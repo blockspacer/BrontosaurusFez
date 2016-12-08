@@ -42,6 +42,6 @@ void NavigationComponent::CalculatePath(CU::Vector2f aTargetPosition)
 
 	eComponentMessageType type = eComponentMessageType::eSetPath;
 	SComponentMessageData data;
-	data.myVector2ListReference = &myPath;
+	data.myVector2ListPointer = &myPath;
 	GetParent()->NotifyComponents(type, data);
 }

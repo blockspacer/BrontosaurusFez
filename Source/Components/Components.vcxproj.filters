@@ -21,6 +21,8 @@
     <ClCompile Include="InputController.cpp" />
     <ClCompile Include="NavigationComponent.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
+    <ClCompile Include="CameraComponent.cpp" />
+    <ClCompile Include="CameraManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -48,6 +50,8 @@
     <ClInclude Include="InputController.h" />
     <ClInclude Include="NavigationComponent.h" />
     <ClInclude Include="MovementComponent.h" />
+    <ClInclude Include="CameraComponent.h" />
+    <ClInclude Include="CameraManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
