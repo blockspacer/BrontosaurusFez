@@ -3,6 +3,9 @@
 
 namespace CU
 {
+	template <typename TYPE>
+	class Vector3;
+
 
 	template<typename TYPE>
 	class Vector2
@@ -11,6 +14,7 @@ namespace CU
 		// Construction
 		Vector2(void);
 		Vector2(const Vector2 &aVector2);
+		Vector2(const Vector3<TYPE>& aVector3);
 		template<typename U> explicit Vector2(const Vector2<U> &aVector2);
 		Vector2(const TYPE anX, const TYPE aY);
 		template<typename U> explicit Vector2(const U aX, const U aY);
@@ -143,6 +147,13 @@ namespace CU
 	{
 		myX = aVector2.myX;
 		myY = aVector2.myY;
+	}
+
+	VECTOR_TEMPLATE_DECL
+		Vector2<TYPE>::Vector2(const Vector3<TYPE> &aVector3)
+	{
+		myX = aVector3.myX;
+		myY = aVector3.myY; 
 	}
 
 	template<typename TYPE>
