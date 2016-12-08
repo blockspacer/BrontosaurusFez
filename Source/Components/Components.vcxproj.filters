@@ -19,6 +19,8 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="InputController.cpp" />
+    <ClCompile Include="NavigationComponent.cpp" />
+    <ClCompile Include="MovementComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -44,6 +46,8 @@
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="ComponentMessage.h" />
     <ClInclude Include="InputController.h" />
+    <ClInclude Include="NavigationComponent.h" />
+    <ClInclude Include="MovementComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
