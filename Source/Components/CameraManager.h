@@ -12,7 +12,7 @@ public:
 	static void Destroy();
 	static CCameraManager& GetInstance();
 	CCameraComponent* CreateCameraComponent();
-	const CU::Camera& GetActiveCamera();
+	CU::Camera& GetActiveCamera();
 
 private: 
 	CCameraManager();

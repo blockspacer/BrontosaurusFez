@@ -54,7 +54,7 @@ CCameraComponent* CCameraManager::CreateCameraComponent()
 	return  camera;
 }
 
-const CU::Camera& CCameraManager::GetActiveCamera()
+CU::Camera& CCameraManager::GetActiveCamera()
 {
 	myCamera.SetTransformation(myActiveCamera->GetToWorldTransformation());
 	return myCamera;
