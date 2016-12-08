@@ -103,7 +103,7 @@ void CInputManager::UpdateMouse()
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eMouseMessage, MouseReleased(mousePosition, CU::eMouseButtons::LBUTTON)));
 		}
 
-		myDInputWrapper->SetMousePosition(CEngine::GetInstance()->GetWindowSize().x / 2, CEngine::GetInstance()->GetWindowSize().y / 2);
+		//myDInputWrapper->SetMousePosition(CEngine::GetInstance()->GetWindowSize().x / 2, CEngine::GetInstance()->GetWindowSize().y / 2);
 	}
 	
 }

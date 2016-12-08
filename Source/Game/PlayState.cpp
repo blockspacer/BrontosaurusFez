@@ -31,6 +31,7 @@
 #include "PostMaster/Event.h"
 #include "CameraManager.h"
 #include "InputControllerManager.h"
+#include "MovementComponentManager.h"
 
 //Temp Includes
 #include "Components/InputController.h"
@@ -66,6 +67,7 @@ CPlayState::~CPlayState()
 	CParticleEmitterComponentManager::Destroy();
 	CCameraManager::Destroy();
 	InputControllerManager::DestroyInstance();
+	MovementComponentManager::DestroyInstance();
 
 	PollingStation::NullifyLevelSpecificData();
 
@@ -108,22 +110,30 @@ void CPlayState::Load()
 	timerMgr.UpdateTimers();
 	//hue hue dags att fula ner play state - Alex(Absolut inte Marcus); // snälla slå Johan inte mig(Alex);
 	CGameObject* tempPlayerObject = globalGame->GetObjectManagerReference().CreateGameObject();
+	CGameObject* tempWorldObject = globalGame->GetObjectManagerReference().CreateGameObject();
+	CModelComponent* tempModelComponentForWorldObject = CModelComponentManager::GetInstance().CreateComponent("Models/Player/swarmerShip.fbx");
+	tempWorldObject->AddComponent(tempModelComponentForWorldObject);
 	CGameObject* tempCameraObject = globalGame->GetObjectManagerReference().CreateGameObject();
-	tempPlayerObject->AddComponent(new InputController());
+	InputController* tempInputController = new InputController();
+	InputControllerManager::GetInstance().RegisterComponent(tempInputController);
+	tempPlayerObject->AddComponent(tempInputController);
+	MovementComponent* tempMovementController = new MovementComponent();
+	MovementComponentManager::GetInstance().RegisterComponent(tempMovementController);
 	tempPlayerObject->AddComponent(new NavigationComponent());
-	tempPlayerObject->AddComponent(new MovementComponent());
+	tempPlayerObject->AddComponent(tempMovementController);
 	CModelComponent* tempModelComponent = CModelComponentManager::GetInstance().CreateComponent("Models/Player/swarmerShip.fbx");
 	//myScene.AddModelInstance(tempModelComponent->GetModelInst());
 	tempPlayerObject->AddComponent(tempModelComponent);
-	tempCameraObject->AddComponent(CCameraManager::GetInstance().CreateCameraComponent());
-	tempCameraObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, -1000.0f));
+	//tempCameraObject->AddComponent(CCameraManager::GetInstance().CreateCameraComponent());
+	tempCameraObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, -10000.0f));
 	tempPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
 	CU::Matrix33f camerarotationMatrix = tempCameraObject->GetLocalTransform().GetRotation();
 	camerarotationMatrix.LookAt(tempCameraObject->GetWorlPosition(), tempPlayerObject->GetWorlPosition());
 	tempCameraObject->GetLocalTransform().SetRotation(camerarotationMatrix);
 	tempPlayerObject->AddComponent(tempCameraObject);
-
-
+	tempPlayerObject->GetLocalTransform() = CAMERA->GetTransformation();
+	tempPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 10));
+	tempPlayerObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 
 	//
 	SShape shape;
@@ -144,7 +154,10 @@ void CPlayState::Init()
 
 State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 {
-	ENGINE->SetCamera(&CCameraManager::GetInstance().GetActiveCamera());
+	//ENGINE->SetCamera(&CCameraManager::GetInstance().GetActiveCamera());
+	CU::Matrix44f temp = CAMERA->GetTransformation();
+	temp.SetPosition(CU::Vector3f(0.0f, 0.0f, -1000.0f));
+	CAMERA->SetTransformation(temp);
 	myScene.SetCamera(CAMERA);
 	//myGUIManager->Update(aDeltaTime)
 
@@ -157,6 +170,7 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	
 	CParticleEmitterComponentManager::GetInstance().UpdateEmitters(aDeltaTime);
 	InputControllerManager::GetInstance().Update(aDeltaTime);
+	MovementComponentManager::GetInstance().Update(aDeltaTime);
 
 	if (globalGame != nullptr)
 	{
@@ -267,4 +281,5 @@ void CPlayState::CreateManagersAndFactories()
 	CParticleEmitterComponentManager::GetInstance().SetScene(&myScene);
 	CCameraManager::Create();
 	InputControllerManager::CreateInstance();
+	MovementComponentManager::CreateInstance();
 }

@@ -8,6 +8,7 @@
 
 InputController::InputController()
 {
+	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eMouseMessage);
 }
 
 
@@ -41,9 +42,11 @@ eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButto
 		CU::Vector2f playerPosition = CU::Vector2f(GetParent()->GetWorlPosition().x, GetParent()->GetWorlPosition().y); // Don't forget to add conversions between vector 2 and 3! like serisously it is góing to save us so much time.
 
 		CU::Vector2f targetPosition = playerPosition + (convertedMousePosition + halfScreenPosition);
+		//targetPosition.x *= -1;
 		eComponentMessageType type = eComponentMessageType::eSetNavigationTarget;
 		SComponentMessageData data;
 		data.myVector2 = targetPosition;
+		//data.myVector2 = playerPosition + CU::Vector2f(100.0f, 100.0f);
 		GetParent()->NotifyComponents(type, data);
 	}
 
