@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="WidgetContainer\WidgetContainer.h" />
+    <ClInclude Include="Widget\Widget.h" />
+    <ClInclude Include="WidgetDecorator\WidgetDecorator.h" />
+    <ClInclude Include="Button\Button.h" />
+    <ClInclude Include="GUIManager\GUIManager.h" />
+    <ClInclude Include="DraggableArea\DraggableArea.h" />
+    <ClInclude Include="WidgetDecorator\TextWidget\TextWidget.h" />
+    <ClInclude Include="WidgetDecorator\Tooltip\ToolTip.h" />
+    <ClInclude Include="WidgetContainer\Window\Window.h" />
+    <ClInclude Include="WidgetFactory\WidgetFactory.h" />
+    <ClInclude Include="RenderableWidgets\SpriteWidget\SpriteWidget.h" />
+    <ClInclude Include="RenderableWidgets\ModelWidget\ModelWidget.h" />
+    <ClInclude Include="GUIPixelConstantBuffer.h" />
+    <ClInclude Include="GUICursor\GUICursor.h" />
+    <ClInclude Include="BarWidget\BarWidget.h" />
+    <ClInclude Include="Button\Button2D.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="WidgetContainer\WidgetContainer.cpp" />
+    <ClCompile Include="Widget\Widget.cpp" />
+    <ClCompile Include="WidgetDecorator\WidgetDecorator.cpp" />
+    <ClCompile Include="Button\Button.cpp" />
+    <ClCompile Include="GUIManager\GUIManager.cpp" />
+    <ClCompile Include="DraggableArea\DraggableArea.cpp" />
+    <ClCompile Include="WidgetDecorator\TextWidget\TextWidget.cpp" />
+    <ClCompile Include="WidgetDecorator\Tooltip\ToolTip.cpp" />
+    <ClCompile Include="WidgetContainer\Window\Window.cpp" />
+    <ClCompile Include="WidgetFactory\WidgetFactory.cpp" />
+    <ClCompile Include="RenderableWidgets\SpriteWidget\SpriteWidget.cpp" />
+    <ClCompile Include="RenderableWidgets\ModelWidget\ModelWidget.cpp" />
+    <ClCompile Include="GUICursor\GUICursor.cpp" />
+    <ClCompile Include="BarWidget\BarWidget.cpp" />
+    <ClCompile Include="Button\Button2D.cpp" />
+  </ItemGroup>
+</Project>

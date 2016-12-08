@@ -1,0 +1,140 @@
+#pragma once
+#include "VertexStructs.h"
+#include <vector>
+#include <map>
+
+#include "../CommonUtilities/matrix44.h"
+
+#include "SphereColData.h"
+
+//namespace CU
+//{
+//	template <typename ObjectType, typename SizeType = unsigned int>
+//	class GrowingArray;
+//}
+
+#define BASE_SCALE 100
+
+struct BoneInfo
+{
+	FBXLoader::Matrix44f BoneOffset;
+	FBXLoader::Matrix44f FinalTransformation;
+
+	BoneInfo()
+	{
+
+	}
+};
+
+class CLoaderCamera
+{
+public:
+	CU::Matrix44f myTransformation;
+	float myFar;
+	float myNear;
+	float myFov;
+	float myAspectRatio;
+};
+
+class CLoaderMesh;
+
+class CLoaderScene
+{
+public:
+	CLoaderScene() : myMeshes(2), myTextures(8), isLODScene(false) {}
+	~CLoaderScene() { myMeshes.DeleteAll(); SAFE_DELETE(myCamera); }
+	std::string myAlbedoTexture;
+	CU::GrowingArray<CU::DynamicString> myTextures;
+	CU::GrowingArray<CLoaderMesh*> myMeshes;
+	CLoaderCamera* myCamera;
+
+
+	SSphereColData mySphereColData;
+	bool isLODScene;
+};
+
+// One model can contain multiple meshes
+class CLoaderMesh // TODO: maybey memory leeks?
+{
+public:
+	CLoaderMesh() 
+	{
+		myShaderType = 0; 
+		myVerticies = nullptr; 
+		myVertexBufferSize = 0; 
+		myVertexCount = 0; 
+		myModel = nullptr; 
+		myLOD_DistStart = myLOD_DistEnd = -1.0f;
+		myLODLevel = -1;
+	}
+	~CLoaderMesh() { delete[] myVerticies; myVerticies = nullptr; }
+	std::vector<unsigned int> myIndexes;
+	std::vector<CLoaderMesh*> myChildren;
+	CU::Matrix44f myTransformation;
+	unsigned int myShaderType;
+	unsigned int myVertexBufferSize; //hur stor en vertex är
+	int myVertexCount;
+	class CLoaderModel* myModel;
+	char* myVerticies; //datan
+	const char* myName;
+	CU::Vector3f myMaxPoint;
+	CU::Vector3f myMinPoint;
+
+	bool myIsAlphaMesh;
+
+	std::string myShaderFile;
+
+	int myLODLevel;
+	float myLOD_DistStart;
+	float myLOD_DistEnd;
+
+	
+
+};
+
+class CLoaderModel
+{
+public:
+	CLoaderModel(){ myIsLoaded = false; myAnimationDuration = 0.0f; }
+	~CLoaderModel(){}
+	void SetData(const char* aModelPath){ myModelPath = aModelPath; }
+	CLoaderMesh* CreateMesh(){ CLoaderMesh *model = new CLoaderMesh(); myMeshes.push_back(model); model->myModel = this; return model; }
+
+	std::vector<CLoaderMesh*> myMeshes;
+	std::string myModelPath;
+	float myAnimationDuration;
+	const struct aiScene* myScene;
+	FBXLoader::Matrix44f myGlobalInverseTransform;
+	bool myIsLoaded;
+	std::vector<std::string> myTextures;
+	// Animation data
+	std::vector<BoneInfo> myBoneInfo;
+	std::map<std::string, unsigned int> myBoneNameToIndex;
+	unsigned int myNumBones;
+
+
+};
+
+struct aiNode;
+class CFBXLoader
+{
+public:
+	CFBXLoader();
+	~CFBXLoader();
+
+	//Consider Using LoadModelScene instead
+	CLoaderModel *LoadModel(const char* aModel);
+	bool LoadGUIScene(const char * aFilePath, CLoaderScene & aSceneOut);
+	bool LoadModelScene(const char * aFilePath, CLoaderScene & aSceneOut);
+
+
+private:
+	void LoadMeshChildren(aiNode* aNode, CU::GrowingArray<aiNode*>& aNodesOut);
+
+	void* LoadModelInternal(CLoaderModel* someInput);
+	int DetermineAndLoadVerticies(struct aiMesh* aMesh, CLoaderMesh* aLoaderMesh);
+	void LoadMaterials(const struct aiScene *sc, CLoaderModel* aModel);
+	void LoadTexture(int aType, std::vector<std::string>& someTextures, struct aiMaterial* aMaterial);
+
+};
+

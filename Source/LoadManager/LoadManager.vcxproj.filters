@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="targetver.h">
+      <Filter>VS</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>VS</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaFunctions.h">
+      <Filter>LuaFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadManager.h">
+      <Filter>LoadManager</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>VS</Filter>
+    </ClCompile>
+    <ClCompile Include="LuaFunctions.cpp">
+      <Filter>LuaFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadManager.cpp">
+      <Filter>LoadManager</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="VS">
+      <UniqueIdentifier>{35f92d3f-46b3-4c23-9408-4c64a447310e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LuaFunctions">
+      <UniqueIdentifier>{a33c0251-8964-432b-b372-abd7d6fcdcf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoadManager">
+      <UniqueIdentifier>{f56e17b2-c60a-469e-afa0-9e5d0cc30d3b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt">
+      <Filter>VS</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,31 @@
+#pragma once
+#include "StateStack\State.h"
+
+namespace GUI
+{
+	class GUIManager;
+}
+
+class PauseMenu : public State, public Subscriber
+{
+public:
+	PauseMenu(StateStack& aStateStack);
+	~PauseMenu();
+
+	void Init() override;
+	eStatus Update(const CU::Time& aDeltaTime) override;
+	void Render() override;
+	void OnEnter() override;
+	void OnExit() override;
+	eMessageReturn Recieve(const Message & aMessage);
+	bool GetLetThroughRender() const override;
+
+	void Resume();
+	void LevelSelect();
+	void MainMenu();
+	void Quit();
+
+private:
+	GUI::GUIManager* myGUIManager;
+};
+
