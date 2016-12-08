@@ -30,6 +30,14 @@
 #include "PostMaster/Message.h"
 #include "PostMaster/Event.h"
 
+//Temp Includes
+#include "Components/InputController.h"
+#include "Components/NavigationComponent.h"
+#include "Components/MovementComponent.h"
+#include "CameraComponent.h"
+#include "CameraManager.h"
+//
+
 extern CGame* globalGame;
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
@@ -109,7 +117,15 @@ void CPlayState::Load()
 
 void CPlayState::Init()
 {
-	
+	//hue hue dags att fula ner play state - Alex(Absolut inte Marcus); // snälla slå Johan inte mig(Alex);
+	CGameObject* playerObject = globalGame->GetObjectManagerReference().CreateGameObject();
+	CGameObject* CameraObject = globalGame->GetObjectManagerReference().CreateGameObject();
+	playerObject->AddComponent(new InputController());
+	playerObject->AddComponent(new NavigationComponent());
+	playerObject->AddComponent(new MovementComponent());
+	CModelComponent* tempModelComponent = CModelComponentManager::GetInstance().CreateComponent("Models/Player/Player.fbx");
+	CameraObject->AddComponent(CCameraManager::GetInstance().CreateCameraComponent());
+	playerObject->AddComponent(CameraObject);
 }
 
 State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
@@ -232,4 +248,5 @@ void CPlayState::CreateManagersAndFactories()
 	CModelComponentManager::Create();
 	CParticleEmitterComponentManager::Create();
 	CParticleEmitterComponentManager::GetInstance().SetScene(&myScene);
+	CCameraManager::Create();
 }
