@@ -44,8 +44,7 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 CPlayState::~CPlayState()
 {
 	SAFE_DELETE(myGUIManager);
-	SAFE_DELETE(myControllerComponent);
-	
+	//SAFE_DELETE(myControllerComponent);
 	CPhysicsManager::DestroyInstance();
 	
 	LoadManager::DestroyInstance();
@@ -189,9 +188,9 @@ void CPlayState::OnExit()
 	myGUIManager->PauseRenderAndUpdate();
 }
 
-void CPlayState::SetControllerComponent(ControllerComponent* aControllerComponent)
+void CPlayState::SetControllerComponent(ControllerComponent* /*aControllerComponent*/)
 {
-	myControllerComponent = aControllerComponent;
+	//myControllerComponent = aControllerComponent;
 }
 
 void CPlayState::ValueChanged(const int /*aValue*/)

@@ -302,7 +302,7 @@ void CScene::DeleteModelInstance(const InstanceID& anId)
 void CScene::DeleteParticleEmitterInstance(const InstanceID anID)
 {
 	//if thread lock here
-	CParticleEmitterInstance* currentEmitter = myParticleEmitters[anID];
+	//CParticleEmitterInstance* currentEmitter = myParticleEmitters[anID];
 	myParticleEmitters[anID] = nullptr;
 	myFreeParticleEmitters.Push(anID);
 	//if thread unlock here

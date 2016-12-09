@@ -168,7 +168,7 @@ void CStreakEmitter::EmitParticle(const CU::Matrix44f& aToWorld)
 	myParticleLogic.Add(logic);
 }
 
-void CStreakEmitter::UpdateCBuffers(const CU::Matrix44f & aToWorldSpace)
+void CStreakEmitter::UpdateCBuffers(const CU::Matrix44f & /*aToWorldSpace*/) //TODO: remove this world space parameter
 {
 	////WorldSpace
 	D3D11_MAPPED_SUBRESOURCE mappedSubresource;

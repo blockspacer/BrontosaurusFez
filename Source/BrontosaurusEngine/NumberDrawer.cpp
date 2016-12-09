@@ -57,7 +57,7 @@ long CNumberDrawer::Increment()
 			++i;
 		}
 
-		currentRect.y = 0.9;
+		currentRect.y = 0.9f;
 		currentRect.w = 1.f;
 
 		currentSprite->SetRect(currentRect);
@@ -67,7 +67,7 @@ long CNumberDrawer::Increment()
 
 long CNumberDrawer::Decrement()
 {
-	for (int i = mySpriteInstances.Size() - 1; i >= 0; --i)
+	for (char i = mySpriteInstances.Size() - 1; i >= 0; --i)
 	{
 		CSpriteInstance& currentSprite = *mySpriteInstances[i];
 		CU::Vector4f currentRect = currentSprite.GetRect();

@@ -1,5 +1,4 @@
-﻿#include "LuaWrapper\Precompiled\stdafx.h"
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "SSlua.h"
 #include "../SSArgument/SSArgument.h"
 #include <codecvt>
@@ -128,7 +127,7 @@ namespace SSlua
 		bool result = true;
 		while (lua_next(myState, -2))
 		{
-			if (lua_isstring(myState, -2) == true)
+			if (lua_isstring(myState, -2))
 			{
 				std::string key = lua_tostring(myState, -2);
 				aTableMapOut[key] = SSArgument();
@@ -384,7 +383,7 @@ namespace SSlua
 			else if (lua_isnumber(aState, -2))
 			{
 				std::string key;
-				key += lua_tointeger(aState, -2);
+				key += std::to_string(lua_tointeger(aState, -2));
 				tempLuaTable[key] = tempArgument;
 			}
 			lua_pop(aState, 1);

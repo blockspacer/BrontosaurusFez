@@ -4,7 +4,6 @@
     <ClCompile Include="BackgroundLoadingManager.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Level.cpp" />
-    <ClCompile Include="LevelSelectLoader.cpp" />
     <ClCompile Include="LoadingAnimation.cpp" />
     <ClCompile Include="PollingStation.cpp" />
     <ClCompile Include="stdafx.cpp" />
@@ -34,7 +33,6 @@
     <ClInclude Include="BackgroundLoadingManager.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Level.h" />
-    <ClInclude Include="LevelSelectLoader.h" />
     <ClInclude Include="LoadingAnimation.h" />
     <ClInclude Include="PollingStation.h" />
     <ClInclude Include="stdafx.h" />

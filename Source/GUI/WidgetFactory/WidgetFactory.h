@@ -21,8 +21,6 @@ namespace GUI
 		static WidgetContainer* CreateGUIScene(const char* aFilePathFBX, bool isOld, CU::Camera*& aGUIManagerCameraOut);
 		static WidgetContainer* CreateGUIScene(const CLoaderScene* aLoaderScene, CU::Camera*& aGUIManagerCameraOut);
 
-		static Widget* CreateButton2D(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::DynamicString& aButtonName);
-
 	private:
 		static Widget* CreateButton(Widget* aWidget);
 		static Widget* CreateHealthBar(Widget* aWidget);

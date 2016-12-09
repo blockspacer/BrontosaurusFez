@@ -7,7 +7,7 @@
 
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 
-CWindowsWindow::CWindowsWindow(SInitWindowParams & aInitWindowParams)
+CWindowsWindow::CWindowsWindow(const SInitWindowParams& aInitWindowParams)
 {
 	InitInstance(aInitWindowParams);
 }
@@ -32,7 +32,7 @@ void CWindowsWindow::Close()
 
 
 
-ATOM CWindowsWindow::MyRegisterClass(HINSTANCE hInstance, std::wstring windowName)
+ATOM CWindowsWindow::MyRegisterClass(HINSTANCE hInstance, const wchar_t* windowName)
 {
 	WNDCLASSEXW wcex;
 
@@ -47,18 +47,18 @@ ATOM CWindowsWindow::MyRegisterClass(HINSTANCE hInstance, std::wstring windowNam
 	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_BRONTOSAURUS);
-	wcex.lpszClassName = windowName.c_str();
+	wcex.lpszClassName = windowName;
 
 	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
 	return RegisterClassExW(&wcex);
 }
 
-BOOL CWindowsWindow::InitInstance(SInitWindowParams& aInitWindowParams)
+BOOL CWindowsWindow::InitInstance(const SInitWindowParams& aInitWindowParams)
 {
 	myHInst = GetModuleHandle(0);
 
-	MyRegisterClass(myHInst, aInitWindowParams.Name);
+	MyRegisterClass(myHInst, aInitWindowParams.Name.c_str());
 	
 	myHWnd = CreateWindowW(aInitWindowParams.Name.c_str(), aInitWindowParams.Title.c_str(), WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, 0, aInitWindowParams.Width, aInitWindowParams.Height, nullptr, nullptr, myHInst, nullptr);

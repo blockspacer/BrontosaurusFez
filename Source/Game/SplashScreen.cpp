@@ -86,7 +86,7 @@ void CSplashScreen::FadeOut(const CU::Time& aDeltaTime)
 
 void CSplashScreen::SetNextPic()
 {
-	unsigned char index = mySprites.Find(myCurrentSprite) + 1;
+	unsigned int index = mySprites.Find(myCurrentSprite) + 1;
 
 	myCurrentSprite = mySprites[index];
 	myFadeState = eFadeState::eFadingIn;

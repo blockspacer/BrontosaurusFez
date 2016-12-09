@@ -72,10 +72,8 @@ void CSurface::Activate()
 
 const CU::Vector2ui& CSurface::GetTextureSize() const
 {
-	if (myTextures.Size() > 0)
-	{
-		return myTextures[0]->GetSize();
-	}
+	assert(myTextures.Size() > 0 && "should not get texture size from surface of no textures");
+	return myTextures[0]->GetSize();
 }
 
 CU::Vector2f CSurface::GetTextureSizeFloat() const

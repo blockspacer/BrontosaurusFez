@@ -6,7 +6,6 @@
 #include <RenderableWidgets/ModelWidget/ModelWidget.h>
 #include <RenderableWidgets/SpriteWidget/SpriteWidget.h>
 #include <Button/Button.h>
-#include <Button/Button2D.h>
 #include <BarWidget/BarWidget.h>
 #include <WidgetDecorator/TextWidget/TextWidget.h>
 
@@ -183,21 +182,6 @@ namespace GUI
 			DL_PRINT_WARNING("Button created but no suitable callback function was implemented: %s", widgetName.c_str());
 			return new ButtonDecorator(nullptr, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget);
 		}
-	}
-
-	Widget* WidgetFactory::CreateButton2D(const CU::Vector2f & aPosition, const CU::Vector2f & aSize, const CU::DynamicString& aButtonName)
-	{
-		auto chooseLevel = []
-		{
-			//PostMaster::GetInstance().SendLetter(Message(eMessageType::eLoadLevel, LoadLevelEvent()));
-		};
-
-		GUI::Button2D* button = new GUI::Button2D(chooseLevel, aPosition, aSize, aButtonName, true);
-		
-		//TextWidget* textWidget = new TextWidget(nullptr, aPosition, aSize, aButtonName + "Text", aButtonName, true); //fix this shit
-		//button->AddWidget("Text", textWidget);
-
-		return button;
 	}
 
 	Widget* WidgetFactory::CreateHealthBar(Widget* aWidget)

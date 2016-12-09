@@ -60,6 +60,7 @@
     <ClCompile Include="PushState.cpp" />
     <ClCompile Include="PushState.cpp" />
     <ClCompile Include="FocusChange.cpp" />
+    <ClCompile Include="PushState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Subscriber.h">
@@ -155,6 +156,9 @@
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="PushState.h" />
     <ClInclude Include="FocusChange.h" />
+    <ClInclude Include="PopCurrentState.h" />
+    <ClInclude Include="PostMaster.h" />
+    <ClInclude Include="PushState.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Events">

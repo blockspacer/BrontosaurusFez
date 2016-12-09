@@ -50,7 +50,7 @@ inline long CNumberDrawer::GetNumber() const
 
 inline void CNumberDrawer::AddSprite()
 {
-	for (int i = 0; i < mySpriteInstances.Size(); ++i)
+	for (char i = 0; i < mySpriteInstances.Size(); ++i)
 	{
 		CU::Vector2f position = mySpriteInstances[i]->GetPosition();
 		position.x += mySpriteData.mySize.x * digitOffset;

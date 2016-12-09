@@ -5,7 +5,7 @@
 //#include "../FontEngine/FontEngineFacade.h"
 
 
-CCoolText::CCoolText(const CU::DynamicString& aFontPath): myVertexBufferPos(nullptr), myVertexBufferUV(nullptr), myVertexConstantBuffer(nullptr), myPixelConstantBuffer(nullptr)
+CCoolText::CCoolText(const CU::DynamicString& /*aFontPath*/): myVertexBufferPos(nullptr), myVertexBufferUV(nullptr), myVertexConstantBuffer(nullptr), myPixelConstantBuffer(nullptr)
 {
 	//myFont = CFontEngineFacade::GetInstance().GetFace(aFontPath.c_str());
 
@@ -16,7 +16,7 @@ CCoolText::~CCoolText()
 {
 }
 
-void CCoolText::Render(const CU::DynamicString& aString, const CU::Vector2f& aPosition, const CU::Vector4f& aColor, const CU::Vector2i& aSize)
+void CCoolText::Render(const CU::DynamicString& aString, const CU::Vector2f& /*aPosition*/, const CU::Vector4f& /*aColor*/, const CU::Vector2i& /*aSize*/)
 {
 	if (!(myLastaString == aString))
 	{

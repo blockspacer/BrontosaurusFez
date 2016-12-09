@@ -94,7 +94,7 @@ public:
 	inline CU::TimerManager* GetTimerManager();
 	inline CU::ThreadPool* GetThreadPool();
 
-	const CU::Time& GetTime();
+	CU::Time GetTime();
 
 	void Render();
 	void ThreadedRender();

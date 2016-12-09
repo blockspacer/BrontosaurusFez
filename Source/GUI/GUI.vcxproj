@@ -215,7 +215,6 @@
   <ItemGroup>
     <ClInclude Include="BarWidget\BarWidget.h" />
     <ClInclude Include="Button\Button.h" />
-    <ClInclude Include="Button\Button2D.h" />
     <ClInclude Include="DraggableArea\DraggableArea.h" />
     <ClInclude Include="GUICursor\GUICursor.h" />
     <ClInclude Include="GUIManager\GUIManager.h" />
@@ -235,7 +234,6 @@
   <ItemGroup>
     <ClCompile Include="BarWidget\BarWidget.cpp" />
     <ClCompile Include="Button\Button.cpp" />
-    <ClCompile Include="Button\Button2D.cpp" />
     <ClCompile Include="DraggableArea\DraggableArea.cpp" />
     <ClCompile Include="GUICursor\GUICursor.cpp" />
     <ClCompile Include="GUIManager\GUIManager.cpp" />
