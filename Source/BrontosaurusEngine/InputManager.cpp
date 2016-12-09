@@ -35,7 +35,7 @@ CInputManager::CInputManager()
 	myXInputWrapper->Init(4);
 
 	myDInputWrapper->Init(reinterpret_cast<HINSTANCE>(CEngine::GetInstance()->GetWindow()->GetHinstance()), reinterpret_cast<HWND>(CEngine::GetInstance()->GetWindow()->GetHWND()));
-	myKeyDowns.Init(20, false);
+	myKeyDowns.Init(20);
 
 	myHasFocus = true;
 

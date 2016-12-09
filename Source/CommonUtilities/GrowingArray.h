@@ -1,116 +1,158 @@
 #pragma once
 #include <assert.h>
 #include <string.h> // memcpy
-#include "DL_Debug.h"
+#include <initializer_list>
+
+#define self (*this)
 
 namespace CU
 {
-	template<typename ObjectType, typename SizeType = unsigned int>
+	template<typename ObjectType, typename SizeType = unsigned int, bool USE_SAFE_MODE = true>
 	class GrowingArray
 	{
 	public:
+		using iterator = ObjectType*;
+		using const_iterator = const ObjectType*;
+
 		GrowingArray();
-		GrowingArray(SizeType aNrOfRecommendedItems, bool aUseSafeModeFlag = true);
-		GrowingArray(std::initializer_list<ObjectType> aInitializerList);
+		GrowingArray(const SizeType aNrOfRecommendedItems);
+		explicit GrowingArray(const SizeType aNrOfRecommendedItems, const ObjectType& aItemToFillWith);
+		GrowingArray(const std::initializer_list<ObjectType>& aInitializerList);
 		GrowingArray(const GrowingArray& aGrowingArray);
 		GrowingArray(GrowingArray&& aGrowingArray);
-		GrowingArray(SizeType aNrOfItems, const ObjectType& aItemToFillWith, bool aUseSafeModeFlag = true);
 
 		~GrowingArray();
 
-		GrowingArray &operator=(const GrowingArray& aGrowingArray);
-		GrowingArray &operator=(GrowingArray&& aGrowingArray);
+		GrowingArray& operator=(const GrowingArray& aGrowingArray);
+		GrowingArray& operator=(GrowingArray&& aGrowingArray);
 
-		void Init(SizeType aNrOfRecomendedItems, bool aUseSafeModeFlag = true);
-		void Init(SizeType aNrOfItems, const ObjectType& aItemToFillWith, bool aUseSafeModeFlag = true);
-		void ReInit(SizeType aNrOfRecomendedItems, bool aUseSafeModeFlag = true);
+		void Init(const SizeType aNrOfRecomendedItems);
+		void Init(const SizeType aNrOfRecomendedItems, const ObjectType& aItemToFillWith);
+		void ReInit(const SizeType aNrOfRecomendedItems);
 
-		inline ObjectType &operator[](const SizeType& aIndex);
-		inline const ObjectType &operator[](const SizeType& aIndex) const;
+		inline ObjectType& operator[](const SizeType aIndex);
+		inline const ObjectType& operator[](const SizeType aIndex) const;
 
-		inline ObjectType &At(const SizeType& aIndex);
-		inline const ObjectType &At(const SizeType& aIndex) const;
+		inline ObjectType& At(const SizeType aIndex);
+		inline const ObjectType& At(const SizeType aIndex) const;
+
+		iterator begin();
+		const_iterator begin() const;
+		iterator end();
+		const_iterator end() const;
 
 		inline void Add(const ObjectType& aObject);
 		inline void Add(ObjectType&& aObject);
 		inline void Add(const GrowingArray& anArray);
-		inline void Insert(SizeType aIndex, ObjectType& aObject);
-		inline void Remove(ObjectType& aObject);
-		inline void RemoveAtIndex(SizeType aItemNumber);
-		inline void DeleteCyclic(ObjectType& aObject);
-		inline void DeleteCyclicAtIndex(SizeType aItemNumber);
+		inline void Insert(const SizeType aIndex, const ObjectType& aObject);
+		inline void Remove(const ObjectType& aObject);
+		inline void RemoveAtIndex(const SizeType aItemNumber);
+		inline void DeleteCyclic(const ObjectType& aObject);
+		inline void DeleteCyclicAtIndex(const SizeType aItemNumber);
 		inline void RemoveCyclic(const ObjectType& aObject);
-		inline void RemoveCyclicAtIndex(SizeType aItemNumber);
+		inline void RemoveCyclicAtIndex(const SizeType aItemNumber);
 		inline SizeType Find(const ObjectType& aObject);
-		inline bool Find(const ObjectType& aObject, SizeType & aReturnIndex);
+		inline bool Find(const ObjectType& aObject, SizeType& aReturnIndex);
 
-		inline ObjectType &GetLast();
-		inline const ObjectType &GetLast() const;
+		inline ObjectType& GetLast();
+		inline const ObjectType& GetLast() const;
+		inline ObjectType* AsPointer(const SizeType aIndex = 0);
+		inline const ObjectType* AsPointer(const SizeType aIndex = 0) const;
+		inline void* AsVoidPointer(const SizeType aIndex = 0);
+		inline const void* AsVoidPointer(const SizeType aIndex = 0) const;
 
-		static const SizeType FoundNone = static_cast<SizeType>(-1);
-			   
+		inline ObjectType Pop();
+
 		inline void RemoveAll();
 		inline void DeleteAll();
 
-		void Optimize();
+		inline void Optimize();
+
+		inline void Resize(const SizeType aNewSize);
+		inline void Resize(const SizeType aNewSize, const ObjectType& aObject);
+		inline void Destroy();
+
 		__forceinline SizeType Size() const;
 		__forceinline SizeType Capacity() const;
 		__forceinline bool IsInitialized() const;
 
-		inline void Resize(SizeType aNewSize);
-		inline void Resize(SizeType aNewSize, const ObjectType& aObject);
-		inline void Reallocate(SizeType aNewSize);
-		inline void Destroy();
+		static const SizeType FoundNone = static_cast<SizeType>(-1);
 
 		typedef SizeType size_type;
 
 	private:
+		inline void Reallocate(const SizeType aNewSize);
 
-		ObjectType *myArray;
+		ObjectType* myArray;
 		SizeType mySize;
 		SizeType myCapacity;
-		bool mySafeModeFlag;
-		bool myIsInit;
 	};
 
-	template<typename ObjectType, typename SizeType>
-	GrowingArray<ObjectType, SizeType>::GrowingArray()
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::GrowingArray()
 	{
 		mySize = 0;
 		myCapacity = 0;
 		myArray = nullptr;
-		mySafeModeFlag = true;
-		myIsInit = false;
 	}
 
-	template<typename ObjectType, typename SizeType>
-	GrowingArray<ObjectType, SizeType>::GrowingArray(SizeType aNrOfRecommendedItems, bool aUseSafeModeFlag) : GrowingArray()
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::GrowingArray(const SizeType aNrOfRecommendedItems) : GrowingArray()
 	{
-		mySize = 0;
-		Init(aNrOfRecommendedItems, aUseSafeModeFlag);
+		Init(aNrOfRecommendedItems);
 	}
 
-	template <typename ObjectType, typename SizeType>
-	GrowingArray<ObjectType, SizeType>::GrowingArray(std::initializer_list<ObjectType> aInitializerList) : GrowingArray()
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::GrowingArray(const SizeType aNrOfRecommendedItems, const ObjectType& aItemToFillWith) : GrowingArray()
+	{
+		Init(aNrOfRecommendedItems, aItemToFillWith);
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::GrowingArray(const std::initializer_list<ObjectType>& aInitializerList) : GrowingArray()
 	{
 		Init(static_cast<SizeType>(aInitializerList.size()));
 
-		for (ObjectType initilizer : aInitializerList)
+		for (const ObjectType& initilizer : aInitializerList)
 		{
 			Add(initilizer);
 		}
 	}
 
-	template<typename ObjectType, typename SizeType>
-	GrowingArray<ObjectType, SizeType>::GrowingArray(const GrowingArray& aGrowingArray) : GrowingArray()
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::GrowingArray(const GrowingArray& aGrowingArray) : GrowingArray()
 	{
-		if (aGrowingArray.myIsInit == true)
+		self = aGrowingArray;
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::GrowingArray(GrowingArray&& aGrowingArray) : GrowingArray()
+	{
+		self = std::move(aGrowingArray);
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::~GrowingArray()
+	{
+		Destroy();				//OM FEL, SKÄLL PÅ KEVIN! och Carl
+	}
+
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>& GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::operator=(const GrowingArray& aGrowingArray)
+	{
+		if (IsInitialized() == true)
 		{
-			Init(aGrowingArray.myCapacity, aGrowingArray.mySafeModeFlag);
+			Destroy();
+		}
+
+		if (aGrowingArray.IsInitialized() == true)
+		{
+			Init(aGrowingArray.myCapacity);
 
 			mySize = aGrowingArray.mySize;
 
-			if (mySafeModeFlag == true)
+			if (USE_SAFE_MODE == true)
 			{
 				for (SizeType i = 0; i < aGrowingArray.Size(); ++i)
 				{
@@ -119,178 +161,135 @@ namespace CU
 			}
 			else
 			{
-				/*delete[] myArray;
-				myArray = nullptr;
-				myArray = new ObjectType[mySize];*/
-				memcpy(myArray, aGrowingArray.myArray, sizeof(*myArray) * aGrowingArray.mySize);
-			}
-			myIsInit = true;
-		}
-	}
-
-	template<typename ObjectType, typename SizeType>
-	GrowingArray<ObjectType, SizeType>::GrowingArray(GrowingArray&& aGrowingArray) : GrowingArray()
-	{
-		myArray = aGrowingArray.myArray;
-		mySize = aGrowingArray.mySize;
-		myCapacity = aGrowingArray.myCapacity;
-		mySafeModeFlag = aGrowingArray.mySafeModeFlag;
-		myIsInit = true;
-
-		aGrowingArray.myArray = nullptr;
-	}
-
-	template <typename ObjectType, typename SizeType>
-	GrowingArray<ObjectType, SizeType>::GrowingArray(SizeType aNrOfItems, const ObjectType& aItemToFillWith, bool aUseSafeModeFlag) : GrowingArray()
-	{
-		Init(aNrOfItems , aUseSafeModeFlag);
-
-		for (SizeType i = 0; i < aNrOfItems; ++i)
-		{
-			Add(aItemToFillWith);
-		}
-	}
-
-	template<typename ObjectType, typename SizeType>
-	GrowingArray<ObjectType, SizeType>::~GrowingArray()
-	{
-		if (myIsInit == true)
-		{
-			delete[] myArray;				//OM FEL, SKÄLL PÅ KEVIN!
-		}
-	}
-
-
-	template<typename ObjectType, typename SizeType>
-	GrowingArray<ObjectType, SizeType>& GrowingArray<ObjectType, SizeType>::operator=(const GrowingArray& aGrowingArray)
-	{
-		if (myIsInit == true)
-		{
-			Destroy();
-		}
-
-		Init(aGrowingArray.myCapacity, aGrowingArray.mySafeModeFlag);
-
-		mySize = aGrowingArray.mySize;
-
-		if (mySafeModeFlag == true)
-		{
-			for (SizeType i = 0; i < aGrowingArray.Size(); ++i)
-			{
-				myArray[i] = aGrowingArray[i];
-			}
-		}
-		else
-		{
-			if (Size() > 0)
-			{
-				memcpy(myArray, aGrowingArray.myArray, sizeof(*myArray) * mySize);
+				if (Size() > 0)
+				{
+					memcpy(myArray, aGrowingArray.myArray, sizeof(*myArray) * mySize);
+				}
 			}
 		}
 
-		return *this;
+		return self;
 	}
 
 
-	template<typename ObjectType, typename SizeType>
-	GrowingArray<ObjectType, SizeType>& GrowingArray<ObjectType, SizeType>::operator=(GrowingArray&& aGrowingArray)
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>& GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::operator=(GrowingArray&& aGrowingArray)
 	{
-		if (myArray != nullptr)
+		if (IsInitialized() == true)
 		{
 			delete[] myArray;
 		}
 
 		myArray = aGrowingArray.myArray;
-		mySize = aGrowingArray.mySize;
-		myCapacity = aGrowingArray.myCapacity;
-		mySafeModeFlag = aGrowingArray.mySafeModeFlag;
-		myIsInit = true;
-
 		aGrowingArray.myArray = nullptr;
-		aGrowingArray.myIsInit = false;
-		return *this;
+		mySize = aGrowingArray.mySize;
+		aGrowingArray.mySize = 0;
+		myCapacity = aGrowingArray.myCapacity;
+		aGrowingArray.myCapacity = 0;
+
+		return self;
 	}
 
-	template<typename ObjectType, typename SizeType>
-	void GrowingArray<ObjectType, SizeType>::Init(SizeType aNrOfRecomendedItems, bool aUseSafeModeFlag)
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Init(const SizeType aNrOfRecomendedItems)
 	{
-		assert(myIsInit == false && "Growing array must not be initialized twice, consider ReInit");
-		assert(aNrOfRecomendedItems > 0 && "Growing array must not be inited with zero recomended items that will cause a heap corruption which is super uber bad!!!!");
+		assert(IsInitialized() == false && "Growing array must not be initialized twice, consider ReInit");
+		assert(aNrOfRecomendedItems > 0 && "Growing array must not be inited with zero capacity");
 
-		if (aNrOfRecomendedItems == 1)
-		{
-			int br = 0;
-			br++;
-		}
 		myArray = new ObjectType[aNrOfRecomendedItems];
 		myCapacity = aNrOfRecomendedItems;
 		mySize = 0;
-		mySafeModeFlag = aUseSafeModeFlag;
-		myIsInit = true;
 	}
 
-	template <typename ObjectType, typename SizeType>
-	void GrowingArray<ObjectType, SizeType>::Init(SizeType aNrOfItems, const ObjectType& aItemToFillWith, bool aUseSafeModeFlag)
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Init(const SizeType aNrOfRecomendedItems, const ObjectType& aItemToFillWith)
 	{
-		if (myIsInit == true)
-		{
-			DL_ASSERT("Can't use that init on a already inited growing array");
-		}
+		assert(IsInitialized() == false && "Growing array must not be initialized twice, consider ReInit");
+		assert(aNrOfRecomendedItems > 0 && "Growing array must not be inited with zero capacity");
 
-		Init(aNrOfItems, aUseSafeModeFlag);
+		Init(aNrOfRecomendedItems);
 
-		for (int i = 0; i < aNrOfItems; ++i)
+		for (SizeType i = 0; i < aNrOfRecomendedItems; ++i)
 		{
 			Add(aItemToFillWith);
 		}
 	}
 
-	template<typename ObjectType, typename SizeType>
-	void GrowingArray<ObjectType, SizeType>::ReInit(SizeType aNrOfRecomendedItems, bool aUseSafeModeFlag)
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::ReInit(const SizeType aNrOfRecomendedItems)
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		assert(aNrOfRecomendedItems > 0 && "Growing array must not be inited with zero capacity");
 
 		Destroy();
-		Init(aNrOfRecomendedItems, aUseSafeModeFlag);
+		Init(aNrOfRecomendedItems);
 	}
 
-	template<typename ObjectType, typename SizeType>
-	inline ObjectType& GrowingArray<ObjectType, SizeType>::operator[](const SizeType& aIndex)
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline ObjectType& GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::operator[](const SizeType aIndex)
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds");
 		return myArray[aIndex];
 	}
 
-	template<typename ObjectType, typename SizeType>
-	inline const ObjectType& GrowingArray<ObjectType, SizeType>::operator[](const SizeType& aIndex) const
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline const ObjectType& GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::operator[](const SizeType aIndex) const
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds");
 		return myArray[aIndex];
 	}
 
-	template<typename ObjectType, typename SizeType>
-	inline ObjectType& GrowingArray<ObjectType, SizeType>::At(const SizeType& aIndex)
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline ObjectType & GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::At(const SizeType aIndex)
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds");
 		return myArray[aIndex];
 	}
 
-	template<typename ObjectType, typename SizeType>
-	inline const ObjectType& GrowingArray<ObjectType, SizeType>::At(const SizeType& aIndex) const
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline const ObjectType & GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::At(const SizeType aIndex) const
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds");
 		return myArray[aIndex];
 	}
 
-	template<typename ObjectType, typename SizeType>
-	inline void GrowingArray<ObjectType, SizeType>::Add(const ObjectType& aObject)
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline typename GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::iterator GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::begin()
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
-		
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		return myArray;
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline typename GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::const_iterator GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::begin() const
+	{
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		return myArray;
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline typename GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::iterator GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::end()
+	{
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		return (myArray + mySize);
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline typename GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::const_iterator GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::end() const
+	{
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		return (myArray + mySize);
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Add(const ObjectType& aObject)
+	{
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+
 		if (mySize >= myCapacity)
 		{
 			Reallocate(myCapacity * 2);
@@ -300,10 +299,10 @@ namespace CU
 		++mySize;
 	}
 
-	template<typename ObjectType, typename SizeType>
-	inline void GrowingArray<ObjectType, SizeType>::Add(ObjectType&& aObject)
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Add(ObjectType&& aObject)
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 
 		if (mySize >= myCapacity)
 		{
@@ -314,10 +313,10 @@ namespace CU
 		++mySize;
 	}
 
-	template <typename ObjectType, typename SizeType>
-	void GrowingArray<ObjectType, SizeType>::Add(const GrowingArray& anArray)
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Add(const GrowingArray& anArray)
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 
 		for (ComponentId i = 0; i < anArray.Size(); ++i)
 		{
@@ -325,10 +324,10 @@ namespace CU
 		}
 	}
 
-	template<typename ObjectType, typename SizeType>
-	inline void GrowingArray<ObjectType, SizeType>::Insert(SizeType aIndex, ObjectType& aObject)
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Insert(const SizeType aIndex, const ObjectType& aObject)
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 
 		if (mySize >= myCapacity)
 		{
@@ -337,6 +336,8 @@ namespace CU
 
 		++mySize;
 
+		//TODO: use memmove if not safe mode
+
 		for (SizeType i = mySize - 1; i > aIndex; i--)
 		{
 			myArray[i] = myArray[i - 1];
@@ -344,10 +345,10 @@ namespace CU
 		myArray[aIndex] = aObject;
 	}
 
-	template<typename ObjectType, typename SizeType>
-	inline void GrowingArray<ObjectType, SizeType>::Remove(ObjectType& aObject)
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Remove(const ObjectType& aObject)
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 
 		SizeType index = Find(aObject);
 		if (index != FoundNone)
@@ -356,11 +357,13 @@ namespace CU
 		}
 	}
 
-	template<typename ObjectType, typename SizeType>
-	inline void GrowingArray<ObjectType, SizeType>::RemoveAtIndex(SizeType aItemNumber)
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::RemoveAtIndex(const SizeType aItemNumber)
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		assert((aItemNumber >= 0 && aItemNumber < mySize) && "Index out of bounds");
+
+		//TODO: use memmove if not safe mode
 
 		if (mySize > 1)
 		{
@@ -376,28 +379,22 @@ namespace CU
 		}
 	}
 
-	template<typename ObjectType, typename SizeType>
-	inline void GrowingArray<ObjectType, SizeType>::DeleteCyclic(ObjectType& aObject)
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::DeleteCyclic(const ObjectType& aObject)
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 
-		for (SizeType i = 0; i < mySize; ++i)
+		SizeType index = Find(aObject);
+		if (index != FoundNone)
 		{
-			if (myArray[i] == aObject)
-			{
-				delete myArray[i];
-				myArray[i] = nullptr;
-				myArray[i] = myArray[mySize - 1];
-				--mySize;
-				break;
-			}
+			DeleteCyclicAtIndex(index);
 		}
 	}
 
-	template<typename ObjectType, typename SizeType>
-	inline void GrowingArray<ObjectType, SizeType>::DeleteCyclicAtIndex(SizeType aItemNumber)
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::DeleteCyclicAtIndex(const SizeType aItemNumber)
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		assert((aItemNumber >= 0 && aItemNumber < mySize) && "Index out of bounds!");
 
 		if (myArray[aItemNumber] != nullptr)
@@ -410,26 +407,22 @@ namespace CU
 		--mySize;
 	}
 
-	template<typename ObjectType, typename SizeType>
-	inline void GrowingArray<ObjectType, SizeType>::RemoveCyclic(const ObjectType& aObject)
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::RemoveCyclic(const ObjectType& aObject)
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
-		for (SizeType i = 0; i < mySize; ++i)
-		{
-			if (myArray[i] == aObject)
-			{
-				myArray[i] = myArray[mySize - 1];
-				--mySize;
-				break;
-			}
-		}
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 
+		SizeType index = Find(aObject);
+		if (index != FoundNone)
+		{
+			RemoveCyclicAtIndex(index);
+		}
 	}
 
-	template<typename ObjectType, typename SizeType>
-	inline void GrowingArray<ObjectType, SizeType>::RemoveCyclicAtIndex(SizeType aItemNumber)
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::RemoveCyclicAtIndex(const SizeType aItemNumber)
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		assert((aItemNumber >= 0 && aItemNumber < mySize) && "Index out of bounds!");
 
 		myArray[aItemNumber] = myArray[mySize - 1];
@@ -438,10 +431,10 @@ namespace CU
 	}
 
 
-	template<typename ObjectType, typename SizeType>
-	inline SizeType GrowingArray<ObjectType, SizeType>::Find(const ObjectType& aObject)
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline SizeType GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Find(const ObjectType& aObject)
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		for (SizeType i = 0; i < mySize; ++i)
 		{
 			if (myArray[i] == aObject)
@@ -449,13 +442,15 @@ namespace CU
 				return i;
 			}
 		}
+
 		return FoundNone;
 	}
 
-	template <typename ObjectType, typename SizeType>
-	bool GrowingArray<ObjectType, SizeType>::Find(const ObjectType& aObject, SizeType& aReturnIndex)
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	bool GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Find(const ObjectType& aObject, SizeType& aReturnIndex)
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+
 		for (SizeType i = 0; i < mySize; ++i)
 		{
 			if (myArray[i] == aObject)
@@ -464,34 +459,75 @@ namespace CU
 				return true;
 			}
 		}
+
 		return false;
 	}
 
-	template<typename ObjectType, typename SizeType>
-	inline ObjectType& GrowingArray<ObjectType, SizeType>::GetLast()
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline ObjectType& GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::GetLast()
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		return myArray[mySize - 1];
 	}
 
-	template<typename ObjectType, typename SizeType>
-	inline const ObjectType& GrowingArray<ObjectType, SizeType>::GetLast() const
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline const ObjectType& GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::GetLast() const
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		return myArray[mySize - 1];
 	}
 
-	template<typename ObjectType, typename SizeType>
-	inline void GrowingArray<ObjectType, SizeType>::RemoveAll()
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline ObjectType * GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::AsPointer(const SizeType aIndex)
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds");
+		return (myArray + aIndex);
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline const ObjectType * GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::AsPointer(const SizeType aIndex) const
+	{
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds");
+		return (myArray + aIndex);
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void * GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::AsVoidPointer(const SizeType aIndex)
+	{
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds");
+		return static_cast<void*>(myArray + aIndex);
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline const void * GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::AsVoidPointer(const SizeType aIndex) const
+	{
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds");
+		return static_cast<void*>(myArray + aIndex);
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline ObjectType GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Pop()
+	{
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		assert(Size() > 0 && "GrowingArray is empty.");
+		return myArray[--mySize];
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::RemoveAll()
+	{
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		mySize = 0;
 	}
 
-	template<typename ObjectType, typename SizeType>
-	inline void GrowingArray<ObjectType, SizeType>::DeleteAll()
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::DeleteAll()
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		for (SizeType i = 0; i < mySize; ++i)
 		{
 			if (myArray[i] != nullptr)
@@ -503,58 +539,35 @@ namespace CU
 		mySize = 0;
 	}
 
-	template<typename ObjectType, typename SizeType>
-	void GrowingArray<ObjectType, SizeType>::Optimize()
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Optimize()
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
-		ObjectType *tempArray = new ObjectType[mySize];
-		for (SizeType i = 0; i < mySize; ++i)
-		{
-			tempArray[i] = myArray[i];
-		}
-
-		if (myArray != nullptr)
-		{
-			delete myArray;
-			myArray = nullptr;
-		}
-
-		myCapacity = mySize;
-		myArray = new ObjectType[mySize];
-
-		for (SizeType i = 0; i < mySize; ++i)
-		{
-			myArray[i] = tempArray[i];
-		} 
-			delete tempArray;
-			tempArray = nullptr;
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		Reallocate(mySize);
 	}
 
-	template<typename ObjectType, typename SizeType>
-	__forceinline SizeType GrowingArray<ObjectType, SizeType>::Size() const
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	__forceinline SizeType GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Size() const
 	{
-		//assert(myIsInit == true && "GrowingArray not yet initialized.");
 		return mySize;
-		
 	}
 
-	template<typename ObjectType, typename SizeType>
-	__forceinline SizeType GrowingArray<ObjectType, SizeType>::Capacity() const
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	__forceinline SizeType GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Capacity() const
 	{
-		//assert(myIsInit == true && "GrowingArray not yet initialized.");
 		return myCapacity;
 	}
 
-	template<typename ObjectType, typename SizeType>
-	inline bool GrowingArray<ObjectType, SizeType>::IsInitialized() const
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline bool GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::IsInitialized() const
 	{
-		return myIsInit;
+		return myArray != nullptr;
 	}
 
-	template<typename ObjectType, typename SizeType>
-	inline void GrowingArray<ObjectType, SizeType>::Resize(SizeType aNewSize)
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Resize(SizeType aNewSize)
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 
 		if (aNewSize > myCapacity)
 		{
@@ -564,42 +577,41 @@ namespace CU
 		mySize = aNewSize;
 	}
 
-	template<typename ObjectType, typename SizeType>
-	inline void GrowingArray<ObjectType, SizeType>::Resize(SizeType aNewSize, const ObjectType& aObject)
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Resize(SizeType aNewSize, const ObjectType& aObject)
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 
 		Resize(aNewSize);
 
-		for (int i = 0; i < Size(); ++i)
+		for (SizeType i = 0; i < Size(); ++i)
 		{
 			myArray[i] = aObject;
 		}
 	}
 
-	template<typename ObjectType, typename SizeType>
-	inline void GrowingArray<ObjectType, SizeType>::Reallocate(SizeType aNewSize)
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Reallocate(const SizeType aNewSize)
 	{
-		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		ObjectType *newArray = new ObjectType[aNewSize];
+
 		for (SizeType i = 0; i < mySize; ++i)
 		{
 			newArray[i] = myArray[i];
 		}
-		
+
 		delete[] myArray;
-		myArray = nullptr;
 		myArray = newArray;
 		myCapacity = aNewSize;
 	}
 
-	template<typename ObjectType, typename SizeType>
-	inline void GrowingArray<ObjectType, SizeType>::Destroy()
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Destroy()
 	{
 		delete[] myArray;
 		myArray = nullptr;
 		myCapacity = 0;
 		mySize = 0;
-		myIsInit = false;
 	}
-} 
+}

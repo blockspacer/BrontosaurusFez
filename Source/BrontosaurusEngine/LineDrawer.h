@@ -35,8 +35,8 @@ private:
 	void RenderLines2D();
 	void UpdateVertexBuffer2D();
 
-	CU::GrowingArray<SLine2D, LineIndex> myLines2D;
-	CU::GrowingArray<LineIndex, LineHandle> myLineHandles2D;
+	CU::GrowingArray<SLine2D, LineIndex, false> myLines2D;
+	CU::GrowingArray<LineIndex, LineHandle, false> myLineHandles2D;
 
 	CEffect* myEffect;
 	ID3D11Buffer* myVertexBuffer2D;

@@ -12,7 +12,7 @@ namespace CU
 	enum class eKeys;
 	enum class eMouseButtons;
 	
-	template <typename ObjectType, typename SizeType = unsigned int>
+	template <typename ObjectType, typename SizeType = unsigned int, bool USE_SAFE_MODE = true>
 	class GrowingArray;
 
 	class InputWrapper
@@ -38,9 +38,9 @@ namespace CU
 		bool IsMouseButtonReleased(eMouseButtons aButton) const;
 
 		int GetMouseWheelPos() const;
-		bool GetKeysDown(GrowingArray<eKeys>& aKeysDown);
-		bool GetKeysPressed(GrowingArray<eKeys>& aKeysPressed);
-		bool GetKeysReleased(GrowingArray<eKeys>& aKeysPressed);
+		bool GetKeysDown(GrowingArray<eKeys, unsigned int, false>& aKeysDown);
+		bool GetKeysPressed(GrowingArray<eKeys, unsigned int, false>& aKeysPressed);
+		bool GetKeysReleased(GrowingArray<eKeys, unsigned int, false>& aKeysPressed);
 
 		std::vector<std::string> GetWhichButtonsDown();// for testing all keys
 	private:	
