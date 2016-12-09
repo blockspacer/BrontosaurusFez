@@ -1,5 +1,5 @@
 #pragma once
-#include "../CommonUtilities/GrowingArray.h"
+//#include "../CommonUtilities/GrowingArray.h"
 #include "TextBitmap.h"
 #include <d3d11.h>
 //#include "../FontEngine/FT_FontFacade.h"

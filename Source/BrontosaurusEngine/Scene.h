@@ -1,9 +1,9 @@
 #pragma once
 
 #include <Stack.h>
-#include <GrowingArray.h>
+//#include <GrowingArray.h>
 
-#include "Lights.h" //directional
+#include "Lights.h" //directional //make forward declaration
 #include "InstanceID.h"
 
 class CSkybox;

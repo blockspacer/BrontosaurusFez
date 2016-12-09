@@ -6,7 +6,7 @@
 #include <map>
 #include "../SSArgument/SSArgument.h"
 #include "../../LuaSource/lua-5.3.3/src/lua.hpp"
-#include "../../CommonUtilities/GrowingArray.h"
+//#include "../../CommonUtilities/GrowingArray.h"
 #include "CommonUtilities/DynamicString.h"
 
 #define LUA_WRAPPER SSlua::LuaWrapper::GetInstance()

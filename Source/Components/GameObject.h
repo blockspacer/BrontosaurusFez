@@ -1,6 +1,6 @@
 #pragma once
 #include "Component.h"
-#include "../CommonUtilities/GrowingArray.h"
+//#include "../CommonUtilities/GrowingArray.h"
 #include "../CommonUtilities/matrix44.h"
 #include "../CommonUtilities/DynamicString.h"
 

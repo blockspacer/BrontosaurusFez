@@ -1,7 +1,7 @@
 #pragma once
 
 #include <unordered_map>
-#include "../CommonUtilities/GrowingArray.h"
+//#include "../CommonUtilities/GrowingArray.h"
 
 namespace CU
 {
@@ -28,10 +28,10 @@ public:
 	friend class CEngine;
 
 	inline void SetCamera(CU::Camera* aCamera);
-	void Render();
+	//void Render();
 
-	ModelHandle CreateModel(const CLoaderMesh* aLoaderMesh, const char* aTexturePath, const WidgetID aWidgetID, const CU::Matrix44f* aWidgetTransformation);
-	void SetVisibility(const WidgetID aWidgetID, const bool aIsVisible);
+	//ModelHandle CreateModel(const CLoaderMesh* aLoaderMesh, const char* aTexturePath, const WidgetID aWidgetID, const CU::Matrix44f* aWidgetTransformation);
+	//void SetVisibility(const WidgetID aWidgetID, const bool aIsVisible);
 
 	inline const CU::Camera* GetCamera() const;
 
@@ -39,11 +39,11 @@ private:
 	CGUIRenderer();
 	~CGUIRenderer();
 
-	CEffect* CreateEffect(const CLoaderMesh* aLoaderMesh);
-	CSurface* CreateSurface(const char* aTexturePath);
+	//CEffect* CreateEffect(const CLoaderMesh* aLoaderMesh);
+	//CSurface* CreateSurface(const char* aTexturePath);
 
-	CU::GrowingArray<SGUIModel, ModelHandle> myModels;
-	std::unordered_map<WidgetID, ModelHandle> myModelHandles;
+	//CU::GrowingArray<SGUIModel, ModelHandle> myModels;
+	//std::unordered_map<WidgetID, ModelHandle> myModelHandles;
 
 	CU::Camera* myCamera;
 };

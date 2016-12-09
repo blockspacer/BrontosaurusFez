@@ -13,8 +13,9 @@
 
 #define SAFE_DELETE(ptr) delete ptr; ptr = nullptr
 
-#include "../CommonUtilities/DL_Debug.h"
-#include "../CommonUtilities/EMouseButtons.h"
+#include "DL_Debug.h"
+#include "EMouseButtons.h"
+#include "GrowingArray.h"
 
 #include "MemoryLeekLogger.h"
 

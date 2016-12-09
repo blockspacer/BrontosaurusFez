@@ -11,5 +11,7 @@
 
 #define SAFE_DELETE(ptr) delete ptr; ptr = nullptr
 
+#include "../CommonUtilities/GrowingArray.h"
+
 //#include "../CommonUtilities/MemoryLeekLogger.h"
 // TODO: reference additional headers your program requires here

@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "ThreadNamer.h"
 
+#include <windows.h>
+#include <thread>
+
 namespace CU
 {
 	static const DWORD MS_VC_EXCEPTION = 0x406D1388;

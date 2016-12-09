@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "GrowingArray.h"
+//#include "GrowingArray.h"
 class CommandLineManager
 {
 public:

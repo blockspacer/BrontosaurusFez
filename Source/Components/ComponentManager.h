@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Component.h"
-#include "../CommonUtilities/GrowingArray.h"
+//#include "../CommonUtilities/GrowingArray.h"
 #include "../CommonUtilities/Stack.h"
 
 class CComponentManager

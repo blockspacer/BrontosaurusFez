@@ -10,6 +10,7 @@
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 
 #include "../CommonUtilities/GrowingArray.h"
+#include "../CommonUtilities/StaticArray.h"
 #include "../CommonUtilities/EMouseButtons.h"
 #include "../CommonUtilities/DynamicString.h"
 #include "../CommonUtilities/vector2.h"
@@ -19,6 +20,6 @@
 #define SAFE_DELETE(ptr) delete ptr; ptr = nullptr
 #endif
 
-#include "../CommonUtilities/MemoryLeekLogger.h"
+//#include "../CommonUtilities/MemoryLeekLogger.h"
 
 // TODO: reference additional headers your program requires here

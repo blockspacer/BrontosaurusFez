@@ -1,9 +1,10 @@
 #pragma once
-#include "GrowingArray.h"
-#define STACK_TEMPLATE_ARG template<typename TYPE>
 
 namespace CU
 {
+	template<typename ObjectType, typename SizeType = unsigned int, bool USE_SAFE_MODE = true>
+	class GrowingArray;
+
 	template<typename TYPE, typename SIZE_T = int>
 	class Stack
 	{

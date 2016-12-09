@@ -1,7 +1,7 @@
 #pragma once
 #include "EmitterData.h"
 #include "vector4.h"
-#include "GrowingArray.h"
+//#include "GrowingArray.h"
 #include "Texture.h"
 #include <climits>
 
