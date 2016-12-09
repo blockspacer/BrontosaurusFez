@@ -34,17 +34,17 @@ CGame::~CGame()
 
 void CGame::Init()
 {
-	// CBackgroundLoadingManager::CreateInstance();
-	// LuaFunctions::RegisterFunctions();
-	// SSlua::LuaWrapper::GetInstance().AddScriptPath("Scripts");
-	// SSlua::LuaWrapper::GetInstance().LoadCode("Scripts/GameMain.lua");
-	// SSlua::LuaWrapper::GetInstance().RunLoadedCode();
+	 CBackgroundLoadingManager::CreateInstance();
+	 //LuaFunctions::RegisterFunctions();
+	 //SSlua::LuaWrapper::GetInstance().AddScriptPath("Scripts");
+	 //SSlua::LuaWrapper::GetInstance().LoadCode("Scripts/GameMain.lua");
+	 //SSlua::LuaWrapper::GetInstance().RunLoadedCode();
 
 
 
 	//if (CommandLineManager::GetInstance()->HasParameter("-skipMainMenu") == true)
 	//{
-	//	myStateStack.PushState(new CPlayState(myStateStack, -1));
+		myStateStack.PushState(new CPlayState(myStateStack, -1));
 	//}
 	//else
 	//{
@@ -68,7 +68,7 @@ void CGame::Init()
 
 void CGame::Update(const CU::Time& /*aDeltaTime*/)
 {
-	//bool isRunning = myStateStack.Update(aDeltaTime);
+	bool isRunning = myStateStack.Update(aDeltaTime);
 	//if (isRunning == false)
 	//{
 	//	CEngine::GetInstance()->Shutdown();
@@ -77,5 +77,5 @@ void CGame::Update(const CU::Time& /*aDeltaTime*/)
 
 void CGame::Render()
 {
-	//myStateStack.Render();
+	myStateStack.Render();
 }

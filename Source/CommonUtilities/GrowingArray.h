@@ -28,6 +28,9 @@ namespace CU
 		inline ObjectType &operator[](const SizeType& aIndex);
 		inline const ObjectType &operator[](const SizeType& aIndex) const;
 
+		inline ObjectType &At(const SizeType& aIndex);
+		inline const ObjectType &At(const SizeType& aIndex) const;
+
 		inline void Add(const ObjectType& aObject);
 		inline void Add(ObjectType&& aObject);
 		inline void Add(const GrowingArray& anArray);
@@ -267,7 +270,21 @@ namespace CU
 		return myArray[aIndex];
 	}
 
+	template<typename ObjectType, typename SizeType>
+	inline ObjectType& GrowingArray<ObjectType, SizeType>::At(const SizeType& aIndex)
+	{
+		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds");
+		return myArray[aIndex];
+	}
 
+	template<typename ObjectType, typename SizeType>
+	inline const ObjectType& GrowingArray<ObjectType, SizeType>::At(const SizeType& aIndex) const
+	{
+		assert(myIsInit == true && "GrowingArray not yet initialized.");
+		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds");
+		return myArray[aIndex];
+	}
 
 	template<typename ObjectType, typename SizeType>
 	inline void GrowingArray<ObjectType, SizeType>::Add(const ObjectType& aObject)

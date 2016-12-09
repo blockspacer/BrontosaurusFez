@@ -21,6 +21,8 @@ namespace CU
 
 	template<typename TYPE>
 	class Vector2;
+
+	
 }
 
 enum class eComponentType
@@ -44,6 +46,7 @@ enum class eComponentMessageType
 	eObjectiveCompleted,
 	eSetDamage,
 	eSetNavigationTarget,
+	eSetPath,
 };
 
 struct SComponentMessageData
@@ -60,6 +63,8 @@ struct SComponentMessageData
 		CU::Matrix33f myProjectileRotationMatrix;
 		CU::Matrix44f myMatrix44;
 		CU::Vector2f myVector2;
+		CU::GrowingArray<CU::Vector2f>* myVector2ListPointer;
+		
 		eComponentType myComponentTypeAdded;
 		ValueObserver<int>* myValueObserver;
 		unsigned short myUnsingedShort;

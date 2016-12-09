@@ -218,13 +218,19 @@
   <ItemGroup>
     <ClInclude Include="AudioSourceComponent.h" />
     <ClInclude Include="AudioSourceComponentManager.h" />
+    <ClInclude Include="CameraComponent.h" />
+    <ClInclude Include="CameraManager.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="ComponentMessage.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="InputController.h" />
+    <ClInclude Include="InputControllerManager.h" />
     <ClInclude Include="ModelComponent.h" />
     <ClInclude Include="ModelComponentManager.h" />
+    <ClInclude Include="MovementComponent.h" />
+    <ClInclude Include="MovementComponentManager.h" />
+    <ClInclude Include="NavigationComponent.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="ParticleEmitterComponent.h" />
     <ClInclude Include="ParticleEmitterComponentManager.h" />
@@ -235,12 +241,18 @@
   <ItemGroup>
     <ClCompile Include="AudioSourceComponent.cpp" />
     <ClCompile Include="AudioSourceComponentManager.cpp" />
+    <ClCompile Include="CameraComponent.cpp" />
+    <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="InputController.cpp" />
+    <ClCompile Include="InputControllerManager.cpp" />
     <ClCompile Include="ModelComponent.cpp" />
     <ClCompile Include="ModelComponentManager.cpp" />
+    <ClCompile Include="MovementComponent.cpp" />
+    <ClCompile Include="MovementComponentManager.cpp" />
+    <ClCompile Include="NavigationComponent.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="ParticleEmitterComponent.cpp" />
     <ClCompile Include="ParticleEmitterComponentManager.cpp" />

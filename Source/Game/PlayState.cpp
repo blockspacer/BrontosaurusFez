@@ -29,6 +29,16 @@
 #include "PostMaster/PopCurrentState.h"
 #include "PostMaster/Message.h"
 #include "PostMaster/Event.h"
+#include "CameraManager.h"
+#include "InputControllerManager.h"
+#include "MovementComponentManager.h"
+
+//Temp Includes
+#include "Components/InputController.h"
+#include "Components/NavigationComponent.h"
+#include "Components/MovementComponent.h"
+#include "CameraComponent.h"
+//
 
 extern CGame* globalGame;
 
@@ -54,6 +64,9 @@ CPlayState::~CPlayState()
 	CModelComponentManager::Destroy();
 	CAudioSourceComponentManager::Destroy();
 	CParticleEmitterComponentManager::Destroy();
+	CCameraManager::Destroy();
+	InputControllerManager::DestroyInstance();
+	MovementComponentManager::DestroyInstance();
 
 	PollingStation::NullifyLevelSpecificData();
 
@@ -72,7 +85,7 @@ void CPlayState::Load()
 	MODELCOMP_MGR.SetScene(&myScene);
 
 	myGUIManager = new GUI::GUIManager(false);
-	myGUIManager->Init("Models/gui/gui.fbx", true);
+	//myGUIManager->Init("Models/gui/gui.fbx", true);
 
 	CU::TimerManager timerMgr;
 	CU::TimerHandle handle = timerMgr.CreateTimer();
@@ -91,10 +104,37 @@ void CPlayState::Load()
 
 	SSlua::ArgumentList levelIndex(1);
 	levelIndex.Add(SSArgument(ssLuaNumber(myLevelIndex)));
-	LUA_WRAPPER.CallLuaFunction("GameLoad", levelIndex);
+	//LUA_WRAPPER.CallLuaFunction("GameLoad", levelIndex);
 
 	timerMgr.UpdateTimers();
+	//hue hue dags att fula ner play state - Alex(Absolut inte Marcus); // snälla slå Johan inte mig(Alex);
+	CGameObject* tempPlayerObject = globalGame->GetObjectManagerReference().CreateGameObject();
+	CGameObject* tempWorldObject = globalGame->GetObjectManagerReference().CreateGameObject();
+	CModelComponent* tempModelComponentForWorldObject = CModelComponentManager::GetInstance().CreateComponent("Models/Player/swarmerShip.fbx");
+	tempWorldObject->AddComponent(tempModelComponentForWorldObject);
+	CGameObject* tempCameraObject = globalGame->GetObjectManagerReference().CreateGameObject();
+	InputController* tempInputController = new InputController();
+	InputControllerManager::GetInstance().RegisterComponent(tempInputController);
+	tempPlayerObject->AddComponent(tempInputController);
+	MovementComponent* tempMovementController = new MovementComponent();
+	MovementComponentManager::GetInstance().RegisterComponent(tempMovementController);
+	tempPlayerObject->AddComponent(new NavigationComponent());
+	tempPlayerObject->AddComponent(tempMovementController);
+	CModelComponent* tempModelComponent = CModelComponentManager::GetInstance().CreateComponent("Models/Player/swarmerShip.fbx");
+	//myScene.AddModelInstance(tempModelComponent->GetModelInst());
+	tempPlayerObject->AddComponent(tempModelComponent);
+	//tempCameraObject->AddComponent(CCameraManager::GetInstance().CreateCameraComponent());
+	tempCameraObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, -10000.0f));
+	tempPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
+	CU::Matrix33f camerarotationMatrix = tempCameraObject->GetLocalTransform().GetRotation();
+	camerarotationMatrix.LookAt(tempCameraObject->GetWorlPosition(), tempPlayerObject->GetWorlPosition());
+	tempCameraObject->GetLocalTransform().SetRotation(camerarotationMatrix);
+	tempPlayerObject->AddComponent(tempCameraObject);
+	tempPlayerObject->GetLocalTransform() = CAMERA->GetTransformation();
+	tempPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 10));
+	tempPlayerObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 
+	//
 	SShape shape;
 	shape.shape = eModelShape::eSphere;
 	
@@ -108,12 +148,17 @@ void CPlayState::Load()
 
 void CPlayState::Init()
 {
-	
+	Load();
 }
 
 State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 {
-	myGUIManager->Update(aDeltaTime);
+	//ENGINE->SetCamera(&CCameraManager::GetInstance().GetActiveCamera());
+	CU::Matrix44f temp = CAMERA->GetTransformation();
+	temp.SetPosition(CU::Vector3f(0.0f, 0.0f, -1000.0f));
+	CAMERA->SetTransformation(temp);
+	myScene.SetCamera(CAMERA);
+	//myGUIManager->Update(aDeltaTime)
 
 	Audio::CAudioInterface* audio = Audio::CAudioInterface::GetInstance();
 	if (audio != nullptr)
@@ -123,7 +168,9 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 
 	
 	CParticleEmitterComponentManager::GetInstance().UpdateEmitters(aDeltaTime);
-	
+	InputControllerManager::GetInstance().Update(aDeltaTime);
+	MovementComponentManager::GetInstance().Update(aDeltaTime);
+
 	if (globalGame != nullptr)
 	{
 		globalGame->GetObjectManagerReference().DestroyObjectsWaitingForDestruction();
@@ -151,7 +198,7 @@ void CPlayState::Render()
 	msg.mySamplerState = eSamplerState::eClamp;
 	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
 
-	myGUIManager->Render();
+	//myGUIManager->Render();
 
 	msg.myBlendState = eBlendState::eNoBlend;
 	msg.myDepthStencilState = eDepthStencilState::eDefault;
@@ -168,7 +215,7 @@ void CPlayState::OnEnter()
 	Audio::CAudioInterface::GetInstance()->LoadBank("Audio/playState.bnk");
 	Audio::CAudioInterface::GetInstance()->PostEvent("PlayCoolSong");
 	//Audio::CAudioInterface::GetInstance()->PostEvent("PlayerMoving_Play");
-	myGUIManager->RestartRenderAndUpdate();
+	//myGUIManager->RestartRenderAndUpdate();
 }
 
 void CPlayState::OnExit()
@@ -231,4 +278,7 @@ void CPlayState::CreateManagersAndFactories()
 	CModelComponentManager::Create();
 	CParticleEmitterComponentManager::Create();
 	CParticleEmitterComponentManager::GetInstance().SetScene(&myScene);
+	CCameraManager::Create();
+	InputControllerManager::CreateInstance();
+	MovementComponentManager::CreateInstance();
 }

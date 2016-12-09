@@ -10,9 +10,8 @@ namespace CU
 	template<typename TYPE>
 	class Vector4;
 
-	//
-	// Vector3
-	//
+	template<typename TYPE>
+	class Vector2;
 
 	template<typename TYPE>
 	class Vector3
@@ -21,7 +20,7 @@ namespace CU
 		// Construction
 		Vector3(void);
 		Vector3(const Vector3 &aVector3);
-		//explicit Vector3(const Vector2<TYPE> &aVector2);
+		explicit Vector3(const Vector2<TYPE> &aVector2, const TYPE aZ = 0);
 		explicit Vector3(const Vector4<TYPE> &aVector4);
 		template<typename U> explicit Vector3(const Vector3<U> &aVector);
 		Vector3(const TYPE anX, const TYPE aY, const TYPE aZ);
@@ -178,13 +177,13 @@ namespace CU
 		myY = static_cast<TYPE>(0);
 		myZ = static_cast<TYPE>(0);
 	}
-	//VECTOR_TEMPLATE_DECL
-	//Vector3<TYPE>::Vector3(const Vector2<TYPE> &aVector2)
-	//{
-	//	myX = aVector2.x;
-	//	myY = aVector2.x;
-	//	myZ = static_cast<TYPE>(0);
-	//}
+	VECTOR_TEMPLATE_DECL
+	Vector3<TYPE>::Vector3(const Vector2<TYPE> &aVector2, const TYPE aZ)
+	{
+		myX = aVector2.x;
+		myY = aVector2.x;
+		myZ = aZ;
+	}
 
 
 	VECTOR_TEMPLATE_DECL
