@@ -28,14 +28,14 @@ CInputManager::CInputManager()
 	void* hingsten = CEngine::GetInstance()->GetWindow()->GetHinstance(),
 		* hunden = CEngine::GetInstance()->GetWindow()->GetHWND();
 
-	bool directInputSuccess = myDInputWrapper->Init(reinterpret_cast<HINSTANCE>(hingsten), reinterpret_cast<HWND>(hunden));
+	/*bool directInputSuccess =*/ myDInputWrapper->Init(reinterpret_cast<HINSTANCE>(hingsten), reinterpret_cast<HWND>(hunden));
 	//assert(directInputSuccess == true && "Failed to init direct input wrapper :(");
 
 	myXInputWrapper = new CU::XInputWrapper();
 	myXInputWrapper->Init(4);
 
 	myDInputWrapper->Init(reinterpret_cast<HINSTANCE>(CEngine::GetInstance()->GetWindow()->GetHinstance()), reinterpret_cast<HWND>(CEngine::GetInstance()->GetWindow()->GetHWND()));
-	myKeyDowns.Init(20, false);
+	myKeyDowns.Init(20);
 
 	myHasFocus = true;
 

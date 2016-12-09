@@ -33,7 +33,7 @@ private:
 
 	CU::InputWrapper* myDInputWrapper;
 	CU::XInputWrapper* myXInputWrapper;
-	CU::GrowingArray<CU::eKeys> myKeyDowns;
+	CU::GrowingArray<CU::eKeys, unsigned int, false> myKeyDowns;
 
 	bool myHasFocus;
 };

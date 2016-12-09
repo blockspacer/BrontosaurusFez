@@ -68,7 +68,7 @@ void CGame::Init()
 
 void CGame::Update(const CU::Time& aDeltaTime)
 {
-	bool isRunning = myStateStack.Update(aDeltaTime);
+	/*bool isRunning =*/ myStateStack.Update(aDeltaTime);
 	//if (isRunning == false)
 	//{
 	//	CEngine::GetInstance()->Shutdown();

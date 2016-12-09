@@ -18,13 +18,13 @@
     <ClInclude Include="SSlua\SSlua.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Precompiled\targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Precompiled\stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SSArgument\SSArgument.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -32,14 +32,11 @@
     <ClCompile Include="SSlua\SSlua.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Precompiled\stdafx.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="SSArgument\SSArgument.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Precompiled\ReadMe.txt" />
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

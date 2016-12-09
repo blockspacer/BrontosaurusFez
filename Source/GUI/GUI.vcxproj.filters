@@ -18,7 +18,6 @@
     <ClInclude Include="GUIPixelConstantBuffer.h" />
     <ClInclude Include="GUICursor\GUICursor.h" />
     <ClInclude Include="BarWidget\BarWidget.h" />
-    <ClInclude Include="Button\Button2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -36,6 +35,5 @@
     <ClCompile Include="RenderableWidgets\ModelWidget\ModelWidget.cpp" />
     <ClCompile Include="GUICursor\GUICursor.cpp" />
     <ClCompile Include="BarWidget\BarWidget.cpp" />
-    <ClCompile Include="Button\Button2D.cpp" />
   </ItemGroup>
 </Project>

@@ -71,7 +71,7 @@ void CParticleEmitterComponentManager::SetScene(CScene * aScene)
 
 void CParticleEmitterComponentManager::UpdateEmitters(const CU::Time & aDeltaTime)
 {
-	for (int i = 0; i < myComponents.Size(); ++i)
+	for (unsigned int i = 0; i < myComponents.Size(); ++i)
 	{
 		myComponents[i]->Update(aDeltaTime);
 	}

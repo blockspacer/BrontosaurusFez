@@ -60,21 +60,21 @@ void Init(int argc, char* argv[])
 
 		int Iwidth;
 		int Iheight;
-		bool Bfullscreen;
+		bool Bfullscreen = false;
 
 		if (CommandLineManager::GetInstance()->HasParameter("-width") == true)
 		{
 			std::string width;
 			width = CommandLineManager::GetInstance()->GetArgument("-width");
 			Iwidth = std::stoi(width);
-			engineParams.myWindowParams.Width = Iwidth;
+			engineParams.myWindowParams.Width = static_cast<unsigned short>(Iwidth);
 		}
 		if (CommandLineManager::GetInstance()->HasParameter("-height") == true)
 		{
 			std::string height;
 			height = CommandLineManager::GetInstance()->GetArgument("-height");
 			Iheight = std::stoi(height);
-			engineParams.myWindowParams.Height = Iheight;
+			engineParams.myWindowParams.Height = static_cast<unsigned short>(Iheight);
 		}
 		if (CommandLineManager::GetInstance()->HasParameter("-fullscreen") == true)
 		{

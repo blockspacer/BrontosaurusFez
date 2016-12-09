@@ -74,7 +74,7 @@ namespace CU
 	template<typename TYPE>
 	inline bool CU::PlaneVolume<TYPE>::Inside(const Point3<TYPE>& aPoint, const float aRadius) const
 	{
-		for (int i = 0; i < myPlanes.Size(); ++i)
+		for (unsigned int i = 0; i < myPlanes.Size(); ++i)
 		{
 			if (myPlanes[i].IsInside(aPoint, aRadius) == false)
 			{

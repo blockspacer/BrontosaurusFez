@@ -2,7 +2,7 @@
 #include "../CommonUtilities/GrowingArray.h"
 #include "TextBitmap.h"
 #include <d3d11.h>
-//#include "../FontEngine/FT_FontFacade.h"
+#include "../FontEngine/FT_FontFacade.h"
 
 namespace CU
 {
@@ -51,7 +51,7 @@ private:
 	CU::DynamicString myLastaString;
 	CTextBitmap myBitmap;
 
-	//CFT_FontFacade myFont;
+	CFT_FontFacade myFont;
 
 	ID3D11ShaderResourceView* aResourceView;
 };

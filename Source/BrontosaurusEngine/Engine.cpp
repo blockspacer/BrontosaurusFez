@@ -217,7 +217,7 @@ CEngine::~CEngine()
 }
 
 
-const CU::Time & CEngine::GetTime()
+CU::Time CEngine::GetTime()
 {
 	return myTimerManager->GetTimer(myTimerH).GetLifeTime();
 }

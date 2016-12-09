@@ -371,3 +371,4 @@ Bin/Text/carl_font_2.fnt
 /Bin/SplashScreen
 /Bin/Sprites/Text/dialogue.psd
 /Bin/Sprites/Text/convertToDDS.cmd
+*.dll

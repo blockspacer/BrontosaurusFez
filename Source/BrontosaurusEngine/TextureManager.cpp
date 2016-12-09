@@ -71,11 +71,24 @@ void CTextureManager::CreateTexture(const wchar_t* aTexturePath, CTexture* aNewT
 	}
 
 	result = DirectX::CreateDDSTextureFromFile(DEVICE, aTexturePath, &res, &texture);
-	CHECK_RESULT(result, "Could not create or load texture: %s", aTexturePath);
+	if (FAILED(result))
+	{
+		RESOURCES_LOG("Could not create or load texture: %ls", aTexturePath);
+		DL_PRINT_WARNING("Could not create or load texture: %ls", aTexturePath);
+		aNewTexture->myTexture = nullptr;
+		aNewTexture->myMipMapCount = 0;
+		aNewTexture->mySize.x = 0;
+		aNewTexture->mySize.y = 0;
+		return;
+	}
+	
+	//CHECK_RESULT(result, "Could not create or load texture: %s", aTexturePath);
 
 	texture->GetResource(&res);
 	result = res->QueryInterface<ID3D11Texture2D>(&pTextureInterface);
-	CHECK_RESULT(result, "Could not get texture interface: %s", aTexturePath);
+	//CHECK_RESULT(result, "Could not get texture interface: %s", aTexturePath);
+	RESOURCES_LOG("Could not get texture interface: %ls", aTexturePath);
+	DL_PRINT_WARNING("Could not get texture interface: %ls", aTexturePath);
 
 	D3D11_TEXTURE2D_DESC desc;
 	pTextureInterface->GetDesc(&desc);

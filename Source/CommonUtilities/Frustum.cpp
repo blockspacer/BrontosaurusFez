@@ -38,9 +38,9 @@ namespace CU
 		}
 
 
-		float AspectRatioX = aWidth / aHeight;
+		//float AspectRatioX = aWidth / aHeight;
 		float AspectRatioY = aHeight / aWidth;
-		float FovX = (aFOV + 15) * (M_PI / 180.0f);
+		float FovX = (aFOV + 15) * (static_cast<float>(M_PI) / 180.0f);
 		float TanFovX = std::tan(FovX / 2.0f);
 		float FovY = 2.0f * std::atan(TanFovX * AspectRatioY);
 

@@ -267,7 +267,7 @@ void CDXFramework::CreateDepthStencil(const int aWidth, const int aHeight, ID3D1
 
 DXGI_FORMAT CDXFramework::GetDepthResourceFormat(DXGI_FORMAT depthformat)
 {
-	DXGI_FORMAT resformat;
+	DXGI_FORMAT resformat = DXGI_FORMAT::DXGI_FORMAT_UNKNOWN;
 	switch (depthformat)
 	{
 	case DXGI_FORMAT::DXGI_FORMAT_D16_UNORM:
@@ -289,7 +289,7 @@ DXGI_FORMAT CDXFramework::GetDepthResourceFormat(DXGI_FORMAT depthformat)
 
 DXGI_FORMAT CDXFramework::GetDepthSRVFormat(DXGI_FORMAT depthformat)
 {
-	DXGI_FORMAT srvformat;
+	DXGI_FORMAT srvformat = DXGI_FORMAT::DXGI_FORMAT_UNKNOWN;
 	switch (depthformat)
 	{
 	case DXGI_FORMAT::DXGI_FORMAT_D16_UNORM:

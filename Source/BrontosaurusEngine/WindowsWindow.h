@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 #include "resource.h"
 
 struct SInitWindowParams;
@@ -7,7 +6,7 @@ struct SInitWindowParams;
 class CWindowsWindow
 {
 public:
-	CWindowsWindow(SInitWindowParams& aInitWindowParams);
+	CWindowsWindow(const SInitWindowParams& aInitWindowParams);
 	~CWindowsWindow();
 	void Update();
 	void Close();
@@ -18,8 +17,8 @@ public:
 	const CU::Vector2ui& GetWindowSize();
 
 private:
-	ATOM MyRegisterClass(HINSTANCE hInstance, std::wstring windowName);
-	BOOL InitInstance(SInitWindowParams& aInitWindowParams);
+	ATOM MyRegisterClass(HINSTANCE hInstance, const wchar_t* windowName);
+	BOOL InitInstance(const SInitWindowParams& aInitWindowParams);
 	HINSTANCE myHInst;
 	HWND myHWnd;
 	MSG myMsg;

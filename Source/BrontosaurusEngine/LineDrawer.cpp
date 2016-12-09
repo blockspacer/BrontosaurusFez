@@ -10,8 +10,8 @@
 #define LINE_2D_VERTEX_COUNT (myLines2D.Size() * 2)
 
 CLineDrawer::CLineDrawer()
-	: myLines2D(8, false)
-	, myLineHandles2D(8, false)
+	: myLines2D(8)
+	, myLineHandles2D(8)
 	, myVertexBuffer2D(nullptr)
 {
 	const unsigned int shaderBluePrint = EModelBluePrint::EModelBluePrint_Position;

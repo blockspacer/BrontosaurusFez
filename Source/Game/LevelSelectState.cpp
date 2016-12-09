@@ -2,7 +2,6 @@
 #include "LevelSelectState.h"
 #include "GUI\GUIManager\GUIManager.h"
 #include "../PostMaster/PostMaster.h"
-#include "LevelSelectLoader.h"
 #include "PostMaster\Message.h"
 #include "PostMaster\Event.h"
 

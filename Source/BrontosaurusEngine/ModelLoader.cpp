@@ -70,7 +70,7 @@ void CModelLoader::LoadModel(const char * aPath, CModel* aNewModel) //TODO: FIX 
 
 	if (res == false)
 	{
-		DL_ASSERT("Failed To load model with path: %s", aPath);
+		//DL_ASSERT("Failed To load model with path: %s", aPath);
 		return;
 	}
 
