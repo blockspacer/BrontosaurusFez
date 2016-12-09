@@ -40,9 +40,6 @@
     <ClCompile Include="WindowSizeChanged.cpp">
       <Filter>Events\WindowSizeChanged</Filter>
     </ClCompile>
-    <ClCompile Include="PushState.cpp">
-      <Filter>Events\PushState</Filter>
-    </ClCompile>
     <ClCompile Include="PushState.cpp" />
     <ClCompile Include="PushState.cpp" />
     <ClCompile Include="PushState.cpp" />
@@ -60,7 +57,9 @@
     <ClCompile Include="PushState.cpp" />
     <ClCompile Include="PushState.cpp" />
     <ClCompile Include="FocusChange.cpp" />
-    <ClCompile Include="PushState.cpp" />
+    <ClCompile Include="PushState.cpp">
+      <Filter>Events\PushState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Subscriber.h">
@@ -114,9 +113,6 @@
     <ClInclude Include="WindowSizeChanged.h">
       <Filter>Events\WindowSizeChanged</Filter>
     </ClInclude>
-    <ClInclude Include="PushState.h">
-      <Filter>Events\PushState</Filter>
-    </ClInclude>
     <ClInclude Include="Event\MouseClicked.h" />
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
@@ -158,7 +154,9 @@
     <ClInclude Include="FocusChange.h" />
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
-    <ClInclude Include="PushState.h" />
+    <ClInclude Include="PushState.h">
+      <Filter>Events\PushState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Events">

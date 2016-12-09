@@ -18,7 +18,7 @@ void PollingStation::NullifyLevelSpecificData()
 
 	if (worldCenterComponents.IsInitialized() == true)
 	{
-		worldCenterComponents.DeleteAll();
+		//worldCenterComponents.DeleteAll();
 		worldCenterComponents.Destroy();
 	}
 }

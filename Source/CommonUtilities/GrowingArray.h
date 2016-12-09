@@ -1,4 +1,5 @@
 #pragma once
+#pragma message("Growing Array compiled")
 #include <assert.h>
 #include <string.h> // memcpy
 #include <initializer_list>
@@ -15,8 +16,8 @@ namespace CU
 		using const_iterator = const ObjectType*;
 
 		GrowingArray();
-		GrowingArray(const SizeType aNrOfRecommendedItems);
-		explicit GrowingArray(const SizeType aNrOfRecommendedItems, const ObjectType& aItemToFillWith);
+		GrowingArray(const SizeType aStartCapacity);
+		explicit GrowingArray(const SizeType aStartCapacity, const ObjectType& aItemToFillWith);
 		GrowingArray(const std::initializer_list<ObjectType>& aInitializerList);
 		GrowingArray(const GrowingArray& aGrowingArray);
 		GrowingArray(GrowingArray&& aGrowingArray);
@@ -26,9 +27,9 @@ namespace CU
 		GrowingArray& operator=(const GrowingArray& aGrowingArray);
 		GrowingArray& operator=(GrowingArray&& aGrowingArray);
 
-		void Init(const SizeType aNrOfRecomendedItems);
-		void Init(const SizeType aNrOfRecomendedItems, const ObjectType& aItemToFillWith);
-		void ReInit(const SizeType aNrOfRecomendedItems);
+		void Init(const SizeType aStartCapacity);
+		void Init(const SizeType aStartCapacity, const ObjectType& aItemToFillWith);
+		void ReInit(const SizeType aStartCapacity);
 
 		inline ObjectType& operator[](const SizeType aIndex);
 		inline const ObjectType& operator[](const SizeType aIndex) const;
@@ -43,14 +44,14 @@ namespace CU
 
 		inline void Add(const ObjectType& aObject);
 		inline void Add(ObjectType&& aObject);
-		inline void Add(const GrowingArray& anArray);
+		inline void Add(const GrowingArray& aArray);
 		inline void Insert(const SizeType aIndex, const ObjectType& aObject);
 		inline void Remove(const ObjectType& aObject);
-		inline void RemoveAtIndex(const SizeType aItemNumber);
+		inline void RemoveAtIndex(const SizeType aIndex);
 		inline void DeleteCyclic(const ObjectType& aObject);
-		inline void DeleteCyclicAtIndex(const SizeType aItemNumber);
+		inline void DeleteCyclicAtIndex(const SizeType aIndex);
 		inline void RemoveCyclic(const ObjectType& aObject);
-		inline void RemoveCyclicAtIndex(const SizeType aItemNumber);
+		inline void RemoveCyclicAtIndex(const SizeType aIndex);
 		inline SizeType Find(const ObjectType& aObject);
 		inline bool Find(const ObjectType& aObject, SizeType& aReturnIndex);
 
@@ -67,6 +68,7 @@ namespace CU
 		inline void DeleteAll();
 
 		inline void Optimize();
+		inline void ShrinkToFit();
 
 		inline void Resize(const SizeType aNewSize);
 		inline void Resize(const SizeType aNewSize, const ObjectType& aObject);
@@ -97,15 +99,15 @@ namespace CU
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
-	GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::GrowingArray(const SizeType aNrOfRecommendedItems) : GrowingArray()
+	GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::GrowingArray(const SizeType aStartCapacity) : GrowingArray()
 	{
-		Init(aNrOfRecommendedItems);
+		Init(aStartCapacity);
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
-	GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::GrowingArray(const SizeType aNrOfRecommendedItems, const ObjectType& aItemToFillWith) : GrowingArray()
+	GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::GrowingArray(const SizeType aStartCapacity, const ObjectType& aItemToFillWith) : GrowingArray()
 	{
-		Init(aNrOfRecommendedItems, aItemToFillWith);
+		Init(aStartCapacity, aItemToFillWith);
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
@@ -152,7 +154,7 @@ namespace CU
 
 			mySize = aGrowingArray.mySize;
 
-			if (USE_SAFE_MODE == true)
+			if (USE_SAFE_MODE)
 			{
 				for (SizeType i = 0; i < aGrowingArray.Size(); ++i)
 				{
@@ -163,7 +165,7 @@ namespace CU
 			{
 				if (Size() > 0)
 				{
-					memcpy(myArray, aGrowingArray.myArray, sizeof(*myArray) * mySize);
+					memcpy(myArray, aGrowingArray.myArray, sizeof(ObjectType) * mySize);
 				}
 			}
 		}
@@ -191,38 +193,38 @@ namespace CU
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
-	void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Init(const SizeType aNrOfRecomendedItems)
+	void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Init(const SizeType aStartCapacity)
 	{
 		assert(IsInitialized() == false && "Growing array must not be initialized twice, consider ReInit");
-		assert(aNrOfRecomendedItems > 0 && "Growing array must not be inited with zero capacity");
+		assert(aStartCapacity > 0 && "Growing array must not be inited with zero capacity");
 
-		myArray = new ObjectType[aNrOfRecomendedItems];
-		myCapacity = aNrOfRecomendedItems;
+		myArray = new ObjectType[aStartCapacity];
+		myCapacity = aStartCapacity;
 		mySize = 0;
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
-	void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Init(const SizeType aNrOfRecomendedItems, const ObjectType& aItemToFillWith)
+	void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Init(const SizeType aStartCapacity, const ObjectType& aItemToFillWith)
 	{
 		assert(IsInitialized() == false && "Growing array must not be initialized twice, consider ReInit");
-		assert(aNrOfRecomendedItems > 0 && "Growing array must not be inited with zero capacity");
+		assert(aStartCapacity > 0 && "Growing array must not be inited with zero capacity");
 
-		Init(aNrOfRecomendedItems);
+		Init(aStartCapacity);
 
-		for (SizeType i = 0; i < aNrOfRecomendedItems; ++i)
+		for (SizeType i = 0; i < aStartCapacity; ++i)
 		{
 			Add(aItemToFillWith);
 		}
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
-	void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::ReInit(const SizeType aNrOfRecomendedItems)
+	void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::ReInit(const SizeType aStartCapacity)
 	{
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
-		assert(aNrOfRecomendedItems > 0 && "Growing array must not be inited with zero capacity");
+		assert(aStartCapacity > 0 && "Growing array must not be inited with zero capacity");
 
 		Destroy();
-		Init(aNrOfRecomendedItems);
+		Init(aStartCapacity);
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
@@ -314,7 +316,7 @@ namespace CU
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
-	void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Add(const GrowingArray& anArray)
+	void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Add(const GrowingArray& aArray)
 	{
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 
@@ -334,15 +336,20 @@ namespace CU
 			Reallocate(myCapacity * 2);
 		}
 
-		++mySize;
-
-		//TODO: use memmove if not safe mode
-
-		for (SizeType i = mySize - 1; i > aIndex; i--)
+		if (USE_SAFE_MODE)
 		{
-			myArray[i] = myArray[i - 1];
+			for (SizeType i = mySize; i > aIndex; i--)
+			{
+				myArray[i] = myArray[i - 1];
+			}
 		}
+		else
+		{
+			memmove(myArray + aIndex + 1, myArray + aIndex, sizeof(ObjectType) * (mySize - aIndex)); //if wrong, it's here
+		}
+
 		myArray[aIndex] = aObject;
+		++mySize;
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
@@ -358,20 +365,27 @@ namespace CU
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
-	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::RemoveAtIndex(const SizeType aItemNumber)
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::RemoveAtIndex(const SizeType aIndex)
 	{
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
-		assert((aItemNumber >= 0 && aItemNumber < mySize) && "Index out of bounds");
+		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds");
 
-		//TODO: use memmove if not safe mode
 
 		if (mySize > 1)
 		{
-			--mySize;
-			for (SizeType i = aItemNumber; i < myCapacity; ++i)
+			if (USE_SAFE_MODE)
 			{
-				myArray[i] = myArray[i + 1];
+				for (SizeType i = aIndex; i < myCapacity; ++i)
+				{
+					myArray[i] = myArray[i + 1];
+				}
 			}
+			else
+			{
+				memmove(myArray + aIndex, myArray + aIndex + 1, sizeof(ObjectType) * (mySize - aIndex)); //if wrong, it's here
+			}
+
+			--mySize;
 		}
 		else
 		{
@@ -392,18 +406,18 @@ namespace CU
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
-	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::DeleteCyclicAtIndex(const SizeType aItemNumber)
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::DeleteCyclicAtIndex(const SizeType aIndex)
 	{
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
-		assert((aItemNumber >= 0 && aItemNumber < mySize) && "Index out of bounds!");
+		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds!");
 
-		if (myArray[aItemNumber] != nullptr)
+		if (myArray[aIndex] != nullptr)
 		{
-			delete myArray[aItemNumber];
-			myArray[aItemNumber] = nullptr;
+			delete myArray[aIndex];
+			myArray[aIndex] = nullptr;
 		}
 
-		myArray[aItemNumber] = myArray[mySize - 1];
+		myArray[aIndex] = myArray[mySize - 1];
 		--mySize;
 	}
 
@@ -420,12 +434,12 @@ namespace CU
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
-	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::RemoveCyclicAtIndex(const SizeType aItemNumber)
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::RemoveCyclicAtIndex(const SizeType aIndex)
 	{
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
-		assert((aItemNumber >= 0 && aItemNumber < mySize) && "Index out of bounds!");
+		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds!");
 
-		myArray[aItemNumber] = myArray[mySize - 1];
+		myArray[aIndex] = myArray[mySize - 1];
 		myArray[mySize - 1] = ObjectType(); //trying this to fix sharedptr error, mvh carl
 		--mySize;
 	}
@@ -544,6 +558,12 @@ namespace CU
 	{
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		Reallocate(mySize);
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::ShrinkToFit()
+	{
+		Optimize();
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>

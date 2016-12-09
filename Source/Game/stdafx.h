@@ -15,6 +15,7 @@
 #define CARL_CREATE CollisionManager::Create()
 
 #include "../CommonUtilities/DL_Debug.h"
+#include "../CommonUtilities/GrowingArray.h"
 
 //#include "../CommonUtilities/MemoryLeekLogger.h"
 

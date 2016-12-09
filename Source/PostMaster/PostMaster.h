@@ -28,7 +28,7 @@ private:
 	PostMaster();
 	~PostMaster();
 
-	CU::StaticArray<CU::GrowingArray<Subscriber*, int>, MessageTypeLength> mySubscribers;
+	CU::StaticArray<CU::GrowingArray<Subscriber*, int, false>, MessageTypeLength> mySubscribers;
 
 	static PostMaster* ourInstance;
 public:
