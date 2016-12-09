@@ -66,7 +66,7 @@ void CGame::Init()
 	////myStateStack.PushState(new LevelSelectState(myStateStack));
 }
 
-void CGame::Update(const CU::Time& /*aDeltaTime*/)
+void CGame::Update(const CU::Time& aDeltaTime)
 {
 	bool isRunning = myStateStack.Update(aDeltaTime);
 	//if (isRunning == false)

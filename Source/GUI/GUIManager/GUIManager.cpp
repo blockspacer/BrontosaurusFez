@@ -290,13 +290,11 @@ void GUI::GUIManager::PauseRenderAndUpdate()
 	myShouldUpdate = false;
 	myShouldRender = false;
 
-	myWidgetContainer->SetVisibility(false);
-	myWidgetContainer->RemoveDebugLines();
-
-	//if (myCursor != nullptr)
-	//{
-	//	locMousePosition = myCursor->GetPosition();
-	//}
+	if (myWidgetContainer != nullptr)
+	{
+		myWidgetContainer->SetVisibility(false);
+		myWidgetContainer->RemoveDebugLines();
+	}
 }
 
 void GUI::GUIManager::RestartRenderAndUpdate()
