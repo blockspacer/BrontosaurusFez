@@ -39,12 +39,15 @@ void MovementComponent::Update(float aDeltaTime)
 			}
 
 			GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
-			CU::Matrix44f cameraTransformation = CAMERA->GetTransformation();
-			cameraTransformation.SetPosition(CU::Vector3f(0.0f, 0.0f, cameraTransformation.GetPosition().z));
-			cameraTransformation.Move(CU::Vector3f(GetParent()->GetLocalTransform().GetPosition().x, GetParent()->GetLocalTransform().GetPosition().y, 0.0f));
-			CAMERA->SetTransformation(cameraTransformation);
+			
 		}
 	}
+	GetParent()->GetLocalTransform().Move(CU::Vector3f(0.0, 0.0, 0.0));
+	GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
+	CU::Matrix44f cameraTransformation = CAMERA->GetTransformation();
+	cameraTransformation.SetPosition(CU::Vector3f(0.0f, 0.0f, cameraTransformation.GetPosition().z));
+	cameraTransformation.Move(CU::Vector3f(GetParent()->GetLocalTransform().GetPosition().x, GetParent()->GetLocalTransform().GetPosition().y, 0.0f));
+	CAMERA->SetTransformation(cameraTransformation);
 }
 
 void MovementComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
