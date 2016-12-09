@@ -36,6 +36,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealLauncher", "RealLaunche
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game\Game.vcxproj", "{3F2BE606-BD58-47CE-8191-F80BC500AA0C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FontEngine", "FontEngine\FontEngine.vcxproj", "{F9F6B9B2-70ED-419E-B66F-E4214036A7DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -131,6 +133,12 @@ Global
 		{3F2BE606-BD58-47CE-8191-F80BC500AA0C}.Release|x64.Build.0 = Release|x64
 		{3F2BE606-BD58-47CE-8191-F80BC500AA0C}.Retail|x64.ActiveCfg = Release|x64
 		{3F2BE606-BD58-47CE-8191-F80BC500AA0C}.Retail|x64.Build.0 = Release|x64
+		{F9F6B9B2-70ED-419E-B66F-E4214036A7DC}.Debug|x64.ActiveCfg = Debug|x64
+		{F9F6B9B2-70ED-419E-B66F-E4214036A7DC}.Debug|x64.Build.0 = Debug|x64
+		{F9F6B9B2-70ED-419E-B66F-E4214036A7DC}.Release|x64.ActiveCfg = Release|x64
+		{F9F6B9B2-70ED-419E-B66F-E4214036A7DC}.Release|x64.Build.0 = Release|x64
+		{F9F6B9B2-70ED-419E-B66F-E4214036A7DC}.Retail|x64.ActiveCfg = Release|x64
+		{F9F6B9B2-70ED-419E-B66F-E4214036A7DC}.Retail|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

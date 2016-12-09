@@ -5,6 +5,8 @@
 #include "../PostMaster/Event.h"
 #include "../CommonUtilities/EMouseButtons.h"
 #include "GameObject.h"
+#include <iostream>
+#include "../BrontosaurusEngine/Engine.h"
 
 InputController::InputController()
 {
@@ -14,6 +16,7 @@ InputController::InputController()
 
 InputController::~InputController()
 {
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);
 }
 
 void InputController::Update(float aDeltaTime)
@@ -37,12 +40,16 @@ eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButto
 {
 	if(aMouseButton == CU::eMouseButtons::LBUTTON)
 	{
-		CU::Vector2f convertedMousePosition = CU::Vector2f(aMousePosition.x * -1920.0f, aMousePosition.y * -1080.0f); // Ändra hårdkodningen memo!
-		CU::Vector2f halfScreenPosition = CU::Vector2f(1920.0f / 2.0f, 1080.0f / 2.0f);
+		CU::Vector2f convertedMousePosition = CU::Vector2f(aMousePosition.x * ENGINE->GetWindowSize().x, aMousePosition.y * ENGINE->GetWindowSize().y); // Ändra hårdkodningen memo!
+		std::cout <<  "Mouse Pos:" <<"X:" << convertedMousePosition.x << " Y: " << convertedMousePosition.y << std::endl;
+		CU::Vector2f halfScreenPosition = CU::Vector2f(ENGINE->GetWindowSize().x / 2.0f, ENGINE->GetWindowSize().y / 2.0f);
 		CU::Vector2f playerPosition = CU::Vector2f(GetParent()->GetWorlPosition().x, GetParent()->GetWorlPosition().y); // Don't forget to add conversions between vector 2 and 3! like serisously it is góing to save us so much time.
-
-		CU::Vector2f targetPosition = playerPosition + (convertedMousePosition + halfScreenPosition);
-		//targetPosition.x *= -1;
+		std::cout << "Player Pos:" << "X:" << playerPosition.x << " Y: " << playerPosition.y << std::endl;
+		std::cout << "Difference Pos:" << "X:" << (convertedMousePosition - halfScreenPosition).x << " Y: " << (convertedMousePosition - halfScreenPosition).y << std::endl;
+		CU::Vector2f targetPosition = playerPosition + CU::Vector2f(convertedMousePosition.x - halfScreenPosition.x, halfScreenPosition.y - convertedMousePosition.y);
+		//targetPosition.y *= -1;
+		std::cout << "Target Pos:" << "X:" << targetPosition.x << " Y: " << targetPosition.y << std::endl;
+		std::cout << "" << std::endl;
 		eComponentMessageType type = eComponentMessageType::eSetNavigationTarget;
 		SComponentMessageData data;
 		data.myVector2 = targetPosition;
