@@ -14,6 +14,7 @@ InputController::InputController()
 
 InputController::~InputController()
 {
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);
 }
 
 void InputController::Update(float aDeltaTime)
