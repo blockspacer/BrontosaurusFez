@@ -50,7 +50,7 @@ public:
 
 	eMessageReturn Recieve(const Message& aMessage) override;
 
-	bool GetIfLoadede() const;
+	inline bool IsLoaded() const;
 
 private:
 	void CreateManagersAndFactories();
@@ -60,18 +60,15 @@ private:
 	CGameObjectManager* myGameObjectManager;
 	GUI::GUIManager* myGUIManager;
 	StatManager* myStatManager;
-	CPointLightInstance* myPointLight; // Attached to camera for the moment
-	//Lights::SDirectionalLight myDirectionalLight;
-	//CU::GrowingArray<CPointLightInstance*> myPointLights;
 	ControllerComponent*  myControllerComponent;
 	CGameObject* myCameraObject;
-	std::atomic<bool>  myIsLoaded;
+	std::atomic_bool  myIsLoaded;
 
 	int myLevelIndex;
 	bool myShouldReturnToLevelSelect;
 };
 
-inline bool CPlayState::GetIfLoadede() const
+inline bool CPlayState::IsLoaded() const
 {
 	return myIsLoaded;
 }

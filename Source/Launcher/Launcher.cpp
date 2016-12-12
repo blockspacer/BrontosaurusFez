@@ -1,16 +1,5 @@
 #include "stdafx.h"
 
-#include <Game.h>
-#include <Engine.h>
-#include <CommandLineManager.h>
-#include <DL_Debug.h>
-#include <Time.h>
-#include "../PostMaster/PostMaster.h"
-#include "../BrontosaurusEngine/EDebugInfoDrawerFlags.h"
-#include "../Audio/AudioInterface.h"
-
-//#include <iostream>
-
 void Init(int argc, char* argv[]);
 unsigned int DebugDrawerFlags();
 

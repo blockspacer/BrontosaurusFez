@@ -48,7 +48,7 @@ State::eStatus CLoadState::Update(const CU::Time& aDeltaTime)
 {
 	myLoadingAnimation.Update(aDeltaTime);
 
-	if (myPlayState->GetIfLoadede() == true)
+	if (myPlayState->IsLoaded() == true)
 	{
 		myStateStack.SwapState(myPlayState);
 		CBackgroundLoadingManager::GetInstance().Clear();

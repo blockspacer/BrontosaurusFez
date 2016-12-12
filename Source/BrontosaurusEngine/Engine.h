@@ -1,5 +1,5 @@
 #pragma once
-#include "stdafx.h"
+//#include "stdafx.h"
 #include <functional>
 #include "../CommonUtilities/vector2.h"
 

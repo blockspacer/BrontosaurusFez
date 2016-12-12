@@ -30,12 +30,15 @@ namespace GUI
 
 			if (aDeltaTime.GetMilliseconds() < 60.f)
 			{
+				ModelWidget* modelWidget = static_cast<ModelWidget*>(*myDecoratedWidget);
+				if (modelWidget != nullptr)
+				{
+					CU::Matrix44f transformation = static_cast<GUI::ModelWidget*>(myDecoratedWidget)->myModelInstance->GetTransformation();
+					float& posY = transformation.GetPosition().y;
+					posY += aDeltaTime.GetMicroseconds() * -0.001f * 0.1f;
 
-				CU::Matrix44f transformation = static_cast<GUI::ModelWidget*>(myDecoratedWidget)->myModelInstance->GetTransformation();
-				float& posY = transformation.GetPosition().y;
-				posY += aDeltaTime.GetMicroseconds() * -0.001f * 0.1f;
-
-				static_cast<ModelWidget*>(myDecoratedWidget)->myModelInstance->SetTransformation(transformation);
+					modelWidget->myModelInstance->SetTransformation(transformation);
+				}
 			}
 
 
@@ -80,6 +83,7 @@ namespace GUI
 
 	void ButtonAnimation::OnMousePressed(const CU::Vector2f& aMousePosition, const CU::eMouseButtons aButton)
 	{
+		SUPRESS_UNUSED_WARNING(aMousePosition);
 		if (aButton == CU::eMouseButtons::LBUTTON)
 		{
 			myAnimationState = eAnimationState::eStarted;
@@ -88,13 +92,15 @@ namespace GUI
 
 	void ButtonAnimation::OnMouseReleased(const CU::Vector2f& aMousePosition, const CU::eMouseButtons aButton)
 	{
+		SUPRESS_UNUSED_WARNING(aMousePosition);
 		if (aButton == CU::eMouseButtons::LBUTTON)
 		{
 			myAnimationState = eAnimationState::eFlipped;
 		}
 	}
-	void ButtonAnimation::OnMouseEnter(const CU::Vector2f & aMousePosition)
+	void ButtonAnimation::OnMouseEnter(const CU::Vector2f& aMousePosition)
 	{
+		SUPRESS_UNUSED_WARNING(aMousePosition);
 		static_cast<ModelWidget*>(myDecoratedWidget)->SetFlashTimeToMax();
 	}
 }

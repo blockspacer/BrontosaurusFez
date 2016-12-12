@@ -20,6 +20,8 @@ namespace CU
 
 namespace GUI
 {
+	class ModelWidget;
+
 	class Widget
 	{
 	public:
@@ -60,6 +62,9 @@ namespace GUI
 		virtual const CU::DynamicString& GetName() const;
 
 		virtual void RemoveDebugLines() const;
+
+		operator Widget*() { return this; }
+		virtual operator ModelWidget*() { return nullptr; }
 
 	protected:
 		void AddDebugLines() const;

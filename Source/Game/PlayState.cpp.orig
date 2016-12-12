@@ -53,9 +53,11 @@ CPlayState::~CPlayState()
 {
 	SAFE_DELETE(myGameObjectManager);
 	SAFE_DELETE(myGUIManager);
+	//SAFE_DELETE(myControllerComponent);
 	CPhysicsManager::DestroyInstance();
 	
 	LoadManager::DestroyInstance();
+	//EnemyFactory::DestroyInstance(); TODO: delete this class
 	
 	CPhysicsManager::DestroyInstance();
 	CModelComponentManager::Destroy();
@@ -111,7 +113,11 @@ void CPlayState::Load()
 	CModelComponent* tempModelComponentForWorldObject2 = CModelComponentManager::GetInstance().CreateComponent("Models/Player/swarmerShip.fbx");
 	tempWorldObject2->GetLocalTransform().Move(CU::Vector3f(500.0f, 0.0f, 0.0f));
 	tempWorldObject2->AddComponent(tempModelComponentForWorldObject2);
-	myCameraObject = myGameObjectManager->CreateGameObject();
+<<<<<<< HEAD
+	CGameObject* tempCameraObject = myGameObjectManager->CreateGameObject();
+=======
+	myCameraObject = globalGame->GetObjectManagerReference().CreateGameObject();
+>>>>>>> 34cec76a3cf18e687bac0b3e8868a45bf2bac690
 	InputController* tempInputController = new InputController();
 	InputControllerManager::GetInstance().RegisterComponent(tempInputController);
 	tempPlayerObject->AddComponent(tempInputController);
@@ -151,10 +157,12 @@ void CPlayState::Load()
 
 void CPlayState::Init()
 {
+	//Load();
 }
 
 State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 {
+	//ENGINE->SetCamera(&CCameraManager::GetInstance().GetActiveCamera());
 	CU::Matrix44f cameraTransformation = CAMERA->GetTransformation();
 	CU::Matrix44f newRotation;
 	newRotation.SetPosition(CU::Vector3f(0.0f, -1000.0f, 0.0f));
@@ -162,16 +170,15 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	cameraTransformation.SetRotation(newRotation);
 	cameraTransformation.SetPosition(CU::Vector3f(0.0f, -1000.0f, 0.0f));
 	CAMERA->SetTransformation(cameraTransformation);
+	//CCameraManager::GetInstance().GetActiveCamera().SetTransformation(cameraTransformation);
 	myCameraObject->GetLocalTransform() = cameraTransformation;
 	CAMERA->SetTransformation(CCameraManager::GetInstance().GetActiveCamera().GetTransformation());
 	myScene.SetCamera(CAMERA);
-	//myGUIManager->Update(aDeltaTime);
+	//myGUIManager->Update(aDeltaTime)
 
 	Audio::CAudioInterface* audio = Audio::CAudioInterface::GetInstance();
 	if (audio != nullptr)
-	{
 		CAudioSourceComponentManager::GetInstance().Update();
-	}
 
 	CPhysicsManager::GetInstance().Update();
 
@@ -255,12 +262,12 @@ void CPlayState::NextLevel()
 	}
 	else
 	{
-		int levelIndex = (myLevelIndex > 0) ? myLevelIndex + 1 : 2; //this is ugly and was just for fun, sorry about that mvh Carl
+		int levelIndex = (myLevelIndex > 0) ? myLevelIndex + 1 : 2;
 		PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, ChangeLevel(levelIndex)));
 	}
 }
 
-eMessageReturn CPlayState::Recieve(const Message& aMessage)
+eMessageReturn CPlayState::Recieve(const Message & aMessage)
 {
 	return aMessage.myEvent.DoEvent(this);
 }

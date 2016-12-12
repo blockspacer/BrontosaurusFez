@@ -8,6 +8,8 @@ class CGameObject :	public CComponent
 {
 public:
 	friend class CGameObjectManager;
+	friend void CU::GrowingArray<CGameObject*>::DeleteAll();
+
 	CU::Matrix44f &GetLocalTransform();
 	CU::Matrix44f GetToWorldTransform();
 	CU::Vector3f GetWorlPosition();
