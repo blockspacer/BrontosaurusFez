@@ -111,7 +111,7 @@ void CPlayState::Load()
 	CGameObject* tempPlayerObject = globalGame->GetObjectManagerReference().CreateGameObject();
 	CGameObject* tempWorldObject = globalGame->GetObjectManagerReference().CreateGameObject();
 	CModelComponent* tempModelComponentForWorldObject = CModelComponentManager::GetInstance().CreateComponent("Models/Player/swarmerShip.fbx");
-	tempWorldObject->GetLocalTransform().Move(CU::Vector3f(0.0f, 500.0f, 0.0f));
+	tempWorldObject->GetLocalTransform().Move(CU::Vector3f(0.0f, 000.0f, 500.0f));
 	tempWorldObject->AddComponent(tempModelComponentForWorldObject);
 	CGameObject* tempWorldObject2 = globalGame->GetObjectManagerReference().CreateGameObject();
 	CModelComponent* tempModelComponentForWorldObject2 = CModelComponentManager::GetInstance().CreateComponent("Models/Player/swarmerShip.fbx");
