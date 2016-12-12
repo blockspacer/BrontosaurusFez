@@ -47,7 +47,7 @@ void MovementComponent::Update(float aDeltaTime)
 	CU::Matrix44f cameraTransformation = CAMERA->GetTransformation();
 	cameraTransformation.SetPosition(CU::Vector3f(0.0f, cameraTransformation.GetPosition().y, 0.0f));
 	cameraTransformation.Move(CU::Vector3f(GetParent()->GetLocalTransform().GetPosition().x, -GetParent()->GetLocalTransform().GetPosition().z,0.0f));
-	CAMERA->SetTransformation(cameraTransformation);
+	//CAMERA->SetTransformation(cameraTransformation);
 }
 
 void MovementComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)

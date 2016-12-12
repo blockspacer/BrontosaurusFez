@@ -117,7 +117,7 @@ void CPlayState::Load()
 	CModelComponent* tempModelComponentForWorldObject2 = CModelComponentManager::GetInstance().CreateComponent("Models/Player/swarmerShip.fbx");
 	tempWorldObject2->GetLocalTransform().Move(CU::Vector3f(500.0f, 0.0f, 0.0f));
 	tempWorldObject2->AddComponent(tempModelComponentForWorldObject2);
-	CGameObject* tempCameraObject = globalGame->GetObjectManagerReference().CreateGameObject();
+	myCameraObject = globalGame->GetObjectManagerReference().CreateGameObject();
 	InputController* tempInputController = new InputController();
 	InputControllerManager::GetInstance().RegisterComponent(tempInputController);
 	tempPlayerObject->AddComponent(tempInputController);
@@ -128,16 +128,17 @@ void CPlayState::Load()
 	CModelComponent* tempModelComponent = CModelComponentManager::GetInstance().CreateComponent("Models/Player/swarmerShip.fbx");
 	//myScene.AddModelInstance(tempModelComponent->GetModelInst());
 	tempPlayerObject->AddComponent(tempModelComponent);
-	tempCameraObject->AddComponent(CCameraManager::GetInstance().CreateCameraComponent());
-	tempCameraObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, -1000.0f));
+	myCameraObject->AddComponent(CCameraManager::GetInstance().CreateCameraComponent());
+	myCameraObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, -1000.0f));
 	tempPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
-	CU::Matrix33f camerarotationMatrix = tempCameraObject->GetLocalTransform().GetRotation();
-	camerarotationMatrix.LookAt(tempCameraObject->GetWorlPosition(), tempPlayerObject->GetWorlPosition());
-	tempCameraObject->GetLocalTransform().SetRotation(camerarotationMatrix);
-	tempPlayerObject->AddComponent(tempCameraObject);
+	CU::Matrix33f camerarotationMatrix = myCameraObject->GetLocalTransform().GetRotation();
+	camerarotationMatrix.LookAt(myCameraObject->GetWorlPosition(), tempPlayerObject->GetWorlPosition());
+	myCameraObject->GetLocalTransform().SetRotation(camerarotationMatrix);
+	tempPlayerObject->AddComponent(myCameraObject);
 	CU::Matrix44f cameraTransformation = CAMERA->GetTransformation();
 	cameraTransformation.Rotate(0.2f, CU::Axees::X);
 	cameraTransformation.Move(CU::Vector3f(0.0f, -100000.0f, 0.0f));
+	myCameraObject->GetLocalTransform() = cameraTransformation;
 	CAMERA->SetTransformation(cameraTransformation);
 	//tempPlayerObject->GetLocalTransform() = CAMERA->GetTransformation();
 	tempPlayerObject->GetLocalTransform().Move(CU::Vector3f(0.0f, 0.0f, 10));
@@ -169,6 +170,9 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	cameraTransformation.SetRotation(newRotation);
 	cameraTransformation.SetPosition(CU::Vector3f(0.0f, -1000.0f, 0.0f));
 	CAMERA->SetTransformation(cameraTransformation);
+	//CCameraManager::GetInstance().GetActiveCamera().SetTransformation(cameraTransformation);
+	myCameraObject->GetLocalTransform() = cameraTransformation;
+	CAMERA->SetTransformation(CCameraManager::GetInstance().GetActiveCamera().GetTransformation());
 	myScene.SetCamera(CAMERA);
 	//myGUIManager->Update(aDeltaTime)
 
