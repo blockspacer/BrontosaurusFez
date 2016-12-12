@@ -10,8 +10,6 @@ namespace GUI
 		TextWidget(Widget* aWidget, const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::DynamicString& aName, const CU::DynamicString& aText, const bool aIsVisible = true);
 		~TextWidget();
 
-		AUTO_IMPLEMENT_SIZE;
-
 	private:
 		
 	};

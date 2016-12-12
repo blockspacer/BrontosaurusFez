@@ -4,9 +4,6 @@
 
 namespace CU
 {
-
-	// Forward declarations
-	//
 	template<typename TYPE>
 	class Vector4;
 

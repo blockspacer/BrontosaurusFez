@@ -5,30 +5,21 @@
 #include "MainMenuState.h"
 #include "SplashScreen.h" //rename to state?
 
-#include "../BrontosaurusEngine/Engine.h"
-
 #include "LoadManager/LuaFunctions.h"
 #include "LuaWrapper/SSlua/SSlua.h"
 #include "CommonUtilities/CommandLineManager.h"
 
-
 #include "Engine.h"
 
-//tempinclude
-#include "LevelSelectState.h"
-
-CGame* globalGame = nullptr; //remove me :( magnus is arg
 
 CGame::CGame()
 {
-	globalGame = this;
 }
 
 
 CGame::~CGame()
 {
 	CBackgroundLoadingManager::DestroyInstance();
-	globalGame = nullptr;
 	SSlua::LuaWrapper::DestroyIfCreated();
 }
 
@@ -42,15 +33,15 @@ void CGame::Init()
 
 
 
-	//if (CommandLineManager::GetInstance()->HasParameter("-skipMainMenu") == true)
-	//{
+	if (CommandLineManager::GetInstance()->HasParameter("-skipMainMenu") == true)
+	{
 		myStateStack.PushState(new CPlayState(myStateStack, -1));
-	//}
-	//else
-	//{
-	//	myStateStack.PushState(new MainMenuState(myStateStack));
-	//}
-	//
+	}
+	else
+	{
+		myStateStack.PushState(new MainMenuState(myStateStack));
+	}
+	
 	//if (CommandLineManager::GetInstance()->HasParameter("-skipSplashScreen") == false)
 	//{
 	//	mySplashScreen = new CSplashScreen(myStateStack);
@@ -62,17 +53,15 @@ void CGame::Init()
 	//
 	//	myStateStack.PushState(mySplashScreen);
 	//}
-
-	////myStateStack.PushState(new LevelSelectState(myStateStack));
 }
 
 void CGame::Update(const CU::Time& aDeltaTime)
 {
-	/*bool isRunning =*/ myStateStack.Update(aDeltaTime);
-	//if (isRunning == false)
-	//{
-	//	CEngine::GetInstance()->Shutdown();
-	//}		
+	bool isRunning = myStateStack.Update(aDeltaTime);
+	if (isRunning == false)
+	{
+		CEngine::GetInstance()->Shutdown();
+	}		
 }
 
 void CGame::Render()

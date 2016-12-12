@@ -16,8 +16,6 @@ namespace GUI
 		void OnMouseExit(const CU::Vector2f& aMousePosition) override;
 		void Render() override;
 
-		AUTO_IMPLEMENT_SIZE;
-
 	private:
 		CU::Vector2f myOffsetToWidget;
 		bool myShowText;

@@ -4,100 +4,131 @@
 #include <RenderableWidgets/ModelWidget/ModelWidget.h>
 #include "../BrontosaurusEngine/ModelInstance.h"
 #include "../Audio/AudioInterface.h"
+#include "ButtonAnimation.h"
 
 namespace GUI
 {
-	ButtonDecorator::ButtonDecorator(const std::function<void(void)>& aFunction, const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::DynamicString& aName, Widget* aDecoratedWidget)
-		: WidgetDecorator(aDecoratedWidget, aPosition, aSize, aName, true)
-		, myAnimationState(eAnimationState::eInActive)
+	Button::Button(const std::function<void(void)>& aFunction, const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::DynamicString& aName)
+		: WidgetContainer(aPosition, aSize, aName, true)
+		//, myAnimationState(eAnimationState::eInActive)
 		, myFunction(aFunction)
-		, myAnimationTimer(*(new CU::Time(0.f))) //this is weird
+		//, myAnimationTimer(*(new CU::Time(0.f))) //this is weird
 		, myWasClicked(false)
 	{
 	}
 
-	ButtonDecorator::ButtonDecorator(const std::function<void(void)>& aFunction, const CU::Vector2f& aPosition, const CU::Vector2f& aSize, Widget* aDecoratedWidget)
-		: ButtonDecorator(aFunction, aPosition, aSize, aDecoratedWidget->GetName() + "_ButtonDecorator", aDecoratedWidget)
+	Button::~Button()
 	{
+		//delete &myAnimationTimer;
 	}
 
-	ButtonDecorator::~ButtonDecorator()
+	void Button::AddWidget(const CU::DynamicString& aWidgetName, Widget* aWidget)
 	{
-		delete &myAnimationTimer;
-	}
+		WidgetContainer::AddWidget(aWidgetName, aWidget);
 
-	void ButtonDecorator::Update(const CU::Time& aDeltaTime)
-	{
-		WidgetDecorator::Update(aDeltaTime);
-
-		const float MilliSecondsPerFrame = 41.7f * .5f;
-
-		if (myAnimationState == eAnimationState::eStarted)
+		if (aWidgetName == "Animation")
 		{
-			myAnimationTimer += aDeltaTime;
-
-			if (aDeltaTime.GetMilliseconds() < 60.f)
+			auto onAnimationDone = [this]
 			{
-				CU::Matrix44f transformation = static_cast<ModelWidget*>(myDecoratedWidget)->myModelInstance->GetTransformation();
-				float& posY = transformation.GetPosition().y;
-				posY += aDeltaTime.GetMicroseconds() * -0.001f * 0.1f;
+				if (myWasClicked == true)
+				{
+					RunCallbackFunction();
+					myWasClicked = false;
+				}
+			};
 
-				static_cast<ModelWidget*>(myDecoratedWidget)->myModelInstance->SetTransformation(transformation);
-			}
-
-
-			if (myAnimationTimer.GetMilliseconds() > MilliSecondsPerFrame * 3.f)
-			{
-				myAnimationState = eAnimationState::ePaused;
-				myAnimationTimer.Reset();
-			}
-		}
-		else if (myAnimationState == eAnimationState::eFlipped)
-		{
-			myAnimationTimer += aDeltaTime;
-			CU::Matrix44f transformation = static_cast<ModelWidget*>(myDecoratedWidget)->myModelInstance->GetTransformation();
-
-			float& posY = transformation.GetPosition().y;
-			posY += aDeltaTime.GetMicroseconds() * 0.001f * 0.1f;
-			static_cast<ModelWidget*>(myDecoratedWidget)->myModelInstance->SetTransformation(transformation);
-
-			if (posY >= myResetPosition)//(myAnimationTimer.GetMilliseconds() > MilliSecondsPerFrame * 3.f)
-			{
-				myAnimationState = eAnimationState::eDone;
-				myAnimationTimer.Reset();
-			}
-		}
-		else if (myAnimationState == eAnimationState::eDone)
-		{
-			myAnimationState = eAnimationState::eInActive;
-			myAnimationTimer.Reset();
-			
-			if (myWasClicked == true)
-			{
-				RunCallbackFunction();
-				myWasClicked = false;
-			}
+			static_cast<ButtonAnimation*>(aWidget)->SetCallbackFunction(onAnimationDone);
 		}
 	}
 
-	void ButtonDecorator::OnMousePressed(const CU::Vector2f& aMousePosition, CU::eMouseButtons aButton)
+	Widget* Button::MouseIsOver(const CU::Vector2f & aPosition)
 	{
-		WidgetDecorator::OnMousePressed(aMousePosition, aButton);
+		return Widget::MouseIsOver(aPosition);
+	}
+
+	void Button::Update(const CU::Time& aDeltaTime)
+	{
+		WidgetContainer::Update(aDeltaTime);
+
+		//const float MilliSecondsPerFrame = 41.7f * .5f;
+
+		//if (myAnimationState == eAnimationState::eStarted)
+		//{
+		//	//myAnimationTimer += aDeltaTime;
+
+		//	//if (aDeltaTime.GetMilliseconds() < 60.f)
+		//	//{
+
+		//	//	CU::Matrix44f transformation = static_cast<ModelWidget*>(static_cast<ButtonAnimation*>(FindWidget("Animation"))->myDecoratedWidget)->myModelInstance->GetTransformation();
+		//	//	float& posY = transformation.GetPosition().y;
+		//	//	posY += aDeltaTime.GetMicroseconds() * -0.001f * 0.1f;
+
+		//	//	static_cast<ModelWidget*>(FindWidget("Animation"))->myModelInstance->SetTransformation(transformation);
+		//	//}
+
+
+		//	//if (myAnimationTimer.GetMilliseconds() > MilliSecondsPerFrame * 3.f)
+		//	//{
+		//	//	myAnimationState = eAnimationState::ePaused;
+		//	//	myAnimationTimer.Reset();
+		//	//}
+		//}
+		//else if (myAnimationState == eAnimationState::eFlipped)
+		//{
+		//	//myAnimationTimer += aDeltaTime;
+		//	//CU::Matrix44f transformation = static_cast<ModelWidget*>(FindWidget("Animation"))->myModelInstance->GetTransformation();
+
+		//	//float& posY = transformation.GetPosition().y;
+		//	//posY += aDeltaTime.GetMicroseconds() * 0.001f * 0.1f;
+		//	//static_cast<ModelWidget*>(FindWidget("Animation"))->myModelInstance->SetTransformation(transformation);
+
+		//	//if (posY >= myResetPosition)//(myAnimationTimer.GetMilliseconds() > MilliSecondsPerFrame * 3.f)
+		//	//{
+		//	//	myAnimationState = eAnimationState::eDone;
+		//	//	myAnimationTimer.Reset();
+		//	//}
+		//}
+		//else if (myAnimationState == eAnimationState::eDone)
+		//{
+		//	//myAnimationState = eAnimationState::eInActive;
+		//	//myAnimationTimer.Reset();
+		//	
+		//	//if (myWasClicked == true)
+		//	//{
+		//	//	RunCallbackFunction();
+		//	//	myWasClicked = false;
+		//	//}
+		//}
+	}
+
+	void Button::OnMousePressed(const CU::Vector2f& aMousePosition, CU::eMouseButtons aButton)
+	{
+		//WidgetContainer::OnMousePressed(aMousePosition, aButton);
+		for (Widget* child : myOrderedWidgets)
+		{
+			child->OnMousePressed(aMousePosition, aButton);
+		}
 
 		if (aButton == CU::eMouseButtons::LBUTTON)
 		{
 			Audio::CAudioInterface::GetInstance()->PostEvent("ButtonClick");
 
-			myAnimationState = eAnimationState::eStarted;
+			//myAnimationState = eAnimationState::eStarted;
 			myWasClicked = true;
 		}
 	}
 
-	void ButtonDecorator::OnMouseReleased(const CU::Vector2f& aMousePosition, const CU::eMouseButtons aButton)
+	void Button::OnMouseReleased(const CU::Vector2f& aMousePosition, const CU::eMouseButtons aButton)
 	{
+		//WidgetContainer::OnMouseReleased(aMousePosition, aButton);
+		for (Widget* child : myOrderedWidgets)
+		{
+			child->OnMouseReleased(aMousePosition, aButton);
+		}
+
 		if (aButton == CU::eMouseButtons::LBUTTON)
 		{
-			myAnimationState = eAnimationState::eFlipped;
+			//myAnimationState = eAnimationState::eFlipped;
 
 			if (IsInside(aMousePosition) == false)
 			{
@@ -106,24 +137,24 @@ namespace GUI
 		}
 	}
 
-	void ButtonDecorator::OnMouseMove(const CU::Vector2f& aMousePosition)
+	void Button::OnMouseMove(const CU::Vector2f& aMousePosition)
 	{
-		WidgetDecorator::OnMouseMove(aMousePosition);
+		WidgetContainer::OnMouseMove(aMousePosition);
 	}
 
-	void ButtonDecorator::OnMouseEnter(const CU::Vector2f& aMousePosition)
+	void Button::OnMouseEnter(const CU::Vector2f& aMousePosition)
 	{
 		Audio::CAudioInterface::GetInstance()->PostEvent("ButtonHover");
-		static_cast<ModelWidget*>(myDecoratedWidget)->SetFlashTimeToMax();
-		WidgetDecorator::OnMouseEnter(aMousePosition);
+		//static_cast<ModelWidget*>(FindWidget("Animation"))->SetFlashTimeToMax();
+		WidgetContainer::OnMouseEnter(aMousePosition);
 	}
 
-	void ButtonDecorator::OnMouseExit(const CU::Vector2f& aMousePosition)
+	void Button::OnMouseExit(const CU::Vector2f& aMousePosition)
 	{
-		WidgetDecorator::OnMouseExit(aMousePosition);
+		WidgetContainer::OnMouseExit(aMousePosition);
 	}
 
-	void ButtonDecorator::RunCallbackFunction()
+	void Button::RunCallbackFunction()
 	{
 		if (myWasClicked == true && myFunction != nullptr)
 		{

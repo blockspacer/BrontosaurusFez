@@ -3,25 +3,25 @@
 #include "GameObject.h"
 #include "ComponentManager.h"
 
-CObjectManager::CObjectManager()
+CGameObjectManager::CGameObjectManager()
 {
 	InitGrowingArrays();
 }
 
-void CObjectManager::InitGrowingArrays()
+void CGameObjectManager::InitGrowingArrays()
 {
 	myMatrices.Init(128);
 	myObjectsAboutToBeDestroyed.Init(2);
 	myObjectsCreated.Init(1024);
 }
 
-CObjectManager::~CObjectManager()
+CGameObjectManager::~CGameObjectManager()
 {
 	ClearAll();
 }
 
 
-CGameObject* CObjectManager::CreateGameObject(const CU::Matrix44f& aMatrix)
+CGameObject* CGameObjectManager::CreateGameObject(const CU::Matrix44f& aMatrix)
 {
 	CGameObject* object;
 	object = new CGameObject(*this);
@@ -35,12 +35,12 @@ CGameObject* CObjectManager::CreateGameObject(const CU::Matrix44f& aMatrix)
 	return  object;
 }
 
-CU::Matrix44f& CObjectManager::GetTransform(CGameObject& aGameObject)
+CU::Matrix44f& CGameObjectManager::GetTransform(CGameObject& aGameObject)
 {
 	return myMatrices[aGameObject.myTransformId];
 }
 
-void CObjectManager::DestroyObject(CGameObject* aGameObject)
+void CGameObjectManager::DestroyObject(CGameObject* aGameObject)
 {
 	if (aGameObject == nullptr)
 	{
@@ -57,12 +57,12 @@ void CObjectManager::DestroyObject(CGameObject* aGameObject)
 	delete aGameObject;
 }
 
-void CObjectManager::AddObjectForDestruction(CGameObject* aGameObject)
+void CGameObjectManager::AddObjectForDestruction(CGameObject* aGameObject)
 {
 	myObjectsAboutToBeDestroyed.Add(aGameObject);
 }
 
-void CObjectManager::DestroyObjectsWaitingForDestruction()
+void CGameObjectManager::DestroyObjectsWaitingForDestruction()
 {
 	for (unsigned int i = 0; i < myObjectsAboutToBeDestroyed.Size(); ++i)
 	{
@@ -71,7 +71,7 @@ void CObjectManager::DestroyObjectsWaitingForDestruction()
 	myObjectsAboutToBeDestroyed.RemoveAll();
 }
 
-void CObjectManager::ClearAll()
+void CGameObjectManager::ClearAll()
 {
 	for (unsigned int i = 0; i < myObjectsCreated.Size(); ++i)
 	{
@@ -82,7 +82,7 @@ void CObjectManager::ClearAll()
 	myObjectsCreated.RemoveAll();
 }
 
-void CObjectManager::DumpAllAndReInit()
+void CGameObjectManager::DumpAllAndReInit()
 {
 	myMatrices.Destroy();
 	myFreeMatrices.Clear();
@@ -100,7 +100,7 @@ void CObjectManager::DumpAllAndReInit()
 	InitGrowingArrays();
 }
 
-ComponentId CObjectManager::CreateMatrix(const CU::Matrix44f& aMatrix44f)
+ComponentId CGameObjectManager::CreateMatrix(const CU::Matrix44f& aMatrix44f)
 {
 	if (myFreeMatrices.Size() == 0)
 	{

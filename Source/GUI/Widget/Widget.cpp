@@ -157,11 +157,6 @@ namespace GUI
 		return myImplementation->myName;
 	}
 
-	int Widget::SizeOfThis() const
-	{
-		return sizeof(*this) + sizeof(*myImplementation);
-	}
-
 	void Widget::SetParent(Widget* aParent)
 	{
 		myImplementation->myParent = aParent;

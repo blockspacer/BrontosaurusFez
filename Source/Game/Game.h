@@ -21,16 +21,16 @@ public:
 	void Update(const CU::Time& aDeltaTime);
 	void Render();
 
-	inline CObjectManager& GetObjectManagerReference();
+	inline CGameObjectManager& GetObjectManagerReference();
 
 private:
-	CObjectManager myObjectManager;
+	CGameObjectManager myObjectManager;
 	StateStack myStateStack;
 	CSplashScreen* mySplashScreen;
 
 };
 
-inline CObjectManager& CGame::GetObjectManagerReference()
+inline CGameObjectManager& CGame::GetObjectManagerReference()
 {
 	return myObjectManager;
 }

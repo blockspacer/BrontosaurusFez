@@ -27,8 +27,8 @@ MainMenuState::~MainMenuState()
 
 void MainMenuState::Init()
 {
-	//myGUIManager = new GUI::GUIManager(true);
-	//myGUIManager->Init("Models/mainMenu/mainMenu.fbx", true);
+	myGUIManager = new GUI::GUIManager(true);
+	myGUIManager->Init("Models/mainMenu/mainMenu.fbx", true);
 	//
 	//mySkyBox = new CSkybox();
 	//mySkyBox->Init();
@@ -36,9 +36,9 @@ void MainMenuState::Init()
 	//CBackgroundLoadingManager::GetInstance().CreateStateToLoad(myStateStack, -1);
 }
 
-State::eStatus MainMenuState::Update(const CU::Time& /*aDeltaTime*/)
+State::eStatus MainMenuState::Update(const CU::Time& aDeltaTime)
 {
-	//myGUIManager->Update(aDeltaTime);
+	myGUIManager->Update(aDeltaTime);
 
 	return myStatus;
 }
@@ -58,7 +58,7 @@ void MainMenuState::Render()
 	//
 	//RENDERER.AddRenderMessage(new SRenderSkyboxMessage(msg));
 	//
-	//myGUIManager->Render();
+	myGUIManager->Render();
 }
 
 void MainMenuState::OnEnter()
@@ -66,11 +66,6 @@ void MainMenuState::OnEnter()
 	//bool result;
 	//result = Audio::CAudioInterface::GetInstance()->LoadBank("Audio/mainMenu.bnk");
 	//Audio::CAudioInterface::GetInstance()->PostEvent("PlayBasSong");
-	//if (myGUIManager == nullptr)
-	//{
-	//	myGUIManager = new GUI::GUIManager(true);
-	//	myGUIManager->Init("Models/mainMenu/mainMenu.fbx", true);
-	//}
 	//
 	//if (myIsGoingToLevelSelect == false)
 	//{
@@ -78,8 +73,8 @@ void MainMenuState::OnEnter()
 	//}
 	//else
 	//{
-	//	PostMaster::GetInstance().InsertSubscriber(myGUIManager, eMessageType::eMouseMessage);
-	//	PostMaster::GetInstance().InsertSubscriber(myGUIManager, eMessageType::eKeyboardMessage);
+		PostMaster::GetInstance().InsertSubscriber(myGUIManager, eMessageType::eMouseMessage);
+		PostMaster::GetInstance().InsertSubscriber(myGUIManager, eMessageType::eKeyboardMessage);
 	//}
 	//
 	//myIsGoingToLevelSelect = false;
@@ -91,6 +86,7 @@ void MainMenuState::OnEnter()
 
 void MainMenuState::OnExit()
 {
+	
 	//Audio::CAudioInterface::GetInstance()->PostEvent("StopBasSong");
 	//Audio::CAudioInterface::GetInstance()->PostEvent("switchBank");
 	//Audio::CAudioInterface::GetInstance()->UnLoadBank("Audio/menMenu.bnk");
@@ -102,8 +98,8 @@ void MainMenuState::OnExit()
 	//}
 	//else
 	//{
-	//	PostMaster::GetInstance().UnSubscribe(myGUIManager, eMessageType::eMouseMessage);
-	//	PostMaster::GetInstance().UnSubscribe(myGUIManager, eMessageType::eKeyboardMessage);
+	PostMaster::GetInstance().UnSubscribe(myGUIManager, eMessageType::eMouseMessage);
+	PostMaster::GetInstance().UnSubscribe(myGUIManager, eMessageType::eKeyboardMessage);
 	//}
 	//
 	//myGUIManager->SetSkipEmissive(true);

@@ -38,40 +38,17 @@ namespace GUI
 		virtual const CU::Vector2f& GetSize() const;
 		virtual bool IsVisible() const;
 
-
 		virtual void OnMouseDrag(const CU::Vector2f& aDisplacement, const CU::eMouseButtons aButton) override;
-
-
 		virtual void OnGotFocus() override;
-
-
 		virtual void OnLostFocus() override;
-
-
 		//virtual Widget* MouseIsOver(const CU::Vector2f& aPosition) override;
-
-
 		virtual void SetWorldPosition(const CU::Vector2f& aPosition) override;
-
-
 		virtual void SetLocalPosition(const CU::Vector2f& aPosition) override;
-
-
 		virtual void SetVisibilityRecursive(const bool aVisibility) override;
-
-
 		virtual void SetName(const CU::DynamicString& aName) override;
-
-
 		virtual bool HasDebugLines() const override;
-
-
 		virtual void RemoveDebugLines() const override;
 
-
-		virtual int SizeOfThis() const override;
-
-		//private:
 	protected:
 		Widget* myDecoratedWidget;
 	};

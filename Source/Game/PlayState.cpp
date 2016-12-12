@@ -40,8 +40,6 @@
 #include "CameraComponent.h"
 //
 
-extern CGame* globalGame;
-
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
 	, myLevelIndex(aLevelIndex)
@@ -53,6 +51,7 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 
 CPlayState::~CPlayState()
 {
+	SAFE_DELETE(myGameObjectManager);
 	SAFE_DELETE(myGUIManager);
 	//SAFE_DELETE(myControllerComponent);
 	CPhysicsManager::DestroyInstance();
@@ -70,22 +69,19 @@ CPlayState::~CPlayState()
 
 	PollingStation::NullifyLevelSpecificData();
 
-	if (globalGame != nullptr)
-	{
-		globalGame->GetObjectManagerReference().DumpAllAndReInit();
-	}
-
 	CComponentManager::DestroyInstance();
 }
 
 void CPlayState::Load()
 {
+	myGameObjectManager = new CGameObjectManager();
+	myGUIManager = new GUI::GUIManager();
+	//myGUIManager->Init("Models/gui/gui.fbx", true);
+
 	CreateManagersAndFactories();
 
 	MODELCOMP_MGR.SetScene(&myScene);
 
-	myGUIManager = new GUI::GUIManager(false);
-	//myGUIManager->Init("Models/gui/gui.fbx", true);
 
 	CU::TimerManager timerMgr;
 	CU::TimerHandle handle = timerMgr.CreateTimer();
@@ -108,16 +104,16 @@ void CPlayState::Load()
 
 	timerMgr.UpdateTimers();
 	//hue hue dags att fula ner play state - Alex(Absolut inte Marcus); // snälla slå Johan inte mig(Alex);
-	CGameObject* tempPlayerObject = globalGame->GetObjectManagerReference().CreateGameObject();
-	CGameObject* tempWorldObject = globalGame->GetObjectManagerReference().CreateGameObject();
+	CGameObject* tempPlayerObject = myGameObjectManager->CreateGameObject();
+	CGameObject* tempWorldObject = myGameObjectManager->CreateGameObject();
 	CModelComponent* tempModelComponentForWorldObject = CModelComponentManager::GetInstance().CreateComponent("Models/Player/swarmerShip.fbx");
 	tempWorldObject->GetLocalTransform().Move(CU::Vector3f(0.0f, 500.0f, 0.0f));
 	tempWorldObject->AddComponent(tempModelComponentForWorldObject);
-	CGameObject* tempWorldObject2 = globalGame->GetObjectManagerReference().CreateGameObject();
+	CGameObject* tempWorldObject2 = myGameObjectManager->CreateGameObject();
 	CModelComponent* tempModelComponentForWorldObject2 = CModelComponentManager::GetInstance().CreateComponent("Models/Player/swarmerShip.fbx");
 	tempWorldObject2->GetLocalTransform().Move(CU::Vector3f(500.0f, 0.0f, 0.0f));
 	tempWorldObject2->AddComponent(tempModelComponentForWorldObject2);
-	CGameObject* tempCameraObject = globalGame->GetObjectManagerReference().CreateGameObject();
+	CGameObject* tempCameraObject = myGameObjectManager->CreateGameObject();
 	InputController* tempInputController = new InputController();
 	InputControllerManager::GetInstance().RegisterComponent(tempInputController);
 	tempPlayerObject->AddComponent(tempInputController);
@@ -153,7 +149,7 @@ void CPlayState::Load()
 
 void CPlayState::Init()
 {
-	Load();
+	//Load();
 }
 
 State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
@@ -176,10 +172,7 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	InputControllerManager::GetInstance().Update(aDeltaTime);
 	MovementComponentManager::GetInstance().Update(aDeltaTime);
 
-	if (globalGame != nullptr)
-	{
-		globalGame->GetObjectManagerReference().DestroyObjectsWaitingForDestruction();
-	}
+	myGameObjectManager->DestroyObjectsWaitingForDestruction();
 
 	return myStatus;
 }
@@ -238,16 +231,6 @@ void CPlayState::OnExit()
 		audioInterface->UnLoadBank("Audio/playState.bnk");
 	}
 	myGUIManager->PauseRenderAndUpdate();
-}
-
-void CPlayState::SetControllerComponent(ControllerComponent* /*aControllerComponent*/)
-{
-	//myControllerComponent = aControllerComponent;
-}
-
-void CPlayState::ValueChanged(const int /*aValue*/)
-{
-
 }
 
 void CPlayState::Pause()

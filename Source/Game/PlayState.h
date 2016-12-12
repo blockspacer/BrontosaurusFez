@@ -21,6 +21,7 @@ namespace GUI
 
 class ControllerComponent;
 class CGameObject;
+class CGameObjectManager;
 class WeaponSystemComponent;
 class EnemyAIControllerComponent;
 class CollisionManager;
@@ -31,7 +32,7 @@ class DeathComponentFactory;
 class StatManager;
 class CTextInstance;
 
-class CPlayState : public State, public Subscriber, public ValueObserver<int>
+class CPlayState : public State, public Subscriber
 {
 public:
 	CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect = false);
@@ -43,9 +44,6 @@ public:
 	void Render() override;
 	void OnEnter() override;
 	void OnExit() override;
-	void SetControllerComponent(ControllerComponent* aControllerComponent);
-	//eMessageReturn Recieve(const Message & aMessage);
-	void ValueChanged(const int aValue) override;
 	void Pause();
 
 	void NextLevel();
@@ -56,9 +54,10 @@ public:
 
 private:
 	void CreateManagersAndFactories();
-	//CCameraManager myCameraManager;
 
 	CScene myScene;
+	
+	CGameObjectManager* myGameObjectManager;
 	GUI::GUIManager* myGUIManager;
 	StatManager* myStatManager;
 	CPointLightInstance* myPointLight; // Attached to camera for the moment

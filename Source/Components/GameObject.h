@@ -7,7 +7,7 @@
 class CGameObject :	public CComponent
 {
 public:
-	friend class CObjectManager;
+	friend class CGameObjectManager;
 	CU::Matrix44f &GetLocalTransform();
 	CU::Matrix44f GetToWorldTransform();
 	CU::Vector3f GetWorlPosition();
@@ -26,12 +26,12 @@ public:
 private:
 	void Destroy() override;
 	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData &aMessageData) override;
-	CGameObject(CObjectManager& aManager);
+	CGameObject(CGameObjectManager& aManager);
 	~CGameObject();
 
 	ComponentId myTransformId;
 	CU::GrowingArray<CComponent*> myComponents;
-	CObjectManager& myManager;
+	CGameObjectManager& myManager;
 	CU::DynamicString myName;
 };
 

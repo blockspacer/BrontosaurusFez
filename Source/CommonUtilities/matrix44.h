@@ -566,7 +566,7 @@ namespace CU
 
 		// The data of this matrix
 		//
-#pragma warning( disable : 4201 ) // NOTE: This works fine in VC2013 and GCC so I'm keeping it. //MAHAM
+#pragma warning( disable : 4201 ) // nonstandard extension used: nameless struct/union
 		union
 		{
 			struct

@@ -13,7 +13,7 @@ namespace GUI
 	class ModelWidget : public Widget
 	{
 	public:
-		friend class ButtonDecorator;
+		friend class ButtonAnimation;
 
 		ModelWidget(CLoaderMesh* aLoaderMesh, const CU::GrowingArray<CU::DynamicString>& aTexturePaths);
 		ModelWidget(CModelInstance* aModelInstance, const CU::DynamicString& aName);
@@ -27,8 +27,6 @@ namespace GUI
 		void OnMouseEnter(const CU::Vector2f& aMousePosition) override;
 
 		SPixelConstantBuffer& GetPixelConstantBufferStruct();
-
-		AUTO_IMPLEMENT_SIZE;
 
 		void SetFlashTimeToMax();
 		inline const CU::Matrix44f& GetOriginalTransformation() const;

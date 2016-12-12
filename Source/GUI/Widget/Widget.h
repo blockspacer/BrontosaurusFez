@@ -1,9 +1,7 @@
 #pragma once
 
 #include "../CommonUtilities/vector2.h"
-#include <unordered_map>
 
-#define AUTO_IMPLEMENT_SIZE inline int SizeOfThis() const override { return sizeof(*this) + Widget::SizeOfThis(); }
 #ifndef SUPRESS_UNUSED_WARNING
 #define SUPRESS_UNUSED_WARNING(variable) variable
 #endif // !SUPRESS_UNUSED_WARNING
@@ -62,7 +60,6 @@ namespace GUI
 		virtual const CU::DynamicString& GetName() const;
 
 		virtual void RemoveDebugLines() const;
-		virtual int SizeOfThis() const = 0;
 
 	protected:
 		void AddDebugLines() const;

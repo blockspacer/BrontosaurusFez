@@ -16,6 +16,6 @@ public:
 
 private:
 	CU::GrowingArray<CGameObject*> myGameObjects;
-	CObjectManager myObjectManager;
+	CGameObjectManager myObjectManager;
 };
 

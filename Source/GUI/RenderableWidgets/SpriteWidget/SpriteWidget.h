@@ -14,8 +14,6 @@ namespace GUI
 
 		void Render() override;
 
-		AUTO_IMPLEMENT_SIZE;
-
 	private:
 		CGameObject* myRenderObject;
 	};
