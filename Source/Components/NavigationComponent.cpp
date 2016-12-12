@@ -37,11 +37,11 @@ void NavigationComponent::CalculatePath(CU::Vector2f aTargetPosition)
 	myPath.RemoveAll();
 	
 	//Need to add real calculation here.
-	myPath.Add(aTargetPosition);
+	myPath.Add(CU::Vector3f(aTargetPosition.x, 0.0f, aTargetPosition.y));
 
 
 	eComponentMessageType type = eComponentMessageType::eSetPath;
 	SComponentMessageData data;
-	data.myVector2ListPointer = &myPath;
+	data.myVector3ListPointer = &myPath;
 	GetParent()->NotifyComponents(type, data);
 }

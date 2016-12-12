@@ -63,7 +63,7 @@ struct SComponentMessageData
 		CU::Matrix33f myProjectileRotationMatrix;
 		CU::Matrix44f myMatrix44;
 		CU::Vector2f myVector2;
-		CU::GrowingArray<CU::Vector2f>* myVector2ListPointer;
+		CU::GrowingArray<CU::Vector3f>* myVector3ListPointer;
 		
 		eComponentType myComponentTypeAdded;
 		ValueObserver<int>* myValueObserver;

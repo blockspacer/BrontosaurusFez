@@ -10,7 +10,7 @@ public:
 	void Destroy() override;
 private:
 	float myMovementSpeed;
-	CU::GrowingArray<CU::Vector2f>* myPathPointer;
+	CU::GrowingArray<CU::Vector3f>* myPathPointer;
 	unsigned short myCurrentPathIndex;
 };
 

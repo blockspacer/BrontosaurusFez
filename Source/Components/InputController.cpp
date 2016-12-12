@@ -47,7 +47,7 @@ eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButto
 		std::cout << "Player Pos:" << "X:" << playerPosition.x << " Y: " << playerPosition.y << std::endl;
 		std::cout << "Difference Pos:" << "X:" << (convertedMousePosition - halfScreenPosition).x << " Y: " << (convertedMousePosition - halfScreenPosition).y << std::endl;
 		CU::Vector2f targetPosition = playerPosition + CU::Vector2f(convertedMousePosition.x - halfScreenPosition.x, halfScreenPosition.y - convertedMousePosition.y);
-		//targetPosition.y *= -1;
+		targetPosition.y *= -1;
 		std::cout << "Target Pos:" << "X:" << targetPosition.x << " Y: " << targetPosition.y << std::endl;
 		std::cout << "" << std::endl;
 		eComponentMessageType type = eComponentMessageType::eSetNavigationTarget;
