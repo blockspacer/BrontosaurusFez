@@ -7,6 +7,8 @@
 #include "GameObject.h"
 #include <iostream>
 #include "../BrontosaurusEngine/Engine.h"
+#include "CameraManager.h"
+#include "../CommonUtilities/Camera.h"
 
 InputController::InputController()
 {
@@ -46,7 +48,14 @@ eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButto
 		CU::Vector2f playerPosition = CU::Vector2f(GetParent()->GetWorlPosition().x, GetParent()->GetWorlPosition().z); // Don't forget to add conversions between vector 2 and 3! like serisously it is góing to save us so much time.
 		std::cout << "Player Pos:" << "X:" << playerPosition.x << " Y: " << GetParent()->GetWorlPosition().z << std::endl;
 		std::cout << "Difference Pos:" << "X:" << (convertedMousePosition - halfScreenPosition).x << " Y: " << (convertedMousePosition - halfScreenPosition).y << std::endl;
-		CU::Vector2f targetPosition = playerPosition + CU::Vector2f(convertedMousePosition.x - halfScreenPosition.x, convertedMousePosition.y - halfScreenPosition.y);
+		CU::Matrix44f newTargetMatrix;
+		newTargetMatrix.SetPosition(CU::Vector3f(playerPosition.x, playerPosition.y, 0.0f));
+		CU::Matrix33f cameraRotation = CAMERA->GetTransformation();
+		//newTargetMatrix.SetRotation(cameraRotation);
+		CU::Vector3f movement(convertedMousePosition.x - halfScreenPosition.x, convertedMousePosition.y - halfScreenPosition.y, 0.0f);
+		newTargetMatrix.Move(movement);
+		CU::Vector2f targetPosition = CU::Vector2f(newTargetMatrix.GetPosition().x, playerPosition.y);
+	
 		//targetPosition.y *= -1;
 		std::cout << "Target Pos:" << "X:" << targetPosition.x << " Y: " << targetPosition.y << std::endl;
 		std::cout << "" << std::endl;

@@ -38,6 +38,7 @@
 #include "Components/NavigationComponent.h"
 #include "Components/MovementComponent.h"
 #include "CameraComponent.h"
+#include <iostream>
 //
 
 extern CGame* globalGame;
@@ -165,17 +166,19 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	//ENGINE->SetCamera(&CCameraManager::GetInstance().GetActiveCamera());
 	CU::Matrix44f cameraTransformation = CAMERA->GetTransformation();
 	CU::Matrix44f newRotation;
-	newRotation.SetPosition(CU::Vector3f(0.0f, -1000.0f, 0.0f));
-	newRotation.Rotate(PI / -2.0f, CU::Axees::X);
+	newRotation.SetPosition(CU::Vector3f(1000.0f, -1000.0f, 0.0f));
+	newRotation.Rotate(PI / -2, CU::Axees::X);
+	newRotation.Rotate(PI / -4, CU::Axees::Y);
 	cameraTransformation.SetRotation(newRotation);
-	cameraTransformation.SetPosition(CU::Vector3f(0.0f, -1000.0f, 0.0f));
-	CAMERA->SetTransformation(cameraTransformation);
+	cameraTransformation.SetPosition(CU::Vector3f(1000.0f, -1000.0f, 0.0f));
+	//CAMERA->SetTransformation(cameraTransformation);
 	//CCameraManager::GetInstance().GetActiveCamera().SetTransformation(cameraTransformation);
 	myCameraObject->GetLocalTransform() = cameraTransformation;
 	CAMERA->SetTransformation(CCameraManager::GetInstance().GetActiveCamera().GetTransformation());
 	myScene.SetCamera(CAMERA);
 	//myGUIManager->Update(aDeltaTime)
-
+	std::cout << "Z: " << myCameraObject->GetWorlPosition().z << std::endl;
+	
 	Audio::CAudioInterface* audio = Audio::CAudioInterface::GetInstance();
 	if (audio != nullptr)
 		CAudioSourceComponentManager::GetInstance().Update();
