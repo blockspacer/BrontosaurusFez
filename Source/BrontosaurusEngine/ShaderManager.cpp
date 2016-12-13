@@ -218,10 +218,6 @@ std::string CShaderManager::GetInputLayoutType(unsigned int aShaderBlueprint, st
 		EffectHelper::CreateLayout(aInputLayout, "TANGENT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
 		EffectHelper::CreateLayout(aInputLayout, "BITANGENT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
 	}
-	if (aShaderBlueprint & EModelBluePrint::EModelBluePrint_Bones)
-	{
-
-	}
 	if (aShaderBlueprint & EModelBluePrint::EModelBluePrint_UV)
 	{
 		layoutName += "Tex";
@@ -237,12 +233,12 @@ std::string CShaderManager::GetInputLayoutType(unsigned int aShaderBlueprint, st
 		layoutName += "Alpha";
 		EffectHelper::CreateLayout(aInputLayout, "ALPHA", 0, DXGI_FORMAT_R32_FLOAT, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
 	}
-
-
-
-
-
-
+	if (aShaderBlueprint & EModelBluePrint::EModelBluePrint_Bones)
+	{
+		layoutName += "Bones";
+		EffectHelper::CreateLayout(aInputLayout, "BONE", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
+		EffectHelper::CreateLayout(aInputLayout, "WEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	}
 	if (aShaderBlueprint & EModelBluePrint::EModelBluePrint_Color)
 	{
 		layoutName += "Color";

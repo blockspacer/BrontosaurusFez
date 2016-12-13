@@ -4,39 +4,49 @@
 #include "Model.h"
 #include "Engine.h"
 #include "Renderer.h"
+#include "AnimationController.h"
 
 
 CModelInstance::CModelInstance(const char* aModelPath)
 {
 	myIsVisible = true;
+	mySecondsLived = 0.f;
 	myModel = MODELMGR->LoadModel(aModelPath);
-	myLastFrame = myTransformation;
+	
+	mySceneAnimator = nullptr;
+	if (myModel->GetScene()->HasAnimations())
+	{
+		mySceneAnimator = new CSceneAnimator();
+		mySceneAnimator->Init(myModel->GetScene());
+		mySceneAnimator->PlayAnimationForward();
+	}
 }
 
-CModelInstance::CModelInstance(SShape aShape)
+CModelInstance::CModelInstance(const char* aModelPath, const CU::Matrix44f& aTransformation)
+	: CModelInstance(aModelPath)
 {
-	myIsVisible = true;
-	myModel = MODELMGR->LoadModel(aShape);
-}
-
-
-CModelInstance::CModelInstance(const char* aModelPath, CU::Matrix44f& aTransformation)
-{
-	myIsVisible = true;
-	myModel = MODELMGR->LoadModel(aModelPath);
 	myTransformation = aTransformation;
 }
 
-CModelInstance::CModelInstance(SShape aShape, CU::Matrix44f& aTransformation)
+CModelInstance::CModelInstance(const SShape aShape)
 {
+	mySecondsLived = 0.f;
 	myIsVisible = true;
 	myModel = MODELMGR->LoadModel(aShape);
+	mySceneAnimator = nullptr;
+}
+
+CModelInstance::CModelInstance(const SShape aShape, const CU::Matrix44f& aTransformation)
+	: CModelInstance(aShape)
+{
 	myTransformation = aTransformation;
 }
 
 CModelInstance::CModelInstance(CModel* aModel, const CU::Matrix44f& aTransformation)
 	: myTransformation(aTransformation)
 	, myModel(aModel)
+	, mySceneAnimator(nullptr)
+	, mySecondsLived(0.f)
 	, myIsVisible(true)
 {
 }
@@ -49,27 +59,38 @@ bool CModelInstance::IsAlpha()
 CModelInstance::~CModelInstance()
 {
 	myModel = nullptr; //TODO: memoryleek mebe // still exists in ModelManager <-- looks like model manager owns this but a refcount would maybe be something
+	SAFE_DELETE(mySceneAnimator);
 }
 
 void CModelInstance::Render(Lights::SDirectionalLight* aLight, CU::GrowingArray<CPointLightInstance*>* aPointLightList)
 {
 	if (myModel != nullptr && myModel->GetInitialized() == true && ShouldRender() == true)
 	{
-		//myModel->Render(myTransformation, myLastFrame, aLight, aPointLightList);
+		SRenderModelMessage* msg = nullptr;
+		(mySceneAnimator != nullptr) ? msg = new SRenderAnimationModelMessage() : msg = new SRenderModelMessage();
 
-		SRenderModelMessage msg;
-		msg.myDirectionalLight = aLight;
-		msg.myPointLights = aPointLightList;
-		msg.myModel = myModel;
-		msg.myTransformation =	myTransformation;
-		msg.myLastFrameTransformation = myLastFrame;
-		RENDERER.AddRenderMessage(new SRenderModelMessage(msg));
+		msg->myDirectionalLight = aLight;
+		msg->myPointLights = aPointLightList;
+		msg->myModel = myModel;
+		msg->myTransformation =	myTransformation;
+		msg->myLastFrameTransformation = myLastFrame;
+		
+		if (mySceneAnimator != nullptr)
+		{
+			std::vector<mat4>& transforms = mySceneAnimator->GetTransforms(mySecondsLived);
+			SRenderAnimationModelMessage* animMsg = static_cast<SRenderAnimationModelMessage*>(msg);
+			memcpy(static_cast<void*>(animMsg->myBoneMatrices), &transforms[0], min(sizeof(animMsg->myBoneMatrices), transforms.size() * sizeof(mat4)));
+		}
 
+		RENDERER.AddRenderMessage(msg);
 
 		myLastFrame = myTransformation;
-
-
 	}
+}
+
+void CModelInstance::Update(const CU::Time aDeltaTime)
+{
+	mySecondsLived += aDeltaTime.GetSeconds();
 }
 
 void CModelInstance::SetTransformation(CU::Matrix44f& aTransformation)

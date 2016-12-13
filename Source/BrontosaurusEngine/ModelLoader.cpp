@@ -128,7 +128,7 @@ void CModelLoader::LoadModel(const char * aPath, CModel* aNewModel) //TODO: FIX 
 	const wchar_t* metalnessPath = metalness.c_str();
 
 	if (scene.myTextures[0] == "")
-		diffusePath = L"";
+		diffusePath = L"Error.dds";
 	texturePaths.Add(diffusePath);
 
 	if (scene.myTextures[1] == "")
@@ -150,49 +150,7 @@ void CModelLoader::LoadModel(const char * aPath, CModel* aNewModel) //TODO: FIX 
 	if (scene.myTextures[10] == "")
 		metalnessPath = L"";
 	texturePaths.Add(metalnessPath);
-	//--------------------------------------------------------------------------//
 	
-
-
-
-
-
-
-	//std::string modelPath = aPath;
-	//std::string directory = std::string(modelPath.begin(), modelPath.end());
-	//directory = directory.substr(0, directory.find_last_of('/') + 1);
-	////for(int i = 0; loadedModel->myTextures.size(); ++i) later add all chanels (for now we only need diffuse & normal)
-	////-----------------------------------------------------------------------//
-	//CU::GrowingArray<const char*> texturePaths;
-	//texturePaths.Init(8);
-	//std::string albedoPath = directory + loadedModel->myTextures[eAlbedo];
-	//std::string roughnessPath = directory + loadedModel->myTextures[eRoughness];
-	//std::string AOPath = directory + loadedModel->myTextures[eAmbientOcclusion];
-	//std::string emissivePath = directory + loadedModel->myTextures[eEmissive];
-	//std::string normalPath = directory + loadedModel->myTextures[eNormal];
-	//std::string metalnessPath = directory + loadedModel->myTextures[eMetalness];
-	//if (loadedModel->myTextures[eAlbedo] == "")
-	//	albedoPath = "";
-	//texturePaths.Add(albedoPath.c_str());
-	//if (loadedModel->myTextures[eRoughness] == "")
-	//	roughnessPath = "";
-	//texturePaths.Add(roughnessPath.c_str());
-	//if (loadedModel->myTextures[eAmbientOcclusion] == "")
-	//	AOPath = "";
-	//texturePaths.Add(AOPath.c_str());
-	//if (loadedModel->myTextures[eEmissive] == "")
-	//	emissivePath = "";
-	//texturePaths.Add(emissivePath.c_str());
-	//if (loadedModel->myTextures[eNormal] == "")
-	//	normalPath = "";
-	//texturePaths.Add(normalPath.c_str());
-	//if (loadedModel->myTextures[eMetalness] == "")
-	//	metalnessPath = "";
-	//texturePaths.Add(metalnessPath.c_str());
-	//--------------------------------------------------------------------------//
-
-	//aNewModel scene.myMeshes[0]->mySphereColData.pos;
-
 
 	int shaderType = scene.myMeshes[0]->myShaderType;
 	std::string shaderPath = scene.myMeshes[0]->myShaderFile.c_str();
@@ -217,7 +175,7 @@ void CModelLoader::LoadModel(const char * aPath, CModel* aNewModel) //TODO: FIX 
 		aNewModel->mySphereColData = /*SSphereColData*/(scene.mySphereColData);
 	}
 	aNewModel->Initialize(effect, surface, scene.myMeshes);
-
+	aNewModel->SetScene(scene.myScene);
 }
 
 //void CModelLoader::CreateTriangle(CModel* /*aModel*/)

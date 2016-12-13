@@ -23,6 +23,7 @@ namespace GUI
 		Widget* myParent;
 		bool myIsVisible;
 	};
+
 	Widget::Widget(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const bool aIsVisible)
 		: Widget(aPosition, aSize, CU::DynamicString("NamelessWidget") + (++ourNamelessCount), aIsVisible)
 	{
@@ -155,11 +156,6 @@ namespace GUI
 	const CU::DynamicString& Widget::GetName() const
 	{
 		return myImplementation->myName;
-	}
-
-	int Widget::SizeOfThis() const
-	{
-		return sizeof(*this) + sizeof(*myImplementation);
 	}
 
 	void Widget::SetParent(Widget* aParent)

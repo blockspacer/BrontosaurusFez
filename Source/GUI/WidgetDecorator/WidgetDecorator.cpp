@@ -148,9 +148,4 @@ namespace GUI
 	{
 		myDecoratedWidget->RemoveDebugLines();
 	}
-
-	int WidgetDecorator::SizeOfThis() const
-	{
-		return sizeof(*this) + myDecoratedWidget->SizeOfThis();
-	}
 }

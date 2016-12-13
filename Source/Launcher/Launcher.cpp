@@ -1,16 +1,5 @@
 #include "stdafx.h"
 
-#include <Game.h>
-#include <Engine.h>
-#include <CommandLineManager.h>
-#include <DL_Debug.h>
-#include <Time.h>
-#include "../PostMaster/PostMaster.h"
-#include "../BrontosaurusEngine/EDebugInfoDrawerFlags.h"
-#include "../Audio/AudioInterface.h"
-
-//#include <iostream>
-
 void Init(int argc, char* argv[]);
 unsigned int DebugDrawerFlags();
 
@@ -56,7 +45,7 @@ void Init(int argc, char* argv[])
 		engineParams.myWindowParams.Title = L"Brontosaurus-BassKodd";
 		engineParams.myWindowParams.Fullscreen = false;
 
-		engineParams.myThreadRender = true;
+		engineParams.myThreadRender = false;
 
 		int Iwidth;
 		int Iheight;

@@ -25,8 +25,10 @@ CModel::CModel()
 	, myFramework(nullptr)
 	, myLODModels(4)
 	, myCbuffer(nullptr)
+	, myBoneBuffer(nullptr)
 	, myLightBuffer(nullptr)
 	, myTimeCBuffer(nullptr)
+	, myScene(nullptr)
 	, myIsInitialized(false)
 	, myIsAlphaModel(false)
 	, myVertexBufferSize(0)
@@ -182,6 +184,15 @@ bool CModel::InitBuffers(const CLoaderMesh* aLoadedMesh)
 	result = DEVICE->CreateBuffer(&indexBufferDesc, &indexData, &myLODModels.GetLast().myIndexBuffer);
 	CHECK_RESULT(result, "Failed to create indexbuffer.");
 
+
+	//ANIMATION BUFFER
+	if (aLoadedMesh->myScene != nullptr && aLoadedMesh->myScene->myNumBones > 0)
+	{
+		SAnimationBoneStruct boneBuffer;
+		myBoneBuffer = BSR::CreateCBuffer<SAnimationBoneStruct>(&boneBuffer);
+	}
+
+
 	return true;
 }
 bool CModel::InitBuffers(CU::GrowingArray<SVertexDataCube>& aVertexList, CU::GrowingArray<unsigned int>& aIndexList)
@@ -253,14 +264,16 @@ bool CModel::InitBuffers(CU::GrowingArray<SVertexDataCube>& aVertexList)
 	return true;
 }
 
-void CModel::Render(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList)
+void CModel::Render(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aBoneBuffer)
 {
 	myEffect->Activate();
 
 	if (mySurface != nullptr)
+	{
 		mySurface->Activate();
+	}
 	
-	UpdateCBuffer(aToWorldSpace, aLastFrameTransformation, aLight, aPointLightList);
+	UpdateCBuffer(aToWorldSpace, aLastFrameTransformation, aLight, aPointLightList, aBoneBuffer);
 
 	UINT stride = myVertexBufferSize;
 	UINT offset = 0;
@@ -280,7 +293,7 @@ void CModel::Render(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLa
 	}
 }
 
-void CModel::UpdateCBuffer(const CU::Matrix44f & aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList) // TODO: Do not update some of the cbuffers	
+void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aBoneBuffer) // TODO: Do not update some of the cbuffers	
 {
 	// WorldSpace thingy
 	D3D11_MAPPED_SUBRESOURCE mappedSubResource;
@@ -309,6 +322,16 @@ void CModel::UpdateCBuffer(const CU::Matrix44f & aToWorldSpace, const CU::Matrix
 	}
 
 
+
+	//ANIMATION BUFFER
+	if (aBoneBuffer != nullptr)
+	{
+		ZeroMemory(&mappedSubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+		DEVICE_CONTEXT->Map(myBoneBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubResource);
+		memcpy(mappedSubResource.pData, aBoneBuffer, ourMaxBoneBufferSize);
+		DEVICE_CONTEXT->Unmap(myBoneBuffer, 0);
+		DEVICE_CONTEXT->VSSetConstantBuffers(3, 1, &myBoneBuffer);
+	}
 
 
 
@@ -474,6 +497,9 @@ CModel& CModel::operator=(CModel&& aModel)
 		aModel.myConstantBuffers[i] = nullptr;
 	}
 
+	myScene = aModel.myScene;
+	aModel.myScene = nullptr;
+
 	return *this;
 }
 CModel& CModel::operator=(const CModel& aModel)
@@ -541,40 +567,7 @@ CModel& CModel::operator=(const CModel& aModel)
 		SAFE_ADD_REF(myConstantBuffers[i]);
 	}
 
+	myScene = aModel.myScene;
+
 	return *this;
-
-
-
-	//if (aModel.myEffect != nullptr)
-	//{
-	//	if (myEffect != nullptr)
-	//	{
-	//		delete myEffect;
-	//	}
-	//	myEffect = new CEffect(*aModel.myEffect);
-	//}
-
-	//if (aModel.mySurface != nullptr)
-	//{
-	//	if (mySurface != nullptr)
-	//	{
-	//		delete mySurface;
-	//	}
-	//	mySurface = new CSurface(*aModel.mySurface);
-	//}
-
-	//myLODModels = aModel.myLODModels;
-
-	//myFramework = aModel.myFramework;
-	//myCbuffer = aModel.myCbuffer;
-	//myTimeCBuffer = aModel.myTimeCBuffer;
-
-	//myLightBuffer = aModel.myLightBuffer;
-
-	//myVertexBufferSize = aModel.myVertexBufferSize;
-
-	//myIsInitialized = aModel.myIsInitialized.load();
-	//mySphereColData = aModel.mySphereColData;
-
-	//return *this;
 }
