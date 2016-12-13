@@ -65,11 +65,11 @@
     <Filter Include="Number">
       <UniqueIdentifier>{78a24218-56ea-426e-a1de-0e1127313924}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ModelManager\Fbx\Animation">
-      <UniqueIdentifier>{c3f52e50-d1fe-48fa-aac1-77397db9e841}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Bitmap">
       <UniqueIdentifier>{74ab491c-6452-4c21-b3ef-c4f8eaead333}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\AnimationController">
+      <UniqueIdentifier>{9ebe6122-bfb4-4809-a35e-b5e104af0a2e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -217,9 +217,6 @@
     <ClInclude Include="EmitterData.h">
       <Filter>Particles</Filter>
     </ClInclude>
-    <ClInclude Include="Animation\cAnimationController.h">
-      <Filter>ModelManager\Fbx\Animation</Filter>
-    </ClInclude>
     <ClInclude Include="SpriteManager.h" />
     <ClInclude Include="Synchronizer.h" />
     <ClInclude Include="BufferStructs.h">
@@ -233,6 +230,9 @@
     </ClInclude>
     <ClInclude Include="CoolText.h">
       <Filter>Text</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationController.h">
+      <Filter>Model\AnimationController</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -340,9 +340,6 @@
     <ClCompile Include="StreakEmitter.cpp">
       <Filter>Streaks</Filter>
     </ClCompile>
-    <ClCompile Include="Animation\cAnimationController.cpp">
-      <Filter>ModelManager\Fbx\Animation</Filter>
-    </ClCompile>
     <ClCompile Include="SpriteManager.cpp" />
     <ClCompile Include="ModelBatch.cpp">
       <Filter>Model</Filter>
@@ -352,6 +349,9 @@
     </ClCompile>
     <ClCompile Include="CoolText.cpp">
       <Filter>Text</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationController.cpp">
+      <Filter>Model\AnimationController</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -32,7 +32,7 @@ CModel* CModelManager::LoadModel(CU::DynamicString aModelPath)
 {
 	if (myModelList.Size() >= ourMaxNumberOfModels)
 	{
-		DL_MESSAGE_BOX("Too many unique models created! Current max is: %i.\nTalk to programmerz if you want more, it is probably possible.\n", ourMaxNumberOfModels);
+		DL_MESSAGE_BOX("Too many unique models created! Current max is: %i.\nTalk to programmer if we need more, it is probably possible.\n", ourMaxNumberOfModels);
 		DL_ASSERT("Too many unique models created! Current max is: %i.\n", ourMaxNumberOfModels);
 		return nullptr;
 	}

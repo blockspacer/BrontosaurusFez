@@ -7,14 +7,6 @@
 
 #include "SphereColData.h"
 
-//namespace CU
-//{
-//	template <typename ObjectType, typename SizeType = unsigned int>
-//	class GrowingArray;
-//}
-
-#define BASE_SCALE 100
-
 struct BoneInfo
 {
 	FBXLoader::Matrix44f BoneOffset;
@@ -37,20 +29,26 @@ public:
 };
 
 class CLoaderMesh;
+class CSceneAnimator;
 
 class CLoaderScene
 {
 public:
-	CLoaderScene() : myMeshes(2), myTextures(8), isLODScene(false) {}
+	CLoaderScene() : myMeshes(2), myTextures(8), isLODScene(false), myScene(nullptr) {}
 	~CLoaderScene() { myMeshes.DeleteAll(); SAFE_DELETE(myCamera); }
 	std::string myAlbedoTexture;
 	CU::GrowingArray<CU::DynamicString> myTextures;
 	CU::GrowingArray<CLoaderMesh*> myMeshes;
 	CLoaderCamera* myCamera;
-
+	const struct aiScene* myScene;
 
 	SSphereColData mySphereColData;
 	bool isLODScene;
+
+	// Animation data
+	std::vector<BoneInfo> myBoneInfo;
+	std::map<std::string, unsigned int> myBoneNameToIndex;
+	unsigned int myNumBones;
 };
 
 // One model can contain multiple meshes
@@ -63,7 +61,8 @@ public:
 		myVerticies = nullptr; 
 		myVertexBufferSize = 0; 
 		myVertexCount = 0; 
-		myModel = nullptr; 
+		myModel = nullptr;
+		myScene = nullptr;
 		myLOD_DistStart = myLOD_DistEnd = -1.0f;
 		myLODLevel = -1;
 	}
@@ -75,6 +74,7 @@ public:
 	unsigned int myVertexBufferSize; //hur stor en vertex är
 	int myVertexCount;
 	class CLoaderModel* myModel;
+	class CLoaderScene* myScene;
 	char* myVerticies; //datan
 	const char* myName;
 	CU::Vector3f myMaxPoint;
@@ -107,10 +107,10 @@ public:
 	FBXLoader::Matrix44f myGlobalInverseTransform;
 	bool myIsLoaded;
 	std::vector<std::string> myTextures;
-	// Animation data
-	std::vector<BoneInfo> myBoneInfo;
-	std::map<std::string, unsigned int> myBoneNameToIndex;
-	unsigned int myNumBones;
+	//// Animation data
+	//std::vector<BoneInfo> myBoneInfo;
+	//std::map<std::string, unsigned int> myBoneNameToIndex;
+	//unsigned int myNumBones;
 
 
 };
