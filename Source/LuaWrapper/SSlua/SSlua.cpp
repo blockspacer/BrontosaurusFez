@@ -3,6 +3,8 @@
 #include "../SSArgument/SSArgument.h"
 #include <codecvt>
 #include <Windows.h>
+#include <iostream>
+#include <fstream>
 
 //extern "C"
 //{
@@ -60,10 +62,10 @@ namespace SSlua
 		return *ourInstance;
 	}
 
-	void LuaWrapper::RegisterFunction(const LuaCallbackFunction &aFunction,const std::string& aName)
+	void LuaWrapper::RegisterFunction(const LuaCallbackFunction &aFunction,const std::string& aName, std::string& aHelpText)
 	{
 		myVoidFunctions[aName] = aFunction;
-
+		myExposedFunctions[aName] = aHelpText;
 		lua_pushstring(myState, aName.c_str());
 		lua_pushcclosure(myState, StaticLuaVoidCallback, 1);
 		lua_setglobal(myState, aName.c_str());
@@ -256,6 +258,20 @@ namespace SSlua
 			}
 		}
 		return true;
+	}
+
+	void LuaWrapper::PrintDocumentation()
+	{
+		std::ofstream outPutFile;
+		outPutFile.open("ExposedFunctions.txt");
+
+		std::map<std::string, std::string>::iterator it;
+		for (it = myExposedFunctions.begin(); it != myExposedFunctions.end(); it++)
+		{
+			outPutFile << it->first << ": " << it->second << std::endl;
+		}
+
+		outPutFile.close();
 	}
 
 	LuaWrapper::LuaWrapper()
