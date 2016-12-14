@@ -10,7 +10,7 @@
 CModelInstance::CModelInstance(const char* aModelPath)
 {
 	myIsVisible = true;
-	mySecondsLived = 0.f;
+	myAnimationCounter = 0.f;
 	myModel = MODELMGR->LoadModel(aModelPath);
 	
 	mySceneAnimator = nullptr;
@@ -30,7 +30,7 @@ CModelInstance::CModelInstance(const char* aModelPath, const CU::Matrix44f& aTra
 
 CModelInstance::CModelInstance(const SShape aShape)
 {
-	mySecondsLived = 0.f;
+	myAnimationCounter = 0.f;
 	myIsVisible = true;
 	myModel = MODELMGR->LoadModel(aShape);
 	mySceneAnimator = nullptr;
@@ -46,7 +46,7 @@ CModelInstance::CModelInstance(CModel* aModel, const CU::Matrix44f& aTransformat
 	: myTransformation(aTransformation)
 	, myModel(aModel)
 	, mySceneAnimator(nullptr)
-	, mySecondsLived(0.f)
+	, myAnimationCounter(0.f)
 	, myIsVisible(true)
 {
 }
@@ -77,7 +77,7 @@ void CModelInstance::Render(Lights::SDirectionalLight* aLight, CU::GrowingArray<
 		
 		if (mySceneAnimator != nullptr)
 		{
-			std::vector<mat4>& transforms = mySceneAnimator->GetTransforms(mySecondsLived);
+			std::vector<mat4>& transforms = mySceneAnimator->GetTransforms(myAnimationCounter);
 			SRenderAnimationModelMessage* animMsg = static_cast<SRenderAnimationModelMessage*>(msg);
 			memcpy(static_cast<void*>(animMsg->myBoneMatrices), &transforms[0], min(sizeof(animMsg->myBoneMatrices), transforms.size() * sizeof(mat4)));
 		}
@@ -90,7 +90,7 @@ void CModelInstance::Render(Lights::SDirectionalLight* aLight, CU::GrowingArray<
 
 void CModelInstance::Update(const CU::Time aDeltaTime)
 {
-	mySecondsLived += aDeltaTime.GetSeconds();
+	myAnimationCounter += aDeltaTime.GetSeconds();
 }
 
 void CModelInstance::SetTransformation(CU::Matrix44f& aTransformation)
@@ -126,4 +126,16 @@ CU::AABB CModelInstance::GetModelBoundingBox()
 	//box.myRadius *= myTransformation.m11;
 	
 	return box;
+}
+
+void CModelInstance::ChangeAnimation(const char* aAnimationKey)
+{
+	if (mySceneAnimator != nullptr)
+	{
+		if (mySceneAnimator->SetAnimation(aAnimationKey) == true)
+		{
+			mySceneAnimator->PlayAnimationForward();
+			myAnimationCounter = 0.f;
+		}
+	}
 }

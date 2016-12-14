@@ -61,8 +61,8 @@ eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButto
 		std::cout << "" << std::endl;
 		eComponentMessageType type = eComponentMessageType::eSetNavigationTarget;
 		SComponentMessageData data;
-		data.myVector2 = targetPosition;
-		//data.myVector2 = playerPosition + CU::Vector2f(100.0f, 100.0f);
+		data.myVector2f = targetPosition;
+		//data.myVector2f = playerPosition + CU::Vector2f(100.0f, 100.0f);
 		GetParent()->NotifyComponents(type, data);
 	}
 

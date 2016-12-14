@@ -54,6 +54,11 @@ void MovementComponent::Receive(const eComponentMessageType aMessageType, const 
 	case eComponentMessageType::eSetPath:
 		myPathPointer = aMessageData.myVector3ListPointer;
 		myCurrentPathIndex = 0;
+		{
+			SComponentMessageData directionData;
+			directionData.myString = "Walk";
+			GetParent()->NotifyComponents(eComponentMessageType::eStartedMoving, directionData);
+		}
 		break;
 	default:
 		break;
