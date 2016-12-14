@@ -164,11 +164,11 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 {
 	CU::Matrix44f cameraTransformation = CAMERA->GetTransformation();
 	CU::Matrix44f newRotation;
-	newRotation.SetPosition(CU::Vector3f(1000.0f, 1000.0f, 0.0f));
+	newRotation.SetPosition(CU::Vector3f(0.0f, 1000.0f, 0.0f));
 	newRotation.Rotate(PI / 2, CU::Axees::X);
-	newRotation.Rotate(PI / 4, CU::Axees::Y);
+	//newRotation.Rotate(PI / -4, CU::Axees::Y);
 	cameraTransformation.SetRotation(newRotation);
-	cameraTransformation.SetPosition(CU::Vector3f(1000.0f, 1000.0f, 0.0f));
+	cameraTransformation.SetPosition(CU::Vector3f(0.0f, 1000.0f, 0.0f));
 	//CAMERA->SetTransformation(cameraTransformation);
 	//CCameraManager::GetInstance().GetActiveCamera().SetTransformation(cameraTransformation);
 	myCameraObject->GetLocalTransform() = cameraTransformation;

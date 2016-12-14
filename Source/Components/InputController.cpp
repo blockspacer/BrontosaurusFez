@@ -54,9 +54,9 @@ eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButto
 		//newTargetMatrix.SetRotation(cameraRotation);
 		CU::Vector3f movement(convertedMousePosition.x - halfScreenPosition.x, convertedMousePosition.y - halfScreenPosition.y, 0.0f);
 		newTargetMatrix.Move(movement);
-		CU::Vector2f targetPosition = CU::Vector2f(newTargetMatrix.GetPosition().x, playerPosition.y);
+		CU::Vector2f targetPosition = CU::Vector2f(newTargetMatrix.GetPosition().x, newTargetMatrix.GetPosition().y);
 	
-		//targetPosition.y *= -1;
+		targetPosition.y *= -1;
 		std::cout << "Target Pos:" << "X:" << targetPosition.x << " Y: " << targetPosition.y << std::endl;
 		std::cout << "" << std::endl;
 		eComponentMessageType type = eComponentMessageType::eSetNavigationTarget;
