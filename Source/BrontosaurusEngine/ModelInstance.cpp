@@ -127,3 +127,15 @@ CU::AABB CModelInstance::GetModelBoundingBox()
 	
 	return box;
 }
+
+void CModelInstance::ChangeAnimation(const char* aAnimationKey)
+{
+	if (mySceneAnimator != nullptr)
+	{
+		if (mySceneAnimator->SetAnimation(aAnimationKey) == true)
+		{
+			mySceneAnimator->PlayAnimationForward();
+			myAnimationCounter = 0.f;
+		}
+	}
+}
