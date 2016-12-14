@@ -56,7 +56,7 @@ eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButto
 		newTargetMatrix.Move(movement);
 		CU::Vector2f targetPosition = CU::Vector2f(newTargetMatrix.GetPosition().x, newTargetMatrix.GetPosition().y);
 	
-		targetPosition.y *= -1;
+		targetPosition.x *= -1;
 		std::cout << "Target Pos:" << "X:" << targetPosition.x << " Y: " << targetPosition.y << std::endl;
 		std::cout << "" << std::endl;
 		eComponentMessageType type = eComponentMessageType::eSetNavigationTarget;
