@@ -1,7 +1,6 @@
 #pragma once
 #include "Component.h"
 #include "../Audio/AudioInterface.h"
-//#include "..\CommonUtilities\GrowingArray.h"
 
 
 class CAudioSourceComponent : public CComponent

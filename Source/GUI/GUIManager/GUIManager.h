@@ -27,12 +27,11 @@ namespace GUI
 	class GUIManager : public Subscriber
 	{
 	public:
-		GUIManager(const bool aShouldStealInput = true /* TODO: remove this stupid parameter :( */);
+		GUIManager();
 		~GUIManager();
 
 		void Init();
-		void Init(const char* aGUIScenePath, bool isOld);
-		//void Init(const char* aLuaScriptPath);
+		void Init(const char* aGUIScenePath);
 		void Update(const CU::Time& aDeltaTime);
 		void Render();
 

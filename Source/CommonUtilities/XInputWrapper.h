@@ -1,7 +1,5 @@
 #pragma once
 
-//#include "../CommonUtilities/GrowingArray.h"
-
 struct _XINPUT_STATE;
 typedef _XINPUT_STATE XINPUT_STATE;
 

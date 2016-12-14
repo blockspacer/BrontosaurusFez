@@ -7,6 +7,7 @@
 #include <iomanip>
 #include "DL_Assert.h"
 #include <iostream>
+#include <fstream>
 
 #include "StringHelper.h"
 #include "CommandLineManager.h"
@@ -29,81 +30,159 @@ const unsigned int MAX_STRING_BUFFER_SIZE = 1024u;
 namespace DL_Debug
 {
 	Debug* Debug::ourInstance = nullptr;
+	
+	class Log
+	{
+	public:
+		inline void CreateLog(const char* aFileName);
+		inline void Write(const char* aMessage);
+		inline void Activate() { myIsActive = true; }
+		inline void Deactivate() { myIsActive = false; }
+
+	private:
+		std::ofstream myDebugFile;
+		std::string myFile;
+		bool myIsActive;
+	};
+
+	void Log::CreateLog(const char* aFilePath)
+	{
+		myIsActive = false;
+		myFile = aFilePath;
+	}
+
+	void Log::Write(const char* aMessage)
+	{
+		if (myIsActive == false)
+		{
+			return;
+		}
+
+		myDebugFile.open(myFile, std::ios::app);
+
+		time_t rawTime = time(nullptr);
+		tm timeInfo = {};
+		char timebuffer[80];
+		
+		localtime_s(&timeInfo, &rawTime);
+		strftime(timebuffer, 80, "%d-%m-%Y %H:%M:%S", &timeInfo);
+
+		myDebugFile << timebuffer << "	" << aMessage << std::endl;
+
+		myDebugFile.close();
+	}
 
 	Debug::Debug()
+		: myLogFiles(nullptr)
 	{
-
+		ActivateLogs();
 	}
 
 	Debug::~Debug()
 	{
+		myLogFiles.DeleteAll();
 	}
 
 	void Debug::CreateLog(eLogTypes aLogType)
 	{
-		if (myLogFiles.find(aLogType) == myLogFiles.end())
+		int logType = static_cast<int>(aLogType);
+		if (myLogFiles[logType] != nullptr)
 		{
-			myLogFiles[aLogType] = Log(); 
-			const char* fileName;
-			switch (aLogType)
-			{
-			case DL_Debug::eLogTypes::eEngine:
-				fileName = "LOG_ENGINE.loggo";
-				break;
-			case DL_Debug::eLogTypes::eGamePlay:
-				fileName = "LOG_GAMEPLAY.loggo";
-				break;
-			case DL_Debug::eLogTypes::eResource:
-				fileName = "LOG_RESOURCES.loggo";
-				break;
-			case DL_Debug::eLogTypes::eCrash:
-				fileName = "LOG_CRASH.loggo";
-				break;
-			case DL_Debug::eLogTypes::eThreadedModels:
-				fileName = "LOG_THREADED_MODELS.loggo";
-				break;
-			default:
-				fileName = "LOG_DEFAULT.loggo";
-				break;
-			}
-			myLogFiles[aLogType].CreateLog(fileName);
+			assert(!"Logtype already created");
+			return;
 		}
+
+		myLogFiles[logType] = new Log();
+		const char* fileName;
+		switch (aLogType)
+		{
+		case DL_Debug::eLogTypes::eEngine:
+			fileName = "LOG_ENGINE.loggo";
+			break;
+		case DL_Debug::eLogTypes::eGamePlay:
+			fileName = "LOG_GAMEPLAY.loggo";
+			break;
+		case DL_Debug::eLogTypes::eResource:
+			fileName = "LOG_RESOURCES.loggo";
+			break;
+		case DL_Debug::eLogTypes::eCrash:
+			fileName = "LOG_CRASH.loggo";
+			break;
+		case DL_Debug::eLogTypes::eThreadedModels:
+			fileName = "LOG_THREADED_MODELS.loggo";
+			break;
+		default:
+			fileName = "LOG_DEFAULT.loggo";
+			break;
+		}
+
+		myLogFiles[logType]->CreateLog(fileName);
 	}
 
-	bool Debug::Destroy()
+	void Debug::CreateInstance()
 	{
-		if (ourInstance != nullptr)
-		{
-			SAFE_DELETE(ourInstance);
-			return true;
-		}
+		assert(ourInstance == nullptr && "Debug logger already created");
+		ourInstance = new Debug();
+	}
 
-		return false;
+	void Debug::DestroyInstance()
+	{
+		assert(ourInstance != nullptr && "Debug logger not created (is NULL)");
+		SAFE_DELETE(ourInstance);
 	}
 
 	Debug* Debug::GetInstance()
 	{
-		if (ourInstance == nullptr)
-		{
-			ourInstance = new Debug();
-		}
-
+		assert(ourInstance != nullptr && "Debug logger not created (is NULL)");
 		return ourInstance;
 	}
 
-	void Debug::Activate(eLogTypes aLogType)
+	void Debug::ActivateLogs()
 	{
-		if (myLogFiles.find(aLogType) == myLogFiles.end())
+		CommandLineManager* commandLineManager = CommandLineManager::GetInstance();
+		if (commandLineManager != nullptr)
+		{
+			if (commandLineManager->HasArgument("-activatelog", "gameplay"))
+			{
+				Activate(DL_Debug::eLogTypes::eGamePlay);
+			}
+			if (commandLineManager->HasArgument("-activatelog", "resource"))
+			{
+				Activate(DL_Debug::eLogTypes::eResource);
+			}
+			if (commandLineManager->HasArgument("-activatelog", "engine"))
+			{
+				Activate(DL_Debug::eLogTypes::eEngine);
+			}
+			if (commandLineManager->HasArgument("-activatelog", "crash"))
+			{
+				Activate(DL_Debug::eLogTypes::eCrash);
+			}
+			if (commandLineManager->HasArgument("-activatelog", "threadedModels"))
+			{
+				Activate(DL_Debug::eLogTypes::eThreadedModels);
+			}
+		}
+	}
+
+	void Debug::Activate(const eLogTypes aLogType)
+	{
+		int logType = static_cast<int>(aLogType);
+		if (myLogFiles[logType] == nullptr)
 		{
 			CreateLog(aLogType);
 		}
 		
-		myLogFiles[aLogType].Activate();
+		myLogFiles[logType]->Activate();
 	}
 
-	void Debug::Deactivate(eLogTypes aLogType)
+	void Debug::Deactivate(const eLogTypes aLogType)
 	{
-		myLogFiles[aLogType].Deactivate();
+		int logType = static_cast<int>(aLogType);
+		if (myLogFiles[logType] != nullptr)
+		{
+			myLogFiles[logType]->Deactivate();
+		}
 	}
 
 	void Debug::AssertMessage(const char *aFileName, const int aLine, const char* /*aFunctionName*/, const char *aString, ...)
@@ -167,7 +246,7 @@ namespace DL_Debug
 		std::wcout << buffer << std::endl;
 	}
 
-	void Debug::WriteLog(eLogTypes aLogType, const char* aFormattedString, ...)
+	void Debug::WriteLog(const eLogTypes aLogType, const char* aFormattedString, ...)
 	{
 		char buffer[MAX_STRING_BUFFER_SIZE] = {};
 		va_list args;
@@ -176,7 +255,7 @@ namespace DL_Debug
 		VSPRINTF(buffer, aFormattedString, args);
 		va_end(args);
 
-		myLogFiles[aLogType].Write(buffer);
+		myLogFiles[static_cast<int>(aLogType)]->Write(buffer);
 	}
 
 	void Debug::ShowMessageBox(const char* aMessage, ...)
@@ -220,22 +299,6 @@ namespace DL_Debug
 		//implement mbx for unix
 #endif
 	}
-	
-//	wchar_t* Debug::charToWChar(const char* text)
-//	{
-//		size_t size = strlen(text) + 1;
-//		wchar_t* wa = new wchar_t[size];
-//		size_t outSize;
-//#ifdef _WIN32
-//		// retval , dst, dstsz, scr, len
-//		mbstowcs_s(&outSize, wa, size, text, size - 1);
-//#else
-//		// dst, src, dstsz or len
-//		outSize = mbstowcs(wa, text, size - 1);
-//		outSize;
-//#endif
-//		return wa;
-//	}
 
 	void Debug::SetConsoleColor(const unsigned short aColor)
 	{
@@ -279,30 +342,5 @@ namespace DL_Debug
 		(void)memcpy_s(aBuffer, MAX_STRING_BUFFER_SIZE, buffer, MAX_STRING_BUFFER_SIZE);
 
 		return aBuffer;
-	}
-
-	void Log::CreateLog(const char* aFilePath)
-	{
-		myIsActive = false;
-		myFile = aFilePath;
-	}
-
-	void Log::Write(const char * aMessage)
-	{
-		if (myIsActive == false)
-			return;
-
-		myDebugFile.open(myFile, std::ios::app);
-
-		time_t rawTime;
-		struct tm timeinfo;
-		char timebuffer[80];
-		time(&rawTime);
-		localtime_s(&timeinfo, &rawTime);
-		strftime(timebuffer, 80, "%d-%m-%Y %H:%M:%S", &timeinfo);
-		
-		myDebugFile << timebuffer << "	" << aMessage << std::endl;
-
-		myDebugFile.close();
 	}
 }

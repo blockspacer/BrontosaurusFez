@@ -254,7 +254,6 @@
     <ClInclude Include="Font.h" />
     <ClInclude Include="FullScreenHelper.h" />
     <ClInclude Include="GUIModleHelper.h" />
-    <ClInclude Include="GUIRenderer.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="InstanceID.h" />
     <ClInclude Include="LightManager.h" />
@@ -310,7 +309,6 @@
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FullScreenHelper.cpp" />
     <ClCompile Include="GUIModleHelper.cpp" />
-    <ClCompile Include="GUIRenderer.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="LightManager.cpp" />
     <ClCompile Include="LineDrawer.cpp" />

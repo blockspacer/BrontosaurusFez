@@ -1,22 +1,25 @@
 #pragma once
-#include <string>
-//#include "GrowingArray.h"
+#include <map>
+
 class CommandLineManager
 {
 public:
-	void SetArguments(int argc, char* argv[]);
-	void ActivateLogs();
-	static CommandLineManager* GetInstance();
+	static void CreateInstance(int argc, char* argv[]);
 	static void DestroyInstance();
+	static CommandLineManager* GetInstance();
+	
+	void ActivateLogs();
 	bool HasParameter(const char* aParameter);
 	bool HasArgument(const char* aParameter, const char* aArgument);
-	std::string GetParameter(const char* aParameter);
-	std::string GetArgument(const char* aParameter);
+	const std::string& GetArgument(const char* aParameter);
+
 private:
-	CommandLineManager();
+	CommandLineManager(int argc, char* argv[]);
 	~CommandLineManager();
+
+	std::map<std::string, CU::GrowingArray<std::string>> myArgs;
+
 	static CommandLineManager* myInstance;
-	
-	CU::GrowingArray<std::string> myArgs;
+	static const std::string ourEmptyString;
 };
 

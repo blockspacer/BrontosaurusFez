@@ -1,5 +1,6 @@
 #pragma once
 #include "StateStack\State.h"
+#include "../PostMaster/Subscriber.h"
 
 namespace GUI
 {

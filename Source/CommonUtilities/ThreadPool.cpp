@@ -7,7 +7,7 @@ namespace CU
 {
 	ThreadPool::ThreadPool()
 	{
-		std::string name = "ThreadPool Worker: ";
+		const static std::string name = "ThreadPool Worker: ";
 		myTimerMgr = new TimerManager();
 		isStopped = false;
 		unsigned concurentThreadsSupported = std::thread::hardware_concurrency();
@@ -21,7 +21,7 @@ namespace CU
 
 			//so very windows
 			std::string threadName = name + std::to_string(i);
-			SetThreadName(worker->myThread,threadName.c_str());
+			SetThreadName(*worker->myThread,threadName.c_str());
 
 		}
 	}

@@ -13,6 +13,10 @@
 
 #define SAFE_DELETE(ptr) delete ptr; ptr = nullptr
 
+#include <utility>
+#include <string>
+#include <cstdint>
+
 #include "DL_Debug.h"
 #include "EMouseButtons.h"
 #include "GrowingArray.h"

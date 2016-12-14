@@ -8,5 +8,6 @@
   <ItemGroup>
     <ClCompile Include="StateStack.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="State.cpp" />
   </ItemGroup>
 </Project>
