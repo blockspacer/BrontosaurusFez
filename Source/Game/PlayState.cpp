@@ -108,7 +108,7 @@ void CPlayState::Load()
 	CGameObject* tempWorldObject = myGameObjectManager->CreateGameObject();
 	CModelComponent* tempModelComponentForWorldObject = CModelComponentManager::GetInstance().CreateComponent("Models/Animation/sampleAnim.fbx");
 	tempWorldObject->GetLocalTransform().Move(CU::Vector3f(0.0f, 000.0f, 500.0f));
-	tempWorldObject->GetLocalTransform().Rotate(-90, CU::Axees::X);
+	//tempWorldObject->GetLocalTransform().Rotate(-90, CU::Axees::X);
 
 	tempWorldObject->AddComponent(tempModelComponentForWorldObject);
 	CGameObject* tempWorldObject2 = myGameObjectManager->CreateGameObject();
@@ -164,18 +164,24 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 {
 	CU::Matrix44f cameraTransformation = CAMERA->GetTransformation();
 	CU::Matrix44f newRotation;
-	newRotation.SetPosition(CU::Vector3f(0.0f, 1000.0f, 0.0f));
+	//newRotation.SetPosition(CU::Vector3f(000.0f, 1000.0f, 0.0f));
 	newRotation.Rotate(PI / 2, CU::Axees::X);
-	//newRotation.Rotate(PI / -4, CU::Axees::Y);
+	newRotation.Rotate(PI / 4, CU::Axees::X);
+	
+	newRotation.Rotate(PI / 1, CU::Axees::Z);
+
 	cameraTransformation.SetRotation(newRotation);
-	cameraTransformation.SetPosition(CU::Vector3f(0.0f, 1000.0f, 0.0f));
+	cameraTransformation.SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
+	cameraTransformation.Move(CU::Vector3f(000.0f, 000.0f, -1500.0f));
+	//newRotation.Rotate(PI / 4, CU::Axees::Y);
+	//cameraTransformation.SetRotation(newRotation);
 	//CAMERA->SetTransformation(cameraTransformation);
 	//CCameraManager::GetInstance().GetActiveCamera().SetTransformation(cameraTransformation);
 	myCameraObject->GetLocalTransform() = cameraTransformation;
 	CAMERA->SetTransformation(CCameraManager::GetInstance().GetActiveCamera().GetTransformation());
 	myScene.SetCamera(CAMERA);
 	//myGUIManager->Update(aDeltaTime)
-	std::cout << "Z: " << myCameraObject->GetWorlPosition().z << std::endl;
+	
 	
 	Audio::CAudioInterface* audio = Audio::CAudioInterface::GetInstance();
 	if (audio != nullptr)
