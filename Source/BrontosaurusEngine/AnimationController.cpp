@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "cAnimationController.h"
+#include "AnimationController.h"
 
 void TransformMatrix(mat4& out,const aiMatrix4x4& in){// there is some type of alignment issue with my mat4 and the aimatrix4x4 class, so the copy must be manually
 	out.m11=in.a1;
@@ -25,7 +25,7 @@ void TransformMatrix(mat4& out,const aiMatrix4x4& in){// there is some type of a
 }
 // ------------------------------------------------------------------------------------------------
 // Constructor on a given animation. 
-cAnimEvaluator::cAnimEvaluator( const aiAnimation* pAnim) {
+CAnimEvaluator::CAnimEvaluator( const aiAnimation* pAnim) {
 	mLastTime = 0.0;
 	TicksPerSecond = static_cast<float>(pAnim->mTicksPerSecond != 0.0f ? pAnim->mTicksPerSecond : 100.0f);
 	Duration = static_cast<float>(pAnim->mDuration);
@@ -42,7 +42,7 @@ cAnimEvaluator::cAnimEvaluator( const aiAnimation* pAnim) {
 	//OUTPUT_DEBUG_MSG("Finished Creating Animation named: "<<Name);
 }
 
-unsigned int cAnimEvaluator::GetFrameIndexAt(float ptime){
+unsigned int CAnimEvaluator::GetFrameIndexAt(float ptime){
 	// get a [0.f ... 1.f) value by allowing the percent to wrap around 1
 	ptime *= TicksPerSecond;
 	
@@ -57,7 +57,7 @@ unsigned int cAnimEvaluator::GetFrameIndexAt(float ptime){
 
 // ------------------------------------------------------------------------------------------------
 // Evaluates the animation tracks for a given time stamp. 
-void cAnimEvaluator::Evaluate( float pTime, std::map<std::string, cBone*>& bones) 
+void CAnimEvaluator::Evaluate( float pTime, std::map<std::string, CBone*>& bones) 
 {
 
 	pTime *= TicksPerSecond;
@@ -68,8 +68,8 @@ void cAnimEvaluator::Evaluate( float pTime, std::map<std::string, cBone*>& bones
 
 	// calculate the transformations for each animation channel
 	for( unsigned int a = 0; a < Channels.size(); a++){
-		const cAnimationChannel* channel = &Channels[a];
-		std::map<std::string, cBone*>::iterator bonenode = bones.find(channel->Name);
+		const CAnimationChannel* channel = &Channels[a];
+		std::map<std::string, CBone*>::iterator bonenode = bones.find(channel->Name);
 
 		if(bonenode == bones.end()) { 
 			//OUTPUT_DEBUG_MSG("did not find the bone node "<<channel->Name);
@@ -157,7 +157,7 @@ void cAnimEvaluator::Evaluate( float pTime, std::map<std::string, cBone*>& bones
 	mLastTime = time;
 }
 
-void SceneAnimator::Release(){// this should clean everything up 
+void CSceneAnimator::Release(){// this should clean everything up 
 	CurrentAnimIndex = -1;
 	Animations.clear();// clear all animations
 	delete Skeleton;// This node will delete all children recursivly
@@ -165,7 +165,7 @@ void SceneAnimator::Release(){// this should clean everything up
 }
 
 // this will build the skeleton based on the scene passed to it and CLEAR EVERYTHING
-void SceneAnimator::Init(const aiScene* pScene)
+void CSceneAnimator::Init(const aiScene* pScene)
 {
 	if(!pScene->HasAnimations()) return;
 	Release();
@@ -180,7 +180,7 @@ void SceneAnimator::Init(const aiScene* pScene)
 		for (unsigned int n = 0; n < mesh->mNumBones;++n)
 		{
 			const aiBone* bone = mesh->mBones[n];
-			std::map<std::string, cBone*>::iterator found = BonesByName.find(bone->mName.data);
+			std::map<std::string, CBone*>::iterator found = BonesByName.find(bone->mName.data);
 			if(found != BonesByName.end())
 			{// FOUND IT!!! woohoo, make sure its not already in the bone list
 				bool skip = false;
@@ -225,11 +225,11 @@ void SceneAnimator::Init(const aiScene* pScene)
 //	OUTPUT_DEBUG_MSG("Finished loading animations with "<<Bones.size()<<" bones");
 }
 
-void SceneAnimator::ExtractAnimations(const aiScene* pScene)
+void CSceneAnimator::ExtractAnimations(const aiScene* pScene)
 {
 	//OUTPUT_DEBUG_MSG("Extracting Animations . . ");
 	for(size_t i(0); i< pScene->mNumAnimations; i++){
-		Animations.push_back(cAnimEvaluator(pScene->mAnimations[i]) );// add the animations
+		Animations.push_back(CAnimEvaluator(pScene->mAnimations[i]) );// add the animations
 	}
 	for(uint32_t i(0); i< Animations.size(); i++){// get all the animation names so I can reference them by name and get the correct id
 		AnimationNameToId.insert(std::map<std::string, uint32_t>::value_type(Animations[i].Name, i));
@@ -237,14 +237,14 @@ void SceneAnimator::ExtractAnimations(const aiScene* pScene)
 	CurrentAnimIndex=0;
 	SetAnimation("Idle");
 }
-bool SceneAnimator::SetAnimation(const std::string& name)
+bool CSceneAnimator::SetAnimation(const std::string& name)
 {
 	std::map<std::string, uint32_t>::iterator itr = AnimationNameToId.find(name);
 	int32_t oldindex = CurrentAnimIndex;
 	if(itr !=AnimationNameToId.end()) CurrentAnimIndex = itr->second;
 	return oldindex != CurrentAnimIndex;
 }
-bool SceneAnimator::SetAnimIndex( int32_t  pAnimIndex)
+bool CSceneAnimator::SetAnimIndex( int32_t  pAnimIndex)
 {
 	if(pAnimIndex >= static_cast<int32_t>(Animations.size())) return false;// no change, or the animations data is out of bounds
 	int32_t oldindex = CurrentAnimIndex;
@@ -254,7 +254,7 @@ bool SceneAnimator::SetAnimIndex( int32_t  pAnimIndex)
 
 // ------------------------------------------------------------------------------------------------
 // Calculates the node transformations for the scene. 
-void SceneAnimator::Calculate(float pTime)
+void CSceneAnimator::Calculate(float pTime)
 {
 	if( (CurrentAnimIndex < 0) | (CurrentAnimIndex >= static_cast<int32_t>(Animations.size())) ) return;// invalid animation
 	
@@ -276,7 +276,7 @@ void SceneAnimator::Calculate(float pTime)
 
 // ------------------------------------------------------------------------------------------------
 // Calculates the bone matrices for the given mesh. 
-void SceneAnimator::CalcBoneMatrices()
+void CSceneAnimator::CalcBoneMatrices()
 {
 	for( size_t a = 0; a < Transforms.size(); ++a)
 	{
@@ -286,9 +286,9 @@ void SceneAnimator::CalcBoneMatrices()
 
 // ------------------------------------------------------------------------------------------------
 // Recursively creates an internal node structure matching the current scene and animation.
-cBone* SceneAnimator::CreateBoneTree( aiNode* pNode, cBone* pParent)
+CBone* CSceneAnimator::CreateBoneTree( aiNode* pNode, CBone* pParent)
 {
-	cBone* internalNode = new cBone();// create a node
+	CBone* internalNode = new CBone();// create a node
 	internalNode->Name = pNode->mName.data;// get the name of the bone
 	internalNode->Parent = pParent; //set the parent, in the case this is theroot node, it will be null
 
@@ -308,19 +308,19 @@ cBone* SceneAnimator::CreateBoneTree( aiNode* pNode, cBone* pParent)
 
 // ------------------------------------------------------------------------------------------------
 // Recursively updates the internal node transformations from the given matrix array
-void SceneAnimator::UpdateTransforms(cBone* pNode) 
+void CSceneAnimator::UpdateTransforms(CBone* pNode) 
 {
 	CalculateBoneToWorldTransform( pNode);// update global transform as well
-	for( std::vector<cBone*>::iterator it = pNode->Children.begin(); it != pNode->Children.end(); ++it)// continue for all children
+	for( std::vector<CBone*>::iterator it = pNode->Children.begin(); it != pNode->Children.end(); ++it)// continue for all children
 		UpdateTransforms( *it);
 }
 
 // ------------------------------------------------------------------------------------------------
 // Calculates the global transformation matrix for the given internal node
-void SceneAnimator::CalculateBoneToWorldTransform(cBone* child)
+void CSceneAnimator::CalculateBoneToWorldTransform(CBone* child)
 {
 	child->GlobalTransform = child->LocalTransform;
-	cBone* parent = child->Parent;
+	CBone* parent = child->Parent;
 	while( parent )
 	{// this will climb the nodes up along through the parents concentating all the matrices to get the Object to World transform, or in this case, the Bone To World transform
 		child->GlobalTransform *= parent->LocalTransform;

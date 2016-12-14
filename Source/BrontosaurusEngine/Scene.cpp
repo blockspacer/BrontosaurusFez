@@ -81,9 +81,12 @@ CScene::~CScene()
 	//myDebugObjects.DeleteAll();
 }
 
-void CScene::Update()
+void CScene::Update(const CU::Time aDeltaTime)
 {
-
+	for (CModelInstance* model : myModels)
+	{
+		model->Update(aDeltaTime);
+	}
 }
 
 void CScene::Render()

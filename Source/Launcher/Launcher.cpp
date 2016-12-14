@@ -1,16 +1,5 @@
 #include "stdafx.h"
 
-#include <Game.h>
-#include <Engine.h>
-#include <CommandLineManager.h>
-#include <DL_Debug.h>
-#include <Time.h>
-#include "../PostMaster/PostMaster.h"
-#include "../BrontosaurusEngine/EDebugInfoDrawerFlags.h"
-#include "../Audio/AudioInterface.h"
-
-//#include <iostream>
-
 void Init(int argc, char* argv[]);
 unsigned int DebugDrawerFlags();
 
@@ -44,7 +33,8 @@ int WINAPI WinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/, LPSTR /
 
 void Init(int argc, char* argv[])
 {
-	CommandLineManager::GetInstance()->SetArguments(argc, argv);
+	CommandLineManager::CreateInstance(argc, argv);
+	DL_Debug::Debug::CreateInstance();
 	PostMaster::CreateInstance();
 
 	{
@@ -56,7 +46,7 @@ void Init(int argc, char* argv[])
 		engineParams.myWindowParams.Title = L"Brontosaurus-BassKodd";
 		engineParams.myWindowParams.Fullscreen = false;
 
-		engineParams.myThreadRender = true;
+		engineParams.myThreadRender = false;
 
 		int Iwidth;
 		int Iheight;
@@ -113,7 +103,7 @@ void Init(int argc, char* argv[])
 
 	CEngine::DestroyInstance();
 	PostMaster::DestroyInstance();
-	DL_Debug::Debug::Destroy();
+	DL_Debug::Debug::DestroyInstance();
 	CommandLineManager::DestroyInstance();
 
 	DumpMemoryLeeks();

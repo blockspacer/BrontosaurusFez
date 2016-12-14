@@ -74,7 +74,7 @@ void CGameObject::Receive(const eComponentMessageType aMessageType, const SCompo
 	}
 }
 
-CGameObject::CGameObject(CObjectManager &aManager) : myTransformId(0), myManager(aManager)
+CGameObject::CGameObject(CGameObjectManager &aManager) : myTransformId(0), myManager(aManager)
 {
 	myComponents.Init(4);
 }

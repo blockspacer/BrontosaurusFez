@@ -43,9 +43,9 @@ namespace CU
 		SetThreadName(GetCurrentThreadId(), threadName);
 	}
 
-	void SetThreadName(std::thread* thread, const char* threadName)
+	void SetThreadName(std::thread& thread, const char* threadName)
 	{
-		DWORD threadId = ::GetThreadId(static_cast<HANDLE>(thread->native_handle()));
+		DWORD threadId = ::GetThreadId(static_cast<HANDLE>(thread.native_handle()));
 		SetThreadName(threadId, threadName);
 	}
 

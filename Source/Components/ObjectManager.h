@@ -1,5 +1,4 @@
 #pragma once
-//#include "../CommonUtilities/GrowingArray.h"
 #include "../CommonUtilities/matrix44.h"
 #include "Component.h"
 #include "..\CommonUtilities\stack.h"
@@ -7,11 +6,11 @@
 
 class CGameObject;
 
-class CObjectManager
+class CGameObjectManager
 {
 public:
-	CObjectManager();
-	~CObjectManager();
+	CGameObjectManager();
+	~CGameObjectManager();
 
 	CGameObject* CreateGameObject();
 	CGameObject* CreateGameObject(const CU::Matrix44f& aMatrix);
@@ -37,7 +36,7 @@ private:
 	CU::GrowingArray<CGameObject*> myObjectsCreated;
 };
 
-inline CGameObject* CObjectManager::CreateGameObject()
+inline CGameObject* CGameObjectManager::CreateGameObject()
 {
 	return CreateGameObject(CU::Matrix44f::Identity);
 }

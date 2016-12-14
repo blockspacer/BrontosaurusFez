@@ -1,7 +1,6 @@
 #pragma once
 #include "../CommonUtilities/matrix44.h"
 #include "../CommonUtilities/DynamicString.h"
-//#include "../CommonUtilities/GrowingArray.h"
 #include "../CommonUtilities/Vector2.h"
 #include "../CommonUtilities/Camera.h"
 
@@ -45,6 +44,7 @@ struct SRenderMessage
 		eRenderStreak,
 		eRenderText,
 		eRenderDebugObjs,
+		eRenderAnimationModel
 	};
 	eRenderMessageType myType;
 
@@ -60,6 +60,15 @@ struct SRenderModelMessage : SRenderMessage
 	Lights::SDirectionalLight* myDirectionalLight;
 	CU::GrowingArray<CPointLightInstance*>* myPointLights;
 
+};
+
+struct SRenderAnimationModelMessage : SRenderModelMessage 
+{
+	SRenderAnimationModelMessage() { myType = SRenderMessage::eRenderMessageType::eRenderAnimationModel; memset(myBoneMatrices, 0, ourMaxBoneCount * ourMatrixSize); }
+	static const unsigned int ourMaxBoneCount = 32u;
+	static const unsigned int ourMatrixSize = sizeof(CU::Matrix44f);
+
+	char myBoneMatrices[ourMaxBoneCount * ourMatrixSize];
 };
 
 struct SRenderGUIModelMessage : SRenderMessage

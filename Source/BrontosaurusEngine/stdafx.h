@@ -13,10 +13,12 @@
 
 // C RunTime Header Files
 #include <stdlib.h>
+#include <utility>
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
 #include <assert.h>
+#include <fstream>
 
 #ifndef SAFE_DELETE
 #define SAFE_DELETE(ptr) delete ptr; ptr = nullptr

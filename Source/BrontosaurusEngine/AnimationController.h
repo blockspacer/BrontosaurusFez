@@ -13,20 +13,23 @@
 #include <string>
 
 #include "../CommonUtilities/matrix44.h"
+
 using mat4 = CU::Matrix44f;
 
-class cBone {
+class CBone {
 public:
 
 	std::string Name;
 	mat4 Offset, LocalTransform, GlobalTransform, OriginalLocalTransform;
-	cBone* Parent;
-	std::vector<cBone*> Children;
+	CBone* Parent;
+	std::vector<CBone*> Children;
 
-	cBone() :Parent(0){}
-	~cBone(){ for(size_t i(0); i< Children.size(); i++) delete Children[i]; }
+	CBone() :Parent(0){}
+	~CBone(){ for(size_t i(0); i< Children.size(); i++) delete Children[i]; }
 };
-class cAnimationChannel{
+
+class CAnimationChannel
+{
 public:
 	std::string Name;
 	std::vector<aiVectorKey> mPositionKeys;
@@ -34,17 +37,17 @@ public:
 	std::vector<aiVectorKey> mScalingKeys;
 };
 
-class cAnimEvaluator{
+class CAnimEvaluator{
 public:
 
-	cAnimEvaluator(): mLastTime(0.0f), TicksPerSecond(0.0f), Duration(0.0f), PlayAnimationForward(true) {}
-	cAnimEvaluator( const aiAnimation* pAnim);
-	void Evaluate( float pTime, std::map<std::string, cBone*>& bones);
+	CAnimEvaluator(): mLastTime(0.0f), TicksPerSecond(0.0f), Duration(0.0f), PlayAnimationForward(true) {}
+	CAnimEvaluator( const aiAnimation* pAnim);
+	void Evaluate( float pTime, std::map<std::string, CBone*>& bones);
 	std::vector<mat4>& GetTransforms(float dt){ return Transforms[GetFrameIndexAt(dt)]; }
 	unsigned int GetFrameIndexAt(float time);
 
 	std::string Name;
-	std::vector<cAnimationChannel> Channels;
+	std::vector<CAnimationChannel> Channels;
 	bool PlayAnimationForward;// play forward == true, play backward == false
 	float mLastTime, TicksPerSecond, Duration;	
 	std::vector<std::tuple<unsigned int, unsigned int, unsigned int> > mLastPositions;
@@ -52,13 +55,14 @@ public:
 };
 
  
-class SceneAnimator{
+class CSceneAnimator
+{
 public:
 
-	SceneAnimator(): Skeleton(0), CurrentAnimIndex(-1) {}
-	~SceneAnimator(){ Release(); }
+	CSceneAnimator(): Skeleton(0), CurrentAnimIndex(-1) {}
+	~CSceneAnimator(){ Release(); }
 
-	void Init(const aiScene* pScene);// this must be called to fill the SceneAnimator with valid data
+	void Init(const aiScene* pScene);// this must be called to fill the CSceneAnimator with valid data
 	void Release();// frees all memory and initializes everything to a default state
 	bool HasSkeleton() const { return !Bones.empty(); }// lets the caller know if there is a skeleton present
 	// the set animation returns whether the animation changed or is still the same. 
@@ -86,27 +90,27 @@ public:
 	// same as above, except takes the index
 	mat4 GetBoneTransform(float dt, unsigned int bindex) {  return Animations[CurrentAnimIndex].GetTransforms(dt)[bindex]; }
 
-	std::vector<cAnimEvaluator> Animations;// a std::vector that holds each animation 
+	std::vector<CAnimEvaluator> Animations;// a std::vector that holds each animation 
 	int32_t CurrentAnimIndex;/** Current animation index */
 
 protected:
 
-	cBone* Skeleton;/** Root node of the internal scene structure */
-	std::map<std::string, cBone*> BonesByName;/** Name to node map to quickly find nodes by their name */
+	CBone* Skeleton;/** Root node of the internal scene structure */
+	std::map<std::string, CBone*> BonesByName;/** Name to node map to quickly find nodes by their name */
 	std::map<std::string, unsigned int> BonesToIndex;/** Name to node map to quickly find nodes by their name */
 	std::map<std::string, uint32_t> AnimationNameToId;// find animations quickly
-	std::vector<cBone*> Bones;// DO NOT DELETE THESE when the destructor runs... THEY ARE JUST COPIES!!
+	std::vector<CBone*> Bones;// DO NOT DELETE THESE when the destructor runs... THEY ARE JUST COPIES!!
 	std::vector<mat4> Transforms;// temp array of transfrorms
 
 
-	void UpdateTransforms(cBone* pNode);
-	void CalculateBoneToWorldTransform(cBone* pInternalNode);/** Calculates the global transformation matrix for the given internal node */
+	void UpdateTransforms(CBone* pNode);
+	void CalculateBoneToWorldTransform(CBone* pInternalNode);/** Calculates the global transformation matrix for the given internal node */
 
 	void Calculate( float pTime);
 	void CalcBoneMatrices();
 
 	void ExtractAnimations(const aiScene* pScene);
-	cBone* CreateBoneTree( aiNode* pNode, cBone* pParent);// Recursively creates an internal node structure matching the current scene and animation. 
+	CBone* CreateBoneTree( aiNode* pNode, CBone* pParent);// Recursively creates an internal node structure matching the current scene and animation. 
 	
 };
 

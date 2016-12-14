@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "InvertMatrix.h"
+#include <xmmintrin.h>
 
 namespace CU
 {

@@ -1,6 +1,5 @@
 #pragma once
 #include "plane.h"
-//#include "GrowingArray.h"
 
 namespace CU
 {
