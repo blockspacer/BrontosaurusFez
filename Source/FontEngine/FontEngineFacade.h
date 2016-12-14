@@ -12,10 +12,9 @@ public:
 	static CFontEngineFacade GetInstance();
 	static void DestroyInstance();
 
-	void Init();
-	CFT_FontFacade GetFace(const char* aFilePath);
+	void Init() const;
+	CFT_FontFacade GetFace(const char* aFilePath) const;
 private:
-
 
 	static CFontEngine* ourInstance;
 };

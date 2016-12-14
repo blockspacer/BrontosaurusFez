@@ -21,6 +21,7 @@
 #include "DebugInfoDrawer.h"
 #include "ThreadNamer.h"
 #include "../Audio/AudioInterface.h"
+#include "../FontEngine/FontEngineFacade.h"
 
 CEngine* CEngine::myInstance = nullptr;
 
@@ -73,9 +74,11 @@ void CEngine::Init(SInitEngineParams& aInitEngineParams)
 	myRenderer = new CRenderer();
 
 	myLineDrawer = new CLineDrawer();
+	CFontEngineFacade::CreateInstance();
+	myFontEngine = CFontEngineFacade::GetInstance();
 	myDebugInfoDrawer = new CDebugInfoDrawer(aInitEngineParams.myDebugFlags);
 	
-	
+
 	ShowCursor(TRUE);
 
 	bool result;

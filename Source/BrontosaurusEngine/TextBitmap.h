@@ -17,7 +17,7 @@ public:
 
 	void Init(int aWidth, int aHeight);
 
-	void DrawMono(const CU::Vector2i &aPosition, const CU::Vector2i &aSize, unsigned char* aBuffer, const CU::Vector3c aColour = CU::Vector3c(0,0,0));
+	void DrawMono(const CU::Vector2i &aPosition, const CU::Vector2i &aSize, unsigned char* aBuffer, const CU::Vector3<unsigned char> aColour = CU::Vector3<unsigned char>(0,0,0));
 	unsigned char* CopyBitmapData();
 	unsigned int GetByteSize() const;
 	unsigned int GetMemPitch() const;

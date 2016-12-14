@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include <functional>
 #include "../CommonUtilities/vector2.h"
+#include "../FontEngine/FontEngineFacade.h"
 
 class CGame;
 class CModelManager;
@@ -133,7 +134,7 @@ private:
 
 	CDXFramework* myDXFramework;
 	CU::ThreadPool* myThreadPool;
-
+	CFontEngineFacade myFontEngine;
 	static CEngine* myInstance;
 
 	CGame* myGameRef;

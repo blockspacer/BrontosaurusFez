@@ -148,6 +148,7 @@ namespace CU
 	};
 
 	using Vector3c = Vector3<char>;
+	using Vector3uc = Vector3<unsigned char>;
 	using Vector3i = Vector3<int>;
 	using Vector3ui = Vector3<unsigned int>;
 	using Vector3f = Vector3<float>;

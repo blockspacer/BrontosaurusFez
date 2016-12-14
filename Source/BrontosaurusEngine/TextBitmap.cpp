@@ -26,7 +26,7 @@ void CTextBitmap::Init(int aWidth, int aHeight)
 	myHeigth = aHeight;
 }
 
-void CTextBitmap::DrawMono(const CU::Vector2i& aPosition, const CU::Vector2i& aSize, unsigned char* aBuffer, const CU::Vector3c aColour)
+void CTextBitmap::DrawMono(const CU::Vector2i& aPosition, const CU::Vector2i& aSize, unsigned char* aBuffer, const CU::Vector3<unsigned char> aColour)
 {
 	CU::Vector2i penPosition(0, 0);
 

@@ -3,10 +3,13 @@
 #include "../BrontosaurusEngine/TextBitmap.h"
 #include "../CommonUtilities/DL_Debug.h"
 #include "../CommonUtilities/vector2.h"
-#include <d3d10sdklayers.h>
 #include "../BrontosaurusEngine/Engine.h"
 #include "../BrontosaurusEngine/DXFramework.h"
 
+#include FT_FREETYPE_H
+#include "../BrontosaurusEngine/EModelBluePrint.h"
+#include "../BrontosaurusEngine/Effect.h"
+#include "../BrontosaurusEngine/ShaderManager.h"
 
 #ifndef ERROR_CHECK
 #define ERROR_CHECK(aError, msg) assert(aError == FT_Err_Ok && msg);
@@ -17,11 +20,21 @@ CFT_Font::CFT_Font()
 {
 	myFace = nullptr;
 	myFacePath = nullptr;
+
+	myCurrentGlyph.myGlyphIndex = 0;
+	myCurrentGlyph.mySlot = nullptr;
+	myEffect = nullptr;
+
+	CreateEffect();
 }
 
 
 CFT_Font::~CFT_Font()
 {
+	if (myEffect != nullptr)
+	{
+		delete myEffect;
+	}
 }
 
 void CFT_Font::SetSize(const int pt, const  int aDeviceWidth, const unsigned int aDeviceHeight)
@@ -35,87 +48,101 @@ void CFT_Font::SetSize(const int pt, const  int aDeviceWidth, const unsigned int
 
 }
 
-CTextBitmap CFT_Font::RenderText(const wchar_t* aString, const int aStringLength, const CU::Vector2i& aTargetSize)
+ID3D11ShaderResourceView* CFT_Font::GetCharResourceView(wchar_t aChar)
 {
-	if (myFace == nullptr)
+	const FT_UInt glyphIndex = FT_Get_Char_Index(myFace, aChar);
+	if (myRenderedGlyphs.count(glyphIndex) < 1)
 	{
-		DL_ASSERT("Font not initialized");
+		CreateCharTexture(glyphIndex);
 	}
-
-	CTextBitmap textBitmap;
-	textBitmap.Init(aTargetSize.x, aTargetSize.y);
-
-	const bool useKerning = FT_HAS_KERNING(myFace);
-
-	CU::Vector2i aPenPosition(0, 0);
-
-	FT_UInt prevoiusGlyph = 0;
-	for (int i = 0; i < aStringLength; ++i)
-	{
-		FT_UInt glyphIndex;
-
-		glyphIndex = FT_Get_Char_Index(myFace, static_cast<FT_ULong>(aString[i]));
-
-		if (useKerning && prevoiusGlyph && glyphIndex)
-		{
-			FT_Vector delta;
-
-			FT_Get_Kerning(myFace, prevoiusGlyph, glyphIndex, FT_KERNING_DEFAULT, &delta);
-
-			aPenPosition.x += delta.x >> 6;
-		}
-
-		FT_Error error;
-
-		error = FT_Load_Glyph(myFace, glyphIndex, FT_LOAD_DEFAULT);
-
-		if (error)
-		{
-			continue;
-		}
-
-		error = FT_Render_Glyph(myFace->glyph, FT_RENDER_MODE_NORMAL);
-
-		if (error)
-		{
-			continue;
-		}
-
-		FT_GlyphSlot const glyphSlot = myFace->glyph;
-
-		const int penX = aPenPosition.x + glyphSlot->bitmap_left;
-		const int penY = aPenPosition.y + glyphSlot->bitmap_top;
-		const CU::Vector2i finalPosition(penX, penY);
-
-
-		textBitmap.DrawMono(finalPosition, CU::Vector2i(glyphSlot->bitmap.width, glyphSlot->bitmap.rows), glyphSlot->bitmap.buffer);
-
-		aPenPosition.x += glyphSlot->advance.x >> 6;
-
-		prevoiusGlyph = glyphIndex;
-	}
-	return textBitmap;
+	ID3D11ShaderResourceView* temp;
+	temp = myRenderedGlyphs[glyphIndex];
+	return temp;
 }
 
+CU::Vector2i CFT_Font::GetAdvance(const wchar_t aNextChar, const wchar_t aPrevoiusChar, const bool aUseKerning)
+{
+	const FT_UInt nextGlyph = FT_Get_Char_Index(myFace, aNextChar);
+	const FT_UInt previousGlyph = FT_Get_Char_Index(myFace, aPrevoiusChar);
+	return GetAdvance(nextGlyph, previousGlyph, aUseKerning);
+}
+
+CU::Vector2i CFT_Font::GetAdvance(const FT_UInt aNextGlyph, const FT_UInt aPrevoiusGlyph, const bool aUseKerning)
+{
+
+	FT_Vector ftAdvance;
+
+	const FT_UInt resetGlyph = myCurrentGlyph.myGlyphIndex;
+	LoadGlyph(aPrevoiusGlyph);
+	
+	ftAdvance = myCurrentGlyph.mySlot->advance;
+	
+	LoadGlyph(resetGlyph);
+
+	if (aUseKerning == true)
+	{
+		FT_Vector delta;
+
+		FT_Get_Kerning(myFace, aPrevoiusGlyph, aNextGlyph, FT_KERNING_DEFAULT, &delta);
+
+		ftAdvance.x += delta.x;
+	}
+
+	const CU::Vector2i finalAdvance(ftAdvance.x * 64, ftAdvance.y * 64);
+
+	return finalAdvance;
+}
+
+CU::Vector2i CFT_Font::GetGlyphSize(wchar_t aChar)
+{
+	const FT_UInt glyphIndex = FT_Get_Char_Index(myFace, aChar);
+	if (myRenderedGlyphs.count(glyphIndex) < 1)
+	{
+		CreateCharTexture(glyphIndex);
+	}
+	return myGlyphSizes[glyphIndex];
+}
+
+CEffect* CFT_Font::GetEffect() const
+{
+	return myEffect;
+}
+
+FT_Error CFT_Font::LoadGlyph(FT_UInt aGlyphIndex)
+{
+	if (myCurrentGlyph.mySlot == nullptr || aGlyphIndex != myCurrentGlyph.myGlyphIndex)
+	{
+		const FT_Error error = FT_Load_Glyph(myFace, aGlyphIndex, FT_LOAD_DEFAULT);
+		myCurrentGlyph.mySlot = myFace->glyph;
+		return error;
+	}
+
+	return static_cast<FT_Error>(0);
+}
+
+CTextBitmap CFT_Font::RenderChar(wchar_t aChar)
+{
+	const FT_UInt glyphIndex= FT_Get_Char_Index(myFace, aChar);
+	return  RenderChar(glyphIndex);
+}
 
 CTextBitmap CFT_Font::RenderChar(FT_UInt aGlyphIndex) 
 {
 	FT_Error error;
 
-	error = FT_Load_Glyph(myFace, aGlyphIndex, FT_LOAD_DEFAULT);
+	error = LoadGlyph(aGlyphIndex);
 	error = FT_Render_Glyph(myFace->glyph, FT_RENDER_MODE_NORMAL);
 	
 	FT_GlyphSlot const glyphSlot = myFace->glyph;
 
 	CTextBitmap charBitmap;
 	charBitmap.Init(glyphSlot->bitmap.width, glyphSlot->bitmap.rows);
-	const int fuckingIntforSomkeFuckingreason = 0;
-	charBitmap.DrawMono(CU::Vector2i(fuckingIntforSomkeFuckingreason, fuckingIntforSomkeFuckingreason), {static_cast<int>(glyphSlot->bitmap.width), static_cast<int>(glyphSlot->bitmap.rows)}, glyphSlot->bitmap.buffer);
+	charBitmap.DrawMono(CU::Vector2i(glyphSlot->bitmap_left, -glyphSlot->bitmap_top), {static_cast<int>(glyphSlot->bitmap.width), static_cast<int>(glyphSlot->bitmap.rows)}, glyphSlot->bitmap.buffer, CU::Vector3uc(0xff, 0xff, 0xff));
 
 	return charBitmap;
 }
 
-void CFT_Font::CreateCharTexture(FT_UInt aGlyphIndex)
+void CFT_Font::CreateCharTexture(const FT_UInt aGlyphIndex)
 {
 	CTextBitmap bitmap = RenderChar(aGlyphIndex);
 
@@ -156,6 +183,17 @@ void CFT_Font::CreateCharTexture(FT_UInt aGlyphIndex)
 	}
 
 	myRenderedGlyphs[aGlyphIndex] = resourceView;
+	myGlyphSizes[aGlyphIndex] = CU::Vector2i(bitmap.GetWidth(), bitmap.GetHeight());
 
 	texture2D->Release();
+}
+
+void CFT_Font::CreateEffect()
+{
+	const unsigned shaderBlueprint = EModelBluePrint_Sprite2D;
+	ID3D11PixelShader* pixeruShaderu = SHADERMGR->LoadPixelShader(L"Shaders/sprite_shader.fx", shaderBlueprint);
+	ID3D11VertexShader* vertexShader = SHADERMGR->LoadVertexShader(L"Shaders/sprite_shader.fx", shaderBlueprint);
+	ID3D11InputLayout* inputLayout = SHADERMGR->LoadInputLayout(L"Shaders/sprite_shader.fx", shaderBlueprint);
+
+	myEffect = new CEffect(vertexShader, pixeruShaderu, nullptr, inputLayout, D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
