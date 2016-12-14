@@ -29,10 +29,10 @@ public:
 
 	struct SParticle
 	{
-		CU::Vector4f pos;
+		CU::Vector4f position; // stores rotation in W
+		CU::Vector4f color;
 		float size;
-		float alpha; //size 6
-
+		float garbage[3];
 	};
 
 	//doesn't need to be alligned since it's not going to the GPU ?
