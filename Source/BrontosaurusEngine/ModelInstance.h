@@ -62,7 +62,7 @@ private:
 
 	CModel* myModel;
 	CSceneAnimator* mySceneAnimator;
-	float mySecondsLived;
+	float myAnimationCounter;
 	bool myIsVisible;
 };
 
