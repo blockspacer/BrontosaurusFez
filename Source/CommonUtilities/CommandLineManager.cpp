@@ -10,30 +10,6 @@ void CommandLineManager::CreateInstance(int argc, char * argv[])
 	myInstance = new CommandLineManager(argc, argv);
 }
 
-void CommandLineManager::ActivateLogs()
-{
-	//if (HasArgument("-activatelog", "gameplay"))
-	//{
-	//	DL_Debug::Debug::GetInstance()->Activate(DL_Debug::eLogTypes::eGamePlay);
-	//}
-	//if (HasArgument("-activatelog", "resource"))
-	//{
-	//	DL_Debug::Debug::GetInstance()->Activate(DL_Debug::eLogTypes::eResource);
-	//}
-	//if (HasArgument("-activatelog", "engine"))
-	//{
-	//	DL_Debug::Debug::GetInstance()->Activate(DL_Debug::eLogTypes::eEngine);
-	//}
-	//if (HasArgument("-activatelog", "crash"))
-	//{
-	//	DL_Debug::Debug::GetInstance()->Activate(DL_Debug::eLogTypes::eCrash);
-	//}
-	//if (HasArgument("-activatelog", "threadedModels"))
-	//{
-	//	DL_Debug::Debug::GetInstance()->Activate(DL_Debug::eLogTypes::eThreadedModels);
-	//}
-}
-
 CommandLineManager* CommandLineManager::GetInstance()
 {
 	assert(myInstance != nullptr && "Command line parser not created (is NULL)");
@@ -136,8 +112,6 @@ CommandLineManager::CommandLineManager(int aArgc, char* aArgv[])
 	{
 		it->second.ShrinkToFit();
 	}
-
-	ActivateLogs();
 }
 
 CommandLineManager::~CommandLineManager()

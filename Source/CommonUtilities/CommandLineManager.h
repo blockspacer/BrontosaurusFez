@@ -8,7 +8,6 @@ public:
 	static void DestroyInstance();
 	static CommandLineManager* GetInstance();
 	
-	void ActivateLogs();
 	bool HasParameter(const char* aParameter);
 	bool HasArgument(const char* aParameter, const char* aArgument);
 	const std::string& GetArgument(const char* aParameter);

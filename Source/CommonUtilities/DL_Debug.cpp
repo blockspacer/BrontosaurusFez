@@ -248,6 +248,12 @@ namespace DL_Debug
 
 	void Debug::WriteLog(const eLogTypes aLogType, const char* aFormattedString, ...)
 	{
+		Log* log = myLogFiles[static_cast<int>(aLogType)];
+		if (log == nullptr)
+		{
+			return;
+		}
+
 		char buffer[MAX_STRING_BUFFER_SIZE] = {};
 		va_list args;
 
@@ -255,7 +261,7 @@ namespace DL_Debug
 		VSPRINTF(buffer, aFormattedString, args);
 		va_end(args);
 
-		myLogFiles[static_cast<int>(aLogType)]->Write(buffer);
+		log->Write(buffer);
 	}
 
 	void Debug::ShowMessageBox(const char* aMessage, ...)

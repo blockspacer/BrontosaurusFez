@@ -87,8 +87,10 @@ void CTextureManager::CreateTexture(const wchar_t* aTexturePath, CTexture* aNewT
 	texture->GetResource(&res);
 	result = res->QueryInterface<ID3D11Texture2D>(&pTextureInterface);
 	//CHECK_RESULT(result, "Could not get texture interface: %s", aTexturePath);
-	RESOURCES_LOG("Could not get texture interface: %ls", aTexturePath);
-	DL_PRINT_WARNING("Could not get texture interface: %ls", aTexturePath);
+	if (FAILED(result))
+	{
+		RESOURCES_LOG("Could not get texture interface: %ls", aTexturePath);
+	}
 
 	D3D11_TEXTURE2D_DESC desc;
 	pTextureInterface->GetDesc(&desc);
