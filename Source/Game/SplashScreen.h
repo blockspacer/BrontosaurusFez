@@ -1,6 +1,6 @@
 #pragma once
-#include "stdafx.h"
 #include "StateStack\State.h"
+#include "PostMaster\Subscriber.h"
 
 enum class eFadeState
 {

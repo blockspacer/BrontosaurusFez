@@ -21,7 +21,7 @@ void NavigationComponent::Receive(const eComponentMessageType aMessageType, cons
 	switch (aMessageType)
 	{
 	case eComponentMessageType::eSetNavigationTarget:
-		CalculatePath(aMessageData.myVector2);
+		CalculatePath(aMessageData.myVector2f);
 		break;
 	default:
 		break;

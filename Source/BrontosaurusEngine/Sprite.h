@@ -1,8 +1,5 @@
 #pragma once
 
-//#include "../CommonUtilities/GrowingArray.h"
-#include <atomic>
-
 class CSpriteInstance;
 class CEffect;
 class CSurface;

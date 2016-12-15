@@ -2,9 +2,6 @@
 
 #include "MessageType.h"
 
-//#include "../CommonUtilities/StaticArray.h"
-//#include "../CommonUtilities/GrowingArray.h"
-
 #define POSTMASTER PostMaster::GetInstance()
 
 class Subscriber;

@@ -47,6 +47,7 @@ enum class eComponentMessageType
 	eSetDamage,
 	eSetNavigationTarget,
 	eSetPath,
+	eStartedMoving
 };
 
 struct SComponentMessageData
@@ -62,15 +63,14 @@ struct SComponentMessageData
 		int myInt;
 		CU::Matrix33f myProjectileRotationMatrix;
 		CU::Matrix44f myMatrix44;
-		CU::Vector2f myVector2;
+		CU::Vector2f myVector2f;
 		CU::GrowingArray<CU::Vector3f>* myVector3ListPointer;
 		
 		eComponentType myComponentTypeAdded;
-		ValueObserver<int>* myValueObserver;
 		unsigned short myUnsingedShort;
 	};
 };
 
-inline SComponentMessageData::SComponentMessageData() :myComponent(nullptr)
+inline SComponentMessageData::SComponentMessageData() : myComponent(nullptr)
 {
 }

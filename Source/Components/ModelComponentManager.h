@@ -1,6 +1,5 @@
 #pragma once
 #include "ModelComponent.h"
-//#include "..\CommonUtilities\GrowingArray.h"
 #include "../BrontosaurusEngine/ModelShapes.h"
 
 #define MODELCOMP_MGR CModelComponentManager::GetInstance()

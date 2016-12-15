@@ -33,7 +33,8 @@ int WINAPI WinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/, LPSTR /
 
 void Init(int argc, char* argv[])
 {
-	CommandLineManager::GetInstance()->SetArguments(argc, argv);
+	CommandLineManager::CreateInstance(argc, argv);
+	DL_Debug::Debug::CreateInstance();
 	PostMaster::CreateInstance();
 
 	{
@@ -102,7 +103,7 @@ void Init(int argc, char* argv[])
 
 	CEngine::DestroyInstance();
 	PostMaster::DestroyInstance();
-	DL_Debug::Debug::Destroy();
+	DL_Debug::Debug::DestroyInstance();
 	CommandLineManager::DestroyInstance();
 
 	DumpMemoryLeeks();

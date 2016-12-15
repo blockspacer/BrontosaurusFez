@@ -33,9 +33,13 @@ CModelComponent::~CModelComponent()
 CU::Matrix44f CModelComponent::GetToWorldTransform()
 {
 	if (GetParent() != nullptr)
+	{
 		return GetParent()->GetToWorldTransform();
+	}
 	else
+	{
 		return CU::Matrix44f::Identity;
+	}
 }
 
 void CModelComponent::SetVisibility(const bool aVisibility)
@@ -57,6 +61,9 @@ void CModelComponent::Receive(const eComponentMessageType aType, const SComponen
 	case eComponentMessageType::eMoving:
 		myModel->SetTransformation(GetToWorldTransform());
 		break;
+	case eComponentMessageType::eStartedMoving:
+		ChangeAnimation(aData.myString);
+		break;
 	}
 }
 
@@ -71,4 +78,9 @@ CModelInstance* CModelComponent::GetAndReleaseModel()
 	CModelInstance* const tempModel = myModel;
 	myModel = nullptr;
 	return tempModel;
+}
+
+void CModelComponent::ChangeAnimation(const char* aAnimationKey)
+{
+	myModel->ChangeAnimation(aAnimationKey);
 }

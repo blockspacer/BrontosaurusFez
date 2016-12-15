@@ -50,9 +50,6 @@
     <Filter Include="Streaks">
       <UniqueIdentifier>{6cbcd24e-e312-4d34-ab7a-c5354fe70489}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GUIRenderer">
-      <UniqueIdentifier>{9a1168b9-cd63-4712-b896-5a4099e84efc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Renderer">
       <UniqueIdentifier>{7c401d84-94f5-420a-ace6-9f10c874bfef}</UniqueIdentifier>
     </Filter>
@@ -166,9 +163,6 @@
     <ClInclude Include="LineDrawer.h" />
     <ClInclude Include="StreakEmitterInstance.h">
       <Filter>Streaks</Filter>
-    </ClInclude>
-    <ClInclude Include="GUIRenderer.h">
-      <Filter>GUIRenderer</Filter>
     </ClInclude>
     <ClInclude Include="RenderPackage.h">
       <Filter>Renderer</Filter>
@@ -302,9 +296,6 @@
     <ClCompile Include="LineDrawer.cpp" />
     <ClCompile Include="StreakEmitterInstance.cpp">
       <Filter>Streaks</Filter>
-    </ClCompile>
-    <ClCompile Include="GUIRenderer.cpp">
-      <Filter>GUIRenderer</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
       <Filter>Renderer</Filter>

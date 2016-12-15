@@ -52,6 +52,8 @@ public:
 
 	void SetTransformation(CU::Matrix44f& aTransformation);
 	void SetPosition(CU::Vector3f aPosition);
+
+	void ChangeAnimation(const char* aAnimationKey);
 	
 	//LAT!
 	inline CModel* GetModel();
@@ -62,7 +64,7 @@ private:
 
 	CModel* myModel;
 	CSceneAnimator* mySceneAnimator;
-	float mySecondsLived;
+	float myAnimationCounter;
 	bool myIsVisible;
 };
 

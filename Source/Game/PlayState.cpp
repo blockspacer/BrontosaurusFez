@@ -106,7 +106,7 @@ void CPlayState::Load()
 	//hue hue dags att fula ner play state - Alex(Absolut inte Marcus); // snälla slå Johan inte mig(Alex);
 	CGameObject* tempPlayerObject = myGameObjectManager->CreateGameObject();
 	CGameObject* tempWorldObject = myGameObjectManager->CreateGameObject();
-	CModelComponent* tempModelComponentForWorldObject = CModelComponentManager::GetInstance().CreateComponent("Models/Animation/sampleAnim.fbx");
+	CModelComponent* tempModelComponentForWorldObject = CModelComponentManager::GetInstance().CreateComponent("Models/Animation/sampleAnim.fbx"/*"Models/Player/player_walk.fbx"*/);
 	tempWorldObject->GetLocalTransform().Move(CU::Vector3f(0.0f, 000.0f, 500.0f));
 	//tempWorldObject->GetLocalTransform().Rotate(-90, CU::Axees::X);
 

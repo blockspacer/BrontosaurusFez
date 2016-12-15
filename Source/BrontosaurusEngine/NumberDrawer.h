@@ -1,7 +1,6 @@
 #pragma once
 #include "SpriteInstance.h"
 #include "DynamicString.h"
-//#include "GrowingArray.h"
 
 namespace
 {

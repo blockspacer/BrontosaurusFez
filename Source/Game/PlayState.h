@@ -1,7 +1,7 @@
 #pragma once
 #include "../StateStack/State.h"
-#include "../BrontosaurusEngine/StreakEmitterInstance.h"
-//#include "../CommonUtilities/GrowingArray.h"
+#include "../PostMaster/Subscriber.h"
+#include "../BrontosaurusEngine/StreakEmitterInstance.h" //TODO: solve this including hell
 #include "../BrontosaurusEngine/Lights.h"
 #include "../BrontosaurusEngine/Scene.h"
 #include "../Physics/PhysicsManager.h"

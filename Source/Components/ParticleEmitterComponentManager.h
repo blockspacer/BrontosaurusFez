@@ -1,5 +1,4 @@
 #pragma once
-//#include "..\CommonUtilities\GrowingArray.h"
 #include "ParticleEmitterComponent.h"
 #include "../BrontosaurusEngine/EmitterData.h"
 

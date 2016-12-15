@@ -16,14 +16,14 @@
 
 static CU::Vector2f locMousePosition;
 
-GUI::GUIManager::GUIManager(const bool aShouldStealInput)
+GUI::GUIManager::GUIManager()
 	: myWidgetContainer(nullptr)
 	, myFocusedWidget(nullptr)
 	, myWidgetAtMouse(nullptr)
 	, myCursor(nullptr)
 	, myShouldUpdate(true)
 	, myShouldRender(true)
-	, myShouldStealInput(aShouldStealInput)
+	, myShouldStealInput(true)
 	, myCamera(nullptr)
 	, myShouldRenderMouse(true)
 {
@@ -53,9 +53,9 @@ void GUI::GUIManager::Init()
 	PostMaster::GetInstance().AppendSubscriber(myCursor, eMessageType::eMouseMessage);
 }
 
-void GUI::GUIManager::Init(const char* aGUIScenePath, bool isOld)
+void GUI::GUIManager::Init(const char* aGUIScenePath)
 {
-	myWidgetContainer = WidgetFactory::CreateGUIScene(aGUIScenePath, isOld, myCamera);
+	myWidgetContainer = WidgetFactory::CreateGUIScene(aGUIScenePath, myCamera);
 
 	myCursor = new GUICursor();
 	PostMaster::GetInstance().AppendSubscriber(myCursor, eMessageType::eMouseMessage);
@@ -67,11 +67,6 @@ void GUI::GUIManager::Init(const char* aGUIScenePath, bool isOld)
 		retryButton->SetVisibility(false);
 	}
 }
-
-//void GUI::GUIManager::Init(const char* aLuaScriptPath)
-//{
-//	myWidgetContainer = WidgetFactory::CreateGUIScene(aLuaScriptPath, myCamera);
-//}
 
 void GUI::GUIManager::Update(const CU::Time& aDeltaTime)
 {

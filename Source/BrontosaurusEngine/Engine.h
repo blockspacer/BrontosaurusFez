@@ -5,10 +5,8 @@
 #include "../FontEngine/FontEngineFacade.h"
 #include "TextInstance.h"
 
-class CGame;
 class CModelManager;
 class CSpriteManager;
-class CGUIRenderer;
 class CLineDrawer;
 class CWindowsWindow;
 class CDXFramework;
@@ -84,7 +82,6 @@ public:
 
 	inline CRenderer& GetRenderer();
 	inline CTextureManager& GetTextureManager();
-	inline CGUIRenderer& GetGUIRenderer();
 	inline CLineDrawer& GetLineDrawer();
 	inline CShaderManager * GetShaderManager();
 	inline CModelManager* GetModelManager();
@@ -115,7 +112,6 @@ private:
 	CWindowsWindow* myWindowsWindow;
 	CModelManager* myModelManager;
 	CSpriteManager* mySpriteManager;
-	CGUIRenderer* myGUIRenderer;
 	CLineDrawer* myLineDrawer;
 	CShaderManager* myShaderManager;
 	CLightManager* myLightManager;
@@ -138,7 +134,6 @@ private:
 	CFontEngineFacade myFontEngine;
 	static CEngine* myInstance;
 
-	CGame* myGameRef;
 	CRenderer* myRenderer;
 	
 	bool myThreadRender;
@@ -175,12 +170,6 @@ inline CSpriteManager& CEngine::GetSpriteManager()
 inline CTextureManager & CEngine::GetTextureManager()
 {
 	return *myTextureManager;
-}
-
-inline CGUIRenderer& CEngine::GetGUIRenderer()
-{
-	assert(myGUIRenderer != nullptr);
-	return *myGUIRenderer;
 }
 
 inline CLineDrawer& CEngine::GetLineDrawer()
