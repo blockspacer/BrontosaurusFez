@@ -235,6 +235,8 @@
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="ParticleEmitterComponent.h" />
     <ClInclude Include="ParticleEmitterComponentManager.h" />
+    <ClInclude Include="Skill.h" />
+    <ClInclude Include="SkillSystemComponent.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StreakEmitterComponent.h" />
     <ClInclude Include="targetver.h" />
@@ -258,6 +260,8 @@
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="ParticleEmitterComponent.cpp" />
     <ClCompile Include="ParticleEmitterComponentManager.cpp" />
+    <ClCompile Include="Skill.cpp" />
+    <ClCompile Include="SkillSystemComponent.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

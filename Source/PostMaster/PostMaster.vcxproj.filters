@@ -60,6 +60,7 @@
     <ClCompile Include="PushState.cpp">
       <Filter>Events\PushState</Filter>
     </ClCompile>
+    <ClCompile Include="InputMessagePressed.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Subscriber.h">
@@ -157,6 +158,9 @@
     <ClInclude Include="PushState.h">
       <Filter>Events\PushState</Filter>
     </ClInclude>
+    <ClInclude Include="PopCurrentState.h" />
+    <ClInclude Include="PostMaster.h" />
+    <ClInclude Include="InputMessagePressed.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Events">
@@ -224,6 +228,9 @@
     </Filter>
     <Filter Include="Events\PopTop2States">
       <UniqueIdentifier>{8d37bc54-7120-4ef6-9af6-9c26d6a05c0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events\InputMessagePressed">
+      <UniqueIdentifier>{1c03f578-17ff-4d90-b49c-3dbfe800b681}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

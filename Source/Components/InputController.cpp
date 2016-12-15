@@ -3,6 +3,7 @@
 #include "../PostMaster/Message.h"
 #include "../PostMaster/PostMaster.h"
 #include "../PostMaster/Event.h"
+#include "../CommonUtilities/EInputMessage.h"
 #include "../CommonUtilities/EMouseButtons.h"
 #include "GameObject.h"
 #include <iostream>
@@ -13,12 +14,14 @@
 InputController::InputController()
 {
 	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eMouseMessage);
+	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eInputMessagePressed);
 }
 
 
 InputController::~InputController()
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eInputMessagePressed);
 }
 
 void InputController::Update(float aDeltaTime)
@@ -65,6 +68,12 @@ eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButto
 		//data.myVector2f = playerPosition + CU::Vector2f(100.0f, 100.0f);
 		GetParent()->NotifyComponents(type, data);
 	}
+
+	return eMessageReturn::eContinue;
+}
+
+eMessageReturn InputController::TakeInputMessage(const CU::eInputMessage aMouseButton)
+{
 
 	return eMessageReturn::eContinue;
 }

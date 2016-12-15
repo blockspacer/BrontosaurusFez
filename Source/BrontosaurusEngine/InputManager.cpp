@@ -6,6 +6,7 @@
 
 #include "../CommonUtilities/EKeyboardKeys.h"
 #include "../CommonUtilities/EMouseButtons.h"
+#include "../CommonUtilities/EInputMessage.h"
 #include "../CommonUtilities/InputWrapper.h"
 #include "../CommonUtilities/XInputWrapper.h"
 #include "../CommonUtilities/vector2.h"
@@ -19,6 +20,7 @@
 #include "../PostMaster/KeyDown.h"
 #include "../PostMaster/KeyPressed.h"
 #include "../PostMaster/KeyReleased.h"
+#include "../PostMaster//InputMessagePressed.h"
 
 CInputManager::CInputManager()
 	: myDInputWrapper(nullptr)
@@ -96,6 +98,7 @@ void CInputManager::UpdateMouse()
 		{
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eMouseMessage, MouseClicked(mousePosition, CU::eMouseButtons::LBUTTON)));
 			//PostMaster::GetInstance().SendLetter(Message(eMessageType::eMousePressed, MouseClicked(mousePosition, CU::eMouseButtons::LBUTTON))); //kyle
+			PostMaster::GetInstance().SendLetter(Message(eMessageType::eInputMessagePressed, InputMessagePressed(CU::eInputMessage::LEFTMOUSEBUTTON)));
 
 		}
 		if (myDInputWrapper->IsMouseButtonReleased(CU::eMouseButtons::LBUTTON) == true)
@@ -124,6 +127,7 @@ void CInputManager::UpdateKeyboard()
 		{
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eKeyboardMessage, KeyPressed(myKeyDowns[i])));
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eKeyPressed, KeyPressed(myKeyDowns[i]))); // Kyle
+			PostMaster::GetInstance().SendLetter(Message(eMessageType::eInputMessagePressed, InputMessagePressed(static_cast<CU::eInputMessage>(myKeyDowns[i]))));
 		}
 	}
 
