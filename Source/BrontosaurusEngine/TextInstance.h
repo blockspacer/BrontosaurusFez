@@ -2,6 +2,7 @@
 #include "../CommonUtilities/DynamicString.h"
 #include "../CommonUtilities/vector4.h"
 #include "../CommonUtilities/vector2.h"
+#include "CoolText.h"
 
 class CText;
 
@@ -18,7 +19,7 @@ public:
 	CTextInstance();
 	~CTextInstance();
 
-	void Init(const CU::DynamicString& aFontPath = "Text/carl_font.fnt");
+	void Init(const CU::DynamicString& aFontPath = "Fonts/comic.ttf");
 	void Render();
 
 	inline void SetPosition(const CU::Vector2f& aPosition);
@@ -34,7 +35,7 @@ private:
 	CU::DynamicString myString;
 	CU::Vector4f myColor;
 	CU::Vector2f myPosition;
-	CText* myText;
+	CCoolText* myText;
 };
 
 inline void CTextInstance::SetPosition(const CU::Vector2f & aPosition)

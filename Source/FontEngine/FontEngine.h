@@ -5,6 +5,9 @@
 #include FT_FREETYPE_H
 #include "../CommonUtilities/GrowingArray.h"
 #include <map>
+#include "FT_FontFacade.h"
+
+//#pragma comment(lib, "C:\\Users\\sthahu2\\Documents\\Project\\BrontosaurusFez\\LibDependencies\\FreeType\\freetype27MT.lib")
 
 class CFT_Font;
 
@@ -14,7 +17,7 @@ public:
 	friend class CFontEngineFacade;
 
 	void Init();
-	CFT_Font* GetFace(const char* aFilePath);
+	CFT_FontFacade GetFace(const char* aFilePath);
 
 private:
 	CFT_Font* CreateFace(const char* aFilePath);

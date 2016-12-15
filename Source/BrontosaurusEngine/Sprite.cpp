@@ -88,10 +88,10 @@ void CSprite::Init(const char* aTexturePath)
 
 bool CSprite::InitBuffers()
 {
-	CU::Vector4f topLeft  = { 0.0f	, 1.0f  , 0.5f, 1.0f };
+	/*CU::Vector4f topLeft  = { 0.0f	, 1.0f  , 0.5f, 1.0f };
 	CU::Vector4f botLeft  = { 1.0f	, 0.0f	, 0.5f, 1.0f };
 	CU::Vector4f topRight = { 0.0f	, 0.0f  , 0.5f, 1.0f };
-	CU::Vector4f botRight = { 0.0f	, 1.0f	, 0.5f, 1.0f };
+	CU::Vector4f botRight = { 0.0f	, 1.0f	, 0.5f, 1.0f };*/
 
 	CU::Vector4f vertices[6] =
 	{
