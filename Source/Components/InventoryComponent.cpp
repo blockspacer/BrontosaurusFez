@@ -4,7 +4,7 @@
 
 InventoryComponent::InventoryComponent()
 {
-	//yHats.Init(16);
+	//Hats.Init(16);
 }
 
 InventoryComponent::~InventoryComponent()
