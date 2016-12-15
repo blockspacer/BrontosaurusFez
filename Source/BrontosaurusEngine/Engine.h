@@ -3,6 +3,7 @@
 #include <functional>
 #include "../CommonUtilities/vector2.h"
 #include "../FontEngine/FontEngineFacade.h"
+#include "TextInstance.h"
 
 class CGame;
 class CModelManager;
@@ -139,9 +140,10 @@ private:
 
 	CGame* myGameRef;
 	CRenderer* myRenderer;
-
+	
 	bool myThreadRender;
 
+	CTextInstance myTestText;
 };
 
 CWindowsWindow* CEngine::GetWindow()

@@ -88,7 +88,7 @@ CU::Vector2i CFT_Font::GetAdvance(const FT_UInt aNextGlyph, const FT_UInt aPrevo
 		ftAdvance.x += delta.x;
 	}
 
-	const CU::Vector2i finalAdvance(ftAdvance.x * 64, ftAdvance.y * 64);
+	const CU::Vector2i finalAdvance(ftAdvance.x / 64, ftAdvance.y / 64);
 
 	return finalAdvance;
 }
@@ -100,7 +100,23 @@ CU::Vector2i CFT_Font::GetGlyphSize(wchar_t aChar)
 	{
 		CreateCharTexture(glyphIndex);
 	}
-	return myGlyphSizes[glyphIndex];
+	return myGlyphData[glyphIndex].mySize;
+}
+
+CU::Vector2i CFT_Font::GetBearing(wchar_t aChar)
+{
+	const FT_UInt glyphIndex = FT_Get_Char_Index(myFace, aChar);
+	return GetBearing(glyphIndex);
+}
+
+CU::Vector2i CFT_Font::GetBearing(const FT_UInt aChar)
+{
+	if (myGlyphData.count(aChar) < 1)
+	{
+		CreateCharTexture(aChar);
+	}
+
+	return myGlyphData[aChar].myBearing;
 }
 
 CEffect* CFT_Font::GetEffect() const
@@ -131,19 +147,41 @@ CTextBitmap CFT_Font::RenderChar(FT_UInt aGlyphIndex)
 	FT_Error error;
 
 	error = LoadGlyph(aGlyphIndex);
+
+	if (error != 0)
+	{
+		CU::DynamicString bla("Freetype load glyph failed check on \"https://www.freetype.org/freetype2/docs/reference/ft2-error_code_values.html#FT_Err_XXX\" code: ");
+		bla += error;
+		DL_ASSERT(bla.c_str());
+	}
+
 	error = FT_Render_Glyph(myFace->glyph, FT_RENDER_MODE_NORMAL);
-	
+	if (error != 0)
+	{
+		CU::DynamicString bla("Freetype render glyph failed check on \"https://www.freetype.org/freetype2/docs/reference/ft2-error_code_values.html#FT_Err_XXX\" code: ");
+		bla += error;
+		DL_ASSERT(bla.c_str());
+	}
 	FT_GlyphSlot const glyphSlot = myFace->glyph;
 
 	CTextBitmap charBitmap;
-	charBitmap.Init(glyphSlot->bitmap.width, glyphSlot->bitmap.rows);
-	charBitmap.DrawMono(CU::Vector2i(glyphSlot->bitmap_left, -glyphSlot->bitmap_top), {static_cast<int>(glyphSlot->bitmap.width), static_cast<int>(glyphSlot->bitmap.rows)}, glyphSlot->bitmap.buffer, CU::Vector3uc(0xff, 0xff, 0xff));
-
+	if (glyphSlot->bitmap.width * glyphSlot->bitmap.rows > 0)
+	{
+		charBitmap.Init(glyphSlot->bitmap.width, glyphSlot->bitmap.rows);
+		charBitmap.DrawMono(CU::Vector2i(0, 0), { static_cast<int>(glyphSlot->bitmap.width), static_cast<int>(glyphSlot->bitmap.rows) }, glyphSlot->bitmap.buffer, CU::Vector3uc(0xff, 0xff, 0xff));
+	}
+	else
+	{
+		charBitmap.Init(1, 1);
+	}
+	myGlyphData[aGlyphIndex].myBearing = CU::Vector2i(glyphSlot->bitmap_left, glyphSlot->bitmap_top);
 	return charBitmap;
 }
 
 void CFT_Font::CreateCharTexture(const FT_UInt aGlyphIndex)
 {
+	myGlyphData[aGlyphIndex] = GlyphData();
+
 	CTextBitmap bitmap = RenderChar(aGlyphIndex);
 
 	D3D11_SUBRESOURCE_DATA* subresourceData = new D3D11_SUBRESOURCE_DATA;
@@ -183,8 +221,8 @@ void CFT_Font::CreateCharTexture(const FT_UInt aGlyphIndex)
 	}
 
 	myRenderedGlyphs[aGlyphIndex] = resourceView;
-	myGlyphSizes[aGlyphIndex] = CU::Vector2i(bitmap.GetWidth(), bitmap.GetHeight());
-
+	myGlyphData[aGlyphIndex].mySize = CU::Vector2i(bitmap.GetWidth(), bitmap.GetHeight());
+	
 	texture2D->Release();
 }
 

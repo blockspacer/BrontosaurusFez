@@ -25,7 +25,7 @@ struct TextVertexConstantBuffer
 CCoolText::CCoolText(const CU::DynamicString& aFontPath): myVertexConstantBuffer(nullptr), myPixelConstantBuffer(nullptr)
 {
 	myFont = CFontEngineFacade::GetInstance().GetFace(aFontPath.c_str());
-
+	myFont.SetSize(32, 0, 0);
 	InitBuffers();
 }
 
@@ -47,11 +47,14 @@ void CCoolText::Render(const CU::DynamicString& aString, const CU::Vector2f& aPo
 		if (i > 0)
 		{
 			const CU::Vector2i pixelAdvance = myFont.GetAdvance(wideString[i], wideString[i - 1], true);
-			const CU::Vector2f screenAdvance(static_cast<float>(pixelAdvance.x / WINDOW_SIZE.x), static_cast<float>(pixelAdvance.y / WINDOW_SIZE.y));
+			const CU::Vector2f screenAdvance(static_cast<float>(pixelAdvance.x) / WINDOW_SIZE.x, static_cast<float>(pixelAdvance.y) / WINDOW_SIZE.y);
 			penPosition += screenAdvance;
 		}
 
-		RenderCharacter(wideString[i], penPosition, aColor);
+		const CU::Vector2i bearing = myFont.GetBearing(wideString[i]);
+		const CU::Vector2f screenBearing(static_cast<float>(bearing.x) / WINDOW_SIZE.x, static_cast<float>(-bearing.y) / WINDOW_SIZE.y);
+
+		RenderCharacter(wideString[i], penPosition + screenBearing, aColor);
 	}
 }
 
@@ -96,7 +99,7 @@ bool CCoolText::InitBuffers()
 void CCoolText::RenderCharacter(const wchar_t aCharacter, const CU::Vector2f& aPosition, const CU::Vector4f& aColor)
 {
 	const CU::Vector2i glyphSize = myFont.GetCharSize(aCharacter);
-	UpdateAndSetVertexConstantBuffer(aPosition, {static_cast<float>(glyphSize.x / WINDOW_SIZE.x), static_cast<float>(glyphSize.y / WINDOW_SIZE.y)}, { 0.f,1.f,0.f,1.f }, aColor);
+	UpdateAndSetVertexConstantBuffer(aPosition, {static_cast<float>(glyphSize.x) / WINDOW_SIZE.x, static_cast<float>(glyphSize.y) / WINDOW_SIZE.y}, { 0.f,0.f,1.f,1.f }, aColor);
 
 	ID3D11ShaderResourceView* const shaderResourceView = myFont.GetCharResourceView(aCharacter);
 	DEVICE_CONTEXT->PSSetShaderResources(1u, 1u, &shaderResourceView);
@@ -106,6 +109,7 @@ void CCoolText::RenderCharacter(const wchar_t aCharacter, const CU::Vector2f& aP
 void CCoolText::ActivateEffect()
 {
 	CEffect *effect = myFont.GetEffect();
+	effect->Activate();
 }
 
 void CCoolText::UpdateAndSetVertexConstantBuffer(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::Vector4f& aRect, const CU::Vector4f& aColor)

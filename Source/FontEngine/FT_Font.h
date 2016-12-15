@@ -10,6 +10,15 @@
 
 class CTextBitmap;
 
+namespace
+{
+	struct GlyphData
+	{
+		CU::Vector2i mySize;
+		CU::Vector2i myBearing;
+	};
+}
+
 class CFT_Font
 {
 public:
@@ -25,6 +34,9 @@ public:
 
 	CU::Vector2i GetGlyphSize(wchar_t aChar);
 
+	CU::Vector2i GetBearing(const wchar_t aChar);
+	CU::Vector2i GetBearing(const FT_UInt aChar);
+
 	CEffect* GetEffect() const;
 	FT_Face myFace;
 	const char* myFacePath;
@@ -38,7 +50,7 @@ private:
 	void CreateCharTexture(const FT_UInt aGlyphIndex);
 	void CreateEffect();
 	std::map<unsigned, ID3D11ShaderResourceView*> myRenderedGlyphs;
-	std::map<unsigned, CU::Vector2i> myGlyphSizes;
+	std::map<unsigned, GlyphData> myGlyphData;
 
 
 	CEffect* myEffect;

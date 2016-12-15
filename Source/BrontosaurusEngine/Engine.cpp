@@ -78,6 +78,9 @@ void CEngine::Init(SInitEngineParams& aInitEngineParams)
 	myFontEngine = CFontEngineFacade::GetInstance();
 	myDebugInfoDrawer = new CDebugInfoDrawer(aInitEngineParams.myDebugFlags);
 	
+	myTestText.Init();
+	myTestText.SetText("Brontosaurs Fez: the hatty Engine");
+	myTestText.SetPosition({ 0.1f, 0.1f });
 
 	ShowCursor(TRUE);
 
@@ -98,10 +101,14 @@ void CEngine::Render()
 	//myDebugInfoDrawer->Update();
 	//myDebugInfoDrawer->Render(myWindowSize);
 
+
+
 	myRenderer->Render();
 
 	myLineDrawer->Render();
+	myTestText.Render();
 	myDXFramework->Render();
+
 }
 
 void CEngine::ThreadedRender()

@@ -13,17 +13,20 @@ class CTextBitmap
 {
 public:
 	CTextBitmap();
+	CTextBitmap(const CTextBitmap& aBitmap);
 	~CTextBitmap();
 
 	void Init(int aWidth, int aHeight);
 
 	void DrawMono(const CU::Vector2i &aPosition, const CU::Vector2i &aSize, unsigned char* aBuffer, const CU::Vector3<unsigned char> aColour = CU::Vector3<unsigned char>(0,0,0));
-	unsigned char* CopyBitmapData();
+	unsigned char* CopyBitmapData() const;
 	unsigned int GetByteSize() const;
 	unsigned int GetMemPitch() const;
 
 	int GetWidth()const;
 	int GetHeight()const;
+
+	CTextBitmap operator=(const CTextBitmap &);
 private:
 	int myWidth;
 	int myHeigth;
