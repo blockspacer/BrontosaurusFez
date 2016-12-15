@@ -226,6 +226,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="InputController.h" />
     <ClInclude Include="InputControllerManager.h" />
+    <ClInclude Include="InventoryComponent.h" />
     <ClInclude Include="ModelComponent.h" />
     <ClInclude Include="ModelComponentManager.h" />
     <ClInclude Include="MovementComponent.h" />
@@ -248,6 +249,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="InputController.cpp" />
     <ClCompile Include="InputControllerManager.cpp" />
+    <ClCompile Include="InventoryComponent.cpp" />
     <ClCompile Include="ModelComponent.cpp" />
     <ClCompile Include="ModelComponentManager.cpp" />
     <ClCompile Include="MovementComponent.cpp" />

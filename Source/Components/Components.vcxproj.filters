@@ -25,6 +25,7 @@
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="InputControllerManager.cpp" />
     <ClCompile Include="MovementComponentManager.cpp" />
+    <ClCompile Include="InventoryComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -56,6 +57,7 @@
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="InputControllerManager.h" />
     <ClInclude Include="MovementComponentManager.h" />
+    <ClInclude Include="InventoryComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
