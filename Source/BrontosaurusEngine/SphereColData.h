@@ -1,6 +1,6 @@
 #pragma once
 #include "../CommonUtilities/vector3.h"
-#include "../CommonUtilities/GrowingArray.h"
+//#include "../CommonUtilities/GrowingArray.h"
 
 struct SSphereColData
 {

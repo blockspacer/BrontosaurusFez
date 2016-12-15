@@ -11,6 +11,6 @@ public:
 
 private:
 	void CalculatePath(CU::Vector2f aTargetPosition);
-	CU::GrowingArray<CU::Vector2f> myPath;
+	CU::GrowingArray<CU::Vector3f> myPath;
 };
 

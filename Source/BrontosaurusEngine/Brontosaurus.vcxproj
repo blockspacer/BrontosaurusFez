@@ -236,7 +236,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Animation\cAnimationController.h" />
+    <ClInclude Include="AnimationController.h" />
     <ClInclude Include="ConstBufferTemplate.h" />
     <ClInclude Include="CoolText.h" />
     <ClInclude Include="dds.h" />
@@ -299,7 +299,7 @@
     <ClInclude Include="WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Animation\cAnimationController.cpp" />
+    <ClCompile Include="AnimationController.cpp" />
     <ClCompile Include="CoolText.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="DebugInfoDrawer.cpp" />

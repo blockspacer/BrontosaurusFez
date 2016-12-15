@@ -10,6 +10,7 @@
 #include "../CommonUtilities/CommonUtilities.h"
 #include "../CommonUtilities/DL_Debug.h"
 #include "../CommonUtilities/GrowingArray.h"
+#include "../CommonUtilities/StaticArray.h"
 #include "../CommonUtilities/CUTime.h"
 
 #include "../CommonUtilities/MemoryLeekLogger.h"

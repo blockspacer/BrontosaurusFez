@@ -57,7 +57,7 @@ void CBackgroundLoadingManager::Clear()
 
 void CBackgroundLoadingManager::InternalLoadAnotherState(CPlayState* aPlayState)
 {
-	while(myCurrentPlayState->GetIfLoadede() == false){}
+	while(myCurrentPlayState->IsLoaded() == false){}
 
 	delete myCurrentPlayState;
 

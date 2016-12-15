@@ -13,7 +13,7 @@ namespace GUI
 	class ModelWidget : public Widget
 	{
 	public:
-		friend class ButtonDecorator;
+		friend class ButtonAnimation;
 
 		ModelWidget(CLoaderMesh* aLoaderMesh, const CU::GrowingArray<CU::DynamicString>& aTexturePaths);
 		ModelWidget(CModelInstance* aModelInstance, const CU::DynamicString& aName);
@@ -28,11 +28,11 @@ namespace GUI
 
 		SPixelConstantBuffer& GetPixelConstantBufferStruct();
 
-		AUTO_IMPLEMENT_SIZE;
-
 		void SetFlashTimeToMax();
 		inline const CU::Matrix44f& GetOriginalTransformation() const;
 		inline bool IsFlashing() const;
+
+		virtual operator class ModelWidget*() override { return this; }
 
 	private:
 		void ConvertPosition3DTo2D(const CU::Vector3f& aPosition3D, CU::Vector2f& aPosition2D);

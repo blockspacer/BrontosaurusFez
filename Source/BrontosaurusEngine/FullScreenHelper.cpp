@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "FullScreenHelper.h"
-#include <GrowingArray.h>
-#include "Engine.h"
+//#include <GrowingArray.h>
+#include "Engine.h" //stdafx??
 #include "DXFramework.h"
 #include "Effect.h"
 #include "RenderPackage.h"

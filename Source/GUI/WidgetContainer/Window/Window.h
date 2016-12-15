@@ -20,8 +20,6 @@ namespace GUI
 		void Render() override;
 		void OnPositionChanged() override;
 
-		AUTO_IMPLEMENT_SIZE;
-
 	private:
 		void Init(const CU::DynamicString& aBackgroundSpritePath, const CU::Vector2f& aBackgroundCoords);
 	};

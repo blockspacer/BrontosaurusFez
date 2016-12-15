@@ -6,7 +6,7 @@
 #include <map>
 #include "../SSArgument/SSArgument.h"
 #include "../../LuaSource/lua-5.3.3/src/lua.hpp"
-#include "../../CommonUtilities/GrowingArray.h"
+//#include "../../CommonUtilities/GrowingArray.h"
 #include "CommonUtilities/DynamicString.h"
 
 #define LUA_WRAPPER SSlua::LuaWrapper::GetInstance()
@@ -25,7 +25,7 @@ namespace SSlua
 		static void DestroyIfCreated();
 		static LuaWrapper& GetInstance();
 
-		void RegisterFunction(const LuaCallbackFunction &aFunction, const std::string &aName);
+		void RegisterFunction(const LuaCallbackFunction &aFunction, const std::string &aName, std::string& aHelpText);
 		void RegisterEngineFunction(const LuaCallbackFunction &aFunction, const std::string &aName);
 
 		void AddScriptPath(std::string aPath);
@@ -38,6 +38,8 @@ namespace SSlua
 		SSArgument CallLuaFunction(const std::string& aFunctionName, const ArgumentList& someArguments, const bool aShouldReturnFlag = false);
 
 		static bool CheckArguments(const CU::DynamicString &aFunctionName,const CU::GrowingArray<eSSType> &aListOfTypes,const ArgumentList &anArgumentList); 
+
+		void PrintDocumentation();
 
 	private:
 		LuaWrapper();
@@ -64,6 +66,8 @@ namespace SSlua
 		lua_State* myState;
 
 		std::map<std::string, LuaCallbackFunction> myVoidFunctions;
+
+		std::map < std::string, std::string> myExposedFunctions;
 	};
 
 }

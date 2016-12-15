@@ -10,6 +10,5 @@ namespace GUI
 		~DraggableArea();
 
 		void OnMouseDrag(const CU::Vector2f& aDisplacement, const CU::eMouseButtons aButton) override;
-		AUTO_IMPLEMENT_SIZE;
 	};
 }

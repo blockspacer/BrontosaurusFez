@@ -1,8 +1,9 @@
 #pragma once
 
-#include <windows.h>
-#include <thread>
-
+namespace std
+{
+	class thread;
+}
 
 namespace CU
 {

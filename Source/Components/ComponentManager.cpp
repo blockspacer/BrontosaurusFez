@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "ComponentManager.h"
-#include "../CommonUtilities/DL_Debug.h"
 
 CComponentManager* CComponentManager::ourInstance = nullptr;
 

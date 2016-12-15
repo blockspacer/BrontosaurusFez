@@ -1,9 +1,9 @@
 #pragma once
 
 #include <Stack.h>
-#include <GrowingArray.h>
+//#include <GrowingArray.h>
 
-#include "Lights.h" //directional
+#include "Lights.h" //directional //make forward declaration
 #include "InstanceID.h"
 
 class CSkybox;
@@ -14,6 +14,7 @@ class CParticleEmitterInstance;
 namespace CU
 {
 	class Camera;
+	class Time;
 }
 
 
@@ -23,7 +24,7 @@ public:
 	CScene();
 	~CScene();
 
-	void Update();
+	void Update(const CU::Time aDeltaTime);
 	void Render();
 
 	//Add shiz, camera, modeller ljus, partiklar

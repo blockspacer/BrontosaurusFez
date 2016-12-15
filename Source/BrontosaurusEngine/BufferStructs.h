@@ -44,3 +44,8 @@ struct SOncePerFrameBuffer
 	float fogStart;
 	float fogEnd;
 };
+
+struct SAnimationBoneStruct 
+{
+	CU::Matrix44f boneMatrices[32];
+};

@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 #include "DXFramework.h"
-#include <GrowingArray.h>
+//#include <GrowingArray.h>
 
 namespace EffectHelper
 {

@@ -27,7 +27,7 @@ namespace GUI
 	class GUIManager : public Subscriber
 	{
 	public:
-		GUIManager(const bool aShouldStealInput);
+		GUIManager(const bool aShouldStealInput = true /* TODO: remove this stupid parameter :( */);
 		~GUIManager();
 
 		void Init();

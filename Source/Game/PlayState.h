@@ -1,7 +1,7 @@
 #pragma once
 #include "../StateStack/State.h"
 #include "../BrontosaurusEngine/StreakEmitterInstance.h"
-#include "../CommonUtilities/GrowingArray.h"
+//#include "../CommonUtilities/GrowingArray.h"
 #include "../BrontosaurusEngine/Lights.h"
 #include "../BrontosaurusEngine/Scene.h"
 #include "../Physics/PhysicsManager.h"
@@ -21,6 +21,7 @@ namespace GUI
 
 class ControllerComponent;
 class CGameObject;
+class CGameObjectManager;
 class WeaponSystemComponent;
 class EnemyAIControllerComponent;
 class CollisionManager;
@@ -31,7 +32,7 @@ class DeathComponentFactory;
 class StatManager;
 class CTextInstance;
 
-class CPlayState : public State, public Subscriber, public ValueObserver<int>
+class CPlayState : public State, public Subscriber
 {
 public:
 	CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect = false);
@@ -43,36 +44,31 @@ public:
 	void Render() override;
 	void OnEnter() override;
 	void OnExit() override;
-	void SetControllerComponent(ControllerComponent* aControllerComponent);
-	//eMessageReturn Recieve(const Message & aMessage);
-	void ValueChanged(const int aValue) override;
 	void Pause();
 
 	void NextLevel();
 
 	eMessageReturn Recieve(const Message& aMessage) override;
 
-	bool GetIfLoadede() const;
+	inline bool IsLoaded() const;
 
 private:
 	void CreateManagersAndFactories();
-	//CCameraManager myCameraManager;
 
 	CScene myScene;
+	
+	CGameObjectManager* myGameObjectManager;
 	GUI::GUIManager* myGUIManager;
 	StatManager* myStatManager;
-	CPointLightInstance* myPointLight; // Attached to camera for the moment
-	//Lights::SDirectionalLight myDirectionalLight;
-	//CU::GrowingArray<CPointLightInstance*> myPointLights;
 	ControllerComponent*  myControllerComponent;
 	CGameObject* myCameraObject;
-	std::atomic<bool>  myIsLoaded;
+	std::atomic_bool  myIsLoaded;
 
 	int myLevelIndex;
 	bool myShouldReturnToLevelSelect;
 };
 
-inline bool CPlayState::GetIfLoadede() const
+inline bool CPlayState::IsLoaded() const
 {
 	return myIsLoaded;
 }

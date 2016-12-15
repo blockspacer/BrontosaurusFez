@@ -29,6 +29,7 @@
 #define TEXTURE_SET_0 0
 
 const float HardCodedFovConstant = 39.f * (3.14f / 180.f) * 0.8f;
+#define BASE_SCALE 100
 
 CFBXLoader::CFBXLoader()
 {
@@ -86,7 +87,7 @@ int CFBXLoader::DetermineAndLoadVerticies(aiMesh* fbxMesh, CLoaderMesh* aLoaderM
 	vertexBufferSize += (fbxMesh->HasTextureCoords(0) ? sizeof(float) * 2 : 0);
 	vertexBufferSize += (fbxMesh->HasNormals() ? sizeof(float) * 4 : 0);
 	vertexBufferSize += (fbxMesh->HasTangentsAndBitangents() ? sizeof(float) * 8 : 0);
-	vertexBufferSize += (fbxMesh->HasBones() ? sizeof(float) * 8 : 0); // Better with an UINT, but this works
+	vertexBufferSize += (fbxMesh->HasBones() ? sizeof(float) * 4 * 2 : 0); // Better with an UINT, but this works
 
 	aLoaderMesh->myShaderType = modelBluePrintType;
 	aLoaderMesh->myVertexBufferSize = vertexBufferSize;
@@ -96,7 +97,7 @@ int CFBXLoader::DetermineAndLoadVerticies(aiMesh* fbxMesh, CLoaderMesh* aLoaderM
 
 
 	std::vector<VertexBoneData> collectedBoneData;
-	if (fbxMesh->HasBones())
+	if (fbxMesh->HasBones() && aLoaderMesh->myScene != nullptr)
 	{
 		collectedBoneData.resize(fbxMesh->mNumVertices);
 
@@ -104,21 +105,22 @@ int CFBXLoader::DetermineAndLoadVerticies(aiMesh* fbxMesh, CLoaderMesh* aLoaderM
 		for (unsigned int i = 0; i < fbxMesh->mNumBones; i++) 
 		{
 			std::string BoneName(fbxMesh->mBones[i]->mName.data);
-			if (aLoaderMesh->myModel->myBoneNameToIndex.find(BoneName) == aLoaderMesh->myModel->myBoneNameToIndex.end())
+			if (aLoaderMesh->myScene->myBoneNameToIndex.find(BoneName) == aLoaderMesh->myScene->myBoneNameToIndex.end())
 			{
-				BoneIndex = aLoaderMesh->myModel->myNumBones;
-				aLoaderMesh->myModel->myNumBones++;
+				BoneIndex = aLoaderMesh->myScene->myNumBones;
+				aLoaderMesh->myScene->myNumBones++;
 				BoneInfo bi;
-				aLoaderMesh->myModel->myBoneInfo.push_back(bi);
+				aLoaderMesh->myScene->myBoneInfo.push_back(bi);
 
 				
 				FBXLoader::Matrix44f NodeTransformation = ConvertToEngineMatrix44(fbxMesh->mBones[i]->mOffsetMatrix);
 
-				aLoaderMesh->myModel->myBoneInfo[BoneIndex].BoneOffset = NodeTransformation;
-				aLoaderMesh->myModel->myBoneNameToIndex[BoneName] = BoneIndex;
+				aLoaderMesh->myScene->myBoneInfo[BoneIndex].BoneOffset = NodeTransformation;
+				aLoaderMesh->myScene->myBoneNameToIndex[BoneName] = BoneIndex;
 			}
-			else {
-				BoneIndex = aLoaderMesh->myModel->myBoneNameToIndex[BoneName];
+			else
+			{
+				BoneIndex = aLoaderMesh->myScene->myBoneNameToIndex[BoneName];
 			}
 
 			for (unsigned int j = 0; j < fbxMesh->mBones[i]->mNumWeights; j++) 
@@ -160,6 +162,7 @@ int CFBXLoader::DetermineAndLoadVerticies(aiMesh* fbxMesh, CLoaderMesh* aLoaderM
 		{
 			VertexBoneData& boneData = collectedBoneData[i];
 
+			//TODO: fix so vertexCollexion can haz UINTS too so we don't need to cast float to uint in the sha-ding
 			// UINTS woudl be better
 			aiVector3D bones;
 			vertexCollection.PushVec4(FBXLoader::Vector4f((float)boneData.IDs[0], (float)boneData.IDs[1], (float)boneData.IDs[2], (float)boneData.IDs[3]));
@@ -383,7 +386,7 @@ bool CFBXLoader::LoadGUIScene(const char* aFilePath, CLoaderScene& aSceneOut)
 	}
 
 	const aiScene* scene = aiImportFile(aFilePath, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_ConvertToLeftHanded);
-
+	aSceneOut.myScene = scene;
 	if (scene->mNumCameras < 1)
 	{
 		DL_ASSERT("fbx file has no camera: %s", aFilePath);
@@ -493,8 +496,8 @@ bool CFBXLoader::LoadModelScene(const char* aFilePath, CLoaderScene& aSceneOut)
 		return false;
 	}
 
-	const aiScene* scene = aiImportFile(aFilePath, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_ConvertToLeftHanded);
-
+	const aiScene* scene = aiImportFile(aFilePath, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_ConvertToLeftHanded | aiProcess_Debone);
+	aSceneOut.myScene = scene;
 	aSceneOut.myCamera = nullptr;
 
 	aiNode* root = scene->mRootNode;
@@ -528,6 +531,7 @@ bool CFBXLoader::LoadModelScene(const char* aFilePath, CLoaderScene& aSceneOut)
 		aiMesh* fbxMesh = scene->mMeshes[meshIndex];
 
 		CLoaderMesh* mesh = new CLoaderMesh();
+		mesh->myScene = &aSceneOut;
 		const aiNode* translationNode = FindTranslationNode(nodes[i]);
 		if (translationNode != nullptr)
 		{

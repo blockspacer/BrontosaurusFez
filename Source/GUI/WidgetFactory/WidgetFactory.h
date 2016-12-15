@@ -13,7 +13,6 @@ namespace GUI
 {
 	class Widget;
 	class WidgetContainer;
-	class ButtonDecorator;
 
 	class WidgetFactory
 	{

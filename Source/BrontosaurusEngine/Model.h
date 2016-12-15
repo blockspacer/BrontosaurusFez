@@ -61,7 +61,12 @@ public:
 	};
 
 	CModel();
+	CModel(const CModel& aCopy) = delete;
 	~CModel();
+
+	CModel& operator=(const CModel& aModel);
+	CModel& operator=(CModel&& aModel);
+
 	//FBX
 	bool Initialize(CEffect* aEffect, CSurface* aSurface, const CLoaderMesh* aLoadedMesh);
 	bool Initialize(CEffect* aEffect, CSurface* aSurface, const CU::GrowingArray<CLoaderMesh*>& aLoadedMesh);
@@ -71,20 +76,20 @@ public:
 	//Shape
 	bool Initialize(CEffect* aEffect, CSurface* aSurface);
 
-
-	void Render(const CU::Matrix44f & aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList);
-	inline bool GetInitialized() { return myIsInitialized == true; }
-	inline const SSphereColData& GetCollisionData();
+	void Render(const CU::Matrix44f & aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aBoneBuffer = nullptr);
+	
+	inline bool GetInitialized() const;
+	inline const SSphereColData& GetCollisionData() const;
 
 	void UpdateConstantBuffer(const eShaderStage aShaderStage, const void* aBufferStruct, const unsigned int aBufferSize);
 	inline void AddConstantBuffer(const eShaderStage aShaderStage, ID3D11Buffer* aConstantBuffer);
-	inline bool HasConstantBuffer(const eShaderStage aShaderStage);
-
-	CModel& operator=(const CModel& aModel);
-	CModel& operator=(CModel&& aModel);
+	inline bool HasConstantBuffer(const eShaderStage aShaderStage) const;
 
 	inline const CU::AABB& GetBoundingBox() const;
-	inline bool IsAlphaModel();
+	inline bool IsAlphaModel() const;
+	inline const struct aiScene* GetScene() const;
+	inline void SetScene(const struct aiScene* aScene);
+
 private:
 
 	SLodData& GetCurrentLODModel(const CU::Vector3f& aModelPosition);
@@ -93,10 +98,9 @@ private:
 	bool InitBuffers(CU::GrowingArray<SVertexDataCube>& aVertexList, CU::GrowingArray<unsigned int>& aIndexList);
 	bool InitBuffers(CU::GrowingArray<SVertexDataCube>& aVertexList);
 	bool InitBuffers(const CLoaderMesh * aLoadedMesh);
-	void UpdateCBuffer(const CU::Matrix44f & aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList);
+	void UpdateCBuffer(const CU::Matrix44f & aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aBoneBuffer);
 
 	inline void SetBoundingBox(const CU::AABB& aAABB);
-
 private:
 	CU::StaticArray<ID3D11Buffer*, static_cast<int>(eShaderStage::eLength)> myConstantBuffers;
 
@@ -109,6 +113,11 @@ private:
 	ID3D11Buffer* myCbuffer; // vertexBuffer
 	ID3D11Buffer* myLightBuffer; // pixelbuffer
 	ID3D11Buffer* myTimeCBuffer; // to vertex Shuld be a buffer that sends every frame along with CameraPosition, and stuffz
+	ID3D11Buffer* myBoneBuffer;
+
+	static const unsigned int ourMaxBoneBufferSize = 32u * sizeof(CU::Matrix44f);
+
+	const struct aiScene* myScene;
 
 	std::atomic_bool myIsInitialized;
 
@@ -123,7 +132,7 @@ private:
 	bool myIsAlphaModel;
 
 };
-inline const SSphereColData& CModel::GetCollisionData()
+inline const SSphereColData& CModel::GetCollisionData() const
 {
 	return mySphereColData;
 }
@@ -138,7 +147,7 @@ inline void CModel::AddConstantBuffer(const eShaderStage aShaderStage, ID3D11Buf
 	myConstantBuffers[static_cast<int>(aShaderStage)] = aConstantBuffer;
 }
 
-inline bool CModel::HasConstantBuffer(const eShaderStage aShaderStage)
+inline bool CModel::HasConstantBuffer(const eShaderStage aShaderStage) const
 {
 	return myConstantBuffers[static_cast<int>(aShaderStage)] != nullptr;
 }
@@ -148,8 +157,23 @@ inline void CModel::SetBoundingBox(const CU::AABB & aAABB)
 	myAABB = aAABB;
 }
 
-inline bool CModel::IsAlphaModel()
+inline const aiScene* CModel::GetScene() const
+{
+	return myScene;
+}
+
+inline void CModel::SetScene(const aiScene* aScene)
+{
+	myScene = aScene;
+}
+
+inline bool CModel::IsAlphaModel() const
 {
 	return myIsAlphaModel;
+}
+
+inline bool CModel::GetInitialized() const
+{
+	return myIsInitialized;
 }
 

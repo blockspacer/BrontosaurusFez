@@ -95,7 +95,7 @@ void CInputManager::UpdateMouse()
 		if (myDInputWrapper->IsMouseButtonPressed(CU::eMouseButtons::LBUTTON) == true)
 		{
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eMouseMessage, MouseClicked(mousePosition, CU::eMouseButtons::LBUTTON)));
-			PostMaster::GetInstance().SendLetter(Message(eMessageType::eMousePressed, MouseClicked(mousePosition, CU::eMouseButtons::LBUTTON))); //kyle
+			//PostMaster::GetInstance().SendLetter(Message(eMessageType::eMousePressed, MouseClicked(mousePosition, CU::eMouseButtons::LBUTTON))); //kyle
 
 		}
 		if (myDInputWrapper->IsMouseButtonReleased(CU::eMouseButtons::LBUTTON) == true)

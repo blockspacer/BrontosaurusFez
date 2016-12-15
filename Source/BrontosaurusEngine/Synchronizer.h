@@ -1,7 +1,7 @@
 #pragma once
 
-#include <GrowingArray.h>
-#include <StaticArray.h>
+//#include <GrowingArray.h>
+//#include <StaticArray.h>
 #include <mutex>
 #include <cstdint>
 

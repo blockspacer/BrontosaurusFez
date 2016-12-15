@@ -1,5 +1,5 @@
 #pragma once
-#include "GrowingArray.h"
+//#include "GrowingArray.h"
 #include "..\Components/ObjectManager.h"
 #include "..\Components\Component.h"
 
@@ -16,6 +16,6 @@ public:
 
 private:
 	CU::GrowingArray<CGameObject*> myGameObjects;
-	CObjectManager myObjectManager;
+	CGameObjectManager myObjectManager;
 };
 
