@@ -25,6 +25,8 @@
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="InputControllerManager.cpp" />
     <ClCompile Include="MovementComponentManager.cpp" />
+    <ClCompile Include="SkillSystemComponent.cpp" />
+    <ClCompile Include="Skill.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -56,6 +58,8 @@
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="InputControllerManager.h" />
     <ClInclude Include="MovementComponentManager.h" />
+    <ClInclude Include="SkillSystemComponent.h" />
+    <ClInclude Include="Skill.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
