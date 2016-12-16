@@ -14,7 +14,6 @@ CConsole::~CConsole()
 
 void CConsole::Init()
 {
-	mySuggestedCommands.Init(100);
 	myTextLog.Init(20);
 }
 
@@ -45,13 +44,12 @@ void CConsole::Render()
 
 void CConsole::UpdateCommandSuggestions(const std::string & aStringToCompare)
 {
-	mySuggestedCommands.RemoveAll();
 	std::map<std::string, SSlua::LuaCallbackFunction>::iterator it;
 	for (it = myLuaFunctions.begin(); it != myLuaFunctions.end(); it++)
 	{
 		if (MakeCommandSuggestions(aStringToCompare,it->first) == true)
 		{
-			mySuggestedCommands.Add(it->first);
+			mySuggestedCommand = it->first;
 		}
 	}
 }
