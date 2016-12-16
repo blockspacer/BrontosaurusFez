@@ -9,6 +9,7 @@
 #include "Skybox.h"
 #include "ParticleEmitterInstance.h"
 
+#define Intify(A_ENUM_CLASS) static_cast<int>(A_ENUM_CLASS)
 
 namespace 
 {
@@ -32,7 +33,8 @@ namespace
 
 	int partition(CU::GrowingArray<CModelInstance*, InstanceID>& A, int p, int q)
 	{
-		float x = Distance2(A[p]->GetTransformation().GetPosition(), CAMERA->GetPosition());
+		//TODO: FIX CAMERA :)
+		float x = 0.f;// Distance2(A[p]->GetTransformation().GetPosition(), CAMERA->GetPosition());
 		int i = p;
 		int j;
 
@@ -40,7 +42,8 @@ namespace
 
 		for (j = p + 1; j < q; j++)
 		{
-			float y = Distance2(A[j]->GetTransformation().GetPosition(), CAMERA->GetPosition());
+			//TODO: FIX CAMERA :) maybe send in as argument
+			float y = 0;// Distance2(A[j]->GetTransformation().GetPosition(), CAMERA->GetPosition());
 			if (y > x)
 			{
 				i = i + 1;
@@ -64,7 +67,6 @@ namespace
 
 CScene::CScene()
 {
-	myActiveCamera = nullptr;
 	myModels.Init(64);
 	myAlphaModels.Init(8);
 	myPointLights.Init(8);
@@ -92,7 +94,7 @@ void CScene::Update(const CU::Time aDeltaTime)
 void CScene::Render()
 {
 	SSetCameraMessage cameraMsg;
-	cameraMsg.myCamera = *CAMERA;
+	cameraMsg.myCamera = myCameras[Intify(eCameraType::ePlayerOneCamera)];
 	RENDERER.AddRenderMessage(new SSetCameraMessage(cameraMsg));
 
 
@@ -125,25 +127,12 @@ void CScene::Render()
 			continue;
 		}
 
-		if (CAMERA->IsInside(myModels[i]->GetModelBoundingBox()) == false)
+		if (myCameras[Intify(eCameraType::ePlayerOneCamera)].IsInside(myModels[i]->GetModelBoundingBox()) == false)
 		{
 			continue;
 		}
 
-
-
-		//SRenderModelMessage msg;
-		//msg.myDirectionalLight = &myDirectionalLight;
-		//msg.myPointLights = &myPointLights;
-		//msg.myModel = myModels[i]->GetModel();
-		//msg.myTransformation = myModels[i]->GetTransformation();
-		//msg.myLastFrameTransformation = myModels[i]->GetLastFrameTransformation();
-		//RENDERER.AddRenderMessage(new SRenderModelMessage(msg));
-
-
-
 		myModels[i]->Render(&myDirectionalLight, &myPointLights);
-
 	}
 
 
@@ -166,7 +155,7 @@ void CScene::Render()
 			continue;
 		}
 
-		if (CAMERA->IsInside(myAlphaModels[i]->GetModelBoundingBox()) == false)
+		if (myCameras[Intify(eCameraType::ePlayerOneCamera)].IsInside(myAlphaModels[i]->GetModelBoundingBox()) == false)
 		{
 			continue;
 		}
@@ -252,15 +241,9 @@ InstanceID CScene::AddParticleEmitterInstance(CParticleEmitterInstance * aPartic
 	return  tempId;
 }
 
-InstanceID CScene::AddCamera(CU::Camera & aCamera)
+void CScene::AddCamera(const eCameraType aCameraType)
 {
-	myCameras.Add(aCamera);
-	return 0;
-}
-
-void CScene::SetCamera(CU::Camera * aCamera)
-{
-	myActiveCamera = aCamera;
+	myCameras[static_cast<int>(aCameraType)] = CU::Camera(); //TODO: maybe not have add
 }
 
 void CScene::SetSkybox(const char* aPath)
@@ -277,6 +260,11 @@ void CScene::SetSkybox(const char* aPath)
 CModelInstance& CScene::GetModelAt(InstanceID aModelID)
 {
 	return *myModels[aModelID];
+}
+
+CU::Camera& CScene::GetCamera(const eCameraType aCameraType)
+{
+	return myCameras[static_cast<int>(aCameraType)];
 }
 
 void CScene::DeleteModelInstance(CModelInstance* anInstance)

@@ -57,11 +57,14 @@ void CModelComponent::Receive(const eComponentMessageType aType, const SComponen
 	switch (aType)
 	{
 	case eComponentMessageType::eAddComponent:
-		if (aData.myComponentTypeAdded != eComponentType::eModel) break;
+		if (aData.myComponentTypeAdded != eComponentType::eModel) break; //else: fall through
 	case eComponentMessageType::eMoving:
-		myModel->SetTransformation(GetToWorldTransform());
+		HandleMoving(aData);
 		break;
 	case eComponentMessageType::eStartedMoving:
+		ChangeAnimation(aData.myString);
+		break;
+	case eComponentMessageType::eStoppedMoving:
 		ChangeAnimation(aData.myString);
 		break;
 	}
@@ -83,4 +86,19 @@ CModelInstance* CModelComponent::GetAndReleaseModel()
 void CModelComponent::ChangeAnimation(const char* aAnimationKey)
 {
 	myModel->ChangeAnimation(aAnimationKey);
+}
+
+void CModelComponent::HandleMoving(const SComponentMessageData& aData)
+{
+	CU::Matrix44f newTransformation = GetToWorldTransform();
+	
+	if (aData.myComponent != nullptr)
+	{
+		float angle = std::atan(aData.myVector3f.Dot(CU::Vector3f(0.f, 0.f, 1.f)));
+		newTransformation.Rotate(angle, CU::Axees::Y);
+	}
+	//CU::Vector2f direction(aData.myVector3f.x, aData.myVector3f.z);
+	//float angle = std::atan(direction.Dot(CU::Vector2f(1.f, 0.f)));
+	
+	myModel->SetTransformation(newTransformation/*GetToWorldTransform()*/);
 }

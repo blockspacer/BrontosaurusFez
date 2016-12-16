@@ -3,21 +3,21 @@
 #include "Component.h"
 #include "../CommonUtilities/Camera.h"
 
-class CCameraManager
+class CCameraComponentManager
 {
 public:
-	~CCameraManager();
 	static void Create();
 	static void Destroy();
-	static CCameraManager& GetInstance();
+	static CCameraComponentManager& GetInstance();
+
 	CCameraComponent* CreateCameraComponent();
-	CU::Camera& GetActiveCamera();
 
 private: 
-	CCameraManager();
-	static CCameraManager* myInstance;
-	CU::Camera myCamera;
+	CCameraComponentManager();
+	~CCameraComponentManager();
+
 	CU::GrowingArray<CCameraComponent*> myCameraComponents;
-	CCameraComponent* myActiveCamera;
+
+	static CCameraComponentManager* myInstance;
 };
 

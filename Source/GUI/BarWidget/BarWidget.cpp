@@ -29,7 +29,7 @@ namespace GUI
 			
 			if (HasDebugLines() == false)
 			{
-				AddDebugLines();
+				//AddDebugLines();
 			}
 			
 			Widget* widget = GetModelChild();

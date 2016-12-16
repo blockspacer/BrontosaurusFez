@@ -382,7 +382,6 @@ void CRenderer::UpdateBuffer()
 {
 	D3D11_MAPPED_SUBRESOURCE mappedSubResource;
 	ZeroMemory(&mappedSubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
-	
 	SOncePerFrameBuffer updatedBuffer;
 
 	updatedBuffer.myCameraMatrices.myCameraSpaceInverse = myCamera.GetInverse();
@@ -671,7 +670,7 @@ void CRenderer::DoRenderQueue()
 		case SRenderMessage::eRenderMessageType::eRenderModel:
 		{
 			SRenderModelMessage* msg = static_cast<SRenderModelMessage*>(renderMessage);
-			msg->myModel->Render(msg->myTransformation, msg->myLastFrameTransformation,msg->myDirectionalLight, msg->myPointLights);
+			msg->myModel->Render(msg->myTransformation, msg->myLastFrameTransformation, msg->myDirectionalLight, msg->myPointLights);
 			++drawCalls;
 			break;
 		}
@@ -689,7 +688,7 @@ void CRenderer::DoRenderQueue()
 			
 			if (msg->myModel->HasConstantBuffer(CModel::eShaderStage::ePixel) == true)
 			{
-				msg->myPixelConstantBufferStruct.myCameraPosition = CAMERA->GetPosition();
+				msg->myPixelConstantBufferStruct.myCameraPosition = myCamera.GetPosition();
 				msg->myModel->UpdateConstantBuffer(CModel::eShaderStage::ePixel, &msg->myPixelConstantBufferStruct, sizeof(msg->myPixelConstantBufferStruct));
 			}
 

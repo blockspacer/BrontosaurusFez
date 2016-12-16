@@ -2,15 +2,15 @@
 #include "CameraManager.h"
 #include "ComponentManager.h"
 
-CCameraManager* CCameraManager::myInstance = nullptr;
+CCameraComponentManager* CCameraComponentManager::myInstance = nullptr;
 
-CCameraManager::CCameraManager()
+CCameraComponentManager::CCameraComponentManager()
 {
 	myCameraComponents.Init(1);
 }
 
 
-CCameraManager::~CCameraManager()
+CCameraComponentManager::~CCameraComponentManager()
 {
 	for (unsigned int i = 0; i < myCameraComponents.Size(); i++)
 	{
@@ -21,41 +21,31 @@ CCameraManager::~CCameraManager()
 	myCameraComponents.RemoveAll();
 }
 
-void CCameraManager::Create()
+void CCameraComponentManager::Create()
 {
 	assert(myInstance == nullptr && "Camera manager already created");
-	myInstance = new CCameraManager;
+	myInstance = new CCameraComponentManager;
 }
 
-void CCameraManager::Destroy()
+void CCameraComponentManager::Destroy()
 {
 	assert(myInstance != nullptr && "Camera manager not created (is NULL)");
 	SAFE_DELETE(myInstance);
 }
 
-CCameraManager& CCameraManager::GetInstance()
+CCameraComponentManager& CCameraComponentManager::GetInstance()
 {
 	assert(myInstance != nullptr && "Camera manager not created (is NULL)");
 	return *myInstance;
 }
 
-CCameraComponent* CCameraManager::CreateCameraComponent()
+CCameraComponent* CCameraComponentManager::CreateCameraComponent()
 {
-	CCameraComponent* camera;
-	camera = new CCameraComponent();
+	CCameraComponent* camera = new CCameraComponent();
 
 	CComponentManager::GetInstance().RegisterComponent(camera);
 
-	if (myCameraComponents.Size() <= 0)
-	{
-		myActiveCamera = camera;
-	}
 	myCameraComponents.Add(camera);
-	return  camera;
-}
 
-CU::Camera& CCameraManager::GetActiveCamera()
-{
-	myCamera.SetTransformation(myActiveCamera->GetToWorldTransformation());
-	return myCamera;
+	return  camera;
 }

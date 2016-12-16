@@ -370,6 +370,9 @@
       <Filter>MatrixInverse</Filter>
     </ClCompile>
     <ClCompile Include="ThreadNamer.cpp" />
+    <ClCompile Include="StringHelper.cpp">
+      <Filter>String</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="CommonUtilities.rc" />

@@ -30,8 +30,7 @@ void MovementComponent::Update(float aDeltaTime)
 
 			if(movement.Length2() < direction.Length2())
 			{
-				GetParent()->GetLocalTransform().Move(movement);
-			
+				GetParent()->GetLocalTransform().Move(movement);			
 			}
 			else
 			{
@@ -39,12 +38,22 @@ void MovementComponent::Update(float aDeltaTime)
 				myCurrentPathIndex++;
 			}
 
-			GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
+			SComponentMessageData movingMessage;
+			movingMessage.myVector3f = movement;
+			GetParent()->NotifyComponents(eComponentMessageType::eMoving, movingMessage);
 			
 		}
+		else
+		{
+			SComponentMessageData stoppedMovingMessage;
+			stoppedMovingMessage.myString = "idle";
+			GetParent()->NotifyComponents(eComponentMessageType::eStoppedMoving, stoppedMovingMessage);
+		}
 	}
-	GetParent()->GetLocalTransform().Move(CU::Vector3f(0.0f, 0.0f, 0.0f));
-	GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
+	//GetParent()->GetLocalTransform().Move(CU::Vector3f(0.0f, 0.0f, 0.0f));
+	//SComponentMessageData movementMessage;
+	//movementMessage.myVector3f.Set();
+	//GetParent()->NotifyComponents(eComponentMessageType::eMoving, movementMessage);
 }
 
 void MovementComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
@@ -56,7 +65,7 @@ void MovementComponent::Receive(const eComponentMessageType aMessageType, const 
 		myCurrentPathIndex = 0;
 		{
 			SComponentMessageData directionData;
-			directionData.myString = "Walk";
+			directionData.myString = "walk";
 			GetParent()->NotifyComponents(eComponentMessageType::eStartedMoving, directionData);
 		}
 		break;

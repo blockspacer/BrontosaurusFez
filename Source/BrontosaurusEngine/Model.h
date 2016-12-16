@@ -61,7 +61,7 @@ public:
 	};
 
 	CModel();
-	CModel(const CModel& aCopy) = delete;
+	CModel(const CModel& aCopy);
 	~CModel();
 
 	CModel& operator=(const CModel& aModel);
@@ -125,7 +125,7 @@ private:
 	CU::AABB myAABB;
 
 
-	unsigned int myVertexBufferSize;
+	unsigned int myVertexSize;
 
 	SSphereColData mySphereColData;
 

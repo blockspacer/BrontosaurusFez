@@ -24,6 +24,8 @@
 #define SAFE_DELETE(ptr) delete ptr; ptr = nullptr
 #endif
 
+#define self (*this)
+
 #define SAFE_RELEASE(comptr) if (comptr != nullptr) { comptr->Release(); comptr = nullptr; }
 #define SAFE_ADD_REF(com_ptr) if (com_ptr) { com_ptr->AddRef(); }
 

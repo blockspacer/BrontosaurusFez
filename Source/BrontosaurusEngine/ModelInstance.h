@@ -3,6 +3,8 @@
 #include "../CommonUtilities/matrix44.h"
 #include "../CommonUtilities/AABB.h"
 
+#include <map>
+
 namespace CU
 {
 	template <typename ObjectType, typename SizeType = unsigned int, bool USE_SAFE_MODE = true>
@@ -59,10 +61,13 @@ public:
 	inline CModel* GetModel();
 	CU::AABB GetModelBoundingBox();
 private:
+	void LoadAnimations(const char* aModelPath);
+
 	CU::Matrix44f myTransformation;
 	CU::Matrix44f myLastFrame;
 
 	CModel* myModel;
+	std::map<std::string, CSceneAnimator> mySceneAnimators;
 	CSceneAnimator* mySceneAnimator;
 	float myAnimationCounter;
 	bool myIsVisible;

@@ -22,6 +22,7 @@ public:
 	inline CModelInstance* GetModelInst() { return myModel; }
 private:
 	void ChangeAnimation(const char* aAnimationKey);
+	void HandleMoving(const SComponentMessageData& aData);
 
 	CModelInstance* myModel; // mebe reference?
 };
