@@ -27,8 +27,8 @@ public:
 	void Render();
 
 private:
-	const CU::GrowingArray<std::string>& UpdateCommandSuggestions(const std::string& aStringToCompare);
-
+	void UpdateCommandSuggestions(const std::string& aStringToCompare);
+	bool CConsole::MakeCommandSuggestions(const std::string& aStringToCompare, const std::string& aStringToEvaluate);
 
 
 
@@ -36,7 +36,7 @@ private:
 	std::map<std::string, SSlua::LuaCallbackFunction> myLuaFunctions;
 	CU::GrowingArray<CTextInstance*> myTextLog;
 	CTextInstance* myCurrentText;
-	CU::GrowingArray<std::string> mySuggestedCommands;
+	std::string mySuggestedCommand;
 
 };
 
