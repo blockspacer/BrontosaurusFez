@@ -64,6 +64,9 @@ void CModelComponent::Receive(const eComponentMessageType aType, const SComponen
 	case eComponentMessageType::eStartedMoving:
 		ChangeAnimation(aData.myString);
 		break;
+	case eComponentMessageType::eSetVisibility:
+		SetVisibility(aData.myBool);
+		break;
 	}
 }
 

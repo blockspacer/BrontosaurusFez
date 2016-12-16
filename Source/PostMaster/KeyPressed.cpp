@@ -9,6 +9,7 @@
 #include"Game\PauseMenu.h"
 #include "..\BrontosaurusEngine\ModelInstance.h"
 #include "../BrontosaurusEngine/Console.h"
+#include "Components\HealthComponent.h"
 
 KeyPressed::KeyPressed(const CU::eKeys& aKey)
 	: myKey(aKey)
@@ -103,5 +104,18 @@ eMessageReturn KeyPressed::DoEvent(PauseMenu *aPauseMenu) const
 eMessageReturn KeyPressed::DoEvent(CConsole *aConsole) const
 {
 	aConsole->TakeKeyBoardInputPressed(myKey);
+	return eMessageReturn::eContinue;
+}
+
+eMessageReturn KeyPressed::DoEvent(CHealthComponent * aHealthComponent) const
+{
+	switch (myKey)
+	{
+	case CU::eKeys::K:
+		aHealthComponent->SetHealth(0);
+		break;
+	default:
+		break;
+	}
 	return eMessageReturn::eContinue;
 }

@@ -1,9 +1,9 @@
 #pragma once
 #include "Component.h"
-
+#include "../PostMaster/Subscriber.h"
 typedef int HealthPoint;
 
-class CHealthComponent : public CComponent
+class CHealthComponent : public CComponent, public Subscriber
 {
 public:
 	CHealthComponent();
@@ -21,5 +21,7 @@ private:
 	float myPercentageLeft;
 	HealthPoint myHealth;
 	HealthPoint myMaxHealth;
+
+	virtual eMessageReturn Recieve(const Message & aMessage) override;
 };
 

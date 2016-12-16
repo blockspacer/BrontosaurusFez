@@ -1,12 +1,18 @@
 #include "stdafx.h"
 #include "HealthComponent.h"
 #include "GameObject.h"
+#include "..\PostMaster\PostMaster.h"
+#include "..\PostMaster\EMessageReturn.h"
+#include "..\PostMaster\Event.h"
+#include "..\PostMaster\Message.h"
 
 CHealthComponent::CHealthComponent()
 {
 	myMaxHealth = 100;
 	myHealth = myMaxHealth;
 	myPercentageLeft = static_cast<float>(myHealth) / static_cast<float>(myMaxHealth);
+
+	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eKeyPressed);
 }
 
 
@@ -35,6 +41,10 @@ void CHealthComponent::SetHealth(const HealthPoint aValue)
 	if (myHealth <= 0)
 	{
 		//dead stuff
+		GetParent()->NotifyComponents(eComponentMessageType::eDied, SComponentMessageData());
+		SComponentMessageData data;
+		data.myBool = false;
+		GetParent()->NotifyComponents(eComponentMessageType::eSetVisibility, data);
 	}
 }
 
@@ -49,8 +59,6 @@ void CHealthComponent::Init()
 	SComponentMessageData data;
 	data.myComponent = this;
 	GetParent()->NotifyComponents(eComponentMessageType::eSetMaxHealthFromStats,data);
-	myMaxHealth;
-	myHealth;
 }
 
 void CHealthComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
@@ -67,4 +75,9 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 
 void CHealthComponent::Destroy()
 {
+}
+
+eMessageReturn CHealthComponent::Recieve(const Message & aMessage)
+{
+	return aMessage.myEvent.DoEvent(this);
 }

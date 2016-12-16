@@ -165,7 +165,6 @@ void CPlayState::Load()
 	//tempPlayerObject->GetLocalTransform() = CAMERA->GetTransformation();
 	tempPlayerObject->GetLocalTransform().Move(CU::Vector3f(0.0f, 0.0f, 10));
 	tempPlayerObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
-	//
 
 	animation = new CModelInstance("Models/Animation/sampleAnim.fbx");
 	animation->SetPosition(CU::Vector3f(0, -5000, 0.f));

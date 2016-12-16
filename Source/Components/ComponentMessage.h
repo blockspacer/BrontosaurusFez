@@ -50,6 +50,7 @@ enum class eComponentMessageType
 	eSetPath,
 	eStartedMoving,
 	eSetMaxHealthFromStats,
+	eSetVisibility,
 	eStatsUpdated,
 };
 
