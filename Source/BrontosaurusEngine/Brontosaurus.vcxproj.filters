@@ -228,6 +228,7 @@
     <ClInclude Include="AnimationController.h">
       <Filter>Model\AnimationController</Filter>
     </ClInclude>
+    <ClInclude Include="TempRemoveMe.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -344,6 +345,7 @@
     <ClCompile Include="AnimationController.cpp">
       <Filter>Model\AnimationController</Filter>
     </ClCompile>
+    <ClCompile Include="TempRemoveMe.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Brontosaurus.rc">
