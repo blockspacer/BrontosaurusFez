@@ -22,6 +22,7 @@
 #include "PostMaster/PushState.h"
 #include "Components/ModelComponent.h"
 #include "Components/ModelComponentManager.h"
+#include "Components/ParticleEmitterComponentManager.h"
 #include "BrontosaurusEngine/TextInstance.h"
 #include "../Components/ComponentManager.h"
 #include "Components/ParticleEmitterComponentManager.h"
@@ -133,7 +134,41 @@ void CPlayState::Load()
 	camerarotationMatrix.LookAt(myCameraObject->GetWorlPosition(), tempPlayerObject->GetWorlPosition());
 	myCameraObject->GetLocalTransform().SetRotation(camerarotationMatrix);
 	tempPlayerObject->AddComponent(myCameraObject);
-	
+
+	SEmitterData data;
+	data.EmissionRate = 20;
+	data.NumOfParticles = 1024;
+
+	data.StartColor = { 1.0f, 1.0f, 1.f, 0.0f };
+
+	data.ColorOverLife[0].time = 0.15f;
+	data.ColorOverLife[0].value = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+	data.ColorOverLife[1].time = 0.95f;
+	data.ColorOverLife[1].value = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+	data.EndColor = { 1.0f, 1.0f, 1.0f, 0.0f };
+
+
+	data.StartSize = 25.0f;
+	data.EndSize = 50.0f;
+
+	data.MinEmissionVelocity = { 0, 0.0f, 0, 1.0f };
+	data.MaxEmissionVelocity = { 150.f, 0.0f, -150.f, 1.0f };
+	data.MinParticleLifeTime = 5.0f;
+	data.MaxParticleLifeTime = 10.0f;
+	data.StartRotation = 0;
+	data.EndRotation = 0;
+
+	data.UseGravity = false;
+	data.Gravity = { 0.0f, 0.0f, 150.0f };
+
+	data.ColorCurve = eLerpCurve::eSmootherStep;
+	data.SizeCurve = eLerpCurve::eSmootherStep;
+	data.RotationCurve = eLerpCurve::eEaseIn;
+
+	CParticleEmitterComponent* tempEmitter = CParticleEmitterComponentManager::GetInstance().CreateComponent(data);
+	tempPlayerObject->AddComponent(tempEmitter);
 	
 	CU::Matrix44f cameraTransformation = CAMERA->GetTransformation();
 	cameraTransformation.Rotate(0.2f, CU::Axees::X);
