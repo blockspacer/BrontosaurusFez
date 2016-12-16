@@ -3,6 +3,7 @@
 #include <functional>
 #include "../CommonUtilities/vector2.h"
 
+class CParticleEmitterManager;
 class CModelManager;
 class CSpriteManager;
 class CLineDrawer;
@@ -90,6 +91,7 @@ public:
 	inline CU::Camera* GetCamera();
 	inline CU::TimerManager* GetTimerManager();
 	inline CU::ThreadPool* GetThreadPool();
+	inline CParticleEmitterManager& GetParticleEmitterManager();
 
 	CU::Time GetTime();
 
@@ -115,8 +117,10 @@ private:
 	CLightManager* myLightManager;
 	CInputManager* myInputManager;
 	CTextureManager* myTextureManager;
+	CParticleEmitterManager* myParticleEmitterManager;
 	
 	CDebugInfoDrawer* myDebugInfoDrawer;
+	
 	CU::TimerManager* myTimerManager;
 	CU::TimerHandle myTimerH;
 
@@ -188,6 +192,12 @@ inline CU::TimerManager* CEngine::GetTimerManager()
 inline CU::ThreadPool* CEngine::GetThreadPool()
 {
 	return myThreadPool;
+}
+
+inline CParticleEmitterManager & CEngine::GetParticleEmitterManager()
+{
+	assert(myParticleEmitterManager != nullptr);
+	return *myParticleEmitterManager;
 }
 
 inline CLightManager*CEngine::GetLightManager()

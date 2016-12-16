@@ -19,6 +19,7 @@
 #include "Renderer.h"
 #include "DebugInfoDrawer.h"
 #include "ThreadNamer.h"
+#include "ParticleEmitterManager.h"
 #include "../Audio/AudioInterface.h"
 
 CEngine* CEngine::myInstance = nullptr;
@@ -66,6 +67,7 @@ void CEngine::Init(SInitEngineParams& aInitEngineParams)
 	myShaderManager = new CShaderManager();
 	myLightManager = new CLightManager();
 	myTextureManager = new CTextureManager();
+	myParticleEmitterManager = new CParticleEmitterManager();
 
 	myCamera = new CU::Camera(60 , aInitEngineParams.myWindowParams.Width, aInitEngineParams.myWindowParams.Height, 1.f, 75000.0f,{ 0.0f, 0.0f, 0.f });
 	myRenderer = new CRenderer();
@@ -198,6 +200,7 @@ CEngine::CEngine()
 	, myTextureManager(nullptr)
 	, myLineDrawer(nullptr)
 	, myThreadPool(nullptr)
+	, myParticleEmitterManager(nullptr)
 {
 }
 
@@ -217,6 +220,7 @@ CEngine::~CEngine()
 	SAFE_DELETE(myTextureManager);
 	SAFE_DELETE(myLineDrawer);
 	SAFE_DELETE(myThreadPool); //TODO: THREAD POOL HAS THREADS IT CANNOT JOIN, don't know if this is true anymore
+	SAFE_DELETE(myParticleEmitterManager);
 
 	Audio::CAudioInterface::Destroy();
 }
