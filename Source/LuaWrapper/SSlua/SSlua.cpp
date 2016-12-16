@@ -62,10 +62,14 @@ namespace SSlua
 		return *ourInstance;
 	}
 
-	void LuaWrapper::RegisterFunction(const LuaCallbackFunction &aFunction,const std::string& aName, std::string& aHelpText)
+	void LuaWrapper::RegisterFunction(const LuaCallbackFunction &aFunction,const std::string& aName,const std::string& aHelpText, const bool aShouldBeExposedToConsole)
 	{
 		myVoidFunctions[aName] = aFunction;
 		myExposedFunctions[aName] = aHelpText;
+		if (aShouldBeExposedToConsole == true)
+		{
+			myConsoleFunctions[aName] = aFunction;
+		}
 		lua_pushstring(myState, aName.c_str());
 		lua_pushcclosure(myState, StaticLuaVoidCallback, 1);
 		lua_setglobal(myState, aName.c_str());
@@ -105,6 +109,11 @@ namespace SSlua
 	void LuaWrapper::LoadCode(const std::string & aFileName)
 	{
 		CheckError(luaL_loadfile(myState, aFileName.c_str()));
+
+		//Alex
+		std::wstring file = myFileWatcher.StringToWString(aFileName);
+		myFileWatcher.WatchFileChange(file, std::bind(&LuaWrapper::FileChanged, this, std::placeholders::_1));
+		//
 	}
 
 	void LuaWrapper::RunLoadedCode()
@@ -282,6 +291,7 @@ namespace SSlua
 		lua_pushcfunction(myState, LuaPrint);
 		lua_setglobal(myState, "print");
 		//lua_pop(myState, 1);
+
 	}
 
 	LuaWrapper::~LuaWrapper()
@@ -299,11 +309,86 @@ namespace SSlua
 		{
 			std::string message = lua_tostring(aLuaState, -1);
 			lua_pop(aLuaState, 1);
-			//DL_ASSERT(false, message.c_str());
-			ERROR_MESSAGE(stringToWstring(message).c_str());
-			exit(0);
+
+			size_t first = message.find("'");
+			std::string sub1 = message.substr(first + 1);
+			size_t second = sub1.find("'");
+			std::string sub2 = sub1.substr(0, second);
+
+			int difference = 99;
+			int resultDifference = 0;
+			std::string didYouMean;
+			std::map<std::string, std::string>::iterator it;
+			for (it = LuaWrapper::GetInstance().myExposedFunctions.begin(); it != LuaWrapper::GetInstance().myExposedFunctions.end(); it++)
+			{
+				resultDifference = LuaWrapper::GetInstance().YouCanTSpell(sub2, it->first);
+				if (resultDifference < difference)
+				{
+					difference = resultDifference;
+					didYouMean = it->first;
+				}
+			}
+
+			std::cout << "You seem to have spelled" << sub2 << " did you mean " << didYouMean << "?" << std::endl;
+			system("pause");
 		}
 	}
+
+
+	
+
+	size_t LuaWrapper::YouCanTSpell(const std::string & aString, const std::string & anotherString)
+	{
+		const size_t m(aString.size());
+		const size_t n(anotherString.size());
+
+		if (m == 0) return n;
+		if (n == 0) return m;
+
+		size_t *costs = new size_t[n + 1];
+
+		for (size_t k = 0; k <= n; k++) costs[k] = k;
+
+		size_t i = 0;
+		for (std::string::const_iterator it1 = aString.begin(); it1 != aString.end(); ++it1, ++i)
+		{
+			costs[0] = i + 1;
+			size_t corner = i;
+
+			size_t j = 0;
+			for (std::string::const_iterator it2 = anotherString.begin(); it2 != anotherString.end(); ++it2, ++j)
+			{
+				size_t upper = costs[j + 1];
+				if (*it1 == *it2)
+				{
+					costs[j + 1] = corner;
+				}
+				else
+				{
+					size_t t(upper<corner ? upper : corner);
+					costs[j + 1] = (costs[j]<t ? costs[j] : t) + 1;
+				}
+
+				corner = upper;
+			}
+		}
+
+		size_t result = costs[n];
+		delete[] costs;
+
+		return result;
+	}
+
+	void LuaWrapper::UpdateFileWatcher()
+	{
+		myFileWatcher.FlushChanges(); //Needs to be done every frame
+	}
+
+	const std::map<std::string, LuaCallbackFunction>& LuaWrapper::GetExposedConsoleFunctions()
+	{
+		return myConsoleFunctions;
+	}
+	
 
 	int LuaWrapper::StaticLuaVoidCallback(lua_State* aState)
 	{
@@ -364,6 +449,37 @@ namespace SSlua
 			}
 		}
 		return 0;
+	}
+
+	void LuaWrapper::FileChanged(const std::wstring & aFileName)
+	{
+		lua_State* newState = luaL_newstate();
+		luaL_openlibs(newState);
+
+		//CheckErrors(luaL_loadfile(myState, aFileName.c_str()),myState);
+		const wchar_t* help = aFileName.c_str();
+		char* helpMePlease;
+		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> convert;
+		//std::wcstombs(helpMePlease, help, 100);
+		CheckError(luaL_dofile(newState, convert.to_bytes(aFileName).c_str()), newState);
+
+		lua_close(myState);
+
+		myState = newState;
+
+		myExposedFunctions.clear();
+
+		lua_pushcfunction(myState, LuaPrint);
+		lua_setglobal(myState, "print");
+
+		myExposedFunctions["print"] = "Prints text in console";
+		
+
+		std::map<std::string, SSlua::LuaCallbackFunction>::iterator it;
+		for (it = LuaWrapper::GetInstance().myVoidFunctions.begin(); it != LuaWrapper::GetInstance().myVoidFunctions.end(); it++)
+		{
+			RegisterFunction(it->second, it->first, "", false);
+		}
 	}
 
 	ssLuaTable LuaWrapper::GetTable(lua_State* aState, int aIndex)

@@ -4,6 +4,7 @@
 
 SkillSystemComponent::SkillSystemComponent()
 {
+	mySkills.Init(4);
 }
 
 
