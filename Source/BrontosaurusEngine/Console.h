@@ -27,8 +27,8 @@ public:
 	void Render();
 
 private:
-	const CU::GrowingArray<std::string>& UpdateCommandSuggestions(const std::string& aStringToCompare);
-
+	void UpdateCommandSuggestions(const std::string& aStringToCompare);
+	bool CConsole::MakeCommandSuggestions(const std::string& aStringToCompare, const std::string& aStringToEvaluate);
 
 
 
