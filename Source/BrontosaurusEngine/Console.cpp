@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Console.h"
-
+#include "../PostMaster/Event.h"
+#include "../PostMaster/Message.h"
 
 CConsole::CConsole()
 {
@@ -55,4 +56,14 @@ const CU::GrowingArray<std::string>& CConsole::UpdateCommandSuggestions(const st
 			didYouMean = it->first;
 		}
 	}
+}
+
+eMessageReturn CConsole::Recieve(const Message & aMessage)
+{
+	return aMessage.myEvent.DoEvent(this);
+}
+
+eMessageReturn CConsole::TakeKeyBoardInputPressed(const CU::eKeys aKey)
+{
+	return eMessageReturn();
 }
