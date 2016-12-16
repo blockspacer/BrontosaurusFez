@@ -224,6 +224,7 @@
     <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="ComponentMessage.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="HealthComponent.h" />
     <ClInclude Include="InputController.h" />
     <ClInclude Include="InputControllerManager.h" />
     <ClInclude Include="InventoryComponent.h" />
@@ -237,6 +238,8 @@
     <ClInclude Include="ParticleEmitterComponentManager.h" />
     <ClInclude Include="Skill.h" />
     <ClInclude Include="SkillSystemComponent.h" />
+    <ClInclude Include="StatComponent.h" />
+    <ClInclude Include="StatStructs.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StreakEmitterComponent.h" />
     <ClInclude Include="targetver.h" />
@@ -249,6 +252,7 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="HealthComponent.cpp" />
     <ClCompile Include="InputController.cpp" />
     <ClCompile Include="InputControllerManager.cpp" />
     <ClCompile Include="InventoryComponent.cpp" />
@@ -262,6 +266,7 @@
     <ClCompile Include="ParticleEmitterComponentManager.cpp" />
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="SkillSystemComponent.cpp" />
+    <ClCompile Include="StatComponent.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

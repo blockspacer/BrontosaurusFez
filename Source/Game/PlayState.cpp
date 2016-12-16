@@ -48,6 +48,7 @@
 #include "BrontosaurusEngine/ModelInstance.h"
 #include "BrontosaurusEngine/WindowsWindow.h"
 #include <iostream>
+#include "StatComponent.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -143,7 +144,11 @@ void CPlayState::Load()
 
 	//----MakeEnemy----
 	CGameObject* TempraryEnemyObject = myGameObjectManager->CreateGameObject();
-	CModelComponent* tempEnemyModel = CModelComponentManager::GetInstance().CreateComponent("");
+	CModelComponent* tempEnemyModel = CModelComponentManager::GetInstance().CreateComponent("Models/Placeholders/tree.fbx");
+	CStatComponent* tempEnemyStatComponent = new CStatComponent();
+	tempEnemyStatComponent->Set(1, 1, 1, 1);
+
+
 	//-----------------
 	CU::Matrix44f cameraTransformation = CAMERA->GetTransformation();
 	cameraTransformation.Rotate(0.2f, CU::Axees::X);

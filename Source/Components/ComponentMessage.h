@@ -47,7 +47,8 @@ enum class eComponentMessageType
 	eSetDamage,
 	eSetNavigationTarget,
 	eSetPath,
-	eStartedMoving
+	eStartedMoving,
+	eSetMaxHealthFromStats,
 };
 
 struct SComponentMessageData
