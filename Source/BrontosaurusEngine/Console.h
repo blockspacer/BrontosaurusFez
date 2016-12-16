@@ -20,7 +20,7 @@ public:
 	void Activate();
 	void Deactivate();
 	eMessageReturn Recieve(const Message & aMessage) override;
-	eMessageReturn TakeKeyBoardInputPressed(const CU::eKeys aKey);
+	eMessageReturn TakeKeyBoardInputPressedChar(const char aKey);
 	
 
 	void Update();

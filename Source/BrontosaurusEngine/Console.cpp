@@ -2,14 +2,17 @@
 #include "Console.h"
 #include "../PostMaster/Event.h"
 #include "../PostMaster/Message.h"
+#include "../PostMaster/PostMaster.h"
 
 CConsole::CConsole()
 {
+	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eKeyPressed);
 }
 
 
 CConsole::~CConsole()
 {
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyPressed);
 }
 
 void CConsole::Init()
@@ -60,7 +63,9 @@ eMessageReturn CConsole::Recieve(const Message & aMessage)
 	return aMessage.myEvent.DoEvent(this);
 }
 
-eMessageReturn CConsole::TakeKeyBoardInputPressed(const CU::eKeys aKey)
+eMessageReturn CConsole::TakeKeyBoardInputPressedChar(const char aKey)
 {
+	int a = 5;
+	a++;
 	return eMessageReturn::eContinue;
 }
