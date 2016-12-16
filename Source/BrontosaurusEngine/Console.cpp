@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Console.h"
-
+#include "../PostMaster/Event.h"
+#include "../PostMaster/Message.h"
 
 CConsole::CConsole()
 {
@@ -27,4 +28,14 @@ void CConsole::Activate()
 
 void CConsole::Deactivate()
 {
+}
+
+eMessageReturn CConsole::Recieve(const Message & aMessage)
+{
+	return aMessage.myEvent.DoEvent(this);
+}
+
+eMessageReturn CConsole::TakeKeyBoardInputPressed(const CU::eKeys aKey)
+{
+	return eMessageReturn();
 }
