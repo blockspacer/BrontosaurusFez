@@ -14,7 +14,6 @@ CConsole::~CConsole()
 
 void CConsole::Init()
 {
-	mySuggestedCommands.Init(100);
 	myTextLog.Init(20);
 }
 
