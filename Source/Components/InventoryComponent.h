@@ -2,20 +2,20 @@
 #include "Component.h"
 #include <GrowingArray.h>
 
-class Hat;
+class CHat;
 
-class InventoryComponent : public CComponent
+class CInventoryComponent : public CComponent
 {
 public:
-	InventoryComponent();
-	~InventoryComponent();
+	CInventoryComponent();
+	~CInventoryComponent();
 
 	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
 	void Destroy() override;
-	void AddHat(const Hat& aHat);
+	void AddHat(CHat& aHat);
 
 private:
-	CU::GrowingArray<Hat> myHats;
+	CU::GrowingArray<CHat> myHats;
 	unsigned int myGold;
 };
 

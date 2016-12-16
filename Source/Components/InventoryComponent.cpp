@@ -1,28 +1,28 @@
 #include "stdafx.h"
 #include "InventoryComponent.h"
+#include <Hat.h>
 
 
-InventoryComponent::InventoryComponent()
+CInventoryComponent::CInventoryComponent()
 {
-	//Hats.Init(16);
+	myHats.Init(16);
 }
 
-InventoryComponent::~InventoryComponent()
+CInventoryComponent::~CInventoryComponent()
 {
 }
 
-void InventoryComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
+void CInventoryComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
 {
 	aMessageData;
 	aMessageType;
 }
 
-void InventoryComponent::Destroy()
+void CInventoryComponent::Destroy()
 {
 }
 
-void InventoryComponent::AddHat(const Hat& aHat)
+void CInventoryComponent::AddHat(CHat& aHat)
 {
-	aHat;
-	//myHats.Add(aHat);
+	myHats.Add(aHat);
 }

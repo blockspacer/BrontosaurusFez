@@ -127,6 +127,7 @@
     <ClCompile Include="BackgroundLoadingManager.cpp" />
     <ClCompile Include="CreditsState.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Hat.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelSelectState.cpp" />
     <ClCompile Include="LoadingAnimation.cpp" />
@@ -144,6 +145,7 @@
     <ClInclude Include="BackgroundLoadingManager.h" />
     <ClInclude Include="CreditsState.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Hat.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelSelectState.h" />
     <ClInclude Include="LoadingAnimation.h" />
