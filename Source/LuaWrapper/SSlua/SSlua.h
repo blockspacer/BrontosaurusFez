@@ -6,8 +6,10 @@
 #include <map>
 #include "../SSArgument/SSArgument.h"
 #include "../../LuaSource/lua-5.3.3/src/lua.hpp"
-//#include "../../CommonUtilities/GrowingArray.h"
+#include "../../CommonUtilities/GrowingArray.h"
 #include "CommonUtilities/DynamicString.h"
+
+#include "../file_watcher.h"
 
 #define LUA_WRAPPER SSlua::LuaWrapper::GetInstance()
 
@@ -25,7 +27,7 @@ namespace SSlua
 		static void DestroyIfCreated();
 		static LuaWrapper& GetInstance();
 
-		void RegisterFunction(const LuaCallbackFunction &aFunction, const std::string &aName, std::string& aHelpText);
+		void RegisterFunction(const LuaCallbackFunction &aFunction, const std::string &aName,const std::string& aHelpText, const bool aShouldBeExposedToConsole);
 		void RegisterEngineFunction(const LuaCallbackFunction &aFunction, const std::string &aName);
 
 		void AddScriptPath(std::string aPath);
@@ -39,7 +41,14 @@ namespace SSlua
 
 		static bool CheckArguments(const CU::DynamicString &aFunctionName,const CU::GrowingArray<eSSType> &aListOfTypes,const ArgumentList &anArgumentList); 
 
+		//Alex
 		void PrintDocumentation();
+		size_t YouCanTSpell(const std::string& aString, const std::string& anotherString);
+
+		void UpdateFileWatcher();
+
+		const std::map<std::string, LuaCallbackFunction>& GetExposedConsoleFunctions();
+		//
 
 	private:
 		LuaWrapper();
@@ -58,6 +67,10 @@ namespace SSlua
 
 		static int LuaPrint(lua_State* aState);
 
+		//Alex
+		void FileChanged(const std::wstring & aFileName); //Work In progress
+		//
+
 		static ssLuaTable GetTable(lua_State* aState, int aIndex);
 		ArgumentList CreateArgumentList(lua_State* aState);
 
@@ -67,7 +80,14 @@ namespace SSlua
 
 		std::map<std::string, LuaCallbackFunction> myVoidFunctions;
 
+		//Alex
 		std::map < std::string, std::string> myExposedFunctions;
+		std::map < std::string, LuaCallbackFunction> myConsoleFunctions;
+
+		LuaCallbackFunction myRegisterFunctionsFunction;
+		CFileWatcher myFileWatcher;
+		std::string myScriptPath;
+		//
 	};
 
 }
