@@ -242,6 +242,7 @@
     <ClInclude Include="DL_StackWalker.h" />
     <ClInclude Include="double_linked_list.h" />
     <ClInclude Include="DynamicString.h" />
+    <ClInclude Include="EInputMessage.h" />
     <ClInclude Include="EKeyboardKeys.h" />
     <ClInclude Include="EMouseButtons.h" />
     <ClInclude Include="Frustum.h" />

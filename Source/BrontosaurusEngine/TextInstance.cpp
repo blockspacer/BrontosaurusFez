@@ -27,7 +27,7 @@ CTextInstance::~CTextInstance()
 
 void CTextInstance::Init(const CU::DynamicString& aFontPath)
 {
-	myText = new CText(aFontPath);
+	myText = new CCoolText(aFontPath);
 }
 
 void CTextInstance::Render()

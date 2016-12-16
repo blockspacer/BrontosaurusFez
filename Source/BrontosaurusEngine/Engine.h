@@ -2,6 +2,8 @@
 //#include "stdafx.h"
 #include <functional>
 #include "../CommonUtilities/vector2.h"
+#include "../FontEngine/FontEngineFacade.h"
+#include "TextInstance.h"
 
 class CModelManager;
 class CSpriteManager;
@@ -124,13 +126,14 @@ private:
 
 	CDXFramework* myDXFramework;
 	CU::ThreadPool* myThreadPool;
-
+	CFontEngineFacade myFontEngine;
 	static CEngine* myInstance;
 
 	CRenderer* myRenderer;
-
+	
 	bool myThreadRender;
 
+	CTextInstance myTestText;
 };
 
 CWindowsWindow* CEngine::GetWindow()
