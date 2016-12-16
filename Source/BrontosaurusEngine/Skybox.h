@@ -34,6 +34,7 @@ private:
 private:
 	CEffect* myEffect;
 	ID3D11Buffer* myVSBuffer;
+	ID3D11Buffer* myPSBuffer;
 	ID3D11Buffer* myVertexBuffer;
 	ID3D11Buffer* myIndexBuffer;
 

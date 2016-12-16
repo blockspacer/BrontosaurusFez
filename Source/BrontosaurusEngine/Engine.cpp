@@ -68,7 +68,6 @@ void CEngine::Init(SInitEngineParams& aInitEngineParams)
 	myLightManager = new CLightManager();
 	myTextureManager = new CTextureManager();
 
-	myCamera = new CU::Camera(60 , aInitEngineParams.myWindowParams.Width, aInitEngineParams.myWindowParams.Height, 1.f, 75000.0f,{ 0.0f, 0.0f, 0.f });
 	myRenderer = new CRenderer();
 
 	myLineDrawer = new CLineDrawer();
@@ -127,7 +126,7 @@ void CEngine::OnResize(const unsigned int aWidth, const unsigned int aHeight)
 	myDXFramework->Resize(aWidth, aHeight);
 	myDXFramework->SetViewPort(aWidth, aHeight, 0.f, 1.f, 0.f, 0.f);
 
-	myCamera->ReInit(60, static_cast<float>(aWidth), static_cast<float>(aHeight), 1.f, 75000.0f); //TODO: remove near and far, use the same derp (maybe add new func specifically for that)
+	//myCamera->ReInit(60, static_cast<float>(aWidth), static_cast<float>(aHeight), 1.f, 75000.0f); //TODO: remove near and far, use the same derp (maybe add new func specifically for that)
 	myRenderer = new CRenderer();
 }
 
@@ -160,7 +159,7 @@ void CEngine::Start()
 		Audio::CAudioInterface* audio = Audio::CAudioInterface::GetInstance();
 		if (audio != nullptr)
 		{
-			audio->SetListenerPosition(myCamera->GetTransformation());
+			//audio->SetListenerPosition(myCamera->GetTransformation());
 			audio->Update();
 		}
 
@@ -197,7 +196,6 @@ CEngine::CEngine()
 	: myRenderer(nullptr)
 	, myModelManager(nullptr)
 	, mySpriteManager(nullptr)
-	, myCamera(nullptr)
 	, myDXFramework(nullptr)
 	, myDebugInfoDrawer(nullptr)
 	, myTimerManager(nullptr)
@@ -216,7 +214,6 @@ CEngine::~CEngine()
 	SAFE_DELETE(myRenderer);
 	SAFE_DELETE(myModelManager);
 	SAFE_DELETE(mySpriteManager);
-	SAFE_DELETE(myCamera);
 	SAFE_DELETE(myDXFramework);
 	SAFE_DELETE(myDebugInfoDrawer);
 	SAFE_DELETE(myTimerManager);

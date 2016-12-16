@@ -87,7 +87,6 @@ void GUI::GUIManager::Render()
 	changeStateMessage->mySamplerState = eSamplerState::eClamp;
 	RENDERER.AddRenderMessage(changeStateMessage);
 
-	CU::Camera* previousCamera = CEngine::GetInstance()->GetCamera();
 	SSetCameraMessage* setCameraMessage = new SSetCameraMessage();
 	setCameraMessage->myCamera = *myCamera;
 	RENDERER.AddRenderMessage(setCameraMessage);
@@ -101,9 +100,9 @@ void GUI::GUIManager::Render()
 			myCursor->Render();
 		}
 	}
-
+	
 	setCameraMessage = new SSetCameraMessage();
-	setCameraMessage->myCamera = *previousCamera;
+	setCameraMessage->myCamera = *myCamera;
 	RENDERER.AddRenderMessage(setCameraMessage);
 }
 

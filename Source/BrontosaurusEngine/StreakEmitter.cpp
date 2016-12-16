@@ -183,7 +183,7 @@ void CStreakEmitter::UpdateCBuffers(const CU::Matrix44f & /*aToWorldSpace*/) //T
 	//CameraPos
 	ZeroMemory(&mappedSubresource, sizeof(D3D11_MAPPED_SUBRESOURCE));
 	SCameraPosition updatedCamera;
-	updatedCamera.position = CAMERA->GetPosition();
+	//updatedCamera.position = CAMERA->GetPosition(); //TODO: ADD REAL CAMERA
 	DEVICE_CONTEXT->Map(myGeometryCBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
 	memcpy(mappedSubresource.pData, &updatedCamera, sizeof(SCameraPosition));
 	DEVICE_CONTEXT->Unmap(myGeometryCBuffer, 0);

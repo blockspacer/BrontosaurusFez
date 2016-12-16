@@ -53,6 +53,8 @@ namespace CU
 		inline Vector2 GetNormalized() const;
 		inline Vector2& Normalize();
 
+		inline void Print() const;
+
 		union
 		{
 #pragma warning(disable : 4201) // nonstandard extension used: nameless struct/union
@@ -324,6 +326,14 @@ namespace CU
 		}
 
 		return self;
+	}
+
+	template<typename TYPE>
+	inline void Vector2<TYPE>::Print() const
+	{
+#ifdef DL_PRINT
+		DL_PRINT("(%f, %f)", x, y);
+#endif // DL_PRINT
 	}
 }
 

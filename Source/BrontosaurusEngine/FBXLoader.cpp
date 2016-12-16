@@ -364,7 +364,7 @@ void CreateCollisionData(SSphereColData* aCollisionData, const aiNode* aCollisio
 	}
 
 	
- 	for (unsigned int i = 0; i < aCollisionData->children.Size(); ++i)
+	for (unsigned int i = 0; i < aCollisionData->children.Size(); ++i)
 	{
 		//aCollisionData->children[i]->radius *= BASE_SCALE;
 		aCollisionData->children[i]->pos *= BASE_SCALE /*/ 10*/;
@@ -626,6 +626,7 @@ void CFBXLoader::LoadMeshChildren(aiNode* aNode, CU::GrowingArray<aiNode*>& aNod
 	for (unsigned int i = 0; i < aNode->mNumChildren; ++i)
 	{
 		aiNode* child = aNode->mChildren[i];
+		if (strcmp(child->mName.C_Str(), "SKEL") == 0) continue;
 		LoadMeshChildren(child, aNodesOut);
 	}
 }

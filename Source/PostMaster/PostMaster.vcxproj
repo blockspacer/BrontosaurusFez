@@ -31,6 +31,7 @@
     <ClCompile Include="DrawCallsCount.cpp" />
     <ClCompile Include="FocusChange.cpp" />
     <ClCompile Include="InputMessagePressed.cpp" />
+    <ClCompile Include="KeyCharPressed.cpp" />
     <ClCompile Include="KeyPressed.cpp" />
     <ClCompile Include="KeyReleased.cpp" />
     <ClCompile Include="MouseDown.cpp" />
@@ -57,6 +58,7 @@
     <ClInclude Include="Event.h" />
     <ClInclude Include="FocusChange.h" />
     <ClInclude Include="InputMessagePressed.h" />
+    <ClInclude Include="KeyCharPressed.h" />
     <ClInclude Include="KeyPressed.h" />
     <ClInclude Include="KeyReleased.h" />
     <ClInclude Include="MouseClicked.h" />

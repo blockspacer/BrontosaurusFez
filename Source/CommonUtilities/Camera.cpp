@@ -6,6 +6,7 @@
 namespace CU
 {
 	Camera::Camera()
+		: Camera(0.f, 0.f, 0.f, 0.f, 0.f, {0.f, 0.f, 0.f})
 	{
 	}
 
@@ -146,4 +147,10 @@ namespace CU
 
 
 	}
+
+	void Camera::SetPosition(const CU::Vector3f& aPosition)
+	{
+		myTransformation.SetPosition(aPosition);
+	}
+
 }

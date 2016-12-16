@@ -107,6 +107,8 @@ namespace CU
 		//
 		Vector3 &Normalize(void);
 
+		void Print() const;
+
 		union
 		{
 			TYPE	myX;
@@ -307,6 +309,14 @@ namespace CU
 		myY /= length;
 		myZ /= length;
 		return *this;
+	}
+
+	template<typename TYPE>
+	inline void Vector3<TYPE>::Print() const
+	{
+#ifdef DL_PRINT
+		DL_PRINT("(%f, %f, %f)", x, y, z);
+#endif // DL_PRINT
 	}
 
 	//STATICS

@@ -17,8 +17,8 @@ namespace CU
 
 		StaticArray& operator=(const StaticArray& aStaticArray);
 
-		inline const Type& operator[](const int& aIndex) const;
-		inline Type& operator[](const int& aIndex);
+		inline const Type& operator[](const int aIndex) const;
+		inline Type& operator[](const int aIndex);
 
 		iterator begin();
 		const_iterator begin() const;
@@ -75,14 +75,14 @@ namespace CU
 	}
 
 	template <typename Type, int ArraySize>
-	inline Type& StaticArray<Type, ArraySize>::operator[](const int& aIndex)
+	inline Type& StaticArray<Type, ArraySize>::operator[](const int aIndex)
 	{
 		assert((aIndex >= 0 && aIndex < ArraySize) && "Index out of bounds!");
 		return myStaticArray[aIndex];
 	}
 
 	template <typename Type, int ArraySize>
-	inline const Type& StaticArray<Type, ArraySize>::operator[](const int& aIndex) const
+	inline const Type& StaticArray<Type, ArraySize>::operator[](const int aIndex) const
 	{
 		assert((aIndex >= 0 && aIndex < ArraySize) && "Index out of bounds!");
 		return myStaticArray[aIndex];

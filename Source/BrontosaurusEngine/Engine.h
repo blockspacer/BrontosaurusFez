@@ -23,7 +23,7 @@ class CDebugInfoDrawer;
 #define HWNDGET			CEngine::GetInstance()->GetWindow()->GetHWND()
 #define HINSTGET		CEngine::GetInstance()->GetWindow()->GetHinstance()
 
-#define CAMERA 			CEngine::GetInstance()->GetCamera()
+//#define CAMERA 			CEngine::GetInstance()->GetCamera()
 #define RENDERER		CEngine::GetInstance()->GetRenderer()
 #define THREADPOOL		CEngine::GetInstance()->GetThreadPool()
 #define LIGHTMANAGER 	CEngine::GetInstance()->GetLightManager()
@@ -89,7 +89,6 @@ public:
 	inline CWindowsWindow* GetWindow();
 	inline CDXFramework* GetFramework();
 	inline CLightManager * GetLightManager();
-	inline CU::Camera* GetCamera();
 	inline CU::TimerManager* GetTimerManager();
 	inline CU::ThreadPool* GetThreadPool();
 
@@ -99,9 +98,6 @@ public:
 	void ThreadedRender();
 	void OnResize(const unsigned int aWidth, const unsigned int aHeight);
 	inline const CU::Vector2ui& GetWindowSize();
-
-
-	inline void SetCamera(CU::Camera* aCamera);
 
 private:
 	CEngine();
@@ -126,7 +122,6 @@ private:
 	std::function<void(const CU::Time&)>  myUpdateCallbackFunction;
 	std::function<void()>  myRenderCallbackFunction;
 	
-	CU::Camera* myCamera;
 	CU::Vector2ui myWindowSize;
 
 	CDXFramework* myDXFramework;
@@ -149,11 +144,6 @@ CWindowsWindow* CEngine::GetWindow()
 CDXFramework* CEngine::GetFramework()
 {
 	return myDXFramework;
-}
-
-inline CU::Camera* CEngine::GetCamera()
-{
-	return myCamera;
 }
 
 inline CModelManager* CEngine::GetModelManager()
@@ -196,11 +186,6 @@ inline CU::ThreadPool* CEngine::GetThreadPool()
 inline CLightManager*CEngine::GetLightManager()
 {
 	return myLightManager;
-}
-
-inline void CEngine::SetCamera(CU::Camera* aCamera)
-{
-	myCamera = aCamera;
 }
 
 inline const CU::Vector2ui& CEngine::GetWindowSize()

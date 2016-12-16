@@ -1,37 +1,26 @@
 #pragma once
-#include <stdlib.h> // mbstowcs_s
-#include <string.h> // strlen
+
+//FORWARD DECLERATION BEGIN
+//std::string and std::wstring
+
+template<class _Elem, class _Traits, class _Alloc>
+class basic_string;
+
+template<class _Elem>
+struct char_traits;
+
+template<class _Ty>
+class allocator;
+
+typedef basic_string<char, char_traits<char>, allocator<char>> string;
+typedef basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t>> wstring;
+
+//FORWARD DECLERATION END
 
 namespace CU
 {
-//	inline wchar_t* CharToWChar(const char* text)
-//	{
-//		size_t size = strlen(text) + 1;
-//		wchar_t* wa = new wchar_t[size];
-//		size_t outSize;
-//#ifdef _WIN32
-//		// retval , dst, dstsz, scr, len
-//		mbstowcs_s(&outSize, wa, size, text, size - 1);
-//#else
-//		// dst, src, dstsz or len
-//		outSize = mbstowcs(wa, text, size - 1);
-//		outSize;
-//#endif
-//		return wa;
-//	}
-
-	inline wchar_t* CharToWChar(wchar_t aBuffer[], const char* aText)
-	{
-		size_t size = strlen(aText) + 1;
-		size_t outSize;
-#ifdef _WIN32
-		// retval , dst, dstsz, scr, len
-		mbstowcs_s(&outSize, aBuffer, size, aText, size - 1);
-#else
-		// dst, src, dstsz or len
-		outSize = mbstowcs(aBuffer, aText, size - 1);
-		outSize;
-#endif
-		return aBuffer;
-	}
+	wchar_t* CharToWChar(wchar_t aBuffer[], const char* aText);
+	std::wstring StringToWString(const std::string& aString);
 }
+
+std::string& operator-=(std::string& aLeft, const std::string& aRight);

@@ -53,8 +53,6 @@ eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButto
 		std::cout << "Difference Pos:" << "X:" << (convertedMousePosition - halfScreenPosition).x << " Y: " << (convertedMousePosition - halfScreenPosition).y << std::endl;
 		CU::Matrix44f newTargetMatrix;
 		newTargetMatrix.SetPosition(CU::Vector3f(playerPosition.x, playerPosition.y, 0.0f));
-		CU::Matrix33f cameraRotation = CAMERA->GetTransformation();
-		//newTargetMatrix.SetRotation(cameraRotation);
 		CU::Vector3f movement(convertedMousePosition.x - halfScreenPosition.x, convertedMousePosition.y - halfScreenPosition.y, 0.0f);
 		newTargetMatrix.Move(movement);
 		CU::Vector2f targetPosition = CU::Vector2f(newTargetMatrix.GetPosition().x, newTargetMatrix.GetPosition().y);

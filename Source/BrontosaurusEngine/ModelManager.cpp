@@ -28,7 +28,7 @@ CModelManager::~CModelManager()
 {
 }
 
-CModel* CModelManager::LoadModel(CU::DynamicString aModelPath)
+CModel* CModelManager::LoadModel(const CU::DynamicString& aModelPath)
 {
 	if (myModelList.Size() >= ourMaxNumberOfModels)
 	{
@@ -58,7 +58,12 @@ CModel* CModelManager::LoadModel(CU::DynamicString aModelPath)
 		
 		myThreadPool->AddWork(CU::Work(LoadFunc, DL_Debug::eLogTypes::eThreadedModels, logmsg.c_str(),CU::ePriority::eHigh));
 #else
-		CreateModel(aModelPath, newModelId);
+		if (CreateModel(aModelPath, newModelId) == false)
+		{
+			myModelList.Pop();
+			myModels.erase(aModelPath.c_str());
+			return nullptr;
+		}
 #endif
 
 	}
@@ -160,11 +165,12 @@ CModel* CModelManager::LoadGUIModel(const CLoaderMesh * aLoaderMesh, const CU::G
 }
 
 
-void CModelManager::CreateModel(const CU::DynamicString& aModelPath, ModelId aNewModel)
+bool CModelManager::CreateModel(const CU::DynamicString& aModelPath, ModelId aNewModel)
 {
 	//myModelList[aNewModel] = CModel();
 	//CModel * const tempModelPointer = new CModel;
-	CModelLoader::LoadModel(aModelPath.c_str(), &myModelList[aNewModel]/*tempModelPointer*/);
+	return CModelLoader::LoadModel(aModelPath.c_str(), &myModelList[aNewModel]/*tempModelPointer*/);
+
 	//myModelList[aNewModel] = *tempModelPointer;
 }
 

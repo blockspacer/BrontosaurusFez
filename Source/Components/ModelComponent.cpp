@@ -57,11 +57,17 @@ void CModelComponent::Receive(const eComponentMessageType aType, const SComponen
 	switch (aType)
 	{
 	case eComponentMessageType::eAddComponent:
-		if (aData.myComponentTypeAdded != eComponentType::eModel) break;
+		if (aData.myComponentTypeAdded != eComponentType::eModel) break; //else: fall through
 	case eComponentMessageType::eMoving:
 		myModel->SetTransformation(GetToWorldTransform());
 		break;
 	case eComponentMessageType::eStartedMoving:
+		ChangeAnimation(aData.myString);
+		break;
+	case eComponentMessageType::eChangedDirection:
+		ChangeDirection(aData.myVector2f);
+		break;
+	case eComponentMessageType::eStoppedMoving:
 		ChangeAnimation(aData.myString);
 		break;
 	case eComponentMessageType::eSetVisibility:
@@ -86,4 +92,15 @@ CModelInstance* CModelComponent::GetAndReleaseModel()
 void CModelComponent::ChangeAnimation(const char* aAnimationKey)
 {
 	myModel->ChangeAnimation(aAnimationKey);
+}
+
+void CModelComponent::ChangeDirection(const CU::Vector2f& aDirection2D)
+{
+	//float angle = std::acos(aDirection2D.Dot(CU::Vector2f(0.f, 1.f)));
+	//CU::Matrix44f transformation = myModel->GetTransformation();
+
+
+	//myModel->SetTransformation(transformation);
+
+	//do math to set the direction of getparent->gettransformation to the angle of the 2d vector
 }

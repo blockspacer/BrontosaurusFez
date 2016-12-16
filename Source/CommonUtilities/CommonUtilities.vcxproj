@@ -342,6 +342,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="StringHelper.cpp" />
     <ClCompile Include="ThreadNamer.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="CUTime.cpp" />

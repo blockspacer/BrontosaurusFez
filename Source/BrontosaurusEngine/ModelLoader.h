@@ -24,7 +24,7 @@ public:
 	~CModelLoader();
 
 	static CModel* CreateShape(SShape aShape);
-	static void LoadModel(const char * aPath, CModel * aNewModel);
+	static bool LoadModel(const char * aPath, CModel * aNewModel);
 
 private:
 	//static void CreateTriangle(CModel* aModel);

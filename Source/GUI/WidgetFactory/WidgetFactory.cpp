@@ -57,42 +57,14 @@ namespace GUI
 		const CU::GrowingArray<CLoaderMesh*>& meshes = aLoaderScene->myMeshes;
 		for (size_ga i = 0; i < meshes.Size(); ++i)
 		{
-			Widget* widget = nullptr;
 			CU::DynamicString widgetName = meshes[i]->myName;
-			if (CU::DynamicString(meshes[i]->myName).Find("healtBar") != CU::DynamicString::FoundNone)
-			{
-				widget = new ModelWidget(meshes[i], { "Models/gui/gui.dds" }, *guiCamera);
-			}
-			else
-			{
-				widget = new ModelWidget(meshes[i], aLoaderScene->myTextures, *guiCamera);
-			}
 
-			if (widget->GetName().Find("laser") != CU::DynamicString::FoundNone ||
-				widget->GetName().Find("scatterGun") != CU::DynamicString::FoundNone ||
-				widget->GetName().Find("hostileMark") != CU::DynamicString::FoundNone)
-			{
-				widget->SetVisibility(false);
-			}
+			Widget* widget = new ModelWidget(meshes[i], aLoaderScene->myTextures, *guiCamera);
 
 			if (widget->GetName().Find("button") != CU::DynamicString::FoundNone || widget->GetName().Find("Button") != CU::DynamicString::FoundNone
 				|| widget->GetName() == "Resume" || widget->GetName() == "Return")
 			{
 				widget = CreateButton(widget);
-			}
-
-			if (widget->GetName().Find("healthBar") != CU::DynamicString::FoundNone || widget->GetName().Find("healtBar") != CU::DynamicString::FoundNone)
-			{
-				widget = CreateHealthBar(widget);
-			}
-			else if (widget->GetName().Find("boost") != CU::DynamicString::FoundNone)
-			{
-				widget = CreateBoostBar(widget);
-			}
-			else if (widget->GetName().Find("timebar") != CU::DynamicString::FoundNone)
-			{
-				widget = CreateTimeBar(widget);
-				//widget->SetVisibility(false);
 			}
 
 			if (widget != nullptr)
@@ -200,25 +172,6 @@ namespace GUI
 		}
 	}
 
-	Widget* WidgetFactory::CreateHealthBar(Widget* aWidget)
-	{
-		BarWidget* healthBar = new BarWidget(aWidget->GetWorldPosition(), aWidget->GetSize(), "playerHealthBar", true, 100, 100);
-		healthBar->AddWidget("model", aWidget);
-		PollingStation::playerHealthBar = healthBar;
-
-		return healthBar;
-		//return nullptr;
-	}
-
-	Widget* WidgetFactory::CreateBoostBar(Widget* aModelWidget)
-	{
-		BarWidget* boosthBar = new BarWidget(aModelWidget->GetWorldPosition(), aModelWidget->GetSize(), "playerBoostBar", true, 100, 100);
-		boosthBar->AddWidget("model", aModelWidget);
-		PollingStation::playerBoostBar = boosthBar;
-
-		return boosthBar;
-	}
-
 	CU::Camera* WidgetFactory::ParseCamera(const CLoaderCamera* aCamera)
 	{
 		if (aCamera == nullptr)
@@ -232,15 +185,4 @@ namespace GUI
 
 		return camera;
 	}
-
-	Widget* WidgetFactory::CreateTimeBar(Widget* aModelWidget)
-	{
-		//aModelWidget->SetVisibility(false);
-		BarWidget* timeBar = new BarWidget(aModelWidget->GetWorldPosition(), aModelWidget->GetSize(), "timeObjectiveBar", false, 100, 100);
-		timeBar->AddWidget("model", aModelWidget);
-		PollingStation::timeObjectiveBar = timeBar;
-
-		return timeBar;
-	}
-
 }

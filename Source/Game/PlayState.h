@@ -19,7 +19,6 @@ namespace GUI
 	class GUIManager;
 }
 
-class ControllerComponent;
 class CGameObject;
 class CGameObjectManager;
 class WeaponSystemComponent;
@@ -60,11 +59,11 @@ private:
 	CGameObjectManager* myGameObjectManager;
 	GUI::GUIManager* myGUIManager;
 	StatManager* myStatManager;
-	ControllerComponent*  myControllerComponent;
-	CGameObject* myCameraObject;
-	std::atomic_bool  myIsLoaded;
+	
+	//CGameObject* myCameraObject;
 
 	int myLevelIndex;
+	std::atomic_bool  myIsLoaded;
 	bool myShouldReturnToLevelSelect;
 };
 

@@ -30,6 +30,7 @@ enum class eComponentType
 {
 	eModel,
 	eDebugSphere,
+	eCamera,
 	eNone,
 };
 
@@ -49,7 +50,8 @@ enum class eComponentMessageType
 	eSetNavigationTarget,
 	eSetPath,
 	eStartedMoving,
-	eSetMaxHealthFromStats,
+	eStoppedMoving,
+	eChangedDirection,
 	eSetVisibility,
 	eStatsUpdated,
 };
@@ -68,6 +70,7 @@ struct SComponentMessageData
 		CU::Matrix33f myProjectileRotationMatrix;
 		CU::Matrix44f myMatrix44;
 		CU::Vector2f myVector2f;
+		CU::Vector3f myVector3f;
 		CU::GrowingArray<CU::Vector3f>* myVector3ListPointer;
 		
 		eComponentType myComponentTypeAdded;
