@@ -44,6 +44,7 @@
 #include "Components/InputController.h"
 #include "Components/NavigationComponent.h"
 #include "Components/MovementComponent.h"
+#include "Components/HealthComponent.h"
 #include "CameraComponent.h"
 #include "BrontosaurusEngine/ModelInstance.h"
 #include "BrontosaurusEngine/WindowsWindow.h"
@@ -147,7 +148,13 @@ void CPlayState::Load()
 	CModelComponent* tempEnemyModel = CModelComponentManager::GetInstance().CreateComponent("Models/Placeholders/tree.fbx");
 	CStatComponent* tempEnemyStatComponent = new CStatComponent();
 	tempEnemyStatComponent->Set(1, 1, 1, 1);
+	CHealthComponent* tempEnemyHealthComponent = new CHealthComponent();
 
+	TempraryEnemyObject->AddComponent(tempEnemyModel);
+	TempraryEnemyObject->AddComponent(tempEnemyStatComponent);
+	TempraryEnemyObject->AddComponent(tempEnemyHealthComponent);
+
+	tempEnemyHealthComponent->Init();
 
 	//-----------------
 	CU::Matrix44f cameraTransformation = CAMERA->GetTransformation();

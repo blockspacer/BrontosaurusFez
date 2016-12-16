@@ -25,6 +25,7 @@ CStatComponent::CStatComponent()
 	myBonusStats->BonusCritDamage = 0.0f;
 	myBonusStats->BonusDamage = 0;
 	myBonusStats->BonusMovementSpeed = 0.0f;
+	myBonusStats->BonusHealth = 0;
 
 	CalculateTotalStats();
 }

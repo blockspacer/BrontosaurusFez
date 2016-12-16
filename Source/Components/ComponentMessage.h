@@ -1,6 +1,7 @@
 #pragma once
 #include "../CommonUtilities/matrix33.h"
 #include "../CommonUtilities/matrix44.h"
+#include "StatStructs.h"
 class Collider;
 class CComponent;
 
@@ -49,6 +50,7 @@ enum class eComponentMessageType
 	eSetPath,
 	eStartedMoving,
 	eSetMaxHealthFromStats,
+	eStatsUpdated,
 };
 
 struct SComponentMessageData
@@ -69,6 +71,7 @@ struct SComponentMessageData
 		
 		eComponentType myComponentTypeAdded;
 		unsigned short myUnsingedShort;
+		Stats::STotalStats myStatStruct;
 	};
 };
 

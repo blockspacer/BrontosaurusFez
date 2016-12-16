@@ -13,7 +13,9 @@ public:
 	void Update(const CU::Time& aDeltaTime);
 	void SetHealth(const HealthPoint aValue);
 	void SetMaxHealth(const HealthPoint aValue);
+	void Init();
 
+	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
 	void Destroy() override;
 private:
 	float myPercentageLeft;

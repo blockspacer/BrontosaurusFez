@@ -7,10 +7,6 @@ CHealthComponent::CHealthComponent()
 	myMaxHealth = 100;
 	myHealth = myMaxHealth;
 	myPercentageLeft = static_cast<float>(myHealth) / static_cast<float>(myMaxHealth);
-
-	SComponentMessageData data;
-	data.myComponent = this;
-	GetParent()->NotifyComponents(eComponentMessageType::eSetMaxHealthFromStats,data);
 }
 
 
@@ -35,9 +31,7 @@ void CHealthComponent::SetHealth(const HealthPoint aValue)
 	{
 		myHealth = myMaxHealth;
 	}
-
 	myPercentageLeft = static_cast<float>(myHealth) / static_cast<float>(myMaxHealth);
-
 	if (myHealth <= 0)
 	{
 		//dead stuff
@@ -48,6 +42,27 @@ void CHealthComponent::SetMaxHealth(const HealthPoint aValue)
 {
 	myMaxHealth = aValue;
 	myHealth = myMaxHealth * myPercentageLeft;
+}
+
+void CHealthComponent::Init()
+{
+	SComponentMessageData data;
+	data.myComponent = this;
+	GetParent()->NotifyComponents(eComponentMessageType::eSetMaxHealthFromStats,data);
+	myMaxHealth;
+	myHealth;
+}
+
+void CHealthComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
+{
+	switch (aMessageType)
+	{
+	case eComponentMessageType::eStatsUpdated:
+		SetMaxHealth(aMessageData.myStatStruct.MaxHealth);
+		break;
+	default:
+		break;
+	}
 }
 
 void CHealthComponent::Destroy()
