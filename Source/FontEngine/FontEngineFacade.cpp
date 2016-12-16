@@ -18,6 +18,7 @@ void CFontEngineFacade::CreateInstance()
 	if (ourInstance == nullptr)
 	{
 		ourInstance = new CFontEngine;
+		ourInstance->Init();
 	}
 }
 
@@ -34,12 +35,12 @@ void CFontEngineFacade::DestroyInstance()
 	}
 }
 
-void CFontEngineFacade::Init()
+void CFontEngineFacade::Init() const
 {
 	ourInstance->Init();
 }
 
-CFT_FontFacade CFontEngineFacade::GetFace(const char* aFilePath)
+CFT_FontFacade CFontEngineFacade::GetFace(const char* aFilePath) const
 {
 	return CFT_FontFacade(ourInstance->GetFace(aFilePath));
 }

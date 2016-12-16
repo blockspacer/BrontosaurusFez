@@ -21,6 +21,7 @@ namespace CU
 namespace GUI
 {
 	class ModelWidget;
+	class ButtonAnimation;
 
 	class Widget
 	{
@@ -65,6 +66,7 @@ namespace GUI
 
 		operator Widget*() { return this; }
 		virtual operator ModelWidget*() { return nullptr; }
+		virtual operator ButtonAnimation*() { return nullptr; }
 
 	protected:
 		void AddDebugLines() const;

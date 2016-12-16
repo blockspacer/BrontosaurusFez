@@ -3,6 +3,7 @@
 #include "../PostMaster/Subscriber.h"
 namespace CU
 {
+	enum class eInputMessage;
 	enum class eMouseButtons;
 }
 class InputController : public CComponent , public Subscriber
@@ -16,6 +17,7 @@ public:
 	void Destroy() override;
 
 	eMessageReturn MouseClicked(const CU::eMouseButtons aMouseButton, const CU::Vector2f& aMousePosition);
+	eMessageReturn TakeInputMessage(const CU::eInputMessage aMouseButton);
 private:
 
 };

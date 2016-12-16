@@ -5,6 +5,8 @@
 
 namespace GUI
 {
+	const float MilliSecondsPerFrame = 41.7f * .5f;
+
 	ButtonAnimation::ButtonAnimation(Widget* aModelWidget)
 		: WidgetDecorator(aModelWidget, aModelWidget->GetLocalPosition(), aModelWidget->GetSize(), aModelWidget->GetName() + "_ButtonAnimation", aModelWidget->IsVisible())
 		, myAnimationIsDoneCallback(nullptr)
@@ -13,6 +15,13 @@ namespace GUI
 		, myResetPosition(0.f)
 	{
 		myAnimationTimer = new CU::Time(0.f);
+
+		ModelWidget* modelWidget = static_cast<ModelWidget*>(*myDecoratedWidget);
+		if (modelWidget != nullptr)
+		{
+			const CU::Matrix44f& transformation = modelWidget->myModelInstance->GetTransformation();
+			myResetPosition = transformation.GetPosition().y;
+		}
 	}
 
 	ButtonAnimation::~ButtonAnimation()
@@ -20,64 +29,19 @@ namespace GUI
 		SAFE_DELETE(myAnimationTimer);
 	}
 
-	void ButtonAnimation::Update(const CU::Time & aDeltaTime)
+	void ButtonAnimation::Update(const CU::Time& aDeltaTime)
 	{
-		const float MilliSecondsPerFrame = 41.7f * .5f;
-
 		if (myAnimationState == eAnimationState::eStarted)
 		{
-			*myAnimationTimer += aDeltaTime;
-
-			if (aDeltaTime.GetMilliseconds() < 60.f)
-			{
-				ModelWidget* modelWidget = static_cast<ModelWidget*>(*myDecoratedWidget);
-				if (modelWidget != nullptr)
-				{
-					CU::Matrix44f transformation = static_cast<GUI::ModelWidget*>(myDecoratedWidget)->myModelInstance->GetTransformation();
-					float& posY = transformation.GetPosition().y;
-					posY += aDeltaTime.GetMicroseconds() * -0.001f * 0.1f;
-
-					modelWidget->myModelInstance->SetTransformation(transformation);
-				}
-			}
-
-
-			if (myAnimationTimer->GetMilliseconds() > MilliSecondsPerFrame * 3.f)
-			{
-				myAnimationState = eAnimationState::ePaused;
-				myAnimationTimer->Reset();
-			}
+			DoStartedAnimation(aDeltaTime);
 		}
 		else if (myAnimationState == eAnimationState::eFlipped)
 		{
-			*myAnimationTimer += aDeltaTime;
-			CU::Matrix44f transformation = static_cast<ModelWidget*>(myDecoratedWidget)->myModelInstance->GetTransformation();
-
-			float& posY = transformation.GetPosition().y;
-			posY += aDeltaTime.GetMicroseconds() * 0.001f * 0.1f;
-			static_cast<ModelWidget*>(myDecoratedWidget)->myModelInstance->SetTransformation(transformation);
-
-			if (posY >= myResetPosition)//(myAnimationTimer.GetMilliseconds() > MilliSecondsPerFrame * 3.f)
-			{
-				myAnimationState = eAnimationState::eDone;
-				myAnimationTimer->Reset();
-			}
+			DoFlippedAnimation(aDeltaTime);
 		}
 		else if (myAnimationState == eAnimationState::eDone)
 		{
-			myAnimationState = eAnimationState::eInActive;
-			myAnimationTimer->Reset();
-
-			if (myAnimationIsDoneCallback != nullptr)
-			{
-				myAnimationIsDoneCallback();
-			}
-
-			//if (myWasClicked == true)
-			//{
-			//	RunCallbackFunction();
-			//	myWasClicked = false;
-			//}
+			DoDoneAnimation();
 		}
 	}
 
@@ -98,9 +62,67 @@ namespace GUI
 			myAnimationState = eAnimationState::eFlipped;
 		}
 	}
+
 	void ButtonAnimation::OnMouseEnter(const CU::Vector2f& aMousePosition)
 	{
 		SUPRESS_UNUSED_WARNING(aMousePosition);
-		static_cast<ModelWidget*>(myDecoratedWidget)->SetFlashTimeToMax();
+		ModelWidget* modelWidget = static_cast<ModelWidget*>(*myDecoratedWidget);
+		if (modelWidget != nullptr)
+		{
+			modelWidget->SetFlashTimeToMax();
+		}
+	}
+
+	void ButtonAnimation::DoStartedAnimation(const CU::Time aDeltaTime)
+	{
+		*myAnimationTimer += aDeltaTime;
+
+		if (aDeltaTime.GetMilliseconds() < 60.f)
+		{
+			ModelWidget* modelWidget = static_cast<ModelWidget*>(*myDecoratedWidget);
+			if (modelWidget != nullptr)
+			{
+				CU::Matrix44f transformation = static_cast<GUI::ModelWidget*>(myDecoratedWidget)->myModelInstance->GetTransformation();
+				float& posY = transformation.GetPosition().y;
+				posY += aDeltaTime.GetMicroseconds() * -0.001f * 0.1f;
+
+				modelWidget->myModelInstance->SetTransformation(transformation);
+			}
+		}
+
+
+		if (myAnimationTimer->GetMilliseconds() > MilliSecondsPerFrame * 3.f)
+		{
+			myAnimationState = eAnimationState::ePaused;
+			myAnimationTimer->Reset();
+		}
+	}
+
+	void ButtonAnimation::DoFlippedAnimation(const CU::Time aDeltaTime)
+	{
+		*myAnimationTimer += aDeltaTime;
+		CU::Matrix44f transformation = static_cast<ModelWidget*>(myDecoratedWidget)->myModelInstance->GetTransformation();
+
+		float& posY = transformation.GetPosition().y;
+		posY += aDeltaTime.GetMicroseconds() * 0.001f * 0.1f;
+		static_cast<ModelWidget*>(myDecoratedWidget)->myModelInstance->SetTransformation(transformation);
+
+		if (posY >= myResetPosition)
+		{
+			posY = myResetPosition;
+			myAnimationState = eAnimationState::eDone;
+			myAnimationTimer->Reset();
+		}
+	}
+
+	void ButtonAnimation::DoDoneAnimation()
+	{
+		myAnimationState = eAnimationState::eInActive;
+		myAnimationTimer->Reset();
+
+		if (myAnimationIsDoneCallback != nullptr)
+		{
+			myAnimationIsDoneCallback();
+		}
 	}
 }

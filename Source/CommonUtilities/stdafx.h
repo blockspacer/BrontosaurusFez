@@ -15,7 +15,9 @@
 
 #include <utility>
 #include <string>
+#include <string.h>
 #include <cstdint>
+#include <stdlib.h>
 
 #include "DL_Debug.h"
 #include "EMouseButtons.h"

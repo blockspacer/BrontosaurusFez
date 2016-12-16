@@ -31,8 +31,14 @@ CModel::CModel()
 	, myScene(nullptr)
 	, myIsInitialized(false)
 	, myIsAlphaModel(false)
-	, myVertexBufferSize(0)
+	, myVertexSize(0)
 {
+}
+
+CModel::CModel(const CModel & aCopy)
+	: CModel()
+{
+	(*this) = aCopy;
 }
 
 CModel::~CModel()
@@ -56,7 +62,7 @@ CModel::~CModel()
 	SAFE_RELEASE(myLightBuffer);
 	SAFE_RELEASE(myTimeCBuffer);
 	myIsInitialized = false;
-	myVertexBufferSize = 0;
+	myVertexSize = 0;
 
 	SAFE_DELETE(myEffect); //make sure this releases stuff
 	SAFE_DELETE(mySurface);
@@ -90,7 +96,7 @@ bool CModel::Initialize(CEffect* aEffect, CSurface* aSurface, const CLoaderMesh*
 
 	myIsAlphaModel = aLoadedMesh->myIsAlphaMesh;
 
-	myVertexBufferSize = aLoadedMesh->myVertexBufferSize;
+	myVertexSize = aLoadedMesh->myVertexBufferSize;
 	myLODModels.Add(SLodData());
 	return InitBuffers(aLoadedMesh);
 }
@@ -109,7 +115,7 @@ bool CModel::Initialize(CEffect* aEffect, CSurface* aSurface, const CU::GrowingA
 	myIsAlphaModel = aLoadedMeshList.GetLast()->myIsAlphaMesh;
 
 
-	myVertexBufferSize = aLoadedMeshList[0]->myVertexBufferSize;
+	myVertexSize = aLoadedMeshList[0]->myVertexBufferSize;
 
 	for (unsigned int i = 0; i < aLoadedMeshList.Size(); ++i)
 	{
@@ -156,7 +162,7 @@ bool CModel::InitBuffers(const CLoaderMesh* aLoadedMesh)
 	D3D11_BUFFER_DESC vertexBufferDesc;
 	ZeroMemory(&vertexBufferDesc, sizeof(vertexBufferDesc));
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = aLoadedMesh->myVertexCount * myVertexBufferSize;
+	vertexBufferDesc.ByteWidth = aLoadedMesh->myVertexCount * myVertexSize;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
@@ -197,7 +203,7 @@ bool CModel::InitBuffers(const CLoaderMesh* aLoadedMesh)
 }
 bool CModel::InitBuffers(CU::GrowingArray<SVertexDataCube>& aVertexList, CU::GrowingArray<unsigned int>& aIndexList)
 {
-	myVertexBufferSize = sizeof(SVertexDataCube);
+	myVertexSize = sizeof(SVertexDataCube);
 	myLODModels.GetLast().myIndexCount = aIndexList.Size();
 	myLODModels.GetLast().myIndexCount = aVertexList.Size();
 
@@ -205,7 +211,7 @@ bool CModel::InitBuffers(CU::GrowingArray<SVertexDataCube>& aVertexList, CU::Gro
 	D3D11_BUFFER_DESC vertexBufferDesc;
 	ZeroMemory(&vertexBufferDesc, sizeof(vertexBufferDesc));
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = aVertexList.Size() * myVertexBufferSize;
+	vertexBufferDesc.ByteWidth = aVertexList.Size() * myVertexSize;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
@@ -241,14 +247,14 @@ bool CModel::InitBuffers(CU::GrowingArray<SVertexDataCube>& aVertexList, CU::Gro
 bool CModel::InitBuffers(CU::GrowingArray<SVertexDataCube>& aVertexList)
 {
 	myLODModels.Add(SLodData());
-	myVertexBufferSize = sizeof(SVertexDataCube);
+	myVertexSize = sizeof(SVertexDataCube);
 	myLODModels.GetLast().myVertexCount = aVertexList.Size();
 
 	// VERTEX BUFFER
 	D3D11_BUFFER_DESC vertexBufferDesc;
 	ZeroMemory(&vertexBufferDesc, sizeof(vertexBufferDesc));
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = aVertexList.Size() * myVertexBufferSize;
+	vertexBufferDesc.ByteWidth = aVertexList.Size() * myVertexSize;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
@@ -275,7 +281,7 @@ void CModel::Render(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLa
 	
 	UpdateCBuffer(aToWorldSpace, aLastFrameTransformation, aLight, aPointLightList, aBoneBuffer);
 
-	UINT stride = myVertexBufferSize;
+	UINT stride = myVertexSize;
 	UINT offset = 0;
 
 	SLodData& currentLodModel = GetCurrentLODModel(aToWorldSpace.GetPosition());
@@ -346,7 +352,7 @@ void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix4
 		ZeroMemory(&mappedSubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
 
 		Lights::SLightsBuffer updatedLights;
-		updatedLights.myCameraPos = CAMERA->GetPosition();
+		updatedLights.myCameraPos/* = CAMERA->GetPosition()*/;
 		updatedLights.myDirectionalLight.direction = aLight->direction;
 		updatedLights.myDirectionalLight.color = aLight->color;
 
@@ -409,7 +415,8 @@ SLodData & CModel::GetCurrentLODModel(const CU::Vector3f& aModelPosition)
 {
 	if (myLODModels.Size() > 1)
 	{
-		float distanceToCam2 = Intersection::Distance2Points2(CAMERA->GetPosition(), aModelPosition);
+		//TODO: FIX CAMERA :)
+		float distanceToCam2 = 0;// Intersection::Distance2Points2(CAMERA->GetPosition(), aModelPosition);
 		for (unsigned int i = 0; i < myLODModels.Size(); ++i)
 		{
 			if (distanceToCam2 >= myLODModels[i].myDistances.LOD_DistStart2 && distanceToCam2 <= myLODModels[i].myDistances.LOD_DistEnd2)
@@ -486,8 +493,8 @@ CModel& CModel::operator=(CModel&& aModel)
 	myIsInitialized = aModel.myIsInitialized.load();
 	aModel.myIsInitialized = false;
 
-	myVertexBufferSize = aModel.myVertexBufferSize;
-	aModel.myVertexBufferSize = 0;
+	myVertexSize = aModel.myVertexSize;
+	aModel.myVertexSize = 0;
 
 	mySphereColData = std::move(aModel.mySphereColData);
 
@@ -557,7 +564,7 @@ CModel& CModel::operator=(const CModel& aModel)
 
 	myIsInitialized = aModel.myIsInitialized.load();
 
-	myVertexBufferSize = aModel.myVertexBufferSize;
+	myVertexSize = aModel.myVertexSize;
 
 	mySphereColData = aModel.mySphereColData;
 

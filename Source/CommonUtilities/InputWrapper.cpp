@@ -59,7 +59,7 @@ namespace CU
 			}
 
 			// Set the cooperative level of the keyboard to not share with other programs.
-			result = myKeyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+			result = myKeyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 			if (FAILED(result) == true)
 			{
 				return false;

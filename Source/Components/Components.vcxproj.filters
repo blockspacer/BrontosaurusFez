@@ -25,6 +25,11 @@
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="InputControllerManager.cpp" />
     <ClCompile Include="MovementComponentManager.cpp" />
+    <ClCompile Include="SkillSystemComponent.cpp" />
+    <ClCompile Include="Skill.cpp" />
+    <ClCompile Include="InventoryComponent.cpp" />
+    <ClCompile Include="StatComponent.cpp" />
+    <ClCompile Include="HealthComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -56,6 +61,12 @@
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="InputControllerManager.h" />
     <ClInclude Include="MovementComponentManager.h" />
+    <ClInclude Include="SkillSystemComponent.h" />
+    <ClInclude Include="Skill.h" />
+    <ClInclude Include="InventoryComponent.h" />
+    <ClInclude Include="StatComponent.h" />
+    <ClInclude Include="StatStructs.h" />
+    <ClInclude Include="HealthComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

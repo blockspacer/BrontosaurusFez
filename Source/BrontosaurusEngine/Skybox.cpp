@@ -10,10 +10,15 @@
 #include <matrix44.h>
 #include "DDSTextureLoader.h"
 #include "ShaderManager.h"
+#include "Text.h"
 
 CSkybox::CSkybox()
-	: mySkyboxTexture(nullptr)
-	//nullify everything
+	: myEffect(nullptr)
+	, myVSBuffer(nullptr)
+	, myPSBuffer(nullptr)
+	, myVertexBuffer(nullptr)
+	, myIndexBuffer(nullptr)
+	, mySkyboxTexture(nullptr)
 {
 }
 
@@ -21,6 +26,7 @@ CSkybox::~CSkybox()
 {
 	SAFE_RELEASE(myVertexBuffer);
 	SAFE_RELEASE(myVSBuffer);
+	SAFE_RELEASE(myPSBuffer);
 	SAFE_DELETE(myEffect);
 
 	TEXTUREMGR.DestroyTexture(mySkyboxTexture);
@@ -41,6 +47,8 @@ void CSkybox::Init(const char* aPath)
 	CreateVertexIndexBuffer();
 	CU::Matrix44f VSbuffer;
 	myVSBuffer = BSR::CreateCBuffer<CU::Matrix44f>(&VSbuffer);
+	CU::Vector4f PSBuffer;
+	myPSBuffer = BSR::CreateCBuffer<CU::Vector4f>(&PSBuffer);
 }
 
 void CSkybox::Render(const CU::Camera& aCamera)
@@ -199,12 +207,20 @@ void CSkybox::UpdateCbuffer(const CU::Camera& aCamera)
 	ZeroMemory(&mappedSubresource, sizeof(D3D11_MAPPED_SUBRESOURCE));
 
 	CU::Matrix44f updatedSpace;
-	ZeroMemory(&updatedSpace, sizeof(CU::Matrix44f));
-
-	updatedSpace = CU::Matrix44f::Identity;// aCamera.GetTransformation();
+	//updatedSpace = /*aCamera.GetTransformation()*/;
 	updatedSpace.SetPosition(aCamera.GetPosition());
+
 	DEVICE_CONTEXT->Map(myVSBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
 	memcpy(mappedSubresource.pData, &updatedSpace, sizeof(CU::Matrix44f));
 	DEVICE_CONTEXT->Unmap(myVSBuffer, 0);
 	DEVICE_CONTEXT->VSSetConstantBuffers(1, 1, &myVSBuffer);
+
+	ZeroMemory(&mappedSubresource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+
+	CU::Vector4f updatedCameraPos(aCamera.GetPosition().x, aCamera.GetPosition().y, aCamera.GetPosition().z, 1.f);
+
+	DEVICE_CONTEXT->Map(myPSBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
+	memcpy(mappedSubresource.pData, &updatedCameraPos, sizeof(CU::Vector4f));
+	DEVICE_CONTEXT->Unmap(myPSBuffer, 0);
+	DEVICE_CONTEXT->PSSetConstantBuffers(0, 1, &myPSBuffer);
 }

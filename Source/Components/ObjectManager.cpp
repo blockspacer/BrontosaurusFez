@@ -73,13 +73,7 @@ void CGameObjectManager::DestroyObjectsWaitingForDestruction()
 
 void CGameObjectManager::ClearAll()
 {
-	for (unsigned int i = 0; i < myObjectsCreated.Size(); ++i)
-	{
-		//DestroyObject(myObjectsCreated[i]);
-		SAFE_DELETE(myObjectsCreated[i]);
-	}
-
-	myObjectsCreated.RemoveAll();
+	myObjectsCreated.DeleteAll();
 }
 
 void CGameObjectManager::DumpAllAndReInit()
@@ -87,13 +81,7 @@ void CGameObjectManager::DumpAllAndReInit()
 	myMatrices.Destroy();
 	myFreeMatrices.Clear();
 
-	//for (unsigned int i = 0; i < myObjectsCreated.Size(); ++i)
-	//{
-	//	SAFE_DELETE(myObjectsCreated[i]);
-	//}
 	myObjectsCreated.DeleteAll();
-
-	myObjectsCreated.RemoveAll();
 	myObjectsCreated.Destroy();
 
 	myObjectsAboutToBeDestroyed.Destroy();

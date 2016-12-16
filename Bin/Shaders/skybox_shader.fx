@@ -28,7 +28,7 @@ struct InputPixel
 {
     float4 position : SV_POSITION;
     float4 worldPosition : WORLD_POS;
-    
+	float4 cameraPosition : CAMERA_POS;    
 };
 
 struct InputGeometry
@@ -49,6 +49,8 @@ InputPixel VS_Pos(InputVertex input)
     output.worldPosition = output.position;
     output.position = mul(cameraSpaceInversed, output.position);
     output.position = mul(projectionSpace, output.position);
+
+	//output.cameraPosition = -cameraSpaceInversed[4];
     return output;
 }
 

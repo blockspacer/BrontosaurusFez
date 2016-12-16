@@ -5,6 +5,7 @@
 
 #include "Lights.h" //directional //make forward declaration
 #include "InstanceID.h"
+#include "Camera.h"
 
 class CSkybox;
 class CModelInstance;
@@ -21,6 +22,13 @@ namespace CU
 class CScene
 {
 public:
+	enum class eCameraType
+	{
+		ePlayerOneCamera,
+		eGUICamera,
+		eLength
+	};
+
 	CScene();
 	~CScene();
 
@@ -32,13 +40,12 @@ public:
 	InstanceID AddDirectionalLight(Lights::SDirectionalLight& aDirectionalLight);
 	InstanceID AddPointLightInstance(CPointLightInstance* aPointLight);
 	InstanceID AddParticleEmitterInstance(CParticleEmitterInstance* aParticleEmitterInstance);
-	InstanceID AddCamera(CU::Camera& aCamera);
+	void AddCamera(const eCameraType aCameraType);
 
-	void SetCamera(CU::Camera* aCamera);
 	void SetSkybox(const char* aPath);
 
 	CModelInstance& GetModelAt(InstanceID aModelID);
-
+	CU::Camera& GetCamera(const eCameraType aCameraType);
 	
 	//Delete Shiz here
 	void DeleteModelInstance(CModelInstance* anInstance);
@@ -66,9 +73,8 @@ private:
 	CU::GrowingArray<CParticleEmitterInstance*, InstanceID> myParticleEmitters;
 	CU::Stack<InstanceID, InstanceID> myFreeParticleEmitters;
 
-	CU::GrowingArray<CU::Camera, InstanceID> myCameras;
+	CU::StaticArray<CU::Camera, static_cast<int>(eCameraType::eLength)> myCameras;
 	Lights::SDirectionalLight myDirectionalLight; //make array
-	CU::Camera* myActiveCamera;
 
 	CSkybox* mySkybox;
 

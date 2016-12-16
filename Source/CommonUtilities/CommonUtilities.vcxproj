@@ -242,6 +242,7 @@
     <ClInclude Include="DL_StackWalker.h" />
     <ClInclude Include="double_linked_list.h" />
     <ClInclude Include="DynamicString.h" />
+    <ClInclude Include="EInputMessage.h" />
     <ClInclude Include="EKeyboardKeys.h" />
     <ClInclude Include="EMouseButtons.h" />
     <ClInclude Include="Frustum.h" />
@@ -342,6 +343,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="StringHelper.cpp" />
     <ClCompile Include="ThreadNamer.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="CUTime.cpp" />

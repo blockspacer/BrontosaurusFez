@@ -12,14 +12,9 @@ CModelInstance::CModelInstance(const char* aModelPath)
 	myIsVisible = true;
 	myAnimationCounter = 0.f;
 	myModel = MODELMGR->LoadModel(aModelPath);
-	
 	mySceneAnimator = nullptr;
-	if (myModel->GetScene()->HasAnimations())
-	{
-		mySceneAnimator = new CSceneAnimator();
-		mySceneAnimator->Init(myModel->GetScene());
-		mySceneAnimator->PlayAnimationForward();
-	}
+	
+	LoadAnimations(aModelPath);
 }
 
 CModelInstance::CModelInstance(const char* aModelPath, const CU::Matrix44f& aTransformation)
@@ -53,13 +48,14 @@ CModelInstance::CModelInstance(CModel* aModel, const CU::Matrix44f& aTransformat
 
 bool CModelInstance::IsAlpha()
 {
-	return myModel->IsAlphaModel();
+	return myModel != nullptr && myModel->IsAlphaModel();
 }
 
 CModelInstance::~CModelInstance()
 {
 	myModel = nullptr; //TODO: memoryleek mebe // still exists in ModelManager <-- looks like model manager owns this but a refcount would maybe be something
-	SAFE_DELETE(mySceneAnimator);
+	//SAFE_DELETE(mySceneAnimator); //is deleted through the map
+	mySceneAnimator = nullptr;
 }
 
 void CModelInstance::Render(Lights::SDirectionalLight* aLight, CU::GrowingArray<CPointLightInstance*>* aPointLightList)
@@ -128,14 +124,54 @@ CU::AABB CModelInstance::GetModelBoundingBox()
 	return box;
 }
 
+#include "../CommonUtilities/StringHelper.h"
+void CModelInstance::LoadAnimations(const char* aModelPath)
+{
+	std::string modelName = aModelPath;
+	modelName -= std::string("idle.fbx"); //temporary bc there are no bones in the vertices in player.fbx, only in player_idle.fbx etc
+	
+	std::string animationNames[5] = { ("idle"), ("walk"), ("pickup"), ("turnRight90"), ("turnLeft90") };
+
+	if (myModel != nullptr && myModel->GetScene()->HasAnimations())
+	{
+		bool foundSpecial = false;
+		for (int i = 0; i < 5; ++i)
+		{
+			const std::string& animationName = animationNames[i];
+
+			CModel* tempAnimationModel = MODELMGR->LoadModel((modelName + animationName + ".fbx").c_str());
+			if (tempAnimationModel == nullptr)
+			{
+				continue;
+			}
+
+			foundSpecial = true;
+
+			mySceneAnimators[animationName] = CSceneAnimator();
+			mySceneAnimators[animationName].Init(tempAnimationModel->GetScene());
+		}
+
+		if (foundSpecial == false)
+		{
+			mySceneAnimators["idle"] = CSceneAnimator();
+			mySceneAnimators["idle"].Init(myModel->GetScene());
+		}
+
+		//mySceneAnimator = new CSceneAnimator();
+		//mySceneAnimator->Init(myModel->GetScene());
+		mySceneAnimator = &mySceneAnimators["idle"];
+		mySceneAnimator->PlayAnimationForward();
+	}
+}
+
 void CModelInstance::ChangeAnimation(const char* aAnimationKey)
 {
 	if (mySceneAnimator != nullptr)
 	{
-		if (mySceneAnimator->SetAnimation(aAnimationKey) == true)
+		auto it = mySceneAnimators.find(aAnimationKey);
+		if (it != mySceneAnimators.end())
 		{
-			mySceneAnimator->PlayAnimationForward();
-			myAnimationCounter = 0.f;
+			mySceneAnimator = &it->second;
 		}
 	}
 }

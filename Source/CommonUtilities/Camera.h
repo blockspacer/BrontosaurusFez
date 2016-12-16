@@ -29,6 +29,7 @@ namespace CU
 		const Matrix44f& GetProjection() const;
 
 		const Vector3f GetPosition() const;
+		void SetPosition(const CU::Vector3f& aPosition);
 
 		void Translate(Vector3f aVector);
 		void Roll(const float aAngle);

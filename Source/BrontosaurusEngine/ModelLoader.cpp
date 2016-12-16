@@ -60,24 +60,22 @@ CModel* CModelLoader::CreateShape(SShape aShape)
 	return newModel;
 }
 
-void CModelLoader::LoadModel(const char * aPath, CModel* aNewModel) //TODO: FIX THIS SHIT.
+bool CModelLoader::LoadModel(const char* aPath, CModel* aNewModel) //TODO: FIX THIS SHIT.
 {
-	// MEBE move into model?!
 	CFBXLoader loader;
-	//CLoaderModel* loadedModel = loader.LoadModel(aPath);
 	CLoaderScene scene;
 	bool res = loader.LoadModelScene(aPath, scene);
 
 	if (res == false)
 	{
 		//DL_ASSERT("Failed To load model with path: %s", aPath);
-		return;
+		return false;
 	}
 
 	if (scene.myMeshes.Size() == 0)
 	{
 		DL_ASSERT("Could not find meshes in file: %s", aPath);
-		return;
+		return false;
 	}
 
 
@@ -176,6 +174,8 @@ void CModelLoader::LoadModel(const char * aPath, CModel* aNewModel) //TODO: FIX 
 	}
 	aNewModel->Initialize(effect, surface, scene.myMeshes);
 	aNewModel->SetScene(scene.myScene);
+
+	return true;
 }
 
 //void CModelLoader::CreateTriangle(CModel* /*aModel*/)

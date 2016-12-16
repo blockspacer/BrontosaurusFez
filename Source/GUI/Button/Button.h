@@ -13,8 +13,6 @@ namespace GUI
 		void AddWidget(const CU::DynamicString& aWidgetName, Widget* aWidget) override;
 		Widget* MouseIsOver(const CU::Vector2f& aPosition) override;
 
-		void Update(const CU::Time& aDeltaTime) override;
-
 		void OnMousePressed(const CU::Vector2f& aMousePosition, const CU::eMouseButtons aButton) override;
 		void OnMouseReleased(const CU::Vector2f& aMousePosition, const CU::eMouseButtons aButton) override;
 
@@ -23,21 +21,10 @@ namespace GUI
 		void OnMouseExit(const CU::Vector2f& aMousePosition) override;
 
 	private:
+		void OnAnimationDone();
 		void RunCallbackFunction();
 
-		//enum class eAnimationState
-		//{
-		//	eInActive,
-		//	eStarted,
-		//	eFlipped,
-		//	ePaused,
-		//	eDone
-
-		//} myAnimationState;
-
 		std::function<void(void)> myFunction;
-		//CU::Time& myAnimationTimer;
-		//float myResetPosition;
 		bool myWasClicked;
 	};
 }

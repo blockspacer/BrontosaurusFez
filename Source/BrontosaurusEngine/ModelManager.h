@@ -30,14 +30,14 @@ public:
 	void CreateInstance(const char* aSpritePath, CSpriteInstance* aSpriteInstance);
 	void Render(CU::Matrix44f aSpace, const Lights::SDirectionalLight& aLight, CU::GrowingArray<CPointLightInstance*> aPointLightList);*/
 
-	CModel* LoadModel(CU::DynamicString aModelPath);
+	CModel* LoadModel(const CU::DynamicString& aModelPath);
 	CModel* LoadModel(const SShape aModelShape);
 	CModel* LoadGUIModel(const CLoaderMesh* aLoaderMesh, const char* aTexturePath);
 	CModel* LoadGUIModel(const CLoaderMesh* aLoaderMesh, const CU::GrowingArray<CU::DynamicString>& aTexturePaths);
 	
 private:
 
-	void CreateModel(const CU::DynamicString& aModelPath, ModelId aNewModel);
+	bool CreateModel(const CU::DynamicString& aModelPath, ModelId aNewModel);
 	CModel* CreateShape(const SShape aModelShape);
 	
 	bool DoesModelExists(const char * aModelPath);
@@ -52,7 +52,7 @@ private:
 	std::unordered_map<float, ModelId> myDebugSphereMap;
 
 
-	CU::ThreadPool* myThreadPool; // what is this even? 
+	CU::ThreadPool* myThreadPool;
 
 	CU::GrowingArray<CModel, ModelId> myDebugModelList;
 	CU::GrowingArray<CModel, ModelId> myModelList;

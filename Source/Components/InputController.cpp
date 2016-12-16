@@ -3,6 +3,7 @@
 #include "../PostMaster/Message.h"
 #include "../PostMaster/PostMaster.h"
 #include "../PostMaster/Event.h"
+#include "../CommonUtilities/EInputMessage.h"
 #include "../CommonUtilities/EMouseButtons.h"
 #include "GameObject.h"
 #include <iostream>
@@ -13,12 +14,14 @@
 InputController::InputController()
 {
 	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eMouseMessage);
+	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eInputMessagePressed);
 }
 
 
 InputController::~InputController()
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eInputMessagePressed);
 }
 
 void InputController::Update(float aDeltaTime)
@@ -50,8 +53,6 @@ eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButto
 		std::cout << "Difference Pos:" << "X:" << (convertedMousePosition - halfScreenPosition).x << " Y: " << (convertedMousePosition - halfScreenPosition).y << std::endl;
 		CU::Matrix44f newTargetMatrix;
 		newTargetMatrix.SetPosition(CU::Vector3f(playerPosition.x, playerPosition.y, 0.0f));
-		CU::Matrix33f cameraRotation = CAMERA->GetTransformation();
-		//newTargetMatrix.SetRotation(cameraRotation);
 		CU::Vector3f movement(convertedMousePosition.x - halfScreenPosition.x, convertedMousePosition.y - halfScreenPosition.y, 0.0f);
 		newTargetMatrix.Move(movement);
 		CU::Vector2f targetPosition = CU::Vector2f(newTargetMatrix.GetPosition().x, newTargetMatrix.GetPosition().y);
@@ -65,6 +66,12 @@ eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButto
 		//data.myVector2f = playerPosition + CU::Vector2f(100.0f, 100.0f);
 		GetParent()->NotifyComponents(type, data);
 	}
+
+	return eMessageReturn::eContinue;
+}
+
+eMessageReturn InputController::TakeInputMessage(const CU::eInputMessage aMouseButton)
+{
 
 	return eMessageReturn::eContinue;
 }

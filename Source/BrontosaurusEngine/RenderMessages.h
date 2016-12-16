@@ -5,6 +5,7 @@
 #include "../CommonUtilities/Camera.h"
 
 #include "../GUI/GUIPixelConstantBuffer.h"
+#include "CoolText.h"
 
 
 class CSkybox;
@@ -137,6 +138,6 @@ struct SRenderTextMessage : SRenderMessage
 	CU::Vector4f myColor;
 	CU::DynamicString myString;
 	CU::Vector2f myPosition;
-	CText* myText;
+	CCoolText* myText;
 
 };

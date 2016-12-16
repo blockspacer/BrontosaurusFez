@@ -9,39 +9,47 @@
 #include <Renderer.h>
 #include "Skybox.h"
 
-#include "../Components/AudioSourceComponentManager.h"
-#include "../Components/ModelComponentManager.h"
-#include "../Components/GameObject.h"
-#include "../BrontosaurusEngine/LineDrawer.h"
-#include "../LuaWrapper/SSlua/SSlua.h"
-#include "../GUI/GUIManager/GUIManager.h"
-#include "LoadManager/LoadManager.h"
-#include "PollingStation.h"
-#include "PostMaster/PostMaster.h"
-#include "../Audio/AudioInterface.h"
-#include "PostMaster/PushState.h"
+#include "Components/AudioSourceComponentManager.h"
+#include "Components/ModelComponentManager.h"
+#include "Components/GameObject.h"
 #include "Components/ModelComponent.h"
 #include "Components/ModelComponentManager.h"
 #include "Components/ParticleEmitterComponentManager.h"
-#include "BrontosaurusEngine/TextInstance.h"
-#include "../Components/ComponentManager.h"
-#include "Components/ParticleEmitterComponentManager.h"
-#include "PostMaster/ChangeLevel.h"
+#include "Components/ComponentManager.h"
+
 #include "PostMaster/PopCurrentState.h"
+#include "PostMaster/ChangeLevel.h"
+#include "PostMaster/PostMaster.h"
+#include "PostMaster/PushState.h"
 #include "PostMaster/Message.h"
 #include "PostMaster/Event.h"
+
+#include "PollingStation.h"
 #include "CameraManager.h"
 #include "InputControllerManager.h"
 #include "MovementComponentManager.h"
+
+#include "BrontosaurusEngine/LineDrawer.h"
+#include "BrontosaurusEngine/TextInstance.h"
+
+#include "../LuaWrapper/SSlua/SSlua.h"
+
+#include "../GUI/GUIManager/GUIManager.h"
+
+#include "LoadManager/LoadManager.h"
+
+#include "../Audio/AudioInterface.h"
 
 //Temp Includes
 #include "Components/InputController.h"
 #include "Components/NavigationComponent.h"
 #include "Components/MovementComponent.h"
+#include "Components/HealthComponent.h"
 #include "CameraComponent.h"
 #include "BrontosaurusEngine/ModelInstance.h"
 #include "BrontosaurusEngine/WindowsWindow.h"
 #include <iostream>
+#include "StatComponent.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -64,7 +72,7 @@ CPlayState::~CPlayState()
 	CModelComponentManager::Destroy();
 	CAudioSourceComponentManager::Destroy();
 	CParticleEmitterComponentManager::Destroy();
-	CCameraManager::Destroy();
+	CCameraComponentManager::Destroy();
 	InputControllerManager::DestroyInstance();
 	MovementComponentManager::DestroyInstance();
 
@@ -75,119 +83,123 @@ CPlayState::~CPlayState()
 
 void CPlayState::Load()
 {
-	myGameObjectManager = new CGameObjectManager();
-	myGUIManager = new GUI::GUIManager();
-	//myGUIManager->Init("Models/gui/gui.fbx", true);
-
+	//start taking the time for loading level
+	CU::TimerManager timerMgr;
+	CU::TimerHandle handle = timerMgr.CreateTimer();
+	timerMgr.StartTimer(handle);
 	CreateManagersAndFactories();
 
 	MODELCOMP_MGR.SetScene(&myScene);
 	myScene.SetSkybox("skybox.dds");
 
-	CU::TimerManager timerMgr;
-	CU::TimerHandle handle = timerMgr.CreateTimer();
-	timerMgr.StartTimer(handle);
-
-	CAMERA->Translate({ 0.0f, 0.f, -11.f });
 
 	Lights::SDirectionalLight dirLight;
 	dirLight.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	dirLight.direction = { 0.0f, 0.0f, 1.0f, 1.0f };
 	myScene.AddDirectionalLight(dirLight);
 
+	//LOAD_MGR.SetCurrentScene(&myScene);
+	//LOAD_MGR.SetCurrentPlayState(this);
 
-	LOAD_MGR.SetCurrentScene(&myScene);
-	LOAD_MGR.SetCurrentPlayState(this);
-
-	SSlua::ArgumentList levelIndex(1);
-	levelIndex.Add(SSArgument(ssLuaNumber(myLevelIndex)));
+	//SSlua::ArgumentList levelIndex(1);
+	//levelIndex.Add(SSArgument(ssLuaNumber(myLevelIndex)));
 	//LUA_WRAPPER.CallLuaFunction("GameLoad", levelIndex);
 
-	timerMgr.UpdateTimers();
 	//hue hue dags att fula ner play state - Alex(Absolut inte Marcus); // snälla slå Johan inte mig(Alex);
-	CGameObject* tempPlayerObject = myGameObjectManager->CreateGameObject();
-	CGameObject* tempWorldObject = myGameObjectManager->CreateGameObject();
-	CModelComponent* tempModelComponentForWorldObject = CModelComponentManager::GetInstance().CreateComponent("Models/Animation/sampleAnim.fbx"/*"Models/Player/player_walk.fbx"*/);
-	tempWorldObject->GetLocalTransform().Move(CU::Vector3f(0.0f, 000.0f, 500.0f));
-	//tempWorldObject->GetLocalTransform().Rotate(-90, CU::Axees::X);
 
-	tempWorldObject->AddComponent(tempModelComponentForWorldObject);
-	CGameObject* tempWorldObject2 = myGameObjectManager->CreateGameObject();
-	CModelComponent* tempModelComponentForWorldObject2 = CModelComponentManager::GetInstance().CreateComponent("Models/Animation/sampleAnim.fbx");
-	tempWorldObject2->GetLocalTransform().Move(CU::Vector3f(500.0f, 0.0f, 0.0f));
-	tempWorldObject2->AddComponent(tempModelComponentForWorldObject2);
-	myCameraObject = myGameObjectManager->CreateGameObject();
+	//create an npc
+	CGameObject* npcObject1 = myGameObjectManager->CreateGameObject();
+	npcObject1->GetLocalTransform().Move(CU::Vector3f(0.0f, 000.0f, 500.0f));
+
+	CModelComponent* modelComponent1 = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
+	npcObject1->AddComponent(modelComponent1);
+
+
+	//create another npc
+	CGameObject* npcObject2 = myGameObjectManager->CreateGameObject();
+	npcObject2->GetLocalTransform().Move(CU::Vector3f(500.0f, 0.0f, 0.0f));
+
+	CModelComponent* modelComponent2= CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
+	npcObject2->AddComponent(modelComponent2);
+
+
+	//create player:
+	CGameObject* playerObject = myGameObjectManager->CreateGameObject();
+
 	InputController* tempInputController = new InputController();
 	InputControllerManager::GetInstance().RegisterComponent(tempInputController);
-	tempPlayerObject->AddComponent(tempInputController);
+	playerObject->AddComponent(tempInputController);
+
 	MovementComponent* tempMovementController = new MovementComponent();
 	MovementComponentManager::GetInstance().RegisterComponent(tempMovementController);
-	tempPlayerObject->AddComponent(new NavigationComponent());
-	tempPlayerObject->AddComponent(tempMovementController);
-	CModelComponent* tempModelComponent = CModelComponentManager::GetInstance().CreateComponent("Models/Animation/sampleAnim.fbx");
-	//myScene.AddModelInstance(tempModelComponent->GetModelInst());
-	tempPlayerObject->AddComponent(tempModelComponent);
-	myCameraObject->AddComponent(CCameraManager::GetInstance().CreateCameraComponent());
-	myCameraObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, -100.0f));
-	tempPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
-	CU::Matrix33f camerarotationMatrix = myCameraObject->GetLocalTransform().GetRotation();
-	camerarotationMatrix.LookAt(myCameraObject->GetWorlPosition(), tempPlayerObject->GetWorlPosition());
-	myCameraObject->GetLocalTransform().SetRotation(camerarotationMatrix);
-	tempPlayerObject->AddComponent(myCameraObject);
+	playerObject->AddComponent(tempMovementController);
 
-	SEmitterData data;
-	data.EmissionRate = 20;
-	data.NumOfParticles = 1024;
+	playerObject->AddComponent(new NavigationComponent());
 
-	data.StartColor = { 1.0f, 1.0f, 1.f, 0.0f };
+	CModelComponent* playerModelComponent = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
+	playerObject->AddComponent(playerModelComponent);
 
-	data.ColorOverLife[0].time = 0.15f;
-	data.ColorOverLife[0].value = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-	data.ColorOverLife[1].time = 0.95f;
-	data.ColorOverLife[1].value = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-	data.EndColor = { 1.0f, 1.0f, 1.0f, 0.0f };
+	playerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
 
 
-	data.StartSize = 25.0f;
-	data.EndSize = 50.0f;
+	//create camera object:
+	//myCameraObject = myGameObjectManager->CreateGameObject();
 
-	data.MinEmissionVelocity = { 0, 0.0f, 0, 1.0f };
-	data.MaxEmissionVelocity = { 150.f, 0.0f, -150.f, 1.0f };
-	data.MinParticleLifeTime = 5.0f;
-	data.MaxParticleLifeTime = 10.0f;
-	data.StartRotation = 0;
-	data.EndRotation = 0;
+	myScene.AddCamera(CScene::eCameraType::ePlayerOneCamera);
+	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
+	cameraComponent->SetCamera(myScene.GetCamera(CScene::eCameraType::ePlayerOneCamera));
 
-	data.UseGravity = false;
-	data.Gravity = { 0.0f, 0.0f, 150.0f };
+	//myCameraObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, -100.0f));
 
-	data.ColorCurve = eLerpCurve::eSmootherStep;
-	data.SizeCurve = eLerpCurve::eSmootherStep;
-	data.RotationCurve = eLerpCurve::eEaseIn;
+	//CU::Matrix33f camerarotationMatrix = myCameraObject->GetLocalTransform().GetRotation();
+	//camerarotationMatrix.LookAt(myCameraObject->GetWorlPosition(), playerObject->GetWorlPosition());
+	//myCameraObject->GetLocalTransform().SetRotation(camerarotationMatrix);
+	//playerObject->AddComponent(myCameraObject);
 
-	CParticleEmitterComponent* tempEmitter = CParticleEmitterComponentManager::GetInstance().CreateComponent(data);
-	tempPlayerObject->AddComponent(tempEmitter);
+
+	//set camera position and rotation
+	CU::Camera& playerCamera = myScene.GetCamera(CScene::eCameraType::ePlayerOneCamera);
+	CU::Matrix44f cameraTransformation = playerCamera.GetTransformation();
+	playerCamera.Init(60, WINDOW_SIZE.x, WINDOW_SIZE.y, 1.f, 75000.0f, { 0.0f, 0.0f, 0.f });
+
+	CU::Matrix44f newRotation;
+
+	newRotation.Rotate(PI / 2, CU::Axees::X);
+	newRotation.Rotate(PI / 4, CU::Axees::X);
+	newRotation.Rotate(PI / 1, CU::Axees::Z);
+
+	cameraTransformation.SetRotation(newRotation);
+	cameraTransformation.SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
+	cameraTransformation.Move(CU::Vector3f(000.0f, 000.0f, -1500.0f));
+
+	playerCamera.SetTransformation(cameraTransformation);
+
+	//myCameraObject->GetLocalTransform() = cameraTransformation;
+	//myCameraObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
+	//myCameraObject->AddComponent(cameraComponent);
+	playerObject->AddComponent(cameraComponent);
+
+	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation());
+	//----MakeEnemy----
+	CGameObject* TempraryEnemyObject = myGameObjectManager->CreateGameObject();
+	CModelComponent* tempEnemyModel = CModelComponentManager::GetInstance().CreateComponent("Models/Placeholders/tree.fbx");
+	CStatComponent* tempEnemyStatComponent = new CStatComponent();
+	tempEnemyStatComponent->Set(1, 1, 1, 1);
+	CHealthComponent* tempEnemyHealthComponent = new CHealthComponent();
+
+	TempraryEnemyObject->AddComponent(tempEnemyModel);
+	TempraryEnemyObject->AddComponent(tempEnemyStatComponent);
+	TempraryEnemyObject->AddComponent(tempEnemyHealthComponent);
+
+	tempEnemyHealthComponent->Init();
+
+	//-----------------
 	
-	CU::Matrix44f cameraTransformation = CAMERA->GetTransformation();
-	cameraTransformation.Rotate(0.2f, CU::Axees::X);
-	cameraTransformation.Move(CU::Vector3f(0.0f, -1000.0f, 0.0f));
-	myCameraObject->GetLocalTransform() = cameraTransformation;
-	CAMERA->SetTransformation(cameraTransformation);
-	//tempPlayerObject->GetLocalTransform() = CAMERA->GetTransformation();
-	tempPlayerObject->GetLocalTransform().Move(CU::Vector3f(0.0f, 0.0f, 10));
-	tempPlayerObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
-	//
-
-	animation = new CModelInstance("Models/Animation/sampleAnim.fbx");
-	animation->SetPosition(CU::Vector3f(0, -5000, 0.f));
-	myScene.AddModelInstance(animation);
-	
-	float time = timerMgr.GetTimer(handle).GetLifeTime().GetMilliseconds();
 	myIsLoaded = true;
 
-
+	//get time to load the level:
+	timerMgr.UpdateTimers();
+	float time = timerMgr.GetTimer(handle).GetLifeTime().GetMilliseconds();
 	GAMEPLAY_LOG("Game Inited in %f ms", time);
 }
 
@@ -197,24 +209,22 @@ void CPlayState::Init()
 
 State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 {
-	CU::Matrix44f cameraTransformation = CAMERA->GetTransformation();
-	CU::Matrix44f newRotation;
-	//newRotation.SetPosition(CU::Vector3f(000.0f, 1000.0f, 0.0f));
-	newRotation.Rotate(PI / 2, CU::Axees::X);
-	newRotation.Rotate(PI / 4, CU::Axees::X);
-	
-	newRotation.Rotate(PI / 1, CU::Axees::Z);
+	//CU::Matrix44f cameraTransformation = myScene.GetCamera(CScene::eCameraType::ePlayerOneCamera).GetTransformation();
+	//CU::Matrix44f newRotation;
 
-	cameraTransformation.SetRotation(newRotation);
-	cameraTransformation.SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
-	cameraTransformation.Move(CU::Vector3f(000.0f, 000.0f, -1500.0f));
-	//newRotation.Rotate(PI / 4, CU::Axees::Y);
+	//newRotation.Rotate(PI / 2, CU::Axees::X);
+	//newRotation.Rotate(PI / 4, CU::Axees::X);
+	//newRotation.Rotate(PI / 1, CU::Axees::Z);
+
 	//cameraTransformation.SetRotation(newRotation);
-	//CAMERA->SetTransformation(cameraTransformation);
-	//CCameraManager::GetInstance().GetActiveCamera().SetTransformation(cameraTransformation);
-	myCameraObject->GetLocalTransform() = cameraTransformation;
-	CAMERA->SetTransformation(CCameraManager::GetInstance().GetActiveCamera().GetTransformation());
-	myScene.SetCamera(CAMERA);
+	//cameraTransformation.SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
+	//cameraTransformation.Move(CU::Vector3f(000.0f, 000.0f, -1500.0f));
+
+
+	//myCameraObject->GetLocalTransform() = cameraTransformation;
+	//myScene.GetCamera(CScene::eCameraType::ePlayerOneCamera).SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation());
+
+
 	//myGUIManager->Update(aDeltaTime)
 	
 	
@@ -319,6 +329,10 @@ eMessageReturn CPlayState::Recieve(const Message& aMessage)
 
 void CPlayState::CreateManagersAndFactories()
 {
+	myGameObjectManager = new CGameObjectManager();
+	myGUIManager = new GUI::GUIManager();
+	//myGUIManager->Init("Models/gui/gui.fbx", true);
+
 	CComponentManager::CreateInstance();
 	CPhysicsManager::CreateInstance();
 	LoadManager::CreateInstance();
@@ -326,7 +340,7 @@ void CPlayState::CreateManagersAndFactories()
 	CModelComponentManager::Create();
 	CParticleEmitterComponentManager::Create();
 	CParticleEmitterComponentManager::GetInstance().SetScene(&myScene);
-	CCameraManager::Create();
+	CCameraComponentManager::Create();
 	InputControllerManager::CreateInstance();
 	MovementComponentManager::CreateInstance();
 }
