@@ -236,7 +236,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AnimationController.h" />
+    <ClInclude Include="Animation\cAnimationController.h" />
+    <ClInclude Include="Console.h" />
     <ClInclude Include="ConstBufferTemplate.h" />
     <ClInclude Include="CoolText.h" />
     <ClInclude Include="dds.h" />
@@ -254,6 +255,7 @@
     <ClInclude Include="Font.h" />
     <ClInclude Include="FullScreenHelper.h" />
     <ClInclude Include="GUIModleHelper.h" />
+    <ClInclude Include="GUIRenderer.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="InstanceID.h" />
     <ClInclude Include="LightManager.h" />
@@ -298,7 +300,8 @@
     <ClInclude Include="WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AnimationController.cpp" />
+    <ClCompile Include="Animation\cAnimationController.cpp" />
+    <ClCompile Include="Console.cpp" />
     <ClCompile Include="CoolText.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="DebugInfoDrawer.cpp" />
@@ -309,6 +312,7 @@
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FullScreenHelper.cpp" />
     <ClCompile Include="GUIModleHelper.cpp" />
+    <ClCompile Include="GUIRenderer.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="LightManager.cpp" />
     <ClCompile Include="LineDrawer.cpp" />
