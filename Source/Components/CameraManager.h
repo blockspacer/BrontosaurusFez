@@ -1,7 +1,6 @@
 #pragma once
 #include "CameraComponent.h"
 #include "Component.h"
-//#include "../CommonUtilities/GrowingArray.h"
 #include "../CommonUtilities/Camera.h"
 
 class CCameraManager

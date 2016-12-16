@@ -1,17 +1,18 @@
 #pragma once
 #include <assert.h>
 
-
 namespace CU
 {
 	template <typename Type, int ArraySize>
 	class StaticArray
 	{
 	public:
+		using iterator = Type*;
+		using const_iterator = const Type*;
+
 		StaticArray();
 		StaticArray(const StaticArray& aStaticArray);
 		StaticArray(const Type& aObject);
-
 		~StaticArray();
 
 		StaticArray& operator=(const StaticArray& aStaticArray);
@@ -19,8 +20,11 @@ namespace CU
 		inline const Type& operator[](const int& aIndex) const;
 		inline Type& operator[](const int& aIndex);
 
+		iterator begin();
+		const_iterator begin() const;
+		iterator end();
+		const_iterator end() const;
 
-	// Utility functions
 		inline void Insert(int aIndex,Type& aObject);
 		inline void DeleteAll();
 
@@ -58,7 +62,6 @@ namespace CU
 	template <typename Type, int ArraySize>
 	StaticArray<Type, ArraySize>::~StaticArray()
 	{
-
 	}
 
 	template <typename Type, int ArraySize>
@@ -83,6 +86,30 @@ namespace CU
 	{
 		assert((aIndex >= 0 && aIndex < ArraySize) && "Index out of bounds!");
 		return myStaticArray[aIndex];
+	}
+
+	template <typename Type, int ArraySize>
+	inline typename StaticArray<Type, ArraySize>::iterator StaticArray<Type, ArraySize>::begin()
+	{
+		return myStaticArray;
+	}
+
+	template <typename Type, int ArraySize>
+	inline typename StaticArray<Type, ArraySize>::const_iterator StaticArray<Type, ArraySize>::begin() const
+	{
+		return myStaticArray;
+	}
+
+	template <typename Type, int ArraySize>
+	inline typename StaticArray<Type, ArraySize>::iterator StaticArray<Type, ArraySize>::end()
+	{
+		return (myStaticArray + ArraySize);
+	}
+
+	template <typename Type, int ArraySize>
+	inline typename StaticArray<Type, ArraySize>::const_iterator StaticArray<Type, ArraySize>::end() const
+	{
+		return (myStaticArray + ArraySize);
 	}
 
 	template <typename Type, int ArraySize>

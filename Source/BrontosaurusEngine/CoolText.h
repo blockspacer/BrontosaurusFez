@@ -1,5 +1,4 @@
 #pragma once
-//#include "../CommonUtilities/GrowingArray.h"
 #include "TextBitmap.h"
 #include <d3d11.h>
 #include "../FontEngine/FT_FontFacade.h"
@@ -31,27 +30,21 @@ public:
 	CCoolText(const CU::DynamicString& aFontPath);
 	~CCoolText();
 
-	void Render(const CU::DynamicString& aString, const CU::Vector2f& aPosition, const CU::Vector4f& aColor, const CU::Vector2i& aSize);
+	void Render(const CU::DynamicString& aString, const CU::Vector2f& aPosition, const CU::Vector4f& aColor/*, const CU::Vector2i& aSize*/);
 
 private:
-	void CreateVertexBuffer(ID3D11Device& aDevice);
-	void CreateConstantBuffer();
+	bool InitBuffers();
 
-	void RenderCharacter(const char aCharacter, const CU::Vector2f& aPosition, const CU::Vector4f& aColor, ID3D11DeviceContext& aDeviceContext);
+	void RenderCharacter(const wchar_t aCharacter, const CU::Vector2f& aPosition, const CU::Vector4f& aColor);
 	void ActivateEffect();
-	void UpdateAndSetVertexBuffers(const char aCharacter, ID3D11DeviceContext& aDeviceContext);
-	void UpdateAndSetConstantBuffer(const char aCharacter, const CU::Vector2f& aPosition, const CU::Vector4f& aColor, ID3D11DeviceContext& aDeviceContext);
-	void CreateTexture();
+	void UpdateAndSetVertexConstantBuffer(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::Vector4f& aRectconst, const CU::Vector4f& aColor);
 
-	ID3D11Buffer* myVertexBufferPos;
-	ID3D11Buffer* myVertexBufferUV;
+
+	ID3D11Buffer* myVertexBuffer;
 	ID3D11Buffer* myVertexConstantBuffer;
 	ID3D11Buffer* myPixelConstantBuffer;
 
-	CU::DynamicString myLastaString;
 	CTextBitmap myBitmap;
 
 	CFT_FontFacade myFont;
-
-	ID3D11ShaderResourceView* aResourceView;
 };

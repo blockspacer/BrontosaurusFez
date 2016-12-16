@@ -1,6 +1,8 @@
 #pragma once
 #include "../CommonUtilities/vector2.h"
-#include "../BrontosaurusEngine/TextBitmap.h"
+#include <d3d11.h>
+#include "../BrontosaurusEngine/Effect.h"
+
 class CFT_Font;
 class CFT_FontFacade
 {
@@ -9,15 +11,16 @@ public:
 	CFT_FontFacade(CFT_Font* aFont);
 	~CFT_FontFacade();
 
-	void SetSize(const int pt, const int aDeviceWidth, const unsigned int aDeviceHeight);
-	CTextBitmap RenderText(const wchar_t* aString, const int aStringLength, const CU::Vector2i& aTargetSize);
+	bool GetIfValid() const;
 
-	CTextBitmap RenderChar(wchar_t aChar);
-	CTextBitmap RenderChar(unsigned  aGlyphIndex);
+	void SetSize(const int pt, const int aDeviceWidth, const unsigned int aDeviceHeight) const;
 
-	CTextBitmap GetAdvance(wchar_t aCurrentChar, wchar_t aPrevoiusChar);
-	CU::Vector2i GetAdvance(unsigned aCurrentGlyph, unsigned aPrevoiusGlyph);
+	ID3D11ShaderResourceView* GetCharResourceView(wchar_t aChar) const;
 
+	CU::Vector2i GetAdvance(const wchar_t aNextChar, const wchar_t aPrevoiusChar, const bool aUseKerning) const;
+	CEffect* GetEffect();
+	CU::Vector2i GetCharSize(const wchar_t aChar);
+	CU::Vector2i GetBearing(const wchar_t aChar);
 private:
 	CFT_Font* myFontpointer;
 };

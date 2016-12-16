@@ -3,20 +3,25 @@
 #include "../PostMaster/Message.h"
 #include "../PostMaster/PostMaster.h"
 #include "../PostMaster/Event.h"
+#include "../CommonUtilities/EInputMessage.h"
 #include "../CommonUtilities/EMouseButtons.h"
 #include "GameObject.h"
 #include <iostream>
 #include "../BrontosaurusEngine/Engine.h"
+#include "CameraManager.h"
+#include "../CommonUtilities/Camera.h"
 
 InputController::InputController()
 {
 	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eMouseMessage);
+	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eInputMessagePressed);
 }
 
 
 InputController::~InputController()
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eInputMessagePressed);
 }
 
 void InputController::Update(float aDeltaTime)
@@ -46,16 +51,29 @@ eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButto
 		CU::Vector2f playerPosition = CU::Vector2f(GetParent()->GetWorlPosition().x, GetParent()->GetWorlPosition().z); // Don't forget to add conversions between vector 2 and 3! like serisously it is góing to save us so much time.
 		std::cout << "Player Pos:" << "X:" << playerPosition.x << " Y: " << GetParent()->GetWorlPosition().z << std::endl;
 		std::cout << "Difference Pos:" << "X:" << (convertedMousePosition - halfScreenPosition).x << " Y: " << (convertedMousePosition - halfScreenPosition).y << std::endl;
-		CU::Vector2f targetPosition = playerPosition + CU::Vector2f(convertedMousePosition.x - halfScreenPosition.x, convertedMousePosition.y - halfScreenPosition.y);
-		//targetPosition.y *= -1;
+		CU::Matrix44f newTargetMatrix;
+		newTargetMatrix.SetPosition(CU::Vector3f(playerPosition.x, playerPosition.y, 0.0f));
+		CU::Matrix33f cameraRotation = CAMERA->GetTransformation();
+		//newTargetMatrix.SetRotation(cameraRotation);
+		CU::Vector3f movement(convertedMousePosition.x - halfScreenPosition.x, convertedMousePosition.y - halfScreenPosition.y, 0.0f);
+		newTargetMatrix.Move(movement);
+		CU::Vector2f targetPosition = CU::Vector2f(newTargetMatrix.GetPosition().x, newTargetMatrix.GetPosition().y);
+	
+		targetPosition.x *= -1;
 		std::cout << "Target Pos:" << "X:" << targetPosition.x << " Y: " << targetPosition.y << std::endl;
 		std::cout << "" << std::endl;
 		eComponentMessageType type = eComponentMessageType::eSetNavigationTarget;
 		SComponentMessageData data;
-		data.myVector2 = targetPosition;
-		//data.myVector2 = playerPosition + CU::Vector2f(100.0f, 100.0f);
+		data.myVector2f = targetPosition;
+		//data.myVector2f = playerPosition + CU::Vector2f(100.0f, 100.0f);
 		GetParent()->NotifyComponents(type, data);
 	}
+
+	return eMessageReturn::eContinue;
+}
+
+eMessageReturn InputController::TakeInputMessage(const CU::eInputMessage aMouseButton)
+{
 
 	return eMessageReturn::eContinue;
 }

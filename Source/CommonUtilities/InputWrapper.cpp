@@ -4,8 +4,6 @@
 #include "EMouseButtons.h"
 #include "EKeyboardKeys.h"
 
-//#include "GrowingArray.h"
-
 namespace CU
 
 #define KEYBOARDKEYDOWN(key, name) (name[static_cast<int>(key)] & 0x80)

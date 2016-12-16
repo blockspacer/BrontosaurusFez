@@ -260,6 +260,9 @@
     <ProjectReference Include="..\Components\Components.vcxproj">
       <Project>{acc2e4bb-bf6d-41f6-8f14-de1a07f97d69}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\FontEngine\FontEngine.vcxproj">
+      <Project>{f9f6b9b2-70ed-419e-b66f-e4214036a7dc}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Game\Game.vcxproj">
       <Project>{3f2be606-bd58-47ce-8191-f80bc500aa0c}</Project>
     </ProjectReference>

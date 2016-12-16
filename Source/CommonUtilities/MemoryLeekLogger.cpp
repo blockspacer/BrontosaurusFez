@@ -7,7 +7,6 @@
 #ifdef WATCH_THE_MEMORY_MKAY
 #ifndef _RETAIL_BUILD
 
-//#include "GrowingArray.h"
 #include <cstdlib>
 #include <map>
 #include <string>

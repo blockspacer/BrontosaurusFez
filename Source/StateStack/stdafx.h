@@ -11,6 +11,8 @@
 
 #define SAFE_DELETE(ptr) delete ptr; ptr = nullptr
 
+#include <utility>
+
 #include "../CommonUtilities/GrowingArray.h"
 #include "../CommonUtilities/StaticArray.h"
 //#include "../CommonUtilities/MemoryLeekLogger.h"

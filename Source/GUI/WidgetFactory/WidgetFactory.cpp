@@ -12,7 +12,6 @@
 
 #include "../BrontosaurusEngine/FBXLoader.h"
 #include "../BrontosaurusEngine/Engine.h"
-#include "../BrontosaurusEngine/GUIRenderer.h"
 
 #include "../CommonUtilities/Camera.h"
 
@@ -30,10 +29,8 @@ const float PI_CONSTANT = 3.141592f;
 
 namespace GUI
 {
-	WidgetContainer* WidgetFactory::CreateGUIScene(const char* aFilePathFBX, bool isOld, CU::Camera*& aGUIManagerCameraOut)
+	WidgetContainer* WidgetFactory::CreateGUIScene(const char* aFilePathFBX, CU::Camera*& aGUIManagerCameraOut)
 	{
-		isOld;
-
 		CFBXLoader loader;
 		CLoaderScene guiScene;
 		if (loader.LoadGUIScene(aFilePathFBX, guiScene) == false)
@@ -53,7 +50,6 @@ namespace GUI
 		}
 
 		CU::Camera* guiCamera = ParseCamera(aLoaderScene->myCamera);
-		CEngine::GetInstance()->GetGUIRenderer().SetCamera(guiCamera);
 		aGUIManagerCameraOut = guiCamera;
 
 		WidgetContainer* baseWidgetContainer = new WidgetContainer(CU::Vector2f::Zero, CU::Vector2f(1.f, 1.f), "BaseWidgetContainer", true);
@@ -65,15 +61,11 @@ namespace GUI
 			CU::DynamicString widgetName = meshes[i]->myName;
 			if (CU::DynamicString(meshes[i]->myName).Find("healtBar") != CU::DynamicString::FoundNone)
 			{
-				widget = new ModelWidget(meshes[i], { "Models/gui/gui.dds" });
-			}
-			else if (CU::DynamicString(meshes[i]->myName).Find("gameOver") != CU::DynamicString::FoundNone)
-			{
-				widget = new ModelWidget(meshes[i], { "Models/gameover/gameover.dds" });
+				widget = new ModelWidget(meshes[i], { "Models/gui/gui.dds" }, *guiCamera);
 			}
 			else
 			{
-				widget = new ModelWidget(meshes[i], aLoaderScene->myTextures/*myAlbedoTexture.c_str()*/);
+				widget = new ModelWidget(meshes[i], aLoaderScene->myTextures, *guiCamera);
 			}
 
 			if (widget->GetName().Find("laser") != CU::DynamicString::FoundNone ||

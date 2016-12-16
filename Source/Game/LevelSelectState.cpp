@@ -18,8 +18,8 @@ LevelSelectState::~LevelSelectState()
 
 void LevelSelectState::Init()
 {
-	myGUIManager = new GUI::GUIManager(true);
-	myGUIManager->Init("Models/mainMenu/levelSelect.fbx", true);
+	myGUIManager = new GUI::GUIManager();
+	myGUIManager->Init("Models/mainMenu/levelSelect.fbx");
 }
 
 State::eStatus LevelSelectState::Update(const CU::Time& aDeltaTime)

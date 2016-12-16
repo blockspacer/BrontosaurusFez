@@ -16,6 +16,7 @@ namespace Lights
 
 class CModel;
 class CPointLightInstance;
+class CSceneAnimator;
 
 class CModelInstance
 {
@@ -28,10 +29,10 @@ public:
 	~CModelInstance();
 
 	CModelInstance(const char* aModelPath);
-	CModelInstance(const char* aModelPath, CU::Matrix44f& aTransformation);
+	CModelInstance(const char* aModelPath, const CU::Matrix44f& aTransformation);
 
-	CModelInstance(SShape aShape);
-	CModelInstance(SShape aShape, CU::Matrix44f& aTransformation);
+	CModelInstance(const SShape aShape);
+	CModelInstance(const SShape aShape, const CU::Matrix44f& aTransformation);
 
 	CModelInstance(CModel* aModel, const CU::Matrix44f& aTransformation);
 
@@ -47,9 +48,12 @@ public:
 
 	//Make GA StaticArray, no need for dynamicArray yo // or make it VectorOnStack?? :) // VectorOnAStick
 	void Render(Lights::SDirectionalLight* aLight, CU::GrowingArray<CPointLightInstance*>* aPointLightList);
+	void Update(const CU::Time aDeltaTime);
 
 	void SetTransformation(CU::Matrix44f& aTransformation);
 	void SetPosition(CU::Vector3f aPosition);
+
+	void ChangeAnimation(const char* aAnimationKey);
 	
 	//LAT!
 	inline CModel* GetModel();
@@ -59,6 +63,8 @@ private:
 	CU::Matrix44f myLastFrame;
 
 	CModel* myModel;
+	CSceneAnimator* mySceneAnimator;
+	float myAnimationCounter;
 	bool myIsVisible;
 };
 

@@ -7,6 +7,7 @@ enum class eMessageType
 	eMousePressed,
 	eKeyboardMessage,
 	eKeyPressed,
+	eInputMessagePressed,
 	eStateStackMessage,
 	eFokusChanged,
 	eDrawCallsThisFrame,

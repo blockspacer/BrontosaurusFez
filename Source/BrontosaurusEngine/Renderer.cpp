@@ -662,7 +662,9 @@ void CRenderer::DoRenderQueue()
 	{
 		SRenderMessage* renderMessage = mySynchronizer[i];
 		if (renderMessage == nullptr)
+		{
 			break;
+		}
 
 		switch (renderMessage->myType)
 		{
@@ -670,6 +672,13 @@ void CRenderer::DoRenderQueue()
 		{
 			SRenderModelMessage* msg = static_cast<SRenderModelMessage*>(renderMessage);
 			msg->myModel->Render(msg->myTransformation, msg->myLastFrameTransformation,msg->myDirectionalLight, msg->myPointLights);
+			++drawCalls;
+			break;
+		}
+		case SRenderMessage::eRenderMessageType::eRenderAnimationModel:
+		{
+			SRenderAnimationModelMessage* msg = static_cast<SRenderAnimationModelMessage*>(renderMessage);
+			msg->myModel->Render(msg->myTransformation, msg->myLastFrameTransformation, msg->myDirectionalLight, msg->myPointLights, msg->myBoneMatrices);
 			++drawCalls;
 			break;
 		}

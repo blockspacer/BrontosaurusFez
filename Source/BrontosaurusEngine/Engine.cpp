@@ -15,12 +15,12 @@
 #include <DL_Debug.h>
 #include "Skybox.h"
 #include "DDSTextureLoader.h"
-#include "GUIRenderer.h"
 #include "LineDrawer.h"
 #include "Renderer.h"
 #include "DebugInfoDrawer.h"
 #include "ThreadNamer.h"
 #include "../Audio/AudioInterface.h"
+#include "../FontEngine/FontEngineFacade.h"
 
 CEngine* CEngine::myInstance = nullptr;
 
@@ -64,7 +64,6 @@ void CEngine::Init(SInitEngineParams& aInitEngineParams)
 	myInputManager = new CInputManager();
 	myModelManager = new CModelManager();
 	mySpriteManager = new CSpriteManager();
-	myGUIRenderer = new CGUIRenderer();
 	myShaderManager = new CShaderManager();
 	myLightManager = new CLightManager();
 	myTextureManager = new CTextureManager();
@@ -73,9 +72,14 @@ void CEngine::Init(SInitEngineParams& aInitEngineParams)
 	myRenderer = new CRenderer();
 
 	myLineDrawer = new CLineDrawer();
+	CFontEngineFacade::CreateInstance();
+	myFontEngine = CFontEngineFacade::GetInstance();
 	myDebugInfoDrawer = new CDebugInfoDrawer(aInitEngineParams.myDebugFlags);
 	
-	
+	myTestText.Init();
+	myTestText.SetText("Brontosaurs Fez: the hatty Engine");
+	myTestText.SetPosition({ 0.1f, 0.1f });
+
 	ShowCursor(TRUE);
 
 	bool result;
@@ -95,10 +99,14 @@ void CEngine::Render()
 	//myDebugInfoDrawer->Update();
 	//myDebugInfoDrawer->Render(myWindowSize);
 
+
+
 	myRenderer->Render();
 
 	myLineDrawer->Render();
+	myTestText.Render();
 	myDXFramework->Render();
+
 }
 
 void CEngine::ThreadedRender()
@@ -186,11 +194,21 @@ void CEngine::Shutdown()
 }
 
 CEngine::CEngine()
-	: myGUIRenderer(nullptr)
-	, myLineDrawer(nullptr)
+	: myRenderer(nullptr)
+	, myModelManager(nullptr)
+	, mySpriteManager(nullptr)
+	, myCamera(nullptr)
+	, myDXFramework(nullptr)
 	, myDebugInfoDrawer(nullptr)
+	, myTimerManager(nullptr)
+	, myWindowsWindow(nullptr)
+	, myInputManager(nullptr)
+	, myShaderManager(nullptr)
+	, myLightManager(nullptr)
+	, myTextureManager(nullptr)
+	, myLineDrawer(nullptr)
+	, myThreadPool(nullptr)
 {
-	myGameRef = nullptr;
 }
 
 CEngine::~CEngine()
@@ -200,7 +218,6 @@ CEngine::~CEngine()
 	SAFE_DELETE(mySpriteManager);
 	SAFE_DELETE(myCamera);
 	SAFE_DELETE(myDXFramework);
-	SAFE_DELETE(myGUIRenderer);
 	SAFE_DELETE(myDebugInfoDrawer);
 	SAFE_DELETE(myTimerManager);
 	SAFE_DELETE(myWindowsWindow);
@@ -209,11 +226,9 @@ CEngine::~CEngine()
 	SAFE_DELETE(myLightManager);
 	SAFE_DELETE(myTextureManager);
 	SAFE_DELETE(myLineDrawer);
-	SAFE_DELETE(myThreadPool); //TODO: THREAD POOL HAS THREADS IT CANNOT JOIN
+	SAFE_DELETE(myThreadPool); //TODO: THREAD POOL HAS THREADS IT CANNOT JOIN, don't know if this is true anymore
 
 	Audio::CAudioInterface::Destroy();
-	// TODO: Solve this hell
-	//myCubeMap->Release();
 }
 
 

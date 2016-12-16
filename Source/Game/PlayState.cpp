@@ -38,7 +38,9 @@
 #include "Components/NavigationComponent.h"
 #include "Components/MovementComponent.h"
 #include "CameraComponent.h"
-//
+#include "BrontosaurusEngine/ModelInstance.h"
+#include "BrontosaurusEngine/WindowsWindow.h"
+#include <iostream>
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -48,7 +50,7 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 	myIsLoaded = false;
 }
 
-
+static CModelInstance* animation = nullptr;
 CPlayState::~CPlayState()
 {
 	SAFE_DELETE(myGameObjectManager);
@@ -79,7 +81,7 @@ void CPlayState::Load()
 	CreateManagersAndFactories();
 
 	MODELCOMP_MGR.SetScene(&myScene);
-
+	myScene.SetSkybox("skybox.dds");
 
 	CU::TimerManager timerMgr;
 	CU::TimerHandle handle = timerMgr.CreateTimer();
@@ -104,11 +106,13 @@ void CPlayState::Load()
 	//hue hue dags att fula ner play state - Alex(Absolut inte Marcus); // snälla slå Johan inte mig(Alex);
 	CGameObject* tempPlayerObject = myGameObjectManager->CreateGameObject();
 	CGameObject* tempWorldObject = myGameObjectManager->CreateGameObject();
-	CModelComponent* tempModelComponentForWorldObject = CModelComponentManager::GetInstance().CreateComponent("Models/Player/swarmerShip.fbx");
+	CModelComponent* tempModelComponentForWorldObject = CModelComponentManager::GetInstance().CreateComponent("Models/Animation/sampleAnim.fbx"/*"Models/Player/player_walk.fbx"*/);
 	tempWorldObject->GetLocalTransform().Move(CU::Vector3f(0.0f, 000.0f, 500.0f));
+	//tempWorldObject->GetLocalTransform().Rotate(-90, CU::Axees::X);
+
 	tempWorldObject->AddComponent(tempModelComponentForWorldObject);
 	CGameObject* tempWorldObject2 = myGameObjectManager->CreateGameObject();
-	CModelComponent* tempModelComponentForWorldObject2 = CModelComponentManager::GetInstance().CreateComponent("Models/Player/swarmerShip.fbx");
+	CModelComponent* tempModelComponentForWorldObject2 = CModelComponentManager::GetInstance().CreateComponent("Models/Animation/sampleAnim.fbx");
 	tempWorldObject2->GetLocalTransform().Move(CU::Vector3f(500.0f, 0.0f, 0.0f));
 	tempWorldObject2->AddComponent(tempModelComponentForWorldObject2);
 	myCameraObject = myGameObjectManager->CreateGameObject();
@@ -119,32 +123,35 @@ void CPlayState::Load()
 	MovementComponentManager::GetInstance().RegisterComponent(tempMovementController);
 	tempPlayerObject->AddComponent(new NavigationComponent());
 	tempPlayerObject->AddComponent(tempMovementController);
-	CModelComponent* tempModelComponent = CModelComponentManager::GetInstance().CreateComponent("Models/Player/swarmerShip.fbx");
+	CModelComponent* tempModelComponent = CModelComponentManager::GetInstance().CreateComponent("Models/Animation/sampleAnim.fbx");
 	//myScene.AddModelInstance(tempModelComponent->GetModelInst());
 	tempPlayerObject->AddComponent(tempModelComponent);
 	myCameraObject->AddComponent(CCameraManager::GetInstance().CreateCameraComponent());
-	myCameraObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, -1000.0f));
+	myCameraObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, -100.0f));
 	tempPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
 	CU::Matrix33f camerarotationMatrix = myCameraObject->GetLocalTransform().GetRotation();
 	camerarotationMatrix.LookAt(myCameraObject->GetWorlPosition(), tempPlayerObject->GetWorlPosition());
 	myCameraObject->GetLocalTransform().SetRotation(camerarotationMatrix);
 	tempPlayerObject->AddComponent(myCameraObject);
+	
+	
 	CU::Matrix44f cameraTransformation = CAMERA->GetTransformation();
 	cameraTransformation.Rotate(0.2f, CU::Axees::X);
-	cameraTransformation.Move(CU::Vector3f(0.0f, -100000.0f, 0.0f));
+	cameraTransformation.Move(CU::Vector3f(0.0f, -1000.0f, 0.0f));
 	myCameraObject->GetLocalTransform() = cameraTransformation;
 	CAMERA->SetTransformation(cameraTransformation);
 	//tempPlayerObject->GetLocalTransform() = CAMERA->GetTransformation();
 	tempPlayerObject->GetLocalTransform().Move(CU::Vector3f(0.0f, 0.0f, 10));
 	tempPlayerObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 	//
-	SShape shape;
-	shape.shape = eModelShape::eSphere;
+
+	animation = new CModelInstance("Models/Animation/sampleAnim.fbx");
+	animation->SetPosition(CU::Vector3f(0, -5000, 0.f));
+	myScene.AddModelInstance(animation);
 	
 	float time = timerMgr.GetTimer(handle).GetLifeTime().GetMilliseconds();
 	myIsLoaded = true;
 
-	Audio::CAudioInterface::GetInstance()->PostEvent("PlayerMoving_Stop");
 
 	GAMEPLAY_LOG("Game Inited in %f ms", time);
 }
@@ -157,16 +164,25 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 {
 	CU::Matrix44f cameraTransformation = CAMERA->GetTransformation();
 	CU::Matrix44f newRotation;
-	newRotation.SetPosition(CU::Vector3f(0.0f, -1000.0f, 0.0f));
-	newRotation.Rotate(PI / -2.0f, CU::Axees::X);
+	//newRotation.SetPosition(CU::Vector3f(000.0f, 1000.0f, 0.0f));
+	newRotation.Rotate(PI / 2, CU::Axees::X);
+	newRotation.Rotate(PI / 4, CU::Axees::X);
+	
+	newRotation.Rotate(PI / 1, CU::Axees::Z);
+
 	cameraTransformation.SetRotation(newRotation);
-	cameraTransformation.SetPosition(CU::Vector3f(0.0f, -1000.0f, 0.0f));
-	CAMERA->SetTransformation(cameraTransformation);
+	cameraTransformation.SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
+	cameraTransformation.Move(CU::Vector3f(000.0f, 000.0f, -1500.0f));
+	//newRotation.Rotate(PI / 4, CU::Axees::Y);
+	//cameraTransformation.SetRotation(newRotation);
+	//CAMERA->SetTransformation(cameraTransformation);
+	//CCameraManager::GetInstance().GetActiveCamera().SetTransformation(cameraTransformation);
 	myCameraObject->GetLocalTransform() = cameraTransformation;
 	CAMERA->SetTransformation(CCameraManager::GetInstance().GetActiveCamera().GetTransformation());
 	myScene.SetCamera(CAMERA);
-	//myGUIManager->Update(aDeltaTime);
-
+	//myGUIManager->Update(aDeltaTime)
+	
+	
 	Audio::CAudioInterface* audio = Audio::CAudioInterface::GetInstance();
 	if (audio != nullptr)
 	{
@@ -179,6 +195,7 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	CParticleEmitterComponentManager::GetInstance().UpdateEmitters(aDeltaTime);
 	InputControllerManager::GetInstance().Update(aDeltaTime);
 	MovementComponentManager::GetInstance().Update(aDeltaTime);
+	myScene.Update(aDeltaTime);
 
 	myGameObjectManager->DestroyObjectsWaitingForDestruction();
 

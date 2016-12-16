@@ -27,8 +27,8 @@ MainMenuState::~MainMenuState()
 
 void MainMenuState::Init()
 {
-	myGUIManager = new GUI::GUIManager(true);
-	myGUIManager->Init("Models/mainMenu/mainMenu.fbx", true);
+	myGUIManager = new GUI::GUIManager();
+	myGUIManager->Init("Models/mainMenu/mainMenu.fbx");
 	//
 	//mySkyBox = new CSkybox();
 	//mySkyBox->Init();

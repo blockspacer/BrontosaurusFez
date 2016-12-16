@@ -21,6 +21,7 @@ public:
 	CModelInstance* GetAndReleaseModel();
 	inline CModelInstance* GetModelInst() { return myModel; }
 private:
+	void ChangeAnimation(const char* aAnimationKey);
 
 	CModelInstance* myModel; // mebe reference?
 };

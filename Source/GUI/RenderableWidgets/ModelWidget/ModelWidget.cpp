@@ -4,7 +4,6 @@
 #include "../BrontosaurusEngine/Engine.h"
 #include "../BrontosaurusEngine/FBXLoader.h"
 
-#include "../BrontosaurusEngine/GUIRenderer.h"
 #include "../BrontosaurusEngine/Renderer.h"
 #include "../BrontosaurusEngine/ModelManager.h"
 #include "../BrontosaurusEngine/ModelInstance.h"
@@ -16,49 +15,49 @@ const float MillisecondsToFlash = 500.f;
 
 namespace GUI
 {
-	ModelWidget::ModelWidget(CLoaderMesh* aLoaderMesh, const CU::GrowingArray<CU::DynamicString>& aTexturePaths)
+	ModelWidget::ModelWidget(CLoaderMesh* aLoaderMesh, const CU::GrowingArray<CU::DynamicString>& aTexturePaths, const CU::Camera& aGUICamera)
 		: Widget(CU::Vector2f::Zero, CU::Vector2f::One, aLoaderMesh->myName, true)
 		, myModelInstance(nullptr)
 		, myPixelConstantBufferStruct(nullptr)
 		, myMillisecondsLeftSinceMouseEnter(0.f)
 	{
-		CModel* model = MODELMGR->LoadGUIModel(aLoaderMesh, aTexturePaths/*[0].c_str()*/);
+		CModel* model = MODELMGR->LoadGUIModel(aLoaderMesh, aTexturePaths);
 		myModelInstance = new CModelInstance(model, aLoaderMesh->myTransformation);
 		myPixelConstantBufferStruct = new SPixelConstantBuffer();
 		myOriginalTransformation = aLoaderMesh->myTransformation;
 
 		CU::Vector2f screenMinPosition;
-		ConvertPosition3DTo2D(aLoaderMesh->myMinPoint, screenMinPosition);
+		ConvertPosition3DTo2D(aGUICamera, aLoaderMesh->myMinPoint, screenMinPosition);
 
 		CU::Vector2f screenMaxPosition;
-		ConvertPosition3DTo2D(aLoaderMesh->myMaxPoint, screenMaxPosition);
+		ConvertPosition3DTo2D(aGUICamera, aLoaderMesh->myMaxPoint, screenMaxPosition);
 
 		SetWorldPosition(CU::Vector2f(screenMinPosition.x, 1.f - screenMaxPosition.y));
 		SetSize(screenMaxPosition - screenMinPosition);
 		AddDebugLines();
 	}
 
-	ModelWidget::ModelWidget(CModelInstance* aModelInstance, const CU::DynamicString& aName)
-		: Widget(CU::Vector2f::Zero, CU::Vector2f::One, aName, true)
-		, myModelInstance(nullptr)
-		, myPixelConstantBufferStruct(nullptr)
-		, myMillisecondsLeftSinceMouseEnter(0.f)
-	{
-		myModelInstance = aModelInstance;
-		myPixelConstantBufferStruct = new SPixelConstantBuffer();
-		myOriginalTransformation = aModelInstance->GetTransformation();
+	//ModelWidget::ModelWidget(CModelInstance* aModelInstance, const CU::DynamicString& aName)
+	//	: Widget(CU::Vector2f::Zero, CU::Vector2f::One, aName, true)
+	//	, myModelInstance(nullptr)
+	//	, myPixelConstantBufferStruct(nullptr)
+	//	, myMillisecondsLeftSinceMouseEnter(0.f)
+	//{
+	//	myModelInstance = aModelInstance;
+	//	myPixelConstantBufferStruct = new SPixelConstantBuffer();
+	//	myOriginalTransformation = aModelInstance->GetTransformation();
 
-		CU::Vector2f screenMinPosition;
-		
-		ConvertPosition3DTo2D(aModelInstance->GetModel()->GetBoundingBox().myMinPos, screenMinPosition);
+	//	CU::Vector2f screenMinPosition;
+	//	
+	//	ConvertPosition3DTo2D(aModelInstance->GetModel()->GetBoundingBox().myMinPos, screenMinPosition);
 
-		CU::Vector2f screenMaxPosition;
-		ConvertPosition3DTo2D(aModelInstance->GetModel()->GetBoundingBox().myMaxPos, screenMaxPosition);
+	//	CU::Vector2f screenMaxPosition;
+	//	ConvertPosition3DTo2D(aModelInstance->GetModel()->GetBoundingBox().myMaxPos, screenMaxPosition);
 
-		SetWorldPosition(CU::Vector2f(screenMinPosition.x, 1.f - screenMaxPosition.y));
-		SetSize(screenMaxPosition - screenMinPosition);
-		AddDebugLines();
-	}
+	//	SetWorldPosition(CU::Vector2f(screenMinPosition.x, 1.f - screenMaxPosition.y));
+	//	SetSize(screenMaxPosition - screenMinPosition);
+	//	AddDebugLines();
+	//}
 
 	ModelWidget::~ModelWidget()
 	{
@@ -129,19 +128,15 @@ namespace GUI
 		myMillisecondsLeftSinceMouseEnter = MillisecondsToFlash;
 	}
 
-	void ModelWidget::ConvertPosition3DTo2D(const CU::Vector3f& aPosition3D, CU::Vector2f& aPosition2D)
+	void ModelWidget::ConvertPosition3DTo2D(const CU::Camera& aGUICamera, const CU::Vector3f& aPosition3D, CU::Vector2f& aPosition2D)
 	{
-		const CU::Camera* guiCamera = CEngine::GetInstance()->GetGUIRenderer().GetCamera();
-		if (guiCamera != nullptr)
-		{
-			CU::Vector4f minPosition(aPosition3D);
-			minPosition = minPosition * myModelInstance->GetTransformation();
-			minPosition = minPosition * guiCamera->GetInverse();
-			minPosition = minPosition * guiCamera->GetProjection();
-			minPosition /= minPosition.w;
-			CU::Vector2f screenMinPosition(minPosition.x, minPosition.y);
-			screenMinPosition = (screenMinPosition + CU::Vector2f::One) / 2.f;
-			aPosition2D = screenMinPosition;
-		}
+		CU::Vector4f minPosition(aPosition3D);
+		minPosition = minPosition * myModelInstance->GetTransformation();
+		minPosition = minPosition * aGUICamera.GetInverse();
+		minPosition = minPosition * aGUICamera.GetProjection();
+		minPosition /= minPosition.w;
+		CU::Vector2f screenMinPosition(minPosition.x, minPosition.y);
+		screenMinPosition = (screenMinPosition + CU::Vector2f::One) / 2.f;
+		aPosition2D = screenMinPosition;
 	}
 }
