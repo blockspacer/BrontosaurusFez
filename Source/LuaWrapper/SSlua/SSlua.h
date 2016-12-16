@@ -7,7 +7,7 @@
 #include "../SSArgument/SSArgument.h"
 #include "../../LuaSource/lua-5.3.3/src/lua.hpp"
 #include "../../CommonUtilities/GrowingArray.h"
-#include "CommonUtilities/DynamicString.h"
+#include "../CommonUtilities/DynamicString.h"
 
 #include "../file_watcher.h"
 

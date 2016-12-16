@@ -478,7 +478,7 @@ namespace SSlua
 		std::map<std::string, SSlua::LuaCallbackFunction>::iterator it;
 		for (it = LuaWrapper::GetInstance().myVoidFunctions.begin(); it != LuaWrapper::GetInstance().myVoidFunctions.end(); it++)
 		{
-			RegisterFunction(it->second, it->first, "");
+			RegisterFunction(it->second, it->first, "", false);
 		}
 	}
 
