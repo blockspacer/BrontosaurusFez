@@ -373,3 +373,4 @@ Bin/Text/carl_font_2.fnt
 /Bin/Sprites/Text/convertToDDS.cmd
 *.dll
 /Bin/Fonts
+*.cmd
