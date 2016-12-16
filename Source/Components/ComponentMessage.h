@@ -49,7 +49,8 @@ enum class eComponentMessageType
 	eSetNavigationTarget,
 	eSetPath,
 	eStartedMoving,
-	eStoppedMoving
+	eStoppedMoving,
+	eChangedDirection
 };
 
 struct SComponentMessageData

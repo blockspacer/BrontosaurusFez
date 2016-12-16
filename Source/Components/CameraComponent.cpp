@@ -11,14 +11,15 @@
 
 void CCameraComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData)
 {
+	if (myCamera == nullptr)
+	{
+		return;
+	}
+
 	switch (aMessageType)
 	{
-	case eComponentMessageType::eAddComponent:
-		if (aMessageData.myComponentTypeAdded != eComponentType::eCamera) break;
-		//myCamera->SetTransformation(GetParent()->GetToWorldTransform());
-		break;
 	case eComponentMessageType::eMoving:
-		myCamera->SetPosition(myCamera->GetPosition() + aMessageData.myVector3f/*GetParent()->GetLocalTransform().GetPosition()*/); //local?
+		myCamera->SetPosition(myCamera->GetPosition() + aMessageData.myVector3f /*GetParent()->GetLocalTransform().GetPosition()*/); //local?
 		break;
 	}
 }

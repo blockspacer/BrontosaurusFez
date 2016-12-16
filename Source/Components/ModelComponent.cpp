@@ -59,10 +59,13 @@ void CModelComponent::Receive(const eComponentMessageType aType, const SComponen
 	case eComponentMessageType::eAddComponent:
 		if (aData.myComponentTypeAdded != eComponentType::eModel) break; //else: fall through
 	case eComponentMessageType::eMoving:
-		HandleMoving(aData);
+		myModel->SetTransformation(GetToWorldTransform());
 		break;
 	case eComponentMessageType::eStartedMoving:
 		ChangeAnimation(aData.myString);
+		break;
+	case eComponentMessageType::eChangedDirection:
+		ChangeDirection(aData.myVector2f);
 		break;
 	case eComponentMessageType::eStoppedMoving:
 		ChangeAnimation(aData.myString);
@@ -88,17 +91,13 @@ void CModelComponent::ChangeAnimation(const char* aAnimationKey)
 	myModel->ChangeAnimation(aAnimationKey);
 }
 
-void CModelComponent::HandleMoving(const SComponentMessageData& aData)
+void CModelComponent::ChangeDirection(const CU::Vector2f& aDirection2D)
 {
-	CU::Matrix44f newTransformation = GetToWorldTransform();
-	
-	if (aData.myComponent != nullptr)
-	{
-		float angle = std::atan(aData.myVector3f.Dot(CU::Vector3f(0.f, 0.f, 1.f)));
-		newTransformation.Rotate(angle, CU::Axees::Y);
-	}
-	//CU::Vector2f direction(aData.myVector3f.x, aData.myVector3f.z);
-	//float angle = std::atan(direction.Dot(CU::Vector2f(1.f, 0.f)));
-	
-	myModel->SetTransformation(newTransformation/*GetToWorldTransform()*/);
+	//float angle = std::acos(aDirection2D.Dot(CU::Vector2f(0.f, 1.f)));
+	//CU::Matrix44f transformation = myModel->GetTransformation();
+
+
+	//myModel->SetTransformation(transformation);
+
+	//do math to set the direction of getparent->gettransformation to the angle of the 2d vector
 }

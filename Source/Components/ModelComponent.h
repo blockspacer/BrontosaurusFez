@@ -22,7 +22,7 @@ public:
 	inline CModelInstance* GetModelInst() { return myModel; }
 private:
 	void ChangeAnimation(const char* aAnimationKey);
-	void HandleMoving(const SComponentMessageData& aData);
+	void ChangeDirection(const CU::Vector2f& aDirection2D);
 
 	CModelInstance* myModel; // mebe reference?
 };

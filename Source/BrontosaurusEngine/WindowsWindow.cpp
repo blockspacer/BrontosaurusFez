@@ -48,7 +48,6 @@ ATOM CWindowsWindow::MyRegisterClass(HINSTANCE hInstance, const wchar_t* windowN
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_BRONTOSAURUS);
 	wcex.lpszClassName = windowName;
-
 	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
 	return RegisterClassExW(&wcex);
@@ -58,7 +57,8 @@ BOOL CWindowsWindow::InitInstance(const SInitWindowParams& aInitWindowParams)
 {
 	myHInst = GetModuleHandle(0);
 
-	MyRegisterClass(myHInst, aInitWindowParams.Name.c_str());
+	ATOM result = MyRegisterClass(myHInst, aInitWindowParams.Name.c_str());
+
 	
 	myHWnd = CreateWindowW(aInitWindowParams.Name.c_str(), aInitWindowParams.Title.c_str(), WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, 0, aInitWindowParams.Width, aInitWindowParams.Height, nullptr, nullptr, myHInst, nullptr);
@@ -78,6 +78,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
+	case WM_QUIT:
+	{
+		int apa = 0;
+		apa++;
+	}
+		break;
+	case WM_CHAR:
+	{
+		int apa = 0;
+		apa++;
+	}
+
+		break;
 	case WM_SIZE:
 
 		break;
@@ -86,9 +99,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_EXITSIZEMOVE:
+	{
 		RECT rect;
 		GetClientRect(hWnd, &rect);
 		CEngine::GetInstance()->OnResize(rect.right - rect.left, rect.bottom - rect.top);
+	}
 		break;
 	case WM_PAINT:
 		{
