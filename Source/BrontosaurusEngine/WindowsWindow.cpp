@@ -4,6 +4,7 @@
 #include "../PostMaster/PostMaster.h"
 #include "../PostMaster/FocusChange.h"
 #include "../PostMaster/Message.h"
+#include "../PostMaster/KeyCharPressed.h"
 
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -18,7 +19,7 @@ CWindowsWindow::~CWindowsWindow()
 
 void CWindowsWindow::Update()
 {
-	while (PeekMessage(&myMsg, myHWnd, 0, 0, PM_REMOVE) > 0)
+	while (PeekMessage(&myMsg, myHWnd, 0, 0, PM_REMOVE))
 	{
 		TranslateMessage(&myMsg);
 		DispatchMessage(&myMsg);
@@ -48,6 +49,7 @@ ATOM CWindowsWindow::MyRegisterClass(HINSTANCE hInstance, const wchar_t* windowN
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_BRONTOSAURUS);
 	wcex.lpszClassName = windowName;
+
 	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
 	return RegisterClassExW(&wcex);
@@ -57,8 +59,7 @@ BOOL CWindowsWindow::InitInstance(const SInitWindowParams& aInitWindowParams)
 {
 	myHInst = GetModuleHandle(0);
 
-	ATOM result = MyRegisterClass(myHInst, aInitWindowParams.Name.c_str());
-
+	MyRegisterClass(myHInst, aInitWindowParams.Name.c_str());
 	
 	myHWnd = CreateWindowW(aInitWindowParams.Name.c_str(), aInitWindowParams.Title.c_str(), WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, 0, aInitWindowParams.Width, aInitWindowParams.Height, nullptr, nullptr, myHInst, nullptr);
@@ -74,23 +75,31 @@ BOOL CWindowsWindow::InitInstance(const SInitWindowParams& aInitWindowParams)
 	return TRUE;
 }
 
+#include <sstream>
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	static std::stringstream writeTo;
 	switch (message)
 	{
-	case WM_QUIT:
-	{
-		int apa = 0;
-		apa++;
-	}
+	case WM_KEYDOWN:
+
 		break;
 	case WM_CHAR:
 	{
-		int apa = 0;
-		apa++;
+		char keyPressed = static_cast<char>(wParam);
+		PostMaster::GetInstance().SendLetter(Message(eMessageType::eKeyPressed, KeyCharPressed(keyPressed)));
+		if (keyPressed == '\r')
+		{
+			DL_PRINT("%s", writeTo.str().c_str());
+			writeTo.str(std::string());
+		}
+		else
+		{
+			writeTo << keyPressed;
+		}
 	}
-
-		break;
+	break;
 	case WM_SIZE:
 
 		break;
@@ -99,11 +108,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_EXITSIZEMOVE:
-	{
 		RECT rect;
 		GetClientRect(hWnd, &rect);
 		CEngine::GetInstance()->OnResize(rect.right - rect.left, rect.bottom - rect.top);
-	}
 		break;
 	case WM_PAINT:
 		{

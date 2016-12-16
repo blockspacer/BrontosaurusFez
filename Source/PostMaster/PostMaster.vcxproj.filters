@@ -61,6 +61,9 @@
       <Filter>Events\PushState</Filter>
     </ClCompile>
     <ClCompile Include="InputMessagePressed.cpp" />
+    <ClCompile Include="KeyCharPressed.cpp">
+      <Filter>Events\KeyCharPressed</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Subscriber.h">
@@ -161,6 +164,11 @@
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="InputMessagePressed.h" />
+    <ClInclude Include="PopCurrentState.h" />
+    <ClInclude Include="PostMaster.h" />
+    <ClInclude Include="KeyCharPressed.h">
+      <Filter>Events\KeyCharPressed</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Events">
@@ -231,6 +239,9 @@
     </Filter>
     <Filter Include="Events\InputMessagePressed">
       <UniqueIdentifier>{1c03f578-17ff-4d90-b49c-3dbfe800b681}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events\KeyCharPressed">
+      <UniqueIdentifier>{a4ddbb42-71f7-432a-aecb-ff030a240365}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
