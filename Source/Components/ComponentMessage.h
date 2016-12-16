@@ -54,6 +54,7 @@ enum class eComponentMessageType
 	eChangedDirection,
 	eSetVisibility,
 	eStatsUpdated,
+	eSetMaxHealthFromStats,
 };
 
 struct SComponentMessageData
