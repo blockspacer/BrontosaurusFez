@@ -45,17 +45,14 @@ void CConsole::Render()
 const CU::GrowingArray<std::string>& CConsole::UpdateCommandSuggestions(const std::string & aStringToCompare)
 {
 	CU::GrowingArray<std::string> mySuggestedCommands;
-	mySuggestedCommands.Init(myLuaFunctions.count);
+	mySuggestedCommands.Init(100);
 	std::map<std::string, SSlua::LuaCallbackFunction>::iterator it;
 	for (it = myLuaFunctions.begin(); it != myLuaFunctions.end(); it++)
 	{
-		resultDifference = YouCanTSpell(aStringToCompare, it->first);
-		if (resultDifference < difference)
-		{
-			difference = resultDifference;
-			didYouMean = it->first;
-		}
+	
 	}
+
+	return mySuggestedCommands;
 }
 
 eMessageReturn CConsole::Recieve(const Message & aMessage)
