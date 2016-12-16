@@ -18,6 +18,7 @@ namespace
 	}
 
 	int partition(CU::GrowingArray<CModelInstance*, InstanceID>& A, int p, int q);
+	
 	void quickSort(CU::GrowingArray<CModelInstance*, InstanceID>& A, int p, int q)
 	{
 		int r;
@@ -177,7 +178,7 @@ void CScene::Render()
 
 	statemsg.myBlendState = eBlendState::eAlphaBlend;
 	statemsg.myRasterizerState = eRasterizerState::eDefault;
-	statemsg.myDepthStencilState = eDepthStencilState::eDisableDepth;
+	statemsg.myDepthStencilState = eDepthStencilState::eReadOnly;
 	statemsg.mySamplerState = eSamplerState::eClamp;
 
 	RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
@@ -189,7 +190,7 @@ void CScene::Render()
 			continue;
 		}*/
 
-		myParticleEmitters[i]->Render();
+		myParticleEmitters[i]->Render(*CAMERA);
 	}
 }
 
