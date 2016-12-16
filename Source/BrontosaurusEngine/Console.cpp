@@ -65,5 +65,5 @@ eMessageReturn CConsole::Recieve(const Message & aMessage)
 
 eMessageReturn CConsole::TakeKeyBoardInputPressed(const CU::eKeys aKey)
 {
-	return eMessageReturn();
+	return eMessageReturn::eContinue;
 }
