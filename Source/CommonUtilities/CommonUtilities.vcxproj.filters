@@ -306,6 +306,7 @@
       <Filter>MatrixInverse</Filter>
     </ClInclude>
     <ClInclude Include="ThreadNamer.h" />
+    <ClInclude Include="QuickSort.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Timer.cpp">
