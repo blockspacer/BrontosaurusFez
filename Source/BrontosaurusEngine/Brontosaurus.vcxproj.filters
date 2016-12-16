@@ -65,8 +65,8 @@
     <Filter Include="Bitmap">
       <UniqueIdentifier>{74ab491c-6452-4c21-b3ef-c4f8eaead333}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Model\AnimationController">
-      <UniqueIdentifier>{9ebe6122-bfb4-4809-a35e-b5e104af0a2e}</UniqueIdentifier>
+    <Filter Include="Animation">
+      <UniqueIdentifier>{389b616a-080e-495c-b71b-e04372a6c138}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -225,8 +225,9 @@
     <ClInclude Include="CoolText.h">
       <Filter>Text</Filter>
     </ClInclude>
+    <ClInclude Include="Console.h" />
     <ClInclude Include="AnimationController.h">
-      <Filter>Model\AnimationController</Filter>
+      <Filter>Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -341,8 +342,9 @@
     <ClCompile Include="CoolText.cpp">
       <Filter>Text</Filter>
     </ClCompile>
+    <ClCompile Include="Console.cpp" />
     <ClCompile Include="AnimationController.cpp">
-      <Filter>Model\AnimationController</Filter>
+      <Filter>Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

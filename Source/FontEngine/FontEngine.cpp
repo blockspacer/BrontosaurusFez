@@ -31,14 +31,14 @@ void CFontEngine::Init()
 	ERROR_CHECK(error, "failed to create FREETYPE2 API");
 }
 
-CFT_Font* CFontEngine::GetFace(const char* aFilePath)
+CFT_FontFacade CFontEngine::GetFace(const char* aFilePath)
 {
 	if (myFaces.count(aFilePath)  == 0)
 	{
 		myFaces[aFilePath] = CreateFace(aFilePath);
 	}
 	
-	return myFaces[aFilePath];
+	return CFT_FontFacade(myFaces[aFilePath]);
 }
 
 CFT_Font* CFontEngine::CreateFace(const char* aFilePath)
@@ -46,8 +46,9 @@ CFT_Font* CFontEngine::CreateFace(const char* aFilePath)
 	CFT_Font* font = new CFT_Font();
 	font->myFacePath = aFilePath;
 
-	FT_Error error;
-	FT_New_Face(myFreetypeAPI, aFilePath, 0, &font->myFace);
+	FT_Error error = 0;
+	error = FT_New_Face(myFreetypeAPI, aFilePath, 0, &font->myFace);
+
 	ERROR_CHECK(error, "failed to create FREETYPE2 Face from file");
 	return font;
 }
