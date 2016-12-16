@@ -236,7 +236,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Animation\cAnimationController.h" />
+    <ClInclude Include="AnimationController.h" />
     <ClInclude Include="Console.h" />
     <ClInclude Include="ConstBufferTemplate.h" />
     <ClInclude Include="CoolText.h" />
@@ -255,7 +255,6 @@
     <ClInclude Include="Font.h" />
     <ClInclude Include="FullScreenHelper.h" />
     <ClInclude Include="GUIModleHelper.h" />
-    <ClInclude Include="GUIRenderer.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="InstanceID.h" />
     <ClInclude Include="LightManager.h" />
@@ -291,7 +290,6 @@
     <ClInclude Include="Synchronizer.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="BufferStructs.h" />
-    <ClInclude Include="TempRemoveMe.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextBitmap.h" />
     <ClInclude Include="TextInstance.h" />
@@ -301,7 +299,7 @@
     <ClInclude Include="WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Animation\cAnimationController.cpp" />
+    <ClCompile Include="AnimationController.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="CoolText.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
@@ -313,7 +311,6 @@
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FullScreenHelper.cpp" />
     <ClCompile Include="GUIModleHelper.cpp" />
-    <ClCompile Include="GUIRenderer.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="LightManager.cpp" />
     <ClCompile Include="LineDrawer.cpp" />
@@ -346,7 +343,6 @@
     <ClCompile Include="StreakEmitter.cpp" />
     <ClCompile Include="StreakEmitterInstance.cpp" />
     <ClCompile Include="Surface.cpp" />
-    <ClCompile Include="TempRemoveMe.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextBitmap.cpp" />
     <ClCompile Include="TextInstance.cpp" />
