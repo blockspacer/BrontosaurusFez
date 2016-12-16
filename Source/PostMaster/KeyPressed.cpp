@@ -8,6 +8,7 @@
 #include "../Game/PlayState.h"
 #include"Game\PauseMenu.h"
 #include "..\BrontosaurusEngine\ModelInstance.h"
+#include "../BrontosaurusEngine/Console.h"
 
 KeyPressed::KeyPressed(const CU::eKeys& aKey)
 	: myKey(aKey)
@@ -96,5 +97,11 @@ eMessageReturn KeyPressed::DoEvent(PauseMenu *aPauseMenu) const
 	default:
 		break;
 	}
+	return eMessageReturn::eContinue;
+}
+
+eMessageReturn KeyPressed::DoEvent(CConsole *aConsole) const
+{
+	aConsole->TakeKeyBoardInputPressed(myKey);
 	return eMessageReturn::eContinue;
 }
