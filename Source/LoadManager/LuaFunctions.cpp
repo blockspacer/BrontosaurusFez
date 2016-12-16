@@ -244,11 +244,22 @@ SSlua::ArgumentList LuaFunctions::CreateParticleEmitterComponent(SSlua::Argument
 	data.StartSize	 = anArgumentList[6].GetFloat();
 	data.EndSize	 = anArgumentList[7].GetFloat();
 
-	data.StartAlpha	= anArgumentList[8].GetFloat();
-	data.EndAlpha	= anArgumentList[9].GetFloat();
+	data.Gravity = { 0.0f, 0.0f, 0.0f };
+	data.UseGravity = false;
+	data.StartColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+	data.EndColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+	data.RotationCurve = eLerpCurve::eSmootherStep;
+	data.ColorCurve = eLerpCurve::eSmootherStep;
+	data.SizeCurve = eLerpCurve::eSmootherStep;
+
+	data.StartRotation = 0.0f;
+	data.EndRotation = 0.0f;
 
 	data.EmissonLifeTime = anArgumentList[10].GetFloat();
 	data.NumOfParticles = anArgumentList[11].GetInt();
+
+	data.ColorOverLife;
 
 	CParticleEmitterComponent* emitter = CParticleEmitterComponentManager::GetInstance().CreateComponent(data);
 
