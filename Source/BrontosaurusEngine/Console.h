@@ -36,7 +36,7 @@ private:
 	std::map<std::string, SSlua::LuaCallbackFunction> myLuaFunctions;
 	CU::GrowingArray<CTextInstance*> myTextLog;
 	CTextInstance* myCurrentText;
-	CU::GrowingArray<std::string> mySuggestedCommands;
+	std::string mySuggestedCommand;
 
 };
 
