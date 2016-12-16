@@ -27,6 +27,7 @@
     <ClCompile Include="MovementComponentManager.cpp" />
     <ClCompile Include="SkillSystemComponent.cpp" />
     <ClCompile Include="Skill.cpp" />
+    <ClCompile Include="InventoryComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -60,6 +61,7 @@
     <ClInclude Include="MovementComponentManager.h" />
     <ClInclude Include="SkillSystemComponent.h" />
     <ClInclude Include="Skill.h" />
+    <ClInclude Include="InventoryComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
