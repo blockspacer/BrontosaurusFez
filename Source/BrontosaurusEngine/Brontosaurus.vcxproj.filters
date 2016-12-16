@@ -228,6 +228,9 @@
     <ClInclude Include="AnimationController.h">
       <Filter>Model\AnimationController</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleEmitterManager.h">
+      <Filter>Particles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -343,6 +346,9 @@
     </ClCompile>
     <ClCompile Include="AnimationController.cpp">
       <Filter>Model\AnimationController</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitterManager.cpp">
+      <Filter>Particles</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
