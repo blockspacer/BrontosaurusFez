@@ -9,29 +9,36 @@
 #include <Renderer.h>
 #include "Skybox.h"
 
-#include "../Components/AudioSourceComponentManager.h"
-#include "../Components/ModelComponentManager.h"
-#include "../Components/GameObject.h"
-#include "../BrontosaurusEngine/LineDrawer.h"
-#include "../LuaWrapper/SSlua/SSlua.h"
-#include "../GUI/GUIManager/GUIManager.h"
-#include "LoadManager/LoadManager.h"
-#include "PollingStation.h"
-#include "PostMaster/PostMaster.h"
-#include "../Audio/AudioInterface.h"
-#include "PostMaster/PushState.h"
+#include "Components/AudioSourceComponentManager.h"
+#include "Components/ModelComponentManager.h"
+#include "Components/GameObject.h"
 #include "Components/ModelComponent.h"
 #include "Components/ModelComponentManager.h"
-#include "BrontosaurusEngine/TextInstance.h"
-#include "../Components/ComponentManager.h"
 #include "Components/ParticleEmitterComponentManager.h"
-#include "PostMaster/ChangeLevel.h"
+#include "Components/ComponentManager.h"
+
 #include "PostMaster/PopCurrentState.h"
+#include "PostMaster/ChangeLevel.h"
+#include "PostMaster/PostMaster.h"
+#include "PostMaster/PushState.h"
 #include "PostMaster/Message.h"
 #include "PostMaster/Event.h"
+
+#include "PollingStation.h"
 #include "CameraManager.h"
 #include "InputControllerManager.h"
 #include "MovementComponentManager.h"
+
+#include "BrontosaurusEngine/LineDrawer.h"
+#include "BrontosaurusEngine/TextInstance.h"
+
+#include "../LuaWrapper/SSlua/SSlua.h"
+
+#include "../GUI/GUIManager/GUIManager.h"
+
+#include "LoadManager/LoadManager.h"
+
+#include "../Audio/AudioInterface.h"
 
 //Temp Includes
 #include "Components/InputController.h"
@@ -133,8 +140,11 @@ void CPlayState::Load()
 	camerarotationMatrix.LookAt(myCameraObject->GetWorlPosition(), tempPlayerObject->GetWorlPosition());
 	myCameraObject->GetLocalTransform().SetRotation(camerarotationMatrix);
 	tempPlayerObject->AddComponent(myCameraObject);
-	
-	
+
+	//----MakeEnemy----
+	CGameObject* TempraryEnemyObject = myGameObjectManager->CreateGameObject();
+	CModelComponent* tempEnemyModel = CModelComponentManager::GetInstance().CreateComponent("");
+	//-----------------
 	CU::Matrix44f cameraTransformation = CAMERA->GetTransformation();
 	cameraTransformation.Rotate(0.2f, CU::Axees::X);
 	cameraTransformation.Move(CU::Vector3f(0.0f, -1000.0f, 0.0f));
