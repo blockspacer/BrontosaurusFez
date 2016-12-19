@@ -1,6 +1,6 @@
 #pragma once
 #include "Component.h"
-#include "..\PostMaster\Subscriber.h"
+//#include "..\PostMaster\Subscriber.h"
 
 class CGameObject;
 class CStatComponent;
