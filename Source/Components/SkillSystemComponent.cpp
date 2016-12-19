@@ -36,11 +36,15 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 		}
 		else
 		{
-			std::cout << "Tried to use skill that was not in skillSystemComponent" << std::endl;
+			std::cout << "Tried to use a skill that was not in skillSystemComponent" << std::endl;
 		}
 	
 	}
 	else if(aMessageType == eComponentMessageType::eSetSkillTarget)
+	{
+		myTarget = aMessageData.myGameObject;
+	}
+	else if (aMessageType == eComponentMessageType::eAddSkill)
 	{
 		myTarget = aMessageData.myGameObject;
 	}

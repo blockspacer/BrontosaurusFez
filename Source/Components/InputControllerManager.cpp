@@ -13,21 +13,21 @@ InputControllerManager::InputControllerManager()
 
 InputControllerManager & InputControllerManager::GetInstance()
 {
-	assert(ourInstance != nullptr && "enemy ai controller component manager not created (is NULL)");
+	assert(ourInstance != nullptr && "input controller component manager not created (is NULL)");
 
 	return *ourInstance;
 }
 
 void InputControllerManager::CreateInstance()
 {
-	assert(ourInstance == nullptr && "enemy ai controller component manager already created");
+	assert(ourInstance == nullptr && "input controller component manager already created");
 	ourInstance = new InputControllerManager();
 }
 
 void InputControllerManager::DestroyInstance()
 {
 
-	assert(ourInstance != nullptr && "enemy ai controller component manager not created (is NULL)");
+	assert(ourInstance != nullptr && "input controller component manager not created (is NULL)");
 
 	SAFE_DELETE(ourInstance);
 }

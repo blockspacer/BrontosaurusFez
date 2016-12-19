@@ -1,4 +1,5 @@
 #pragma once
+class CGameObject;
 
 class Skill
 {
@@ -13,6 +14,8 @@ protected:
 	virtual void OnActivation();
 	virtual void OnDeActivation();
 	
+	CGameObject* aUser;
+	CGameObject* aTarget;
 	bool myIsActive;
 };
 
