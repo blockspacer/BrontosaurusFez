@@ -16,6 +16,7 @@
 #include "Components/ModelComponentManager.h"
 #include "Components/ParticleEmitterComponentManager.h"
 #include "Components/ComponentManager.h"
+#include "Components/InventoryComponent.h"
 
 #include "PostMaster/PopCurrentState.h"
 #include "PostMaster/ChangeLevel.h"
@@ -141,6 +142,12 @@ void CPlayState::Load()
 
 	playerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
 
+	//__TEMP____CREATE_AND_ADD_HAT_TO_PLAYER______
+
+	CInventoryComponent inventoryComponent;
+	playerObject->AddComponent(new CInventoryComponent());
+
+	//__TEMP______________________________________
 
 	//create camera object:
 	//myCameraObject = myGameObjectManager->CreateGameObject();
@@ -194,6 +201,7 @@ void CPlayState::Load()
 	tempEnemyHealthComponent->Init();
 
 	//-----------------
+
 	
 	myIsLoaded = true;
 
@@ -205,6 +213,7 @@ void CPlayState::Load()
 
 void CPlayState::Init()
 {
+	//skillnad på load, init & konstructor ?
 }
 
 State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
