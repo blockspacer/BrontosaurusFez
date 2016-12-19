@@ -38,9 +38,9 @@ private:
 	CTextInstance* myCurrentText;
 	std::string mySuggestedCommand;
 
-	/*float myElapsedAnimationTimer;
+	float myElapsedAnimationTimer;
 	float myAnimationTimerCooldown;
 	bool myHaveIAfterCurrentText;
-	bool myIsActive;*/
+	bool myIsActive;
 };
 
