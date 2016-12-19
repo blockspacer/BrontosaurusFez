@@ -92,7 +92,7 @@ void CInputManager::UpdateMouse()
 
 		if (myDInputWrapper->IsMouseButtonDown(CU::eMouseButtons::LBUTTON) == true)
 		{
-			PostMaster::GetInstance().SendLetter(Message(eMessageType::eMouseMessage, MouseDown(mousePosition, CU::eMouseButtons::LBUTTON)));
+			PostMaster::GetInstance().SendLetter(Message(eMessageType::eMouseDownMessage, MouseDown(mousePosition, CU::eMouseButtons::LBUTTON)));
 		}
 		if (myDInputWrapper->IsMouseButtonPressed(CU::eMouseButtons::LBUTTON) == true)
 		{

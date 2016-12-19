@@ -63,7 +63,8 @@ enum class eComponentMessageType
 	eSetMaxHealthFromStats,
 	eUseSkill,
 	eSetSkillTarget,
-	eAddSkill
+	eAddSkill,
+	eTakeDamage
 };
 
 struct SComponentMessageData
