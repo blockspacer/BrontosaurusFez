@@ -60,7 +60,7 @@ void CConsole::Update(float aDeltaTime)
 		}
 		else
 		{
-			myCurrentText->SetText(myCurrentText->GetText() + "I");
+			myCurrentText->SetText(myCurrentText->GetText() + "|");
 		}
 		myHaveIAfterCurrentText = !myHaveIAfterCurrentText;
 	}
