@@ -180,6 +180,10 @@ eMessageReturn CConsole::TakeKeyBoardInputPressedChar(const char aKey)
 		{
 			myCurrentText->SetText(myCurrentText->GetText().SubStr(0, myCurrentText->GetText().Size() - 1));
 		}
+		else if (aKey == '\t')
+		{
+			//Fyll i från den föreslagna funktionen.
+		}
 		else
 		{
 			myCurrentText->SetText(myCurrentText->GetText() + aKey);
