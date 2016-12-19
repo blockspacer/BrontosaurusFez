@@ -50,11 +50,12 @@
 #include "Components/NavigationComponent.h"
 #include "Components/MovementComponent.h"
 #include "Components/HealthComponent.h"
+#include "MainStatComponent.h"
+#include "StatComponent.h"
 #include "CameraComponent.h"
 #include "BrontosaurusEngine/ModelInstance.h"
 #include "BrontosaurusEngine/WindowsWindow.h"
 #include <iostream>
-#include "StatComponent.h"
 #include "Components\SkillFactory.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
@@ -137,38 +138,22 @@ void CPlayState::Load()
 
 
 	//create player:
-	CGameObject* playerObject = myGameObjectManager->CreateGameObject();
+	myPlayerObject = myGameObjectManager->CreateGameObject();
 
 	InputController* tempInputController = new InputController();
 	InputControllerManager::GetInstance().RegisterComponent(tempInputController);
-	playerObject->AddComponent(tempInputController);
+	myPlayerObject->AddComponent(tempInputController);
 
 	MovementComponent* tempMovementController = new MovementComponent();
 	MovementComponentManager::GetInstance().RegisterComponent(tempMovementController);
-	playerObject->AddComponent(tempMovementController);
+	myPlayerObject->AddComponent(tempMovementController);
 
-	playerObject->AddComponent(new NavigationComponent());
+	myPlayerObject->AddComponent(new NavigationComponent());
 
 	CModelComponent* playerModelComponent = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
-	playerObject->AddComponent(playerModelComponent);
+	myPlayerObject->AddComponent(playerModelComponent);
 
-	playerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
-
-	//__TEMP____CREATE_AND_ADD_HAT_TO_PLAYER_INVENTORY_____
-
-	CGameObject* hatObj = myGameObjectManager->CreateGameObject();
-	CModelComponent* hatModel = MODELCOMP_MGR.CreateComponent("Models/Player/hat_basic.fbx");
-	hatObj->AddComponent(hatModel);
-	CU::Vector3f hatPos = hatObj->GetLocalTransform().GetPosition();
-	hatObj->GetLocalTransform().SetPosition({ hatPos.x, hatPos.y + 175.f, hatPos.z });
-	playerObject->AddComponent(hatObj);
-
-
-	// Hat följer på ben pos mebe
-
-	//__TEMP______________________________________
-
-
+	myPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
 
 	//create camera object:
 	//myCameraObject = myGameObjectManager->CreateGameObject();
@@ -206,19 +191,24 @@ void CPlayState::Load()
 	//myCameraObject->GetLocalTransform() = cameraTransformation;
 	//myCameraObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 	//myCameraObject->AddComponent(cameraComponent);
-	playerObject->AddComponent(cameraComponent);
+	myPlayerObject->AddComponent(cameraComponent);
 
 	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation());
 	//----MakeEnemy----
 	CGameObject* TempraryEnemyObject = myGameObjectManager->CreateGameObject();
 	CModelComponent* tempEnemyModel = CModelComponentManager::GetInstance().CreateComponent("Models/Placeholders/tree.fbx");
+	
+	Stats::SBaseStats baseStats;
+	baseStats.Dexterity = 1337;
+	Stats::SBonusStats bonusStats;
 	CStatComponent* tempEnemyStatComponent = new CStatComponent();
-	tempEnemyStatComponent->Set(1, 1, 1, 1);
 	CHealthComponent* tempEnemyHealthComponent = new CHealthComponent();
 
 	TempraryEnemyObject->AddComponent(tempEnemyModel);
 	TempraryEnemyObject->AddComponent(tempEnemyStatComponent);
 	TempraryEnemyObject->AddComponent(tempEnemyHealthComponent);
+
+	tempEnemyStatComponent->SetStats(baseStats, bonusStats);
 
 	tempEnemyHealthComponent->Init();
 
@@ -337,6 +327,73 @@ void CPlayState::NextLevel()
 eMessageReturn CPlayState::Recieve(const Message& aMessage)
 {
 	return aMessage.myEvent.DoEvent(this);
+}
+
+
+void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)
+{
+	//__TEMP____CREATES_AND_ADDS_HAT_TO_PLAYER_OBJ_____
+
+	CGameObject* hatObj = myGameObjectManager->CreateGameObject();
+	CModelComponent* hatModel = MODELCOMP_MGR.CreateComponent("Models/Player/hat_basic.fbx");
+	hatObj->AddComponent(hatModel);
+	CU::Vector3f hatPos = hatObj->GetLocalTransform().GetPosition();
+	hatObj->GetLocalTransform().SetPosition({ hatPos.x, hatPos.y + 175.f, hatPos.z });
+	aPlayerObject->AddComponent(hatObj);
+
+	CMainStatComponent* mainStat = new CMainStatComponent;
+	aPlayerObject->AddComponent(mainStat);
+
+	CStatComponent* stat1 = new CStatComponent;
+	CStatComponent* stat2 = new CStatComponent;
+	CStatComponent* stat3 = new CStatComponent;
+
+
+	hatObj->AddComponent(stat1);
+	aPlayerObject->AddComponent(stat2);
+	hatObj->AddComponent(stat3);
+
+	Stats::SBaseStats base1;
+	base1.Dexterity = 1;
+	base1.Intelligence = 1;
+	base1.Strength = 1;
+	base1.Vitality = 1;
+	Stats::SBonusStats bonus1;
+	bonus1.BonusArmor = 1;
+	bonus1.BonusCritChance = 1;
+	bonus1.BonusCritDamage = 1;
+	bonus1.BonusDamage = 1;
+	bonus1.BonusHealth = 1;
+	bonus1.BonusMovementSpeed = 1;
+	stat1->SetStats(base1, bonus1);
+
+	Stats::SBaseStats base2;
+	base2.Dexterity = 2;
+	base2.Intelligence = 2;
+	base2.Strength = 2;
+	base2.Vitality = 2;
+	Stats::SBonusStats bonus2;
+	bonus2.BonusArmor = 2;
+	bonus2.BonusCritChance = 2;
+	bonus2.BonusCritDamage = 2;
+	bonus2.BonusDamage = 2;
+	bonus2.BonusHealth = 2;
+	bonus2.BonusMovementSpeed = 2;
+	stat2->SetStats(base2, bonus2);
+
+	Stats::SBaseStats base3;
+	base3.Dexterity = 3;
+	base3.Intelligence = 3;
+	base3.Strength = 3;
+	base3.Vitality = 3;
+	Stats::SBonusStats bonus3;
+	bonus3.BonusArmor = 3;
+	bonus3.BonusCritChance = 3;
+	bonus3.BonusCritDamage = 3;
+	bonus3.BonusDamage = 3;
+	bonus3.BonusHealth = 3;
+	bonus3.BonusMovementSpeed = 3;
+	stat3->SetStats(base3, bonus3);
 }
 
 void CPlayState::CreateManagersAndFactories()
