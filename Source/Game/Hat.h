@@ -1,17 +1,17 @@
 #pragma once
 
 class CStatComponent;
-class CTexture;
+class CModelComponent;
 
 class CHat 
 {
 public:
 	CHat() = default; //wew
-	CHat(char* aTexturePath, CStatComponent* aStats);
+	CHat(char* aModelPath, CStatComponent* aStats);
 	~CHat();
+	const CStatComponent& GetStats();
+	void Render();
 private:
-	CStatComponent* myStatComponent; //behöver dessaa vara pekare sen?
-	CTexture* myTexture;
-
+	CStatComponent* myStatComponent;
+	CModelComponent* myModelComponent;
 };
-
