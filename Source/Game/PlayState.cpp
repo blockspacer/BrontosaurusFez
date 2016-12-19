@@ -16,6 +16,7 @@
 #include "Components/ModelComponentManager.h"
 #include "Components/ParticleEmitterComponentManager.h"
 #include "Components/ComponentManager.h"
+#include "Components/InventoryComponent.h"
 
 #include "PostMaster/PopCurrentState.h"
 #include "PostMaster/ChangeLevel.h"
@@ -39,6 +40,10 @@
 #include "LoadManager/LoadManager.h"
 
 #include "../Audio/AudioInterface.h"
+
+//Kanske Inte ska vara här?
+#include "../BrontosaurusEngine/Console.h"
+//
 
 //Temp Includes
 #include "Components/InputController.h"
@@ -105,6 +110,12 @@ void CPlayState::Load()
 	//levelIndex.Add(SSArgument(ssLuaNumber(myLevelIndex)));
 	//LUA_WRAPPER.CallLuaFunction("GameLoad", levelIndex);
 
+	//kanske inte ska ske så här?
+	LUA_WRAPPER.RegisterFunction(SSlua::LuaCallbackFunction(&CPlayState::LuaFunction), "Func", "lol", true);
+	CONSOLE->GetLuaFunctions();
+	//
+
+
 	//hue hue dags att fula ner play state - Alex(Absolut inte Marcus); // snälla slå Johan inte mig(Alex);
 
 	//create an npc
@@ -141,6 +152,12 @@ void CPlayState::Load()
 
 	playerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
 
+	//__TEMP____CREATE_AND_ADD_HAT_TO_PLAYER______
+
+	CInventoryComponent inventoryComponent;
+	playerObject->AddComponent(new CInventoryComponent());
+
+	//__TEMP______________________________________
 
 	//create camera object:
 	//myCameraObject = myGameObjectManager->CreateGameObject();
@@ -159,9 +176,9 @@ void CPlayState::Load()
 
 	//set camera position and rotation
 	CU::Camera& playerCamera = myScene.GetCamera(CScene::eCameraType::ePlayerOneCamera);
-	CU::Matrix44f cameraTransformation = playerCamera.GetTransformation();
 	playerCamera.Init(60, WINDOW_SIZE.x, WINDOW_SIZE.y, 1.f, 75000.0f, { 0.0f, 0.0f, 0.f });
 
+	CU::Matrix44f cameraTransformation = playerCamera.GetTransformation();
 	CU::Matrix44f newRotation;
 
 	newRotation.Rotate(PI / 2, CU::Axees::X);
@@ -173,6 +190,7 @@ void CPlayState::Load()
 	cameraTransformation.Move(CU::Vector3f(000.0f, 000.0f, -1500.0f));
 
 	playerCamera.SetTransformation(cameraTransformation);
+	cameraComponent->InitOffsetPosition();
 
 	//myCameraObject->GetLocalTransform() = cameraTransformation;
 	//myCameraObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
@@ -194,6 +212,7 @@ void CPlayState::Load()
 	tempEnemyHealthComponent->Init();
 
 	//-----------------
+
 	
 	myIsLoaded = true;
 
@@ -205,6 +224,7 @@ void CPlayState::Load()
 
 void CPlayState::Init()
 {
+	//skillnad på load, init & konstructor ?
 }
 
 State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)

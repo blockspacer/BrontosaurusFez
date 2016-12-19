@@ -5,6 +5,8 @@
 #include "../PostMaster/PostMaster.h"
 #include "TextInstance.h"
 
+#include <iostream>
+
 CConsole::CConsole()
 {
 	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eKeyPressed);
@@ -169,16 +171,20 @@ eMessageReturn CConsole::TakeKeyBoardInputPressedChar(const char aKey)
 		if (aKey == '\r')
 		{
 			myTextLog.Add(new CTextInstance(*myCurrentText));
-			CheckIfTextIsCommand(myCurrentText->GetText());
-			myCurrentText->SetText("");
 			for (unsigned short i = 0; i < myTextLog.Size(); i++)
 			{
 				myTextLog[i]->SetPosition(myTextLog[i]->GetPosition() + CU::Vector2f(0.0f, -0.05f));
 			}
+			CheckIfTextIsCommand(myCurrentText->GetText());
+			myCurrentText->SetText("");
 		}
 		else if (aKey == '\b')
 		{
 			myCurrentText->SetText(myCurrentText->GetText().SubStr(0, myCurrentText->GetText().Size() - 1));
+		}
+		else if (aKey == '\t')
+		{
+			//Fyll i från den föreslagna funktionen.
 		}
 		else
 		{
@@ -194,6 +200,10 @@ const CU::DynamicString CConsole::CheckIfTextIsCommand(const CU::DynamicString& 
 	{
 		//doGodMode();
 		return aText + " is activated.";
+	}
+	else if (aText == "help")
+	{
+		PrintCommands();
 	}
 	else
 	{
@@ -283,5 +293,27 @@ CU::DynamicString CConsole::ParseAndRunFunction(const CU::DynamicString& aString
 		{
 			const SSArgument& currentArgument = returnArguments[i];
 		}
+	}
+}
+}
+
+void CConsole::Print(const CU::DynamicString & aText)
+{
+	myCurrentText->SetText(aText);
+	myTextLog.Add(new CTextInstance(*myCurrentText));
+	CheckIfTextIsCommand(myCurrentText->GetText());
+	for (unsigned short i = 0; i < myTextLog.Size(); i++)
+	{
+		myTextLog[i]->SetPosition(myTextLog[i]->GetPosition() + CU::Vector2f(0.0f, -0.05f));
+		std::cout << myTextLog[i]->GetText().c_str() << std::endl;
+	}
+}
+
+void CConsole::PrintCommands()
+{
+	std::map<std::string, SSlua::LuaCallbackFunction>::iterator it;
+	for (it = myLuaFunctions.begin(); it != myLuaFunctions.end(); it++)
+	{
+		Print(it->first.c_str());
 	}
 }

@@ -4,10 +4,10 @@
 #include "../CommonUtilities/matrix44.h"
 #include "../CommonUtilities/Camera.h"
 
-//CU::Matrix44f CCameraComponent::GetToWorldTransformation()
-//{
-//	return myCamera->GetTransformation();
-//}
+void CCameraComponent::InitOffsetPosition()
+{
+	myOffsetPosition = myCamera->GetPosition();
+}
 
 void CCameraComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData)
 {
@@ -19,7 +19,7 @@ void CCameraComponent::Receive(const eComponentMessageType aMessageType, const S
 	switch (aMessageType)
 	{
 	case eComponentMessageType::eMoving:
-		myCamera->SetPosition(myCamera->GetPosition() + aMessageData.myVector3f /*GetParent()->GetLocalTransform().GetPosition()*/); //local?
+		myCamera->SetPosition(myOffsetPosition + GetParent()->GetWorlPosition());
 		break;
 	}
 }
@@ -27,11 +27,6 @@ void CCameraComponent::Receive(const eComponentMessageType aMessageType, const S
 void CCameraComponent::Destroy()
 {
 	DL_ASSERT("Not yet implemented");
-}
-
-void CCameraComponent::SetCamera(CU::Camera& aCamera)
-{
-	myCamera = &aCamera;
 }
 
 CCameraComponent::CCameraComponent()

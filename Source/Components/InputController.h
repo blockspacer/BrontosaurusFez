@@ -1,6 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "../PostMaster/Subscriber.h"
+#include "../CommonUtilities/GrowingArray.h"
 namespace CU
 {
 	enum class eInputMessage;
@@ -17,8 +18,8 @@ public:
 	void Destroy() override;
 
 	eMessageReturn MouseClicked(const CU::eMouseButtons aMouseButton, const CU::Vector2f& aMousePosition);
-	eMessageReturn TakeInputMessage(const CU::eInputMessage aMouseButton);
+	eMessageReturn TakeInputMessage(const CU::eInputMessage aInputMessage);
 private:
-
+	CU::GrowingArray<CU::eInputMessage> mySkillInputMessageActivators;
 };
 
