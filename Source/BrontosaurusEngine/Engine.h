@@ -38,6 +38,7 @@ class CConsole;
 #define DEVICE_CONTEXT	CEngine::GetInstance()->GetFramework()->GetDeviceContext()
 
 #define WINDOW_SIZE     CEngine::GetInstance()->GetWindowSize()
+#define CONSOLE         CEngine::GetInstance()->GetConsole()
 
 namespace CU
 {
@@ -91,6 +92,7 @@ public:
 	inline CLightManager * GetLightManager();
 	inline CU::TimerManager* GetTimerManager();
 	inline CU::ThreadPool* GetThreadPool();
+	inline CConsole* GetConsole();
 
 	CU::Time GetTime();
 
@@ -182,6 +184,11 @@ inline CU::TimerManager* CEngine::GetTimerManager()
 inline CU::ThreadPool* CEngine::GetThreadPool()
 {
 	return myThreadPool;
+}
+
+inline CConsole * CEngine::GetConsole()
+{
+	return myConsole;
 }
 
 inline CLightManager*CEngine::GetLightManager()
