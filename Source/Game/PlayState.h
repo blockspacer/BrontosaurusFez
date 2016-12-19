@@ -9,6 +9,8 @@
 #include "ValueObserver.h"
 #include <atomic>
 
+#include "../LuaWrapper/SSlua/SSlua.h"
+
 namespace CU
 {
 	class Time;
@@ -51,6 +53,9 @@ public:
 
 	inline bool IsLoaded() const;
 
+	//Denna ska bort
+	static SSlua::ArgumentList LuaFunction(SSlua::ArgumentList anArgumentList);
+
 private:
 	void CreateManagersAndFactories();
 
@@ -70,4 +75,9 @@ private:
 inline bool CPlayState::IsLoaded() const
 {
 	return myIsLoaded;
+}
+
+inline SSlua::ArgumentList CPlayState::LuaFunction(SSlua::ArgumentList anArgumentList)
+{
+	return SSlua::ArgumentList();
 }

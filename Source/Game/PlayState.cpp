@@ -40,6 +40,10 @@
 
 #include "../Audio/AudioInterface.h"
 
+//Kanske Inte ska vara här?
+#include "../BrontosaurusEngine/Console.h"
+//
+
 //Temp Includes
 #include "Components/InputController.h"
 #include "Components/NavigationComponent.h"
@@ -104,6 +108,12 @@ void CPlayState::Load()
 	//SSlua::ArgumentList levelIndex(1);
 	//levelIndex.Add(SSArgument(ssLuaNumber(myLevelIndex)));
 	//LUA_WRAPPER.CallLuaFunction("GameLoad", levelIndex);
+
+	//kanske inte ska ske så här?
+	LUA_WRAPPER.RegisterFunction(SSlua::LuaCallbackFunction(&CPlayState::LuaFunction), "Func", "lol", true);
+	CONSOLE->GetLuaFunctions();
+	//
+
 
 	//hue hue dags att fula ner play state - Alex(Absolut inte Marcus); // snälla slå Johan inte mig(Alex);
 
