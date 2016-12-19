@@ -28,7 +28,10 @@ private:
 	ID3D11ShaderResourceView* myTexture;
 	unsigned int myMipMapCount;
 	int myRefCount;
-
+	
+#ifdef _DEBUG
+	const wchar_t* myPath;
+#endif
 };
 
 inline const CU::Vector2ui & CTexture::GetSize() const

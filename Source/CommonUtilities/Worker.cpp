@@ -74,14 +74,26 @@ namespace CU
 
 				if (myPool->myHighPrioWork.size() > 0)
 				{
+#ifdef _WIN32
+					SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
+#elif defined __linux__
+					//http ://stackoverflow.com/questions/10876342/equivalent-of-setthreadpriority-on-linux-pthreads
+#endif
+
 					workQueue = &myPool->myHighPrioWork;
 				}
 				else if (myPool->myNormalPrioWork.size() > 0)
 				{
+#ifdef _WIN32
+					SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_NORMAL);
+#endif
 					workQueue = &myPool->myNormalPrioWork;
 				}
 				else if (myPool->myLowPrioWork.size() > 0)
 				{
+#ifdef _WIN32
+					SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
+#endif
 					workQueue = &myPool->myLowPrioWork;
 				}
 

@@ -19,8 +19,10 @@
 #include "Renderer.h"
 #include "DebugInfoDrawer.h"
 #include "ThreadNamer.h"
+#include "ParticleEmitterManager.h"
 #include "../Audio/AudioInterface.h"
 #include "../FontEngine/FontEngineFacade.h"
+#include "Console.h"
 
 CEngine* CEngine::myInstance = nullptr;
 
@@ -67,12 +69,15 @@ void CEngine::Init(SInitEngineParams& aInitEngineParams)
 	myShaderManager = new CShaderManager();
 	myLightManager = new CLightManager();
 	myTextureManager = new CTextureManager();
+	myParticleEmitterManager = new CParticleEmitterManager();
 
 	myRenderer = new CRenderer();
 
 	myLineDrawer = new CLineDrawer();
 	CFontEngineFacade::CreateInstance();
 	myFontEngine = CFontEngineFacade::GetInstance();
+	myConsole = new CConsole();
+	myConsole->Init();
 	myDebugInfoDrawer = new CDebugInfoDrawer(aInitEngineParams.myDebugFlags);
 	
 	myTestText.Init();
@@ -105,7 +110,7 @@ void CEngine::Render()
 	myLineDrawer->Render();
 	myTestText.Render();
 	myDXFramework->Render();
-
+	myConsole->Render();
 }
 
 void CEngine::ThreadedRender()
@@ -153,7 +158,7 @@ void CEngine::Start()
 
 		myUpdateCallbackFunction(myTimerManager->GetTimer(myTimerH).GetDeltaTime());
 		myWindowsWindow->Update();
-		
+		myConsole->Update(myTimerManager->GetTimer(myTimerH).GetDeltaTime().GetSeconds());
 
 
 		Audio::CAudioInterface* audio = Audio::CAudioInterface::GetInstance();
@@ -206,6 +211,7 @@ CEngine::CEngine()
 	, myTextureManager(nullptr)
 	, myLineDrawer(nullptr)
 	, myThreadPool(nullptr)
+	, myParticleEmitterManager(nullptr)
 {
 }
 
@@ -224,6 +230,7 @@ CEngine::~CEngine()
 	SAFE_DELETE(myTextureManager);
 	SAFE_DELETE(myLineDrawer);
 	SAFE_DELETE(myThreadPool); //TODO: THREAD POOL HAS THREADS IT CANNOT JOIN, don't know if this is true anymore
+	SAFE_DELETE(myParticleEmitterManager);
 
 	Audio::CAudioInterface::Destroy();
 }

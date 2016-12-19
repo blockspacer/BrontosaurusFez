@@ -1,9 +1,6 @@
 #include "stdafx.h"
 #include "ParticleEmitter.h"
-//#include <iostream>
-#include <CUTime.h>
-//#include <CommonUtilities.h>
-
+#include "EmitterData.h"
 
 #include "ShaderManager.h"
 #include "Effect.h"
@@ -13,67 +10,33 @@
 #include "ConstBufferTemplate.h"
 #include "TextureManager.h"
 
-namespace
-{
-	#define RAND_FLOAT_RANGE(LOW, HIGH) (LOW) + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/((HIGH)-(LOW))));
 
 
-	float fLerp(float aStart, float aEnd, float aTime)
-	{
-		return (aEnd + aTime*(aStart - aEnd));
-	}
-}
 
-
-CParticleEmitter::CParticleEmitter(const SEmitterData& aEmitterData)
+CParticleEmitter::CParticleEmitter()
 {
 	myTexture = nullptr;
 	myEffect = nullptr;
 	myFramework = nullptr;
 	myVertexBuffer = nullptr;
 	myModelBuffer = nullptr;
-
-	myEmitDelta = 0.f;
-	myEmitTimer = 0.f;
-	myIsActive = true;
-
-	myEmitterData = aEmitterData;
 }
+
 CParticleEmitter::~CParticleEmitter()
 {
-	if (myTexture)
-	{
-		TEXTUREMGR.DestroyTexture(myTexture);
-	}
-
-	if (myModelBuffer)
-		myModelBuffer->Release();
-	
-	if (myVertexBuffer)
-		myVertexBuffer->Release();
-
-	if (myEffect)
-	{
-		SAFE_DELETE(myEffect);
-	}
-
-	myIsActive = false;
+	Destroy();
 }
 
-void CParticleEmitter::Init()
+void CParticleEmitter::Init(const SEmitterData& aEmitterData)
 {
-	myParticles.Init(64);
-	myParticleLogic.Init(64);
+	myTexture = &TEXTUREMGR.LoadTexture(aEmitterData.TexturePath.c_str());
+	myMaxNrOfParticles = aEmitterData.NumOfParticles;
 
-	myEmitDelta = 1.f / myEmitterData.EmissionRate;
-	myEmitTimer = 0.f;
-
-	myTexture = &TEXTUREMGR.LoadTexture(myEmitterData.TexturePath);
 
 	unsigned int ShaderType = 0;
 	ShaderType |= EModelBluePrint_Position;
 	ShaderType |= EModelBluePrint_Size;
-	ShaderType |= EModelBluePrint_Alpha;
+	ShaderType |= EModelBluePrint_Color;
 	
 	ID3D11VertexShader* vertexShader = SHADERMGR->LoadVertexShader(L"Shaders/particle_shader.fx", ShaderType);
 	ID3D11PixelShader* pixelShader = SHADERMGR->LoadPixelShader(L"Shaders/particle_shader.fx", ShaderType);
@@ -87,82 +50,58 @@ void CParticleEmitter::Init()
 	InitBuffers();
 }
 
-void CParticleEmitter::Update(const CU::Time & aDeltaTime, const CU::Matrix44f & aToWorldSpace)
+void CParticleEmitter::Render(const CU::Matrix44f & aToWorldSpace, const CU::GrowingArray<SParticle, unsigned short, false>& aParticleList)
 {
-	float deltaTime = aDeltaTime.GetSeconds();
+	myEffect->Activate();
+	UpdateCBuffers(aToWorldSpace);
+	ResizeVertexBuffer(aParticleList);
 
-	if (myIsActive == true)
+	DEVICE_CONTEXT->PSSetShaderResources(1, 1, myTexture->GetShaderResourceViewPointer());
+
+	UINT stride = sizeof(SParticle);
+	UINT offset = 0;
+
+	myFramework->GetDeviceContext()->IASetVertexBuffers(0, 1, &myVertexBuffer, &stride, &offset);
+	myFramework->GetDeviceContext()->Draw(aParticleList.Size(), 0);
+}
+
+void CParticleEmitter::Destroy()
+{
+	if (myTexture)
 	{
-		myEmitTimer += deltaTime;
-		if (myEmitTimer >= myEmitDelta)
-		{
-			myEmitTimer -= myEmitDelta;
-			EmitParticle(aToWorldSpace);
-		}
+		TEXTUREMGR.DestroyTexture(myTexture);
 	}
-	if (myParticles.Size() != myParticleLogic.Size())
+
+	if (myModelBuffer)
+		myModelBuffer->Release();
+
+	if (myVertexBuffer)
+		myVertexBuffer->Release();
+
+	if (myEffect)
 	{
-		assert(false && "Particlelist and logiclist missalligned.");
-	}
-
-	for (unsigned int i = 0; i < myParticles.Size(); ++i)
-	{
-		myParticleLogic[i].lifetimeLeft -= deltaTime;
-		if (myParticleLogic[i].lifetimeLeft <= 0.0f)
-		{
-			myParticles.RemoveCyclicAtIndex(i);
-			myParticleLogic.RemoveCyclicAtIndex(i);
-			--i;
-			continue;
-		}
-
-		CU::Vector4f deltaMovement = myParticleLogic[i].movementDir * deltaTime;
-		myParticles[i].pos += deltaMovement;
-		myParticles[i].pos.w = myParticleLogic[i].rotation;
-
-		myParticles[i].size = fLerp(myEmitterData.StartSize, myEmitterData.EndSize, myParticleLogic[i].lifetimeLeft / myParticleLogic[i].lifeTime);
-		myParticles[i].alpha = fLerp(myEmitterData.StartAlpha, myEmitterData.EndAlpha, myParticleLogic[i].lifetimeLeft / myParticleLogic[i].lifeTime);
+		SAFE_DELETE(myEffect);
 	}
 }
 
-void CParticleEmitter::Render(const CU::Matrix44f & aToWorldSpace)
+
+void CParticleEmitter::ResizeVertexBuffer(const CU::GrowingArray<SParticle, unsigned short, false>& aParticleList)
 {
-	if (myParticles.Size() > 0)// && myIsActive == true) TODO: Fixa nått snyggare än detta! Woago
-	{
-		myEffect->Activate();
-		UpdateCBuffers(aToWorldSpace);
+	D3D11_MAPPED_SUBRESOURCE resource;
+	ZeroMemory(&resource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+	DEVICE_CONTEXT->Map(myVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
 
-		DEVICE_CONTEXT->PSSetShaderResources(1, 1, myTexture->GetShaderResourceViewPointer());
+	unsigned int bufferSize = sizeof(SParticle);
 
-		UINT stride = sizeof(SParticle);
-		UINT offset = 0;
+	if (aParticleList.Size() > myMaxNrOfParticles)
+		bufferSize *= myMaxNrOfParticles;
+	else
+		bufferSize *= aParticleList.Size();
 
-		myFramework->GetDeviceContext()->IASetVertexBuffers(0, 1, &myVertexBuffer, &stride, &offset);
-		myFramework->GetDeviceContext()->Draw(myParticles.Size(), 0);
-	}
-}
+	if (aParticleList.Size() > 0)
+		memcpy(resource.pData, &aParticleList[0], bufferSize);
 
-void CParticleEmitter::EmitParticle(const CU::Matrix44f& aToWorldSpace)
-{
-	SParticle particle;
-	particle.pos = aToWorldSpace.GetPosition();
-	particle.alpha = myEmitterData.StartAlpha;
-	particle.size = myEmitterData.StartSize;
-
-	SParticleLogic logic;
-	logic.lifeTime = RAND_FLOAT_RANGE(myEmitterData.MinParticleLifeTime, myEmitterData.MaxParticleLifeTime);
-	logic.lifetimeLeft = logic.lifeTime;
-	logic.rotation = RAND_FLOAT_RANGE(0.0f, 360.0f);
-	
-	float x = RAND_FLOAT_RANGE(myEmitterData.MinEmissionVelocity.x, myEmitterData.MaxEmissionVelocity.x);
-	float y = RAND_FLOAT_RANGE(myEmitterData.MinEmissionVelocity.y, myEmitterData.MaxEmissionVelocity.y);
-	float z = RAND_FLOAT_RANGE(myEmitterData.MinEmissionVelocity.z, myEmitterData.MaxEmissionVelocity.z);
-	//std::cout << x << " " << y << " " << z << std::endl;
-
-	logic.movementDir = CU::Vector3f(x, y, z);
-
-	myParticles.Add(particle);
-	myParticleLogic.Add(logic);
+	DEVICE_CONTEXT->Unmap(myVertexBuffer, 0);
 }
 
 void CParticleEmitter::UpdateCBuffers(const CU::Matrix44f & aToWorldSpace)
@@ -171,28 +110,11 @@ void CParticleEmitter::UpdateCBuffers(const CU::Matrix44f & aToWorldSpace)
 	D3D11_MAPPED_SUBRESOURCE mappedSubresource;
 	SToWorldSpace updatedWorld;
 	updatedWorld.myWorldSpace = aToWorldSpace;
-	unsigned int bufferSize;
+
 	DEVICE_CONTEXT->Map(myModelBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
 	memcpy(mappedSubresource.pData, &updatedWorld, sizeof(SToWorldSpace));
 	DEVICE_CONTEXT->Unmap(myModelBuffer, 0);
 	DEVICE_CONTEXT->VSSetConstantBuffers(1, 1, &myModelBuffer);
-
-
-	//VertexBuffer
-	ZeroMemory(&mappedSubresource, sizeof(D3D11_MAPPED_SUBRESOURCE));
-	DEVICE_CONTEXT->Map(myVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
-
-	bufferSize = sizeof(SParticle);
-
-	if (myParticles.Size() > ourMaxNrOfParticles)
-		bufferSize *= ourMaxNrOfParticles;
-	else
-		bufferSize *= myParticles.Size();
-
-	if (myParticles.Size() > 0)
-		memcpy(mappedSubresource.pData, &myParticles[0], bufferSize);
-
-	DEVICE_CONTEXT->Unmap(myVertexBuffer, 0);
 }
 
 bool CParticleEmitter::InitBuffers()
@@ -201,8 +123,8 @@ bool CParticleEmitter::InitBuffers()
 	D3D11_BUFFER_DESC vertexBufferDesc;
 	ZeroMemory(&vertexBufferDesc, sizeof(vertexBufferDesc));
 	vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	vertexBufferDesc.ByteWidth = sizeof(SParticle) * ourMaxNrOfParticles;
-	vertexBufferDesc.BindFlags = D3D11_USAGE_DYNAMIC;
+	vertexBufferDesc.ByteWidth = sizeof(SParticle) * myMaxNrOfParticles;
+	vertexBufferDesc.BindFlags = D3D11_USAGE_DYNAMIC | D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	vertexBufferDesc.MiscFlags = 0;
 

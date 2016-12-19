@@ -1,9 +1,6 @@
 #pragma once
-#include "EmitterData.h"
 #include "vector4.h"
 #include "Texture.h"
-#include <climits>
-
 
 namespace CU
 {
@@ -15,55 +12,28 @@ namespace CU
 	using Matrix44f = Matrix44<float>;
 }
 
-
-
-
 class CEffect;
 class CDXFramework;
 struct ID3D11Buffer;
+struct SParticle;
+struct SEmitterData;
 
 class CParticleEmitter
 {
 public:
-
-	struct SParticle
-	{
-		CU::Vector4f pos;
-		float size;
-		float alpha; //size 6
-
-	};
-
-	//doesn't need to be alligned since it's not going to the GPU ?
-	struct SParticleLogic
-	{
-		CU::Vector4f movementDir;
-		float lifeTime;
-		float lifetimeLeft;
-		float rotation;
-	};
-public:
-	CParticleEmitter(const SEmitterData& EmitterData);
+	CParticleEmitter();
 	CParticleEmitter(const CParticleEmitter& aParticleEmitter) = delete;
 	~CParticleEmitter();
-	void Init();
-	void Update(const CU::Time & aDeltaTimem, const CU::Matrix44f& aToWorldSpace);
-	void Render(const CU::Matrix44f & aToWorldSpace);
-	inline void Activate();
-	inline void Deactivate();
-
+	void Init(const SEmitterData& EmitterData);
+	void Render(const CU::Matrix44f & aToWorldSpace, const CU::GrowingArray<SParticle, unsigned short, false>& aParticleList);
+	void Destroy();
 private:
-
-	void EmitParticle(const CU::Matrix44f& aToWorldSpace);
+	void ResizeVertexBuffer(const CU::GrowingArray<SParticle, unsigned short, false>& aParticleList);
 	void UpdateCBuffers(const CU::Matrix44f& aToWorldSpace);
 	bool InitBuffers();
 
 private:
-	static constexpr unsigned short ourMaxNrOfParticles = 2048u;
-	CU::GrowingArray<SParticle> myParticles;
-	CU::GrowingArray<SParticleLogic> myParticleLogic;
-
-	SEmitterData	myEmitterData;
+	unsigned short myMaxNrOfParticles;
 
 	CTexture*		myTexture;
 	CEffect*		myEffect;
@@ -72,18 +42,4 @@ private:
 	ID3D11Buffer*	myVertexBuffer;
 	ID3D11Buffer*	myModelBuffer;
 
-
-	float myEmitDelta;
-	float myEmitTimer;
-	bool  myIsActive;
 };
-
-void CParticleEmitter::Activate()
-{
-	myIsActive = true;
-}
-
-void CParticleEmitter::Deactivate()
-{
-	myIsActive = false;
-}
