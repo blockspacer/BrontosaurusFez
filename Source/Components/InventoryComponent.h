@@ -13,6 +13,8 @@ public:
 	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
 	void Destroy() override;
 	void AddHat(CHat& aHat);
+	void AddGold(unsigned int aAmountOfGold);
+	void RenderHatsInInventory();
 
 private:
 	CU::GrowingArray<CHat> myHats;

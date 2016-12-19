@@ -26,3 +26,16 @@ void CInventoryComponent::AddHat(CHat& aHat)
 {
 	myHats.Add(aHat);
 }
+
+void CInventoryComponent::AddGold(unsigned int aAmountOfGold)
+{
+	myGold += aAmountOfGold;
+}
+
+void CInventoryComponent::RenderHatsInInventory()
+{
+	for (int i = 0; i < myHats.Size(); ++i)
+	{
+		myHats[i].Render(); // mebe
+	}
+}
