@@ -30,6 +30,7 @@
     <ClCompile Include="InventoryComponent.cpp" />
     <ClCompile Include="StatComponent.cpp" />
     <ClCompile Include="HealthComponent.cpp" />
+    <ClCompile Include="InventoryComponentManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -67,6 +68,7 @@
     <ClInclude Include="StatComponent.h" />
     <ClInclude Include="StatStructs.h" />
     <ClInclude Include="HealthComponent.h" />
+    <ClInclude Include="InventoryComponentManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

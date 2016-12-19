@@ -62,7 +62,7 @@ void CConsole::Update(float aDeltaTime)
 		}
 		else
 		{
-			myCurrentText->SetText(myCurrentText->GetText() + "I");
+			myCurrentText->SetText(myCurrentText->GetText() + "|");
 		}
 		myHaveIAfterCurrentText = !myHaveIAfterCurrentText;
 	}
@@ -157,6 +157,7 @@ eMessageReturn CConsole::TakeKeyBoardInputPressedChar(const char aKey)
 		{
 			Activate();
 		}
+		return eMessageReturn::eContinue;
 	}
 	if (myIsActive == true)
 	{
@@ -180,6 +181,10 @@ eMessageReturn CConsole::TakeKeyBoardInputPressedChar(const char aKey)
 		else if (aKey == '\b')
 		{
 			myCurrentText->SetText(myCurrentText->GetText().SubStr(0, myCurrentText->GetText().Size() - 1));
+		}
+		else if (aKey == '\t')
+		{
+			//Fyll i från den föreslagna funktionen.
 		}
 		else
 		{

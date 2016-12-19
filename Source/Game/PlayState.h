@@ -32,6 +32,7 @@ class EnemyEmitterComponent;
 class DeathComponentFactory;
 class StatManager;
 class CTextInstance;
+class CParticleEmitterComponent;
 
 class CPlayState : public State, public Subscriber
 {
@@ -61,6 +62,8 @@ private:
 
 	CScene myScene;
 	
+	CParticleEmitterComponent* myEmitterComp;
+
 	CGameObjectManager* myGameObjectManager;
 	GUI::GUIManager* myGUIManager;
 	StatManager* myStatManager;

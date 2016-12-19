@@ -18,6 +18,9 @@ class CParticleEmitter;
 class CStreakEmitterInstance;
 
 struct SPixelConstantBuffer;
+struct SParticle;
+
+typedef unsigned int ParticleEmitterID;
 
 namespace CU
 {
@@ -84,7 +87,8 @@ struct SRenderGUIModelMessage : SRenderMessage
 struct SRenderParticlesMessage : SRenderMessage
 {
 	SRenderParticlesMessage() { myType = SRenderMessage::eRenderMessageType::eRenderParticles; }
-	CParticleEmitter* particleEmitter;
+	ParticleEmitterID particleEmitter;
+	CU::GrowingArray<SParticle, unsigned short, false> particleList;
 	CU::Matrix44f toWorld;
 };
 

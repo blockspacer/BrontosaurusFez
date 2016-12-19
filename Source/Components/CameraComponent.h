@@ -15,17 +15,23 @@ class CCameraComponent : public CComponent
 {
 public:
 	friend class CCameraComponentManager;
-	//CU::Matrix44f GetToWorldTransformation();
+	
+	void InitOffsetPosition();
 
 	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData)override;
 	void Destroy();
-	void SetCamera(CU::Camera& aCamera);
+
+	inline void SetCamera(CU::Camera& aCamera);
 
 private:
 	CCameraComponent();
 	~CCameraComponent();
 
+	CU::Vector3f myOffsetPosition;
 	CU::Camera* myCamera;
-	CU::Matrix44f myTransformation;
 };
 
+inline void CCameraComponent::SetCamera(CU::Camera& aCamera)
+{
+	myCamera = &aCamera;
+}
