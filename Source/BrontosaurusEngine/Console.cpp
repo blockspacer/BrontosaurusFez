@@ -154,6 +154,7 @@ eMessageReturn CConsole::TakeKeyBoardInputPressedChar(const char aKey)
 		{
 			Activate();
 		}
+		return eMessageReturn::eContinue;
 	}
 	if (myIsActive == true)
 	{
