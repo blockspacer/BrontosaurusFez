@@ -232,6 +232,9 @@
     <ClInclude Include="ParticleEmitterManager.h">
       <Filter>Particles</Filter>
     </ClInclude>
+    <ClInclude Include="ModelID.h">
+      <Filter>Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
