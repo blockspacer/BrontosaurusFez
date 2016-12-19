@@ -2,6 +2,8 @@
 #include "SkillFactory.h"
 #include "Skill.h"
 
+SkillFactory* SkillFactory::ourInstance = nullptr;
+
 SkillFactory::SkillFactory()
 {
 	mySkills.Init(500);
