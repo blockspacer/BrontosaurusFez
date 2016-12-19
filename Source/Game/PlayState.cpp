@@ -154,12 +154,21 @@ void CPlayState::Load()
 
 	playerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
 
-	//__TEMP____CREATE_AND_ADD_HAT_TO_PLAYER______
+	//__TEMP____CREATE_AND_ADD_HAT_TO_PLAYER_INVENTORY_____
 
-	CInventoryComponent inventoryComponent;
-	playerObject->AddComponent(new CInventoryComponent());
+	CGameObject* hatObj = myGameObjectManager->CreateGameObject();
+	CModelComponent* hatModel = MODELCOMP_MGR.CreateComponent("Models/Player/hat_basic.fbx");
+	hatObj->AddComponent(hatModel);
+	CU::Vector3f hatPos = hatObj->GetLocalTransform().GetPosition();
+	hatObj->GetLocalTransform().SetPosition({ hatPos.x, hatPos.y + 175.f, hatPos.z });
+	playerObject->AddComponent(hatObj);
+
+
+	// Hat följer på ben pos mebe
 
 	//__TEMP______________________________________
+
+
 
 	//create camera object:
 	//myCameraObject = myGameObjectManager->CreateGameObject();
@@ -189,7 +198,7 @@ void CPlayState::Load()
 
 	cameraTransformation.SetRotation(newRotation);
 	cameraTransformation.SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
-	cameraTransformation.Move(CU::Vector3f(000.0f, 000.0f, -1500.0f));
+	cameraTransformation.Move(CU::Vector3f(0.0f, 0.0f, -1100.0f));
 
 	playerCamera.SetTransformation(cameraTransformation);
 	cameraComponent->InitOffsetPosition();
@@ -231,25 +240,6 @@ void CPlayState::Init()
 
 State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 {
-	//CU::Matrix44f cameraTransformation = myScene.GetCamera(CScene::eCameraType::ePlayerOneCamera).GetTransformation();
-	//CU::Matrix44f newRotation;
-
-	//newRotation.Rotate(PI / 2, CU::Axees::X);
-	//newRotation.Rotate(PI / 4, CU::Axees::X);
-	//newRotation.Rotate(PI / 1, CU::Axees::Z);
-
-	//cameraTransformation.SetRotation(newRotation);
-	//cameraTransformation.SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
-	//cameraTransformation.Move(CU::Vector3f(000.0f, 000.0f, -1500.0f));
-
-
-	//myCameraObject->GetLocalTransform() = cameraTransformation;
-	//myScene.GetCamera(CScene::eCameraType::ePlayerOneCamera).SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation());
-
-
-	//myGUIManager->Update(aDeltaTime)
-	
-	
 	Audio::CAudioInterface* audio = Audio::CAudioInterface::GetInstance();
 	if (audio != nullptr)
 	{
