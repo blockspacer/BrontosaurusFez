@@ -1,5 +1,5 @@
 #pragma once
-#include "LuaWrapper/SSlua/SSlua.h"
+#include "../LuaWrapper/SSlua/SSlua.h"
 
 namespace LuaFunctions
 {

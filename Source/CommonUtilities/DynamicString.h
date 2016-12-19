@@ -46,7 +46,15 @@ namespace CU
 		int FindLast(const char aCharacter) const;
 
 		DynamicString SubStr(const int aIndex, const int aLength) const;
+
+		bool IsInt() const;
 		int AsInteger() const;
+
+		bool IsFloat() const;
+		double AsFloat() const;
+
+		bool IsBool() const;
+		bool AsBool() const;
 
 		inline char& operator[](const int aIndex);
 		inline char operator[](const int aIndex) const;
