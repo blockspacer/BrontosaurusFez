@@ -55,6 +55,7 @@
 #include "BrontosaurusEngine/WindowsWindow.h"
 #include <iostream>
 #include "StatComponent.h"
+#include "Components\SkillFactory.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -84,6 +85,7 @@ CPlayState::~CPlayState()
 	PollingStation::NullifyLevelSpecificData();
 
 	CComponentManager::DestroyInstance();
+	SkillFactory::DestroyInstance();
 }
 
 void CPlayState::Load()
@@ -353,4 +355,5 @@ void CPlayState::CreateManagersAndFactories()
 	CCameraComponentManager::Create();
 	InputControllerManager::CreateInstance();
 	MovementComponentManager::CreateInstance();
+	SkillFactory::CreateInstance();
 }

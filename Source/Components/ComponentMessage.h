@@ -7,7 +7,7 @@ class CComponent;
 
 template <typename T>
 class ValueObserver;
-
+class CGameObject;
 namespace CU
 {
 
@@ -58,6 +58,9 @@ enum class eComponentMessageType
 	eSetVisibility,
 	eStatsUpdated,
 	eSetMaxHealthFromStats,
+	eUseSkill,
+	eSetSkillTarget,
+	eAddSkill
 };
 
 struct SComponentMessageData
@@ -68,6 +71,7 @@ struct SComponentMessageData
 	{
 		CComponent* myComponent;
 		CComponent* myComponents[2];
+		CGameObject* myGameObject;
 		bool myBool;
 		const char* myString;
 		int myInt;

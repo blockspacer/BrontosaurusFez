@@ -3,6 +3,7 @@
 #include "../LuaWrapper/SSlua/SSlua.h"
 #include "../CommonUtilities/GrowingArray.h"
 #include "../PostMaster/Subscriber.h"
+#include "../LoadManager/LuaFunctions.h"
 
 namespace CU
 {
@@ -33,6 +34,7 @@ private:
 	void Print(const CU::DynamicString& aText);
 	void PrintCommands();
 
+	CU::DynamicString ParseAndRunFunction(const CU::DynamicString& aString);
 
 private:
 	std::map<std::string, SSlua::LuaCallbackFunction> myLuaFunctions;

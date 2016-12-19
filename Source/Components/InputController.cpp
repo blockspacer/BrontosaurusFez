@@ -15,6 +15,7 @@ InputController::InputController()
 {
 	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eMouseMessage);
 	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eInputMessagePressed);
+	mySkillInputMessageActivators.Init(5);
 }
 
 
@@ -70,8 +71,17 @@ eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButto
 	return eMessageReturn::eContinue;
 }
 
-eMessageReturn InputController::TakeInputMessage(const CU::eInputMessage aMouseButton)
+eMessageReturn InputController::TakeInputMessage(const CU::eInputMessage aInputMessage)
 {
-
+	for(unsigned short i = 0; i < mySkillInputMessageActivators.Size(); i++)
+	{
+		if(mySkillInputMessageActivators[i] == aInputMessage)
+		{
+			eComponentMessageType type = eComponentMessageType::eUseSkill;
+			SComponentMessageData data;
+			data.myInt = i;
+			GetParent()->NotifyComponents(type, data);
+		}
+	}
 	return eMessageReturn::eContinue;
 }
