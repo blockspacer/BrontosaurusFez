@@ -79,23 +79,28 @@ void CConsole::Render()
 
 void CConsole::UpdateCommandSuggestions(const std::string & aStringToCompare)
 {
+	int finalResultDifferance = 9999;
+	int result = 0;
+
 	std::map<std::string, SSlua::LuaCallbackFunction>::iterator it;
 	for (it = myLuaFunctions.begin(); it != myLuaFunctions.end(); it++)
 	{
-		if (MakeCommandSuggestions(aStringToCompare,it->first) == true)
+		result = MakeCommandSuggestions(aStringToCompare, it->first);
+		if (result < finalResultDifferance)
 		{
+			finalResultDifferance = result;
 			mySuggestedCommand = it->first;
 		}
 	}
 }
 
-bool CConsole::MakeCommandSuggestions(const std::string& aStringToCompare, const std::string& aStringToEvaluate)
+size_t CConsole::MakeCommandSuggestions(const std::string& aStringToCompare, const std::string& aStringToEvaluate)
 {
 	const size_t m(aStringToCompare.size());
 	const size_t n(aStringToEvaluate.size());
 
-	if (m == 0) return false;
-	if (n == 0) return false;
+	if (m == 0) return n;
+	if (n == 0) return m;
 
 	size_t *costs = new size_t[n + 1];
 
@@ -127,12 +132,8 @@ bool CConsole::MakeCommandSuggestions(const std::string& aStringToCompare, const
 
 	size_t result = costs[n];
 	delete[] costs;
-	if (aStringToCompare.size() - aStringToEvaluate.size() == result)
-	{
-		return true;
-	}
 
-	return false;
+	return result;
 }
 
 eMessageReturn CConsole::Recieve(const Message & aMessage)
