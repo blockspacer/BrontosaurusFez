@@ -179,7 +179,7 @@ void CScene::Render()
 			continue;
 		}*/
 
-		myParticleEmitters[i]->Render(*CAMERA);
+		myParticleEmitters[i]->Render(GetCamera(eCameraType::ePlayerOneCamera));
 	}
 }
 
