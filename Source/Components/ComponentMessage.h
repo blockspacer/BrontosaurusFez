@@ -7,7 +7,7 @@ class CComponent;
 
 template <typename T>
 class ValueObserver;
-
+class CGameObject;
 namespace CU
 {
 
