@@ -16,7 +16,7 @@ class CInputManager;
 class CTextureManager;
 class CRenderer;
 class CDebugInfoDrawer;
-
+class CConsole;
 
 #define ENGINE 			CEngine::GetInstance()
 #define WINDOW 			CEngine::GetInstance()->GetWindow()
@@ -113,7 +113,8 @@ private:
 	CLightManager* myLightManager;
 	CInputManager* myInputManager;
 	CTextureManager* myTextureManager;
-	
+	CConsole* myConsole;
+
 	CDebugInfoDrawer* myDebugInfoDrawer;
 	CU::TimerManager* myTimerManager;
 	CU::TimerHandle myTimerH;

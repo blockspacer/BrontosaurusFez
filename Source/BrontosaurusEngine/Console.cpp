@@ -8,14 +8,15 @@
 CConsole::CConsole()
 {
 	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eKeyPressed);
-	/*myIsActive = false;
+	myIsActive = false;
 	myHaveIAfterCurrentText = false;
 	myElapsedAnimationTimer = 0.0f;
 	myAnimationTimerCooldown = 0.5f;
 	myCurrentText = new CTextInstance;
 	myCurrentText->SetColor(CTextInstance::Red);
-	myCurrentText->SetPosition(CU::Vector2f(0.5f,0.5f));
-	myCurrentText->SetText("");*/
+	myCurrentText->SetPosition(CU::Vector2f(0.2f,0.8f));
+	myCurrentText->SetText("");
+	myCurrentText->Init();
 }
 
 
@@ -48,33 +49,33 @@ void CConsole::Deactivate()
 
 void CConsole::Update(float aDeltaTime)
 {
-	//myElapsedAnimationTimer += aDeltaTime;
-	//if (myAnimationTimerCooldown < myElapsedAnimationTimer)
-	//{
-	//	myElapsedAnimationTimer = 0.0f;
-	//	if (myHaveIAfterCurrentText == true)
-	//	{
-	//		myCurrentText->SetText(myCurrentText->GetText().SubStr(0, myCurrentText->GetText().Size() - 1));
-	//		
-	//	}
-	//	else
-	//	{
-	//		myCurrentText->SetText(myCurrentText->GetText() + "I");
-	//	}
-	//	myHaveIAfterCurrentText = !myHaveIAfterCurrentText;
-	//}
+	myElapsedAnimationTimer += aDeltaTime;
+	if (myAnimationTimerCooldown < myElapsedAnimationTimer)
+	{
+		myElapsedAnimationTimer = 0.0f;
+		if (myHaveIAfterCurrentText == true)
+		{
+			myCurrentText->SetText(myCurrentText->GetText().SubStr(0, myCurrentText->GetText().Size() - 1));
+			
+		}
+		else
+		{
+			myCurrentText->SetText(myCurrentText->GetText() + "I");
+		}
+		myHaveIAfterCurrentText = !myHaveIAfterCurrentText;
+	}
 }
 
 void CConsole::Render()
 {
-	/*if (myIsActive == true)
+	if (myIsActive == true)
 	{
 		myCurrentText->Render();
 		for (unsigned short i = 0; i < myTextLog.Size(); i++)
 		{
 			myTextLog[i]->Render();
 		}
-	}*/
+	}
 }
 
 void CConsole::UpdateCommandSuggestions(const std::string & aStringToCompare)
@@ -142,7 +143,7 @@ eMessageReturn CConsole::Recieve(const Message & aMessage)
 
 eMessageReturn CConsole::TakeKeyBoardInputPressedChar(const char aKey)
 {
-	/*if (aKey == "keyForActivation")
+	if (aKey == '§')
 	{
 		myIsActive = !myIsActive;
 		if (myIsActive == false)
@@ -163,17 +164,17 @@ eMessageReturn CConsole::TakeKeyBoardInputPressedChar(const char aKey)
 			myElapsedAnimationTimer = myAnimationTimerCooldown;
 		}
 
-		if (aKey == "keyForEnter")
+		if (aKey == '\r')
 		{
 			myTextLog.Add(new CTextInstance(*myCurrentText));
 			CheckIfTextIsCommand(myCurrentText->GetText());
 			myCurrentText->SetText("");
 			for (unsigned short i = 0; i < myTextLog.Size(); i++)
 			{
-				myTextLog[i]->SetPosition(myTextLog[i]->GetPosition() + CU::Vector2f(0.0f, 0.05f));
+				myTextLog[i]->SetPosition(myTextLog[i]->GetPosition() + CU::Vector2f(0.0f, -0.05f));
 			}
 		}
-		else if (aKey == "keyForBackSpace")
+		else if (aKey == '\b')
 		{
 			myCurrentText->SetText(myCurrentText->GetText().SubStr(0, myCurrentText->GetText().Size() - 1));
 		}
@@ -181,24 +182,24 @@ eMessageReturn CConsole::TakeKeyBoardInputPressedChar(const char aKey)
 		{
 			myCurrentText->SetText(myCurrentText->GetText() + aKey);
 		}
-	}*/
+	}
 	return eMessageReturn::eContinue;
 }
 
-//const CU::DynamicString CConsole::CheckIfTextIsCommand(const CU::DynamicString& aText)
-//{
-//	if (aText == "GodMode")
-//	{
-//		//doGodMode
-//		return aText + " is activated.";
-//	}
-//	else
-//	{
-//		if (MakeCommandSuggestions(aText.c_str(), "GodMode") == true)
-//		{
-//			return aText + " was not found perhaps you meant GodMode.";
-//		}
-//	}
-//
-//	return aText + " was not found.";
-//}
+const CU::DynamicString CConsole::CheckIfTextIsCommand(const CU::DynamicString& aText)
+{
+	if (aText == "GodMode")
+	{
+		//doGodMode();
+		return aText + " is activated.";
+	}
+	else
+	{
+		if (MakeCommandSuggestions(aText.c_str(), "GodMode") == true)
+		{
+			return aText + " was not found perhaps you meant GodMode.";
+		}
+	}
+
+	return aText + " was not found.";
+}
