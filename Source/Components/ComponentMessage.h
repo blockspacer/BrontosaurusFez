@@ -31,6 +31,7 @@ enum class eComponentType
 	eModel,
 	eDebugSphere,
 	eCamera,
+	eInventory,
 	eNone,
 };
 
@@ -45,6 +46,8 @@ enum class eComponentMessageType
 	eRespawned,
 	eHeal,
 	eTookDamage,
+	eLootDropped,
+	eLootPickedUp,
 	eObjectiveCompleted,
 	eSetDamage,
 	eSetNavigationTarget,
