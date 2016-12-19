@@ -196,10 +196,9 @@ const CU::DynamicString CConsole::CheckIfTextIsCommand(const CU::DynamicString& 
 	}
 	else
 	{
-		if (MakeCommandSuggestions(aText.c_str(), "GodMode") == true)
-		{
-			return aText + " was not found perhaps you meant GodMode.";
-		}
+
+		return aText + " was not found perhaps you meant GodMode.";
+
 	}
 
 	return aText + " was not found.";

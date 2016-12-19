@@ -29,7 +29,7 @@ public:
 private:
 	void UpdateCommandSuggestions(const std::string& aStringToCompare);
 	size_t CConsole::MakeCommandSuggestions(const std::string& aStringToCompare, const std::string& aStringToEvaluate);
-	//const CU::DynamicString CheckIfTextIsCommand(const CU::DynamicString& aText);
+	const CU::DynamicString CheckIfTextIsCommand(const CU::DynamicString& aText);
 
 
 private:
