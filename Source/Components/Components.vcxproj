@@ -229,6 +229,7 @@
     <ClInclude Include="InputControllerManager.h" />
     <ClInclude Include="InventoryComponent.h" />
     <ClInclude Include="InventoryComponentManager.h" />
+    <ClInclude Include="MainStatComponent.h" />
     <ClInclude Include="ModelComponent.h" />
     <ClInclude Include="ModelComponentManager.h" />
     <ClInclude Include="MovementComponent.h" />
@@ -259,6 +260,7 @@
     <ClCompile Include="InputControllerManager.cpp" />
     <ClCompile Include="InventoryComponent.cpp" />
     <ClCompile Include="InventoryComponentManager.cpp" />
+    <ClCompile Include="MainStatComponent.cpp" />
     <ClCompile Include="ModelComponent.cpp" />
     <ClCompile Include="ModelComponentManager.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
