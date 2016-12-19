@@ -29,6 +29,12 @@ CTexture & CTextureManager::LoadTexture(const wchar_t* aWideTexturePath)
 	}
 
 	myTextures[aWideTexturePath].AddRef();
+
+#ifdef _DEBUG
+	myTextures[aWideTexturePath].myPath = aWideTexturePath;
+#endif
+
+
 	return myTextures[aWideTexturePath];
 }
 

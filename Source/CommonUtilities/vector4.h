@@ -37,6 +37,12 @@ namespace CU
 			return aLeft += aRight;
 		}
 
+		friend Vector4 operator +(Vector4 aLeft, const Vector3<TYPE> &aRight)
+		{
+			return aLeft += aRight;
+		}
+
+
 
 		friend Vector4 operator -(Vector4 aLeft, const Vector4 &aRight)
 		{
@@ -98,6 +104,8 @@ namespace CU
 		void Set(const TYPE aX, const TYPE aY, const TYPE aZ, const TYPE aW);
 
 		// Combined
+		Vector4 &operator +=(const Vector3<TYPE> &aRight);
+
 		Vector4 &operator +=(const Vector4 &aRight);
 		Vector4 &operator -=(const Vector4 &aRight);
 		Vector4 &operator *=(const TYPE aRight);
@@ -291,7 +299,7 @@ namespace CU
 
 	// Combined
 	VECTOR_TEMPLATE_DECL
-		Vector4<TYPE> &Vector4<TYPE>::operator +=(const Vector4 &aRight)
+	Vector4<TYPE> &Vector4<TYPE>::operator +=(const Vector4 &aRight)
 	{
 		myX += aRight.x;
 		myY += aRight.y;
@@ -299,6 +307,17 @@ namespace CU
 		myW += aRight.w;
 		return *this;
 	}
+
+
+	VECTOR_TEMPLATE_DECL
+		Vector4<TYPE> &Vector4<TYPE>::operator +=(const Vector3<TYPE> &aRight)
+	{
+		myX += aRight.x;
+		myY += aRight.y;
+		myZ += aRight.z;
+		return *this;
+	}
+
 	VECTOR_TEMPLATE_DECL
 		Vector4<TYPE> &Vector4<TYPE>::operator -=(const Vector4 &aRight)
 	{

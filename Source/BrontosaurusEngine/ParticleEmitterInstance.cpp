@@ -3,72 +3,288 @@
 #include "Renderer.h"
 #include "Engine.h"
 #include "ParticleEmitter.h"
+
+#include "ParticleEmitterManager.h"
+
 #include "../CommonUtilities/CUTime.h"
+#include <GrowingArray.h>
 
-CParticleEmitterInstance::CParticleEmitterInstance()
+
+//#define STATIC_SIZEOF(x) {char STATIC_SIZEOF_TEMP[(x)]; STATIC_SIZEOF_TEMP = 1;}
+
+
+namespace
 {
-	myIsVisible = true;
+#ifndef RAND_FLOAT_RANGE
+#define RAND_FLOAT_RANGE(LOW, HIGH) (LOW) + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/((HIGH)-(LOW))));
+#endif
 
-	SEmitterData emitterData;
+	float fLerp(float aStart, float aEnd, float aTime)
+	{
+		return (aStart + aTime*(aEnd - aStart));
+		//return (aEnd + aTime*(aStart - aEnd));
+	}
 
-	emitterData.TexturePath = "";
+	float CalcCurve(float t, eLerpCurve aCurveType)
+	{
+		const float pi = 3.1415f;
 
-	emitterData.EmissionRate = 1000.f;
+		switch (aCurveType)
+		{
+		case eLerpCurve::eLinear:
+			return t;
+		case eLerpCurve::eExponential:
+			return t * t;
+		case eLerpCurve::eEaseOut:
+			return std::sin(t * pi * 0.5f);
+		case eLerpCurve::eEaseIn:
+			return 1.f - std::cos(t * pi * 0.5f);
+		case eLerpCurve::eSmoothStep:
+			return t*t * (3.f - 2.f*t);
+		case eLerpCurve::eSmootherStep:
+			return t*t*t * (t * (6.f*t - 15.f) + 10.f);
+		default:
+			break;
+		}
+	}
 
-	emitterData.StartAlpha = 1.0f;
-	emitterData.EndAlpha = 0.0f;
+	CU::Vector4f vectorFlerp(const CU::Vector4f& aStart, const CU::Vector4f& aEnd, float aTime)
+	{
 
-	emitterData.StartSize = 5.0f;
-	emitterData.EndSize = 15.0f;
+		CU::Vector4f ret;
 
-	emitterData.MinParticleLifeTime = 1.0f;
-	emitterData.MaxParticleLifeTime = 1.0f;
+		ret.x = fLerp(aStart.x, aEnd.x, aTime);//aEnd.x + aTime * (aStart.x - aEnd.x);
+		ret.y = fLerp(aStart.y, aEnd.y, aTime);//aEnd.y + aTime * (aStart.y - aEnd.y);
+		ret.z = fLerp(aStart.z, aEnd.z, aTime);//aEnd.z + aTime * (aStart.z - aEnd.z);
+		ret.w = fLerp(aStart.w, aEnd.w, aTime);//aEnd.w + aTime * (aStart.w - aEnd.w);
 
-	emitterData.MinEmissionVelocity = { -10.0f, -10.0f, -10.0f };
-	emitterData.MaxEmissionVelocity = { 10.0f, 10.0f, 10.0f };
+		return ret;
+	}
 
-	emitterData.NumOfParticles = 64;
-	emitterData.EmissonLifeTime = -1.f;
-
-	myEmitter = new CParticleEmitter(emitterData);
-	myEmitter->Init();
+	float Distance2(const CU::Vector4f& p1, const CU::Vector4f& p2)
+	{
+		return ((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y) + (p1.z - p2.z) * (p1.z - p2.z));
+	}
 }
 
 CParticleEmitterInstance::CParticleEmitterInstance(const SEmitterData& aEmitterData)
 {
-	myInstanceID = 0;
-	myIsVisible = true;
-	myEmitter = new CParticleEmitter(aEmitterData);
-	myEmitter->Init();
+	myEmitterData = aEmitterData;
+	Init();
 }
-
 
 CParticleEmitterInstance::~CParticleEmitterInstance()
 {
-	SAFE_DELETE(myEmitter);
+	CEngine* engine = CEngine::GetInstance();
+	assert(engine != nullptr && "CEngine was nullptr");
+	engine->GetParticleEmitterManager().RemoveParticleEmitter(myEmitterID);
 }
 
+void CParticleEmitterInstance::Init()
+{
+	myInstanceID = 0;
 
+	myIsActive = true;
+	myIsVisible = true;
+
+
+	myEmitDelta = 1.f / myEmitterData.EmissionRate;
+	myEmitTimer = 0.f;
+
+	myParticles.Init(myEmitterData.NumOfParticles);
+	myParticleLogic.Init(myEmitterData.NumOfParticles);
+
+
+
+	CEngine* engine = CEngine::GetInstance();
+	assert(engine != nullptr && "CEngine was nullptr");
+	engine->GetParticleEmitterManager().CreateParticleEmitter(myEmitterData);
+
+}
+#include <iostream>
 void CParticleEmitterInstance::Update(const CU::Time& aDeltaTime)
 {
-	myEmitter->Update(aDeltaTime, myToWorldSpace);
+	float deltaTime = aDeltaTime.GetSeconds();
+
+	if (myIsActive == true)
+	{
+		myEmitTimer += deltaTime;
+		if (myEmitTimer >= myEmitDelta)
+		{
+			myEmitTimer -= myEmitDelta;
+			EmitParticle();
+		}
+	}
+	if (myParticles.Size() != myParticleLogic.Size())
+	{
+		assert(false && "Particlelist and logiclist missalligned.");
+	}
+
+	for (unsigned int i = 0; i < myParticles.Size(); ++i)
+	{
+		myParticleLogic[i].lifetimeLeft -= deltaTime;
+		if (myParticleLogic[i].lifetimeLeft <= 0.0f)
+		{
+			myParticles.RemoveCyclicAtIndex(i);
+			myParticleLogic.RemoveCyclicAtIndex(i);
+			--i;
+			continue;
+		}
+
+		if (myEmitterData.UseGravity == true)
+		{
+			myParticleLogic[i].movementDir = myParticleLogic[i].movementDir + (myEmitterData.Gravity * deltaTime);
+		}
+
+
+		CU::Vector3f deltaMovement = myParticleLogic[i].movementDir * deltaTime;
+		float particleLifetime = 1.0f - (myParticleLogic[i].lifetimeLeft / myParticleLogic[i].lifeTime);
+		
+
+
+		myParticles[i].position += deltaMovement;
+
+
+		
+		myParticles[i].position.w = myParticleLogic[i].rotation + fLerp(
+			myEmitterData.StartRotation, 
+			myEmitterData.EndRotation, 
+			CalcCurve(particleLifetime, myEmitterData.RotationCurve));
+
+		myParticles[i].position.w *= 3.1415f / 180.f;
+
+
+		myParticles[i].size = fLerp(
+			myEmitterData.StartSize, 
+			myEmitterData.EndSize, 
+			CalcCurve(particleLifetime, myEmitterData.SizeCurve));
+		
+		
+		
+		SEmitterKeyframe startK = {0.0f, myEmitterData.StartColor};
+		SEmitterKeyframe endK = {1.0f, myEmitterData.EndColor};
+
+
+		for (int j = 0; j < myEmitterData.ColorOverLife.Size(); ++j)
+		{
+			if (myEmitterData.ColorOverLife[j].time < 0.0f)
+				continue;
+
+			if (myEmitterData.ColorOverLife[j].time < particleLifetime)
+			{
+				if (myEmitterData.ColorOverLife[j].time > startK.time)
+				{
+					startK = myEmitterData.ColorOverLife[j];
+				}
+			}
+
+
+			if (myEmitterData.ColorOverLife[j].time > particleLifetime)
+			{
+				if (myEmitterData.ColorOverLife[j].time < endK.time)
+				{
+					endK = myEmitterData.ColorOverLife[j];
+				}
+			}
+
+		}
+
+
+		// start is bigger then life
+
+		float colorT = (particleLifetime - startK.time) / (endK.time - startK.time);
+
+		CU::Vector4f colr = vectorFlerp(
+			startK.value,
+			endK.value,
+			CalcCurve(colorT, myEmitterData.ColorCurve));
+
+		//Sleep(10);
+
+		myParticles[i].color = colr;
+
+		if (i == 0)
+		{
+			system("cls");
+			std::cout << "\n\nLIFETIME: " << particleLifetime;
+
+			std::cout << "\nSTART:\n";
+			std::cout << "T: " << startK.time << "	X: " << startK.value.x << "	Y: " << startK.value.y << "	Z: " << startK.value.z << "	W: " << startK.value.w << std::endl;
+			std::cout << "END:\n";
+
+			std::cout << "T: " << endK.time << "	X: " << endK.value.x << "	Y: " << endK.value.y << "	Z: " << endK.value.z << "	W: " << endK.value.w << std::endl;
+			std::cout << "RESULT:\n";
+			std::cout << "T: " << colorT << "	X: " << colr.x << "	Y: " << colr.y << "	Z: " << colr.z << "	W: " << colr.w << std::endl;
+
+		}
+
+
+		int br = 0;;
+	}
 }
 
-void CParticleEmitterInstance::Render()
+void CParticleEmitterInstance::Render(const CU::Camera& aCamera)
 {
-	SRenderParticlesMessage msg;
-	msg.particleEmitter = myEmitter;
-	msg.toWorld = myToWorldSpace;
-	RENDERER.AddRenderMessage(new SRenderParticlesMessage(msg));
-	//myEmitter->Render(aCamera, myToWorldSpace);
+	if (myParticles.Size() > 0)
+	{
+		SRenderParticlesMessage msg;
+		msg.particleEmitter = myEmitterID;
+		msg.toWorld = myToWorldSpace;
+		msg.particleList = myParticles;
+		DistanceSort(msg.particleList, aCamera);
+		RENDERER.AddRenderMessage(new SRenderParticlesMessage(msg));
+	}
+}
+
+void CParticleEmitterInstance::EmitParticle()
+{
+	if (myParticles.Size() < myEmitterData.NumOfParticles)
+	{
+
+		SParticle particle;
+		particle.position = myToWorldSpace.GetPosition();
+		particle.color = myEmitterData.StartColor;
+		particle.size = myEmitterData.StartSize;
+
+		SParticleLogic logic;
+		logic.lifeTime = RAND_FLOAT_RANGE(myEmitterData.MinParticleLifeTime, myEmitterData.MaxParticleLifeTime);
+		logic.lifetimeLeft = logic.lifeTime;
+		logic.rotation = RAND_FLOAT_RANGE(0.0f, 360.0f);
+
+		float x = RAND_FLOAT_RANGE(myEmitterData.MinEmissionVelocity.x, myEmitterData.MaxEmissionVelocity.x);
+		float y = RAND_FLOAT_RANGE(myEmitterData.MinEmissionVelocity.y, myEmitterData.MaxEmissionVelocity.y);
+		float z = RAND_FLOAT_RANGE(myEmitterData.MinEmissionVelocity.z, myEmitterData.MaxEmissionVelocity.z);
+
+		logic.movementDir = CU::Vector3f(x, y, z);
+
+		myParticles.Add(particle);
+		myParticleLogic.Add(logic);
+	}
 }
 
 void CParticleEmitterInstance::Activate()
 {
-	myEmitter->Activate();
+	myIsActive = true;
 }
 
 void CParticleEmitterInstance::Deactivate()
 {
-	myEmitter->Deactivate();
+	myIsActive = false;
 }
+
+void CParticleEmitterInstance::DistanceSort(CU::GrowingArray<SParticle, unsigned short, false>& aParticleList, const CU::Camera& aCamera)
+{
+	CU::Vector4f cameraPosition(aCamera.GetPosition());
+
+	auto compareLambda = [cameraPosition](const SParticle& aInput, const SParticle& aSecondInput)
+	{
+		float x = Distance2(aInput.position, cameraPosition);
+		float y = Distance2(aSecondInput.position, cameraPosition);
+
+		return (x < y);
+	};
+
+	aParticleList.QuickSort(compareLambda);
+}
+
+

@@ -28,8 +28,8 @@ public:
 
 private:
 	void UpdateCommandSuggestions(const std::string& aStringToCompare);
-	bool CConsole::MakeCommandSuggestions(const std::string& aStringToCompare, const std::string& aStringToEvaluate);
-	//const CU::DynamicString CheckIfTextIsCommand(const CU::DynamicString& aText);
+	size_t CConsole::MakeCommandSuggestions(const std::string& aStringToCompare, const std::string& aStringToEvaluate);
+	const CU::DynamicString CheckIfTextIsCommand(const CU::DynamicString& aText);
 
 
 private:
@@ -38,9 +38,9 @@ private:
 	CTextInstance* myCurrentText;
 	std::string mySuggestedCommand;
 
-	/*float myElapsedAnimationTimer;
+	float myElapsedAnimationTimer;
 	float myAnimationTimerCooldown;
 	bool myHaveIAfterCurrentText;
-	bool myIsActive;*/
+	bool myIsActive;
 };
 

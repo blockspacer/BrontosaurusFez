@@ -1,28 +1,91 @@
 #pragma once
+#include <VectorOnStack.h>
 #include <Vector3.h>
+#include <Vector4.h>
+#include <DynamicString.h>
 
+#define STATIC_SIZEOF(x) {char STATIC_SIZEOF_TEMP[(x)]; STATIC_SIZEOF_TEMP = 1;}
+
+enum class eLerpCurve : char
+{
+	eLinear,
+	eExponential,
+	eEaseOut,
+	eEaseIn,
+	eSmoothStep,
+	eSmootherStep,
+};
+
+
+struct SEmitterKeyframe
+{
+	SEmitterKeyframe()
+	{
+		time = -1.0f; // nullo
+	}
+
+	SEmitterKeyframe(float t, const CU::Vector4f& v)
+	{
+		time = t; 
+		value = v;
+	}
+
+	//bool operator==(const SEmitterKeyframe& aLeft)
+	//{
+	//	return aLeft.Time == this->Time & aLeft.Value == this->Value;
+	//}
+
+
+	float time;
+
+	CU::Vector4f value;
+
+};
 
 struct SEmitterData
 {
-	const char* TexturePath;
-	float EmissionRate;
+	SEmitterData()
+	{
+		//STATIC_SIZEOF(alignof(SEmitterData));
+		//STATIC_SIZEOF(sizeof(*this));
+	}
+
+	CU::DynamicString TexturePath;
+
+
+	CU::Vector4f StartColor;
+	CU::Vector4f EndColor;
 
 	CU::Vector3f MinEmissionVelocity;
 	CU::Vector3f MaxEmissionVelocity;
+	
+	CU::Vector3f Gravity;
+	
+	float StartSize;
+	float EndSize;
+	
+	float EmissionRate;
+
+	float StartRotation;
+	float EndRotation;
 
 	float MinParticleLifeTime;
 	float MaxParticleLifeTime;
-
-	float StartSize;
-	float EndSize;
-
-	float StartAlpha;
-	float EndAlpha;
-
+	
 	float EmissonLifeTime;
+
+	CU::StaticArray<SEmitterKeyframe, 2> ColorOverLife; // sort these badboys
 
 
 	int NumOfParticles;
+
+
+	eLerpCurve RotationCurve;
+	eLerpCurve ColorCurve;
+	eLerpCurve SizeCurve;
+	bool UseGravity;
+
+
 };
 
 struct  SStreakEmitterData
@@ -41,4 +104,21 @@ struct  SStreakEmitterData
 	float EmissonLifeTime;
 
 	int NumOfParticles;
+};
+
+
+struct SParticle
+{
+	CU::Vector4f position; // stores rotation in W
+	float size;
+	CU::Vector4f color;
+};
+
+//doesn't need to be alligned since it's not going to the GPU ?
+struct SParticleLogic
+{
+	CU::Vector3f movementDir;
+	float lifeTime;
+	float lifetimeLeft;
+	float rotation;
 };

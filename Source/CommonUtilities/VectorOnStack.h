@@ -4,9 +4,6 @@
 namespace CU
 {
 	template <typename Type, int aSize, typename CountType = unsigned short, bool UseSafeModeFlag = true>
-	typedef VectorOnStack VectorOnAStick;
-
-	template <typename Type, int aSize, typename CountType = unsigned short, bool UseSafeModeFlag = true>
 	class VectorOnStack
 	{
 	public:

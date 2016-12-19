@@ -166,9 +166,9 @@ void CPlayState::Load()
 
 	//set camera position and rotation
 	CU::Camera& playerCamera = myScene.GetCamera(CScene::eCameraType::ePlayerOneCamera);
-	CU::Matrix44f cameraTransformation = playerCamera.GetTransformation();
 	playerCamera.Init(60, WINDOW_SIZE.x, WINDOW_SIZE.y, 1.f, 75000.0f, { 0.0f, 0.0f, 0.f });
 
+	CU::Matrix44f cameraTransformation = playerCamera.GetTransformation();
 	CU::Matrix44f newRotation;
 
 	newRotation.Rotate(PI / 2, CU::Axees::X);
@@ -180,6 +180,7 @@ void CPlayState::Load()
 	cameraTransformation.Move(CU::Vector3f(000.0f, 000.0f, -1500.0f));
 
 	playerCamera.SetTransformation(cameraTransformation);
+	cameraComponent->InitOffsetPosition();
 
 	//myCameraObject->GetLocalTransform() = cameraTransformation;
 	//myCameraObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());

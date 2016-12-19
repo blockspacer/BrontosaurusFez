@@ -9,9 +9,9 @@
 #include "Skybox.h"
 #include "StreakEmitterInstance.h"
 #include "ParticleEmitter.h"
+#include "ParticleEmitterManager.h"
 #include "ConstBufferTemplate.h"
 #include "Text.h"
-
 #include <Camera.h>
 
 #include "ModelInstance.h"
@@ -595,7 +595,7 @@ void CRenderer::CreateDepthStencilStates()
 		D3D11_DEPTH_STENCIL_DESC depthStencilReadOnlyDesc;
 		ZeroMemory(&depthStencilReadOnlyDesc, sizeof(depthStencilReadOnlyDesc));
 		depthStencilReadOnlyDesc.DepthEnable = true;
-		depthStencilReadOnlyDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		depthStencilReadOnlyDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 		depthStencilReadOnlyDesc.DepthFunc = D3D11_COMPARISON_LESS;
 		depthStencilReadOnlyDesc.StencilEnable = true;
 		depthStencilReadOnlyDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
@@ -746,7 +746,11 @@ void CRenderer::DoRenderQueue()
 		case SRenderMessage::eRenderMessageType::eRenderParticles:
 		{
 			SRenderParticlesMessage* msg = static_cast<SRenderParticlesMessage*>(renderMessage);
-			msg->particleEmitter->Render(msg->toWorld);
+			CParticleEmitter* emitter = ENGINE->GetParticleEmitterManager().GetParticleEmitter(msg->particleEmitter);
+			if (emitter == nullptr)
+				break;
+
+			emitter->Render(msg->toWorld, msg->particleList);
 			break;
 		}
 		case SRenderMessage::eRenderMessageType::eRenderStreak:

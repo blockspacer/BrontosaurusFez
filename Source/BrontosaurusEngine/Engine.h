@@ -5,6 +5,7 @@
 #include "../FontEngine/FontEngineFacade.h"
 #include "TextInstance.h"
 
+class CParticleEmitterManager;
 class CModelManager;
 class CSpriteManager;
 class CLineDrawer;
@@ -16,7 +17,7 @@ class CInputManager;
 class CTextureManager;
 class CRenderer;
 class CDebugInfoDrawer;
-
+class CConsole;
 
 #define ENGINE 			CEngine::GetInstance()
 #define WINDOW 			CEngine::GetInstance()->GetWindow()
@@ -91,6 +92,7 @@ public:
 	inline CLightManager * GetLightManager();
 	inline CU::TimerManager* GetTimerManager();
 	inline CU::ThreadPool* GetThreadPool();
+	inline CParticleEmitterManager& GetParticleEmitterManager();
 
 	CU::Time GetTime();
 
@@ -113,8 +115,12 @@ private:
 	CLightManager* myLightManager;
 	CInputManager* myInputManager;
 	CTextureManager* myTextureManager;
+	CParticleEmitterManager* myParticleEmitterManager;
 	
+	CConsole* myConsole;
+
 	CDebugInfoDrawer* myDebugInfoDrawer;
+	
 	CU::TimerManager* myTimerManager;
 	CU::TimerHandle myTimerH;
 
@@ -181,6 +187,12 @@ inline CU::TimerManager* CEngine::GetTimerManager()
 inline CU::ThreadPool* CEngine::GetThreadPool()
 {
 	return myThreadPool;
+}
+
+inline CParticleEmitterManager & CEngine::GetParticleEmitterManager()
+{
+	assert(myParticleEmitterManager != nullptr);
+	return *myParticleEmitterManager;
 }
 
 inline CLightManager*CEngine::GetLightManager()

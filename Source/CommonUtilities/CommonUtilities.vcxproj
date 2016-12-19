@@ -262,6 +262,7 @@
     <ClInclude Include="plane_volume.h" />
     <ClInclude Include="PostMasterKyle.h" />
     <ClInclude Include="Queue.h" />
+    <ClInclude Include="QuickSort.h" />
     <ClInclude Include="rapidjson\allocators.h" />
     <ClInclude Include="rapidjson\document.h" />
     <ClInclude Include="rapidjson\encodedstream.h" />

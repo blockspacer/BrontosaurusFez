@@ -27,29 +27,23 @@ void MovementComponent::Update(float aDeltaTime)
 			CU::Vector3f directionNormalized = direction.GetNormalized();
 			CU::Vector3f movement = directionNormalized * myMovementSpeed * aDeltaTime;
 			
+			CU::Matrix44f& localTransform = GetParent()->GetLocalTransform();
 
 			if(movement.Length2() < direction.Length2())
 			{
-				GetParent()->GetLocalTransform().Move(movement);
+				GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 
-				SComponentMessageData deltaMovement;
-				deltaMovement.myVector3f = movement;
-				GetParent()->NotifyComponents(eComponentMessageType::eMoving, deltaMovement);
-
-
-				//CU::Matrix33f rotationMatrix = GetParent()->GetLocalTransform().GetRotation();
-				//rotationMatrix.LookAt(GetParent()->GetLocalTransform().GetPosition(), GetParent()->GetLocalTransform().GetPosition() + movement);
-				//GetParent()->GetLocalTransform().SetRotation(rotationMatrix);
+				CU::Matrix33f rotationMatrix = localTransform.GetRotation();
+				rotationMatrix.LookAt(localTransform.GetPosition() + movement, localTransform.GetPosition());
+				localTransform.SetRotation(rotationMatrix);
+				localTransform.Move(CU::Vector3f(0.0f, 0.0f, myMovementSpeed * -aDeltaTime));
 			}
 			else
 			{
-				GetParent()->GetLocalTransform().SetPosition(myPathPointer->At(myCurrentPathIndex));
-
-				SComponentMessageData deltaMovement;
-				deltaMovement.myVector3f = direction;
-				GetParent()->NotifyComponents(eComponentMessageType::eMoving, deltaMovement);
-
+				localTransform.SetPosition(myPathPointer->At(myCurrentPathIndex));
 				myCurrentPathIndex++;
+
+				GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 			}
 		}
 		else
@@ -57,6 +51,7 @@ void MovementComponent::Update(float aDeltaTime)
 			SComponentMessageData stoppedMovingMessage;
 			stoppedMovingMessage.myString = "idle";
 			GetParent()->NotifyComponents(eComponentMessageType::eStoppedMoving, stoppedMovingMessage);
+			myPathPointer = nullptr;
 		}
 	}
 }
