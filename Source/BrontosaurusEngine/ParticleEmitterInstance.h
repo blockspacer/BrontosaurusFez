@@ -1,6 +1,7 @@
 #pragma once
 #include "matrix44.h"
 #include "InstanceID.h"
+#include "EmitterData.h"
 
 namespace CU
 {
@@ -9,20 +10,21 @@ namespace CU
 }
 
 class CParticleEmitter;
-struct SEmitterData;
+
+typedef unsigned int ParticleEmitterID;
 
 class CParticleEmitterInstance
 {
 public:
-	CParticleEmitterInstance();
 	CParticleEmitterInstance(const SEmitterData& aEmitterData);
 
 	~CParticleEmitterInstance();
 
 	void Update(const CU::Time & aDeltaTime);
-	void Render();
+	void Render(const CU::Camera& aCamera); // needs the camera to sort by
 	void Activate();
 	void Deactivate();
+	static void DistanceSort(CU::GrowingArray<SParticle, unsigned short, false>& aParticleList, const CU::Camera & aCamera);
 	inline void SetPosition(CU::Vector3f aPosition);
 	inline void SetVisibility(bool);
 	inline bool IsVisible() const;
@@ -31,10 +33,26 @@ public:
 	inline void SetInstandeID(const InstanceID aID);
 
 private:
+	void Init();
+	void EmitParticle();
+
+
+private:
 	CU::Matrix44f myToWorldSpace;
-	CParticleEmitter* myEmitter;
-	bool myIsVisible;
+	SEmitterData	myEmitterData;
+
+
+	CU::GrowingArray<SParticle, unsigned short, false> myParticles;
+	CU::GrowingArray<SParticleLogic> myParticleLogic;
+
+	float myEmitDelta;
+	float myEmitTimer;
+	ParticleEmitterID myEmitterID;
 	InstanceID myInstanceID;
+
+
+	bool  myIsActive;
+	bool myIsVisible;
 };
 
 inline void CParticleEmitterInstance::SetPosition(CU::Vector3f aPosition)
@@ -61,3 +79,4 @@ inline void CParticleEmitterInstance::SetInstandeID(const InstanceID aID)
 {
 	myInstanceID = aID;
 }
+

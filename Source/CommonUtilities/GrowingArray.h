@@ -3,6 +3,8 @@
 #include <assert.h>
 #include <string.h> // memcpy
 #include <initializer_list>
+#include "QuickSort.h"
+
 
 #define self (*this)
 
@@ -69,6 +71,8 @@ namespace CU
 
 		inline void Optimize();
 		inline void ShrinkToFit();
+
+		inline void QuickSort(std::function<bool(ObjectType, ObjectType)> aCompareFunction);
 
 		inline void Resize(const SizeType aNewSize);
 		inline void Resize(const SizeType aNewSize, const ObjectType& aObject);
@@ -564,6 +568,13 @@ namespace CU
 	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::ShrinkToFit()
 	{
 		Optimize();
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void CU::GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::QuickSort(std::function<bool(ObjectType, ObjectType)> aCompareFunction)
+	{
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		CU::QuickSort(*this, 0, mySize, aCompareFunction);
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
