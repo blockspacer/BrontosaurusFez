@@ -294,8 +294,10 @@ CU::DynamicString CConsole::ParseAndRunFunction(const CU::DynamicString& aString
 			const SSArgument& currentArgument = returnArguments[i];
 		}
 	}
+
+	return resultString;
 }
-}
+
 
 void CConsole::Print(const CU::DynamicString & aText)
 {
