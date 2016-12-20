@@ -19,11 +19,11 @@ CU::Matrix44f CGameObject::GetToWorldTransform()
 		return GetLocalTransform();
 	}
 }
-CU::Vector3f CGameObject::GetWorlPosition()
+CU::Vector3f CGameObject::GetWorldPosition()
 {
 	if (GetParent() != nullptr)
 	{
-		return GetLocalTransform().GetPosition() + GetParent()->GetWorlPosition();
+		return GetLocalTransform().GetPosition() + GetParent()->GetWorldPosition();
 	}
 	else
 	{

@@ -31,12 +31,12 @@ private:
 	ComponentId myId = NULL_COMPONENT;
 };
 
+inline CGameObject * CComponent::GetParent()
+{
+	return myParent;
+}
+
 inline ComponentId CComponent::GetId() const
 {
 	return myId;
-}
-
-__forceinline CGameObject* CComponent::GetParent()
-{
-	return myParent;
 }

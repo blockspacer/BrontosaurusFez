@@ -41,7 +41,7 @@ void Skill::Init(CGameObject * aUser)
 
 void Skill::BasicAttackUpdate(float aDeltaTime)
 {
-	if(CU::Vector3f(myUser->GetWorlPosition() - myTargetPosition).Length2() < 500.0f * 500.0f)
+	if(CU::Vector3f(myUser->GetWorldPosition() - myTargetPosition).Length2() < 500.0f * 500.0f)
 	{
 		eComponentMessageType type = eComponentMessageType::eTakeDamage;
 		SComponentMessageData data;
