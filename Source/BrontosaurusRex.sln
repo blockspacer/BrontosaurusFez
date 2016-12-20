@@ -38,6 +38,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game\Game.vcxproj",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FontEngine", "FontEngine\FontEngine.vcxproj", "{F9F6B9B2-70ED-419E-B66F-E4214036A7DC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KevinLoader", "KevinLoader\KevinLoader.vcxproj", "{CBC04772-EFF5-45EE-8C89-C09E24C4236C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -236,6 +238,18 @@ Global
 		{F9F6B9B2-70ED-419E-B66F-E4214036A7DC}.Retail|x64.Build.0 = Release|x64
 		{F9F6B9B2-70ED-419E-B66F-E4214036A7DC}.Retail|x86.ActiveCfg = Release|x64
 		{F9F6B9B2-70ED-419E-B66F-E4214036A7DC}.Retail|x86.Build.0 = Release|x64
+		{CBC04772-EFF5-45EE-8C89-C09E24C4236C}.Debug|x64.ActiveCfg = Debug|x64
+		{CBC04772-EFF5-45EE-8C89-C09E24C4236C}.Debug|x64.Build.0 = Debug|x64
+		{CBC04772-EFF5-45EE-8C89-C09E24C4236C}.Debug|x86.ActiveCfg = Debug|Win32
+		{CBC04772-EFF5-45EE-8C89-C09E24C4236C}.Debug|x86.Build.0 = Debug|Win32
+		{CBC04772-EFF5-45EE-8C89-C09E24C4236C}.Release|x64.ActiveCfg = Release|x64
+		{CBC04772-EFF5-45EE-8C89-C09E24C4236C}.Release|x64.Build.0 = Release|x64
+		{CBC04772-EFF5-45EE-8C89-C09E24C4236C}.Release|x86.ActiveCfg = Release|Win32
+		{CBC04772-EFF5-45EE-8C89-C09E24C4236C}.Release|x86.Build.0 = Release|Win32
+		{CBC04772-EFF5-45EE-8C89-C09E24C4236C}.Retail|x64.ActiveCfg = Release|x64
+		{CBC04772-EFF5-45EE-8C89-C09E24C4236C}.Retail|x64.Build.0 = Release|x64
+		{CBC04772-EFF5-45EE-8C89-C09E24C4236C}.Retail|x86.ActiveCfg = Release|Win32
+		{CBC04772-EFF5-45EE-8C89-C09E24C4236C}.Retail|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

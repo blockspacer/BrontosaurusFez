@@ -14,6 +14,7 @@ public:
 	~MouseDown();
 
 	eMessageReturn DoEvent(ControllerComponent* aControllerComponent) const;
+	eMessageReturn DoEvent(InputController* aInputController) const;
 
 private:
 	const CU::Vector2f myMousePosition;

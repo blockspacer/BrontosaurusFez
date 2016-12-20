@@ -34,6 +34,8 @@
     <ClCompile Include="AIControllerComponent.cpp" />
     <ClCompile Include="ChaserController.cpp" />
     <ClCompile Include="IController.cpp" />
+    <ClCompile Include="SkillFactory.cpp" />
+    <ClCompile Include="MainStatComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -75,6 +77,8 @@
     <ClInclude Include="AIControllerComponent.h" />
     <ClInclude Include="ChaserController.h" />
     <ClInclude Include="IController.h" />
+    <ClInclude Include="SkillFactory.h" />
+    <ClInclude Include="MainStatComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

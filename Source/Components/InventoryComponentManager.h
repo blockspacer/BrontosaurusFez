@@ -9,14 +9,14 @@ public:
 	static void DestroyInstance();
 
 	void Update(const CU::Time & aDeltaTime);
-	void RegisterComponent(CInventoryComponent* aComponent);
+	CInventoryComponent& CreateAndRegisterComponent();
 
 private:
 	CInventoryComponentManager();
 	~CInventoryComponentManager();
 
-	CU::GrowingArray<CInventoryComponent*> myComponents; //varför behöver jag inte forward declare'a growing-array, wtf?
-										// Är allt i stdafx forward declare'at som default, även om man inte inkluderar något?
+	CU::GrowingArray<CInventoryComponent*> myComponents;
+
 	static CInventoryComponentManager* ourInstance;
 };
 

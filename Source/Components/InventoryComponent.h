@@ -1,23 +1,30 @@
 #pragma once
 #include "Component.h"
-#include <GrowingArray.h>
+//#include "..\PostMaster\Subscriber.h"
 
-class CHat;
+class CGameObject;
+class CStatComponent;
 
-class CInventoryComponent : public CComponent
+struct SHat
+{
+	const CStatComponent* stat;
+	CGameObject* gameObject; // GameObj hatObj  -> AddComp(statComp)
+};
+
+class CInventoryComponent : public CComponent//, public Subscriber
 {
 public:
 	CInventoryComponent();
 	~CInventoryComponent();
 
 	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
+//	eMessageReturn Receive(const Message& aMessage) override;
 	void Destroy() override;
-	void AddHat(CHat& aHat);
+	void AddHat(SHat& aHat);
 	void AddGold(unsigned int aAmountOfGold);
-	void RenderHatsInInventory();
 
 private:
-	CU::GrowingArray<CHat> myHats;
+	CU::GrowingArray<SHat> myHats; //byt till stat component.
 	unsigned int myGold;
 };
 
