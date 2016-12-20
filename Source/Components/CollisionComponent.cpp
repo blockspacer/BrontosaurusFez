@@ -35,7 +35,7 @@ void CCollisionComponent::Receive(const eComponentMessageType aMessageType, cons
 	switch (aMessageType)
 	{
 	case eComponentMessageType::eMoving:
-		myCollider->SetPosition(GetParent()->GetWorlPosition());
+		myCollider->SetPosition(GetParent()->GetWorldPosition());
 		break;
 	}
 }
