@@ -5,6 +5,8 @@
 
 Skill::Skill()
 {
+	myIsActive = false;
+	myIsSelected = false;
     myUpdateFunction = std::bind(&Skill::BasicAttackUpdate, this, std::placeholders::_1);
 	myUser = nullptr;
 }
@@ -23,6 +25,7 @@ void Skill::Activate()
 void Skill::Deactivate()
 {
 	myIsActive = false;
+	myIsSelected = false;
 	OnDeActivation();
 }
 
@@ -45,6 +48,11 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 		data.myInt = 1000000000.0f;
 		//myTarget->NotifyComponents(type, data); //from collsionMan get if there is an enemy here then do attack!
 	}
+}
+
+void Skill::SetTarget(CU::Vector3f aTargetPosition)
+{	
+	myTargetPosition = aTargetPosition;
 }
 
 void Skill::OnActivation()

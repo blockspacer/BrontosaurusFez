@@ -55,7 +55,7 @@ enum class eComponentMessageType
 	eSetVisibility,
 	eStatsUpdated,
 	eSetMaxHealthFromStats,
-	eUseSkill,
+	eSelectSkill,
 	eSetSkillTargetPosition,
 	eAddSkill,
 	eTakeDamage
