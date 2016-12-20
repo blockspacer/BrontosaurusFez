@@ -31,6 +31,9 @@
     <ClCompile Include="StatComponent.cpp" />
     <ClCompile Include="HealthComponent.cpp" />
     <ClCompile Include="InventoryComponentManager.cpp" />
+    <ClCompile Include="AIControllerComponent.cpp" />
+    <ClCompile Include="ChaserController.cpp" />
+    <ClCompile Include="IController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -69,6 +72,9 @@
     <ClInclude Include="StatStructs.h" />
     <ClInclude Include="HealthComponent.h" />
     <ClInclude Include="InventoryComponentManager.h" />
+    <ClInclude Include="AIControllerComponent.h" />
+    <ClInclude Include="ChaserController.h" />
+    <ClInclude Include="IController.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

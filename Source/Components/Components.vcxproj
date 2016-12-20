@@ -216,15 +216,19 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AIControllerComponent.h" />
+    <ClInclude Include="AIControllerManager.h" />
     <ClInclude Include="AudioSourceComponent.h" />
     <ClInclude Include="AudioSourceComponentManager.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CameraManager.h" />
+    <ClInclude Include="ChaserController.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="ComponentMessage.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="HealthComponent.h" />
+    <ClInclude Include="IController.h" />
     <ClInclude Include="InputController.h" />
     <ClInclude Include="InputControllerManager.h" />
     <ClInclude Include="InventoryComponent.h" />
@@ -246,14 +250,18 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AIControllerComponent.cpp" />
+    <ClCompile Include="AIControllerManager.cpp" />
     <ClCompile Include="AudioSourceComponent.cpp" />
     <ClCompile Include="AudioSourceComponentManager.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="CameraManager.cpp" />
+    <ClCompile Include="ChaserController.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="HealthComponent.cpp" />
+    <ClCompile Include="IController.cpp" />
     <ClCompile Include="InputController.cpp" />
     <ClCompile Include="InputControllerManager.cpp" />
     <ClCompile Include="InventoryComponent.cpp" />
