@@ -52,6 +52,9 @@ public:
 
 	eMessageReturn Recieve(const Message& aMessage) override;
 
+	void TEMP_ADD_HAT(CGameObject* aPlayerObject);
+	CGameObject* myPlayerObject; //TEMP
+
 	inline bool IsLoaded() const;
 
 	//Denna ska bort
