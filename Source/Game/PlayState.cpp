@@ -144,7 +144,7 @@ void CPlayState::Load()
 
 	//create player:
 	myPlayerObject = myGameObjectManager->CreateGameObject();
-	PollingStation::playerObject = playerObject;
+	PollingStation::playerObject = myPlayerObject;
 
 	InputController* tempInputController = new InputController();
 	InputControllerManager::GetInstance().RegisterComponent(tempInputController);
@@ -201,35 +201,34 @@ void CPlayState::Load()
 
 	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation());
 	//----MakeEnemy----
-	CGameObject* TempraryEnemyObject = myGameObjectManager->CreateGameObject();
+	CGameObject* enemyObj = myGameObjectManager->CreateGameObject();
 	CModelComponent* tempEnemyModel = CModelComponentManager::GetInstance().CreateComponent("Models/Placeholders/tree.fbx");
+	CStatComponent* tempEnemyStatComponent = new CStatComponent();
+	CAIControllerComponent* AIController = new CAIControllerComponent();
+	CHealthComponent* tempEnemyHealthComponent = new CHealthComponent();
+	CChaserController* chaserController = new CChaserController();
+	
+	enemyObj->AddComponent(tempEnemyModel);
+	enemyObj->AddComponent(AIController);
+	enemyObj->AddComponent(tempEnemyStatComponent);
+	enemyObj->AddComponent(tempEnemyHealthComponent);
+	
+	AIController->AddControllerBehaviour(chaserController);
 	
 	Stats::SBaseStats baseStats;
 	baseStats.Dexterity = 1337;
 	Stats::SBonusStats bonusStats;
-	CStatComponent* tempEnemyStatComponent = new CStatComponent();
-	CHealthComponent* tempEnemyHealthComponent = new CHealthComponent();
-
-	CAIControllerComponent* AIController = new CAIControllerComponent();
-	CChaserController* chaserController = new CChaserController();
-	chaserController->SetMaxAcceleration(1);
-	chaserController->SetMaxSpeed(10);
-	chaserController->SetSlowDownRadius(100);
-	chaserController->SetTargetRadius(100);
-
-	TempraryEnemyObject->AddComponent(AIController);
-	AIController->AddControllerBehaviour(chaserController);
-
+	
+	chaserController->SetMaxAcceleration(400);
+	chaserController->SetMaxSpeed(400);
+	chaserController->SetSlowDownRadius(500);
+	chaserController->SetTargetRadius(70);
+	
 	AIControllerManager::GetIstance().AddController(AIController);
-
-	TempraryEnemyObject->AddComponent(tempEnemyModel);
-	TempraryEnemyObject->AddComponent(tempEnemyStatComponent);
-	TempraryEnemyObject->AddComponent(tempEnemyHealthComponent);
-
+	
 	tempEnemyStatComponent->SetStats(baseStats, bonusStats);
-
+	
 	tempEnemyHealthComponent->Init();
-
 	//-----------------
 
 	

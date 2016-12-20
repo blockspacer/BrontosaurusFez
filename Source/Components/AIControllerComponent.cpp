@@ -2,6 +2,8 @@
 #include "AIControllerComponent.h"
 #include "GameObject.h"
 
+const CU::Vector2f StopVector = CU::Vector2f(99999, 99999);
+
 CAIControllerComponent::CAIControllerComponent()
 {
 	myControllers.Init(2);
@@ -31,12 +33,19 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 	CU::Vector2f Acceleration = CU::Vector2f::Zero;
 	for (unsigned int i = 0; i < myControllers.Size(); ++i)
 	{
-		Acceleration += myControllers[i]->Update(aDeltaTime);
+		CU::Vector2f returnValue = myControllers[i]->Update(aDeltaTime);
+		if (returnValue == StopVector)
+		{
+			myVelocity = CU::Vector2f::Zero;
+			break;
+		}
+		Acceleration += returnValue;
 	}
 	myVelocity += Acceleration * aDeltaTime.GetSeconds();
 	CU::Vector2f velocity = myVelocity * aDeltaTime.GetSeconds();
 
-	GetParent()->GetToWorldTransform().Move(CU::Vector3f(myVelocity.x,0,myVelocity.y));
+	GetParent()->GetLocalTransform().Move(CU::Vector3f(velocity.x,0,velocity.y));
+	GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 }
 
 void CAIControllerComponent::Destroy()

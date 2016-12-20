@@ -23,8 +23,8 @@ CChaserController::~CChaserController()
 
 const CU::Vector2f CChaserController::Update(const CU::Time& aDeltaTime)
 {
-	myTarget = CU::Vector2f(PollingStation::playerObject->GetWorldPosition().x, PollingStation::playerObject->GetWorldPosition().y);
-	CU::Vector2f position = CU::Vector2f(myController->GetParent()->GetWorldPosition().x, myController->GetParent()->GetWorldPosition().y);
+	myTarget = CU::Vector2f(PollingStation::playerObject->GetWorldPosition().x, PollingStation::playerObject->GetWorldPosition().z);
+	CU::Vector2f position = CU::Vector2f(myController->GetParent()->GetWorldPosition().x, myController->GetParent()->GetWorldPosition().z);
 	CU::Vector2f targetVelocity = CU::Vector2f::Zero;
 	targetVelocity = myTarget - position;
 
@@ -32,8 +32,7 @@ const CU::Vector2f CChaserController::Update(const CU::Time& aDeltaTime)
 
 	if (distance < myTargetRadius)
 	{
-		myWeight = 0;
-		return CU::Vector2f::Zero;
+		return CU::Vector2f(99999, 99999);
 	}
 	float speed = myMaxSpeed;
 	
