@@ -296,7 +296,8 @@ namespace CU
 	VECTOR_TEMPLATE_DECL
 		Vector3<TYPE> Vector3<TYPE>::GetNormalized(void) const
 	{
-		return Vector3<TYPE>(myX / Length(), myY / Length(), myZ / Length());
+		Vector3<TYPE> normalized = *this;
+		return normalized.Normalize();
 	}
 
 	// Manipulation
@@ -304,10 +305,13 @@ namespace CU
 		Vector3<TYPE> &Vector3<TYPE>::Normalize(void)
 	{
 		TYPE length = Length();
+		if (length > 0)
+		{
+			myX /= length;
+			myY /= length;
+			myZ /= length;
+		}
 
-		myX /= length;
-		myY /= length;
-		myZ /= length;
 		return *this;
 	}
 

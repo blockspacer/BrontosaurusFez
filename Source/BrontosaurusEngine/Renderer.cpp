@@ -747,8 +747,7 @@ void CRenderer::DoRenderQueue()
 		{
 			SRenderParticlesMessage* msg = static_cast<SRenderParticlesMessage*>(renderMessage);
 			CParticleEmitter* emitter = ENGINE->GetParticleEmitterManager().GetParticleEmitter(msg->particleEmitter);
-			if (emitter == nullptr)
-				break;
+			if (emitter == nullptr)	break;
 
 			emitter->Render(msg->toWorld, msg->particleList);
 			break;

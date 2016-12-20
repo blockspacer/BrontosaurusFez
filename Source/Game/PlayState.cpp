@@ -139,10 +139,14 @@ void CPlayState::Load()
 	npcObject2->AddComponent(modelComponent2);
 
 
+	myScene->AddCamera(CScene::eCameraType::ePlayerOneCamera);
+	CU::Camera& playerCamera = myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera);
+	playerCamera.Init(60, WINDOW_SIZE.x, WINDOW_SIZE.y, 1.f, 75000.0f, { 0.0f, 0.0f, 0.f });
+
 	//create player:
 	myPlayerObject = myGameObjectManager->CreateGameObject();
 
-	InputController* tempInputController = new InputController();
+	InputController* tempInputController = new InputController(playerCamera);
 	InputControllerManager::GetInstance().RegisterComponent(tempInputController);
 	myPlayerObject->AddComponent(tempInputController);
 
@@ -157,10 +161,7 @@ void CPlayState::Load()
 
 	myPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
 
-	//create camera object:
-	//myCameraObject = myGameObjectManager->CreateGameObject();
-
-	myScene->AddCamera(CScene::eCameraType::ePlayerOneCamera);
+	//create camera component:
 	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
 	cameraComponent->SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 
@@ -173,9 +174,6 @@ void CPlayState::Load()
 
 
 	//set camera position and rotation
-	CU::Camera& playerCamera = myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera);
-	playerCamera.Init(60, WINDOW_SIZE.x, WINDOW_SIZE.y, 1.f, 75000.0f, { 0.0f, 0.0f, 0.f });
-
 	CU::Matrix44f cameraTransformation = playerCamera.GetTransformation();
 	CU::Matrix44f newRotation;
 
@@ -190,9 +188,6 @@ void CPlayState::Load()
 	playerCamera.SetTransformation(cameraTransformation);
 	cameraComponent->InitOffsetPosition();
 
-	//myCameraObject->GetLocalTransform() = cameraTransformation;
-	//myCameraObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
-	//myCameraObject->AddComponent(cameraComponent);
 	myPlayerObject->AddComponent(cameraComponent);
 
 	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation());

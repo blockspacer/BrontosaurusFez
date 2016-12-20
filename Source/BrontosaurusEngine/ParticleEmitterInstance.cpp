@@ -101,7 +101,7 @@ void CParticleEmitterInstance::Init()
 	engine->GetParticleEmitterManager().CreateParticleEmitter(myEmitterData);
 
 }
-#include <iostream>
+
 void CParticleEmitterInstance::Update(const CU::Time& aDeltaTime)
 {
 	float deltaTime = aDeltaTime.GetSeconds();
@@ -120,7 +120,7 @@ void CParticleEmitterInstance::Update(const CU::Time& aDeltaTime)
 		assert(false && "Particlelist and logiclist missalligned.");
 	}
 
-	for (unsigned int i = 0; i < myParticles.Size(); ++i)
+	for (unsigned short i = 0; i < myParticles.Size(); ++i)
 	{
 		myParticleLogic[i].lifetimeLeft -= deltaTime;
 		if (myParticleLogic[i].lifetimeLeft <= 0.0f)
@@ -205,16 +205,16 @@ void CParticleEmitterInstance::Update(const CU::Time& aDeltaTime)
 
 		if (i == 0)
 		{
-			system("cls");
-			std::cout << "\n\nLIFETIME: " << particleLifetime;
+			//system("cls");
+			//std::cout << "\n\nLIFETIME: " << particleLifetime;
 
-			std::cout << "\nSTART:\n";
-			std::cout << "T: " << startK.time << "	X: " << startK.value.x << "	Y: " << startK.value.y << "	Z: " << startK.value.z << "	W: " << startK.value.w << std::endl;
-			std::cout << "END:\n";
+			//std::cout << "\nSTART:\n";
+			//std::cout << "T: " << startK.time << "	X: " << startK.value.x << "	Y: " << startK.value.y << "	Z: " << startK.value.z << "	W: " << startK.value.w << std::endl;
+			//std::cout << "END:\n";
 
-			std::cout << "T: " << endK.time << "	X: " << endK.value.x << "	Y: " << endK.value.y << "	Z: " << endK.value.z << "	W: " << endK.value.w << std::endl;
-			std::cout << "RESULT:\n";
-			std::cout << "T: " << colorT << "	X: " << colr.x << "	Y: " << colr.y << "	Z: " << colr.z << "	W: " << colr.w << std::endl;
+			//std::cout << "T: " << endK.time << "	X: " << endK.value.x << "	Y: " << endK.value.y << "	Z: " << endK.value.z << "	W: " << endK.value.w << std::endl;
+			//std::cout << "RESULT:\n";
+			//std::cout << "T: " << colorT << "	X: " << colr.x << "	Y: " << colr.y << "	Z: " << colr.z << "	W: " << colr.w << std::endl;
 
 		}
 

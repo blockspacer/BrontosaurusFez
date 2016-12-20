@@ -1,7 +1,6 @@
 #pragma once
 #include <map>
 #include "../LuaWrapper/SSlua/SSlua.h"
-#include "../CommonUtilities/GrowingArray.h"
 #include "../PostMaster/Subscriber.h"
 #include "../LoadManager/LuaFunctions.h"
 

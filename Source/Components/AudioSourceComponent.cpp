@@ -47,6 +47,7 @@ void CAudioSourceComponent::PushEvent(const char * aEvent)
 
 void CAudioSourceComponent::Destroy()
 {
-	GetParent()->GetComponents().RemoveCyclic(this);
+	DL_ASSERT("not implemented anymore, mvh carl");
+	//GetParent()->GetComponents().RemoveCyclic(this);
 	CComponentManager::GetInstance().RemoveComponent(myGameObjectID);
 }

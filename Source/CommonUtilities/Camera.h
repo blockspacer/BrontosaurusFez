@@ -27,6 +27,7 @@ namespace CU
 
 		// Returns the projection matrix 
 		const Matrix44f& GetProjection() const;
+		const Matrix44f& GetProjectionInverse() const;
 
 		const Vector3f GetPosition() const;
 		void SetPosition(const CU::Vector3f& aPosition);
@@ -55,7 +56,7 @@ namespace CU
 
 		// Describes the transformation from camera space to screen space 
 		Matrix44f myProjection;
-
+		Matrix44f myProjectionInverse;
 
 		//supercool frustum that will be glorious and amazing
 		CFrustum myFrustum;

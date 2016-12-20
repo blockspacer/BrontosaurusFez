@@ -1,4 +1,7 @@
 #pragma once
+
+#include "vector3.h"
+
 #define VECTOR_TEMPLATE_DECL template<typename TYPE>
 
 namespace CU
@@ -122,33 +125,47 @@ namespace CU
 
 		union
 		{
-			TYPE	myX;
-			TYPE    x;
-			TYPE	r;
-			TYPE	u;
-		};
-		union
-		{
-			TYPE	myY;
-			TYPE    y;
-			TYPE	g;
-			TYPE	v;
-		};
-		union
-		{
-			TYPE	myZ;
-			TYPE    z;
-			TYPE	b;
-		};
-		union
-		{
-			TYPE	myW;
-			TYPE    w;
-			TYPE	a;
+			struct  
+			{
+				union
+				{
+					TYPE	myX;
+					TYPE    x;
+					TYPE	r;
+					TYPE	u;
+				};
+				union
+				{
+					TYPE	myY;
+					TYPE    y;
+					TYPE	g;
+					TYPE	v;
+				};
+				union
+				{
+					TYPE	myZ;
+					TYPE    z;
+					TYPE	b;
+				};
+				union
+				{
+					TYPE	myW;
+					TYPE    w;
+					TYPE	a;
+				};
+			};
+
+			struct
+			{
+				CU::Vector3<TYPE> myVector3;
+				TYPE myDontAsk;
+			};
 		};
 
 		static Vector4 Normalize(Vector4 aVector);
 		static TYPE Dot(const Vector4 &aFirstVector, const Vector4 &aSecondVector);
+
+		void Print() const;
 
 		static const Vector4	Zero,
 			UnitX,
@@ -350,7 +367,7 @@ namespace CU
 	VECTOR_TEMPLATE_DECL
 		TYPE Vector4<TYPE>::Length(void) const
 	{
-		return sqrt((myX * myX) + (myY * myY) + (myZ * myZ) + (myW * myW));
+		return sqrt(Length2());
 	}
 	VECTOR_TEMPLATE_DECL
 		TYPE Vector4<TYPE>::Length2(void) const
@@ -365,8 +382,8 @@ namespace CU
 	VECTOR_TEMPLATE_DECL
 		Vector4<TYPE> Vector4<TYPE>::GetNormalized(void) const
 	{
-		TYPE length = Length();
-		return Vector4<TYPE>(myX / length, myY / length, myZ / length, myW / length);
+		Vector4<TYPE> normalized = *this;
+		return normalized.Normalize();
 	}
 
 
@@ -375,10 +392,14 @@ namespace CU
 		Vector4<TYPE> &Vector4<TYPE>::Normalize(void)
 	{
 		TYPE length = Length();
-		myX /= length;
-		myY /= length;
-		myZ /= length;
-		myW /= length;
+		if (length > 0)
+		{
+			myX /= length;
+			myY /= length;
+			myZ /= length;
+			myW /= length;
+		}
+
 		return *this;
 	}
 
@@ -398,4 +419,11 @@ namespace CU
 			(aFirstVector.w * aSecondVector.w));
 	}
 
-} 
+	template<typename TYPE>
+	inline void Vector4<TYPE>::Print() const
+	{
+#ifdef DL_PRINT
+		DL_PRINT("(%f, %f, %f, %f)", x, y, z, w);
+#endif // DL_PRINT
+	}
+}

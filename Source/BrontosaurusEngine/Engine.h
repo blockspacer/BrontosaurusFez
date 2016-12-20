@@ -1,5 +1,4 @@
 #pragma once
-//#include "stdafx.h"
 #include <functional>
 #include "../CommonUtilities/vector2.h"
 #include "../FontEngine/FontEngineFacade.h"
@@ -24,7 +23,6 @@ class CConsole;
 #define HWNDGET			CEngine::GetInstance()->GetWindow()->GetHWND()
 #define HINSTGET		CEngine::GetInstance()->GetWindow()->GetHinstance()
 
-//#define CAMERA 			CEngine::GetInstance()->GetCamera()
 #define RENDERER		CEngine::GetInstance()->GetRenderer()
 #define THREADPOOL		CEngine::GetInstance()->GetThreadPool()
 #define LIGHTMANAGER 	CEngine::GetInstance()->GetLightManager()

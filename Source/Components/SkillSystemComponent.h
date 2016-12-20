@@ -1,5 +1,5 @@
 #pragma once
-#include "../CommonUtilities/GrowingArray.h"
+
 #include "Component.h"
 class Skill;
 class SkillSystemComponent : public CComponent

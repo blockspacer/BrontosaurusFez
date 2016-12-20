@@ -1,11 +1,22 @@
 #pragma once
-#include "ComponentMessage.h"
-
 
 typedef unsigned int ComponentId;
 #define NULL_COMPONENT 0
 
 class CGameObject;
+struct SComponentMessageData;
+enum class eComponentMessageType;
+
+enum class eComponentType
+{
+	eModel,
+	eDebugSphere,
+	eCamera,
+	eInventory,
+	eMainStat,
+	eStat,
+	eNone,
+};
 
 class CComponent
 {
@@ -24,11 +35,11 @@ public:
 	ComponentId GetId()const;
 
 protected:
-	eComponentType myType = eComponentType::eNone;
-private:
+	eComponentType myType;
 
+private:
 	CGameObject* myParent;
-	ComponentId myId = NULL_COMPONENT;
+	ComponentId myId;
 };
 
 inline ComponentId CComponent::GetId() const
