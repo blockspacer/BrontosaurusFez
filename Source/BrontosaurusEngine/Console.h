@@ -40,7 +40,8 @@ private:
 	std::map<std::string, SSlua::LuaCallbackFunction> myLuaFunctions;
 	CU::GrowingArray<CTextInstance*> myTextLog;
 	CTextInstance* myCurrentText;
-	std::string mySuggestedCommand;
+	CTextInstance* mySuggestedCommand;
+	//std::string mySuggestedCommand;
 
 	float myElapsedAnimationTimer;
 	float myAnimationTimerCooldown;
