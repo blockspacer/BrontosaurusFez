@@ -53,10 +53,6 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 void Skill::SetTarget(CU::Vector3f aTargetPosition)
 {	
 	myTargetPosition = aTargetPosition;
-	if(myIsSelected == true)
-	{
-		myIsActive = true;
-	}
 }
 
 void Skill::OnActivation()
