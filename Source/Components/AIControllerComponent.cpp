@@ -50,7 +50,6 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 		myVelocity *= myMaxVelocity;
 	}
 
-
 	CU::Vector2f velocity = myVelocity * aDeltaTime.GetSeconds();
 
 	GetParent()->GetLocalTransform().Move(CU::Vector3f(velocity.x,0,velocity.y));
