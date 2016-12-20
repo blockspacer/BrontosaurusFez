@@ -43,8 +43,11 @@
 
 #include "../Audio/AudioInterface.h"
 
+#include "Components\SkillFactory.h"
+#include "Components\SkillSystemComponentManager.h"
 //Kanske Inte ska vara här?
 #include "../BrontosaurusEngine/Console.h"
+#include "AIControllerManager.h"
 //
 
 //Temp Includes
@@ -57,9 +60,12 @@
 #include "CameraComponent.h"
 #include "BrontosaurusEngine/ModelInstance.h"
 #include "BrontosaurusEngine/WindowsWindow.h"
-
-#include "Components\SkillFactory.h"
+#include <iostream>
 #include "StatComponent.h"
+#include "Components/AIControllerComponent.h"
+#include "Components/ChaserController.h"
+#include "Components\SkillFactory.h"
+#include "SkillSystemComponent.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -84,11 +90,14 @@ CPlayState::~CPlayState()
 	CCameraComponentManager::Destroy();
 	InputControllerManager::DestroyInstance();
 	MovementComponentManager::DestroyInstance();
+	SkillSystemComponentManager::DestroyInstance();
+	AIControllerManager::Destroy();
 
 	PollingStation::NullifyLevelSpecificData();
 
-	CComponentManager::DestroyInstance();
 	SkillFactory::DestroyInstance();
+	CComponentManager::DestroyInstance();
+
 }
 
 void CPlayState::Load()
@@ -145,6 +154,7 @@ void CPlayState::Load()
 
 	//create player:
 	myPlayerObject = myGameObjectManager->CreateGameObject();
+	PollingStation::playerObject = myPlayerObject;
 
 	InputController* tempInputController = new InputController(playerCamera);
 	InputControllerManager::GetInstance().RegisterComponent(tempInputController);
@@ -160,8 +170,12 @@ void CPlayState::Load()
 	myPlayerObject->AddComponent(playerModelComponent);
 
 	myPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
+	SkillSystemComponent* tempSkillSystemComponent = new SkillSystemComponent;
+	SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
+	myPlayerObject->AddComponent(tempSkillSystemComponent);
+	//create camera object:
+	//myCameraObject = myGameObjectManager->CreateGameObject();
 
-	//create camera component:
 	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
 	cameraComponent->SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 
@@ -192,23 +206,34 @@ void CPlayState::Load()
 
 	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation());
 	//----MakeEnemy----
-	CGameObject* TempraryEnemyObject = myGameObjectManager->CreateGameObject();
+	CGameObject* enemyObj = myGameObjectManager->CreateGameObject();
 	CModelComponent* tempEnemyModel = CModelComponentManager::GetInstance().CreateComponent("Models/Placeholders/tree.fbx");
+	CStatComponent* tempEnemyStatComponent = new CStatComponent();
+	CAIControllerComponent* AIController = new CAIControllerComponent();
+	CHealthComponent* tempEnemyHealthComponent = new CHealthComponent();
+	CChaserController* chaserController = new CChaserController();
+	
+	enemyObj->AddComponent(tempEnemyModel);
+	enemyObj->AddComponent(AIController);
+	enemyObj->AddComponent(tempEnemyStatComponent);
+	enemyObj->AddComponent(tempEnemyHealthComponent);
+	
+	AIController->AddControllerBehaviour(chaserController);
 	
 	Stats::SBaseStats baseStats;
 	baseStats.Dexterity = 1337;
 	Stats::SBonusStats bonusStats;
-	CStatComponent* tempEnemyStatComponent = new CStatComponent();
-	CHealthComponent* tempEnemyHealthComponent = new CHealthComponent();
-
-	TempraryEnemyObject->AddComponent(tempEnemyModel);
-	TempraryEnemyObject->AddComponent(tempEnemyStatComponent);
-	TempraryEnemyObject->AddComponent(tempEnemyHealthComponent);
-
+	
+	chaserController->SetMaxAcceleration(400);
+	chaserController->SetMaxSpeed(30);
+	chaserController->SetSlowDownRadius(100);
+	chaserController->SetTargetRadius(70);
+	
+	AIControllerManager::GetIstance().AddController(AIController);
+	
 	tempEnemyStatComponent->SetStats(baseStats, bonusStats);
-
+	
 	tempEnemyHealthComponent->Init();
-
 	//-----------------
 
 	
@@ -236,6 +261,8 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	CParticleEmitterComponentManager::GetInstance().UpdateEmitters(aDeltaTime);
 	InputControllerManager::GetInstance().Update(aDeltaTime);
 	MovementComponentManager::GetInstance().Update(aDeltaTime);
+	AIControllerManager::GetIstance().Update(aDeltaTime);
+	SkillSystemComponentManager::GetInstance().Update(aDeltaTime);
 	myScene->Update(aDeltaTime);
 
 	myGameObjectManager->DestroyObjectsWaitingForDestruction();
@@ -406,5 +433,7 @@ void CPlayState::CreateManagersAndFactories()
 	CCameraComponentManager::Create();
 	InputControllerManager::CreateInstance();
 	MovementComponentManager::CreateInstance();
+	AIControllerManager::Create();
 	SkillFactory::CreateInstance();
+	SkillSystemComponentManager::CreateInstance();
 }

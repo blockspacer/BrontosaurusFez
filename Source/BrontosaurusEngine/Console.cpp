@@ -15,10 +15,14 @@ CConsole::CConsole()
 	myElapsedAnimationTimer = 0.0f;
 	myAnimationTimerCooldown = 0.5f;
 	myCurrentText = new CTextInstance;
+	mySuggestedCommand = new CTextInstance;
 	myCurrentText->SetColor(CTextInstance::Red);
 	myCurrentText->SetPosition(CU::Vector2f(0.2f,0.8f));
+	mySuggestedCommand->SetColor(CTextInstance::Red);
+	mySuggestedCommand->SetPosition(myCurrentText->GetPosition() + CU::Vector2f(0.0f, 0.05f));
 	myCurrentText->SetText("");
 	myCurrentText->Init();
+	mySuggestedCommand->Init();
 }
 
 
@@ -73,6 +77,7 @@ void CConsole::Render()
 	if (myIsActive == true)
 	{
 		myCurrentText->Render();
+		mySuggestedCommand->Render();
 		for (unsigned short i = 0; i < myTextLog.Size(); i++)
 		{
 			myTextLog[i]->Render();
@@ -92,7 +97,7 @@ void CConsole::UpdateCommandSuggestions(const std::string & aStringToCompare)
 		if (result < finalResultDifferance)
 		{
 			finalResultDifferance = result;
-			mySuggestedCommand = it->first;
+			mySuggestedCommand->SetText(it->first.c_str());
 		}
 	}
 }
@@ -184,11 +189,13 @@ eMessageReturn CConsole::TakeKeyBoardInputPressedChar(const char aKey)
 		}
 		else if (aKey == '\t')
 		{
-			//Fyll i från den föreslagna funktionen.
+			myCurrentText->SetText(mySuggestedCommand->GetText());
+			mySuggestedCommand->SetText("");
 		}
 		else
 		{
 			myCurrentText->SetText(myCurrentText->GetText() + aKey);
+			UpdateCommandSuggestions(myCurrentText->GetText().c_str());
 		}
 	}
 	return eMessageReturn::eContinue;
@@ -207,9 +214,16 @@ const CU::DynamicString CConsole::CheckIfTextIsCommand(const CU::DynamicString& 
 	}
 	else
 	{
-
-		return aText + " was not found perhaps you meant GodMode.";
-
+		std::map<std::string, SSlua::LuaCallbackFunction>::iterator it;
+		for (it = myLuaFunctions.begin(); it != myLuaFunctions.end(); it++)
+		{
+			if (it->first == aText.c_str())
+			{
+				SSlua::ArgumentList temp;
+				temp.Init(1);
+				it->second(temp);
+			}
+		}
 	}
 
 	return aText + " was not found.";

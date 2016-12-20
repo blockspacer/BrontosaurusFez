@@ -56,7 +56,7 @@ enum class eComponentMessageType
 	eStatsUpdated,
 	eSetMaxHealthFromStats,
 	eUseSkill,
-	eSetSkillTarget,
+	eSetSkillTargetPosition,
 	eAddSkill,
 	eTakeDamage
 };

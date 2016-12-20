@@ -7,7 +7,6 @@ Skill::Skill()
 {
     myUpdateFunction = std::bind(&Skill::BasicAttackUpdate, this, std::placeholders::_1);
 	myUser = nullptr;
-	myTarget = nullptr;
 }
 
 
@@ -39,12 +38,12 @@ void Skill::Init(CGameObject * aUser)
 
 void Skill::BasicAttackUpdate(float aDeltaTime)
 {
-	if(CU::Vector3f(myUser->GetWorlPosition() - myTarget->GetWorlPosition()).Length2() < 500.0f * 500.0f)
+	if(CU::Vector3f(myUser->GetWorldPosition() - myTargetPosition).Length2() < 500.0f * 500.0f)
 	{
 		eComponentMessageType type = eComponentMessageType::eTakeDamage;
 		SComponentMessageData data;
 		data.myInt = 1000000000.0f;
-		myTarget->NotifyComponents(type, data);
+		//myTarget->NotifyComponents(type, data); //from collsionMan get if there is an enemy here then do attack!
 	}
 }
 

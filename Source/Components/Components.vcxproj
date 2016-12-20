@@ -213,17 +213,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="AudioSourceComponent.h" />
     <ClInclude Include="AudioSourceComponentManager.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionComponentManager.h" />
+    <ClInclude Include="ChaserController.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="ComponentMessage.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="HealthComponent.h" />
+    <ClInclude Include="IController.h" />
     <ClInclude Include="InputController.h" />
     <ClInclude Include="InputControllerManager.h" />
     <ClInclude Include="InventoryComponent.h" />
@@ -240,6 +245,7 @@
     <ClInclude Include="Skill.h" />
     <ClInclude Include="SkillFactory.h" />
     <ClInclude Include="SkillSystemComponent.h" />
+    <ClInclude Include="SkillSystemComponentManager.h" />
     <ClInclude Include="StatComponent.h" />
     <ClInclude Include="StatStructs.h" />
     <ClInclude Include="stdafx.h" />
@@ -247,16 +253,20 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AIControllerComponent.cpp" />
+    <ClCompile Include="AIControllerManager.cpp" />
     <ClCompile Include="AudioSourceComponent.cpp" />
     <ClCompile Include="AudioSourceComponentManager.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="CollisionComponentManager.cpp" />
+    <ClCompile Include="ChaserController.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="HealthComponent.cpp" />
+    <ClCompile Include="IController.cpp" />
     <ClCompile Include="InputController.cpp" />
     <ClCompile Include="InputControllerManager.cpp" />
     <ClCompile Include="InventoryComponent.cpp" />
@@ -273,6 +283,7 @@
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="SkillFactory.cpp" />
     <ClCompile Include="SkillSystemComponent.cpp" />
+    <ClCompile Include="SkillSystemComponentManager.cpp" />
     <ClCompile Include="StatComponent.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -11,7 +11,7 @@ public:
 
 	CU::Matrix44f &GetLocalTransform();
 	CU::Matrix44f GetToWorldTransform();
-	CU::Vector3f GetWorlPosition();
+	CU::Vector3f GetWorldPosition();
 
 	void AddComponent(CComponent* aComponent);
 
