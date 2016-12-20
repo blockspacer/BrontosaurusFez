@@ -181,6 +181,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <PreprocessorDefinitions>_RETAIL_BUILD;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -188,13 +189,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CollisionManager.cpp" />
+    <ClCompile Include="PointCollider.cpp" />
+    <ClCompile Include="SquareCollider.cpp" />
+    <ClCompile Include="CircleCollider.cpp" />
+    <ClCompile Include="GroupCollider.cpp" />
     <ClCompile Include="Intersection.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">Create</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CollisionManager.h" />
+    <ClInclude Include="PointCollider.h" />
+    <ClInclude Include="SquareCollider.h" />
+    <ClInclude Include="CircleCollider.h" />
+    <ClInclude Include="GroupCollider.h" />
+    <ClInclude Include="ICollider.h" />
     <ClInclude Include="Intersection.h" />
     <ClInclude Include="line.h" />
     <ClInclude Include="plane.h" />
-    <ClInclude Include="Shape.h" />
+    <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CommonUtilities\CommonUtilities.vcxproj">

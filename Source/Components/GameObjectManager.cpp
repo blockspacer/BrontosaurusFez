@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "ObjectManager.h"
+#include "GameObjectManager.h"
 #include "GameObject.h"
 #include "ComponentManager.h"
 

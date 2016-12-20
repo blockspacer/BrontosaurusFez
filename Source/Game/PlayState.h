@@ -1,12 +1,7 @@
 #pragma once
 #include "../StateStack/State.h"
 #include "../PostMaster/Subscriber.h"
-#include "../BrontosaurusEngine/StreakEmitterInstance.h" //TODO: solve this including hell
-#include "../BrontosaurusEngine/Lights.h"
-#include "../BrontosaurusEngine/Scene.h"
-#include "../Physics/PhysicsManager.h"
 
-#include "ValueObserver.h"
 #include <atomic>
 
 namespace CU
@@ -19,6 +14,7 @@ namespace GUI
 	class GUIManager;
 }
 
+class CScene;
 class CGameObject;
 class CGameObjectManager;
 class WeaponSystemComponent;
@@ -55,7 +51,7 @@ public:
 private:
 	void CreateManagersAndFactories();
 
-	CScene myScene;
+	CScene* myScene;
 	
 	CParticleEmitterComponent* myEmitterComp;
 

@@ -213,13 +213,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="AudioSourceComponent.h" />
     <ClInclude Include="AudioSourceComponentManager.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CameraManager.h" />
+    <ClInclude Include="CollisionComponent.h" />
+    <ClInclude Include="CollisionComponentManager.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="ComponentMessage.h" />
@@ -233,7 +232,7 @@
     <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="MovementComponentManager.h" />
     <ClInclude Include="NavigationComponent.h" />
-    <ClInclude Include="ObjectManager.h" />
+    <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="ParticleEmitterComponent.h" />
     <ClInclude Include="ParticleEmitterComponentManager.h" />
     <ClInclude Include="Skill.h" />
@@ -249,6 +248,8 @@
     <ClCompile Include="AudioSourceComponentManager.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="CameraManager.cpp" />
+    <ClCompile Include="CollisionComponent.cpp" />
+    <ClCompile Include="CollisionComponentManager.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -261,7 +262,7 @@
     <ClCompile Include="MovementComponent.cpp" />
     <ClCompile Include="MovementComponentManager.cpp" />
     <ClCompile Include="NavigationComponent.cpp" />
-    <ClCompile Include="ObjectManager.cpp" />
+    <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="ParticleEmitterComponent.cpp" />
     <ClCompile Include="ParticleEmitterComponentManager.cpp" />
     <ClCompile Include="Skill.cpp" />

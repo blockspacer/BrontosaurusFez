@@ -241,11 +241,13 @@
     <ClInclude Include="DL_Debug.h" />
     <ClInclude Include="DL_StackWalker.h" />
     <ClInclude Include="double_linked_list.h" />
+    <ClInclude Include="DynamicMemoryPool.h" />
     <ClInclude Include="DynamicString.h" />
     <ClInclude Include="EInputMessage.h" />
     <ClInclude Include="EKeyboardKeys.h" />
     <ClInclude Include="EMouseButtons.h" />
     <ClInclude Include="Frustum.h" />
+    <ClInclude Include="Function.h" />
     <ClInclude Include="GrowingArray.h" />
     <ClInclude Include="Heap.h" />
     <ClInclude Include="InputWrapper.h" />
@@ -257,6 +259,7 @@
     <ClInclude Include="matrix33.h" />
     <ClInclude Include="matrix44.h" />
     <ClInclude Include="MemoryLeekLogger.h" />
+    <ClInclude Include="StaticMemoryPool.h" />
     <ClInclude Include="MessageKyle.h" />
     <ClInclude Include="plane.h" />
     <ClInclude Include="plane_volume.h" />
@@ -310,7 +313,6 @@
     <ClInclude Include="CUTime.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TimerManager.h" />
-    <ClInclude Include="ValueObserver.h" />
     <ClInclude Include="vector2.h" />
     <ClInclude Include="vector3.h" />
     <ClInclude Include="vector4.h" />

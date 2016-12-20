@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "GameObject.h"
-#include "ObjectManager.h"
+#include "GameObjectManager.h"
 
 
 CU::Matrix44f& CGameObject::GetLocalTransform()

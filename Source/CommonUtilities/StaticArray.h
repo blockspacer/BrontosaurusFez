@@ -1,4 +1,5 @@
 #pragma once
+#pragma message("Static array compiled")
 #include <assert.h>
 
 namespace CU

@@ -17,7 +17,6 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="InputController.cpp" />
     <ClCompile Include="NavigationComponent.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
@@ -30,6 +29,13 @@
     <ClCompile Include="InventoryComponent.cpp" />
     <ClCompile Include="StatComponent.cpp" />
     <ClCompile Include="HealthComponent.cpp" />
+    <ClCompile Include="GameObjectManager.cpp" />
+    <ClCompile Include="CollisionComponent.cpp">
+      <Filter>CollisionComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionComponentManager.cpp">
+      <Filter>CollisionComponent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -52,7 +58,6 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="ComponentMessage.h" />
     <ClInclude Include="InputController.h" />
     <ClInclude Include="NavigationComponent.h" />
@@ -67,9 +72,13 @@
     <ClInclude Include="StatComponent.h" />
     <ClInclude Include="StatStructs.h" />
     <ClInclude Include="HealthComponent.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt" />
+    <ClInclude Include="GameObjectManager.h" />
+    <ClInclude Include="CollisionComponent.h">
+      <Filter>CollisionComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionComponentManager.h">
+      <Filter>CollisionComponent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Precompiled">
@@ -92,6 +101,9 @@
     </Filter>
     <Filter Include="Marker\MarkerInstance">
       <UniqueIdentifier>{4cfa2c7f-78fe-4453-8df2-1dcf3bcd1562}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CollisionComponent">
+      <UniqueIdentifier>{88817a1a-4acc-4f7b-9229-b949c0689260}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

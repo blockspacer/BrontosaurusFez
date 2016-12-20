@@ -19,38 +19,38 @@ namespace GUI
 	{
 	}
 
-	void BarWidget::ValueChanged(const int aValue)
-	{
-		myProgressValue = aValue;
+	//void BarWidget::ValueChanged(const int aValue)
+	//{
+	//	myProgressValue = aValue;
 
-		if (myProgressValue < myMaxValue)
-		{
-			SetVisibility(true);
-			
-			if (HasDebugLines() == false)
-			{
-				//AddDebugLines();
-			}
-			
-			Widget* widget = GetModelChild();
-			if (widget != nullptr)
-			{
-				ModelWidget* modelWidget = static_cast<ModelWidget*>(widget);
+	//	if (myProgressValue < myMaxValue)
+	//	{
+	//		SetVisibility(true);
+	//		
+	//		if (HasDebugLines() == false)
+	//		{
+	//			//AddDebugLines();
+	//		}
+	//		
+	//		Widget* widget = GetModelChild();
+	//		if (widget != nullptr)
+	//		{
+	//			ModelWidget* modelWidget = static_cast<ModelWidget*>(widget);
 
-				modelWidget->GetPixelConstantBufferStruct().myValues[SPixelConstantBuffer::eMember::eIsProgressBar] = 1.f;
-				modelWidget->GetPixelConstantBufferStruct().myValues[SPixelConstantBuffer::eMember::eProgressBarValue] = 1.f - static_cast<float>(myProgressValue) / static_cast<float>(myMaxValue);
-			}
-		}
-		else
-		{
-			FlashAndRemove();
-		}
-	}
+	//			modelWidget->GetPixelConstantBufferStruct().myValues[SPixelConstantBuffer::eMember::eIsProgressBar] = 1.f;
+	//			modelWidget->GetPixelConstantBufferStruct().myValues[SPixelConstantBuffer::eMember::eProgressBarValue] = 1.f - static_cast<float>(myProgressValue) / static_cast<float>(myMaxValue);
+	//		}
+	//	}
+	//	else
+	//	{
+	//		FlashAndRemove();
+	//	}
+	//}
 
-	void BarWidget::SetMaxValue(const int aValue)
-	{
-		myMaxValue = aValue;
-	}
+	//void BarWidget::SetMaxValue(const int aValue)
+	//{
+	//	myMaxValue = aValue;
+	//}
 
 	void BarWidget::Update(const CU::Time& aDeltaTime)
 	{

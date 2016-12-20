@@ -10,6 +10,8 @@
 
 #include <utility>
 
+#include "GameObject.h"
+
 #include "../CommonUtilities/CommonUtilities.h"
 #include "../CommonUtilities/DL_Debug.h"
 #include "../CommonUtilities/GrowingArray.h"

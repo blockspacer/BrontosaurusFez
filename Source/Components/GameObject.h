@@ -20,9 +20,9 @@ public:
 
 	void MarkForDestruction();
 
-	void SetName(const CU::DynamicString& aName);
-	CU::GrowingArray<CComponent*>& GetComponents();
-	const CU::DynamicString& GetName()const;
+	inline void SetName(const CU::DynamicString& aName);
+	inline CU::GrowingArray<CComponent*>& GetComponents();
+	inline const CU::DynamicString& GetName()const;
 
 private:
 	void Destroy() override;

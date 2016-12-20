@@ -67,6 +67,15 @@
     <Filter Include="MatrixInverse">
       <UniqueIdentifier>{43bff1ff-2916-42fd-85ff-7b056de6b086}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MemoryPool">
+      <UniqueIdentifier>{6d7856c4-b602-4b4f-ba08-13bf130de734}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Function">
+      <UniqueIdentifier>{b56e6367-b76c-4ad9-aa1b-b1ddec1e1529}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CommandLineManager">
+      <UniqueIdentifier>{a0465575-eaa9-406b-b536-f852d2cef5e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Timer.h">
@@ -244,7 +253,6 @@
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="CommandLineManager.h" />
     <ClInclude Include="Worker.h">
       <Filter>ThreadPool</Filter>
     </ClInclude>
@@ -290,12 +298,10 @@
     <ClInclude Include="CountDown.h">
       <Filter>CountDown</Filter>
     </ClInclude>
-    <ClInclude Include="ValueObserver.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Queue.h">
       <Filter>Queue</Filter>
     </ClInclude>
-    <ClInclude Include="MemoryLeekLogger.h" />
     <ClInclude Include="Frustum.h">
       <Filter>Math</Filter>
     </ClInclude>
@@ -308,6 +314,22 @@
     <ClInclude Include="ThreadNamer.h" />
     <ClInclude Include="EInputMessage.h">
       <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="QuickSort.h" />
+    <ClInclude Include="DynamicMemoryPool.h">
+      <Filter>MemoryPool</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMemoryPool.h">
+      <Filter>MemoryPool</Filter>
+    </ClInclude>
+    <ClInclude Include="Function.h">
+      <Filter>Function</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryLeekLogger.h">
+      <Filter>MemoryLogger</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandLineManager.h">
+      <Filter>CommandLineManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -333,7 +355,6 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="CommandLineManager.cpp" />
     <ClCompile Include="ThreadPool.cpp">
       <Filter>ThreadPool</Filter>
     </ClCompile>
@@ -365,7 +386,6 @@
       <Filter>CountDown</Filter>
     </ClCompile>
     <ClCompile Include="Ray.cpp" />
-    <ClCompile Include="MemoryLeekLogger.cpp" />
     <ClCompile Include="Frustum.cpp">
       <Filter>Math</Filter>
     </ClCompile>
@@ -375,6 +395,12 @@
     <ClCompile Include="ThreadNamer.cpp" />
     <ClCompile Include="StringHelper.cpp">
       <Filter>String</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryLeekLogger.cpp">
+      <Filter>MemoryLogger</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandLineManager.cpp">
+      <Filter>CommandLineManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

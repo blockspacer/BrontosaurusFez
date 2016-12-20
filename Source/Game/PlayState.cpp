@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "PlayState.h"
-#include "Game.h"
+
 #include <Engine.h> //fixa camera instance sen
 #include <CommonUtilities.h>
 #include <Lights.h>
@@ -8,7 +8,9 @@
 #include <TimerManager.h>
 #include <Renderer.h>
 #include "Skybox.h"
+#include <Scene.h>
 
+#include "Components/GameObjectManager.h"
 #include "Components/AudioSourceComponentManager.h"
 #include "Components/ModelComponentManager.h"
 #include "Components/GameObject.h"
@@ -48,27 +50,25 @@
 #include "CameraComponent.h"
 #include "BrontosaurusEngine/ModelInstance.h"
 #include "BrontosaurusEngine/WindowsWindow.h"
-#include <iostream>
 #include "StatComponent.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
 	, myLevelIndex(aLevelIndex)
 	, myShouldReturnToLevelSelect(aShouldReturnToLevelSelect)
+	, myScene(nullptr)
 {
 	myIsLoaded = false;
 }
 
-static CModelInstance* animation = nullptr;
 CPlayState::~CPlayState()
 {
+	SAFE_DELETE(myScene);
 	SAFE_DELETE(myGameObjectManager);
 	SAFE_DELETE(myGUIManager);
-	CPhysicsManager::DestroyInstance();
 	
 	LoadManager::DestroyInstance();
 	
-	CPhysicsManager::DestroyInstance();
 	CModelComponentManager::Destroy();
 	CAudioSourceComponentManager::Destroy();
 	CParticleEmitterComponentManager::Destroy();
@@ -89,14 +89,14 @@ void CPlayState::Load()
 	timerMgr.StartTimer(handle);
 	CreateManagersAndFactories();
 
-	MODELCOMP_MGR.SetScene(&myScene);
-	myScene.SetSkybox("skybox.dds");
+	MODELCOMP_MGR.SetScene(myScene);
+	myScene->SetSkybox("skybox.dds");
 
 
 	Lights::SDirectionalLight dirLight;
 	dirLight.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	dirLight.direction = { 0.0f, 0.0f, 1.0f, 1.0f };
-	myScene.AddDirectionalLight(dirLight);
+	myScene->AddDirectionalLight(dirLight);
 
 	//LOAD_MGR.SetCurrentScene(&myScene);
 	//LOAD_MGR.SetCurrentPlayState(this);
@@ -145,9 +145,9 @@ void CPlayState::Load()
 	//create camera object:
 	//myCameraObject = myGameObjectManager->CreateGameObject();
 
-	myScene.AddCamera(CScene::eCameraType::ePlayerOneCamera);
+	myScene->AddCamera(CScene::eCameraType::ePlayerOneCamera);
 	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
-	cameraComponent->SetCamera(myScene.GetCamera(CScene::eCameraType::ePlayerOneCamera));
+	cameraComponent->SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 
 	//myCameraObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, -100.0f));
 
@@ -158,7 +158,7 @@ void CPlayState::Load()
 
 
 	//set camera position and rotation
-	CU::Camera& playerCamera = myScene.GetCamera(CScene::eCameraType::ePlayerOneCamera);
+	CU::Camera& playerCamera = myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera);
 	playerCamera.Init(60, WINDOW_SIZE.x, WINDOW_SIZE.y, 1.f, 75000.0f, { 0.0f, 0.0f, 0.f });
 
 	CU::Matrix44f cameraTransformation = playerCamera.GetTransformation();
@@ -210,7 +210,7 @@ void CPlayState::Init()
 
 State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 {
-	//CU::Matrix44f cameraTransformation = myScene.GetCamera(CScene::eCameraType::ePlayerOneCamera).GetTransformation();
+	//CU::Matrix44f cameraTransformation = myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera).GetTransformation();
 	//CU::Matrix44f newRotation;
 
 	//newRotation.Rotate(PI / 2, CU::Axees::X);
@@ -223,7 +223,7 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 
 
 	//myCameraObject->GetLocalTransform() = cameraTransformation;
-	//myScene.GetCamera(CScene::eCameraType::ePlayerOneCamera).SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation());
+	//myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera).SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation());
 
 
 	//myGUIManager->Update(aDeltaTime)
@@ -234,14 +234,11 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	{
 		CAudioSourceComponentManager::GetInstance().Update();
 	}
-
-	CPhysicsManager::GetInstance().Update();
-
 	
 	CParticleEmitterComponentManager::GetInstance().UpdateEmitters(aDeltaTime);
 	InputControllerManager::GetInstance().Update(aDeltaTime);
 	MovementComponentManager::GetInstance().Update(aDeltaTime);
-	myScene.Update(aDeltaTime);
+	myScene->Update(aDeltaTime);
 
 	myGameObjectManager->DestroyObjectsWaitingForDestruction();
 
@@ -250,7 +247,7 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 
 void CPlayState::Render()
 {
-	myScene.Render();
+	myScene->Render();
 
 	SChangeStatesMessage msg;
 	msg.myBlendState = eBlendState::eAlphaBlend;
@@ -330,17 +327,17 @@ eMessageReturn CPlayState::Recieve(const Message& aMessage)
 
 void CPlayState::CreateManagersAndFactories()
 {
+	myScene = new CScene();
 	myGameObjectManager = new CGameObjectManager();
 	myGUIManager = new GUI::GUIManager();
 	//myGUIManager->Init("Models/gui/gui.fbx", true);
 
 	CComponentManager::CreateInstance();
-	CPhysicsManager::CreateInstance();
 	LoadManager::CreateInstance();
 	CAudioSourceComponentManager::Create();
 	CModelComponentManager::Create();
 	CParticleEmitterComponentManager::Create();
-	CParticleEmitterComponentManager::GetInstance().SetScene(&myScene);
+	CParticleEmitterComponentManager::GetInstance().SetScene(myScene);
 	CCameraComponentManager::Create();
 	InputControllerManager::CreateInstance();
 	MovementComponentManager::CreateInstance();

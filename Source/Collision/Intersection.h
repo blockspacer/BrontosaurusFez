@@ -1,20 +1,43 @@
 #pragma once
+
+//move all the structs to files of their own and clear out includes from this header file
 #include <CommonUtilities.h> // Byt till Utillities.  // PSST Cleara ut collisions från CU
 #include <Vector3.h>
-#include <matrix.h>
+#include <vector2.h>
 #include "plane.h"
-#include "line.h"
-#include <math.h>
+
+namespace Collision
+{
+	template<typename TYPE>
+	class Line;
+
+	template<typename TYPE>
+	class Plane;
+}
 
 namespace Intersection
 {
-
-	struct Sphere
+	struct SSphere
 	{
 		CU::Vector3f myCenterPosition;
 		float myRadius;
-		float myRadiusSquared;
+	};
 
+	struct SCircle
+	{
+		CU::Vector2f myCenterPosition;
+		float myRadius;
+	};
+
+	struct SPoint
+	{
+		CU::Vector2f myPosition;
+	};
+
+	struct SSquare 
+	{
+		CU::Vector2f myMinPosition;
+		CU::Vector2f myMaxPosition;
 	};
 
 	struct AABB
@@ -51,23 +74,24 @@ namespace Intersection
 	};
 	
 	
-	CU::Vector3f ClosestPointOnAABB(CU::Vector3f aPoint, const AABB &aAABB);
-	float Distance2Points(const CU::Vector3f aFirstVector, const CU::Vector3f aSecondVector);
-	float Distance2Points2(const CU::Vector3f aFirstVector, const CU::Vector3f aSecondVector);
+	void ClosestPointOnAABB(CU::Vector3f& aPoint, const AABB &aAABB);
+	float Distance2Points(const CU::Vector3f& aFirstVector, const CU::Vector3f& aSecondVector);
+	float Distance2Points2(const CU::Vector3f& aFirstVector, const CU::Vector3f& aSecondVector);
 
-	bool PointInsideSphere(const Sphere &aSpehere, const CU::Vector3f &aPoint);
-	bool PointInsideAABB(const AABB &aAABB, const CU::Vector3f &aPoint);
+	bool PointInsideSphere(const SSphere& aSpehere, const CU::Vector3f& aPoint);
+	bool PointInsideAABB(const AABB& aAABB, const CU::Vector3f& aPoint);
 
-	bool LineVsLine(LineSegment2D aLineSegment, LineSegment2D aSecondLineSegment, CU::Vector3f aIntersectionPoint);
+	bool LineVsLine(const LineSegment2D& aLineSegment, const LineSegment2D& aSecondLineSegment, CU::Vector3f* aIntersectionPoint = nullptr);
+	bool LineVsAABB(const LineSegment3D& aLineSegment, const AABB& aAABB);
+	bool LineVsSphere(const LineSegment3D& aLineSegment, const SSphere& aSphere, const CU::Vector3f& aIntersectionPoint);
 
-	bool LineVsAABB(const LineSegment3D aLineSegment, const AABB aAABB, const CU::Vector3f aInsersection);
-	bool LineVsSphere(const LineSegment3D aLineSegment, const Sphere aSphere, const CU::Vector3f &aIntersectionPoint);
+	bool SweptSphereVsAABB(const LineSegment3D& aLine, const float aRadius, const AABB& aAABB);
+	bool SweptSphereVsSphere(const LineSegment3D& aLine, const float aRadius, const SSphere& aSphere);
+	bool SphereVsSphere(const SSphere& aFirst, const SSphere& aSecond);
 
-	bool SweptSphereVsAABB(const LineSegment3D aLine, const float aRadius, const AABB aAABB);
-	bool SweptSphereVsSphere(const LineSegment3D aLine, const float aRadius, const Sphere aSphere);
+	bool SphereVsPlane(const Collision::Plane<float>& aPlane, const SSphere& aSphere);
+	bool SphereVsFrustum(const SSphere& aSphere, const Fov90Frustum& aFrustum);
 
-	bool SphereVsSphere(const Sphere& aFirst, const Sphere& aSecond);
-
-	bool SphereVsPlane(Collision::Plane<float> aPlane, Sphere aSphere);
-	bool SphereVsFrustum(const Sphere aSphere, const Fov90Frustum aFrustum);
+	bool CircleVsCircle(const SCircle& aFirst, const SCircle& aSecond);
+	bool PointInsideCircle(const SCircle& aCircle, const SPoint& aPoint);
 }
