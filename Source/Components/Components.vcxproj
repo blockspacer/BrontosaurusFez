@@ -227,6 +227,8 @@
     <ClInclude Include="InputController.h" />
     <ClInclude Include="InputControllerManager.h" />
     <ClInclude Include="InventoryComponent.h" />
+    <ClInclude Include="InventoryComponentManager.h" />
+    <ClInclude Include="MainStatComponent.h" />
     <ClInclude Include="ModelComponent.h" />
     <ClInclude Include="ModelComponentManager.h" />
     <ClInclude Include="MovementComponent.h" />
@@ -236,6 +238,7 @@
     <ClInclude Include="ParticleEmitterComponent.h" />
     <ClInclude Include="ParticleEmitterComponentManager.h" />
     <ClInclude Include="Skill.h" />
+    <ClInclude Include="SkillFactory.h" />
     <ClInclude Include="SkillSystemComponent.h" />
     <ClInclude Include="StatComponent.h" />
     <ClInclude Include="StatStructs.h" />
@@ -257,6 +260,8 @@
     <ClCompile Include="InputController.cpp" />
     <ClCompile Include="InputControllerManager.cpp" />
     <ClCompile Include="InventoryComponent.cpp" />
+    <ClCompile Include="InventoryComponentManager.cpp" />
+    <ClCompile Include="MainStatComponent.cpp" />
     <ClCompile Include="ModelComponent.cpp" />
     <ClCompile Include="ModelComponentManager.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
@@ -266,6 +271,7 @@
     <ClCompile Include="ParticleEmitterComponent.cpp" />
     <ClCompile Include="ParticleEmitterComponentManager.cpp" />
     <ClCompile Include="Skill.cpp" />
+    <ClCompile Include="SkillFactory.cpp" />
     <ClCompile Include="SkillSystemComponent.cpp" />
     <ClCompile Include="StatComponent.cpp" />
     <ClCompile Include="stdafx.cpp">

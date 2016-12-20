@@ -3,6 +3,8 @@
 #include "Component.h"
 #include "../CommonUtilities/Stack.h"
 
+#define COMPMGR CComponentManager::GetInstance() 
+
 class CComponentManager
 {
 public:

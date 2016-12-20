@@ -29,6 +29,9 @@
     <ClCompile Include="InventoryComponent.cpp" />
     <ClCompile Include="StatComponent.cpp" />
     <ClCompile Include="HealthComponent.cpp" />
+    <ClCompile Include="InventoryComponentManager.cpp" />
+    <ClCompile Include="SkillFactory.cpp" />
+    <ClCompile Include="MainStatComponent.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="CollisionComponent.cpp">
       <Filter>CollisionComponent</Filter>
@@ -74,11 +77,13 @@
     <ClInclude Include="HealthComponent.h" />
     <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="CollisionComponent.h">
-      <Filter>CollisionComponent</Filter>
-    </ClInclude>
     <ClInclude Include="CollisionComponentManager.h">
-      <Filter>CollisionComponent</Filter>
-    </ClInclude>
+    <ClInclude Include="InventoryComponentManager.h" />
+    <ClInclude Include="SkillFactory.h" />
+    <ClInclude Include="MainStatComponent.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Precompiled">

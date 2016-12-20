@@ -61,6 +61,8 @@ eMessageReturn KeyPressed::DoEvent(CPlayState* aPlayState) const
 		case CU::eKeys::ESCAPE:
 			aPlayState->Pause();
 			break;
+			case CU::eKeys::H:
+				aPlayState->TEMP_ADD_HAT(aPlayState->myPlayerObject);
 		default:
 			break;
 		}

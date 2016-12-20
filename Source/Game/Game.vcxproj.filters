@@ -27,7 +27,6 @@
     <ClCompile Include="SplashScreen.cpp">
       <Filter>States</Filter>
     </ClCompile>
-    <ClCompile Include="Hat.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackgroundLoadingManager.h" />
@@ -57,7 +56,6 @@
     <ClInclude Include="SplashScreen.h">
       <Filter>States</Filter>
     </ClInclude>
-    <ClInclude Include="Hat.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="States">
