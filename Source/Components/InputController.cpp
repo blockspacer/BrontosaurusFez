@@ -14,13 +14,16 @@
 InputController::InputController()
 {
 	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eMouseMessage);
+	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eMouseDownMessage);
 	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eInputMessagePressed);
+	mySkillInputMessageActivators.Init(5);
 }
 
 
 InputController::~InputController()
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseDownMessage);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eInputMessagePressed);
 }
 
@@ -45,11 +48,11 @@ eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButto
 {
 	if(aMouseButton == CU::eMouseButtons::LBUTTON)
 	{
-		CU::Vector2f convertedMousePosition = CU::Vector2f(aMousePosition.x * ENGINE->GetWindowSize().x, aMousePosition.y * ENGINE->GetWindowSize().y); // Ändra hårdkodningen memo!
+		CU::Vector2f convertedMousePosition = CU::Vector2f(aMousePosition.x, aMousePosition.y); // Ändra hårdkodningen memo!
 		std::cout <<  "Mouse Pos:" <<"X:" << convertedMousePosition.x << " Y: " << convertedMousePosition.y << std::endl;
 		CU::Vector2f halfScreenPosition = CU::Vector2f(ENGINE->GetWindowSize().x / 2.0f, ENGINE->GetWindowSize().y / 2.0f);
-		CU::Vector2f playerPosition = CU::Vector2f(GetParent()->GetWorlPosition().x, GetParent()->GetWorlPosition().z); // Don't forget to add conversions between vector 2 and 3! like serisously it is góing to save us so much time.
-		std::cout << "Player Pos:" << "X:" << playerPosition.x << " Y: " << GetParent()->GetWorlPosition().z << std::endl;
+		CU::Vector2f playerPosition = CU::Vector2f(GetParent()->GetWorldPosition().x, GetParent()->GetWorldPosition().z); // Don't forget to add conversions between vector 2 and 3! like serisously it is góing to save us so much time.
+		std::cout << "Player Pos:" << "X:" << playerPosition.x << " Y: " << GetParent()->GetWorldPosition().z << std::endl;
 		std::cout << "Difference Pos:" << "X:" << (convertedMousePosition - halfScreenPosition).x << " Y: " << (convertedMousePosition - halfScreenPosition).y << std::endl;
 		CU::Matrix44f newTargetMatrix;
 		newTargetMatrix.SetPosition(CU::Vector3f(playerPosition.x, playerPosition.y, 0.0f));
@@ -70,8 +73,17 @@ eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButto
 	return eMessageReturn::eContinue;
 }
 
-eMessageReturn InputController::TakeInputMessage(const CU::eInputMessage aMouseButton)
+eMessageReturn InputController::TakeInputMessage(const CU::eInputMessage aInputMessage)
 {
-
+	for(unsigned short i = 0; i < mySkillInputMessageActivators.Size(); i++)
+	{
+		if(mySkillInputMessageActivators[i] == aInputMessage)
+		{
+			eComponentMessageType type = eComponentMessageType::eUseSkill;
+			SComponentMessageData data;
+			data.myInt = i;
+			GetParent()->NotifyComponents(type, data);
+		}
+	}
 	return eMessageReturn::eContinue;
 }

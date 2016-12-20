@@ -5,6 +5,8 @@
 #include "../PostMaster/PostMaster.h"
 #include "TextInstance.h"
 
+#include <iostream>
+
 CConsole::CConsole()
 {
 	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eKeyPressed);
@@ -13,10 +15,14 @@ CConsole::CConsole()
 	myElapsedAnimationTimer = 0.0f;
 	myAnimationTimerCooldown = 0.5f;
 	myCurrentText = new CTextInstance;
+	mySuggestedCommand = new CTextInstance;
 	myCurrentText->SetColor(CTextInstance::Red);
 	myCurrentText->SetPosition(CU::Vector2f(0.2f,0.8f));
+	mySuggestedCommand->SetColor(CTextInstance::Red);
+	mySuggestedCommand->SetPosition(myCurrentText->GetPosition() + CU::Vector2f(0.0f, 0.05f));
 	myCurrentText->SetText("");
 	myCurrentText->Init();
+	mySuggestedCommand->Init();
 }
 
 
@@ -60,7 +66,7 @@ void CConsole::Update(float aDeltaTime)
 		}
 		else
 		{
-			myCurrentText->SetText(myCurrentText->GetText() + "I");
+			myCurrentText->SetText(myCurrentText->GetText() + "|");
 		}
 		myHaveIAfterCurrentText = !myHaveIAfterCurrentText;
 	}
@@ -71,6 +77,7 @@ void CConsole::Render()
 	if (myIsActive == true)
 	{
 		myCurrentText->Render();
+		mySuggestedCommand->Render();
 		for (unsigned short i = 0; i < myTextLog.Size(); i++)
 		{
 			myTextLog[i]->Render();
@@ -90,7 +97,7 @@ void CConsole::UpdateCommandSuggestions(const std::string & aStringToCompare)
 		if (result < finalResultDifferance)
 		{
 			finalResultDifferance = result;
-			mySuggestedCommand = it->first;
+			mySuggestedCommand->SetText(it->first.c_str());
 		}
 	}
 }
@@ -169,20 +176,26 @@ eMessageReturn CConsole::TakeKeyBoardInputPressedChar(const char aKey)
 		if (aKey == '\r')
 		{
 			myTextLog.Add(new CTextInstance(*myCurrentText));
-			CheckIfTextIsCommand(myCurrentText->GetText());
-			myCurrentText->SetText("");
 			for (unsigned short i = 0; i < myTextLog.Size(); i++)
 			{
 				myTextLog[i]->SetPosition(myTextLog[i]->GetPosition() + CU::Vector2f(0.0f, -0.05f));
 			}
+			CheckIfTextIsCommand(myCurrentText->GetText());
+			myCurrentText->SetText("");
 		}
 		else if (aKey == '\b')
 		{
 			myCurrentText->SetText(myCurrentText->GetText().SubStr(0, myCurrentText->GetText().Size() - 1));
 		}
+		else if (aKey == '\t')
+		{
+			myCurrentText->SetText(mySuggestedCommand->GetText());
+			mySuggestedCommand->SetText("");
+		}
 		else
 		{
 			myCurrentText->SetText(myCurrentText->GetText() + aKey);
+			UpdateCommandSuggestions(myCurrentText->GetText().c_str());
 		}
 	}
 	return eMessageReturn::eContinue;
@@ -195,12 +208,128 @@ const CU::DynamicString CConsole::CheckIfTextIsCommand(const CU::DynamicString& 
 		//doGodMode();
 		return aText + " is activated.";
 	}
+	else if (aText == "help")
+	{
+		PrintCommands();
+	}
 	else
 	{
-
-		return aText + " was not found perhaps you meant GodMode.";
-
+		std::map<std::string, SSlua::LuaCallbackFunction>::iterator it;
+		for (it = myLuaFunctions.begin(); it != myLuaFunctions.end(); it++)
+		{
+			if (it->first == aText.c_str())
+			{
+				SSlua::ArgumentList temp;
+				temp.Init(1);
+				it->second(temp);
+			}
+		}
 	}
 
 	return aText + " was not found.";
+}
+
+CU::DynamicString CConsole::ParseAndRunFunction(const CU::DynamicString& aString)
+{
+	
+	int currentLetter = aString.FindFirst(' ');
+	if (currentLetter ==CU::DynamicString::FoundNone)
+	{
+		currentLetter = aString.Size();
+	}
+
+	const CU::DynamicString commandName = aString.SubStr(0, currentLetter);
+
+	if (myLuaFunctions.count(std::string(commandName.c_str())) == 0)
+	{
+		return CU::DynamicString("ERROR: Could not find a command with the name -> ") + commandName;
+	}
+
+	SSlua::ArgumentList arguments;
+	arguments.Init(1);
+	while (currentLetter != aString.Size())
+	{
+		const int beginingOfArg = currentLetter + 1;
+		if (aString[beginingOfArg] == '"')
+		{
+			bool isCorrect = false;
+			for (currentLetter += 1; currentLetter < aString.Size(); currentLetter++)
+			{
+				if (aString[currentLetter] == '"')
+				{
+					isCorrect = true;
+					break;
+				}
+			}
+
+			if (isCorrect == false)
+			{
+				return "ERROR: string was not closed! please close it by using \" at the end";
+			}
+
+			arguments.Add(SSArgument(aString.SubStr(beginingOfArg + 1, currentLetter - beginingOfArg - 1).c_str()));
+		}
+		else
+		{
+			for (currentLetter += 1; currentLetter < aString.Size(); currentLetter++)
+			{
+				if (aString[currentLetter] == ' ')
+				{
+					break;
+				}
+			}
+
+			const CU::DynamicString argumentString = aString.SubStr(beginingOfArg, currentLetter - beginingOfArg);
+
+			if (argumentString.IsBool())
+			{
+				arguments.Add(SSArgument(argumentString.AsBool()));
+			}
+			else if (argumentString.IsFloat())
+			{
+				arguments.Add(SSArgument(argumentString.AsFloat()));
+			}
+			else
+			{
+				arguments.Add(SSArgument(argumentString.c_str()));
+			}
+		}
+	}
+
+	const SSlua::ArgumentList returnArguments = myLuaFunctions[commandName.c_str()](arguments);
+
+	CU::DynamicString resultString("");
+	if (returnArguments.Size() > 0)
+	{
+		resultString += "RESULT-> ";
+
+		for (int i = 0; i < returnArguments.Size(); ++i)
+		{
+			const SSArgument& currentArgument = returnArguments[i];
+		}
+	}
+
+	return resultString;
+}
+
+
+void CConsole::Print(const CU::DynamicString & aText)
+{
+	myCurrentText->SetText(aText);
+	myTextLog.Add(new CTextInstance(*myCurrentText));
+	CheckIfTextIsCommand(myCurrentText->GetText());
+	for (unsigned short i = 0; i < myTextLog.Size(); i++)
+	{
+		myTextLog[i]->SetPosition(myTextLog[i]->GetPosition() + CU::Vector2f(0.0f, -0.05f));
+		std::cout << myTextLog[i]->GetText().c_str() << std::endl;
+	}
+}
+
+void CConsole::PrintCommands()
+{
+	std::map<std::string, SSlua::LuaCallbackFunction>::iterator it;
+	for (it = myLuaFunctions.begin(); it != myLuaFunctions.end(); it++)
+	{
+		Print(it->first.c_str());
+	}
 }

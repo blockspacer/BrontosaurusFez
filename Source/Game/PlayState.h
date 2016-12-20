@@ -9,6 +9,11 @@
 #include "ValueObserver.h"
 #include <atomic>
 
+#include "../LuaWrapper/SSlua/SSlua.h"
+
+//temp includes
+#include <iostream>
+
 namespace CU
 {
 	class Time;
@@ -50,7 +55,13 @@ public:
 
 	eMessageReturn Recieve(const Message& aMessage) override;
 
+	void TEMP_ADD_HAT(CGameObject* aPlayerObject);
+	CGameObject* myPlayerObject; //TEMP
+
 	inline bool IsLoaded() const;
+
+	//Denna ska bort
+	static SSlua::ArgumentList LuaFunction(SSlua::ArgumentList anArgumentList);
 
 private:
 	void CreateManagersAndFactories();
@@ -73,4 +84,10 @@ private:
 inline bool CPlayState::IsLoaded() const
 {
 	return myIsLoaded;
+}
+
+inline SSlua::ArgumentList CPlayState::LuaFunction(SSlua::ArgumentList anArgumentList)
+{
+	std::cout << "Du anropade en function från Konsolen Punkt 3.a klar" << std::endl;
+	return SSlua::ArgumentList();
 }

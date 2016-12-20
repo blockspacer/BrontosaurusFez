@@ -37,6 +37,8 @@ public:
 	CU::Vector2i GetBearing(const wchar_t aChar);
 	CU::Vector2i GetBearing(const FT_UInt aChar);
 
+	//void SetLineGap(const int pt)
+
 	CEffect* GetEffect() const;
 	FT_Face myFace;
 	const char* myFacePath;

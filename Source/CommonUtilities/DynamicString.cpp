@@ -297,10 +297,69 @@ DynamicString DynamicString::SubStr(const int aIndex, const int aLength) const
 	return string;
 }
 
+bool DynamicString::IsInt() const
+{
+	assert(myString != nullptr);
+
+	const CU::DynamicString numbers = "1234567890";
+
+	for (int i = 0; i < mySize; ++i)
+	{
+		if (numbers.FindFirst(at(i)) == FoundNone)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
 int CU::DynamicString::AsInteger() const
 {
 	assert(myString != nullptr);
 	return std::atoi(myString);
+}
+
+bool DynamicString::IsFloat() const
+{
+	assert(myString != nullptr);
+
+	const CU::DynamicString numbers = "1234567890.";
+
+	for (int i = 0; i < mySize; ++i)
+	{
+		if (numbers.FindFirst(at(i)) == FoundNone)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+double DynamicString::AsFloat() const
+{
+	assert(IsFloat() == true);
+	return  std::atof(myString);
+}
+
+bool DynamicString::IsBool() const
+{
+	if (*this == "true" || *this == "false")
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool DynamicString::AsBool() const
+{
+	assert(IsBool() == true);
+
+	return *this == "true";
 }
 
 void DynamicString::InternalInit()

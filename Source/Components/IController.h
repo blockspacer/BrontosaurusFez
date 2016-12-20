@@ -1,0 +1,31 @@
+#pragma once
+#include "Component.h"
+
+class CAIControllerComponent;
+
+enum class eControllerType
+{
+	eDefault,
+	eChaser,
+	eBlend,
+	eArriver,
+};
+
+class IController : public CComponent
+{
+public:
+	IController();
+	~IController();
+
+	const eControllerType GetType() const;
+
+	void AddParent(CAIControllerComponent* aController);
+
+	virtual const CU::Vector2f Update(const CU::Time& aDeltaTime) = 0;
+protected:
+	CAIControllerComponent* GetControllerComponent();
+
+	float myWeight;
+	eControllerType myControllerType;
+	CAIControllerComponent* myController;
+};

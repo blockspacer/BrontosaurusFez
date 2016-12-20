@@ -3,6 +3,7 @@
 #include "../LuaWrapper/SSlua/SSlua.h"
 #include "../CommonUtilities/GrowingArray.h"
 #include "../PostMaster/Subscriber.h"
+#include "../LoadManager/LuaFunctions.h"
 
 namespace CU
 {
@@ -30,13 +31,17 @@ private:
 	void UpdateCommandSuggestions(const std::string& aStringToCompare);
 	size_t CConsole::MakeCommandSuggestions(const std::string& aStringToCompare, const std::string& aStringToEvaluate);
 	const CU::DynamicString CheckIfTextIsCommand(const CU::DynamicString& aText);
+	void Print(const CU::DynamicString& aText);
+	void PrintCommands();
 
+	CU::DynamicString ParseAndRunFunction(const CU::DynamicString& aString);
 
 private:
 	std::map<std::string, SSlua::LuaCallbackFunction> myLuaFunctions;
 	CU::GrowingArray<CTextInstance*> myTextLog;
 	CTextInstance* myCurrentText;
-	std::string mySuggestedCommand;
+	CTextInstance* mySuggestedCommand;
+	//std::string mySuggestedCommand;
 
 	float myElapsedAnimationTimer;
 	float myAnimationTimerCooldown;
