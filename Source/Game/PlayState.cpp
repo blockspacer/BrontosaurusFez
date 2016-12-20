@@ -43,6 +43,7 @@
 
 //Kanske Inte ska vara här?
 #include "../BrontosaurusEngine/Console.h"
+#include "AIControllerManager.h"
 //
 
 //Temp Includes
@@ -55,6 +56,8 @@
 #include "BrontosaurusEngine/WindowsWindow.h"
 #include <iostream>
 #include "StatComponent.h"
+#include "Components/AIControllerComponent.h"
+#include "Components/ChaserController.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -80,6 +83,7 @@ CPlayState::~CPlayState()
 	CCameraComponentManager::Destroy();
 	InputControllerManager::DestroyInstance();
 	MovementComponentManager::DestroyInstance();
+	AIControllerManager::Destroy();
 
 	PollingStation::NullifyLevelSpecificData();
 
@@ -136,6 +140,7 @@ void CPlayState::Load()
 
 	//create player:
 	CGameObject* playerObject = myGameObjectManager->CreateGameObject();
+	PollingStation::playerObject = playerObject;
 
 	InputController* tempInputController = new InputController();
 	InputControllerManager::GetInstance().RegisterComponent(tempInputController);
@@ -205,6 +210,18 @@ void CPlayState::Load()
 	tempEnemyStatComponent->Set(1, 1, 1, 1);
 	CHealthComponent* tempEnemyHealthComponent = new CHealthComponent();
 
+	CAIControllerComponent* AIController = new CAIControllerComponent();
+	CChaserController* chaserController = new CChaserController();
+	chaserController->SetMaxAcceleration(1);
+	chaserController->SetMaxSpeed(10);
+	chaserController->SetSlowDownRadius(100);
+	chaserController->SetTargetRadius(100);
+
+	TempraryEnemyObject->AddComponent(AIController);
+	AIController->AddControllerBehaviour(chaserController);
+
+	AIControllerManager::GetIstance().AddController(AIController);
+
 	TempraryEnemyObject->AddComponent(tempEnemyModel);
 	TempraryEnemyObject->AddComponent(tempEnemyStatComponent);
 	TempraryEnemyObject->AddComponent(tempEnemyHealthComponent);
@@ -260,6 +277,7 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	CParticleEmitterComponentManager::GetInstance().UpdateEmitters(aDeltaTime);
 	InputControllerManager::GetInstance().Update(aDeltaTime);
 	MovementComponentManager::GetInstance().Update(aDeltaTime);
+	AIControllerManager::GetIstance().Update(aDeltaTime);
 	myScene.Update(aDeltaTime);
 
 	myGameObjectManager->DestroyObjectsWaitingForDestruction();
@@ -363,4 +381,5 @@ void CPlayState::CreateManagersAndFactories()
 	CCameraComponentManager::Create();
 	InputControllerManager::CreateInstance();
 	MovementComponentManager::CreateInstance();
+	AIControllerManager::Create();
 }
