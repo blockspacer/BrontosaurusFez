@@ -167,6 +167,7 @@ void CPlayState::Load()
 	myPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
 	SkillSystemComponent* tempSkillSystemComponent = new SkillSystemComponent;
 	SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
+	tempSkillSystemComponent->AddSkill("Not Implemented");
 	myPlayerObject->AddComponent(tempSkillSystemComponent);
 	//create camera object:
 	//myCameraObject = myGameObjectManager->CreateGameObject();
@@ -227,8 +228,8 @@ void CPlayState::Load()
 	Stats::SBonusStats bonusStats;
 	
 	chaserController->SetMaxAcceleration(400);
-	chaserController->SetMaxSpeed(400);
-	chaserController->SetSlowDownRadius(500);
+	chaserController->SetMaxSpeed(30);
+	chaserController->SetSlowDownRadius(100);
 	chaserController->SetTargetRadius(70);
 	
 	AIControllerManager::GetIstance().AddController(AIController);

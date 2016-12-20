@@ -7,6 +7,7 @@ const CU::Vector2f StopVector = CU::Vector2f(99999, 99999);
 CAIControllerComponent::CAIControllerComponent()
 {
 	myControllers.Init(2);
+	myMaxVelocity = 70;
 }
 
 
@@ -42,6 +43,13 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 		Acceleration += returnValue;
 	}
 	myVelocity += Acceleration * aDeltaTime.GetSeconds();
+
+	if (myVelocity.Length() > myMaxVelocity)
+	{
+		myVelocity.Normalize();
+		myVelocity *= myMaxVelocity;
+	}
+
 	CU::Vector2f velocity = myVelocity * aDeltaTime.GetSeconds();
 
 	GetParent()->GetLocalTransform().Move(CU::Vector3f(velocity.x,0,velocity.y));

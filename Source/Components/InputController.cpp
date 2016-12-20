@@ -79,7 +79,7 @@ eMessageReturn InputController::TakeInputMessage(const CU::eInputMessage aInputM
 	{
 		if(mySkillInputMessageActivators[i] == aInputMessage)
 		{
-			eComponentMessageType type = eComponentMessageType::eUseSkill;
+			eComponentMessageType type = eComponentMessageType::eSelectSkill;
 			SComponentMessageData data;
 			data.myInt = i;
 			GetParent()->NotifyComponents(type, data);

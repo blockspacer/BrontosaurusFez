@@ -30,18 +30,22 @@ void SkillSystemComponent::Update(float aDeltaTime)
 				mySkills[i]->Init(GetParent());
 				mySkills[i]->Update(aDeltaTime);
 			}
-
+			
 		}
 	}
 }
 
 void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
 {
-	if(aMessageType == eComponentMessageType::eUseSkill)
+	if(aMessageType == eComponentMessageType::eSelectSkill)
 	{
 		if(aMessageData.myInt < mySkills.Size())
 		{
-			mySkills[aMessageData.myInt]->Activate();
+			for(unsigned short i = 0; i < mySkills.Size(); i++)
+			{
+				mySkills[i]->Deselect();
+			}
+			mySkills[aMessageData.myInt]->Select();
 		}
 		else
 		{
@@ -55,6 +59,10 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 		for(unsigned short i = 0; i < mySkills.Size(); i++)
 		{
 			mySkills[i]->SetTarget(aMessageData.myVector3f);
+			if(mySkills[i]->GetIsSelected() == true)
+			{
+				mySkills[i]->Activate();
+			}
 		}
 	}
 	else if (aMessageType == eComponentMessageType::eAddSkill)
