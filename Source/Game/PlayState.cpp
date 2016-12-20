@@ -227,8 +227,8 @@ void CPlayState::Load()
 	Stats::SBonusStats bonusStats;
 	
 	chaserController->SetMaxAcceleration(400);
-	chaserController->SetMaxSpeed(400);
-	chaserController->SetSlowDownRadius(500);
+	chaserController->SetMaxSpeed(30);
+	chaserController->SetSlowDownRadius(100);
 	chaserController->SetTargetRadius(70);
 	
 	AIControllerManager::GetIstance().AddController(AIController);

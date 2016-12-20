@@ -16,5 +16,7 @@ public:
 private:
 	CU::GrowingArray<IController*> myControllers;
 	CU::Vector2f myVelocity;
+
+	float myMaxVelocity;
 };
 
