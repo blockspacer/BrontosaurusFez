@@ -19,7 +19,7 @@ CConsole::CConsole()
 	myCurrentText->SetColor(CTextInstance::Red);
 	myCurrentText->SetPosition(CU::Vector2f(0.2f,0.8f));
 	mySuggestedCommand->SetColor(CTextInstance::Red);
-	mySuggestedCommand->SetPosition(myCurrentText->GetPosition() + CU::Vector2f(0.2f, 0.05f));
+	mySuggestedCommand->SetPosition(myCurrentText->GetPosition() + CU::Vector2f(0.0f, 0.05f));
 	myCurrentText->SetText("");
 	myCurrentText->Init();
 	mySuggestedCommand->Init();
@@ -214,9 +214,16 @@ const CU::DynamicString CConsole::CheckIfTextIsCommand(const CU::DynamicString& 
 	}
 	else
 	{
-
-		return aText + " was not found perhaps you meant GodMode.";
-
+		std::map<std::string, SSlua::LuaCallbackFunction>::iterator it;
+		for (it = myLuaFunctions.begin(); it != myLuaFunctions.end(); it++)
+		{
+			if (it->first == aText.c_str())
+			{
+				SSlua::ArgumentList temp;
+				temp.Init(1);
+				it->second(temp);
+			}
+		}
 	}
 
 	return aText + " was not found.";

@@ -11,6 +11,9 @@
 
 #include "../LuaWrapper/SSlua/SSlua.h"
 
+//temp includes
+#include <iostream>
+
 namespace CU
 {
 	class Time;
@@ -85,5 +88,6 @@ inline bool CPlayState::IsLoaded() const
 
 inline SSlua::ArgumentList CPlayState::LuaFunction(SSlua::ArgumentList anArgumentList)
 {
+	std::cout << "Du anropade en function från Konsolen Punkt 3.a klar" << std::endl;
 	return SSlua::ArgumentList();
 }

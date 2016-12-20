@@ -245,6 +245,7 @@
     <ClInclude Include="Skill.h" />
     <ClInclude Include="SkillFactory.h" />
     <ClInclude Include="SkillSystemComponent.h" />
+    <ClInclude Include="SkillSystemComponentManager.h" />
     <ClInclude Include="StatComponent.h" />
     <ClInclude Include="StatStructs.h" />
     <ClInclude Include="stdafx.h" />
@@ -280,6 +281,7 @@
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="SkillFactory.cpp" />
     <ClCompile Include="SkillSystemComponent.cpp" />
+    <ClCompile Include="SkillSystemComponentManager.cpp" />
     <ClCompile Include="StatComponent.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

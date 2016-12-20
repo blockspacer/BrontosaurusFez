@@ -36,6 +36,7 @@
     <ClCompile Include="IController.cpp" />
     <ClCompile Include="SkillFactory.cpp" />
     <ClCompile Include="MainStatComponent.cpp" />
+    <ClCompile Include="SkillSystemComponentManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -79,6 +80,7 @@
     <ClInclude Include="IController.h" />
     <ClInclude Include="SkillFactory.h" />
     <ClInclude Include="MainStatComponent.h" />
+    <ClInclude Include="SkillSystemComponentManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

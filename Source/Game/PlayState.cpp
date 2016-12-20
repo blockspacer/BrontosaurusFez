@@ -41,6 +41,8 @@
 
 #include "../Audio/AudioInterface.h"
 
+#include "Components\SkillFactory.h"
+#include "Components\SkillSystemComponentManager.h"
 //Kanske Inte ska vara här?
 #include "../BrontosaurusEngine/Console.h"
 #include "AIControllerManager.h"
@@ -61,6 +63,7 @@
 #include "Components/AIControllerComponent.h"
 #include "Components/ChaserController.h"
 #include "Components\SkillFactory.h"
+#include "SkillSystemComponent.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -86,12 +89,14 @@ CPlayState::~CPlayState()
 	CCameraComponentManager::Destroy();
 	InputControllerManager::DestroyInstance();
 	MovementComponentManager::DestroyInstance();
+	SkillSystemComponentManager::DestroyInstance();
 	AIControllerManager::Destroy();
 
 	PollingStation::NullifyLevelSpecificData();
 
-	CComponentManager::DestroyInstance();
 	SkillFactory::DestroyInstance();
+	CComponentManager::DestroyInstance();
+
 }
 
 void CPlayState::Load()
@@ -160,7 +165,9 @@ void CPlayState::Load()
 	myPlayerObject->AddComponent(playerModelComponent);
 
 	myPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
-
+	SkillSystemComponent* tempSkillSystemComponent = new SkillSystemComponent;
+	SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
+	myPlayerObject->AddComponent(tempSkillSystemComponent);
 	//create camera object:
 	//myCameraObject = myGameObjectManager->CreateGameObject();
 
@@ -260,6 +267,7 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	InputControllerManager::GetInstance().Update(aDeltaTime);
 	MovementComponentManager::GetInstance().Update(aDeltaTime);
 	AIControllerManager::GetIstance().Update(aDeltaTime);
+	SkillSystemComponentManager::GetInstance().Update(aDeltaTime);
 	myScene.Update(aDeltaTime);
 
 	myGameObjectManager->DestroyObjectsWaitingForDestruction();
@@ -431,4 +439,6 @@ void CPlayState::CreateManagersAndFactories()
 	InputControllerManager::CreateInstance();
 	MovementComponentManager::CreateInstance();
 	AIControllerManager::Create();
+	SkillFactory::CreateInstance();
+	SkillSystemComponentManager::CreateInstance();
 }
