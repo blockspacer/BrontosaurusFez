@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include "../CommonUtilities/vector3.h"
 class CGameObject;
 
 class Skill
@@ -12,14 +13,15 @@ public:
 	virtual void Update(float aDeltaTime);
 	virtual void Init(CGameObject* aUser);
 	void BasicAttackUpdate(float aDeltaTime); //we probably want to chagne this later
-	inline virtual bool GetIsActive();
-
+	inline bool GetIsActive();
+	inline void SetTarget(CU::Vector3f aTargetPosition);
+	inline bool IsInited();
 protected:
 	virtual void OnActivation();
 	virtual void OnDeActivation();
 	
 	CGameObject* myUser;
-	CGameObject* myTarget;
+	CU::Vector3f myTargetPosition;
 	std::function<void(float)> myUpdateFunction;
 	bool myIsActive;
 };
@@ -28,4 +30,18 @@ protected:
 inline bool Skill::GetIsActive()
 {
 	return myIsActive;
+}
+
+inline void Skill::SetTarget(CU::Vector3f aTargetPosition)
+{
+	myTargetPosition = aTargetPosition;
+}
+
+inline bool Skill::IsInited()
+{
+	if(myUser != nullptr)
+	{
+		return true;
+	}
+	return false;
 }

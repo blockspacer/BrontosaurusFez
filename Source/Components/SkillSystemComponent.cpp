@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "SkillSystemComponent.h"
 #include "Skill.h"
+#include "SkillFactory.h"
 
 #include <iostream>
 SkillSystemComponent::SkillSystemComponent()
 {
 	mySkills.Init(4);
-	myTarget = nullptr;
 }
 
 
@@ -20,7 +20,16 @@ void SkillSystemComponent::Update(float aDeltaTime)
 	{
 		if(mySkills[i]->GetIsActive() == true)
 		{
-			mySkills[i]->Update(aDeltaTime);
+			if(mySkills[i]->IsInited() == true)
+			{
+				mySkills[i]->Update(aDeltaTime);
+			
+			}
+			else
+			{
+				mySkills[i]->Init(GetParent());
+				mySkills[i]->Update(aDeltaTime);
+			}
 
 		}
 	}
@@ -40,16 +49,29 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 		}
 	
 	}
-	else if(aMessageType == eComponentMessageType::eSetSkillTarget)
+	else if(aMessageType == eComponentMessageType::eSetSkillTargetPosition)
 	{
-		myTarget = aMessageData.myGameObject;
+		myTargetPosition = aMessageData.myVector3f;
+		for(unsigned short i = 0; i < mySkills.Size(); i++)
+		{
+			mySkills[i]->SetTarget(aMessageData.myVector3f);
+		}
 	}
 	else if (aMessageType == eComponentMessageType::eAddSkill)
 	{
-		myTarget = aMessageData.myGameObject;
+		mySkills.Add(SkillFactory::GetInstance().CreateSkill(aMessageData.myString));
+		mySkills.GetLast()->Init(GetParent());
+		mySkills.GetLast()->SetTarget(myTargetPosition);
 	}
 }
 
 void SkillSystemComponent::Destroy()
 {
+}
+
+void SkillSystemComponent::AddSkill(const char * aSkillName)
+{
+	mySkills.Add(SkillFactory::GetInstance().CreateSkill(aSkillName));
+	mySkills.GetLast()->Init(GetParent());
+	mySkills.GetLast()->SetTarget(myTargetPosition);
 }
