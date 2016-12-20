@@ -41,6 +41,8 @@
 
 #include "../Audio/AudioInterface.h"
 
+#include "Components\SkillFactory.h"
+#include "Components\SkillSystemComponentManager.h"
 //Kanske Inte ska vara här?
 #include "../BrontosaurusEngine/Console.h"
 //
@@ -56,7 +58,7 @@
 #include "BrontosaurusEngine/ModelInstance.h"
 #include "BrontosaurusEngine/WindowsWindow.h"
 #include <iostream>
-#include "Components\SkillFactory.h"
+#include "SkillSystemComponent.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -82,11 +84,13 @@ CPlayState::~CPlayState()
 	CCameraComponentManager::Destroy();
 	InputControllerManager::DestroyInstance();
 	MovementComponentManager::DestroyInstance();
+	SkillSystemComponentManager::DestroyInstance();
 
 	PollingStation::NullifyLevelSpecificData();
 
-	CComponentManager::DestroyInstance();
 	SkillFactory::DestroyInstance();
+	CComponentManager::DestroyInstance();
+
 }
 
 void CPlayState::Load()
@@ -154,7 +158,9 @@ void CPlayState::Load()
 	myPlayerObject->AddComponent(playerModelComponent);
 
 	myPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
-
+	SkillSystemComponent* tempSkillSystemComponent = new SkillSystemComponent;
+	SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
+	myPlayerObject->AddComponent(tempSkillSystemComponent);
 	//create camera object:
 	//myCameraObject = myGameObjectManager->CreateGameObject();
 
@@ -242,6 +248,7 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	CParticleEmitterComponentManager::GetInstance().UpdateEmitters(aDeltaTime);
 	InputControllerManager::GetInstance().Update(aDeltaTime);
 	MovementComponentManager::GetInstance().Update(aDeltaTime);
+	SkillSystemComponentManager::GetInstance().Update(aDeltaTime);
 	myScene.Update(aDeltaTime);
 
 	myGameObjectManager->DestroyObjectsWaitingForDestruction();
@@ -413,4 +420,5 @@ void CPlayState::CreateManagersAndFactories()
 	InputControllerManager::CreateInstance();
 	MovementComponentManager::CreateInstance();
 	SkillFactory::CreateInstance();
+	SkillSystemComponentManager::CreateInstance();
 }
