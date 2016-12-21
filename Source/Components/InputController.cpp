@@ -10,9 +10,6 @@
 #include "CameraManager.h"
 #include "../CommonUtilities/Camera.h"
 
-#define to_str(apa) #apa
-#define combine(apa, apa2) to_str(apa) ## to_str(apa2)
-
 InputController::InputController(const CU::Camera& aPlayerCamera)
 	: myPlayerCamera(aPlayerCamera)
 {
@@ -45,63 +42,6 @@ void InputController::Receive(const eComponentMessageType aMessageType, const SC
 
 void InputController::Destroy()
 {
-	//float pointX, pointY;
-	//D3DXMATRIX projectionMatrix, viewMatrix, inverseViewMatrix, worldMatrix, translateMatrix, inverseWorldMatrix;
-	//D3DXVECTOR3 direction, origin, rayOrigin, rayDirection;
-	//bool intersect, result;
-
-
-	//// Move the mouse cursor coordinates into the -1 to +1 range.
-	//pointX = ((2.0f * (float)mouseX) / (float)m_screenWidth) - 1.0f;
-	//pointY = (((2.0f * (float)mouseY) / (float)m_screenHeight) - 1.0f) * -1.0f;
-
-	//// Adjust the points using the projection matrix to account for the aspect ratio of the viewport.
-	//m_D3D->GetProjectionMatrix(projectionMatrix);
-	//pointX = pointX / projectionMatrix._11;
-	//pointY = pointY / projectionMatrix._22;
-
-	//// Get the inverse of the view matrix.
-	//m_Camera->GetViewMatrix(viewMatrix);
-	//D3DXMatrixInverse(&inverseViewMatrix, NULL, &viewMatrix);
-
-	//// Calculate the direction of the picking ray in view space.
-	//direction.x = (pointX * inverseViewMatrix._11) + (pointY * inverseViewMatrix._21) + inverseViewMatrix._31;
-	//direction.y = (pointX * inverseViewMatrix._12) + (pointY * inverseViewMatrix._22) + inverseViewMatrix._32;
-	//direction.z = (pointX * inverseViewMatrix._13) + (pointY * inverseViewMatrix._23) + inverseViewMatrix._33;
-
-	//// Get the origin of the picking ray which is the position of the camera.
-	//origin = m_Camera->GetPosition();
-
-	//// Get the world matrix and translate to the location of the sphere.
-	//m_D3D->GetWorldMatrix(worldMatrix);
-	//D3DXMatrixTranslation(&translateMatrix, -5.0f, 1.0f, 5.0f);
-	//D3DXMatrixMultiply(&worldMatrix, &worldMatrix, &translateMatrix);
-
-	//// Now get the inverse of the translated world matrix.
-	//D3DXMatrixInverse(&inverseWorldMatrix, NULL, &worldMatrix);
-
-	//// Now transform the ray origin and the ray direction from view space to world space.
-	//D3DXVec3TransformCoord(&rayOrigin, &origin, &inverseWorldMatrix);
-	//D3DXVec3TransformNormal(&rayDirection, &direction, &inverseWorldMatrix);
-
-	//// Normalize the ray direction.
-	//D3DXVec3Normalize(&rayDirection, &rayDirection);
-
-	//// Now perform the ray-sphere intersection test.
-	//intersect = RaySphereIntersect(rayOrigin, rayDirection, 1.0f);
-
-	//if (intersect == true)
-	//{
-	//	// If it does intersect then set the intersection to "yes" in the text string that is displayed to the screen.
-	//	result = m_Text->SetIntersection(true, m_D3D->GetDeviceContext());
-	//}
-	//else
-	//{
-	//	// If not then set the intersection to "No".
-	//	result = m_Text->SetIntersection(false, m_D3D->GetDeviceContext());
-	//}
-
-	//return;
 }
 
 eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButton, const CU::Vector2f & aMousePosition)
