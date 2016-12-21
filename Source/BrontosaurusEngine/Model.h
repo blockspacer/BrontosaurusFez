@@ -2,7 +2,7 @@
 #include <atomic>
 #include "BufferStructs.h"
 #include "SphereColData.h"
-
+#include "AnimationController.h"
 
 #include "../CommonUtilities/StaticArray.h"
 #include "../CommonUtilities/AABB.h"
@@ -16,6 +16,7 @@ struct SConstLayout;
 class CLoaderModel;
 class CLoaderMesh;
 
+class CSceneAnimator;
 class CModelInstance;
 class CModelLoader;
 
@@ -50,6 +51,7 @@ struct SLodData
 class CModel
 {
 	friend class CModelLoader;
+	friend class CModelManager;
 
 public:
 	enum class eShaderStage
@@ -90,6 +92,15 @@ public:
 	inline const struct aiScene* GetScene() const;
 	inline void SetScene(const struct aiScene* aScene);
 
+	inline bool HasAnimations();
+
+	inline void AddRef();
+	inline void RemoveRef();
+
+	inline int GetRefCount();
+
+	std::vector<mat4>& GetBones(float aTime, const char * aAnimationState);
+
 private:
 
 	SLodData& GetCurrentLODModel(const CU::Vector3f& aModelPosition);
@@ -101,8 +112,12 @@ private:
 	void UpdateCBuffer(const CU::Matrix44f & aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aBoneBuffer);
 
 	inline void SetBoundingBox(const CU::AABB& aAABB);
+
 private:
 	CU::StaticArray<ID3D11Buffer*, static_cast<int>(eShaderStage::eLength)> myConstantBuffers;
+
+	std::map<std::string, CSceneAnimator> mySceneAnimators;
+	CSceneAnimator* mySceneAnimator;
 
 	CEffect* myEffect;
 	CSurface* mySurface;
@@ -131,6 +146,8 @@ private:
 
 	bool myIsAlphaModel;
 
+	int myRefCount;
+
 };
 inline const SSphereColData& CModel::GetCollisionData() const
 {
@@ -157,6 +174,7 @@ inline void CModel::SetBoundingBox(const CU::AABB & aAABB)
 	myAABB = aAABB;
 }
 
+
 inline const aiScene* CModel::GetScene() const
 {
 	return myScene;
@@ -165,6 +183,26 @@ inline const aiScene* CModel::GetScene() const
 inline void CModel::SetScene(const aiScene* aScene)
 {
 	myScene = aScene;
+}
+
+inline bool CModel::HasAnimations()
+{
+	return mySceneAnimator != nullptr;
+}
+
+inline void CModel::AddRef()
+{
+	myRefCount++;
+}
+
+inline void CModel::RemoveRef()
+{
+	myRefCount--;
+}
+
+inline int CModel::GetRefCount()
+{
+	return myRefCount;
 }
 
 inline bool CModel::IsAlphaModel() const

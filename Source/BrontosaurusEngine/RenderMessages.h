@@ -59,10 +59,12 @@ struct SRenderModelMessage : SRenderMessage
 	SRenderModelMessage() { myType = SRenderMessage::eRenderMessageType::eRenderModel; }
 	CU::Matrix44f myTransformation;
 	CU::Matrix44f myLastFrameTransformation;
-	CModel* myModel;
-	unsigned int myModelIndex; // This is how it shuld be, YEYE-YEA
+	int myModelID;
 	Lights::SDirectionalLight* myDirectionalLight;
 	CU::GrowingArray<CPointLightInstance*>* myPointLights;
+
+	float myAnimationTime;
+	const char* myCurrentAnimation;
 
 };
 
@@ -81,7 +83,8 @@ struct SRenderGUIModelMessage : SRenderMessage
 
 	CU::Matrix44f myToWorld;
 	SPixelConstantBuffer myPixelConstantBufferStruct;
-	CModel* myModel;
+	int myModelID;
+
 };
 
 struct SRenderParticlesMessage : SRenderMessage

@@ -262,6 +262,7 @@
     <ClInclude Include="LineDrawer.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelBatch.h" />
+    <ClInclude Include="ModelID.h" />
     <ClInclude Include="ModelInstance.h" />
     <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="ModelManager.h" />

@@ -10,6 +10,7 @@
 #include "StreakEmitterInstance.h"
 #include "ParticleEmitter.h"
 #include "ParticleEmitterManager.h"
+#include "ModelManager.h"
 #include "ConstBufferTemplate.h"
 #include "Text.h"
 #include <Camera.h>
@@ -670,14 +671,23 @@ void CRenderer::DoRenderQueue()
 		case SRenderMessage::eRenderMessageType::eRenderModel:
 		{
 			SRenderModelMessage* msg = static_cast<SRenderModelMessage*>(renderMessage);
-			msg->myModel->Render(msg->myTransformation, msg->myLastFrameTransformation, msg->myDirectionalLight, msg->myPointLights);
+			CModel* model = CEngine::GetInstance()->GetModelManager()->GetModel(msg->myModelID);
+			model->Render(msg->myTransformation, msg->myLastFrameTransformation, msg->myDirectionalLight, msg->myPointLights);
 			++drawCalls;
 			break;
 		}
 		case SRenderMessage::eRenderMessageType::eRenderAnimationModel:
 		{
 			SRenderAnimationModelMessage* msg = static_cast<SRenderAnimationModelMessage*>(renderMessage);
-			msg->myModel->Render(msg->myTransformation, msg->myLastFrameTransformation, msg->myDirectionalLight, msg->myPointLights, msg->myBoneMatrices);
+			CModel* model = CEngine::GetInstance()->GetModelManager()->GetModel(msg->myModelID);
+			msg->myAnimationTime;
+			msg->myCurrentAnimation;
+
+			std::vector<mat4>& bones = model->GetBones(msg->myAnimationTime, msg->myCurrentAnimation);
+			
+			memcpy(static_cast<void*>(msg->myBoneMatrices), &bones[0], min(sizeof(msg->myBoneMatrices), bones.size() * sizeof(mat4)));
+
+			model->Render(msg->myTransformation, msg->myLastFrameTransformation, msg->myDirectionalLight, msg->myPointLights, msg->myBoneMatrices);
 			++drawCalls;
 			break;
 		}
@@ -685,14 +695,14 @@ void CRenderer::DoRenderQueue()
 		{
 			myGUIData.myInputPackage.Activate();
 			SRenderGUIModelMessage* msg = static_cast<SRenderGUIModelMessage*>(renderMessage);
-			
-			if (msg->myModel->HasConstantBuffer(CModel::eShaderStage::ePixel) == true)
+			CModel* model = CEngine::GetInstance()->GetModelManager()->GetModel(msg->myModelID);
+			if (model->HasConstantBuffer(CModel::eShaderStage::ePixel) == true)
 			{
 				msg->myPixelConstantBufferStruct.myCameraPosition = myCamera.GetPosition();
-				msg->myModel->UpdateConstantBuffer(CModel::eShaderStage::ePixel, &msg->myPixelConstantBufferStruct, sizeof(msg->myPixelConstantBufferStruct));
+				model->UpdateConstantBuffer(CModel::eShaderStage::ePixel, &msg->myPixelConstantBufferStruct, sizeof(msg->myPixelConstantBufferStruct));
 			}
 
-			msg->myModel->Render(msg->myToWorld, msg->myToWorld, nullptr, nullptr); //don't blur  GUI, atm fullösning deluxe.
+			model->Render(msg->myToWorld, msg->myToWorld, nullptr, nullptr); //don't blur  GUI, atm fullösning deluxe.
 			
 			++drawCalls;
 

@@ -6,6 +6,7 @@
 #include "../CommonUtilities/matrix44.h"
 
 #include "SphereColData.h"
+#include "FbxLoader/AssImp/scene.h"
 
 struct BoneInfo
 {

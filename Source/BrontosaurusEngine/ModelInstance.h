@@ -23,6 +23,8 @@ class CSceneAnimator;
 class CModelInstance
 {
 public:
+	typedef int ModelId;
+
 	friend class CModelManager;
 	friend class CModelComponent;
 
@@ -36,10 +38,7 @@ public:
 	CModelInstance(const SShape aShape);
 	CModelInstance(const SShape aShape, const CU::Matrix44f& aTransformation);
 
-	CModelInstance(CModel* aModel, const CU::Matrix44f& aTransformation);
-
-
-	bool IsAlpha();
+	CModelInstance(ModelId aModel, const CU::Matrix44f& aTransformation);
 
 public:
 	bool ShouldRender();
@@ -59,18 +58,21 @@ public:
 	
 	//LAT!
 	inline CModel* GetModel();
+
+	inline ModelId GetModelID();
+
 	CU::AABB GetModelBoundingBox();
 private:
-	void LoadAnimations(const char* aModelPath);
-
 	CU::Matrix44f myTransformation;
 	CU::Matrix44f myLastFrame;
 
-	CModel* myModel;
-	std::map<std::string, CSceneAnimator> mySceneAnimators;
-	CSceneAnimator* mySceneAnimator;
+	ModelId myModel;
+
+	const char* myCurrentAnimation;
+
 	float myAnimationCounter;
 	bool myIsVisible;
+	bool myHasAnimations;
 };
 
 inline const CU::Matrix44f& CModelInstance::GetTransformation() const
@@ -89,6 +91,11 @@ inline void CModelInstance::SetVisibility(const bool aFlag)
 }
 
 inline CModel* CModelInstance::GetModel()
+{
+	return NULL;//myModel;
+}
+
+inline int CModelInstance::GetModelID()
 {
 	return myModel;
 }
