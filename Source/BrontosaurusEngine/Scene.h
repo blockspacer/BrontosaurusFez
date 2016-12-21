@@ -65,9 +65,6 @@ private:
 	CU::GrowingArray<CModelInstance*, InstanceID> myModels;
 	CU::Stack<InstanceID, InstanceID> myFreeModels;
 
-	CU::GrowingArray<CModelInstance*, InstanceID> myAlphaModels;
-	CU::Stack<InstanceID, InstanceID> myFreeAlphaModels;
-
 	CU::GrowingArray<CPointLightInstance*> myPointLights;
 
 	CU::GrowingArray<CParticleEmitterInstance*, InstanceID> myParticleEmitters;

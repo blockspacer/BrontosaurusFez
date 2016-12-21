@@ -69,7 +69,6 @@ namespace
 CScene::CScene()
 {
 	myModels.Init(64);
-	myAlphaModels.Init(8);
 	myPointLights.Init(8);
 	myParticleEmitters.Init(8);
 	mySkybox = nullptr;
@@ -79,7 +78,6 @@ CScene::~CScene()
 {
 	SAFE_DELETE(mySkybox);
 	myModels.DeleteAll();
-	myAlphaModels.DeleteAll();
 	myParticleEmitters.DeleteAll();
 	//myDebugObjects.DeleteAll();
 }
@@ -136,35 +134,6 @@ void CScene::Render()
 		myModels[i]->Render(&myDirectionalLight, &myPointLights);
 	}
 
-
-	statemsg.myBlendState = eBlendState::eAlphaBlend;
-	statemsg.myRasterizerState = eRasterizerState::eDefault;
-	statemsg.myDepthStencilState = eDepthStencilState::eDefault;
-	statemsg.mySamplerState = eSamplerState::eWrap;
-
-
-	RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
-
-
-	quickSort(myAlphaModels, 0, myAlphaModels.Size());
-
-
-	for (unsigned int i = 0; i < myAlphaModels.Size(); ++i)
-	{
-		if (myAlphaModels[i] == nullptr || myAlphaModels[i]->ShouldRender() == false)
-		{
-			continue;
-		}
-
-		if (myCameras[Intify(eCameraType::ePlayerOneCamera)].IsInside(myAlphaModels[i]->GetModelBoundingBox()) == false)
-		{
-			continue;
-		}
-
-		myAlphaModels[i]->Render(&myDirectionalLight, &myPointLights);
-
-	}
-
 	statemsg.myBlendState = eBlendState::eAlphaBlend;
 	statemsg.myRasterizerState = eRasterizerState::eDefault;
 	statemsg.myDepthStencilState = eDepthStencilState::eReadOnly;
@@ -187,30 +156,16 @@ InstanceID CScene::AddModelInstance(CModelInstance* aModelInstance)
 {
 	InstanceID id = 0;
 
-	if (aModelInstance->IsAlpha() == false)
+	if (myFreeModels.Size() < 1)
 	{
-		if (myFreeModels.Size() < 1)
-		{
-			myModels.Add(aModelInstance);
-			id = myModels.Size();
-			return id;
-		}
-
-		id = myFreeModels.Pop();
-		myModels[id] = aModelInstance;
+		myModels.Add(aModelInstance);
+		id = myModels.Size();
+		return id;
 	}
-	else
-	{
-		if (myFreeAlphaModels.Size() < 1)
-		{
-			myAlphaModels.Add(aModelInstance);
-			id = myAlphaModels.Size();
-			return id;
-		}
 
-		id = myFreeAlphaModels.Pop();
-		myAlphaModels[id] = aModelInstance;
-	}
+	id = myFreeModels.Pop();
+	myModels[id] = aModelInstance;
+	
 	
 	return id;
 }
