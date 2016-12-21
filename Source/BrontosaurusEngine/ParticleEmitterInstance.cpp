@@ -87,21 +87,18 @@ void CParticleEmitterInstance::Init()
 	myIsActive = true;
 	myIsVisible = true;
 
-
 	myEmitDelta = 1.f / myEmitterData.EmissionRate;
 	myEmitTimer = 0.f;
 
 	myParticles.Init(myEmitterData.NumOfParticles);
 	myParticleLogic.Init(myEmitterData.NumOfParticles);
 
-
-
 	CEngine* engine = CEngine::GetInstance();
 	assert(engine != nullptr && "CEngine was nullptr");
-	engine->GetParticleEmitterManager().CreateParticleEmitter(myEmitterData);
+	myEmitterID = engine->GetParticleEmitterManager().CreateParticleEmitter(myEmitterData);
 
 }
-#include <iostream>
+
 void CParticleEmitterInstance::Update(const CU::Time& aDeltaTime)
 {
 	float deltaTime = aDeltaTime.GetSeconds();
@@ -199,27 +196,8 @@ void CParticleEmitterInstance::Update(const CU::Time& aDeltaTime)
 			endK.value,
 			CalcCurve(colorT, myEmitterData.ColorCurve));
 
-		//Sleep(10);
-
 		myParticles[i].color = colr;
 
-		if (i == 0)
-		{
-			system("cls");
-			std::cout << "\n\nLIFETIME: " << particleLifetime;
-
-			std::cout << "\nSTART:\n";
-			std::cout << "T: " << startK.time << "	X: " << startK.value.x << "	Y: " << startK.value.y << "	Z: " << startK.value.z << "	W: " << startK.value.w << std::endl;
-			std::cout << "END:\n";
-
-			std::cout << "T: " << endK.time << "	X: " << endK.value.x << "	Y: " << endK.value.y << "	Z: " << endK.value.z << "	W: " << endK.value.w << std::endl;
-			std::cout << "RESULT:\n";
-			std::cout << "T: " << colorT << "	X: " << colr.x << "	Y: " << colr.y << "	Z: " << colr.z << "	W: " << colr.w << std::endl;
-
-		}
-
-
-		int br = 0;;
 	}
 }
 
