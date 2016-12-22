@@ -6,7 +6,9 @@
 #include "TextInstance.h"
 
 #include <iostream>
-
+#include "../PostMaster/PushState.h"
+#include "../PostMaster/PopCurrentState.h"
+#include "../PostMaster/ConsoleCalledUpon.h"
 CConsole::CConsole()
 {
 	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eKeyPressed);
@@ -43,12 +45,16 @@ void CConsole::GetLuaFunctions()
 
 void CConsole::Activate()
 {
+	PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PushState(PushState::eState::ePauseScreen, -1)));
+	PostMaster::GetInstance().SendLetter(Message(eMessageType::eConsoleCalledUpon, ConsoleCalledUpon(true)));
 	//ta all input
 	//Börja Renderas
 }
 
 void CConsole::Deactivate()
 {
+	PostMaster::GetInstance().SendLetter(Message(eMessageType::eConsoleCalledUpon, ConsoleCalledUpon(false)));
+	PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PopCurrentState()));
 	//sluta ta all input
 	//sluta renderas
 }

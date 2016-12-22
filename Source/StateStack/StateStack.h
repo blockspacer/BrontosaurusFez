@@ -31,9 +31,16 @@ public:
 
 	eMessageReturn Recieve(const Message& aMessage) override;
 
+	inline void SetShouldUpdate(bool aShouldUpdate);
 private:
 	CU::Stack <State*, /*unsigned*/ short> myStates;
 	std::function<void(void)> mySwapStateFunction;
 
 	State* myStateToSwapTo;
+	bool myShouldUpdate;
 };
+
+inline void StateStack::SetShouldUpdate(bool aShouldUpdate)
+{
+	myShouldUpdate = aShouldUpdate;
+}
