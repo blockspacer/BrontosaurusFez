@@ -216,9 +216,9 @@ namespace CU
 	VECTOR_TEMPLATE_DECL
 		Vector4<TYPE>::Vector4(const Vector3<TYPE> &anOther)
 	{
-		myX = anOther.myX;
-		myY = anOther.myY;
-		myZ = anOther.myZ;
+		myX = anOther.x;
+		myY = anOther.y;
+		myZ = anOther.z;
 		myW = static_cast<TYPE>(1);
 	}
 
@@ -288,18 +288,18 @@ namespace CU
 	VECTOR_TEMPLATE_DECL
 		Vector4 <TYPE> &Vector4<TYPE>::operator =(const Vector3<TYPE> &aRight)
 	{
-		myX = aRight.myX;
-		myY = aRight.myY;
-		myZ = aRight.myZ;
-		myW = static_cast<TYPE>(0);
+		x = aRight.x;
+		y = aRight.y;
+		z = aRight.z;
+		w = static_cast<TYPE>(0);
 		return *this;
 	}
 
 	VECTOR_TEMPLATE_DECL
 		Vector4 <TYPE> &Vector4<TYPE>::operator =(const Vector2<TYPE> &aRight)
 	{
-		myX = aRight.myX;
-		myY = aRight.myY;
+		myX = aRight.x;
+		myY = aRight.y;
 		myZ = static_cast<TYPE>(0);
 		myW = static_cast<TYPE>(0);
 		return *this;

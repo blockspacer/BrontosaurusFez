@@ -1,149 +1,108 @@
 #pragma once
-#define VECTOR_TEMPLATE_DECL template<typename TYPE>
 #include <math.h>
+
+#define self (*this)
 
 namespace CU
 {
 	template<typename TYPE>
-	class Vector4;
+	class Vector2;
 
 	template<typename TYPE>
-	class Vector2;
+	class Vector4;
 
 	template<typename TYPE>
 	class Vector3
 	{
 	public:
-		// Construction
-		Vector3(void);
-		Vector3(const Vector3 &aVector3);
-		explicit Vector3(const Vector2<TYPE> &aVector2, const TYPE aZ = 0);
-		explicit Vector3(const Vector4<TYPE> &aVector4);
-		template<typename U> explicit Vector3(const Vector3<U> &aVector);
-		Vector3(const TYPE anX, const TYPE aY, const TYPE aZ);
+		Vector3();
+		Vector3(const Vector3& aVector3);
+		Vector3(const TYPE aX, const TYPE aY, const TYPE aZ);
+		Vector3(const Vector2<TYPE> aVector2, const TYPE aZ = 0);
+		Vector3(const Vector4<TYPE>& aVector4);
 
-		void Set(const TYPE aX, const TYPE aY, const TYPE aZ)
-		{
-			myX = aX; myY = aY; myZ = aZ;
-		}
+		template<typename U> explicit Vector3(const Vector3<U>& aVector);
+		template<typename U> explicit Vector3(const U aX, const U aY, const U aZ);
 
-		// Arithmetic
-		friend Vector3 operator +(Vector3 aLeft, const Vector3 &aRight)
-		{
-			return aLeft += aRight;
-		}
-		friend Vector3 operator -(Vector3 aLeft, const Vector3 &aRight)
-		{
-			return aLeft -= aRight;
-		}
-		friend Vector3 operator *(Vector3 aLeft, const TYPE aRight)
-		{
-			return aLeft *= aRight;
-		}
+		void Set(const TYPE aX, const TYPE aY, const TYPE aZ);
+		template <typename U> void Set(const U aX, const U aY, const U aZ);
 
-		friend Vector3 operator *(const TYPE aRight, Vector3 aLeft)
-		{
-			return aLeft *= aRight;
-		}
-		friend Vector3 operator *(Vector3 aLeft, const Vector3 aRight)
-		{
-			aLeft.x *= aRight.x;
-			aLeft.y *= aRight.y;
-			aLeft.z *= aRight.z;
-			return aLeft;
-		}
-		friend Vector3 operator /(Vector3 aLeft, const TYPE aRight)
-		{
-			return aLeft /= aRight;
-		}
-		friend Vector3 operator -(Vector3 aRight)
-		{
-			aRight *= -1;
-			return aRight;
-		}
-		// Comparison
-		friend bool operator ==(const Vector3 &aLeft, const Vector3 &aRight)
-		{
-			if ((aLeft.x == aRight.x) && (aLeft.y == aRight.y) && (aLeft.z == aRight.z))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		friend bool operator !=(const Vector3 &aLeft, const Vector3 &aRight)
-		{
-			if ((aLeft.x == aRight.x) && (aLeft.y == aRight.y) && (aLeft.z == aRight.z))
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
-		}
+		Vector3& operator=(const Vector3& aRight);
+		template <typename U> Vector3& operator=(const Vector3<U>& aRight);
+		Vector3& operator=(const Vector4<TYPE>& aRight);
 
+		Vector3& operator+=(const Vector3& aRight);
+		Vector3& operator-=(const Vector3& aRight);
+		Vector3& operator*=(const Vector3& aRight);
+		Vector3& operator/=(const Vector3& aRight);
 
-		// Assignment
-		Vector3 &operator =(const Vector3 &aRight);
-		Vector3 &operator =(const Vector4<TYPE> &aRight);
+		Vector3& operator*=(const TYPE aRight);
+		Vector3& operator/=(const TYPE aRight);
 
-		// Combined
-		Vector3 &operator +=(const Vector3 &aRight);
-		Vector3 &operator -=(const Vector3 &aRight);
-		Vector3 &operator *=(const TYPE aRight);
-		Vector3 &operator /=(const TYPE aRight);
+		Vector3 operator+(const Vector3& aRight) const;
+		Vector3 operator-(const Vector3& aRight) const;
+		Vector3 operator*(const Vector3& aRight) const;
+		Vector3 operator/(const Vector3& aRight) const;
 
-		// Info
-		TYPE Length(void) const;
-		TYPE Length2(void) const;
-		TYPE Dot(const Vector3 &aRight) const;
-		Vector3 Cross(const Vector3 &aRight) const;
-		Vector3 GetNormalized(void) const;
+		Vector3 operator*(const TYPE aScalar) const;
+		Vector3 operator/(const TYPE aRight) const;
 
-		// Manipulation
-		//
-		Vector3 &Normalize(void);
+		Vector3 operator-() const;
+
+		bool operator==(const Vector3& aRight) const;
+		bool operator!=(const Vector3& aRight) const;
+
+		TYPE Length() const;
+		TYPE Length2() const;
+		TYPE Dot(const Vector3& aRight) const;
+		Vector3 Cross(const Vector3& aRight) const;
+		Vector3 GetNormalized() const;
+
+		Vector3& Normalize();
+
+		Vector3& InterPolateTowards(Vector3 aVectorToInterPolateTowards, float aInterpolatingSpeed);
 
 		void Print() const;
+		static void Print(const Vector3& aVector);
+		template <typename... Args>
+		static void Print(const Vector3& aVector, Args... aMoreVectors);
 
 		union
 		{
-			TYPE	myX;
-			TYPE    x;
-			TYPE    X;
-			TYPE	u;
-			TYPE	r;
-		};
-		union
-		{
-			TYPE	myY;
-			TYPE    y;
-			TYPE    Y;
-			TYPE	v;
-			TYPE	g;
-		};
-		union
-		{
-			TYPE	myZ;
-			TYPE    z;
-			TYPE    Z;
-			TYPE	w;
-			TYPE	b;
+#pragma warning(disable : 4201) // nonstandard extension used: nameless struct/union
+			struct
+			{
+				TYPE x, y, z;
+				//union
+				//{
+				//	TYPE    x;
+				//	TYPE	r;
+				//};
+				//union
+				//{
+				//	TYPE    y;
+				//	TYPE	g;
+				//};
+				//union
+				//{
+				//	TYPE    z;
+				//	TYPE	b;
+				//};
+			};
+			struct
+			{
+				TYPE r, g, b;
+			};
+#pragma warning(default : 4201)
+
+			TYPE vector[3];
 		};
 
-		static TYPE Dot(const Vector3 &aLeft, const Vector3 &aRight);
-		static Vector3 Cross(const Vector3 &aLeft, const Vector3 &aRight);
-		static Vector3 Normalize(Vector3 aVector);
-		Vector3 InterPolateTowards(Vector3 aVectorToInterPolateTowards, float aInterpolatingSpeed);
-
-		static const Vector3	Zero,
-			UnitX,
-			UnitY,
-			UnitZ,
-			One;
+		static const Vector3 Zero;
+		static const Vector3 UnitX;
+		static const Vector3 UnitY;
+		static const Vector3 UnitZ;
+		static const Vector3 One;
 	};
 
 	using Vector3c = Vector3<char>;
@@ -158,8 +117,9 @@ namespace CU
 	using Point3ui = Vector3<unsigned int>;
 	using Point3f = Vector3<float>;
 	using Point3d = Vector3<double>;
-	VECTOR_TEMPLATE_DECL
-		using Point3 = Vector3 < TYPE >;
+
+	template<typename TYPE>
+	using Point3 = Vector3 < TYPE >;
 
 	template<typename TYPE> const Vector3<TYPE> Vector3<TYPE>::Zero(0, 0, 0);
 	template<typename TYPE> const Vector3<TYPE> Vector3<TYPE>::UnitX(1, 0, 0);
@@ -167,152 +127,279 @@ namespace CU
 	template<typename TYPE> const Vector3<TYPE> Vector3<TYPE>::UnitZ(0, 0, 1);
 	template<typename TYPE> const Vector3<TYPE> Vector3<TYPE>::One(1, 1, 1);
 
-	//#include "vector3_template.inl"
-
-	// Construction
-	VECTOR_TEMPLATE_DECL
-		Vector3<TYPE>::Vector3(void)
+	template<typename TYPE>
+	Vector3<TYPE>::Vector3()
+		: x(static_cast<TYPE>(0))
+		, y(static_cast<TYPE>(0))
+		, z(static_cast<TYPE>(0))
 	{
-		myX = static_cast<TYPE>(0);
-		myY = static_cast<TYPE>(0);
-		myZ = static_cast<TYPE>(0);
-	}
-	VECTOR_TEMPLATE_DECL
-	Vector3<TYPE>::Vector3(const Vector2<TYPE> &aVector2, const TYPE aZ)
-	{
-		myX = aVector2.x;
-		myY = aVector2.x;
-		myZ = aZ;
 	}
 
-
-	VECTOR_TEMPLATE_DECL
-		Vector3<TYPE>::Vector3(const Vector3 &aVector3)
+	template<typename TYPE>
+	Vector3<TYPE>::Vector3(const Vector3& aVector3)
+		: x(aVector3.x)
+		, y(aVector3.y)
+		, z(aVector3.z)
 	{
-		myX = aVector3.myX;
-		myY = aVector3.myY;
-		myZ = aVector3.myZ;
 	}
 
-	VECTOR_TEMPLATE_DECL
-		Vector3<TYPE>::Vector3(const Vector4<TYPE> &aVector4)
+	template<typename TYPE>
+	Vector3<TYPE>::Vector3(const TYPE aX, const TYPE aY, const TYPE aZ)
+		: x(aX)
+		, y(aY)
+		, z(aZ)
 	{
-		myX = aVector4.myX;
-		myY = aVector4.myY;
-		myZ = aVector4.myZ;
 	}
 
+	template<typename TYPE>
+	Vector3<TYPE>::Vector3(const Vector2<TYPE> aVector2, const TYPE aZ)
+		: x(aVector2.x)
+		, y(aVector2.y)
+		, z(aZ)
+	{
+	}
+
+	template<typename TYPE>
+	Vector3<TYPE>::Vector3(const Vector4<TYPE>& aVector4)
+		: x(aVector4.x)
+		, y(aVector4.y)
+		, z(aVector4.z)
+	{
+	}
 
 	template<typename TYPE>
 	template<typename U>
-	inline Vector3<TYPE>::Vector3(const Vector3<U> &aVector) : x(static_cast<TYPE>(aVector.x)), y(static_cast<TYPE>(aVector.y)), z(static_cast<TYPE>(aVector.z))
+	inline Vector3<TYPE>::Vector3(const Vector3<U> &aVector)
+		: x(static_cast<TYPE>(aVector.x))
+		, y(static_cast<TYPE>(aVector.y))
+		, z(static_cast<TYPE>(aVector.z))
 	{
-	}
-	VECTOR_TEMPLATE_DECL
-		Vector3<TYPE>::Vector3(const TYPE aX, const TYPE aY, const TYPE aZ)
-	{
-		myX = aX;
-		myY = aY;
-		myZ = aZ;
 	}
 
-
-	// Assignment
-	VECTOR_TEMPLATE_DECL
-		Vector3<TYPE> &Vector3<TYPE>::operator =(const Vector3 &aRight)
+	template<typename TYPE>
+	template<typename U>
+	inline Vector3<TYPE>::Vector3(const U aX, const U aY, const U aZ)
+		: x(static_cast<TYPE>(aX))
+		, y(static_cast<TYPE>(aY))
+		, z(static_cast<TYPE>(aZ))
 	{
-		myX = aRight.myX;
-		myY = aRight.myY;
-		myZ = aRight.myZ;
-		return *this;
-	}
-	VECTOR_TEMPLATE_DECL
-		Vector3<TYPE> &Vector3<TYPE>::operator =(const Vector4<TYPE> &aRight)
-	{
-		myX = aRight.myX;
-		myY = aRight.myY;
-		myZ = aRight.myZ;
-		return *this;
 	}
 
-	// Combined
-	VECTOR_TEMPLATE_DECL
-		Vector3<TYPE> &Vector3<TYPE>::operator +=(const Vector3 &aRight)
+	template<typename TYPE>
+	template<typename U>
+	inline void Vector3<TYPE>::Set(const U aX, const U aY, const U aZ)
 	{
-		myX += aRight.x;
-		myY += aRight.y;
-		myZ += aRight.z;
-		return *this;
-	}
-	VECTOR_TEMPLATE_DECL
-		Vector3<TYPE> &Vector3<TYPE>::operator -=(const Vector3 &aRight)
-	{
-		myX -= aRight.x;
-		myY -= aRight.y;
-		myZ -= aRight.z;
-		return *this;
-	}
-	VECTOR_TEMPLATE_DECL
-		Vector3<TYPE> &Vector3<TYPE>::operator *=(const TYPE aRight)
-	{
-		myX *= aRight;
-		myY *= aRight;
-		myZ *= aRight;
-		return *this;
-	}
-	VECTOR_TEMPLATE_DECL
-		Vector3<TYPE> &Vector3<TYPE>::operator /=(const TYPE aRight)
-	{
-		myX /= aRight;
-		myY /= aRight;
-		myZ /= aRight;
-		return *this;
+		x = static_cast<TYPE>(aX);
+		y = static_cast<TYPE>(aY);
+		z = static_cast<TYPE>(aZ);
 	}
 
-	// Info
-	VECTOR_TEMPLATE_DECL
-		TYPE Vector3<TYPE>::Length(void) const
+	template<typename TYPE>
+	inline void Vector3<TYPE>::Set(const TYPE aX, const TYPE aY, const TYPE aZ)
 	{
-		return sqrt((myX * myX) + (myY * myY) + (myZ * myZ));
+		x = aX;
+		y = aY;
+		z = aZ;
 	}
-	VECTOR_TEMPLATE_DECL
-		TYPE Vector3<TYPE>::Length2(void) const
-	{
-		return ((myX * myX) + (myY * myY) + (myZ * myZ));
 
-	}
-	VECTOR_TEMPLATE_DECL
-		TYPE Vector3<TYPE>::Dot(const Vector3 &aRight) const
+	template<typename TYPE>
+	Vector3<TYPE>& Vector3<TYPE>::operator=(const Vector3& aRight)
 	{
-		return ((myX * aRight.x) + (myY * aRight.y) + (myZ * aRight.z));
+		x = aRight.x;
+		y = aRight.y;
+		z = aRight.z;
+
+		return self;
 	}
-	VECTOR_TEMPLATE_DECL
-		Vector3<TYPE> Vector3<TYPE>::Cross(const Vector3 &aRight) const
+
+	template<typename TYPE>
+	template<typename U>
+	Vector3<TYPE>& Vector3<TYPE>::operator=(const Vector3<U>& aRight)
 	{
-		return Vector3((myY * aRight.z) - (myZ * aRight.y),
-			(myZ * aRight.x) - (myX * aRight.z),
-			(myX * aRight.y) - (myY * aRight.x));
+		x = static_cast<TYPE>(aRight.x);
+		y = static_cast<TYPE>(aRight.y);
+		z = static_cast<TYPE>(aRight.z);
+
+		return self;
 	}
-	VECTOR_TEMPLATE_DECL
-		Vector3<TYPE> Vector3<TYPE>::GetNormalized(void) const
+
+	template<typename TYPE>
+	Vector3<TYPE>& Vector3<TYPE>::operator=(const Vector4<TYPE>& aRight)
+	{
+		x = aRight.x;
+		y = aRight.y;
+		z = aRight.z;
+
+		return self;
+	}
+
+	template<typename TYPE>
+	Vector3<TYPE>& Vector3<TYPE>::operator+=(const Vector3& aRight)
+	{
+		x += aRight.x;
+		y += aRight.y;
+		z += aRight.z;
+
+		return self;
+	}
+
+	template<typename TYPE>
+	Vector3<TYPE>& Vector3<TYPE>::operator-=(const Vector3& aRight)
+	{
+		x -= aRight.x;
+		y -= aRight.y;
+		z -= aRight.z;
+
+		return self;
+	}
+
+	template<typename TYPE>
+	inline Vector3<TYPE>& Vector3<TYPE>::operator*=(const Vector3& aRight)
+	{
+		x *= aRight.x;
+		y *= aRight.y;
+		z *= aRight.z;
+
+		return self;
+	}
+
+	template<typename TYPE>
+	inline Vector3<TYPE>& Vector3<TYPE>::operator/=(const Vector3& aRight)
+	{
+		x /= aRight.x;
+		y /= aRight.y;
+		z /= aRight.z;
+
+		return self;
+	}
+
+	template<typename TYPE>
+	Vector3<TYPE>& Vector3<TYPE>::operator*=(const TYPE aRight)
+	{
+		x *= aRight;
+		y *= aRight;
+		z *= aRight;
+		
+		return self;
+	}
+
+	template<typename TYPE>
+	Vector3<TYPE>& Vector3<TYPE>::operator/=(const TYPE aRight)
+	{
+		x /= aRight;
+		y /= aRight;
+		z /= aRight;
+
+		return self;
+	}
+
+	template<typename TYPE>
+	inline Vector3<TYPE> Vector3<TYPE>::operator+(const Vector3& aRight) const
+	{
+		Vector3 sum = self;
+		return sum += aRight;
+	}
+
+	template<typename TYPE>
+	inline Vector3<TYPE> Vector3<TYPE>::operator-(const Vector3& aRight) const
+	{
+		Vector3 difference = self;
+		return difference -= aRight;
+	}
+
+	template<typename TYPE>
+	inline Vector3<TYPE> Vector3<TYPE>::operator*(const Vector3& aRight) const
+	{
+		Vector3 product = self;
+		return product *= aRight;
+	}
+
+	template<typename TYPE>
+	inline Vector3<TYPE> Vector3<TYPE>::operator/(const Vector3& aRight) const
+	{
+		Vector3 quotient = self;
+		return quotient /= aRight;
+	}
+
+	template<typename TYPE>
+	inline Vector3<TYPE> Vector3<TYPE>::operator*(const TYPE aScalar) const
+	{
+		Vector3 product = self;
+		return product *= aScalar;
+	}
+
+	template<typename TYPE>
+	inline Vector3<TYPE> Vector3<TYPE>::operator/(const TYPE aRight) const
+	{
+		Vector3 quotient = self;
+		return quotient /= aRight;
+	}
+
+	template<typename TYPE>
+	inline Vector3<TYPE> Vector3<TYPE>::operator-() const
+	{
+		return Vector3(-x, -y, -z);
+	}
+
+	template<typename TYPE>
+	inline bool Vector3<TYPE>::operator==(const Vector3& aRight) const
+	{
+		return (x == aRight.x && y == aRight.y && z == aRight.z);
+	}
+
+	template<typename TYPE>
+	inline bool Vector3<TYPE>::operator!=(const Vector3& aRight) const
+	{
+		return !(self == aRight);
+	}
+
+	template<typename TYPE>
+	TYPE Vector3<TYPE>::Length() const
+	{
+		return sqrt(Length2());
+	}
+
+	template<typename TYPE>
+	TYPE Vector3<TYPE>::Length2() const
+	{
+		return ((x * x) + (y * y) + (z * z));
+	}
+
+	template<typename TYPE>
+	TYPE Vector3<TYPE>::Dot(const Vector3& aRight) const
+	{
+		return ((x * aRight.x) + (y * aRight.y) + (z * aRight.z));
+	}
+
+	template<typename TYPE>
+	Vector3<TYPE> Vector3<TYPE>::Cross(const Vector3 &aRight) const
+	{
+		return Vector3(
+			(y * aRight.z) - (z * aRight.y),
+			(z * aRight.x) - (x * aRight.z),
+			(x * aRight.y) - (y * aRight.x)
+		);
+	}
+
+	template<typename TYPE>
+	Vector3<TYPE> Vector3<TYPE>::GetNormalized() const
 	{
 		Vector3<TYPE> normalized = *this;
 		return normalized.Normalize();
 	}
 
-	// Manipulation
-	VECTOR_TEMPLATE_DECL
-		Vector3<TYPE> &Vector3<TYPE>::Normalize(void)
+	template<typename TYPE>
+	Vector3<TYPE>& Vector3<TYPE>::Normalize()
 	{
 		TYPE length = Length();
 		if (length > 0)
 		{
-			myX /= length;
-			myY /= length;
-			myZ /= length;
+			x /= length;
+			y /= length;
+			z /= length;
 		}
 
-		return *this;
+		return self;
 	}
 
 	template<typename TYPE>
@@ -323,31 +410,27 @@ namespace CU
 #endif // DL_PRINT
 	}
 
-	//STATICS
-	VECTOR_TEMPLATE_DECL
-		TYPE Vector3<TYPE>::Dot(const Vector3 &aLeft, const Vector3 &aRight)
+	template<typename TYPE>
+	inline void Vector3<TYPE>::Print(const Vector3& aVector)
 	{
-		return ((aLeft.x * aRight.x) + (aLeft.y * aRight.y) + (aLeft.z * aRight.z));
+		aVector.Print();
 	}
-	VECTOR_TEMPLATE_DECL
-		Vector3<TYPE> Vector3<TYPE>::Cross(const Vector3 &aLeft, const Vector3 &aRight)
+
+	template<typename TYPE>
+	template<typename ...Args>
+	inline void Vector3<TYPE>::Print(const Vector3& aVector, Args ...aMoreVectors)
 	{
-		return Vector3((aLeft.y * aRight.z) - (aLeft.z * aRight.y),
-			(aLeft.z * aRight.x) - (aLeft.x * aRight.z),
-			(aLeft.x * aRight.y) - (aLeft.y * aRight.x));
+		Print(aVector);
+		Print(aMoreVectors...);
 	}
-	VECTOR_TEMPLATE_DECL
-		Vector3<TYPE> Vector3<TYPE>::Normalize(Vector3 aVector)
+
+	template<typename TYPE>
+	Vector3<TYPE>& Vector3<TYPE>::InterPolateTowards(Vector3 aVectorToInterPolateTowards, float aInterpolatingSpeed)
 	{
-		TYPE length = aVector.Length();
-		return Vector3<TYPE>(aVector.x / length, aVector.y / length, aVector.z / length);
-	}
-	VECTOR_TEMPLATE_DECL
-		Vector3<TYPE> Vector3<TYPE>::InterPolateTowards(Vector3 aVectorToInterPolateTowards, float aInterpolatingSpeed)
-	{
-		myX = myX + aInterpolatingSpeed * (aVectorToInterPolateTowards.myX - myX);
-		myY = myY + aInterpolatingSpeed * (aVectorToInterPolateTowards.myY - myY);
-		myZ = myZ + aInterpolatingSpeed * (aVectorToInterPolateTowards.myZ - myZ);
-		return *this;
+		x = x + aInterpolatingSpeed * (aVectorToInterPolateTowards.x - x);
+		y = y + aInterpolatingSpeed * (aVectorToInterPolateTowards.y - y);
+		z = z + aInterpolatingSpeed * (aVectorToInterPolateTowards.z - z);
+
+		return self;
 	}
 } 

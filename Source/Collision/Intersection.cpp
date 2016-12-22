@@ -199,7 +199,7 @@ bool Intersection::SweptSphereVsAABB(const LineSegment3D& aLine, const float aRa
 	Vector3f lineVector = aLine.myEndPos - aLine.myStartPos;
 
 	//the length of the sweptsphere scaled 0 to 1
-	float length = Vector3f::Dot(startToAABB, lineVector);
+	float length = startToAABB.Dot(lineVector);
 	length /= lineVector.Length2();
 
 	float shortestDistance;
