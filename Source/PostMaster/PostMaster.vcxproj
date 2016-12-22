@@ -28,6 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChangeLevel.cpp" />
+    <ClCompile Include="ConsoleCalledUpon.cpp" />
     <ClCompile Include="DrawCallsCount.cpp" />
     <ClCompile Include="FocusChange.cpp" />
     <ClCompile Include="InputMessagePressed.cpp" />
@@ -53,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChangeLevel.h" />
+    <ClInclude Include="ConsoleCalledUpon.h" />
     <ClInclude Include="DrawCallsCount.h" />
     <ClInclude Include="EMessageReturn.h" />
     <ClInclude Include="Event.h" />

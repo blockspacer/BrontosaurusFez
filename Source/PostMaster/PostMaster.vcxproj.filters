@@ -64,6 +64,7 @@
     <ClCompile Include="KeyCharPressed.cpp">
       <Filter>Events\KeyCharPressed</Filter>
     </ClCompile>
+    <ClCompile Include="ConsoleCalledUpon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Subscriber.h">
@@ -169,6 +170,9 @@
     <ClInclude Include="KeyCharPressed.h">
       <Filter>Events\KeyCharPressed</Filter>
     </ClInclude>
+    <ClInclude Include="PopCurrentState.h" />
+    <ClInclude Include="PostMaster.h" />
+    <ClInclude Include="ConsoleCalledUpon.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Events">
