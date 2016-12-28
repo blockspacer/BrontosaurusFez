@@ -21,7 +21,7 @@ namespace CU
 		template<typename U> explicit Vector4(const Vector4<U> &aOther);
 		template<typename U> explicit Vector4(const U aX, const U aY, const U aZ, const U aW);
 
-		explicit Vector4(const Vector3<TYPE>& aOther);
+		explicit Vector4(const Vector3<TYPE>& aOther, const TYPE aW = 1.f);
 		explicit Vector4(const Vector2<TYPE>& aOther);
 		explicit Vector4(const Vector2<TYPE>& aXY, const TYPE aZ, const TYPE aW);
 		explicit Vector4(const Vector2<TYPE>& aXY, const Vector2<TYPE> &aZW);
@@ -129,11 +129,11 @@ namespace CU
 	}
 
 	template<typename TYPE>
-	Vector4<TYPE>::Vector4(const Vector3<TYPE>& aVector3)
+	Vector4<TYPE>::Vector4(const Vector3<TYPE>& aVector3, const TYPE aW)
 		: x(aVector3.x)
 		, y(aVector3.y)
 		, z(aVector3.z)
-		, w(static_cast<TYPE>(1))
+		, w(/*static_cast<TYPE>(1)*/aW)
 	{
 	}
 

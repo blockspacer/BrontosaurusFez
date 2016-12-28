@@ -2,7 +2,7 @@
 #include "../CommonUtilities/matrix33.h"
 #include "../CommonUtilities/matrix44.h"
 #include "StatStructs.h"
-//#include "../CommonUtilities/GrowingArray.h"
+
 class Collider;
 class CComponent;
 class CGameObject;

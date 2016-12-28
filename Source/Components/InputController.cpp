@@ -31,12 +31,12 @@ void InputController::Update(float aDeltaTime)
 {
 }
 
-eMessageReturn InputController::Recieve(const Message & aMessage)
+eMessageReturn InputController::Recieve(const Message& aMessage)
 {
 	return aMessage.myEvent.DoEvent(this);
 }
 
-void InputController::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
+void InputController::Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData)
 {
 }
 
@@ -44,7 +44,7 @@ void InputController::Destroy()
 {
 }
 
-eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButton, const CU::Vector2f & aMousePosition)
+eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButton, const CU::Vector2f& aMousePosition)
 {
 	if(aMouseButton == CU::eMouseButtons::LBUTTON)
 	{
@@ -55,25 +55,31 @@ eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButto
 		CU::Vector4f mousePosNormalizedHomogeneousSpace(mousePosNormalizedSpace, CU::Vector2f::Zero);
 		CU::Vector4f screenToCameraSpaceRay = mousePosNormalizedHomogeneousSpace * myPlayerCamera.GetProjectionInverse();
 
-		CU::Vector4f direction;
+		CU::Vector3f direction;
 		direction.x = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m11) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m21) + myPlayerCamera.GetTransformation().m31;
 		direction.y = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m12) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m22) + myPlayerCamera.GetTransformation().m32;
 		direction.z = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m13) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m23) + myPlayerCamera.GetTransformation().m33;
-		direction.w = 0.f;
+
+		//tested with transposed
+		//direction.x = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m11) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m12) + myPlayerCamera.GetTransformation().m13;
+		//direction.y = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m21) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m22) + myPlayerCamera.GetTransformation().m23;
+		//direction.z = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m31) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m32) + myPlayerCamera.GetTransformation().m33;
+
+		//direction = CU::Vector3f(CU::Vector4f(direction, 0.f) * myPlayerCamera.GetTransformation());
 
 		CU::Vector4f targetPosition3D;
-		const CU::Vector4f groundNormal(0.f, 1.f, 0.f, 0.f);
-		float denominator = direction.Dot(groundNormal);
+		const CU::Vector3f groundNormal(0.f, 1.f, 0.f);
+		const float denominator = direction.Dot(groundNormal);
 		if (std::fabs(denominator) > 0.0001f)
 		{
-			float t = (GetParent()->GetToWorldTransform().GetPosition() - myPlayerCamera.GetPosition()).Dot(groundNormal.myVector3) / denominator;
+			const float t = (GetParent()->GetToWorldTransform().GetPosition() - myPlayerCamera.GetPosition()).Dot(groundNormal) / denominator;
 			if (std::fabs(t) > 0.0001f)
 			{
-				targetPosition3D = myPlayerCamera.GetPosition() + CU::Vector3f(direction * t);
+				targetPosition3D = myPlayerCamera.GetPosition() + direction * t;
 			}
 		}
 
-		CU::Vector2f targetPosition(targetPosition3D.x, -targetPosition3D.z);
+		CU::Vector2f targetPosition(targetPosition3D.x, targetPosition3D.z);
 		
 		eComponentMessageType type = eComponentMessageType::eSetNavigationTarget;
 		SComponentMessageData data;
