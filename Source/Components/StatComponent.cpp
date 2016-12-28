@@ -25,8 +25,6 @@ void CStatComponent::Receive(const eComponentMessageType aMessageType, const SCo
 {
 	switch (aMessageType) // fixa med messages så att man notify'ar eCollectStats när objektet läggs till som parent, mebe.
 	{
-	default:
-		break;
 	}
 }
 
