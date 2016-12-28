@@ -18,8 +18,8 @@ namespace CU
 		Vector3();
 		Vector3(const Vector3& aVector3);
 		Vector3(const TYPE aX, const TYPE aY, const TYPE aZ);
-		Vector3(const Vector2<TYPE> aVector2, const TYPE aZ = 0);
-		Vector3(const Vector4<TYPE>& aVector4);
+		explicit Vector3(const Vector2<TYPE> aVector2, const TYPE aZ = 0);
+		explicit Vector3(const Vector4<TYPE>& aVector4);
 
 		template<typename U> explicit Vector3(const Vector3<U>& aVector);
 		template<typename U> explicit Vector3(const U aX, const U aY, const U aZ);
@@ -70,29 +70,17 @@ namespace CU
 		union
 		{
 #pragma warning(disable : 4201) // nonstandard extension used: nameless struct/union
+
 			struct
 			{
 				TYPE x, y, z;
-				//union
-				//{
-				//	TYPE    x;
-				//	TYPE	r;
-				//};
-				//union
-				//{
-				//	TYPE    y;
-				//	TYPE	g;
-				//};
-				//union
-				//{
-				//	TYPE    z;
-				//	TYPE	b;
-				//};
 			};
+
 			struct
 			{
 				TYPE r, g, b;
 			};
+
 #pragma warning(default : 4201)
 
 			TYPE vector[3];
@@ -418,7 +406,7 @@ namespace CU
 
 	template<typename TYPE>
 	template<typename ...Args>
-	inline void Vector3<TYPE>::Print(const Vector3& aVector, Args ...aMoreVectors)
+	inline void Vector3<TYPE>::Print(const Vector3& aVector, Args... aMoreVectors)
 	{
 		Print(aVector);
 		Print(aMoreVectors...);
@@ -434,3 +422,5 @@ namespace CU
 		return self;
 	}
 } 
+
+#undef self

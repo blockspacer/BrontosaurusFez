@@ -383,14 +383,13 @@ void CModelLoader::CreateSphere(CModel* aModel, const float aSize)
 	{
 		for (float phi = 0.; phi < 2 * PI; phi += PI / 10.)
 		{
-
-			CU::Vector4d point;
+			CU::Vector4f point;
 			point.x = radius * cos(phi) * sin(theta);
 			point.y = radius * sin(phi) * sin(theta);
 			point.z = radius            * cos(theta);
 			point.w = 1.f;
 			modelVertices.Add(SVertexDataCube());
-			modelVertices[index].position = CU::Vector4f(point);
+			modelVertices[index].position = point;
 			index++;
 		}
 	}

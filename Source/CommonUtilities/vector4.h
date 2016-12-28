@@ -1,191 +1,107 @@
 #pragma once
 
-#include "vector3.h"
-
-#define VECTOR_TEMPLATE_DECL template<typename TYPE>
+#define self (*this)
 
 namespace CU
 {
-	// Forward declarations
-	//
-	template<typename TYPE>
-	class Vector3;
-
-
 	template<typename TYPE>
 	class Vector2;
+
+	template<typename TYPE>
+	class Vector3;
 
 	template<typename TYPE>
 	class Vector4
 	{
 	public:
-		// Construction
-		Vector4(void);
-		Vector4(const Vector4 &anOther);
+		Vector4();
+		Vector4(const Vector4 &aOther);
+		Vector4(const TYPE aX, const TYPE aY, const TYPE aZ, const TYPE aW);
 
-		explicit Vector4(const Vector3<TYPE> &anOther);
-		explicit Vector4(const Vector2<TYPE> &anOther);
-		explicit Vector4(const Vector2<TYPE> &aXY, const TYPE aZ, const TYPE aW);
-		explicit Vector4(const Vector2<TYPE> &aXY, const Vector2<TYPE> &aZW);
+		template<typename U> explicit Vector4(const Vector4<U> &aOther);
+		template<typename U> explicit Vector4(const U aX, const U aY, const U aZ, const U aW);
 
-		Vector4(const TYPE anX, const TYPE anY, const TYPE aZ, const TYPE aW);
+		explicit Vector4(const Vector3<TYPE>& aOther);
+		explicit Vector4(const Vector2<TYPE>& aOther);
+		explicit Vector4(const Vector2<TYPE>& aXY, const TYPE aZ, const TYPE aW);
+		explicit Vector4(const Vector2<TYPE>& aXY, const Vector2<TYPE> &aZW);
 
-
-		template<typename U> explicit Vector4(const Vector4<U> &anOther);
-
-
-		// Arithmetic
-		friend Vector4 operator +(Vector4 aLeft, const Vector4 &aRight)
-		{
-			return aLeft += aRight;
-		}
-
-		friend Vector4 operator +(Vector4 aLeft, const Vector3<TYPE> &aRight)
-		{
-			return aLeft += aRight;
-		}
-
-
-
-		friend Vector4 operator -(Vector4 aLeft, const Vector4 &aRight)
-		{
-			return aLeft -= aRight;
-		}
-
-
-		friend Vector4 operator *(Vector4 aLeft, const TYPE aRight)
-		{
-			return aLeft *= aRight;
-		}
-
-
-		friend Vector4 operator /(Vector4 aLeft, const TYPE aRight)
-		{
-			return aLeft /= aRight;
-		}
-
-
-		friend Vector4 operator -(Vector4 aRight)
-		{
-			aRight *= -1;
-			return aRight;
-		}
-
-
-		// Comparison
-		friend bool operator ==(const Vector4 &aLeft, const Vector4 &aRight)
-		{
-			if ((aLeft.x == aRight.x) && (aLeft.y == aRight.y) && (aLeft.z == aRight.z) && (aLeft.w == aRight.w))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-
-		friend bool operator !=(const Vector4 &aLeft, const Vector4 &aRight)
-		{
-			if ((aLeft.x == aRight.x) && (aLeft.y == aRight.y) && (aLeft.z == aRight.z) && (aLeft.w == aRight.w))
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
-		}
-
-
-		// Assignment
-		Vector4 &operator =(const Vector4 &aRight);
-		Vector4 &operator =(const Vector3<TYPE> &aRight);
-		Vector4 &operator =(const Vector2<TYPE> &aRight);
+		Vector4& operator=(const Vector4& aRight);
+		Vector4& operator=(const Vector3<TYPE>& aRight);
+		Vector4& operator=(const Vector2<TYPE>& aRight);
 
 		void Set(const TYPE aX, const TYPE aY, const TYPE aZ, const TYPE aW);
 
-		// Combined
-		Vector4 &operator +=(const Vector3<TYPE> &aRight);
+		Vector4& operator+=(const Vector3<TYPE>& aRight);
+		Vector4& operator+=(const Vector4& aRight);
+		Vector4& operator-=(const Vector4& aRight);
+		Vector4& operator*=(const Vector4& aRight);
+		Vector4& operator/=(const Vector4& aRight);
+		Vector4& operator*=(const TYPE aRight);
+		Vector4& operator/=(const TYPE aRight);
 
-		Vector4 &operator +=(const Vector4 &aRight);
-		Vector4 &operator -=(const Vector4 &aRight);
-		Vector4 &operator *=(const TYPE aRight);
-		Vector4 &operator /=(const TYPE aRight);
+		Vector4 operator+(const Vector4& aRight) const;
+		Vector4 operator-(const Vector4& aRight) const;
+		Vector4 operator*(const Vector4& aRight) const;
+		Vector4 operator/(const Vector4& aRight) const;
 
-		// Info
-		TYPE Length(void) const;
-		TYPE Length2(void) const;
-		TYPE Dot(const Vector4 &aRight) const;
-		Vector4 GetNormalized(void) const;
+		Vector4 operator+(const Vector3<TYPE>& aRight) const;
+		Vector4 operator-(const Vector3<TYPE>& aRight) const;
+		Vector4 operator*(const TYPE aRight) const;
+		Vector4 operator/(const TYPE aRight) const;
+		Vector4 operator-() const;
 
-		// Manipulation
-		Vector4 &Normalize(void);
+		bool operator==(const Vector4& aRight) const;
+		bool operator!=(const Vector4& aRight) const;
+
+		TYPE Length() const;
+		TYPE Length2() const;
+		TYPE Dot(const Vector4& aRight) const;
+		Vector4 GetNormalized() const;
+
+		Vector4& Normalize();
+
+		void Print() const;
 
 		union
 		{
-			struct  
+#pragma warning(disable : 4201) // nonstandard extension used: nameless struct/union
+			struct
 			{
-				union
-				{
-					TYPE	myX;
-					TYPE    x;
-					TYPE	r;
-					TYPE	u;
-				};
-				union
-				{
-					TYPE	myY;
-					TYPE    y;
-					TYPE	g;
-					TYPE	v;
-				};
-				union
-				{
-					TYPE	myZ;
-					TYPE    z;
-					TYPE	b;
-				};
-				union
-				{
-					TYPE	myW;
-					TYPE    w;
-					TYPE	a;
-				};
+				TYPE x;
+				TYPE y;
+				TYPE z;
+				TYPE w;
 			};
 
 			struct
 			{
-				CU::Vector3<TYPE> myVector3;
-				TYPE myDontAsk;
+				TYPE r;
+				TYPE g;
+				TYPE b;
+				TYPE a;
 			};
+
+#pragma warning(default : 4201)
+
+			TYPE vector[4];
 		};
 
-		static Vector4 Normalize(Vector4 aVector);
-		static TYPE Dot(const Vector4 &aFirstVector, const Vector4 &aSecondVector);
-
-		void Print() const;
-
-		static const Vector4	Zero,
-			UnitX,
-			UnitY,
-			UnitZ,
-			UnitW,
-			One;
+		static const Vector4 Zero;
+		static const Vector4 UnitX;
+		static const Vector4 UnitY;
+		static const Vector4 UnitZ;
+		static const Vector4 UnitW;
+		static const Vector4 One;
 	};
 
-	using Vector4c = Vector4<char>;
 	using Vector4i = Vector4<int>;
 	using Vector4ui = Vector4<unsigned int>;
 	using Vector4f = Vector4<float>;
-	using Vector4d = Vector4<double>;
 
-	using Point4c = Vector4<char>;
 	using Point4i = Vector4<int>;
 	using Point4ui = Vector4<unsigned int>;
 	using Point4f = Vector4<float>;
-	using Point4d = Vector4<double>;
 
 	template<typename TYPE> const Vector4<TYPE> Vector4<TYPE>::Zero(0, 0, 0, 0);
 	template<typename TYPE> const Vector4<TYPE> Vector4<TYPE>::UnitX(1, 0, 0, 0);
@@ -194,229 +110,322 @@ namespace CU
 	template<typename TYPE> const Vector4<TYPE> Vector4<TYPE>::UnitW(0, 0, 0, 1);
 	template<typename TYPE> const Vector4<TYPE> Vector4<TYPE>::One(1, 1, 1, 1);
 
-
-	// Construction
-	VECTOR_TEMPLATE_DECL
-		Vector4<TYPE>::Vector4(void)
+	template<typename TYPE>
+	Vector4<TYPE>::Vector4()
+		: x(static_cast<TYPE>(0))
+		, y(static_cast<TYPE>(0))
+		, z(static_cast<TYPE>(0))
+		, w(static_cast<TYPE>(0))
 	{
-		myX = static_cast<TYPE>(0);
-		myY = static_cast<TYPE>(0);
-		myZ = static_cast<TYPE>(0);
-		myW = static_cast<TYPE>(0);
-	}
-	VECTOR_TEMPLATE_DECL
-		Vector4<TYPE>::Vector4(const Vector4 &aVector4)
-	{
-		myX = aVector4.myX;
-		myY = aVector4.myY;
-		myZ = aVector4.myZ;
-		myW = aVector4.myW;
 	}
 
-	VECTOR_TEMPLATE_DECL
-		Vector4<TYPE>::Vector4(const Vector3<TYPE> &anOther)
+	template<typename TYPE>
+	Vector4<TYPE>::Vector4(const Vector4& aOther)
+		: x(aOther.x)
+		, y(aOther.y)
+		, z(aOther.z)
+		, w(aOther.w)
 	{
-		myX = anOther.x;
-		myY = anOther.y;
-		myZ = anOther.z;
-		myW = static_cast<TYPE>(1);
+	}
+
+	template<typename TYPE>
+	Vector4<TYPE>::Vector4(const Vector3<TYPE>& aVector3)
+		: x(aVector3.x)
+		, y(aVector3.y)
+		, z(aVector3.z)
+		, w(static_cast<TYPE>(1))
+	{
 	}
 
 	template<typename TYPE>
 	template<typename U>
-	inline Vector4<TYPE>::Vector4(const Vector4<U> &aVector) : x(static_cast<TYPE>(aVector.x)), y(static_cast<TYPE>(aVector.y)), z(static_cast<TYPE>(aVector.z)), w(static_cast<TYPE>(aVector.w))
+	Vector4<TYPE>::Vector4(const Vector4<U>& aOther)
+		: x(static_cast<TYPE>(aOther.x))
+		, y(static_cast<TYPE>(aOther.y))
+		, z(static_cast<TYPE>(aOther.z))
+		, w(static_cast<TYPE>(aOther.w))
 	{
 	}
 
-	VECTOR_TEMPLATE_DECL
-		Vector4<TYPE>::Vector4(const TYPE aX, const TYPE aY, const TYPE aZ, const TYPE aW)
+	template<typename TYPE>
+	Vector4<TYPE>::Vector4(const TYPE aX, const TYPE aY, const TYPE aZ, const TYPE aW)
+		: x(static_cast<TYPE>(aX))
+		, y(static_cast<TYPE>(aY))
+		, z(static_cast<TYPE>(aZ))
+		, w(static_cast<TYPE>(aW))
 	{
-		myX = aX;
-		myY = aY;
-		myZ = aZ;
-		myW = aW;
+	}
+
+	template<typename TYPE>
+	template<typename U>
+	Vector4<TYPE>::Vector4(const U aX, const U aY, const U aZ, const U aW)
+		: x(static_cast<TYPE>(aX))
+		, y(static_cast<TYPE>(aY))
+		, z(static_cast<TYPE>(aZ))
+		, w(static_cast<TYPE>(aW))
+	{
 	}
 
 
 
-	VECTOR_TEMPLATE_DECL
-		Vector4<TYPE>::Vector4(const Vector2<TYPE> &aXY)
+	template<typename TYPE>
+	Vector4<TYPE>::Vector4(const Vector2<TYPE> &aXY)
+		: x(aXY.x)
+		, y(aXY.y)
+		, z(static_cast<TYPE>(0))
+		, w(static_cast<TYPE>(1) /* VENNE?! CARL? */)
 	{
-		myX = aXY.x;
-		myY = aXY.y;
-		myZ = static_cast<TYPE>(0);
-		myW = static_cast<TYPE>(1); // VENNE?! CARL?
 	}
 
-
-
-
-
-	VECTOR_TEMPLATE_DECL
-		Vector4<TYPE>::Vector4(const Vector2<TYPE> &aXY, const TYPE aZ, const TYPE aW)
+	template<typename TYPE>
+	Vector4<TYPE>::Vector4(const Vector2<TYPE> &aXY, const TYPE aZ, const TYPE aW)
+		: x(aXY.x)
+		, y(aXY.y)
+		, z(aZ)
+		, w(aW)
 	{
-		myX = aXY.x;
-		myY = aXY.y;
-		myZ = aZ;
-		myW = aZ;
 	}
 
-
-
-
-	VECTOR_TEMPLATE_DECL
-		Vector4<TYPE>::Vector4(const Vector2<TYPE> &aXY, const Vector2<TYPE> &aZW)
+	template<typename TYPE>
+	Vector4<TYPE>::Vector4(const Vector2<TYPE> &aXY, const Vector2<TYPE> &aZW)
+		: x(aXY.x)
+		, y(aXY.y)
+		, z(aZW.x)
+		, w(aZW.y)
 	{
-		myX = aXY.x;
-		myY = aXY.y;
-		myZ = aZW.x;
-		myW = aZW.y;
 	}
 
-
-
-	// Assignment
-	VECTOR_TEMPLATE_DECL
-		Vector4<TYPE> &Vector4<TYPE>::operator =(const Vector4 &aRight)
+	template<typename TYPE>
+	Vector4<TYPE>& Vector4<TYPE>::operator=(const Vector4& aRight)
 	{
-		myX = aRight.myX;
-		myY = aRight.myY;
-		myZ = aRight.myZ;
-		myW = aRight.w;
-		return *this;
+		x = aRight.x;
+		y = aRight.y;
+		z = aRight.z;
+		w = aRight.w;
+
+		return self;
 	}
-	VECTOR_TEMPLATE_DECL
-		Vector4 <TYPE> &Vector4<TYPE>::operator =(const Vector3<TYPE> &aRight)
+
+	template<typename TYPE>
+	Vector4<TYPE> &Vector4<TYPE>::operator=(const Vector3<TYPE>& aRight)
 	{
 		x = aRight.x;
 		y = aRight.y;
 		z = aRight.z;
 		w = static_cast<TYPE>(0);
-		return *this;
+
+		return self;
 	}
 
-	VECTOR_TEMPLATE_DECL
-		Vector4 <TYPE> &Vector4<TYPE>::operator =(const Vector2<TYPE> &aRight)
+	template<typename TYPE>
+	Vector4<TYPE>& Vector4<TYPE>::operator=(const Vector2<TYPE>& aRight)
 	{
-		myX = aRight.x;
-		myY = aRight.y;
-		myZ = static_cast<TYPE>(0);
-		myW = static_cast<TYPE>(0);
-		return *this;
+		x = aRight.x;
+		y = aRight.y;
+		z = static_cast<TYPE>(0);
+		w = static_cast<TYPE>(0);
+
+		return self;
 	}
 
-	VECTOR_TEMPLATE_DECL
+	template<typename TYPE>
 	inline void Vector4<TYPE>::Set(const TYPE aX, const TYPE aY, const TYPE aZ, const TYPE aW)
 	{
-		myX = aX;
-		myY = aY;
-		myZ = aZ;
-		myW = aW;
+		x = aX;
+		y = aY;
+		z = aZ;
+		w = aW;
 	}
 
-	// Combined
-	VECTOR_TEMPLATE_DECL
-	Vector4<TYPE> &Vector4<TYPE>::operator +=(const Vector4 &aRight)
+	template<typename TYPE>
+	Vector4<TYPE>& Vector4<TYPE>::operator+=(const Vector4& aRight)
 	{
-		myX += aRight.x;
-		myY += aRight.y;
-		myZ += aRight.z;
-		myW += aRight.w;
-		return *this;
+		x += aRight.x;
+		y += aRight.y;
+		z += aRight.z;
+		w += aRight.w;
+
+		return self;
 	}
 
-
-	VECTOR_TEMPLATE_DECL
-		Vector4<TYPE> &Vector4<TYPE>::operator +=(const Vector3<TYPE> &aRight)
+	template<typename TYPE>
+	Vector4<TYPE>& Vector4<TYPE>::operator+=(const Vector3<TYPE>& aRight)
 	{
-		myX += aRight.x;
-		myY += aRight.y;
-		myZ += aRight.z;
-		return *this;
+		x += aRight.x;
+		y += aRight.y;
+		z += aRight.z;
+		
+		return self;
 	}
 
-	VECTOR_TEMPLATE_DECL
-		Vector4<TYPE> &Vector4<TYPE>::operator -=(const Vector4 &aRight)
+	template<typename TYPE>
+	Vector4<TYPE>& Vector4<TYPE>::operator-=(const Vector4 &aRight)
 	{
-		myX -= aRight.x;
-		myY -= aRight.y;
-		myZ -= aRight.z;
-		myW -= aRight.w;
-		return *this;
-	}
-	VECTOR_TEMPLATE_DECL
-		Vector4<TYPE> &Vector4<TYPE>::operator *=(const TYPE aRight)
-	{
-		myX *= aRight;
-		myY *= aRight;
-		myZ *= aRight;
-		myW *= aRight;
-		return *this;
-	}
-	VECTOR_TEMPLATE_DECL
-		Vector4<TYPE> &Vector4<TYPE>::operator /=(const TYPE aRight)
-	{
-		myX /= aRight;
-		myY /= aRight;
-		myZ /= aRight;
-		myW /= aRight;
-		return *this;
+		x -= aRight.x;
+		y -= aRight.y;
+		z -= aRight.z;
+		w -= aRight.w;
+
+		return self;
 	}
 
-	// Info
-	VECTOR_TEMPLATE_DECL
-		TYPE Vector4<TYPE>::Length(void) const
+	template<typename TYPE>
+	inline Vector4<TYPE>& Vector4<TYPE>::operator*=(const Vector4& aRight)
+	{
+		x *= aRight.x;
+		y *= aRight.y;
+		z *= aRight.z;
+		w *= aRight.w;
+
+		return self;
+	}
+
+	template<typename TYPE>
+	inline Vector4<TYPE>& Vector4<TYPE>::operator/=(const Vector4& aRight)
+	{
+		x /= aRight.x;
+		y /= aRight.y;
+		z /= aRight.z;
+		w /= aRight.w;
+
+		return self;
+	}
+
+	template<typename TYPE>
+	Vector4<TYPE>& Vector4<TYPE>::operator*=(const TYPE aRight)
+	{
+		x *= aRight;
+		y *= aRight;
+		z *= aRight;
+		w *= aRight;
+
+		return self;
+	}
+
+	template<typename TYPE>
+	Vector4<TYPE>& Vector4<TYPE>::operator/=(const TYPE aRight)
+	{
+		x /= aRight;
+		y /= aRight;
+		z /= aRight;
+		w /= aRight;
+		
+		return self;
+	}
+
+	template<typename TYPE>
+	inline Vector4<TYPE> Vector4<TYPE>::operator+(const Vector4& aRight) const
+	{
+		Vector4 sum = self;
+		return sum += aRight;
+	}
+
+	template<typename TYPE>
+	inline Vector4<TYPE> Vector4<TYPE>::operator-(const Vector4& aRight) const
+	{
+		Vector4 difference = self;
+		return difference -= aRight;
+	}
+
+	template<typename TYPE>
+	inline Vector4<TYPE> Vector4<TYPE>::operator*(const Vector4& aRight) const
+	{
+		Vector4 product = self;
+		return product *= aRight;
+	}
+
+	template<typename TYPE>
+	inline Vector4<TYPE> Vector4<TYPE>::operator/(const Vector4& aRight) const
+	{
+		Vector4 quote = self;
+		return quote /= aRight;
+	}
+
+	template<typename TYPE>
+	inline Vector4<TYPE> Vector4<TYPE>::operator+(const Vector3<TYPE>& aRight) const
+	{
+		Vector4 sum = self;
+		return sum += aRight;
+	}
+
+	template<typename TYPE>
+	inline Vector4<TYPE> Vector4<TYPE>::operator-(const Vector3<TYPE>& aRight) const
+	{
+		Vector4 difference = self;
+		return difference -= aRight;
+	}
+
+	template<typename TYPE>
+	inline Vector4<TYPE> Vector4<TYPE>::operator*(const TYPE aRight) const
+	{
+		Vector4 product = self;
+		return product *= aRight;
+	}
+
+	template<typename TYPE>
+	inline Vector4<TYPE> Vector4<TYPE>::operator/(const TYPE aRight) const
+	{
+		Vector4 quote = self;
+		return quote /= aRight;
+	}
+
+	template<typename TYPE>
+	inline Vector4<TYPE> Vector4<TYPE>::operator-() const
+	{
+		return Vector4(-x, -y, -z, -w);
+	}
+
+	template<typename TYPE>
+	inline bool Vector4<TYPE>::operator==(const Vector4& aRight) const
+	{
+		return (x == aRight.x && y == aRight.y && z == aRight.z && w == aRight.w);
+	}
+
+	template<typename TYPE>
+	inline bool Vector4<TYPE>::operator!=(const Vector4& aRight) const
+	{
+		return !(self == aRight);
+	}
+
+	template<typename TYPE>
+	TYPE Vector4<TYPE>::Length() const
 	{
 		return sqrt(Length2());
 	}
-	VECTOR_TEMPLATE_DECL
-		TYPE Vector4<TYPE>::Length2(void) const
+
+	template<typename TYPE>
+	TYPE Vector4<TYPE>::Length2() const
 	{
-		return ((myX * myX) + (myY * myY) + (myZ * myZ) + (myW * myW));
+		return ((x * x) + (y * y) + (z * z) + (w * w));
 	}
-	VECTOR_TEMPLATE_DECL
-		TYPE Vector4<TYPE>::Dot(const Vector4 &aRight) const
+
+	template<typename TYPE>
+	TYPE Vector4<TYPE>::Dot(const Vector4& aRight) const
 	{
-		return ((myX * aRight.x) + (myY * aRight.y) + (myZ * aRight.z) + (myW * aRight.w));
+		return ((x * aRight.x) + (y * aRight.y) + (z * aRight.z) + (w * aRight.w));
 	}
-	VECTOR_TEMPLATE_DECL
-		Vector4<TYPE> Vector4<TYPE>::GetNormalized(void) const
+
+	template<typename TYPE>
+	Vector4<TYPE> Vector4<TYPE>::GetNormalized() const
 	{
 		Vector4<TYPE> normalized = *this;
 		return normalized.Normalize();
 	}
 
-
-	// Manipulation
-	VECTOR_TEMPLATE_DECL
-		Vector4<TYPE> &Vector4<TYPE>::Normalize(void)
+	template<typename TYPE>
+	Vector4<TYPE>& Vector4<TYPE>::Normalize()
 	{
 		TYPE length = Length();
+
 		if (length > 0)
 		{
-			myX /= length;
-			myY /= length;
-			myZ /= length;
-			myW /= length;
+			x /= length;
+			y /= length;
+			z /= length;
+			w /= length;
 		}
 
-		return *this;
-	}
-
-	//STATICS
-	VECTOR_TEMPLATE_DECL
-		Vector4<TYPE> Vector4<TYPE>::Normalize(Vector4 aVector)
-	{
-		TYPE length = aVector.Length();
-		return Vector4<TYPE>(aVector.x / length, aVector.y / length, aVector.z / length, aVector.w / length);
-	}
-	VECTOR_TEMPLATE_DECL
-		TYPE Vector4<TYPE>::Dot(const Vector4 &aFirstVector, const Vector4 &aSecondVector)
-	{
-		return ((aFirstVector.x * aSecondVector.x) +
-			(aFirstVector.y * aSecondVector.y) +
-			(aFirstVector.z * aSecondVector.z) +
-			(aFirstVector.w * aSecondVector.w));
+		return self;
 	}
 
 	template<typename TYPE>
@@ -427,3 +436,5 @@ namespace CU
 #endif // DL_PRINT
 	}
 }
+
+#undef self
