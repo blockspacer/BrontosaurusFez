@@ -335,6 +335,7 @@
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PointLightInstance.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RenderMessages.cpp" />
     <ClCompile Include="RenderPackage.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShaderManager.cpp" />

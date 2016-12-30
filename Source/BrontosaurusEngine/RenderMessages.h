@@ -5,7 +5,6 @@
 #include "../CommonUtilities/Camera.h"
 
 #include "../GUI/GUIPixelConstantBuffer.h"
-#include "CoolText.h"
 
 
 class CSkybox;
@@ -13,12 +12,18 @@ class CModelInstance;
 class CModel;
 class CSprite;
 class CText;
+class CCoolText;
 class CPointLightInstance;
 class CParticleEmitter;
 class CStreakEmitterInstance;
 
 struct SPixelConstantBuffer;
 struct SParticle;
+
+enum class eRasterizerState : int;
+enum class eBlendState : int;
+enum class eDepthStencilState : int;
+enum class eSamplerState : int;
 
 typedef unsigned int ParticleEmitterID;
 
@@ -35,7 +40,6 @@ namespace Lights
 
 struct SRenderMessage
 {
-	virtual ~SRenderMessage() {}
 	enum class eRenderMessageType
 	{
 		eSetCamera,
@@ -51,27 +55,31 @@ struct SRenderMessage
 		eRenderDebugObjs,
 		eRenderAnimationModel
 	};
+
+	SRenderMessage(const eRenderMessageType aRenderMessageType);
+	virtual ~SRenderMessage();
+
 	eRenderMessageType myType;
 
 };
 
 struct SRenderModelMessage : SRenderMessage
 {
-	SRenderModelMessage() { myType = SRenderMessage::eRenderMessageType::eRenderModel; }
+	SRenderModelMessage();
 	CU::Matrix44f myTransformation;
 	CU::Matrix44f myLastFrameTransformation;
-	int myModelID;
-	Lights::SDirectionalLight* myDirectionalLight;
 	CU::GrowingArray<CPointLightInstance*>* myPointLights;
+	Lights::SDirectionalLight* myDirectionalLight;
 
-	float myAnimationTime;
 	const char* myCurrentAnimation;
+	float myAnimationTime;
 
+	int myModelID;
 };
 
 struct SRenderAnimationModelMessage : SRenderModelMessage 
 {
-	SRenderAnimationModelMessage() { myType = SRenderMessage::eRenderMessageType::eRenderAnimationModel; memset(myBoneMatrices, 0, ourMaxBoneCount * ourMatrixSize); }
+	SRenderAnimationModelMessage();
 	static const unsigned int ourMaxBoneCount = 32u;
 	static const unsigned int ourMatrixSize = sizeof(CU::Matrix44f);
 
@@ -80,7 +88,7 @@ struct SRenderAnimationModelMessage : SRenderModelMessage
 
 struct SRenderGUIModelMessage : SRenderMessage
 {
-	SRenderGUIModelMessage() { myType = SRenderMessage::eRenderMessageType::eRenderGUIModel; }
+	SRenderGUIModelMessage();
 
 	CU::Matrix44f myToWorld;
 	SPixelConstantBuffer myPixelConstantBufferStruct;
@@ -90,7 +98,7 @@ struct SRenderGUIModelMessage : SRenderMessage
 
 struct SRenderParticlesMessage : SRenderMessage
 {
-	SRenderParticlesMessage() { myType = SRenderMessage::eRenderMessageType::eRenderParticles; }
+	SRenderParticlesMessage();
 	ParticleEmitterID particleEmitter;
 	CU::GrowingArray<SParticle, unsigned short, false> particleList;
 	CU::Matrix44f toWorld;
@@ -98,20 +106,20 @@ struct SRenderParticlesMessage : SRenderMessage
 
 struct SRenderStreakMessage : SRenderMessage
 {
-	SRenderStreakMessage() { myType = SRenderMessage::eRenderMessageType::eRenderStreak; }
+	SRenderStreakMessage();
 	CStreakEmitterInstance* streakEmitter;
 };
 
 struct SRenderFireMessage : SRenderMessage
 {
-	SRenderFireMessage() { myType = SRenderMessage::eRenderMessageType::eRenderFire; }
+	SRenderFireMessage();
 	CU::Matrix44f myToWorldMatrix;
 	int myFireID;
 };
 
 struct SRenderSpriteMessage : SRenderMessage
 {
-	SRenderSpriteMessage() { myType = SRenderMessage::eRenderMessageType::eRenderSprite; }
+	SRenderSpriteMessage();
 	CU::Vector2f myPosition;
 	CU::Vector2f mySize;
 	CU::Vector4f myRect;
@@ -121,21 +129,20 @@ struct SRenderSpriteMessage : SRenderMessage
 
 struct SRenderSkyboxMessage : SRenderMessage
 {
-	SRenderSkyboxMessage() { myType = SRenderMessage::eRenderMessageType::eRenderSkybox; }
+	SRenderSkyboxMessage();
 	CSkybox* mySkybox;
 };
 
 struct SSetCameraMessage : SRenderMessage
 {
-	SSetCameraMessage() { myType = SRenderMessage::eRenderMessageType::eSetCamera; }
+	SSetCameraMessage();
 	CU::Camera myCamera;
 };
 
 
 struct SChangeStatesMessage : SRenderMessage
 {
-	SChangeStatesMessage() { myType = SRenderMessage::eRenderMessageType::eChangeStates; mySamplerState = eSamplerState::eSize; }
-
+	SChangeStatesMessage();
 	eRasterizerState myRasterizerState;
 	eBlendState myBlendState;
 	eDepthStencilState myDepthStencilState;
@@ -145,10 +152,9 @@ struct SChangeStatesMessage : SRenderMessage
 
 struct SRenderTextMessage : SRenderMessage
 {
-	SRenderTextMessage() { myType = SRenderMessage::eRenderMessageType::eRenderText; }
+	SRenderTextMessage();
 	CU::Vector4f myColor;
 	CU::DynamicString myString;
 	CU::Vector2f myPosition;
 	CCoolText* myText;
-
 };

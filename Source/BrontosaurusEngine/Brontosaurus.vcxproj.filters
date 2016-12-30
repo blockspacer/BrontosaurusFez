@@ -379,6 +379,9 @@
     <ClCompile Include="FireEmitterManager.cpp">
       <Filter>Fire</Filter>
     </ClCompile>
+    <ClCompile Include="RenderMessages.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Brontosaurus.rc">
