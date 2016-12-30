@@ -1,8 +1,7 @@
 #include "stdafx.h"
 #include "PointCollider.h"
-#include "CircleCollider.h"
 
-Intersection::SPoint CPointCollider::ourNullPoint = {};
+Intersection::SPoint CPointCollider::ourNullPoint;
 
 CPointCollider::CPointCollider()
 {
@@ -33,29 +32,26 @@ bool CPointCollider::TestCollision(ICollider* aCollider)
 bool CPointCollider::TestCollision(CPointCollider* aPointCollider)
 {
 	// A point cannot collide with another point due to floating point presision
-	// if it is not the same point and then they will (should) not be tested anyway
+	// as long as it is not the same point and then they will (should) not be tested anyway
 	return false;
 }
 
 bool CPointCollider::TestCollision(CCircleCollider* aCircleCollider)
 {
-	return Intersection::PointInsideCircle(aCircleCollider->GetData(), *myPointData);
-	return false;
+	return Intersection::PointInsideCircle(aCircleCollider->GetData(), GetData());
 }
 
-bool CPointCollider::TestCollision(CSquareCollider* aBoxCollider)
+bool CPointCollider::TestCollision(CSquareCollider* aSquareCollider)
 {
-	assert(!"point collider not implemented");
-	return false;
+	return Intersection::PointInsideSquare(aSquareCollider->GetData(), GetData());
 }
 
 bool CPointCollider::TestCollision(CGroupCollider* aGroupCollider)
 {
-	assert(!"point collider not implemented");
-	return false;
+	return aGroupCollider->TestCollision(this);
 }
 
-const Intersection::SPoint & CPointCollider::GetData() const
+const Intersection::SPoint& CPointCollider::GetData() const
 {
 	if (myPointData == nullptr)
 	{
@@ -64,4 +60,17 @@ const Intersection::SPoint & CPointCollider::GetData() const
 	}
 
 	return *myPointData;
+}
+
+void CPointCollider::SetPosition(const CU::Vector3f& aPosition)
+{
+	SetPosition({ aPosition.x, aPosition.z });
+}
+
+void CPointCollider::SetPosition(const CU::Vector2f aPosition)
+{
+	if (myPointData != nullptr)
+	{
+		myPointData->myPosition = aPosition;
+	}
 }

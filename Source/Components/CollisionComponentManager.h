@@ -30,6 +30,6 @@ public:
 private:
 	ICollider* CreateCollider(const eColliderType aColliderType); //move this to CColliderFactory in Collision project
 
-	CU::GrowingArray<CCollisionComponent*> myCollisionComponents;
+	CU::GrowingArray<CCollisionComponent*, unsigned int, false> myCollisionComponents;
 	CCollisionManager* myCollisionManager;
 };

@@ -11,7 +11,7 @@ CCollisionComponent::CCollisionComponent(ICollider* aCollider)
 		assert(!"Collision component got collider that is NULL");
 		return;
 	}
-
+	
 	myCollider->InitCallbackFunctions(
 		std::bind(&CCollisionComponent::OnCollisionEnter, this, std::placeholders::_1),
 		std::bind(&CCollisionComponent::OnCollisionUpdate, this, std::placeholders::_1),
@@ -45,14 +45,23 @@ void CCollisionComponent::Destroy()
 	DL_ASSERT("not implemented");
 }
 
-void CCollisionComponent::OnCollisionEnter(ICollider* /*aCollider*/)
+void CCollisionComponent::OnCollisionEnter(ICollider* aCollider)
 {
+	SComponentMessageData data;
+	data.myCollider = aCollider;
+	GetParent()->NotifyComponents(eComponentMessageType::eOnCollisionEnter, data);
 }
 
-void CCollisionComponent::OnCollisionUpdate(ICollider* /*aCollider*/)
+void CCollisionComponent::OnCollisionUpdate(ICollider* aCollider)
 {
+	SComponentMessageData data;
+	data.myCollider = aCollider;
+	GetParent()->NotifyComponents(eComponentMessageType::eOnCollisionUpdate, data);
 }
 
-void CCollisionComponent::OnCollisionExit(ICollider* /*aCollider*/)
+void CCollisionComponent::OnCollisionExit(ICollider* aCollider)
 {
+	SComponentMessageData data;
+	data.myCollider = aCollider;
+	GetParent()->NotifyComponents(eComponentMessageType::eOnCollisionExit, data);
 }

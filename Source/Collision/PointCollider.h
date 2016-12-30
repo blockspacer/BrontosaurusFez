@@ -22,6 +22,9 @@ public:
 
 	const Intersection::SPoint& GetData() const;
 
+	void SetPosition(const CU::Vector3f& aPosition);
+	void SetPosition(const CU::Vector2f aPosition);
+
 private:
 	Intersection::SPoint* myPointData;
 

@@ -4,6 +4,10 @@
 
 #include "../Collision/CollisionManager.h"
 
+#include "../Collision/PointCollider.h"
+#include "../Collision/SquareCollider.h"
+#include "../Collision/CircleCollider.h"
+#include "../Collision/GroupCollider.h"
 
 CCollisionComponentManager::CCollisionComponentManager()
 	: myCollisionComponents(32)
@@ -16,6 +20,7 @@ CCollisionComponentManager::CCollisionComponentManager()
 CCollisionComponentManager::~CCollisionComponentManager()
 {
 	myCollisionComponents.DeleteAll();
+	SAFE_DELETE(myCollisionManager);
 }
 
 void CCollisionComponentManager::Update()
@@ -29,7 +34,7 @@ CCollisionComponent* CCollisionComponentManager::CreateCollisionComponent(const 
 	ICollider* newCollider = CreateCollider(aColliderType);
 	CCollisionComponent* newCollisionComponent = new CCollisionComponent(newCollider);
 
-
+	myCollisionComponents.Add(newCollisionComponent);
 
 	return newCollisionComponent;
 }
@@ -45,5 +50,20 @@ void CCollisionComponentManager::DestroyCollisionComponent(CCollisionComponent* 
 
 ICollider* CCollisionComponentManager::CreateCollider(const eColliderType aColliderType)
 {
-	return nullptr;
+	ICollider* newCollider = nullptr;
+
+	switch (aColliderType)
+	{
+	case CCollisionComponentManager::eColliderType::eCircle:
+		newCollider = new CCircleCollider();
+		break;
+	case CCollisionComponentManager::eColliderType::ePoint:
+		newCollider = new CPointCollider();
+		break;
+	case CCollisionComponentManager::eColliderType::eSquare:
+		newCollider = new CSquareCollider();
+		break;
+	}
+
+	return newCollider;
 }

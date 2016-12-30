@@ -60,6 +60,11 @@ void CCollisionManager::RemoveCollider(ICollider* aCollider)
 
 void CCollisionManager::TestCollision(ICollider* aFirst, ICollider* aSecond)
 {
+	if (ICollider::CanCollide(aFirst, aSecond) == false)
+	{
+		return;
+	}
+
 	if (aFirst->TestCollision(aSecond) == true)
 	{
 		if (ICollider::HasCollided(aFirst, aSecond) == false)

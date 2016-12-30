@@ -2,13 +2,35 @@
 #include "GroupCollider.h"
 
 CGroupCollider::CGroupCollider()
-	: myColliders(4ui16)
+	: myColliders(4ui16/*having fun mvh carl*/)
 {
+}
+
+CGroupCollider::CGroupCollider(const CGroupCollider& aCopy)
+{
+	self = aCopy;
+}
+
+CGroupCollider::CGroupCollider(CGroupCollider&& aTemporary)
+{
+	self = std::move(aTemporary);
 }
 
 CGroupCollider::~CGroupCollider()
 {
 	myColliders.DeleteAll();
+}
+
+CGroupCollider& CGroupCollider::operator=(const CGroupCollider& aCopy)
+{
+	myColliders = aCopy.myColliders;
+	return self;
+}
+
+CGroupCollider& CGroupCollider::operator=(CGroupCollider&& aTemporary)
+{
+	myColliders = std::move(aTemporary.myColliders);
+	return self;
 }
 
 void CGroupCollider::RenderDebugLines()
@@ -24,11 +46,11 @@ bool CGroupCollider::TestCollision(ICollider* aCollider)
 	return aCollider->TestCollision(this);
 }
 
-bool CGroupCollider::TestCollision(CCircleCollider* aCircleCollider)
+bool CGroupCollider::TestCollision(CPointCollider* aPointCollider)
 {
-	for (size_type i = 0; i < myColliders.Size(); ++i)
+	for (ICollider* collider : myColliders)
 	{
-		if (myColliders[i]->TestCollision(aCircleCollider) == true)
+		if (collider->TestCollision(aPointCollider) == true)
 		{
 			return true;
 		}
@@ -37,11 +59,24 @@ bool CGroupCollider::TestCollision(CCircleCollider* aCircleCollider)
 	return false;
 }
 
-bool CGroupCollider::TestCollision(CSquareCollider* aBoxCollider)
+bool CGroupCollider::TestCollision(CCircleCollider* aCircleCollider)
 {
-	for (size_type i = 0; i < myColliders.Size(); ++i)
+	for (ICollider* collider : myColliders)
 	{
-		if (myColliders[i]->TestCollision(aBoxCollider) == true)
+		if (collider->TestCollision(aCircleCollider) == true)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool CGroupCollider::TestCollision(CSquareCollider* aSquareCollider)
+{
+	for (ICollider* collider : myColliders)
+	{
+		if (collider->TestCollision(aSquareCollider) == true)
 		{
 			return true;
 		}
@@ -52,13 +87,25 @@ bool CGroupCollider::TestCollision(CSquareCollider* aBoxCollider)
 
 bool CGroupCollider::TestCollision(CGroupCollider* aGroupCollider)
 {
-	for (size_type i = 0; i < myColliders.Size(); ++i)
+	for (ICollider* collider : myColliders)
 	{
-		if (myColliders[i]->TestCollision(aGroupCollider) == true)
+		if (collider->TestCollision(aGroupCollider) == true)
 		{
 			return true;
 		}
 	}
 
 	return false;
+}
+
+void CGroupCollider::SetPosition(const CU::Vector3f& aPosition)
+{
+	aPosition;
+	assert(!"Must implement a parent position system for this, otherwise group collider is worthless");
+}
+
+void CGroupCollider::SetPosition(const CU::Vector2f aPosition)
+{
+	aPosition;
+	assert(!"Must implement a parent position system for this, otherwise group collider is worthless");
 }

@@ -3,7 +3,7 @@
 #include "../CommonUtilities/matrix44.h"
 #include "StatStructs.h"
 
-class Collider;
+class ICollider;
 class CComponent;
 class CGameObject;
 
@@ -58,12 +58,15 @@ enum class eComponentMessageType
 	eSelectSkill,
 	eSetSkillTargetPosition,
 	eAddSkill,
-	eTakeDamage
+	eTakeDamage,
+	eOnCollisionEnter,
+	eOnCollisionUpdate,
+	eOnCollisionExit,
 };
 
 struct SComponentMessageData
 {
-	SComponentMessageData();
+	SComponentMessageData() : myComponent(nullptr) {}
 
 	union
 	{
@@ -82,9 +85,7 @@ struct SComponentMessageData
 		eComponentType myComponentTypeAdded;
 		unsigned short myUnsingedShort;
 		Stats::STotalStats myStatStruct;
+		ICollider* myCollider;
 	};
 };
 
-inline SComponentMessageData::SComponentMessageData() : myComponent(nullptr)
-{
-}

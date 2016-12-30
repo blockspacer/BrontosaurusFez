@@ -3,7 +3,7 @@
 #include "CircleCollider.h"
 #include "Intersection.h"
 
-Intersection::SCircle CCircleCollider::ourNullCircle = {};
+const Intersection::SCircle CCircleCollider::ourNullCircle = {};
 
 CCircleCollider::CCircleCollider()
 {
@@ -12,7 +12,12 @@ CCircleCollider::CCircleCollider()
 
 CCircleCollider::CCircleCollider(const CCircleCollider& aCopy)
 {
-	myCircleData = new Intersection::SCircle(*aCopy.myCircleData);
+	self = aCopy;
+}
+
+CCircleCollider::CCircleCollider(CCircleCollider&& aTemporary)
+{
+	self = std::move(aTemporary);
 }
 
 CCircleCollider::~CCircleCollider()
@@ -20,28 +25,36 @@ CCircleCollider::~CCircleCollider()
 	SAFE_DELETE(myCircleData);
 }
 
+CCircleCollider& CCircleCollider::operator=(const CCircleCollider& aCopy)
+{
+	myCircleData = new Intersection::SCircle(*aCopy.myCircleData);
+	return self;
+}
+
+CCircleCollider& CCircleCollider::operator=(CCircleCollider&& aTemporary)
+{
+	myCircleData = aTemporary.myCircleData;
+	aTemporary.myCircleData = nullptr;
+
+	return self;
+}
+
 bool CCircleCollider::TestCollision(ICollider* aCollider)
 {
 	return aCollider->TestCollision(this);
 }
 
-bool CCircleCollider::TestCollision(CPointCollider* aCollider)
+bool CCircleCollider::TestCollision(CPointCollider* aPointCollider)
 {
-	assert(!"point collider not implemented");
-	return false;
+	return Intersection::PointInsideCircle(GetData(), aPointCollider->GetData());
 }
 
 bool CCircleCollider::TestCollision(CCircleCollider* aCircleCollider)
 {
-	if (Intersection::CircleVsCircle(*myCircleData, *aCircleCollider->myCircleData))
-	{
-		return true;
-	}
-
-	return false;
+	return Intersection::CircleVsCircle(GetData(), aCircleCollider->GetData());
 }
 
-bool CCircleCollider::TestCollision(CSquareCollider* aBoxCollider)
+bool CCircleCollider::TestCollision(CSquareCollider* aSquareCollider)
 {
 	assert(!"point collider not implemented");
 	return false;
@@ -49,8 +62,23 @@ bool CCircleCollider::TestCollision(CSquareCollider* aBoxCollider)
 
 bool CCircleCollider::TestCollision(CGroupCollider* aGroupCollider)
 {
-	assert(!"point collider not implemented");
-	return false;
+	return aGroupCollider->TestCollision(this);
+}
+
+void CCircleCollider::SetPosition(const CU::Vector3f& aPosition)
+{
+	if (myCircleData != nullptr)
+	{
+		myCircleData->myCenterPosition.Set(aPosition.x, aPosition.z);
+	}
+}
+
+void CCircleCollider::SetPosition(const CU::Vector2f aPosition)
+{
+	if (myCircleData != nullptr)
+	{
+		myCircleData->myCenterPosition = aPosition;
+	}
 }
 
 const Intersection::SCircle& CCircleCollider::GetData() const

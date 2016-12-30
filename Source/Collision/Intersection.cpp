@@ -9,7 +9,6 @@
 using namespace Collision;
 using namespace CU;
 
-
 Intersection::Fov90Frustum::Fov90Frustum(float aNearZ, float aFarZ)
 {
 	myFarPlane = Plane<float>(Point3f(0, 0, -aFarZ), Vector3f(0, 0, -1));
@@ -297,7 +296,7 @@ bool Intersection::SphereVsFrustum(const SSphere& aSphere, const Fov90Frustum& a
 	return false;
 }
 
-bool Intersection::CircleVsCircle(const SCircle & aFirst, const SCircle & aSecond)
+bool Intersection::CircleVsCircle(const SCircle& aFirst, const SCircle& aSecond)
 {
 	float distance2 = (aFirst.myCenterPosition - aSecond.myCenterPosition).Length2();
 	float radii2 = (aFirst.myRadius + aSecond.myRadius) * (aFirst.myRadius + aSecond.myRadius);
@@ -309,4 +308,60 @@ bool Intersection::PointInsideCircle(const SCircle& aCircle, const SPoint& aPoin
 {
 	float distance2 = (aPoint.myPosition - aCircle.myCenterPosition).Length2();
 	return distance2 <= aCircle.myRadius * aCircle.myRadius;
+}
+
+bool Intersection::PointInsideSquare(const SSquare& aSquare, const SPoint& aPoint)
+{
+	if (aPoint.myPosition.x < aSquare.myMinPosition.x)
+	{
+		return false;
+	}
+	else if (aPoint.myPosition.y < aSquare.myMinPosition.y)
+	{
+		return false;
+	}
+	else if (aPoint.myPosition.x >= aSquare.myMaxPosition.x)
+	{
+		return false;
+	}
+	else if (aPoint.myPosition.y >= aSquare.myMaxPosition.y)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool Intersection::CircleVsSquare(const SCircle& aCircle, const SSquare& aSquare)
+{
+	SSquare extendedSquare;
+	extendedSquare.myMaxPosition = aSquare.myMaxPosition + CU::Vector2f::One * aCircle.myRadius;
+	extendedSquare.myMinPosition = aSquare.myMinPosition - CU::Vector2f::One * aCircle.myRadius;
+	
+	return PointInsideSquare(extendedSquare, SPoint(aCircle.myCenterPosition));
+}
+
+bool Intersection::SquareVsSquare(const SSquare& aFirst, const SSquare& aSecond)
+{
+	if (aFirst.myMaxPosition.x < aSecond.myMinPosition.x)
+	{
+		return false;
+	}
+
+	if (aFirst.myMaxPosition.y < aSecond.myMinPosition.y)
+	{
+		return false;
+	}
+
+	if (aFirst.myMinPosition.x > aSecond.myMaxPosition.x)
+	{
+		return false;
+	}
+
+	if (aFirst.myMinPosition.y > aSecond.myMaxPosition.y)
+	{
+		return false;
+	}
+
+	return true;
 }

@@ -31,6 +31,8 @@ namespace Intersection
 
 	struct SPoint
 	{
+		SPoint() {}
+		SPoint(const CU::Vector2f aPosition) : myPosition(aPosition) {}
 		CU::Vector2f myPosition;
 	};
 
@@ -94,4 +96,7 @@ namespace Intersection
 
 	bool CircleVsCircle(const SCircle& aFirst, const SCircle& aSecond);
 	bool PointInsideCircle(const SCircle& aCircle, const SPoint& aPoint);
+	bool PointInsideSquare(const SSquare& aSquare, const SPoint& aPoint);
+	bool CircleVsSquare(const SCircle& aCircle, const SSquare& aSquare);
+	bool SquareVsSquare(const SSquare& aFirst, const SSquare& aSecond);
 }

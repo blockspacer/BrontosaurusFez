@@ -9,7 +9,7 @@
     </ClCompile>
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="SquareCollider.cpp">
-      <Filter>Collider\BoxCollider</Filter>
+      <Filter>Collider\SquareCollider</Filter>
     </ClCompile>
     <ClCompile Include="PointCollider.cpp">
       <Filter>Collider\PointCollider</Filter>
@@ -33,7 +33,7 @@
     </ClInclude>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SquareCollider.h">
-      <Filter>Collider\BoxCollider</Filter>
+      <Filter>Collider\SquareCollider</Filter>
     </ClInclude>
     <ClInclude Include="PointCollider.h">
       <Filter>Collider\PointCollider</Filter>
@@ -64,14 +64,14 @@
     <Filter Include="Collider\GroupCollider">
       <UniqueIdentifier>{089ff87a-aecd-41e3-bab1-869af18ab9cf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Collider\BoxCollider">
-      <UniqueIdentifier>{8d4f6a13-e948-4947-947a-a2ddcf17b96d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Collider\PointCollider">
       <UniqueIdentifier>{ddbdc2bd-cb10-4f9c-8078-b554e954d021}</UniqueIdentifier>
     </Filter>
     <Filter Include="Utilities">
       <UniqueIdentifier>{231b81f9-e494-4bc3-8501-617e85895313}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collider\SquareCollider">
+      <UniqueIdentifier>{8d4f6a13-e948-4947-947a-a2ddcf17b96d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
