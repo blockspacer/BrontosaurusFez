@@ -94,6 +94,18 @@ namespace CU
 	template<typename TYPE> const Vector2<TYPE> Vector2<TYPE>::One(1, 1);
 
 	template<typename TYPE>
+	Vector2<TYPE>& operator*=(const TYPE aLeft, Vector2<TYPE>& aRight)
+	{
+		return aRight *= aLeft;
+	}
+
+	template<typename TYPE>
+	Vector2<TYPE> operator*(const TYPE aLeft, Vector2<TYPE> aRight)
+	{
+		return aRight *= aLeft;
+	}
+
+	template<typename TYPE>
 	Vector2<TYPE>::Vector2() : x(static_cast<TYPE>(0)), y(static_cast<TYPE>(0))
 	{
 	}

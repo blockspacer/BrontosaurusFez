@@ -38,6 +38,7 @@ class CConsole;
 #define DEVICE_CONTEXT	CEngine::GetInstance()->GetFramework()->GetDeviceContext()
 
 #define WINDOW_SIZE     CEngine::GetInstance()->GetWindowSize()
+#define WINDOW_SIZE_F	CEngine::GetInstance()->GetWindowSizeF()
 #define CONSOLE         CEngine::GetInstance()->GetConsole()
 
 namespace CU
@@ -102,6 +103,7 @@ public:
 	void ThreadedRender();
 	void OnResize(const unsigned int aWidth, const unsigned int aHeight);
 	inline const CU::Vector2ui& GetWindowSize();
+	inline CU::Vector2f GetWindowSizeF();
 
 private:
 	CEngine();
@@ -192,12 +194,12 @@ inline CU::ThreadPool* CEngine::GetThreadPool()
 	return myThreadPool;
 }
 
-inline CConsole * CEngine::GetConsole()
+inline CConsole* CEngine::GetConsole()
 {
 	return myConsole;
 }
 
-inline CParticleEmitterManager & CEngine::GetParticleEmitterManager()
+inline CParticleEmitterManager& CEngine::GetParticleEmitterManager()
 {
 	assert(myParticleEmitterManager != nullptr);
 	return *myParticleEmitterManager;
@@ -218,7 +220,12 @@ inline const CU::Vector2ui& CEngine::GetWindowSize()
 	return myWindowSize;
 }
 
-inline CRenderer & CEngine::GetRenderer()
+inline CU::Vector2f CEngine::GetWindowSizeF()
+{
+	return CU::Vector2f(myWindowSize);
+}
+
+inline CRenderer& CEngine::GetRenderer()
 {
 	return *myRenderer;
 }

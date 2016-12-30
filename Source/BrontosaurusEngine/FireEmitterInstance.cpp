@@ -39,6 +39,9 @@ CFireEmitterInstance& CFireEmitterInstance::operator=(const CFireEmitterInstance
 
 CFireEmitterInstance& CFireEmitterInstance::operator=(CFireEmitterInstance&& aTemporary)
 {
+	myFireEmitter = aTemporary.myFireEmitter;
+	aTemporary.myFireEmitter = -1;
+	myTransformation = aTemporary.myTransformation;
 
 	return self;
 }

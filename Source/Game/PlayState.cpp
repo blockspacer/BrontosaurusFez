@@ -154,7 +154,7 @@ void CPlayState::Load()
 
 	myScene->AddCamera(CScene::eCameraType::ePlayerOneCamera);
 	CU::Camera& playerCamera = myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera);
-	playerCamera.Init(60, WINDOW_SIZE.x, WINDOW_SIZE.y, 1.f, 75000.0f, { 0.0f, 0.0f, 0.f });
+	playerCamera.Init(60, WINDOW_SIZE_F.x, WINDOW_SIZE_F.y, 1.f, 75000.0f, { 0.0f, 0.0f, 0.f });
 
 	//create player:
 	myPlayerObject = myGameObjectManager->CreateGameObject();
@@ -259,8 +259,10 @@ void CPlayState::Load()
 	fireData.myDistortionBias = 0.5f;
 
 	fireeeeeByCarl.Init(fireData);
-	//fireeeeeByCarl.SetPosition(CU::Vector3f(0.f, 0.f, 0.f));
 	fireeeeeByCarl.GetTransformation().Rotate(3.141592f, CU::Axees::Y);
+	fireeeeeByCarl.GetTransformation().m11 *= 2.f;
+	fireeeeeByCarl.GetTransformation().m22 *= 2.f;
+	fireeeeeByCarl.GetTransformation().m33 *= 2.f;
 	myScene->AddFireEmitters(fireeeeeByCarl);
 	
 	myIsLoaded = true;
