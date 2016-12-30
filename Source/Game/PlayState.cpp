@@ -67,6 +67,10 @@
 #include "Components\SkillFactory.h"
 #include "SkillSystemComponent.h"
 
+//ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
+#include "../BrontosaurusEngine/FireEmitterInstance.h"
+#include "../BrontosaurusEngine/FireEmitterData.h"
+
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
 	, myLevelIndex(aLevelIndex)
@@ -237,6 +241,27 @@ void CPlayState::Load()
 	tempEnemyHealthComponent->Init();
 	//-----------------
 
+	CFireEmitterInstance fireeeeeByCarl;
+	SFireEmitterData fireData;
+	fireData.myScrollSpeeds[0] = 1.3f;
+	fireData.myScrollSpeeds[1] = 2.1f;
+	fireData.myScrollSpeeds[2] = 2.3f;
+
+	fireData.myScales[0] = 1.f;
+	fireData.myScales[1] = 2.f;
+	fireData.myScales[2] = 3.f;
+
+	fireData.myDistortions[0].Set(0.1f, 0.2f);
+	fireData.myDistortions[1].Set(0.1f, 0.3f);
+	fireData.myDistortions[2].Set(0.1f, 0.1f);
+
+	fireData.myDistortionScale = 0.8f;
+	fireData.myDistortionBias = 0.5f;
+
+	fireeeeeByCarl.Init(fireData);
+	//fireeeeeByCarl.SetPosition(CU::Vector3f(0.f, 0.f, 0.f));
+	fireeeeeByCarl.GetTransformation().Rotate(3.141592f, CU::Axees::Y);
+	myScene->AddFireEmitters(fireeeeeByCarl);
 	
 	myIsLoaded = true;
 

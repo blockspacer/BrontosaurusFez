@@ -5,6 +5,7 @@
 #include "TextInstance.h"
 
 class CParticleEmitterManager;
+class CFireEmitterManager;
 class CModelManager;
 class CSpriteManager;
 class CLineDrawer;
@@ -92,6 +93,7 @@ public:
 	inline CU::TimerManager* GetTimerManager();
 	inline CU::ThreadPool* GetThreadPool();
 	inline CParticleEmitterManager& GetParticleEmitterManager();
+	inline CFireEmitterManager& GetFireEmitterManager();
 	inline CConsole* GetConsole();
 
 	CU::Time GetTime();
@@ -116,6 +118,7 @@ private:
 	CInputManager* myInputManager;
 	CTextureManager* myTextureManager;
 	CParticleEmitterManager* myParticleEmitterManager;
+	CFireEmitterManager* myFireEmitterManager;
 	
 	CConsole* myConsole;
 
@@ -198,6 +201,11 @@ inline CParticleEmitterManager & CEngine::GetParticleEmitterManager()
 {
 	assert(myParticleEmitterManager != nullptr);
 	return *myParticleEmitterManager;
+}
+
+inline CFireEmitterManager& CEngine::GetFireEmitterManager()
+{
+	return *myFireEmitterManager;
 }
 
 inline CLightManager*CEngine::GetLightManager()

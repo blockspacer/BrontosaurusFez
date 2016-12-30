@@ -33,6 +33,9 @@
 #define SUPRESS_UNUSED_WARNING(variable) variable
 #endif // !SUPRESS_UNUSED_WARNING
 
+#include "Engine.h"
+#include "DXFramework.h"
+
 #include "../CommonUtilities/DL_Debug.h"
 #include "../CommonUtilities/GrowingArray.h"
 #include "../CommonUtilities/StaticArray.h"

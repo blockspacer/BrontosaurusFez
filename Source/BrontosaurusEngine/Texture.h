@@ -17,6 +17,7 @@ public:
 
 	const CU::Vector2ui& GetSize() const;
 	const unsigned int GetMipMapCount() const;
+	ID3D11ShaderResourceView* GetShaderResourceView();
 	ID3D11ShaderResourceView** GetShaderResourceViewPointer();
 
 	inline void AddRef();
@@ -30,7 +31,7 @@ private:
 	int myRefCount;
 	
 #ifdef _DEBUG
-	const wchar_t* myPath;
+	std::wstring myPath;
 #endif
 };
 
@@ -42,6 +43,11 @@ inline const CU::Vector2ui & CTexture::GetSize() const
 inline const unsigned int CTexture::GetMipMapCount() const
 {
 	return myMipMapCount;
+}
+
+inline ID3D11ShaderResourceView* CTexture::GetShaderResourceView()
+{
+	return myTexture;
 }
 
 inline ID3D11ShaderResourceView ** CTexture::GetShaderResourceViewPointer()

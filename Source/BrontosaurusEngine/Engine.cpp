@@ -20,6 +20,7 @@
 #include "DebugInfoDrawer.h"
 #include "ThreadNamer.h"
 #include "ParticleEmitterManager.h"
+#include "FireEmitterManager.h"
 #include "../Audio/AudioInterface.h"
 #include "../FontEngine/FontEngineFacade.h"
 #include "Console.h"
@@ -70,6 +71,7 @@ void CEngine::Init(SInitEngineParams& aInitEngineParams)
 	myLightManager = new CLightManager();
 	myTextureManager = new CTextureManager();
 	myParticleEmitterManager = new CParticleEmitterManager();
+	myFireEmitterManager = new CFireEmitterManager();
 
 	myRenderer = new CRenderer();
 
@@ -212,6 +214,7 @@ CEngine::CEngine()
 	, myLineDrawer(nullptr)
 	, myThreadPool(nullptr)
 	, myParticleEmitterManager(nullptr)
+	, myFireEmitterManager(nullptr)
 {
 }
 
@@ -227,10 +230,11 @@ CEngine::~CEngine()
 	SAFE_DELETE(myInputManager);
 	SAFE_DELETE(myShaderManager);
 	SAFE_DELETE(myLightManager);
-	SAFE_DELETE(myTextureManager);
 	SAFE_DELETE(myLineDrawer);
 	SAFE_DELETE(myThreadPool); //TODO: THREAD POOL HAS THREADS IT CANNOT JOIN, don't know if this is true anymore
 	SAFE_DELETE(myParticleEmitterManager);
+	SAFE_DELETE(myFireEmitterManager);
+	SAFE_DELETE(myTextureManager);
 
 	Audio::CAudioInterface::Destroy();
 }

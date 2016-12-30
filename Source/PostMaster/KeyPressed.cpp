@@ -9,7 +9,10 @@
 #include"Game\PauseMenu.h"
 #include "..\BrontosaurusEngine\ModelInstance.h"
 #include "../BrontosaurusEngine/Console.h"
+
+//temp
 #include "Components\HealthComponent.h"
+#include "../BrontosaurusEngine/Renderer.h"
 
 KeyPressed::KeyPressed(const CU::eKeys& aKey)
 	: myKey(aKey)
@@ -119,5 +122,29 @@ eMessageReturn KeyPressed::DoEvent(CHealthComponent * aHealthComponent) const
 	default:
 		break;
 	}
+	return eMessageReturn::eContinue;
+}
+
+eMessageReturn KeyPressed::DoEvent(CRenderer* aRenderer) const
+{
+	if (aRenderer == nullptr)
+	{
+		return eMessageReturn::eContinue;
+	}
+
+#ifdef _RETAIL_BUILD
+#error "detta är temp-kod, man ska för fan inte kunna stänga av bloom med b in game, mvh carl"
+#endif // _RETAIL_BUILD
+
+
+	switch (myKey)
+	{
+	case CU::eKeys::B:
+		aRenderer->GetSettings().Bloom = !aRenderer->GetSettings().Bloom;
+		break;
+	default:
+		break;
+	}
+
 	return eMessageReturn::eContinue;
 }

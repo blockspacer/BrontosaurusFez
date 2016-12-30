@@ -48,6 +48,11 @@ CTexture& CTextureManager::LoadTexture(const char* aTexturePath)
 
 void CTextureManager::DestroyTexture(const CTexture* aTexture)
 {
+	if (aTexture == nullptr)
+	{
+		return;
+	}
+
 	for (auto it = myTextures.begin(); it != myTextures.end(); ++it)
 	{
 		if (&it->second == aTexture)

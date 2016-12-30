@@ -46,6 +46,7 @@ struct SRenderMessage
 		eRenderSkybox,
 		eRenderParticles,
 		eRenderStreak,
+		eRenderFire,
 		eRenderText,
 		eRenderDebugObjs,
 		eRenderAnimationModel
@@ -99,6 +100,13 @@ struct SRenderStreakMessage : SRenderMessage
 {
 	SRenderStreakMessage() { myType = SRenderMessage::eRenderMessageType::eRenderStreak; }
 	CStreakEmitterInstance* streakEmitter;
+};
+
+struct SRenderFireMessage : SRenderMessage
+{
+	SRenderFireMessage() { myType = SRenderMessage::eRenderMessageType::eRenderFire; }
+	CU::Matrix44f myToWorldMatrix;
+	int myFireID;
 };
 
 struct SRenderSpriteMessage : SRenderMessage

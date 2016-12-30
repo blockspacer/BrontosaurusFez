@@ -18,7 +18,10 @@ public:
 	eMessageReturn DoEvent(State*) const override;
 	eMessageReturn DoEvent(PauseMenu*) const override;
 	eMessageReturn DoEvent(CConsole* aConsole) const override;
+
+	//temp
 	eMessageReturn DoEvent(CHealthComponent* aHealthComponent) const override;
+	eMessageReturn DoEvent(CRenderer* aRenderer) const override;
 
 private:
 	const CU::eKeys& myKey;

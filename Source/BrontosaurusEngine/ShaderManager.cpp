@@ -203,6 +203,13 @@ std::string CShaderManager::GetInputLayoutType(unsigned int aShaderBlueprint, st
 		EffectHelper::CreateLayout(aInputLayout, "SCALE", 0, DXGI_FORMAT_R32G32_FLOAT, 1, D3D11_INPUT_PER_VERTEX_DATA, 0);
 		return layoutName;
 	}
+	else if (aShaderBlueprint & EModelBluePrint::EModelBluePrint_Fire)
+	{
+		layoutName += "Fire";
+		EffectHelper::CreateLayout(aInputLayout, "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
+		EffectHelper::CreateLayout(aInputLayout, "UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
+		return layoutName;
+	}
 	else
 	{
 		assert(false && "You need a position!");

@@ -68,6 +68,9 @@
     <Filter Include="Animation">
       <UniqueIdentifier>{389b616a-080e-495c-b71b-e04372a6c138}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fire">
+      <UniqueIdentifier>{4d19949d-8af1-4814-975f-6ff6ac3be8da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -235,6 +238,18 @@
     <ClInclude Include="ModelID.h">
       <Filter>Model</Filter>
     </ClInclude>
+    <ClInclude Include="FireEmitter.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="FireEmitterInstance.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="FireEmitterManager.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="FireEmitterData.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -354,6 +369,15 @@
     </ClCompile>
     <ClCompile Include="ParticleEmitterManager.cpp">
       <Filter>Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="FireEmitter.cpp">
+      <Filter>Fire</Filter>
+    </ClCompile>
+    <ClCompile Include="FireEmitterInstance.cpp">
+      <Filter>Fire</Filter>
+    </ClCompile>
+    <ClCompile Include="FireEmitterManager.cpp">
+      <Filter>Fire</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,7 @@
 #include "Renderer.h"
 #include "Skybox.h"
 #include "ParticleEmitterInstance.h"
+#include "FireEmitterInstance.h"
 
 #define Intify(A_ENUM_CLASS) static_cast<int>(A_ENUM_CLASS)
 
@@ -71,6 +72,7 @@ CScene::CScene()
 	myModels.Init(64);
 	myPointLights.Init(8);
 	myParticleEmitters.Init(8);
+	myFireEmitters.Init(8);
 	mySkybox = nullptr;
 }
 
@@ -132,6 +134,19 @@ void CScene::Render()
 		}
 
 		myModels[i]->Render(&myDirectionalLight, &myPointLights);
+	}
+
+	SChangeStatesMessage* changeStateMessage = new SChangeStatesMessage();
+	changeStateMessage->myBlendState = eBlendState::eAlphaBlend;
+	changeStateMessage->myDepthStencilState = eDepthStencilState::eReadOnly; //don't know what to do here
+	changeStateMessage->myRasterizerState = eRasterizerState::eDefault;
+	changeStateMessage->mySamplerState = eSamplerState::eClamp0Wrap1;
+
+	RENDERER.AddRenderMessage(changeStateMessage);
+
+	for (CFireEmitterInstance& fireEmitter : myFireEmitters)
+	{
+		fireEmitter.Render();
 	}
 
 	statemsg.myBlendState = eBlendState::eAlphaBlend;
@@ -197,6 +212,13 @@ InstanceID CScene::AddParticleEmitterInstance(CParticleEmitterInstance * aPartic
 	return  tempId;
 }
 
+InstanceID CScene::AddFireEmitters(const CFireEmitterInstance& aFireEmitter)
+{
+	InstanceID id = myFireEmitters.Size();
+	myFireEmitters.Add(aFireEmitter);
+	return id;
+}
+
 void CScene::AddCamera(const eCameraType aCameraType)
 {
 	myCameras[static_cast<int>(aCameraType)] = CU::Camera(); //TODO: maybe not have add
@@ -216,6 +238,11 @@ void CScene::SetSkybox(const char* aPath)
 CModelInstance& CScene::GetModelAt(InstanceID aModelID)
 {
 	return *myModels[aModelID];
+}
+
+CFireEmitterInstance& CScene::GetFireEmitter(const InstanceID aFireEmitterID)
+{
+	return myFireEmitters[aFireEmitterID];
 }
 
 CU::Camera& CScene::GetCamera(const eCameraType aCameraType)

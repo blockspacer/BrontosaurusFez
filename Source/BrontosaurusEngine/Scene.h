@@ -11,6 +11,7 @@ class CSkybox;
 class CModelInstance;
 class CPointLightInstance;
 class CParticleEmitterInstance;
+class CFireEmitterInstance;
 
 namespace CU
 {
@@ -40,11 +41,13 @@ public:
 	InstanceID AddDirectionalLight(Lights::SDirectionalLight& aDirectionalLight);
 	InstanceID AddPointLightInstance(CPointLightInstance* aPointLight);
 	InstanceID AddParticleEmitterInstance(CParticleEmitterInstance* aParticleEmitterInstance);
+	InstanceID AddFireEmitters(const CFireEmitterInstance& aFireEmitter);
 	void AddCamera(const eCameraType aCameraType);
 
 	void SetSkybox(const char* aPath);
 
 	CModelInstance& GetModelAt(InstanceID aModelID);
+	CFireEmitterInstance& GetFireEmitter(const InstanceID aFireEmitterID);
 	CU::Camera& GetCamera(const eCameraType aCameraType);
 	
 	//Delete Shiz here
@@ -69,6 +72,8 @@ private:
 
 	CU::GrowingArray<CParticleEmitterInstance*, InstanceID> myParticleEmitters;
 	CU::Stack<InstanceID, InstanceID> myFreeParticleEmitters;
+	
+	CU::GrowingArray<CFireEmitterInstance, InstanceID> myFireEmitters;
 
 	CU::StaticArray<CU::Camera, static_cast<int>(eCameraType::eLength)> myCameras;
 	Lights::SDirectionalLight myDirectionalLight; //make array
