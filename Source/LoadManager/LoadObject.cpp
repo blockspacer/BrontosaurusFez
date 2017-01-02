@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "LoadObject.h"
 #include "KevinLoader/KevinLoader.h"
-#include "ObjectManager.h"
 #include "LoadManager.h"
 #include "Game/PlayState.h"
 #include "GameObject.h"
 #include "ComponentManager.h"
 #include "DL_Debug.h"
+#include "GameObjectManager.h"
 
 int LoadObject(KLoader::SLoadedComponentData someData)
 {
