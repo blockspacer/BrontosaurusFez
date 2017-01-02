@@ -1,7 +1,6 @@
 #pragma once
 #include <map>
 #include "../LuaWrapper/SSlua/SSlua.h"
-#include "../CommonUtilities/GrowingArray.h"
 #include "../PostMaster/Subscriber.h"
 #include "../LoadManager/LuaFunctions.h"
 
@@ -24,7 +23,7 @@ public:
 	eMessageReturn TakeKeyBoardInputPressedChar(const char aKey);
 	
 
-	void Update(float aDeltaTime);
+	bool Update(float aDeltaTime);
 	void Render();
 
 private:
@@ -40,7 +39,8 @@ private:
 	std::map<std::string, SSlua::LuaCallbackFunction> myLuaFunctions;
 	CU::GrowingArray<CTextInstance*> myTextLog;
 	CTextInstance* myCurrentText;
-	std::string mySuggestedCommand;
+	CTextInstance* mySuggestedCommand;
+	//std::string mySuggestedCommand;
 
 	float myElapsedAnimationTimer;
 	float myAnimationTimerCooldown;

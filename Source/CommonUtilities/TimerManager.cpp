@@ -78,7 +78,7 @@ namespace CU
 
 	void TimerManager::ResetTimer(const TimerHandle aHandle)
 	{
-		assert(aHandle < myTimers.size() && "StopTimer out of bounds!");
+		assert(aHandle < myTimers.size() && "ResetTimer out of bounds!");
 		myTimers[aHandle].Reset();
 	}
 

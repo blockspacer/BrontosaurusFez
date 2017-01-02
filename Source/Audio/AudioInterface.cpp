@@ -39,17 +39,17 @@ namespace Audio
 	{
 		AkListenerPosition listenerposition;
 
-		listenerposition.Position.X = aTranslation.myPosition.X;
-		listenerposition.Position.Y = aTranslation.myPosition.Y;
-		listenerposition.Position.Z = aTranslation.myPosition.Z;
+		listenerposition.Position.X = aTranslation.myPosition.x;
+		listenerposition.Position.Y = aTranslation.myPosition.y;
+		listenerposition.Position.Z = aTranslation.myPosition.z;
 		
-		listenerposition.OrientationFront.X = aTranslation.myForwardVector.X;
-		listenerposition.OrientationFront.Y = aTranslation.myForwardVector.Y;
-		listenerposition.OrientationFront.Z = aTranslation.myForwardVector.Z;
+		listenerposition.OrientationFront.X = aTranslation.myForwardVector.x;
+		listenerposition.OrientationFront.Y = aTranslation.myForwardVector.y;
+		listenerposition.OrientationFront.Z = aTranslation.myForwardVector.z;
 		
-		listenerposition.OrientationTop.X = aTranslation.myUpVector.X;
-		listenerposition.OrientationTop.Y = aTranslation.myUpVector.X;
-		listenerposition.OrientationTop.Z = aTranslation.myUpVector.X;
+		listenerposition.OrientationTop.X = aTranslation.myUpVector.x;
+		listenerposition.OrientationTop.Y = aTranslation.myUpVector.x;
+		listenerposition.OrientationTop.Z = aTranslation.myUpVector.x;
 
 		myWwiseManager->SetListenerPosition(listenerposition);
 	}
@@ -58,13 +58,13 @@ namespace Audio
 	{
 		AkSoundPosition soundPosition;
 
-		soundPosition.Position.X = aPosition.X;
-		soundPosition.Position.Y = aPosition.Y;
-		soundPosition.Position.Z = aPosition.Z;
+		soundPosition.Position.X = aPosition.x;
+		soundPosition.Position.Y = aPosition.y;
+		soundPosition.Position.Z = aPosition.z;
 
-		soundPosition.Orientation.X = aOrientation.X;
-		soundPosition.Orientation.Y = aOrientation.Y;
-		soundPosition.Orientation.Z = aOrientation.Z;
+		soundPosition.Orientation.X = aOrientation.x;
+		soundPosition.Orientation.Y = aOrientation.y;
+		soundPosition.Orientation.Z = aOrientation.z;
 
 		myWwiseManager->SetGameObjectPosition(aGameObjectID, soundPosition);
 	}

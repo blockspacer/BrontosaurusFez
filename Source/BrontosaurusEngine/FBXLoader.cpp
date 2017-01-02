@@ -208,7 +208,7 @@ CLoaderCamera* ParseCamera(const aiCamera* aCameraIn)
 
 	CU::Vector3f upVector = CU::Vector3f(aCameraIn->mUp.x, aCameraIn->mUp.y, aCameraIn->mUp.z).GetNormalized();
 	CU::Vector3f forwardVector = CU::Vector3f(aCameraIn->mLookAt.x, aCameraIn->mLookAt.y, aCameraIn->mLookAt.z).GetNormalized();
-	CU::Vector3f rightVector = CU::Vector3f::Cross(upVector, forwardVector).GetNormalized();
+	CU::Vector3f rightVector = (upVector.Cross(forwardVector)).GetNormalized();
 	CU::Vector3f positionVector = CU::Vector3f(aCameraIn->mPosition.x, aCameraIn->mPosition.y, aCameraIn->mPosition.z);
 
 	cameraOut->myTransformation.myUpVector = upVector;

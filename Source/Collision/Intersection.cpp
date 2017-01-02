@@ -1,7 +1,13 @@
+#include "stdafx.h"
 #include "Intersection.h"
+
+#include "matrix.h"
+#include "line.h"
+
+#include <cmath>
+
 using namespace Collision;
 using namespace CU;
-
 
 Intersection::Fov90Frustum::Fov90Frustum(float aNearZ, float aFarZ)
 {
@@ -21,7 +27,7 @@ Intersection::Fov90Frustum::Fov90Frustum(float aNearZ, float aFarZ)
 }
 
 
-Vector3f Intersection::ClosestPointOnAABB(Vector3f aPoint, const AABB &aAABB)
+void Intersection::ClosestPointOnAABB(Vector3f& aPoint, const AABB& aAABB)
 {
 	if (aPoint.x < aAABB.myMinPos.x)
 	{
@@ -49,21 +55,19 @@ Vector3f Intersection::ClosestPointOnAABB(Vector3f aPoint, const AABB &aAABB)
 	{
 		aPoint.z = aAABB.myMaxPos.z;
 	}
-
-	return aPoint;
 }
 
-float Intersection::Distance2Points(const Vector3f aFirstVector, const Vector3f aSecondVector)
+float Intersection::Distance2Points(const Vector3f& aFirstVector, const Vector3f& aSecondVector)
 {
 	return sqrt(SQUARE(aFirstVector.x - aSecondVector.x) + SQUARE(aFirstVector.y - aSecondVector.y) + SQUARE(aFirstVector.z - aSecondVector.z));
 }
 
-float Intersection::Distance2Points2(const Vector3f aFirstVector, const Vector3f aSecondVector)
+float Intersection::Distance2Points2(const Vector3f& aFirstVector, const Vector3f& aSecondVector)
 {
 	return SQUARE(aFirstVector.x - aSecondVector.x) + SQUARE(aFirstVector.y - aSecondVector.y) + SQUARE(aFirstVector.z - aSecondVector.z);
 }
 
-bool Intersection::PointInsideSphere(const Sphere &aSpehere, const Vector3f &aPoint)
+bool Intersection::PointInsideSphere(const SSphere& aSpehere, const Vector3f& aPoint)
 {
 	float distance = Distance2Points(aPoint, aSpehere.myCenterPosition);
 
@@ -74,7 +78,7 @@ bool Intersection::PointInsideSphere(const Sphere &aSpehere, const Vector3f &aPo
 	return false;
 }
 
-bool Intersection::PointInsideAABB(const AABB &aAABB, const Vector3f &aPoint)
+bool Intersection::PointInsideAABB(const AABB& aAABB, const Vector3f& aPoint)
 {
 	if (aPoint.x > aAABB.myMinPos.x && aPoint.x < aAABB.myMaxPos.x &&
 		aPoint.y > aAABB.myMinPos.y && aPoint.y < aAABB.myMaxPos.y &&
@@ -86,9 +90,8 @@ bool Intersection::PointInsideAABB(const AABB &aAABB, const Vector3f &aPoint)
 	return false;
 }
 
-bool Intersection::LineVsLine(LineSegment2D aLineSegment, LineSegment2D aSecondLineSegment, Vector3f aIntersectionPoint)
+bool Intersection::LineVsLine(const LineSegment2D& aLineSegment, const LineSegment2D& aSecondLineSegment, Vector3f* aIntersectionPoint)
 {
-
 	Vector2f firstLine = aLineSegment.myEndPos - aLineSegment.myStartPos;
 	Vector2f secondLine = aSecondLineSegment.myEndPos - aSecondLineSegment.myStartPos;
 
@@ -131,20 +134,20 @@ bool Intersection::LineVsLine(LineSegment2D aLineSegment, LineSegment2D aSecondL
 	float t = (aSecondLineSegment.myStartPos - aLineSegment.myStartPos).Cross(secondLine) / firstXsecond;
 	float u = (aSecondLineSegment.myStartPos - aLineSegment.myStartPos).Cross(firstLine) / firstXsecond;
 
-	if (/*!(FLOAT_IS_ZERO(firstXsecond)) && */(0 <= t && t <= 1) && (0 <= u && u <= 1))
+	if (aIntersectionPoint != nullptr && /*!(FLOAT_IS_ZERO(firstXsecond)) && */(0 <= t && t <= 1) && (0 <= u && u <= 1))
 	{
-		aIntersectionPoint.x = aLineSegment.myStartPos.x + t * firstLine.x;
-		aIntersectionPoint.y = aLineSegment.myStartPos.y + t * firstLine.y;
+		aIntersectionPoint->x = aLineSegment.myStartPos.x + t * firstLine.x;
+		aIntersectionPoint->y = aLineSegment.myStartPos.y + t * firstLine.y;
 		return true;
 	}
 
 	return false;
 }
 
-bool Intersection::LineVsAABB(const LineSegment3D aLineSegment, const AABB aAABB, const Vector3f aIntersection)
+bool Intersection::LineVsAABB(const LineSegment3D& aLineSegment, const AABB& aAABB)
 {
-	aIntersection;
-	Point3f nearestOnAABB = ClosestPointOnAABB(aLineSegment.myStartPos, aAABB);
+	Point3f nearestOnAABB = aLineSegment.myStartPos;
+	ClosestPointOnAABB(nearestOnAABB, aAABB);
 	Vector3f startToAABB = nearestOnAABB - aLineSegment.myStartPos;
 	Vector3f lineVector = aLineSegment.myEndPos - aLineSegment.myStartPos;
 	Vector3f projection = lineVector.GetNormalized() * (lineVector.GetNormalized().Dot(startToAABB));
@@ -153,7 +156,7 @@ bool Intersection::LineVsAABB(const LineSegment3D aLineSegment, const AABB aAABB
 	return PointInsideAABB(aAABB, nearestOnLine);
 }
 
-bool Intersection::LineVsSphere(const LineSegment3D aLineSegment, const Sphere aSphere, const Vector3f &aIntersectionPoint)
+bool Intersection::LineVsSphere(const LineSegment3D& aLineSegment, const SSphere& aSphere, const Vector3f &aIntersectionPoint)
 {
 	//   �-(-�-)-� WHAT IF?
 	// this senario is if the line crosses the spheres origo with the line segment start and end pos outside the spheres radius
@@ -181,21 +184,21 @@ bool Intersection::LineVsSphere(const LineSegment3D aLineSegment, const Sphere a
 	return false;
 }
 
-bool Intersection::SweptSphereVsAABB(const LineSegment3D aLine, const float aRadius, AABB aAABB)
+bool Intersection::SweptSphereVsAABB(const LineSegment3D& aLine, const float aRadius, const AABB& aAABB)
 {
-
 	if (aRadius == 0.0f)
 	{
-		return LineVsAABB(aLine, aAABB, Vector3f::Zero);
+		return LineVsAABB(aLine, aAABB);
 	}
 
 
-	Point3f nearestOnAABB = ClosestPointOnAABB(aLine.myStartPos, aAABB);
+	Point3f nearestOnAABB = aLine.myStartPos;
+	ClosestPointOnAABB(nearestOnAABB, aAABB);
 	Vector3f startToAABB = nearestOnAABB - aLine.myStartPos;
 	Vector3f lineVector = aLine.myEndPos - aLine.myStartPos;
 
 	//the length of the sweptsphere scaled 0 to 1
-	float length = Vector3f::Dot(startToAABB, lineVector);
+	float length = startToAABB.Dot(lineVector);
 	length /= lineVector.Length2();
 
 	float shortestDistance;
@@ -223,17 +226,16 @@ bool Intersection::SweptSphereVsAABB(const LineSegment3D aLine, const float aRad
 	}
 }
 
-bool Intersection::SweptSphereVsSphere(const LineSegment3D aLine, const float aRadius, const Sphere aSphere)
+bool Intersection::SweptSphereVsSphere(const LineSegment3D& aLine, const float aRadius, const SSphere& aSphere)
 {
-	Sphere tempSphere;
+	SSphere tempSphere;
 	tempSphere.myCenterPosition = aSphere.myCenterPosition;
 	tempSphere.myRadius = aSphere.myRadius + aRadius;
-	tempSphere.myRadiusSquared = SQUARE(tempSphere.myRadius);
 
 	return LineVsSphere(aLine, tempSphere, Vector3f::Zero);
 }
 
-bool Intersection::SphereVsSphere(const Sphere& aFirst, const Sphere& aSecond)
+bool Intersection::SphereVsSphere(const SSphere& aFirst, const SSphere& aSecond)
 {
 	float distance = Distance2Points2(aFirst.myCenterPosition, aSecond.myCenterPosition);
 	float Radia2 = (aFirst.myRadius + aSecond.myRadius) * (aFirst.myRadius + aSecond.myRadius);
@@ -244,14 +246,12 @@ bool Intersection::SphereVsSphere(const Sphere& aFirst, const Sphere& aSecond)
 	return false;
 }
 
-bool Intersection::SphereVsPlane(Plane<float> aPlane, Sphere aSphere)
+bool Intersection::SphereVsPlane(const Plane<float>& aPlane, const SSphere& aSphere)
 {
-	aSphere.myCenterPosition.x = -aSphere.myCenterPosition.x;
-	aSphere.myCenterPosition.y = -aSphere.myCenterPosition.y;
-	aSphere.myCenterPosition.z = -aSphere.myCenterPosition.z;
+	CU::Vector3f negatedSphereCenter = -aSphere.myCenterPosition;
 
 	float planeDot = aPlane.myPoint.Dot(aPlane.myNormal);
-	float distance = aPlane.myNormal.Dot(aSphere.myCenterPosition) - planeDot;
+	float distance = aPlane.myNormal.Dot(negatedSphereCenter) - planeDot;
 
 	//the sphere is completly outside plane
 	if (distance > aSphere.myRadius)
@@ -269,7 +269,7 @@ bool Intersection::SphereVsPlane(Plane<float> aPlane, Sphere aSphere)
 	return true;
 }
 
-bool Intersection::SphereVsFrustum(const Sphere aSphere, const Fov90Frustum aFrustum)
+bool Intersection::SphereVsFrustum(const SSphere& aSphere, const Fov90Frustum& aFrustum)
 {
 
 	//	 ~~~~~=?~~~~~~~~~~~~~~~~
@@ -294,4 +294,74 @@ bool Intersection::SphereVsFrustum(const Sphere aSphere, const Fov90Frustum aFru
 	}
 
 	return false;
+}
+
+bool Intersection::CircleVsCircle(const SCircle& aFirst, const SCircle& aSecond)
+{
+	float distance2 = (aFirst.myCenterPosition - aSecond.myCenterPosition).Length2();
+	float radii2 = (aFirst.myRadius + aSecond.myRadius) * (aFirst.myRadius + aSecond.myRadius);
+
+	return distance2 <= radii2;
+}
+
+bool Intersection::PointInsideCircle(const SCircle& aCircle, const SPoint& aPoint)
+{
+	float distance2 = (aPoint.myPosition - aCircle.myCenterPosition).Length2();
+	return distance2 <= aCircle.myRadius * aCircle.myRadius;
+}
+
+bool Intersection::PointInsideSquare(const SSquare& aSquare, const SPoint& aPoint)
+{
+	if (aPoint.myPosition.x < aSquare.myMinPosition.x)
+	{
+		return false;
+	}
+	else if (aPoint.myPosition.y < aSquare.myMinPosition.y)
+	{
+		return false;
+	}
+	else if (aPoint.myPosition.x >= aSquare.myMaxPosition.x)
+	{
+		return false;
+	}
+	else if (aPoint.myPosition.y >= aSquare.myMaxPosition.y)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool Intersection::CircleVsSquare(const SCircle& aCircle, const SSquare& aSquare)
+{
+	SSquare extendedSquare;
+	extendedSquare.myMaxPosition = aSquare.myMaxPosition + CU::Vector2f::One * aCircle.myRadius;
+	extendedSquare.myMinPosition = aSquare.myMinPosition - CU::Vector2f::One * aCircle.myRadius;
+	
+	return PointInsideSquare(extendedSquare, SPoint(aCircle.myCenterPosition));
+}
+
+bool Intersection::SquareVsSquare(const SSquare& aFirst, const SSquare& aSecond)
+{
+	if (aFirst.myMaxPosition.x < aSecond.myMinPosition.x)
+	{
+		return false;
+	}
+
+	if (aFirst.myMaxPosition.y < aSecond.myMinPosition.y)
+	{
+		return false;
+	}
+
+	if (aFirst.myMinPosition.x > aSecond.myMaxPosition.x)
+	{
+		return false;
+	}
+
+	if (aFirst.myMinPosition.y > aSecond.myMaxPosition.y)
+	{
+		return false;
+	}
+
+	return true;
 }

@@ -22,7 +22,7 @@ void MovementComponent::Update(float aDeltaTime)
 	{
 		if(myCurrentPathIndex < myPathPointer->Size())
 		{
-			CU::Vector3f position = GetParent()->GetWorlPosition();
+			CU::Vector3f position = GetParent()->GetWorldPosition();
 			CU::Vector3f direction = myPathPointer->At(myCurrentPathIndex) - position;
 			CU::Vector3f directionNormalized = direction.GetNormalized();
 			CU::Vector3f movement = directionNormalized * myMovementSpeed * aDeltaTime;

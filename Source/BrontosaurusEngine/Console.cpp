@@ -6,19 +6,25 @@
 #include "TextInstance.h"
 
 #include <iostream>
-
+#include "../PostMaster/PushState.h"
+#include "../PostMaster/PopCurrentState.h"
+#include "../PostMaster/ConsoleCalledUpon.h"
 CConsole::CConsole()
 {
-	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eKeyPressed);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed, 10);
 	myIsActive = false;
 	myHaveIAfterCurrentText = false;
 	myElapsedAnimationTimer = 0.0f;
 	myAnimationTimerCooldown = 0.5f;
 	myCurrentText = new CTextInstance;
+	mySuggestedCommand = new CTextInstance;
 	myCurrentText->SetColor(CTextInstance::Red);
 	myCurrentText->SetPosition(CU::Vector2f(0.2f,0.8f));
+	mySuggestedCommand->SetColor(CTextInstance::Red);
+	mySuggestedCommand->SetPosition(myCurrentText->GetPosition() + CU::Vector2f(0.0f, 0.05f));
 	myCurrentText->SetText("");
 	myCurrentText->Init();
+	mySuggestedCommand->Init();
 }
 
 
@@ -39,33 +45,36 @@ void CConsole::GetLuaFunctions()
 
 void CConsole::Activate()
 {
-	//ta all input
-	//Börja Renderas
+	PostMaster::GetInstance().SendLetter(Message(eMessageType::eConsoleCalledUpon, ConsoleCalledUpon(true)));
 }
 
 void CConsole::Deactivate()
 {
-	//sluta ta all input
-	//sluta renderas
+	PostMaster::GetInstance().SendLetter(Message(eMessageType::eConsoleCalledUpon, ConsoleCalledUpon(false)));
 }
 
-void CConsole::Update(float aDeltaTime)
+bool CConsole::Update(float aDeltaTime)
 {
-	myElapsedAnimationTimer += aDeltaTime;
-	if (myAnimationTimerCooldown < myElapsedAnimationTimer)
+	if (myIsActive == true)
 	{
-		myElapsedAnimationTimer = 0.0f;
-		if (myHaveIAfterCurrentText == true)
+		myElapsedAnimationTimer += aDeltaTime;
+		if (myAnimationTimerCooldown < myElapsedAnimationTimer)
 		{
-			myCurrentText->SetText(myCurrentText->GetText().SubStr(0, myCurrentText->GetText().Size() - 1));
-			
+			myElapsedAnimationTimer = 0.0f;
+			if (myHaveIAfterCurrentText == true)
+			{
+				myCurrentText->SetText(myCurrentText->GetText().SubStr(0, myCurrentText->GetText().Size() - 1));
+
+			}
+			else
+			{
+				myCurrentText->SetText(myCurrentText->GetText() + "|");
+			}
+			myHaveIAfterCurrentText = !myHaveIAfterCurrentText;
 		}
-		else
-		{
-			myCurrentText->SetText(myCurrentText->GetText() + "|");
-		}
-		myHaveIAfterCurrentText = !myHaveIAfterCurrentText;
 	}
+
+	return myIsActive;
 }
 
 void CConsole::Render()
@@ -73,6 +82,7 @@ void CConsole::Render()
 	if (myIsActive == true)
 	{
 		myCurrentText->Render();
+		mySuggestedCommand->Render();
 		for (unsigned short i = 0; i < myTextLog.Size(); i++)
 		{
 			myTextLog[i]->Render();
@@ -92,7 +102,7 @@ void CConsole::UpdateCommandSuggestions(const std::string & aStringToCompare)
 		if (result < finalResultDifferance)
 		{
 			finalResultDifferance = result;
-			mySuggestedCommand = it->first;
+			mySuggestedCommand->SetText(it->first.c_str());
 		}
 	}
 }
@@ -157,8 +167,10 @@ eMessageReturn CConsole::TakeKeyBoardInputPressedChar(const char aKey)
 		{
 			Activate();
 		}
-		return eMessageReturn::eContinue;
+
+		return eMessageReturn::eStop;
 	}
+
 	if (myIsActive == true)
 	{
 		if (myHaveIAfterCurrentText == true)
@@ -177,19 +189,28 @@ eMessageReturn CConsole::TakeKeyBoardInputPressedChar(const char aKey)
 			}
 			CheckIfTextIsCommand(myCurrentText->GetText());
 			myCurrentText->SetText("");
+			mySuggestedCommand->SetText("");
 		}
 		else if (aKey == '\b')
 		{
 			myCurrentText->SetText(myCurrentText->GetText().SubStr(0, myCurrentText->GetText().Size() - 1));
+			if (myCurrentText->GetText() == "")
+			{
+				mySuggestedCommand->SetText("");
+			}
 		}
 		else if (aKey == '\t')
 		{
-			//Fyll i från den föreslagna funktionen.
+			myCurrentText->SetText(mySuggestedCommand->GetText());
+			mySuggestedCommand->SetText("");
 		}
 		else
 		{
 			myCurrentText->SetText(myCurrentText->GetText() + aKey);
+			UpdateCommandSuggestions(myCurrentText->GetText().c_str());
 		}
+
+		return eMessageReturn::eStop;
 	}
 	return eMessageReturn::eContinue;
 }
@@ -207,9 +228,16 @@ const CU::DynamicString CConsole::CheckIfTextIsCommand(const CU::DynamicString& 
 	}
 	else
 	{
-
-		return aText + " was not found perhaps you meant GodMode.";
-
+		std::map<std::string, SSlua::LuaCallbackFunction>::iterator it;
+		for (it = myLuaFunctions.begin(); it != myLuaFunctions.end(); it++)
+		{
+			if (it->first == aText.c_str())
+			{
+				SSlua::ArgumentList temp;
+				temp.Init(1);
+				it->second(temp);
+			}
+		}
 	}
 
 	return aText + " was not found.";

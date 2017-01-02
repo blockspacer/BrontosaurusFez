@@ -11,12 +11,12 @@ namespace CU
 	class Vector2
 	{
 	public:
-		inline Vector2();
-		inline Vector2(const Vector2& aVector2);
-		inline Vector2(const TYPE aX, const TYPE aY);
+		Vector2();
+		Vector2(const Vector2& aVector2);
+		Vector2(const TYPE aX, const TYPE aY);
 		inline Vector2(const Vector3<TYPE>& aVector3);
-		template<typename U> inline explicit Vector2(const Vector2<U>& aVector2);
-		template<typename U> inline explicit Vector2(const U aX, const U aY);
+		template<typename U> explicit Vector2(const Vector2<U>& aVector2);
+		template<typename U> explicit Vector2(const U aX, const U aY);
 
 		inline Vector2& operator=(const Vector2& aRight);
 		template<typename U> inline Vector2& operator=(const Vector2<U>& aRight);
@@ -94,6 +94,18 @@ namespace CU
 	template<typename TYPE> const Vector2<TYPE> Vector2<TYPE>::One(1, 1);
 
 	template<typename TYPE>
+	Vector2<TYPE>& operator*=(const TYPE aLeft, Vector2<TYPE>& aRight)
+	{
+		return aRight *= aLeft;
+	}
+
+	template<typename TYPE>
+	Vector2<TYPE> operator*(const TYPE aLeft, Vector2<TYPE> aRight)
+	{
+		return aRight *= aLeft;
+	}
+
+	template<typename TYPE>
 	Vector2<TYPE>::Vector2() : x(static_cast<TYPE>(0)), y(static_cast<TYPE>(0))
 	{
 	}
@@ -115,13 +127,13 @@ namespace CU
 
 	template<typename TYPE>
 	template<typename U>
-	inline Vector2<TYPE>::Vector2(const Vector2<U>& aVector) : x(static_cast<TYPE>(aVector.x)), y(static_cast<TYPE>(aVector.y))
+	Vector2<TYPE>::Vector2(const Vector2<U>& aVector) : x(static_cast<TYPE>(aVector.x)), y(static_cast<TYPE>(aVector.y))
 	{
 	}
 
 	template<typename TYPE>
 	template<typename U>
-	inline Vector2<TYPE>::Vector2(const U aX, const U aY) : x(static_cast<TYPE>(aX)), y(static_cast<TYPE>(aY))
+	Vector2<TYPE>::Vector2(const U aX, const U aY) : x(static_cast<TYPE>(aX)), y(static_cast<TYPE>(aY))
 	{
 	}
 

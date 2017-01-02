@@ -147,6 +147,11 @@ namespace CU
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
 	GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>& GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::operator=(const GrowingArray& aGrowingArray)
 	{
+#ifdef _DEBUG
+		bool useSafeMode = USE_SAFE_MODE;
+		if (useSafeMode) useSafeMode;
+#endif // _DEBUG
+
 		if (IsInitialized() == true)
 		{
 			Destroy();
@@ -256,7 +261,7 @@ namespace CU
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
-	inline const ObjectType & GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::At(const SizeType aIndex) const
+	inline const ObjectType& GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::At(const SizeType aIndex) const
 	{
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds");
@@ -334,6 +339,11 @@ namespace CU
 	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Insert(const SizeType aIndex, const ObjectType& aObject)
 	{
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+#ifdef _DEBUG
+		bool useSafeMode = USE_SAFE_MODE;
+		if (useSafeMode) useSafeMode;
+#endif // _DEBUG
+
 
 		if (mySize >= myCapacity)
 		{
@@ -374,6 +384,10 @@ namespace CU
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds");
 
+#ifdef _DEBUG
+		bool useSafeMode = USE_SAFE_MODE;
+		if (useSafeMode) useSafeMode;
+#endif // _DEBUG
 
 		if (mySize > 1)
 		{

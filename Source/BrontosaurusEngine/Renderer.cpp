@@ -10,6 +10,9 @@
 #include "StreakEmitterInstance.h"
 #include "ParticleEmitter.h"
 #include "ParticleEmitterManager.h"
+#include "FireEmitterManager.h"
+#include "FireEmitter.h"
+#include "ModelManager.h"
 #include "ConstBufferTemplate.h"
 #include "Text.h"
 #include <Camera.h>
@@ -27,12 +30,15 @@
 
 CRenderer::CRenderer()
 {
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed);
+
 	mySettings.HDR = true;
-	mySettings.Bloom = true;
+	mySettings.Bloom = false;
 	mySettings.Motionblur = false;
 	mySettings.CromaticAberration = true;
 
-	myTimers.CreateTimer();
+	myOncePerFrameBufferTimer = myTimers.CreateTimer();
+	myFireTimer = myTimers.CreateTimer();
 
 	CreateBuffer();
 
@@ -54,6 +60,8 @@ CRenderer::CRenderer()
 
 CRenderer::~CRenderer()
 {
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyPressed);
+
 	for (int i = 0; i < myRasterizerStates.Size(); ++i)
 	{
 		myRasterizerStates[i]->Release();
@@ -386,8 +394,8 @@ void CRenderer::UpdateBuffer()
 
 	updatedBuffer.myCameraMatrices.myCameraSpaceInverse = myCamera.GetInverse();
 	updatedBuffer.myCameraMatrices.myProjectionSpace = myCamera.GetProjection();
-	updatedBuffer.deltaTime = myTimers.GetTimer(0).GetDeltaTime().GetSeconds();
-	updatedBuffer.time = myTimers.GetTimer(0).GetLifeTime().GetSeconds();
+	updatedBuffer.deltaTime = myTimers.GetTimer(myOncePerFrameBufferTimer).GetDeltaTime().GetSeconds();
+	updatedBuffer.time = myTimers.GetTimer(myOncePerFrameBufferTimer).GetLifeTime().GetSeconds();
 	updatedBuffer.fogStart = 0.0f;
 	updatedBuffer.fogEnd = 0.0f;
 	
@@ -590,7 +598,7 @@ void CRenderer::CreateDepthStencilStates()
 		myDepthStencilStates[static_cast<int>(eDepthStencilState::eDisableDepth)] = depthStencilState;
 	}
 
-	//tabort?
+	//tabort? ta den vaek
 	{
 		D3D11_DEPTH_STENCIL_DESC depthStencilReadOnlyDesc;
 		ZeroMemory(&depthStencilReadOnlyDesc, sizeof(depthStencilReadOnlyDesc));
@@ -649,6 +657,8 @@ void CRenderer::CreateSamplerStates()
 	result = DEVICE->CreateSamplerState(&samplerStateDesc, &clampState);
 	mySamplerStates[static_cast<int>(eSamplerState::eClamp)] = clampState;
 
+	mySamplerStates[static_cast<int>(eSamplerState::eClamp0Wrap1)] = nullptr;
+
 	CHECK_RESULT(result, "Failed to create SamplerState.");
 }
 
@@ -670,14 +680,23 @@ void CRenderer::DoRenderQueue()
 		case SRenderMessage::eRenderMessageType::eRenderModel:
 		{
 			SRenderModelMessage* msg = static_cast<SRenderModelMessage*>(renderMessage);
-			msg->myModel->Render(msg->myTransformation, msg->myLastFrameTransformation, msg->myDirectionalLight, msg->myPointLights);
+			CModel* model = CEngine::GetInstance()->GetModelManager()->GetModel(msg->myModelID);
+			model->Render(msg->myTransformation, msg->myLastFrameTransformation, msg->myDirectionalLight, msg->myPointLights);
 			++drawCalls;
 			break;
 		}
 		case SRenderMessage::eRenderMessageType::eRenderAnimationModel:
 		{
 			SRenderAnimationModelMessage* msg = static_cast<SRenderAnimationModelMessage*>(renderMessage);
-			msg->myModel->Render(msg->myTransformation, msg->myLastFrameTransformation, msg->myDirectionalLight, msg->myPointLights, msg->myBoneMatrices);
+			CModel* model = CEngine::GetInstance()->GetModelManager()->GetModel(msg->myModelID);
+			msg->myAnimationTime;
+			msg->myCurrentAnimation;
+
+			std::vector<mat4>& bones = model->GetBones(msg->myAnimationTime, msg->myCurrentAnimation);
+			
+			memcpy(static_cast<void*>(msg->myBoneMatrices), &bones[0], min(sizeof(msg->myBoneMatrices), bones.size() * sizeof(mat4)));
+
+			model->Render(msg->myTransformation, msg->myLastFrameTransformation, msg->myDirectionalLight, msg->myPointLights, msg->myBoneMatrices);
 			++drawCalls;
 			break;
 		}
@@ -685,14 +704,14 @@ void CRenderer::DoRenderQueue()
 		{
 			myGUIData.myInputPackage.Activate();
 			SRenderGUIModelMessage* msg = static_cast<SRenderGUIModelMessage*>(renderMessage);
-			
-			if (msg->myModel->HasConstantBuffer(CModel::eShaderStage::ePixel) == true)
+			CModel* model = CEngine::GetInstance()->GetModelManager()->GetModel(msg->myModelID);
+			if (model->HasConstantBuffer(CModel::eShaderStage::ePixel) == true)
 			{
 				msg->myPixelConstantBufferStruct.myCameraPosition = myCamera.GetPosition();
-				msg->myModel->UpdateConstantBuffer(CModel::eShaderStage::ePixel, &msg->myPixelConstantBufferStruct, sizeof(msg->myPixelConstantBufferStruct));
+				model->UpdateConstantBuffer(CModel::eShaderStage::ePixel, &msg->myPixelConstantBufferStruct, sizeof(msg->myPixelConstantBufferStruct));
 			}
 
-			msg->myModel->Render(msg->myToWorld, msg->myToWorld, nullptr, nullptr); //don't blur  GUI, atm fullösning deluxe.
+			model->Render(msg->myToWorld, msg->myToWorld, nullptr, nullptr); //don't blur  GUI, atm fullösning deluxe.
 			
 			++drawCalls;
 
@@ -747,8 +766,7 @@ void CRenderer::DoRenderQueue()
 		{
 			SRenderParticlesMessage* msg = static_cast<SRenderParticlesMessage*>(renderMessage);
 			CParticleEmitter* emitter = ENGINE->GetParticleEmitterManager().GetParticleEmitter(msg->particleEmitter);
-			if (emitter == nullptr)
-				break;
+			if (emitter == nullptr)	break;
 
 			emitter->Render(msg->toWorld, msg->particleList);
 			break;
@@ -763,13 +781,28 @@ void CRenderer::DoRenderQueue()
 			}
 			break;
 		}
+		case SRenderMessage::eRenderMessageType::eRenderFire:
+		{
+			SRenderFireMessage* msg = static_cast<SRenderFireMessage*>(renderMessage);
+			CFireEmitter* emitter = ENGINE->GetFireEmitterManager().GetFireEmitter(msg->myFireID);
+			if (emitter == nullptr) break;
+
+			const CU::Timer& fireTimer = myTimers.GetTimer(myFireTimer);
+			if (fireTimer.GetLifeTime().GetMilliseconds() > 10000.f)
+			{
+				myTimers.ResetTimer(myFireTimer);
+			}
+
+			emitter->Render(fireTimer.GetLifeTime(), msg->myToWorldMatrix);
+			break;
+		}
 		}
 	}
 
 	PostMaster::GetInstance().SendLetter(Message(eMessageType::eDrawCallsThisFrame, DrawCallsCount(drawCalls)));
 }
 
-void CRenderer::SetStates(const SChangeStatesMessage* aState)
+void CRenderer::SetStates(const SChangeStatesMessage* aState) //change from pekare to reference
 {
 	DEVICE_CONTEXT->RSSetState(myRasterizerStates[static_cast<int>(aState->myRasterizerState)]);
 	DEVICE_CONTEXT->OMSetDepthStencilState(myDepthStencilStates[static_cast<int>(aState->myDepthStencilState)], 0);
@@ -781,8 +814,21 @@ void CRenderer::SetStates(const SChangeStatesMessage* aState)
 
 
 	assert(aState->mySamplerState != eSamplerState::eSize);
-	DEVICE_CONTEXT->VSSetSamplers(0, 1, &mySamplerStates[static_cast<int>(aState->mySamplerState)]);
-	DEVICE_CONTEXT->PSSetSamplers(0, 1, &mySamplerStates[static_cast<int>(aState->mySamplerState)]);
+	if (aState->mySamplerState == eSamplerState::eClamp0Wrap1)
+	{
+		ID3D11SamplerState* both[2] = { mySamplerStates[static_cast<int>(eSamplerState::eClamp)], mySamplerStates[static_cast<int>(eSamplerState::eWrap)] };
+		DEVICE_CONTEXT->VSSetSamplers(0, 2, both);
+		DEVICE_CONTEXT->PSSetSamplers(0, 2, both);
+	}
+	else
+	{
+		DEVICE_CONTEXT->VSSetSamplers(0, 1, &mySamplerStates[static_cast<int>(aState->mySamplerState)]);
+		DEVICE_CONTEXT->PSSetSamplers(0, 1, &mySamplerStates[static_cast<int>(aState->mySamplerState)]);
+	}
+}
 
+eMessageReturn CRenderer::Recieve(const Message & aMessage)
+{
+	return aMessage.myEvent.DoEvent(this);
 }
 

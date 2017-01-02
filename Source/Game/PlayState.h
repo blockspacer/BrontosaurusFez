@@ -1,15 +1,13 @@
 #pragma once
 #include "../StateStack/State.h"
 #include "../PostMaster/Subscriber.h"
-#include "../BrontosaurusEngine/StreakEmitterInstance.h" //TODO: solve this including hell
-#include "../BrontosaurusEngine/Lights.h"
-#include "../BrontosaurusEngine/Scene.h"
-#include "../Physics/PhysicsManager.h"
 
-#include "ValueObserver.h"
 #include <atomic>
 
 #include "../LuaWrapper/SSlua/SSlua.h"
+
+//temp includes
+#include <iostream>
 
 namespace CU
 {
@@ -21,6 +19,7 @@ namespace GUI
 	class GUIManager;
 }
 
+class CScene;
 class CGameObject;
 class CGameObjectManager;
 class WeaponSystemComponent;
@@ -52,6 +51,9 @@ public:
 
 	eMessageReturn Recieve(const Message& aMessage) override;
 
+	void TEMP_ADD_HAT(CGameObject* aPlayerObject);
+	CGameObject* myPlayerObject; //TEMP
+
 	inline bool IsLoaded() const;
 
 	CGameObjectManager* GetObjectManager() const;
@@ -62,7 +64,7 @@ public:
 private:
 	void CreateManagersAndFactories();
 
-	CScene myScene;
+	CScene* myScene;
 	
 	CParticleEmitterComponent* myEmitterComp;
 
@@ -84,5 +86,6 @@ inline bool CPlayState::IsLoaded() const
 
 inline SSlua::ArgumentList CPlayState::LuaFunction(SSlua::ArgumentList anArgumentList)
 {
+	std::cout << "Du anropade en function från Konsolen Punkt 3.a klar" << std::endl;
 	return SSlua::ArgumentList();
 }

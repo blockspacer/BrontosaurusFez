@@ -66,43 +66,38 @@ void MainMenuState::OnEnter()
 	//bool result;
 	//result = Audio::CAudioInterface::GetInstance()->LoadBank("Audio/mainMenu.bnk");
 	//Audio::CAudioInterface::GetInstance()->PostEvent("PlayBasSong");
-	//
-	//if (myIsGoingToLevelSelect == false)
-	//{
-	//	myGUIManager->RestartRenderAndUpdate();
-	//}
-	//else
-	//{
-		PostMaster::GetInstance().InsertSubscriber(myGUIManager, eMessageType::eMouseMessage);
-		PostMaster::GetInstance().InsertSubscriber(myGUIManager, eMessageType::eKeyboardMessage);
-	//}
-	//
-	//myIsGoingToLevelSelect = false;
-	//
-	//myGUIManager->SetSkipEmissive(false);
-	//
-	//myGUIManager->SetRenderMouse(true);
+	
+	if (myIsGoingToLevelSelect == false)
+	{
+		myGUIManager->RestartRenderAndUpdate();
+	}
+	else
+	{
+		PostMaster::GetInstance().Subscribe(myGUIManager, eMessageType::eMouseMessage, 5);
+		PostMaster::GetInstance().Subscribe(myGUIManager, eMessageType::eKeyboardMessage);
+	}
+	
+	myIsGoingToLevelSelect = false;
+	
+	myGUIManager->SetRenderMouse(true);
 }
 
 void MainMenuState::OnExit()
 {
-	
 	//Audio::CAudioInterface::GetInstance()->PostEvent("StopBasSong");
 	//Audio::CAudioInterface::GetInstance()->PostEvent("switchBank");
 	//Audio::CAudioInterface::GetInstance()->UnLoadBank("Audio/menMenu.bnk");
-	//
-	////SAFE_DELETE(myGUIManager);
-	//if (myIsGoingToLevelSelect == false)
-	//{
-	//	myGUIManager->PauseRenderAndUpdate();
-	//}
-	//else
-	//{
-	PostMaster::GetInstance().UnSubscribe(myGUIManager, eMessageType::eMouseMessage);
-	PostMaster::GetInstance().UnSubscribe(myGUIManager, eMessageType::eKeyboardMessage);
-	//}
-	//
-	//myGUIManager->SetSkipEmissive(true);
-	//
-	//myGUIManager->SetRenderMouse(false);
+	
+
+	if (myIsGoingToLevelSelect == false)
+	{
+		myGUIManager->PauseRenderAndUpdate();
+	}
+	else
+	{
+		PostMaster::GetInstance().UnSubscribe(myGUIManager, eMessageType::eMouseMessage);
+		PostMaster::GetInstance().UnSubscribe(myGUIManager, eMessageType::eKeyboardMessage);
+	}
+	
+	myGUIManager->SetRenderMouse(false);
 }

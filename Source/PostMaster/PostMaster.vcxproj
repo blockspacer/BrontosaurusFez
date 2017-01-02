@@ -28,13 +28,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChangeLevel.cpp" />
+    <ClCompile Include="ConsoleCalledUpon.cpp" />
     <ClCompile Include="DrawCallsCount.cpp" />
     <ClCompile Include="FocusChange.cpp" />
     <ClCompile Include="InputMessagePressed.cpp" />
     <ClCompile Include="KeyCharPressed.cpp" />
     <ClCompile Include="KeyPressed.cpp" />
     <ClCompile Include="KeyReleased.cpp" />
-    <ClCompile Include="MouseDown.cpp" />
     <ClCompile Include="MouseReleased.cpp" />
     <ClCompile Include="Pop2States.cpp" />
     <ClCompile Include="PopCurrentState.cpp" />
@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChangeLevel.h" />
+    <ClInclude Include="ConsoleCalledUpon.h" />
     <ClInclude Include="DrawCallsCount.h" />
     <ClInclude Include="EMessageReturn.h" />
     <ClInclude Include="Event.h" />
@@ -62,7 +63,6 @@
     <ClInclude Include="KeyPressed.h" />
     <ClInclude Include="KeyReleased.h" />
     <ClInclude Include="MouseClicked.h" />
-    <ClInclude Include="MouseDown.h" />
     <ClInclude Include="Pop2States.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="MessageType.h" />

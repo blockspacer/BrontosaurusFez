@@ -16,11 +16,13 @@ class CreditsState;
 class CInputManager;
 class CDebugInfoDrawer;
 class LevelSelectState;
-class ControllerComponent;
 class EnemyEmitterComponent;
 class InputController;
 class CConsole;
+
+//temp
 class CHealthComponent;
+class CRenderer;
 
 class Event
 {
@@ -41,6 +43,8 @@ public:
 	virtual eMessageReturn DoEvent(EnemyEmitterComponent*) const { return eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(InputController*) const { return eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(CConsole*) const { return eMessageReturn::eContinue; }
+
 	//temp
 	virtual eMessageReturn DoEvent(CHealthComponent*) const { return eMessageReturn::eContinue; }
+	virtual eMessageReturn DoEvent(CRenderer*) const { return eMessageReturn::eContinue; }
 };

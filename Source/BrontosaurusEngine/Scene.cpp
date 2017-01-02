@@ -8,6 +8,7 @@
 #include "Renderer.h"
 #include "Skybox.h"
 #include "ParticleEmitterInstance.h"
+#include "FireEmitterInstance.h"
 
 #define Intify(A_ENUM_CLASS) static_cast<int>(A_ENUM_CLASS)
 
@@ -69,9 +70,9 @@ namespace
 CScene::CScene()
 {
 	myModels.Init(64);
-	myAlphaModels.Init(8);
 	myPointLights.Init(8);
 	myParticleEmitters.Init(8);
+	myFireEmitters.Init(8);
 	mySkybox = nullptr;
 }
 
@@ -79,7 +80,6 @@ CScene::~CScene()
 {
 	SAFE_DELETE(mySkybox);
 	myModels.DeleteAll();
-	myAlphaModels.DeleteAll();
 	myParticleEmitters.DeleteAll();
 	//myDebugObjects.DeleteAll();
 }
@@ -136,33 +136,18 @@ void CScene::Render()
 		myModels[i]->Render(&myDirectionalLight, &myPointLights);
 	}
 
+	SChangeStatesMessage* changeStateMessage = new SChangeStatesMessage();
+	changeStateMessage->myBlendState = eBlendState::eAlphaBlend;
+	changeStateMessage->myDepthStencilState = eDepthStencilState::eReadOnly; //don't know what to do here
+	changeStateMessage->myRasterizerState = eRasterizerState::eNoCullingClockwise;
+	changeStateMessage->mySamplerState = eSamplerState::eClamp0Wrap1;
 
-	statemsg.myBlendState = eBlendState::eAlphaBlend;
-	statemsg.myRasterizerState = eRasterizerState::eDefault;
-	statemsg.myDepthStencilState = eDepthStencilState::eDefault;
-	statemsg.mySamplerState = eSamplerState::eWrap;
+	RENDERER.AddRenderMessage(changeStateMessage);
 
-
-	RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
-
-
-	quickSort(myAlphaModels, 0, myAlphaModels.Size());
-
-
-	for (unsigned int i = 0; i < myAlphaModels.Size(); ++i)
+	for (CFireEmitterInstance& fireEmitter : myFireEmitters)
 	{
-		if (myAlphaModels[i] == nullptr || myAlphaModels[i]->ShouldRender() == false)
-		{
-			continue;
-		}
-
-		if (myCameras[Intify(eCameraType::ePlayerOneCamera)].IsInside(myAlphaModels[i]->GetModelBoundingBox()) == false)
-		{
-			continue;
-		}
-
-		myAlphaModels[i]->Render(&myDirectionalLight, &myPointLights);
-
+		fireEmitter.GetTransformation().LookAt(myCameras[Intify(eCameraType::ePlayerOneCamera)].GetPosition());
+		fireEmitter.Render();
 	}
 
 	statemsg.myBlendState = eBlendState::eAlphaBlend;
@@ -187,30 +172,16 @@ InstanceID CScene::AddModelInstance(CModelInstance* aModelInstance)
 {
 	InstanceID id = 0;
 
-	if (aModelInstance->IsAlpha() == false)
+	if (myFreeModels.Size() < 1)
 	{
-		if (myFreeModels.Size() < 1)
-		{
-			myModels.Add(aModelInstance);
-			id = myModels.Size();
-			return id;
-		}
-
-		id = myFreeModels.Pop();
-		myModels[id] = aModelInstance;
+		myModels.Add(aModelInstance);
+		id = myModels.Size();
+		return id;
 	}
-	else
-	{
-		if (myFreeAlphaModels.Size() < 1)
-		{
-			myAlphaModels.Add(aModelInstance);
-			id = myAlphaModels.Size();
-			return id;
-		}
 
-		id = myFreeAlphaModels.Pop();
-		myAlphaModels[id] = aModelInstance;
-	}
+	id = myFreeModels.Pop();
+	myModels[id] = aModelInstance;
+	
 	
 	return id;
 }
@@ -242,6 +213,13 @@ InstanceID CScene::AddParticleEmitterInstance(CParticleEmitterInstance * aPartic
 	return  tempId;
 }
 
+InstanceID CScene::AddFireEmitters(const CFireEmitterInstance& aFireEmitter)
+{
+	InstanceID id = myFireEmitters.Size();
+	myFireEmitters.Add(aFireEmitter);
+	return id;
+}
+
 void CScene::AddCamera(const eCameraType aCameraType)
 {
 	myCameras[static_cast<int>(aCameraType)] = CU::Camera(); //TODO: maybe not have add
@@ -261,6 +239,11 @@ void CScene::SetSkybox(const char* aPath)
 CModelInstance& CScene::GetModelAt(InstanceID aModelID)
 {
 	return *myModels[aModelID];
+}
+
+CFireEmitterInstance& CScene::GetFireEmitter(const InstanceID aFireEmitterID)
+{
+	return myFireEmitters[aFireEmitterID];
 }
 
 CU::Camera& CScene::GetCamera(const eCameraType aCameraType)

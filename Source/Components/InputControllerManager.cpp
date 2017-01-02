@@ -13,21 +13,21 @@ InputControllerManager::InputControllerManager()
 
 InputControllerManager & InputControllerManager::GetInstance()
 {
-	assert(ourInstance != nullptr && "enemy ai controller component manager not created (is NULL)");
+	assert(ourInstance != nullptr && "input controller component manager not created (is NULL)");
 
 	return *ourInstance;
 }
 
 void InputControllerManager::CreateInstance()
 {
-	assert(ourInstance == nullptr && "enemy ai controller component manager already created");
+	assert(ourInstance == nullptr && "input controller component manager already created");
 	ourInstance = new InputControllerManager();
 }
 
 void InputControllerManager::DestroyInstance()
 {
 
-	assert(ourInstance != nullptr && "enemy ai controller component manager not created (is NULL)");
+	assert(ourInstance != nullptr && "input controller component manager not created (is NULL)");
 
 	SAFE_DELETE(ourInstance);
 }
@@ -39,21 +39,21 @@ void InputControllerManager::RegisterComponent(InputController * aComponent)
 
 void InputControllerManager::Update(const CU::Time & aDeltaTime)
 {
-	for (unsigned short i = 0; i < myComponents.Size(); i++)
+	for (InputController* component : myComponents)
 	{
-		if (myComponents[i] != nullptr)
+		if (component != nullptr)
 		{
-			myComponents[i]->Update(aDeltaTime.GetSeconds());
+			component->Update(aDeltaTime.GetSeconds());
 		}
 	}
 }
 
 InputControllerManager::~InputControllerManager()
 {
-	for (unsigned int i = 0; i < myComponents.Size(); ++i)
+	for (InputController* component : myComponents)
 	{
-		CComponentManager::GetInstance().RemoveComponent(myComponents[i]->GetId());
-		SAFE_DELETE(myComponents[i]);
+		CComponentManager::GetInstance().RemoveComponent(component->GetId());
+		SAFE_DELETE(component);
 	}
 
 	myComponents.RemoveAll();

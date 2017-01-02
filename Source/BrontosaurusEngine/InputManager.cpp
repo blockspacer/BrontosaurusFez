@@ -13,7 +13,6 @@
 
 #include "../PostMaster/PostMaster.h"
 #include "../PostMaster/Message.h"
-#include "../PostMaster/MouseDown.h"
 #include "../PostMaster/MouseClicked.h"
 #include "../PostMaster/MouseReleased.h"
 #include "../PostMaster/MouseMoved.h"
@@ -41,7 +40,7 @@ CInputManager::CInputManager()
 
 	myHasFocus = true;
 
-	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eFokusChanged);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eFokusChanged);
 }
 
 CInputManager::~CInputManager()
@@ -89,17 +88,9 @@ void CInputManager::UpdateMouse()
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eMouseMessage, MouseMoved(mousePosition)));
 			lastMousePosition = mousePosition;
 		}
-
-		if (myDInputWrapper->IsMouseButtonDown(CU::eMouseButtons::LBUTTON) == true)
-		{
-			PostMaster::GetInstance().SendLetter(Message(eMessageType::eMouseMessage, MouseDown(mousePosition, CU::eMouseButtons::LBUTTON)));
-		}
 		if (myDInputWrapper->IsMouseButtonPressed(CU::eMouseButtons::LBUTTON) == true)
 		{
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eMouseMessage, MouseClicked(mousePosition, CU::eMouseButtons::LBUTTON)));
-			//PostMaster::GetInstance().SendLetter(Message(eMessageType::eMousePressed, MouseClicked(mousePosition, CU::eMouseButtons::LBUTTON))); //kyle
-			PostMaster::GetInstance().SendLetter(Message(eMessageType::eInputMessagePressed, InputMessagePressed(CU::eInputMessage::LEFTMOUSEBUTTON)));
-
 		}
 		if (myDInputWrapper->IsMouseButtonReleased(CU::eMouseButtons::LBUTTON) == true)
 		{

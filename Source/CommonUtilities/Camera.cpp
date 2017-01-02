@@ -35,6 +35,8 @@ namespace CU
 	{
 
 		myProjection = myProjection.CreateProjectionMatrixLH(1, aFar, aProjectionWidth , aProjectionHeight , (aFov) *(3.14159265f / 180.f));
+		myProjectionInverse = myProjection.GetInverted();
+
 		myFrustum.SetFrustum(aFar, aNear, aFov, aProjectionWidth, aProjectionHeight);
 		myTransformation = Matrix44f::Identity;
 		myTransformation.SetPosition(aPosition);
@@ -54,7 +56,9 @@ namespace CU
 		const float aNear,
 		const float aFar)
 	{
-		myProjection = myProjection.CreateProjectionMatrixLH(aNear, aFar, aProjectionWidth , aProjectionHeight, aFov * (3.14159265f / 180.f));
+		myProjection = myProjection.CreateProjectionMatrixLH(aNear, aFar, aProjectionWidth, aProjectionHeight, aFov * (3.14159265f / 180.f));
+		myProjectionInverse = myProjection.GetInverted();
+
 		myFrustum.SetFrustum(aFar, aNear, aFov, aProjectionWidth, aProjectionHeight);
 		myDistFarNear = aFar - aNear;
 		myFar = aFar;
@@ -77,6 +81,11 @@ namespace CU
 	const Matrix44f& Camera::GetProjection() const
 	{
 		return myProjection;
+	}
+
+	const Matrix44f& Camera::GetProjectionInverse() const
+	{
+		return myProjectionInverse;
 	}
 
 	const Vector3f Camera::GetPosition() const

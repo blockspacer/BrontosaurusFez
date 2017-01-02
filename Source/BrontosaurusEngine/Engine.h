@@ -1,11 +1,11 @@
 #pragma once
-//#include "stdafx.h"
 #include <functional>
 #include "../CommonUtilities/vector2.h"
 #include "../FontEngine/FontEngineFacade.h"
 #include "TextInstance.h"
 
 class CParticleEmitterManager;
+class CFireEmitterManager;
 class CModelManager;
 class CSpriteManager;
 class CLineDrawer;
@@ -24,7 +24,6 @@ class CConsole;
 #define HWNDGET			CEngine::GetInstance()->GetWindow()->GetHWND()
 #define HINSTGET		CEngine::GetInstance()->GetWindow()->GetHinstance()
 
-//#define CAMERA 			CEngine::GetInstance()->GetCamera()
 #define RENDERER		CEngine::GetInstance()->GetRenderer()
 #define THREADPOOL		CEngine::GetInstance()->GetThreadPool()
 #define LIGHTMANAGER 	CEngine::GetInstance()->GetLightManager()
@@ -39,6 +38,7 @@ class CConsole;
 #define DEVICE_CONTEXT	CEngine::GetInstance()->GetFramework()->GetDeviceContext()
 
 #define WINDOW_SIZE     CEngine::GetInstance()->GetWindowSize()
+#define WINDOW_SIZE_F	CEngine::GetInstance()->GetWindowSizeF()
 #define CONSOLE         CEngine::GetInstance()->GetConsole()
 
 namespace CU
@@ -94,6 +94,7 @@ public:
 	inline CU::TimerManager* GetTimerManager();
 	inline CU::ThreadPool* GetThreadPool();
 	inline CParticleEmitterManager& GetParticleEmitterManager();
+	inline CFireEmitterManager& GetFireEmitterManager();
 	inline CConsole* GetConsole();
 
 	CU::Time GetTime();
@@ -102,6 +103,7 @@ public:
 	void ThreadedRender();
 	void OnResize(const unsigned int aWidth, const unsigned int aHeight);
 	inline const CU::Vector2ui& GetWindowSize();
+	inline CU::Vector2f GetWindowSizeF();
 
 private:
 	CEngine();
@@ -118,6 +120,7 @@ private:
 	CInputManager* myInputManager;
 	CTextureManager* myTextureManager;
 	CParticleEmitterManager* myParticleEmitterManager;
+	CFireEmitterManager* myFireEmitterManager;
 	
 	CConsole* myConsole;
 
@@ -191,15 +194,20 @@ inline CU::ThreadPool* CEngine::GetThreadPool()
 	return myThreadPool;
 }
 
-inline CConsole * CEngine::GetConsole()
+inline CConsole* CEngine::GetConsole()
 {
 	return myConsole;
 }
 
-inline CParticleEmitterManager & CEngine::GetParticleEmitterManager()
+inline CParticleEmitterManager& CEngine::GetParticleEmitterManager()
 {
 	assert(myParticleEmitterManager != nullptr);
 	return *myParticleEmitterManager;
+}
+
+inline CFireEmitterManager& CEngine::GetFireEmitterManager()
+{
+	return *myFireEmitterManager;
 }
 
 inline CLightManager*CEngine::GetLightManager()
@@ -212,7 +220,12 @@ inline const CU::Vector2ui& CEngine::GetWindowSize()
 	return myWindowSize;
 }
 
-inline CRenderer & CEngine::GetRenderer()
+inline CU::Vector2f CEngine::GetWindowSizeF()
+{
+	return CU::Vector2f(myWindowSize);
+}
+
+inline CRenderer& CEngine::GetRenderer()
 {
 	return *myRenderer;
 }

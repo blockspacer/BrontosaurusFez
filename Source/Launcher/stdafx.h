@@ -13,6 +13,7 @@
 
 #include <Game.h>
 #include <Engine.h>
+#include <GrowingArray.h>
 #include <CommandLineManager.h>
 #include <DL_Debug.h>
 #include <MemoryLeekLogger.h>

@@ -103,6 +103,10 @@ void CCoolText::RenderCharacter(const wchar_t aCharacter, const CU::Vector2f& aP
 
 	ID3D11ShaderResourceView* const shaderResourceView = myFont.GetCharResourceView(aCharacter);
 	DEVICE_CONTEXT->PSSetShaderResources(1u, 1u, &shaderResourceView);
+
+	UINT stride = sizeof(float) * 4u;
+	UINT offset = 0;
+	DEVICE_CONTEXT->IASetVertexBuffers(0, 1, &myVertexBuffer, &stride, &offset);
 	CEngine::GetInstance()->GetFramework()->GetDeviceContext()->Draw(6, 0);
 }
 

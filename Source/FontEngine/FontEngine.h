@@ -3,7 +3,6 @@
 
 #include "ft2build.h"
 #include FT_FREETYPE_H
-#include "../CommonUtilities/GrowingArray.h"
 #include <map>
 #include "FT_FontFacade.h"
 

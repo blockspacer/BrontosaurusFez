@@ -1,104 +1,271 @@
 #include "stdafx.h"
+#include "Engine.h"
 #include "ModelManager.h"
 #include "ModelLoader.h"
 #include "ConstBufferTemplate.h"
 #include <CommonUtilities.h>
 #include <CommandLineManager.h>
-#include "Engine.h"
-//#include "ModelInstance.h"
-//#include "Sprite.h"
 #include <matrix44.h>
-#include "DynamicString.h"
+#include <StringHelper.h>
 #include <ThreadPool.h>
+#include <DynamicString.h>
 
 #include "GUIModleHelper.h"
 #include "FBXLoader.h"
 #include "..\GUI\GUIPixelConstantBuffer.h"
 
+
 CModelManager::CModelManager()
 	: myModelList(ourMaxNumberOfModels)
-	, myGUIModelList(ourMaxNumberOfGUIModels)
 {
 	myThreadPool = CEngine::GetInstance()->GetThreadPool();
-	//myModelList.Init(8);
-	myDebugModelList.Init(64);
 }
 
 CModelManager::~CModelManager()
 {
 }
 
-CModel* CModelManager::LoadModel(const CU::DynamicString& aModelPath)
+
+const CModelManager::ModelId CModelManager::LoadModel(const CU::DynamicString& aModelPath)
 {
 	if (myModelList.Size() >= ourMaxNumberOfModels)
 	{
-		DL_MESSAGE_BOX("Too many unique models created! Current max is: %i.\nTalk to programmer if we need more, it is probably possible.\n", ourMaxNumberOfModels);
+		DL_MESSAGE_BOX("Too many unique models created! Current max is: %i.\nTalk to a programmer if we need more, it is probably possible.\n", ourMaxNumberOfModels);
 		DL_ASSERT("Too many unique models created! Current max is: %i.\n", ourMaxNumberOfModels);
-		return nullptr;
+		return NULL_MODEL;
 	}
+
+	ModelId newModelID = -1;
 
 	if (myModels.count(aModelPath.c_str()) == 0) //check if derp, else flip bool
 	{
-		const ModelId newModelId = myModelList.Size();
-		myModels[aModelPath.c_str()] = newModelId;
-		myModelList.Add(CModel());
-
-//#define THREAD_MODELLOADING  
-
- // trådad funkar inte atm, för att vi hinner returnera och behandla modellen innan kollisionsdatan är klar.
-// Kolla hur modellen är hanterad och se om det inte går o fixa coll med lite pekarmagi.
-#ifdef THREAD_MODELLOADING
-		auto LoadFunc = [aModelPath, newModelId, this]()
+		if (myFreeModelIDs.Size() != 0)
 		{
-			CreateModel(aModelPath, newModelId);
-		};
-		
-		CU::DynamicString logmsg = aModelPath.c_str();
-		logmsg += "\t took %f ms to load.";
-		
-		myThreadPool->AddWork(CU::Work(LoadFunc, DL_Debug::eLogTypes::eThreadedModels, logmsg.c_str(),CU::ePriority::eHigh));
-#else
-		if (CreateModel(aModelPath, newModelId) == false)
+			newModelID = myFreeModelIDs.Pop();
+		}
+		else
+		{
+			newModelID = myModelList.Size();
+			myModelList.Add(CModel());
+		}
+
+		myModels[aModelPath.c_str()] = newModelID;
+
+
+		if (CreateModel(aModelPath, newModelID) == false)
 		{
 			myModelList.Pop();
 			myModels.erase(aModelPath.c_str());
-			return nullptr;
+			return NULL_MODEL;
 		}
-#endif
+
+		LoadAnimations(aModelPath.c_str(), newModelID);
 
 	}
-	//myModelList[myModels[aModelPath.c_str()]].AddInstance(aModelInstance);
-	return &myModelList[myModels[aModelPath.c_str()]];
-}
 
-bool CModelManager::DoesModelExists(const char * aModelPath)
-{
-	return myModels.find(aModelPath) == myModels.end();
+	myModelList[myModels[aModelPath.c_str()]].AddRef();
+	return myModels[aModelPath.c_str()];
 }
-
-CModel* CModelManager::LoadModel(SShape aModelShape)
+const CModelManager::ModelId CModelManager::LoadModel(SShape aModelShape)
 {
+	if (myModelList.Size() >= ourMaxNumberOfModels)
+	{
+		DL_MESSAGE_BOX("Too many unique models created! Current max is: %i.\nTalk to a programmer if we need more, it is probably possible.\n", ourMaxNumberOfModels);
+		DL_ASSERT("Too many unique models created! Current max is: %i.\n", ourMaxNumberOfModels);
+		return -1;
+	}
+
+	ModelId newModelID = -1;
+
+
 	if (aModelShape.shape == eModelShape::eSphere)
 	{
-		if(myDebugSphereMap.find(aModelShape.size) == myDebugSphereMap.end())
+		if(mySpheres.find(aModelShape.size) == mySpheres.end())
 		{
-			const ModelId newModelId = myDebugModelList.Size();
-			CModel* temp = CreateShape(aModelShape);
-			myDebugModelList.Add(*temp);
-			delete temp;
-			myDebugSphereMap[aModelShape.size] = newModelId;
+			if (myFreeModelIDs.Size() != 0)
+			{
+				newModelID = myFreeModelIDs.Pop();
+			}
+			else
+			{
+				newModelID = myModelList.Size();
+				myModelList.Add(CModel());
+			}
+
+			myModelList[newModelID] = *CreateShape(aModelShape);
+			mySpheres[aModelShape.size] = newModelID;
 		}
-		return &myDebugModelList[myDebugSphereMap[aModelShape.size]];
+		return mySpheres[aModelShape.size];
 	}
 	else if (DoesShapeExist(aModelShape) == false)
 	{
-		myModelList.Add(*CreateShape(aModelShape));
-		myShapes[aModelShape.shape] = myModelList.Size() - 1;
+		if (myFreeModelIDs.Size() != 0)
+		{
+			newModelID = myFreeModelIDs.Pop();
+		}
+		else
+		{
+			newModelID = myModelList.Size();
+			myModelList.Add(CModel());
+		}
+
+		myModelList[newModelID] = *CreateShape(aModelShape);
+		myShapes[aModelShape.shape] = newModelID;
 	}
 
-	return &myModelList[myShapes[aModelShape.shape]];
+	return myShapes[aModelShape.shape];
 }
 
+const CModelManager::ModelId CModelManager::LoadGUIModel(const CLoaderMesh* aLoaderMesh, const char* aTexturePath)
+{
+	if (myModelList.Size() >= ourMaxNumberOfModels)
+	{
+		DL_MESSAGE_BOX("Too many unique models created! Current max is: %i.\nTalk to a programmer if you want more, it is probably possible.\n", ourMaxNumberOfModels);
+		DL_ASSERT("Too many unique models created! Current max is: %i.\n", ourMaxNumberOfModels);
+		return -1;
+	}
+
+	if (myModels.find(aLoaderMesh->myName) == myModels.end())
+	{
+		CEffect* effect = GUIModleHelper::CreateEffect(aLoaderMesh);
+		CSurface* surface = GUIModleHelper::CreateSurface(aTexturePath);
+
+		ModelId handle = -1;
+		if (myFreeModelIDs.Size() != 0)
+		{
+			handle = myFreeModelIDs.Pop();
+		}
+		else
+		{
+			handle = myModelList.Size();
+			myModelList.Add(CModel());
+		}
+
+
+		myModels[aLoaderMesh->myName] = handle;
+
+		myModelList[handle].Initialize(effect, surface, aLoaderMesh);
+
+		SPixelConstantBuffer bufferStruct = {};
+		ID3D11Buffer* pixelConstantBuffer = BSR::CreateCBuffer<SPixelConstantBuffer>(&bufferStruct);
+		myModelList[handle].AddConstantBuffer(CModel::eShaderStage::ePixel, pixelConstantBuffer);
+	}
+
+	return myModels[aLoaderMesh->myName];
+}
+const CModelManager::ModelId CModelManager::LoadGUIModel(const CLoaderMesh * aLoaderMesh, const CU::GrowingArray<CU::DynamicString>& aTexturePaths)
+{
+	if (myModelList.Size() >= ourMaxNumberOfModels)
+	{
+		DL_MESSAGE_BOX("Too many unique models created! Current max is: %i.\nTalk to a programmer if you want more, it is probably possible.\n", ourMaxNumberOfModels);
+		DL_ASSERT("Too many unique models created! Current max is: %i.\n", ourMaxNumberOfModels);
+		return -1;
+	}
+
+	if (myModels.find(aLoaderMesh->myName) == myModels.end())
+	{
+		CEffect* effect = GUIModleHelper::CreateEffect(aLoaderMesh);
+		CSurface* surface = GUIModleHelper::CreateSurface(aTexturePaths);
+
+		ModelId handle = -1;
+		if (myFreeModelIDs.Size() != 0)
+		{
+			handle = myFreeModelIDs.Pop();
+		}
+		else
+		{
+			handle = myModelList.Size();
+			myModelList.Add(CModel());
+		}
+
+		myModels[aLoaderMesh->myName] = handle;
+
+		myModelList[handle].Initialize(effect, surface, aLoaderMesh);
+
+		SPixelConstantBuffer bufferStruct = {};
+		ID3D11Buffer* pixelConstantBuffer = BSR::CreateCBuffer<SPixelConstantBuffer>(&bufferStruct);
+		myModelList[handle].AddConstantBuffer(CModel::eShaderStage::ePixel, pixelConstantBuffer);
+	}
+
+	return myModels[aLoaderMesh->myName];
+}
+
+CModel* CModelManager::GetModel(const ModelId aModelID)
+{
+	if (aModelID == -1 || myModelList[aModelID].GetInitialized() == false)
+	{
+		return nullptr;
+	}
+	return &myModelList[aModelID];
+}
+void CModelManager::RemoveModel(const ModelId aModelID)
+{
+	myModelList[aModelID].RemoveRef();
+	
+	if (myModelList[aModelID].GetRefCount() <= 0)
+	{
+		myFreeModelIDs.Push(aModelID);
+		myModelList[aModelID] = CModel();
+	}
+}
+void CModelManager::LoadAnimations(const char * aPath, const ModelId aModelId)
+{
+	std::string modelName = aPath;
+	modelName -= std::string("idle.fbx"); //temporary bc there are no bones in the vertices in player.fbx, only in player_idle.fbx etc
+
+	std::string animationNames[5] = { ("idle"), ("walk"), ("pickup"), ("turnRight90"), ("turnLeft90") };
+
+	CModel* mdl = GetModel(aModelId);
+	const aiScene* scene = mdl->GetScene();
+	if (mdl != nullptr && scene->HasAnimations())// && mdl->GetScene->HasAnimations())
+	{
+		bool foundSpecial = false;
+		for (int i = 0; i < 5; ++i)
+		{
+			const std::string& animationName = animationNames[i];
+
+			ModelId tempAnimationModel = LoadModel((modelName + animationName + ".fbx").c_str());
+			if (tempAnimationModel == NULL_MODEL)
+			{
+				continue;
+			}
+
+			foundSpecial = true;
+
+			mdl->mySceneAnimators[animationName] = CSceneAnimator();
+			mdl->mySceneAnimators[animationName].Init(GetModel(tempAnimationModel)->GetScene());
+
+			//RemoveModel(tempAnimationModel);
+		}
+
+		if (foundSpecial == false)
+		{
+			mdl->mySceneAnimators["idle"] = CSceneAnimator();
+			mdl->mySceneAnimators["idle"].Init(mdl->GetScene());
+		}
+
+		mdl->mySceneAnimator = &mdl->mySceneAnimators["idle"];
+		mdl->mySceneAnimator->PlayAnimationForward();
+	}
+}
+
+
+
+bool CModelManager::CreateModel(const CU::DynamicString& aModelPath, ModelId aNewModel)
+{
+	return CModelLoader::LoadModel(aModelPath.c_str(), &myModelList[aNewModel]/*tempModelPointer*/);
+}
+CModel* CModelManager::CreateShape(SShape aModelShape)
+{
+	return CModelLoader::CreateShape(aModelShape);
+}
+
+
+
+bool CModelManager::DoesModelExists(const char * aModelPath)
+{
+	return myModels.find(aModelPath) != myModels.end();
+}
 bool CModelManager::DoesShapeExist(SShape aModelShape)
 {
 	if (myShapes.find(aModelShape.shape) == myShapes.end())
@@ -106,75 +273,4 @@ bool CModelManager::DoesShapeExist(SShape aModelShape)
 		return false;
 	}
 	return true;
-}
-
-CModel* CModelManager::LoadGUIModel(const CLoaderMesh* aLoaderMesh, const char* aTexturePath)
-{
-	if (myGUIModelList.Size() >= ourMaxNumberOfGUIModels)
-	{
-		DL_MESSAGE_BOX("Too many unique gui models created! Current max is: %i.\nTalk to programmerz if you want more, it is probably possible.\n", ourMaxNumberOfGUIModels);
-		DL_ASSERT("Too many unique models created! Current max is: %i.\n", ourMaxNumberOfGUIModels);
-		return nullptr;
-	}
-
-	if (myGUIModels.find(aLoaderMesh->myName) == myGUIModels.end())
-	{
-		CEffect* effect = GUIModleHelper::CreateEffect(aLoaderMesh);
-		CSurface* surface = GUIModleHelper::CreateSurface(aTexturePath);
-
-		ModelId handle = myGUIModelList.Size();
-		myGUIModels[aLoaderMesh->myName] = handle;
-
-		myGUIModelList.Add(CModel());
-		myGUIModelList.GetLast().Initialize(effect, surface, aLoaderMesh);
-
-		SPixelConstantBuffer bufferStruct = {};
-		ID3D11Buffer* pixelConstantBuffer = BSR::CreateCBuffer<SPixelConstantBuffer>(&bufferStruct);
-		myGUIModelList.GetLast().AddConstantBuffer(CModel::eShaderStage::ePixel, pixelConstantBuffer);
-	}
-
-	return &myGUIModelList[myGUIModels[aLoaderMesh->myName]];
-}
-
-CModel* CModelManager::LoadGUIModel(const CLoaderMesh * aLoaderMesh, const CU::GrowingArray<CU::DynamicString>& aTexturePaths)
-{
-	if (myGUIModelList.Size() >= ourMaxNumberOfGUIModels)
-	{
-		DL_MESSAGE_BOX("Too many unique gui models created! Current max is: %i.\nTalk to programmerz if you want more, it is probably possible.\n", ourMaxNumberOfGUIModels);
-		DL_ASSERT("Too many unique models created! Current max is: %i.\n", ourMaxNumberOfGUIModels);
-		return nullptr;
-	}
-
-	if (myGUIModels.find(aLoaderMesh->myName) == myGUIModels.end())
-	{
-		CEffect* effect = GUIModleHelper::CreateEffect(aLoaderMesh);
-		CSurface* surface = GUIModleHelper::CreateSurface(aTexturePaths);
-
-		ModelId handle = myGUIModelList.Size();
-		myGUIModels[aLoaderMesh->myName] = handle;
-
-		myGUIModelList.Add(CModel());
-		myGUIModelList.GetLast().Initialize(effect, surface, aLoaderMesh);
-
-		SPixelConstantBuffer bufferStruct = {};
-		ID3D11Buffer* pixelConstantBuffer = BSR::CreateCBuffer<SPixelConstantBuffer>(&bufferStruct);
-		myGUIModelList.GetLast().AddConstantBuffer(CModel::eShaderStage::ePixel, pixelConstantBuffer);
-	}
-
-	return &myGUIModelList[myGUIModels[aLoaderMesh->myName]];
-}
-
-
-bool CModelManager::CreateModel(const CU::DynamicString& aModelPath, ModelId aNewModel)
-{
-	//myModelList[aNewModel] = CModel();
-	//CModel * const tempModelPointer = new CModel;
-	return CModelLoader::LoadModel(aModelPath.c_str(), &myModelList[aNewModel]/*tempModelPointer*/);
-
-	//myModelList[aNewModel] = *tempModelPointer;
-}
-
-CModel* CModelManager::CreateShape(SShape aModelShape)
-{
-	return CModelLoader::CreateShape(aModelShape);
 }

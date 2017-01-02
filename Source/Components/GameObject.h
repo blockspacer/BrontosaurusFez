@@ -11,7 +11,7 @@ public:
 
 	CU::Matrix44f &GetLocalTransform();
 	CU::Matrix44f GetToWorldTransform();
-	CU::Vector3f GetWorlPosition();
+	CU::Vector3f GetWorldPosition();
 
 	void AddComponent(CComponent* aComponent);
 
@@ -20,9 +20,8 @@ public:
 
 	void MarkForDestruction();
 
-	void SetName(const CU::DynamicString& aName);
-	CU::GrowingArray<CComponent*>& GetComponents();
-	const CU::DynamicString& GetName()const;
+	inline void SetName(const CU::DynamicString& aName);
+	inline const CU::DynamicString& GetName() const;
 
 private:
 	void Destroy() override;
@@ -40,11 +39,6 @@ private:
 inline void CGameObject::SetName(const CU::DynamicString& aName)
 {
 	myName = aName;
-}
-
-inline CU::GrowingArray<CComponent*>& CGameObject::GetComponents()
-{
-	return myComponents;
 }
 
 inline const CU::DynamicString& CGameObject::GetName() const

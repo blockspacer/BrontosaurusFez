@@ -15,6 +15,9 @@
 #include "../CommonUtilities/GrowingArray.h"
 #include "../CommonUtilities/StaticArray.h"
 #include "../CommonUtilities/CUTime.h"
-
 #include "../CommonUtilities/MemoryLeekLogger.h"
+
+#include "GameObject.h"
+#include "ComponentMessage.h"
+
 // TODO: reference additional headers your program requires here

@@ -16,6 +16,7 @@
 #include "../CommonUtilities/matrix44.h"
 #include "../Collision/Intersection.h"
 #include <CUTime.h>
+#include <StringHelper.h>
 
 
 CModel::CModel()
@@ -31,7 +32,9 @@ CModel::CModel()
 	, myScene(nullptr)
 	, myIsInitialized(false)
 	, myIsAlphaModel(false)
+	, mySceneAnimator(nullptr)
 	, myVertexSize(0)
+	, myRefCount(0)
 {
 }
 
@@ -410,6 +413,26 @@ void CModel::UpdateConstantBuffer(const eShaderStage aShaderStage, const void* a
 	myFramework->GetDeviceContext()->Unmap(myConstantBuffers[static_cast<int>(aShaderStage)], 0);
 }
 
+std::vector<mat4>& CModel::GetBones(float aTime, const char * aAnimationState)
+{
+	if(mySceneAnimator != nullptr)
+	{
+		if (mySceneAnimator != nullptr)
+		{
+			auto it = mySceneAnimators.find(aAnimationState);
+			if (it != mySceneAnimators.end())
+			{
+				mySceneAnimator = &it->second;
+			}
+		}
+
+		//std::vector<mat4>& transforms = mySceneAnimator->GetTransforms(aTime);
+		return mySceneAnimator->GetTransforms(aTime);
+
+		//memcpy(static_cast<void*>(aReturn), &transforms[0], min(sizeof(aReturn), transforms.size() * sizeof(mat4)));
+
+	}
+}
 
 SLodData & CModel::GetCurrentLODModel(const CU::Vector3f& aModelPosition)
 {

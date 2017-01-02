@@ -2,37 +2,34 @@
 #include "../CommonUtilities/matrix33.h"
 #include "../CommonUtilities/matrix44.h"
 #include "StatStructs.h"
-class Collider;
-class CComponent;
 
-template <typename T>
-class ValueObserver;
+class ICollider;
+class CComponent;
 class CGameObject;
+
 namespace CU
 {
+	template<typename ObjectType, typename SizeType = unsigned int, bool USE_SAFE_MODE = true>
+	class GrowingArray;
 
-	// Forward declarations
-	//
 	template<typename TYPE>
 	class Matrix44;
-
+	using Matrix44f = Matrix44<float>;
 
 	template<typename TYPE>
 	class Matrix33;
+	using Matrix33f = Matrix33<float>;
+
+	template<typename TYPE>
+	class Vector3;
+	using Vector3f = Vector3<float>;
 
 	template<typename TYPE>
 	class Vector2;
-
-	
+	using Vector2f = Vector2<float>;
 }
 
-enum class eComponentType
-{
-	eModel,
-	eDebugSphere,
-	eCamera,
-	eNone,
-};
+enum class eComponentType : int;
 
 
 enum class eComponentMessageType
@@ -45,6 +42,9 @@ enum class eComponentMessageType
 	eRespawned,
 	eHeal,
 	eTookDamage,
+	eLootDropped,
+	eLootPickedUp,
+	eCollectStats,
 	eObjectiveCompleted,
 	eSetDamage,
 	eSetNavigationTarget,
@@ -55,13 +55,18 @@ enum class eComponentMessageType
 	eSetVisibility,
 	eStatsUpdated,
 	eSetMaxHealthFromStats,
-	eUseSkill,
-	eSetSkillTarget
+	eSelectSkill,
+	eSetSkillTargetPosition,
+	eAddSkill,
+	eTakeDamage,
+	eOnCollisionEnter,
+	eOnCollisionUpdate,
+	eOnCollisionExit,
 };
 
 struct SComponentMessageData
 {
-	SComponentMessageData();
+	SComponentMessageData() : myComponent(nullptr) {}
 
 	union
 	{
@@ -80,9 +85,7 @@ struct SComponentMessageData
 		eComponentType myComponentTypeAdded;
 		unsigned short myUnsingedShort;
 		Stats::STotalStats myStatStruct;
+		ICollider* myCollider;
 	};
 };
 
-inline SComponentMessageData::SComponentMessageData() : myComponent(nullptr)
-{
-}

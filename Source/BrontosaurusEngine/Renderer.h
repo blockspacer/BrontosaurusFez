@@ -7,6 +7,9 @@
 #include "FullScreenHelper.h"
 #include <TimerManager.h>
 
+//temp includes
+#include "../PostMaster/Subscriber.h" //mvh carl
+
 struct ID3D11RasterizerState;
 struct ID3D11DepthStencilState;
 struct ID3D11BlendState;
@@ -26,7 +29,7 @@ struct SRendererSettings
 };
 
 
-class CRenderer
+class CRenderer : public Subscriber
 {
 public:
 	CRenderer();
@@ -35,6 +38,7 @@ public:
 	void Render();
 	void SwapWrite();
 	void ClearRenderQueue();
+	inline SRendererSettings& GetSettings();
 private:
 	void Bloom();
 	void HDR();
@@ -116,5 +120,15 @@ private:
 	CU::Camera myCamera;
 
 	ID3D11Buffer* myOncePerFrameBuffer;
+
+	CU::TimerHandle myOncePerFrameBufferTimer;
+	CU::TimerHandle myFireTimer;
+
+	// Inherited via Subscriber
+	eMessageReturn Recieve(const Message& aMessage) override;
 };
 
+inline SRendererSettings& CRenderer::GetSettings()
+{
+	return mySettings;
+}

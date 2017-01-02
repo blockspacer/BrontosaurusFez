@@ -11,5 +11,6 @@ enum EModelBluePrint
 	EModelBluePrint_Alpha = 1 << 6,
 	EModelBluePrint_Sprite2D = 1 << 7,
 	EModelBluePrint_Text2D = 1 << 8,
-	EModelBluePrint_Color = 1 << 9
+	EModelBluePrint_Color = 1 << 9,
+	EModelBluePrint_Fire = 1 << 10,
 };

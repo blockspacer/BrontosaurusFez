@@ -2,20 +2,20 @@
 #include "Component.h"
 #include "StatStructs.h"
 
+class CMainStatComponent;
 class CStatComponent : public CComponent
 {
 public:
+	friend CMainStatComponent;
+
+	//Don't forget to set Stats AFTER adding this component to its parent.
 	CStatComponent();
 	~CStatComponent();
-	void Set(const int aStrength, const int aDexterity,const int aIntelligence, const int aVitality);
+	void SetStats(Stats::SBaseStats& aBaseStats, Stats::SBonusStats& aBonusStats);
+
 private:
-	void LevelUp();
-	void CalculateTotalStats();
-private:
-	Stats::SBaseStatbody* myBaseStats;
-	Stats::SBaseStatbody* myLevelUpBonus;
+	Stats::SBaseStats* myBaseStats;
 	Stats::SBonusStats* myBonusStats;
-	Stats::STotalStats* myTotalStats;
 
 	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
 	void Destroy() override;

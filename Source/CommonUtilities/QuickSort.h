@@ -26,8 +26,8 @@ namespace CU
 	template<typename type, typename sizet, bool safemode>
 	int Partition(GrowingArray<type, sizet, safemode>& A, int p, int q, std::function<bool(type, type)> aCompFunction)
 	{
-		int i = p;
-		int j;
+		sizet i = p;
+		sizet j;
 
 		type temp;
 

@@ -4,7 +4,7 @@ enum class eMessageType
 {
 	eWindowSizeChanged,
 	eMouseMessage,
-	eMousePressed,
+	//eMouseDownMessage,
 	eKeyboardMessage,
 	eKeyPressed,
 	eInputMessagePressed,
@@ -23,8 +23,7 @@ enum class eMessageType
 	eObjectives,
 	eLevelOver,
 	eNextLevelPlease,
-	ePlayerGotNewWeapon,
-	ePlayerChangedWeapon,
+	eConsoleCalledUpon,
 	eLength,
 };
 //Ifall du vill lägga till en till messagetyp så kompilera om Postmaster Projekter annars kraschar det. 

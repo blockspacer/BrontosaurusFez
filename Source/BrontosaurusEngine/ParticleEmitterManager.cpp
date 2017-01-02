@@ -73,7 +73,7 @@ void CParticleEmitterManager::RemoveParticleEmitter(const ParticleEmitterID aID)
 
 int CParticleEmitterManager::EmitterExists(const SEmitterData & aEmitterData)
 {
-	for (int i = 0; i < myParticleEmitterComp.Size(); i++)
+	for (unsigned int i = 0; i < myParticleEmitterComp.Size(); i++)
 	{
 		if (myParticleEmitterComp[i] == aEmitterData)
 		{

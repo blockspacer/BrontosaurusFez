@@ -3,9 +3,6 @@
 #include "Text.h"
 
 #include "Renderer.h"
-#include "Engine.h"
-
-#include "../CommonUtilities/MemoryLeekLogger.h"
 
 const CU::Vector4f CTextInstance::Red(1, 0, 0, 1);
 const CU::Vector4f CTextInstance::Yellow(1, 1, 0, 1);

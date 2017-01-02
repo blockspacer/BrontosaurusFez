@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "LuaFunctions.h"
-#include "..\Components/ObjectManager.h"
+#include "../Components/GameObjectManager.h"
 #include "BrontosaurusEngine/Engine.h"
 #include "Game/Game.h"
 #include "CommonUtilities/DynamicString.h"
@@ -18,8 +18,6 @@
 #include "Components\AudioSourceComponentManager.h"
 
 #include "Components/ParticleEmitterComponentManager.h"
-
-extern CGame* globalGame;
 
 void LuaFunctions::RegisterFunctions()
 {
@@ -82,7 +80,7 @@ SSlua::ArgumentList LuaFunctions::CreateObject(SSlua::ArgumentList anArgumentLis
 	transform.m43 = luaMatrix.at("m43").GetNumber();
 	transform.m44 = luaMatrix.at("m44").GetNumber();
 
-	CGameObject* anObjectPointer = globalGame->GetObjectManagerReference().CreateGameObject(transform);
+	CGameObject* anObjectPointer = nullptr;// myGameObjectManager->CreateGameObject(transform);
 
 	SSArgument returnArgument;
 	returnArgument = static_cast<ssLuaNumber>(anObjectPointer->GetId());

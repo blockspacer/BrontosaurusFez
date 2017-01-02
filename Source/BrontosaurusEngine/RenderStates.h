@@ -28,6 +28,7 @@ enum class eSamplerState
 {
 	eClamp,
 	eWrap,
+	eClamp0Wrap1, // i wanna use both, mvh carl
 	eSize,
 };
 

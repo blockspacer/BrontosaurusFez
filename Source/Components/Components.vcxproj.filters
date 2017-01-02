@@ -31,6 +31,19 @@
     <ClCompile Include="StatComponent.cpp" />
     <ClCompile Include="HealthComponent.cpp" />
     <ClCompile Include="InventoryComponentManager.cpp" />
+    <ClCompile Include="ChaserController.cpp" />
+    <ClCompile Include="SkillFactory.cpp" />
+    <ClCompile Include="MainStatComponent.cpp" />
+    <ClCompile Include="SkillSystemComponentManager.cpp" />
+    <ClCompile Include="AIControllerComponent.cpp">
+      <Filter>AIControllerComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="AIControllerManager.cpp">
+      <Filter>AIControllerComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="IController.cpp">
+      <Filter>AIControllerComponent\Behaviours</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -69,6 +82,19 @@
     <ClInclude Include="StatStructs.h" />
     <ClInclude Include="HealthComponent.h" />
     <ClInclude Include="InventoryComponentManager.h" />
+    <ClInclude Include="ChaserController.h" />
+    <ClInclude Include="SkillFactory.h" />
+    <ClInclude Include="MainStatComponent.h" />
+    <ClInclude Include="SkillSystemComponentManager.h" />
+    <ClInclude Include="AIControllerComponent.h">
+      <Filter>AIControllerComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="AIControllerManager.h">
+      <Filter>AIControllerComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="IController.h">
+      <Filter>AIControllerComponent\Behaviours</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -94,6 +120,12 @@
     </Filter>
     <Filter Include="Marker\MarkerInstance">
       <UniqueIdentifier>{4cfa2c7f-78fe-4453-8df2-1dcf3bcd1562}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AIControllerComponent">
+      <UniqueIdentifier>{1e119105-f505-41ce-b31f-60906f40d6b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AIControllerComponent\Behaviours">
+      <UniqueIdentifier>{3d135083-3cc1-4d4e-a9a9-5135b7b2d548}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

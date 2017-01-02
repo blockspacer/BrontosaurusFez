@@ -20,7 +20,7 @@ public:
 
 	~CParticleEmitterInstance();
 
-	void Update(const CU::Time & aDeltaTime);
+	void Update(const CU::Time& aDeltaTime);
 	void Render(const CU::Camera& aCamera); // needs the camera to sort by
 	void Activate();
 	void Deactivate();

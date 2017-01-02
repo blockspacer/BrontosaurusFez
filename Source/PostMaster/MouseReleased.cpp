@@ -3,6 +3,7 @@
 
 #include "../GUI/GUIManager/GUIManager.h"
 #include "Game/LevelSelectState.h"
+#include "Components/InputController.h"
 
 MouseReleased::MouseReleased(const CU::Vector2f& aMousePosition, const CU::eMouseButtons& aMouseButton)
 	: myMousePosition(aMousePosition)
@@ -29,6 +30,16 @@ eMessageReturn MouseReleased::DoEvent(LevelSelectState* aLevelSelectState) const
 	if (aLevelSelectState != nullptr)
 	{
 		aLevelSelectState->SetStateStatus(State::eStatus::ePop);
+	}
+
+	return eMessageReturn::eContinue;
+}
+
+eMessageReturn MouseReleased::DoEvent(InputController * aInputController) const
+{
+	if (aInputController != nullptr)
+	{
+		aInputController->MouseReleased(myMouseButton, myMousePosition);
 	}
 
 	return eMessageReturn::eContinue;

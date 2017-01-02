@@ -3,7 +3,6 @@
   <ItemGroup>
     <ClCompile Include="BackgroundLoadingManager.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Level.cpp" />
     <ClCompile Include="LoadingAnimation.cpp" />
     <ClCompile Include="PollingStation.cpp" />
     <ClCompile Include="stdafx.cpp" />
@@ -28,12 +27,10 @@
     <ClCompile Include="SplashScreen.cpp">
       <Filter>States</Filter>
     </ClCompile>
-    <ClCompile Include="Hat.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackgroundLoadingManager.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="Level.h" />
     <ClInclude Include="LoadingAnimation.h" />
     <ClInclude Include="PollingStation.h" />
     <ClInclude Include="stdafx.h" />
@@ -59,7 +56,6 @@
     <ClInclude Include="SplashScreen.h">
       <Filter>States</Filter>
     </ClInclude>
-    <ClInclude Include="Hat.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="States">

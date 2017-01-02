@@ -1,4 +1,5 @@
 #pragma once
+#pragma message ("Vector on stack compiled")
 #include <assert.h>
 
 namespace CU

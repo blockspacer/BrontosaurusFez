@@ -33,6 +33,9 @@
 #define SUPRESS_UNUSED_WARNING(variable) variable
 #endif // !SUPRESS_UNUSED_WARNING
 
+#include "Engine.h"
+#include "DXFramework.h"
+
 #include "../CommonUtilities/DL_Debug.h"
 #include "../CommonUtilities/GrowingArray.h"
 #include "../CommonUtilities/StaticArray.h"
@@ -44,5 +47,7 @@
 #include "../CommonUtilities/vector2.h"
 #include "../CommonUtilities/vector3.h"
 #include "../CommonUtilities/vector4.h"
+#include "../CommonUtilities/matrix33.h"
+#include "../CommonUtilities/matrix44.h"
 
 // TODO: reference additional headers your program requires here

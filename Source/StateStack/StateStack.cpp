@@ -10,24 +10,31 @@
 StateStack::StateStack()
 	: mySwapStateFunction(nullptr), myStateToSwapTo(nullptr)
 {
-	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eStateStackMessage);
+	myShouldUpdate = true;
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eStateStackMessage);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eConsoleCalledUpon);
 }
 
 StateStack::~StateStack()
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eStateStackMessage);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eConsoleCalledUpon);
 	Clear();
 }
 
 void StateStack::PushState(State *aState)
 {
-	if (myStates.Size() > 0)
+	if(myShouldUpdate == true)
 	{
-		myStates.Top()->OnExit();
+		if (myStates.Size() > 0)
+		{
+			myStates.Top()->OnExit();
+		}
+		myStates.Push(aState);
+		aState->Init();
+		aState->OnEnter();
+	
 	}
-	myStates.Push(aState);
-	aState->Init();
-	aState->OnEnter();
 }
 
 State* StateStack::GetCurrentState()
@@ -39,22 +46,26 @@ bool StateStack::Update(const CU::Time& aDeltaTime)
 {
 	if (myStates.Size() > 0)
 	{
-		if (myStates.Top()->Update(aDeltaTime) == State::eStatus::ePop)
+		if (myShouldUpdate == true)
 		{
-			Pop();
-		}
+			if (myStates.Top()->Update(aDeltaTime) == State::eStatus::ePop)
+			{
+				Pop();
+			}
 
-		if (mySwapStateFunction != nullptr)
-		{
-			mySwapStateFunction();
-			mySwapStateFunction = nullptr;
-		}
+			if (mySwapStateFunction != nullptr)
+			{
+				mySwapStateFunction();
+				mySwapStateFunction = nullptr;
+			}
 
-		if (myStateToSwapTo != nullptr)
-		{
-			Pop();
-			PushState(myStateToSwapTo);
-			myStateToSwapTo = nullptr;
+			if (myStateToSwapTo != nullptr)
+			{
+				Pop();
+				PushState(myStateToSwapTo);
+				myStateToSwapTo = nullptr;
+			}
+		
 		}
 
 		return STATESTACK_CONTINUE;

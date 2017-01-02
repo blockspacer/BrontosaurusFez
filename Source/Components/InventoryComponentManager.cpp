@@ -24,9 +24,12 @@ void CInventoryComponentManager::Update(const CU::Time & aDeltaTime)
 	// Kanske inte behöver en manager;
 }
 
-void CInventoryComponentManager::RegisterComponent(CInventoryComponent * aComponent)
+CInventoryComponent& CInventoryComponentManager::CreateAndRegisterComponent()
 {
-	myComponents.Add(aComponent);
+	CInventoryComponent* component = new CInventoryComponent();
+	myComponents.Add(component);
+	COMPMGR.RegisterComponent(component);
+	return *component;
 }
 
 void CInventoryComponentManager::DestroyInstance()

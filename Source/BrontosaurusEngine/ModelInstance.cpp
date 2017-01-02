@@ -4,7 +4,6 @@
 #include "Model.h"
 #include "Engine.h"
 #include "Renderer.h"
-#include "AnimationController.h"
 
 
 CModelInstance::CModelInstance(const char* aModelPath)
@@ -12,9 +11,8 @@ CModelInstance::CModelInstance(const char* aModelPath)
 	myIsVisible = true;
 	myAnimationCounter = 0.f;
 	myModel = MODELMGR->LoadModel(aModelPath);
-	mySceneAnimator = nullptr;
-	
-	LoadAnimations(aModelPath);
+	myHasAnimations = MODELMGR->GetModel(myModel)->HasAnimations();
+	myCurrentAnimation = "idle";
 }
 
 CModelInstance::CModelInstance(const char* aModelPath, const CU::Matrix44f& aTransformation)
@@ -23,12 +21,12 @@ CModelInstance::CModelInstance(const char* aModelPath, const CU::Matrix44f& aTra
 	myTransformation = aTransformation;
 }
 
-CModelInstance::CModelInstance(const SShape aShape)
+CModelInstance::CModelInstance(const SShape aShape) 
+	: myHasAnimations(false)
 {
 	myAnimationCounter = 0.f;
 	myIsVisible = true;
 	myModel = MODELMGR->LoadModel(aShape);
-	mySceneAnimator = nullptr;
 }
 
 CModelInstance::CModelInstance(const SShape aShape, const CU::Matrix44f& aTransformation)
@@ -37,45 +35,47 @@ CModelInstance::CModelInstance(const SShape aShape, const CU::Matrix44f& aTransf
 	myTransformation = aTransformation;
 }
 
-CModelInstance::CModelInstance(CModel* aModel, const CU::Matrix44f& aTransformation)
+CModelInstance::CModelInstance(ModelId aModel, const CU::Matrix44f& aTransformation)
 	: myTransformation(aTransformation)
 	, myModel(aModel)
-	, mySceneAnimator(nullptr)
 	, myAnimationCounter(0.f)
 	, myIsVisible(true)
+	, myCurrentAnimation("")
+	, myHasAnimations(false)
 {
 }
 
-bool CModelInstance::IsAlpha()
-{
-	return myModel != nullptr && myModel->IsAlphaModel();
-}
 
 CModelInstance::~CModelInstance()
 {
-	myModel = nullptr; //TODO: memoryleek mebe // still exists in ModelManager <-- looks like model manager owns this but a refcount would maybe be something
+	if (myModel != NULL_MODEL)
+	{
+		MODELMGR->GetModel(myModel)->RemoveRef();
+		myModel = -1; 
+	}
+	
+	
+	//TODO: memoryleek mebe // still exists in ModelManager <-- looks like model manager owns this but a refcount would maybe be something
 	//SAFE_DELETE(mySceneAnimator); //is deleted through the map
-	mySceneAnimator = nullptr;
 }
 
 void CModelInstance::Render(Lights::SDirectionalLight* aLight, CU::GrowingArray<CPointLightInstance*>* aPointLightList)
 {
-	if (myModel != nullptr && myModel->GetInitialized() == true && ShouldRender() == true)
+	if (ShouldRender() == true)
 	{
 		SRenderModelMessage* msg = nullptr;
-		(mySceneAnimator != nullptr) ? msg = new SRenderAnimationModelMessage() : msg = new SRenderModelMessage();
+		(myHasAnimations != false) ? msg = new SRenderAnimationModelMessage() : msg = new SRenderModelMessage();
 
 		msg->myDirectionalLight = aLight;
 		msg->myPointLights = aPointLightList;
-		msg->myModel = myModel;
+		msg->myModelID = myModel;
 		msg->myTransformation =	myTransformation;
 		msg->myLastFrameTransformation = myLastFrame;
 		
-		if (mySceneAnimator != nullptr)
+		if (myHasAnimations != false)
 		{
-			std::vector<mat4>& transforms = mySceneAnimator->GetTransforms(myAnimationCounter);
-			SRenderAnimationModelMessage* animMsg = static_cast<SRenderAnimationModelMessage*>(msg);
-			memcpy(static_cast<void*>(animMsg->myBoneMatrices), &transforms[0], min(sizeof(animMsg->myBoneMatrices), transforms.size() * sizeof(mat4)));
+			msg->myAnimationTime = myAnimationCounter;
+			msg->myCurrentAnimation = myCurrentAnimation;
 		}
 
 		RENDERER.AddRenderMessage(msg);
@@ -104,7 +104,7 @@ void CModelInstance::SetPosition(CU::Vector3f aPosition)
 
 bool CModelInstance::ShouldRender()
 {
-	return myIsVisible == true && myModel != nullptr && myModel->GetInitialized() == true;
+	return  myModel != -1 && myIsVisible == true;
 }
 
 //in worldSpace
@@ -115,7 +115,7 @@ CU::AABB CModelInstance::GetModelBoundingBox()
 	if (!myModel)
 		return box;
 
-	box = myModel->GetBoundingBox();
+	box = MODELMGR->GetModel(myModel)->GetBoundingBox();
 	box.myCenterPos = box.myCenterPos * myTransformation;
 	box.myMinPos = box.myMinPos * myTransformation;
 	box.myMaxPos = box.myMaxPos * myTransformation;
@@ -124,54 +124,17 @@ CU::AABB CModelInstance::GetModelBoundingBox()
 	return box;
 }
 
-#include "../CommonUtilities/StringHelper.h"
-void CModelInstance::LoadAnimations(const char* aModelPath)
-{
-	std::string modelName = aModelPath;
-	modelName -= std::string("idle.fbx"); //temporary bc there are no bones in the vertices in player.fbx, only in player_idle.fbx etc
-	
-	std::string animationNames[5] = { ("idle"), ("walk"), ("pickup"), ("turnRight90"), ("turnLeft90") };
-
-	if (myModel != nullptr && myModel->GetScene()->HasAnimations())
-	{
-		bool foundSpecial = false;
-		for (int i = 0; i < 5; ++i)
-		{
-			const std::string& animationName = animationNames[i];
-
-			CModel* tempAnimationModel = MODELMGR->LoadModel((modelName + animationName + ".fbx").c_str());
-			if (tempAnimationModel == nullptr)
-			{
-				continue;
-			}
-
-			foundSpecial = true;
-
-			mySceneAnimators[animationName] = CSceneAnimator();
-			mySceneAnimators[animationName].Init(tempAnimationModel->GetScene());
-		}
-
-		if (foundSpecial == false)
-		{
-			mySceneAnimators["idle"] = CSceneAnimator();
-			mySceneAnimators["idle"].Init(myModel->GetScene());
-		}
-
-		//mySceneAnimator = new CSceneAnimator();
-		//mySceneAnimator->Init(myModel->GetScene());
-		mySceneAnimator = &mySceneAnimators["idle"];
-		mySceneAnimator->PlayAnimationForward();
-	}
-}
 
 void CModelInstance::ChangeAnimation(const char* aAnimationKey)
 {
-	if (mySceneAnimator != nullptr)
+	myCurrentAnimation = aAnimationKey;
+
+	/*if (mySceneAnimator != nullptr)
 	{
 		auto it = mySceneAnimators.find(aAnimationKey);
 		if (it != mySceneAnimators.end())
 		{
 			mySceneAnimator = &it->second;
 		}
-	}
+	}*/
 }

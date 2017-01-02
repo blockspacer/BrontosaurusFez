@@ -6,15 +6,15 @@
 #include "../CommonUtilities/EInputMessage.h"
 #include "../CommonUtilities/EMouseButtons.h"
 #include "GameObject.h"
-#include <iostream>
 #include "../BrontosaurusEngine/Engine.h"
 #include "CameraManager.h"
 #include "../CommonUtilities/Camera.h"
 
-InputController::InputController()
+InputController::InputController(const CU::Camera& aPlayerCamera)
+	: myPlayerCamera(aPlayerCamera)
+	, myMouseIsDown(false)
 {
-	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eMouseMessage);
-	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eInputMessagePressed);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage);
 	mySkillInputMessageActivators.Init(5);
 }
 
@@ -22,19 +22,58 @@ InputController::InputController()
 InputController::~InputController()
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);
-	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eInputMessagePressed);
 }
 
 void InputController::Update(float aDeltaTime)
 {
+	if (myMouseIsDown == true)
+	{//convert pixel mouse position to world ground position
+		CU::Vector2f windowSize(WINDOW_SIZE);
+		CU::Vector2f mousePosZeroToOne = myMousePosition / windowSize;
+		CU::Vector2f mousePosNormalizedSpace = mousePosZeroToOne * 2.f - CU::Vector2f::One;
+		mousePosNormalizedSpace.y *= -1;
+		CU::Vector4f mousePosNormalizedHomogeneousSpace(mousePosNormalizedSpace, CU::Vector2f::Zero);
+		CU::Vector4f screenToCameraSpaceRay = mousePosNormalizedHomogeneousSpace * myPlayerCamera.GetProjectionInverse();
+
+		CU::Vector3f direction;
+		direction.x = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m11) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m21) + myPlayerCamera.GetTransformation().m31;
+		direction.y = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m12) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m22) + myPlayerCamera.GetTransformation().m32;
+		direction.z = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m13) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m23) + myPlayerCamera.GetTransformation().m33;
+
+		//tested with transposed
+		//direction.x = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m11) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m12) + myPlayerCamera.GetTransformation().m13;
+		//direction.y = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m21) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m22) + myPlayerCamera.GetTransformation().m23;
+		//direction.z = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m31) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m32) + myPlayerCamera.GetTransformation().m33;
+
+		//direction = CU::Vector3f(CU::Vector4f(direction, 0.f) * myPlayerCamera.GetTransformation());
+
+		CU::Vector4f targetPosition3D;
+		const CU::Vector3f groundNormal(0.f, 1.f, 0.f);
+		const float denominator = direction.Dot(groundNormal);
+		if (std::fabs(denominator) > 0.0001f)
+		{
+			const float t = (GetParent()->GetToWorldTransform().GetPosition() - myPlayerCamera.GetPosition()).Dot(groundNormal) / denominator;
+			if (std::fabs(t) > 0.0001f)
+			{
+				targetPosition3D = myPlayerCamera.GetPosition() + direction * t;
+			}
+		}
+
+		CU::Vector2f targetPosition(targetPosition3D.x, targetPosition3D.z);
+
+		eComponentMessageType type = eComponentMessageType::eSetNavigationTarget;
+		SComponentMessageData data;
+		data.myVector2f = targetPosition;
+		GetParent()->NotifyComponents(type, data);
+	}
 }
 
-eMessageReturn InputController::Recieve(const Message & aMessage)
+eMessageReturn InputController::Recieve(const Message& aMessage)
 {
 	return aMessage.myEvent.DoEvent(this);
 }
 
-void InputController::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
+void InputController::Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData)
 {
 }
 
@@ -42,31 +81,30 @@ void InputController::Destroy()
 {
 }
 
-eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButton, const CU::Vector2f & aMousePosition)
+eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButton, const CU::Vector2f& aMousePosition)
 {
 	if(aMouseButton == CU::eMouseButtons::LBUTTON)
 	{
-		CU::Vector2f convertedMousePosition = CU::Vector2f(aMousePosition.x * ENGINE->GetWindowSize().x, aMousePosition.y * ENGINE->GetWindowSize().y); // Ändra hårdkodningen memo!
-		std::cout <<  "Mouse Pos:" <<"X:" << convertedMousePosition.x << " Y: " << convertedMousePosition.y << std::endl;
-		CU::Vector2f halfScreenPosition = CU::Vector2f(ENGINE->GetWindowSize().x / 2.0f, ENGINE->GetWindowSize().y / 2.0f);
-		CU::Vector2f playerPosition = CU::Vector2f(GetParent()->GetWorlPosition().x, GetParent()->GetWorlPosition().z); // Don't forget to add conversions between vector 2 and 3! like serisously it is góing to save us so much time.
-		std::cout << "Player Pos:" << "X:" << playerPosition.x << " Y: " << GetParent()->GetWorlPosition().z << std::endl;
-		std::cout << "Difference Pos:" << "X:" << (convertedMousePosition - halfScreenPosition).x << " Y: " << (convertedMousePosition - halfScreenPosition).y << std::endl;
-		CU::Matrix44f newTargetMatrix;
-		newTargetMatrix.SetPosition(CU::Vector3f(playerPosition.x, playerPosition.y, 0.0f));
-		CU::Vector3f movement(convertedMousePosition.x - halfScreenPosition.x, convertedMousePosition.y - halfScreenPosition.y, 0.0f);
-		newTargetMatrix.Move(movement);
-		CU::Vector2f targetPosition = CU::Vector2f(newTargetMatrix.GetPosition().x, newTargetMatrix.GetPosition().y);
-	
-		targetPosition.x *= -1;
-		std::cout << "Target Pos:" << "X:" << targetPosition.x << " Y: " << targetPosition.y << std::endl;
-		std::cout << "" << std::endl;
-		eComponentMessageType type = eComponentMessageType::eSetNavigationTarget;
-		SComponentMessageData data;
-		data.myVector2f = targetPosition;
-		//data.myVector2f = playerPosition + CU::Vector2f(100.0f, 100.0f);
-		GetParent()->NotifyComponents(type, data);
+		myMouseIsDown = true;
+		myMousePosition = aMousePosition;
 	}
+
+	return eMessageReturn::eContinue;
+}
+
+eMessageReturn InputController::MouseReleased(const CU::eMouseButtons aMouseButton, const CU::Vector2f & aMousePosition)
+{
+	if (aMouseButton == CU::eMouseButtons::LBUTTON)
+	{
+		myMouseIsDown = false;
+	}
+
+	return eMessageReturn::eContinue;
+}
+
+eMessageReturn InputController::MouseMoved(const CU::Vector2f& aMousePosition)
+{
+	myMousePosition = aMousePosition;
 
 	return eMessageReturn::eContinue;
 }
@@ -77,7 +115,7 @@ eMessageReturn InputController::TakeInputMessage(const CU::eInputMessage aInputM
 	{
 		if(mySkillInputMessageActivators[i] == aInputMessage)
 		{
-			eComponentMessageType type = eComponentMessageType::eUseSkill;
+			eComponentMessageType type = eComponentMessageType::eSelectSkill;
 			SComponentMessageData data;
 			data.myInt = i;
 			GetParent()->NotifyComponents(type, data);

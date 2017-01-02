@@ -30,7 +30,7 @@ CParticleEmitter::~CParticleEmitter()
 void CParticleEmitter::Init(const SEmitterData& aEmitterData)
 {
 	myTexture = &TEXTUREMGR.LoadTexture(aEmitterData.TexturePath.c_str());
-	myMaxNrOfParticles = aEmitterData.NumOfParticles;
+	myMaxNrOfParticles = static_cast<unsigned short>(aEmitterData.NumOfParticles);
 
 
 	unsigned int ShaderType = 0;
