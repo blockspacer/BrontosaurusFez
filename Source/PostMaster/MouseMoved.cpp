@@ -5,6 +5,7 @@
 #include "../GUI/GUICursor/GUICursor.h"
 
 #include "../BrontosaurusEngine/Engine.h"
+#include "Components/InputController.h"
 
 MouseMoved::MouseMoved(const CU::Vector2f& aMousePosition)
 	: myMousePosition(aMousePosition)
@@ -38,6 +39,16 @@ eMessageReturn MouseMoved::DoEvent(GUICursor* aGUICursor) const
 		CU::Vector2f deltaPosition = myMousePosition /*- ScreenCenter*/;
 		
 		aGUICursor->SetPosition(/*aGUICursor->GetPosition() +*/ CU::Vector2f(deltaPosition.x / windowSize.x, deltaPosition.y / windowSize.y));
+	}
+
+	return eMessageReturn::eContinue;
+}
+
+eMessageReturn MouseMoved::DoEvent(InputController * aInputController) const
+{
+	if (aInputController != nullptr)
+	{
+		aInputController->MouseMoved(myMousePosition);
 	}
 
 	return eMessageReturn::eContinue;

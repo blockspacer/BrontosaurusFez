@@ -23,7 +23,7 @@ public:
 	eMessageReturn TakeKeyBoardInputPressedChar(const char aKey);
 	
 
-	void Update(float aDeltaTime);
+	bool Update(float aDeltaTime);
 	void Render();
 
 private:

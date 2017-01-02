@@ -233,6 +233,7 @@
   <ItemGroup>
     <ClInclude Include="AABB.h" />
     <ClInclude Include="binary_tree.h" />
+    <ClInclude Include="BitSet.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CommandLineManager.h" />
     <ClInclude Include="CommonUtilities.h" />

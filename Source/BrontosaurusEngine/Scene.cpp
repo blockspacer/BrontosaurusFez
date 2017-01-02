@@ -139,13 +139,14 @@ void CScene::Render()
 	SChangeStatesMessage* changeStateMessage = new SChangeStatesMessage();
 	changeStateMessage->myBlendState = eBlendState::eAlphaBlend;
 	changeStateMessage->myDepthStencilState = eDepthStencilState::eReadOnly; //don't know what to do here
-	changeStateMessage->myRasterizerState = eRasterizerState::eDefault;
+	changeStateMessage->myRasterizerState = eRasterizerState::eNoCullingClockwise;
 	changeStateMessage->mySamplerState = eSamplerState::eClamp0Wrap1;
 
 	RENDERER.AddRenderMessage(changeStateMessage);
 
 	for (CFireEmitterInstance& fireEmitter : myFireEmitters)
 	{
+		fireEmitter.GetTransformation().LookAt(myCameras[Intify(eCameraType::ePlayerOneCamera)].GetPosition());
 		fireEmitter.Render();
 	}
 

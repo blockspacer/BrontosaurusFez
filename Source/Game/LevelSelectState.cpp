@@ -36,7 +36,7 @@ void LevelSelectState::Render()
 
 void LevelSelectState::OnEnter()
 {
-	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eMouseMessage);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage);
 	myGUIManager->RestartRenderAndUpdate();
 }
 

@@ -30,7 +30,7 @@
 
 CRenderer::CRenderer()
 {
-	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eKeyPressed);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed);
 
 	mySettings.HDR = true;
 	mySettings.Bloom = false;

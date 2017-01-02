@@ -76,6 +76,9 @@
     <Filter Include="CommandLineManager">
       <UniqueIdentifier>{a0465575-eaa9-406b-b536-f852d2cef5e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BitSet">
+      <UniqueIdentifier>{d56df7d9-58d7-4ffe-94a8-b9b80582123d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Timer.h">
@@ -330,6 +333,9 @@
     </ClInclude>
     <ClInclude Include="CommandLineManager.h">
       <Filter>CommandLineManager</Filter>
+    </ClInclude>
+    <ClInclude Include="BitSet.h">
+      <Filter>BitSet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

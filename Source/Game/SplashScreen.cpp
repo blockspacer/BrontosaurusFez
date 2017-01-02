@@ -102,8 +102,8 @@ bool CSplashScreen::CheckIfMorePicsInArray()
 
 void CSplashScreen::OnEnter()
 {
-	POSTMASTER.AppendSubscriber(this, eMessageType::eKeyPressed);
-	POSTMASTER.AppendSubscriber(this, eMessageType::eMousePressed);
+	POSTMASTER.Subscribe(this, eMessageType::eKeyPressed);
+	//POSTMASTER.Subscribe(this, eMessageType::eMousePressed);
 
 
 	assert(mySprites.Size() > 0 && "You need to add something to the splashScreen");
@@ -118,13 +118,13 @@ void CSplashScreen::OnEnter()
 void CSplashScreen::OnExit()
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyPressed);
-	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMousePressed);
+	//PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMousePressed);
 
 }
 
 eMessageReturn CSplashScreen::Recieve(const Message& aMessage)
 {
-	if (aMessage.myMessageType == eMessageType::eKeyPressed || aMessage.myMessageType ==  eMessageType::eMousePressed)
+	if (aMessage.myMessageType == eMessageType::eKeyPressed /*|| aMessage.myMessageType ==  eMessageType::eMousePressed*/)
 	{
 		if (CheckIfMorePicsInArray() == true)
 			SetNextPic();

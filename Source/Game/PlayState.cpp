@@ -328,9 +328,9 @@ void CPlayState::Render()
 
 void CPlayState::OnEnter()
 {
-	//PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eStateMessage);
-	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eKeyboardMessage);
-	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eNextLevelPlease);
+	//PostMaster::GetInstance().Subscribe(this, eMessageType::eStateMessage);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eNextLevelPlease);
 	Audio::CAudioInterface::GetInstance()->LoadBank("Audio/playState.bnk");
 	Audio::CAudioInterface::GetInstance()->PostEvent("PlayCoolSong");
 	//Audio::CAudioInterface::GetInstance()->PostEvent("PlayerMoving_Play");

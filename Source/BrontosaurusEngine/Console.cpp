@@ -11,7 +11,7 @@
 #include "../PostMaster/ConsoleCalledUpon.h"
 CConsole::CConsole()
 {
-	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eKeyPressed);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed, 10);
 	myIsActive = false;
 	myHaveIAfterCurrentText = false;
 	myElapsedAnimationTimer = 0.0f;
@@ -45,37 +45,36 @@ void CConsole::GetLuaFunctions()
 
 void CConsole::Activate()
 {
-	PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PushState(PushState::eState::ePauseScreen, -1)));
 	PostMaster::GetInstance().SendLetter(Message(eMessageType::eConsoleCalledUpon, ConsoleCalledUpon(true)));
-	//ta all input
-	//Börja Renderas
 }
 
 void CConsole::Deactivate()
 {
 	PostMaster::GetInstance().SendLetter(Message(eMessageType::eConsoleCalledUpon, ConsoleCalledUpon(false)));
-	PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PopCurrentState()));
-	//sluta ta all input
-	//sluta renderas
 }
 
-void CConsole::Update(float aDeltaTime)
+bool CConsole::Update(float aDeltaTime)
 {
-	myElapsedAnimationTimer += aDeltaTime;
-	if (myAnimationTimerCooldown < myElapsedAnimationTimer)
+	if (myIsActive == true)
 	{
-		myElapsedAnimationTimer = 0.0f;
-		if (myHaveIAfterCurrentText == true)
+		myElapsedAnimationTimer += aDeltaTime;
+		if (myAnimationTimerCooldown < myElapsedAnimationTimer)
 		{
-			myCurrentText->SetText(myCurrentText->GetText().SubStr(0, myCurrentText->GetText().Size() - 1));
-			
+			myElapsedAnimationTimer = 0.0f;
+			if (myHaveIAfterCurrentText == true)
+			{
+				myCurrentText->SetText(myCurrentText->GetText().SubStr(0, myCurrentText->GetText().Size() - 1));
+
+			}
+			else
+			{
+				myCurrentText->SetText(myCurrentText->GetText() + "|");
+			}
+			myHaveIAfterCurrentText = !myHaveIAfterCurrentText;
 		}
-		else
-		{
-			myCurrentText->SetText(myCurrentText->GetText() + "|");
-		}
-		myHaveIAfterCurrentText = !myHaveIAfterCurrentText;
 	}
+
+	return myIsActive;
 }
 
 void CConsole::Render()
@@ -168,8 +167,10 @@ eMessageReturn CConsole::TakeKeyBoardInputPressedChar(const char aKey)
 		{
 			Activate();
 		}
-		return eMessageReturn::eContinue;
+
+		return eMessageReturn::eStop;
 	}
+
 	if (myIsActive == true)
 	{
 		if (myHaveIAfterCurrentText == true)
@@ -203,6 +204,8 @@ eMessageReturn CConsole::TakeKeyBoardInputPressedChar(const char aKey)
 			myCurrentText->SetText(myCurrentText->GetText() + aKey);
 			UpdateCommandSuggestions(myCurrentText->GetText().c_str());
 		}
+
+		return eMessageReturn::eStop;
 	}
 	return eMessageReturn::eContinue;
 }

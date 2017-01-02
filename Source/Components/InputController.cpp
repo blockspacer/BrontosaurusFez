@@ -12,10 +12,9 @@
 
 InputController::InputController(const CU::Camera& aPlayerCamera)
 	: myPlayerCamera(aPlayerCamera)
+	, myMouseIsDown(false)
 {
-	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eMouseMessage);
-	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eMouseDownMessage);
-	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eInputMessagePressed);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage);
 	mySkillInputMessageActivators.Init(5);
 }
 
@@ -23,34 +22,14 @@ InputController::InputController(const CU::Camera& aPlayerCamera)
 InputController::~InputController()
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);
-	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseDownMessage);
-	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eInputMessagePressed);
 }
 
 void InputController::Update(float aDeltaTime)
 {
-}
-
-eMessageReturn InputController::Recieve(const Message& aMessage)
-{
-	return aMessage.myEvent.DoEvent(this);
-}
-
-void InputController::Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData)
-{
-}
-
-void InputController::Destroy()
-{
-}
-
-eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButton, const CU::Vector2f& aMousePosition)
-{
-	if(aMouseButton == CU::eMouseButtons::LBUTTON)
-	{
-		//convert pixel mouse position to world ground position
+	if (myMouseIsDown == true)
+	{//convert pixel mouse position to world ground position
 		CU::Vector2f windowSize(WINDOW_SIZE);
-		CU::Vector2f mousePosZeroToOne = aMousePosition / windowSize;
+		CU::Vector2f mousePosZeroToOne = myMousePosition / windowSize;
 		CU::Vector2f mousePosNormalizedSpace = mousePosZeroToOne * 2.f - CU::Vector2f::One;
 		CU::Vector4f mousePosNormalizedHomogeneousSpace(mousePosNormalizedSpace, CU::Vector2f::Zero);
 		CU::Vector4f screenToCameraSpaceRay = mousePosNormalizedHomogeneousSpace * myPlayerCamera.GetProjectionInverse();
@@ -80,12 +59,51 @@ eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButto
 		}
 
 		CU::Vector2f targetPosition(targetPosition3D.x, targetPosition3D.z);
-		
+
 		eComponentMessageType type = eComponentMessageType::eSetNavigationTarget;
 		SComponentMessageData data;
 		data.myVector2f = targetPosition;
 		GetParent()->NotifyComponents(type, data);
 	}
+}
+
+eMessageReturn InputController::Recieve(const Message& aMessage)
+{
+	return aMessage.myEvent.DoEvent(this);
+}
+
+void InputController::Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData)
+{
+}
+
+void InputController::Destroy()
+{
+}
+
+eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButton, const CU::Vector2f& aMousePosition)
+{
+	if(aMouseButton == CU::eMouseButtons::LBUTTON)
+	{
+		myMouseIsDown = true;
+		myMousePosition = aMousePosition;
+	}
+
+	return eMessageReturn::eContinue;
+}
+
+eMessageReturn InputController::MouseReleased(const CU::eMouseButtons aMouseButton, const CU::Vector2f & aMousePosition)
+{
+	if (aMouseButton == CU::eMouseButtons::LBUTTON)
+	{
+		myMouseIsDown = false;
+	}
+
+	return eMessageReturn::eContinue;
+}
+
+eMessageReturn InputController::MouseMoved(const CU::Vector2f& aMousePosition)
+{
+	myMousePosition = aMousePosition;
 
 	return eMessageReturn::eContinue;
 }

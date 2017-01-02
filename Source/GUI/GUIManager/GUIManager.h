@@ -32,6 +32,7 @@ namespace GUI
 
 		void Init();
 		void Init(const char* aGUIScenePath);
+
 		void Update(const CU::Time& aDeltaTime);
 		void Render();
 
@@ -50,7 +51,6 @@ namespace GUI
 
 		eMessageReturn Recieve(const Message& aMessage) override;
 
-		void SetSkipEmissive(const bool aShouldSkipEmissive);
 		inline void SetRenderMouse(const bool aShouldRenderMouse);
 
 	private:
