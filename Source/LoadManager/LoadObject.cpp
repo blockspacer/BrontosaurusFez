@@ -16,9 +16,11 @@ int LoadObject(KLoader::SLoadedComponentData someData)
 
 	CU::JsonObject PositionObject = someData.myData.at("position").GetJsonObject();
 
-	const float positionX = PositionObject.at("x").GetNumber();
-	const float positionY = PositionObject.at("y").GetNumber();
-	const float positionZ = PositionObject.at("z").GetNumber();
+	const float unityScale = 100;
+
+	const float positionX = PositionObject.at("x").GetNumber() * unityScale;
+	const float positionY = PositionObject.at("y").GetNumber() * unityScale;
+	const float positionZ = PositionObject.at("z").GetNumber() * unityScale;
 
 	currentMatrix.SetPosition({positionX, positionY, positionZ});
 
