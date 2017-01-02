@@ -2,6 +2,9 @@
 #include "SkillFactory.h"
 #include "Skill.h"
 
+
+#include <iostream>
+
 SkillFactory* SkillFactory::ourInstance = nullptr;
 
 SkillFactory::SkillFactory()
@@ -37,6 +40,14 @@ void SkillFactory::DestroyInstance()
 Skill * SkillFactory::CreateSkill(const char * aSkillName)
 {
 	Skill* newSkill = new Skill;
-	mySkills.Add(newSkill);
+	if(aSkillName == "BasicAttack")
+	{
+	
+		mySkills.Add(newSkill);
+	}
+	else
+	{
+		std::cout << "Skill not yet implemented" << std::endl;
+	}
 	return newSkill;
 }
