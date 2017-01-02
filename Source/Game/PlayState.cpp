@@ -115,8 +115,8 @@ void CPlayState::Load()
 	timerMgr.StartTimer(handle);
 	CreateManagersAndFactories();
 
-	MODELCOMP_MGR.SetScene(&myScene);
-	myScene.SetSkybox("skybox.dds");
+	MODELCOMP_MGR.SetScene(myScene);
+	myScene->SetSkybox("skybox.dds");
 	LoadManager::GetInstance().SetCurrentPlayState(this);
 
 	Lights::SDirectionalLight dirLight;
@@ -143,7 +143,11 @@ void CPlayState::Load()
 
 	KLoader::CKevinLoader &kLoaderInstance = KLoader::CKevinLoader::GetInstance();
 
-	kLoaderInstance.LoadFile(L"Json/Levels/ProgGym/LevelData.json");
+	const KLoader::eError loadError = kLoaderInstance.LoadFile(L"Json/Levels/ProgGym/LevelData.json");
+	if (loadError != KLoader::eError::NO_LOADER_ERROR)
+	{
+		DL_ASSERT("Loading Failed");
+	}
 
 	//create an npc
 	CGameObject* npcObject1 = myGameObjectManager->CreateGameObject();

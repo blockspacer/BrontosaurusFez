@@ -55,7 +55,9 @@ namespace KLoader
 		~CKevinLoader();
 
 		int LoadComponent(const std::string& aIdString, const CU::CPJWrapper& aRoot);
+
 		eError LoadObjects(const CU::CPJWrapper& aWrapper);
+		eError LinkObjects();
 
 		std::map<std::string, LoadFunction> myLoadFunctions;
 		std::map<std::string, LinkFunction> myLinkFunctions;

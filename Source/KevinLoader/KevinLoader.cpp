@@ -72,6 +72,13 @@ namespace KLoader
 			return loadObjectError;
 		}
 
+		const eError linkObjectError = LinkObjects();
+		if (linkObjectError != eError::NO_LOADER_ERROR)
+		{
+			return linkObjectError;
+		}
+
+		return eError::NO_LOADER_ERROR;
 	}
 
 	void CKevinLoader::PrintMissingComponents(CU::DynamicString componentName)
@@ -206,6 +213,31 @@ namespace KLoader
 
 			 myLinkObjects[currentID] = currentLink;
 		}
+		return eError::NO_LOADER_ERROR;
+	}
+
+	eError CKevinLoader::LinkObjects()
+	{
+		for (auto linkObject : myLinkObjects)
+		{
+			const LinkObject& currentLink = linkObject.second;
+
+			if (currentLink.myChildren.Size() > 0)
+			{
+				for (int i = 0; i < currentLink.myChildren.Size(); ++i)
+				{
+					if (myObjectLinkFunction)
+					{
+						myObjectLinkFunction(currentLink.myIndex, myLinkObjects[currentLink.myChildren[i]].myIndex);
+					}
+					else
+					{
+						return eError::MISSING_OBJECT_LINK_FUNC;
+					}
+				}
+			}
+		}
+
 		return eError::NO_LOADER_ERROR;
 	}
 }
