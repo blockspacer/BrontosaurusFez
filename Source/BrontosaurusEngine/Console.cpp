@@ -189,10 +189,15 @@ eMessageReturn CConsole::TakeKeyBoardInputPressedChar(const char aKey)
 			}
 			CheckIfTextIsCommand(myCurrentText->GetText());
 			myCurrentText->SetText("");
+			mySuggestedCommand->SetText("");
 		}
 		else if (aKey == '\b')
 		{
 			myCurrentText->SetText(myCurrentText->GetText().SubStr(0, myCurrentText->GetText().Size() - 1));
+			if (myCurrentText->GetText() == "")
+			{
+				mySuggestedCommand->SetText("");
+			}
 		}
 		else if (aKey == '\t')
 		{
