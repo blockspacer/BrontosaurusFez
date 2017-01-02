@@ -52,6 +52,7 @@ eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButto
 		CU::Vector2f windowSize(WINDOW_SIZE);
 		CU::Vector2f mousePosZeroToOne = aMousePosition / windowSize;
 		CU::Vector2f mousePosNormalizedSpace = mousePosZeroToOne * 2.f - CU::Vector2f::One;
+		mousePosNormalizedSpace.y *= -1;
 		CU::Vector4f mousePosNormalizedHomogeneousSpace(mousePosNormalizedSpace, CU::Vector2f::Zero);
 		CU::Vector4f screenToCameraSpaceRay = mousePosNormalizedHomogeneousSpace * myPlayerCamera.GetProjectionInverse();
 
