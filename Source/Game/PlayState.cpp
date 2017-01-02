@@ -55,6 +55,7 @@
 #include "BrontosaurusEngine/WindowsWindow.h"
 #include <iostream>
 #include "StatComponent.h"
+#include "KevinLoader/KevinLoader.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -88,6 +89,8 @@ CPlayState::~CPlayState()
 
 void CPlayState::Load()
 {
+
+
 	//start taking the time for loading level
 	CU::TimerManager timerMgr;
 	CU::TimerHandle handle = timerMgr.CreateTimer();
@@ -96,7 +99,7 @@ void CPlayState::Load()
 
 	MODELCOMP_MGR.SetScene(&myScene);
 	myScene.SetSkybox("skybox.dds");
-
+	LoadManager::GetInstance().SetCurrentPlayState(this);
 
 	Lights::SDirectionalLight dirLight;
 	dirLight.color = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -117,6 +120,12 @@ void CPlayState::Load()
 
 
 	//hue hue dags att fula ner play state - Alex(Absolut inte Marcus); // snälla slå Johan inte mig(Alex);
+
+	//Loadingu like pingu
+
+	KLoader::CKevinLoader &kLoaderInstance = KLoader::CKevinLoader::GetInstance();
+
+	kLoaderInstance.LoadFile(L"Json/Levels/ProgGym/LevelData.json");
 
 	//create an npc
 	CGameObject* npcObject1 = myGameObjectManager->CreateGameObject();
@@ -345,6 +354,11 @@ void CPlayState::NextLevel()
 eMessageReturn CPlayState::Recieve(const Message& aMessage)
 {
 	return aMessage.myEvent.DoEvent(this);
+}
+
+CGameObjectManager* CPlayState::GetObjectManager() const
+{
+	return myGameObjectManager;
 }
 
 void CPlayState::CreateManagersAndFactories()

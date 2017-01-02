@@ -515,7 +515,6 @@ namespace CU
 
 			return *this;
 		}
-
 		
 		Matrix44<TYPE> &Rotate(float anAngle, Axees anAxis)
 		{
@@ -543,6 +542,30 @@ namespace CU
 
 			*this = temp * *this;
 			SetPosition(Vector3<TYPE>(tempLoc.x, tempLoc.y, tempLoc.z));
+
+			return *this;
+		}
+
+		/* rotates x,y then z*/
+		Matrix44<TYPE> &Rotate(const float x, const float y, const float z)
+		{
+			Rotate(x, Axees::X);
+			Rotate(y, Axees::Y);
+			Rotate(z, Axees::Z);
+
+			return *this;
+		}
+
+		Matrix44<TYPE> &Scale(const Vector3<TYPE> &aScaleVector)
+		{
+			Matrix44 scaleMatrix;
+			
+			scaleMatrix.m11 = aScaleVector.x;
+			scaleMatrix.m22 = aScaleVector.y;
+			scaleMatrix.m33 = aScaleVector.z;
+			scaleMatrix.m44 = 1;
+
+			*this = scaleMatrix * *this;
 
 			return *this;
 		}

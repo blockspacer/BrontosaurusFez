@@ -54,6 +54,8 @@ public:
 
 	inline bool IsLoaded() const;
 
+	CGameObjectManager* GetObjectManager() const;
+
 	//Denna ska bort
 	static SSlua::ArgumentList LuaFunction(SSlua::ArgumentList anArgumentList);
 

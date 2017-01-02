@@ -67,6 +67,9 @@
     <Filter Include="MatrixInverse">
       <UniqueIdentifier>{43bff1ff-2916-42fd-85ff-7b056de6b086}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PicoJson">
+      <UniqueIdentifier>{45412c79-6444-4e53-b508-abe0a9c9403f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Timer.h">
@@ -309,6 +312,13 @@
     <ClInclude Include="EInputMessage.h">
       <Filter>Input</Filter>
     </ClInclude>
+    <ClInclude Include="QuickSort.h" />
+    <ClInclude Include="picojson.h">
+      <Filter>PicoJson</Filter>
+    </ClInclude>
+    <ClInclude Include="PJWrapper.h">
+      <Filter>PicoJson</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Timer.cpp">
@@ -375,6 +385,9 @@
     <ClCompile Include="ThreadNamer.cpp" />
     <ClCompile Include="StringHelper.cpp">
       <Filter>String</Filter>
+    </ClCompile>
+    <ClCompile Include="PJWrapper.cpp">
+      <Filter>PicoJson</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -301,7 +301,7 @@ bool DynamicString::IsInt() const
 {
 	assert(myString != nullptr);
 
-	const CU::DynamicString numbers = "1234567890";
+	const CU::DynamicString numbers = "1234567890-";
 
 	for (int i = 0; i < mySize; ++i)
 	{
@@ -324,7 +324,7 @@ bool DynamicString::IsFloat() const
 {
 	assert(myString != nullptr);
 
-	const CU::DynamicString numbers = "1234567890.";
+	const CU::DynamicString numbers = "1234567890.-";
 
 	for (int i = 0; i < mySize; ++i)
 	{

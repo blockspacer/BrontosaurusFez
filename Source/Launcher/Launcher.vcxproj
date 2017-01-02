@@ -266,6 +266,9 @@
     <ProjectReference Include="..\Game\Game.vcxproj">
       <Project>{3f2be606-bd58-47ce-8191-f80bc500aa0c}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\KevinLoader\KevinLoader.vcxproj">
+      <Project>{cbc04772-eff5-45ee-8c89-c09e24c4236c}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\LoadManager\LoadManager.vcxproj">
       <Project>{3993f760-8da4-4813-a704-ce28766fd630}</Project>
     </ProjectReference>
