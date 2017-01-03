@@ -4,7 +4,6 @@
 #include <Engine.h> //fixa camera instance sen
 #include <CommonUtilities.h>
 #include <Lights.h>
-#include <Time.h>
 #include <TimerManager.h>
 #include <Renderer.h>
 #include "Skybox.h"
@@ -15,10 +14,8 @@
 #include "Components/ModelComponentManager.h"
 #include "Components/GameObject.h"
 #include "Components/ModelComponent.h"
-#include "Components/ModelComponentManager.h"
 #include "Components/ParticleEmitterComponentManager.h"
 #include "Components/ComponentManager.h"
-#include "Components/InventoryComponent.h"
 
 #include "PostMaster/PopCurrentState.h"
 #include "PostMaster/ChangeLevel.h"
