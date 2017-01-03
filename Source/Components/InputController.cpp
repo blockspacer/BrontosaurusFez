@@ -63,7 +63,8 @@ void InputController::Update(float aDeltaTime)
 		}
 
 		CU::Vector2f targetPosition(targetPosition3D.x, targetPosition3D.z);
-
+		
+		TakeInputMessage(CU::eInputMessage::LEFTMOUSEBUTTON);
 		eComponentMessageType type = eComponentMessageType::eSetNavigationTarget;
 		SComponentMessageData data;
 		data.myVector2f = targetPosition;
@@ -105,7 +106,14 @@ eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButto
 		myMouseIsDown = true;
 		myMousePosition = aMousePosition;
 	}
-
+	else if(aMouseButton == CU::eMouseButtons::RBUTTON)
+	{
+		TakeInputMessage(CU::eInputMessage::RIGHTMOUSEBUTTON);
+	}
+	else if (aMouseButton == CU::eMouseButtons::MIDBUTTON)
+	{
+		TakeInputMessage(CU::eInputMessage::MIDDLEMOUSEBUTTON);
+	}
 	return eMessageReturn::eContinue;
 }
 
