@@ -138,9 +138,20 @@ void CPlayState::Load()
 
 	//Loadingu like pingu
 
-	KLoader::CKevinLoader &kLoaderInstance = KLoader::CKevinLoader::GetInstance();
+	CU::CPJWrapper levelsFile;
+	const std::string errorString = levelsFile.Parse("Json/LevelList.json");
 
-	const KLoader::eError loadError = kLoaderInstance.LoadFile(L"Json/Levels/ProgGym/LevelData.json");
+	CU::CPJWrapper levelsArray = levelsFile.GetJsonObject().at("levels");
+
+	const int magicLevelNumberSuperDuperTusen = 0;
+
+	std::string levelPath = "Json/Levels/";
+	levelPath += levelsArray[magicLevelNumberSuperDuperTusen].GetString();
+	levelPath += "/LevelData.json";
+
+	KLoader::CKevinLoader &loader = KLoader::CKevinLoader::GetInstance();
+
+	const KLoader::eError loadError = loader.LoadFile(levelPath);
 	if (loadError != KLoader::eError::NO_LOADER_ERROR)
 	{
 		DL_ASSERT("Loading Failed");

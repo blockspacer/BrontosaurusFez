@@ -61,10 +61,10 @@ namespace KLoader
 		myObjectLinkFunction = aLinkFunction;
 	}
 
-	eError CKevinLoader::LoadFile(std::wstring aFilePath)
+	eError CKevinLoader::LoadFile(const std::string& aFilePath)
 	{
 		CU::CPJWrapper wrapper;
-		wrapper.Parse(std::string(aFilePath.begin(), aFilePath.end()));
+		wrapper.Parse(aFilePath);
 
 		const eError loadObjectError = LoadObjects(wrapper);
 		if (loadObjectError != eError::NO_LOADER_ERROR)
