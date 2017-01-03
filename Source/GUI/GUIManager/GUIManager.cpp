@@ -33,8 +33,6 @@ GUI::GUIManager::~GUIManager()
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
-	PostMaster::GetInstance().UnSubscribe(this, eMessageType::ePlayerGotNewWeapon);
-	PostMaster::GetInstance().UnSubscribe(this, eMessageType::ePlayerChangedWeapon);
 
 	myFocusedWidget = nullptr;
 	myWidgetAtMouse = nullptr;
@@ -50,7 +48,7 @@ void GUI::GUIManager::Init()
 	myWidgetContainer = new WidgetContainer(CU::Vector2f::Zero, CU::Vector2f::One, "BaseWidget", true);
 
 	myCursor = new GUICursor();
-	PostMaster::GetInstance().AppendSubscriber(myCursor, eMessageType::eMouseMessage);
+	PostMaster::GetInstance().Subscribe(myCursor, eMessageType::eMouseMessage, 6);
 }
 
 void GUI::GUIManager::Init(const char* aGUIScenePath)
@@ -58,7 +56,7 @@ void GUI::GUIManager::Init(const char* aGUIScenePath)
 	myWidgetContainer = WidgetFactory::CreateGUIScene(aGUIScenePath, myCamera);
 
 	myCursor = new GUICursor();
-	PostMaster::GetInstance().AppendSubscriber(myCursor, eMessageType::eMouseMessage);
+	PostMaster::GetInstance().Subscribe(myCursor, eMessageType::eMouseMessage, 6);
 
 
 	Widget* retryButton = myWidgetContainer->FindWidget("buttonRetry");
@@ -92,13 +90,10 @@ void GUI::GUIManager::Render()
 	RENDERER.AddRenderMessage(setCameraMessage);
 
 	myWidgetContainer->Render();
-	if (myShouldStealInput == true)
+
+	if (myShouldStealInput == true && myShouldRenderMouse == true)
 	{
-		//changeStateMessage = new SChangeStatesMessage()
-		if (myShouldRenderMouse == true)
-		{
-			myCursor->Render();
-		}
+		myCursor->Render();
 	}
 	
 	setCameraMessage = new SSetCameraMessage();
@@ -249,36 +244,10 @@ eMessageReturn GUI::GUIManager::Recieve(const Message& aMessage)
 	return aMessage.myEvent.DoEvent(this);
 }
 
-static const CU::Vector3f inactiveMainMenuOffset(0.f, -10.f, 0.f);
-#include "RenderableWidgets\ModelWidget\ModelWidget.h" //last day fulhax :)
-void GUI::GUIManager::SetSkipEmissive(const bool aShouldSkipEmissive)
-{
-	ModelWidget* button = nullptr;
-	float floatBool = aShouldSkipEmissive ? 1.f : 0.f;
-
-	button = static_cast<ModelWidget*>(myWidgetContainer->FindWidget("ButtonStart"));
-	button->GetPixelConstantBufferStruct().myValues[SPixelConstantBuffer::eSkipEmissive] = floatBool;
-	button->SetInactivePosition(inactiveMainMenuOffset * floatBool);
-
-	button = static_cast<ModelWidget*>(myWidgetContainer->FindWidget("buttonCredits"));
-	button->GetPixelConstantBufferStruct().myValues[SPixelConstantBuffer::eSkipEmissive] = floatBool;
-	button->SetInactivePosition(inactiveMainMenuOffset * floatBool);
-
-	button = static_cast<ModelWidget*>(myWidgetContainer->FindWidget("buttonQuit"));
-	button->GetPixelConstantBufferStruct().myValues[SPixelConstantBuffer::eSkipEmissive] = floatBool;
-	button->SetInactivePosition(inactiveMainMenuOffset * floatBool);
-
-	button = static_cast<ModelWidget*>(myWidgetContainer->FindWidget("buttonLevelSelect"));
-	button->GetPixelConstantBufferStruct().myValues[SPixelConstantBuffer::eSkipEmissive] = floatBool;
-	button->SetInactivePosition(inactiveMainMenuOffset * floatBool);
-}
-
 void GUI::GUIManager::PauseRenderAndUpdate()
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
-	PostMaster::GetInstance().UnSubscribe(this, eMessageType::ePlayerGotNewWeapon);
-	PostMaster::GetInstance().UnSubscribe(this, eMessageType::ePlayerChangedWeapon);
 	PostMaster::GetInstance().UnSubscribe(myCursor, eMessageType::eMouseMessage);
 
 	myShouldUpdate = false;
@@ -298,11 +267,9 @@ void GUI::GUIManager::RestartRenderAndUpdate()
 
 	myWidgetContainer->SetVisibility(true);
 
-	PostMaster::GetInstance().InsertSubscriber(this, eMessageType::eMouseMessage);
-	PostMaster::GetInstance().InsertSubscriber(this, eMessageType::eKeyboardMessage);
-	PostMaster::GetInstance().InsertSubscriber(this, eMessageType::ePlayerGotNewWeapon);
-	PostMaster::GetInstance().InsertSubscriber(this, eMessageType::ePlayerChangedWeapon);
-	PostMaster::GetInstance().InsertSubscriber(myCursor, eMessageType::eMouseMessage);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage, 5);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage, 5);
+	PostMaster::GetInstance().Subscribe(myCursor, eMessageType::eMouseMessage, 6);
 
 
 	if (locMousePosition != CU::Vector2f::Zero && myCursor != nullptr)

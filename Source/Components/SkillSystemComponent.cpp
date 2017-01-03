@@ -3,7 +3,6 @@
 #include "Skill.h"
 #include "SkillFactory.h"
 
-#include <iostream>
 SkillSystemComponent::SkillSystemComponent()
 {
 	mySkills.Init(4);
@@ -49,7 +48,7 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 		}
 		else
 		{
-			std::cout << "Tried to use a skill that was not in skillSystemComponent" << std::endl;
+			DL_PRINT_WARNING("Tried to use a skill that was not in skillSystemComponent");
 		}
 	
 	}

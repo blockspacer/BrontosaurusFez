@@ -19,23 +19,18 @@ namespace CU
 		Z
 	};
 
-	// Forward declarations
-	//
 	template<typename TYPE>
 	class Matrix33;
 
 	template<typename TYPE>
 	class Matrix44
 	{
-	public:     // Constant to avoid using magic numbers
-				//
-		static const unsigned int   NumRows = 4,
-									NumColumns = 4,
-									NumElements = NumRows * NumColumns;
+	public:
+		static const unsigned int NumRows = 4;
+		static const unsigned int NumColumns = 4;
+		static const unsigned int NumElements = NumRows * NumColumns;
 
-		// Initializes the matrix to the identity matrix
-		//
-		Matrix44(void)
+		Matrix44()
 		{
 			m11 = static_cast<TYPE>(1); m12 = static_cast<TYPE>(0); m13 = static_cast<TYPE>(0); m14 = static_cast<TYPE>(0);
 			m21 = static_cast<TYPE>(0); m22 = static_cast<TYPE>(1); m23 = static_cast<TYPE>(0); m24 = static_cast<TYPE>(0);
@@ -43,40 +38,31 @@ namespace CU
 			m41 = static_cast<TYPE>(0); m42 = static_cast<TYPE>(0); m43 = static_cast<TYPE>(0); m44 = static_cast<TYPE>(1);
 		}
 
-		// Initializes the matrix with the data from anOther
-		//
-		Matrix44(const Matrix44 &anOther)
+		Matrix44(const Matrix44& aOther)
 		{
-			m11 = anOther.m11; m12 = anOther.m12; m13 = anOther.m13; m14 = anOther.m14;
-			m21 = anOther.m21; m22 = anOther.m22; m23 = anOther.m23; m24 = anOther.m24;
-			m31 = anOther.m31; m32 = anOther.m32; m33 = anOther.m33; m34 = anOther.m34;
-			m41 = anOther.m41; m42 = anOther.m42; m43 = anOther.m43; m44 = anOther.m44;
+			m11 = aOther.m11; m12 = aOther.m12; m13 = aOther.m13; m14 = aOther.m14;
+			m21 = aOther.m21; m22 = aOther.m22; m23 = aOther.m23; m24 = aOther.m24;
+			m31 = aOther.m31; m32 = aOther.m32; m33 = aOther.m33; m34 = aOther.m34;
+			m41 = aOther.m41; m42 = aOther.m42; m43 = aOther.m43; m44 = aOther.m44;
 		}
 
-		// Initializes the matrix with anOther's data as the top left 3x3-part and sets the
-		// rest of the matrix like the identity matrix
-		//
-		Matrix44(const Matrix33<TYPE> &anOther)
+		Matrix44(const Matrix33<TYPE>& aOther)
 		{
-			m11 = anOther.m11; m12 = anOther.m12; m13 = anOther.m13; m14 = static_cast<TYPE>(0);
-			m21 = anOther.m21; m22 = anOther.m22; m23 = anOther.m23; m24 = static_cast<TYPE>(0);
-			m31 = anOther.m31; m32 = anOther.m32; m33 = anOther.m33; m34 = static_cast<TYPE>(0);
+			m11 = aOther.m11; m12 = aOther.m12; m13 = aOther.m13; m14 = static_cast<TYPE>(0);
+			m21 = aOther.m21; m22 = aOther.m22; m23 = aOther.m23; m24 = static_cast<TYPE>(0);
+			m31 = aOther.m31; m32 = aOther.m32; m33 = aOther.m33; m34 = static_cast<TYPE>(0);
 			m41 = static_cast<TYPE>(0); m42 = static_cast<TYPE>(0); m43 = static_cast<TYPE>(0); m44 = static_cast<TYPE>(1);
 		}
 
-		// Initializes the matrix with the static_cast'ed data from anOther
-		//
 		template<typename U>
-		Matrix44(const Matrix44<U> &anOther)
+		Matrix44(const Matrix44<U>& aOther)
 		{
-			m11 = static_cast<TYPE>(anOther.m11); m12 = static_cast<TYPE>(anOther.m12); m13 = static_cast<TYPE>(anOther.m13); m14 = static_cast<TYPE>(anOther.m14);
-			m21 = static_cast<TYPE>(anOther.m21); m22 = static_cast<TYPE>(anOther.m22); m23 = static_cast<TYPE>(anOther.m23); m24 = static_cast<TYPE>(anOther.m24);
-			m31 = static_cast<TYPE>(anOther.m31); m32 = static_cast<TYPE>(anOther.m32); m33 = static_cast<TYPE>(anOther.m33); m34 = static_cast<TYPE>(anOther.m34);
-			m41 = static_cast<TYPE>(anOther.m41); m42 = static_cast<TYPE>(anOther.m42); m43 = static_cast<TYPE>(anOther.m43); m44 = static_cast<TYPE>(anOther.m44);
+			m11 = static_cast<TYPE>(aOther.m11); m12 = static_cast<TYPE>(aOther.m12); m13 = static_cast<TYPE>(aOther.m13); m14 = static_cast<TYPE>(aOther.m14);
+			m21 = static_cast<TYPE>(aOther.m21); m22 = static_cast<TYPE>(aOther.m22); m23 = static_cast<TYPE>(aOther.m23); m24 = static_cast<TYPE>(aOther.m24);
+			m31 = static_cast<TYPE>(aOther.m31); m32 = static_cast<TYPE>(aOther.m32); m33 = static_cast<TYPE>(aOther.m33); m34 = static_cast<TYPE>(aOther.m34);
+			m41 = static_cast<TYPE>(aOther.m41); m42 = static_cast<TYPE>(aOther.m42); m43 = static_cast<TYPE>(aOther.m43); m44 = static_cast<TYPE>(aOther.m44);
 		}
 
-		// Initializes the matrix with the data from an array
-		//
 		Matrix44(const TYPE(&anArray)[NumElements])
 		{
 			m11 = anArray[0]; m12 = anArray[1]; m13 = anArray[2]; m14 = anArray[3];
@@ -85,8 +71,6 @@ namespace CU
 			m41 = anArray[12]; m42 = anArray[13]; m43 = anArray[14]; m44 = anArray[15];
 		}
 
-		// Initializes the matrix with plain values
-		//
 		Matrix44(
 			const TYPE a11, const TYPE a12, const TYPE a13, const TYPE a14,
 			const TYPE a21, const TYPE a22, const TYPE a23, const TYPE a24,
@@ -99,9 +83,7 @@ namespace CU
 			m41 = a41; m42 = a42; m43 = a43; m44 = a44;
 		}
 
-		// Adds and assigns the values of aRight to this matrix
-		//
-		Matrix44 &operator +=(const Matrix44 &aRight)
+		Matrix44 &operator+=(const Matrix44& aRight)
 		{
 			m11 += aRight.m11; m12 += aRight.m12; m13 += aRight.m13; m14 += aRight.m14;
 			m21 += aRight.m21; m22 += aRight.m22; m23 += aRight.m23; m24 += aRight.m24;
@@ -110,9 +92,7 @@ namespace CU
 			return *this;
 		}
 
-		// Subtract and assigns the values of aRight to this matrix
-		//
-		Matrix44 &operator -=(const Matrix44 &aRight)
+		Matrix44 &operator-=(const Matrix44& aRight)
 		{
 			m11 -= aRight.m11; m12 -= aRight.m12; m13 -= aRight.m13; m14 -= aRight.m14;
 			m21 -= aRight.m21; m22 -= aRight.m22; m23 -= aRight.m23; m24 -= aRight.m24;
@@ -121,7 +101,7 @@ namespace CU
 			return *this;
 		}
 
-		Matrix44 &operator *=(const TYPE aScalar)
+		Matrix44 &operator*=(const TYPE aScalar)
 		{
 			for (unsigned int i = 0; i < NumElements; ++i)
 			{
@@ -131,9 +111,7 @@ namespace CU
 			return *this;
 		}
 
-		// Multiplies this matrix with aRight
-		//
-		Matrix44 &operator *=(const Matrix44 &aRight)
+		Matrix44 &operator*=(const Matrix44& aRight)
 		{
 			Matrix44 temp = *this;
 			const __m128 X = aRight.m1;
@@ -214,9 +192,7 @@ namespace CU
 			//return *this;
 		}
 
-		// Sets the values of this matrix to those of aRight
-		//
-		Matrix44 &operator =(const Matrix44 &aRight)
+		Matrix44& operator=(const Matrix44& aRight)
 		{
 			m11 = aRight.m11; m12 = aRight.m12; m13 = aRight.m13; m14 = aRight.m14;
 			m21 = aRight.m21; m22 = aRight.m22; m23 = aRight.m23; m24 = aRight.m24;
@@ -225,7 +201,7 @@ namespace CU
 			return *this;
 		}
 
-		Matrix44 &operator =(const Matrix33<TYPE> &aRight)
+		Matrix44& operator=(const Matrix33<TYPE>& aRight)
 		{
 			m11 = aRight.m11; m12 = aRight.m12; m13 = aRight.m13; m14 = 0;
 			m21 = aRight.m21; m22 = aRight.m22; m23 = aRight.m23; m24 = 0;
@@ -234,9 +210,7 @@ namespace CU
 			return *this;
 		}
 
-		// Returns a transposed copy of this matrix
-		//
-		Matrix44 &Transpose(void)
+		Matrix44& Transpose()
 		{
 			Matrix44 temp = *this;
 
@@ -352,10 +326,7 @@ namespace CU
 			//return temp;
 		}
 
-
-		// Creates a transformation matrix for rotating anAngle rad around the x-axis
-		//
-		static Matrix44 CreateRotateAroundX(const TYPE anAngle)
+		static Matrix44 CreateRotateAroundX(const TYPE aAngle)
 		{
 			Matrix44 rotationX;
 
@@ -365,13 +336,13 @@ namespace CU
 			rotationX.m14 = static_cast<TYPE>(0);
 
 			rotationX.m21 = static_cast<TYPE>(0);
-			rotationX.m22 = static_cast<TYPE>(cos(static_cast<double>(anAngle)));
-			rotationX.m23 = static_cast<TYPE>(sin(static_cast<double>(anAngle)));
+			rotationX.m22 = static_cast<TYPE>(cos(static_cast<double>(aAngle)));
+			rotationX.m23 = static_cast<TYPE>(sin(static_cast<double>(aAngle)));
 			rotationX.m24 = static_cast<TYPE>(0);
 
 			rotationX.m31 = static_cast<TYPE>(0);
-			rotationX.m32 = static_cast<TYPE>(-sin(static_cast<double>(anAngle)));
-			rotationX.m33 = static_cast<TYPE>(cos(static_cast<double>(anAngle)));
+			rotationX.m32 = static_cast<TYPE>(-sin(static_cast<double>(aAngle)));
+			rotationX.m33 = static_cast<TYPE>(cos(static_cast<double>(aAngle)));
 			rotationX.m34 = static_cast<TYPE>(0);
 
 			rotationX.m41 = static_cast<TYPE>(0);
@@ -382,15 +353,13 @@ namespace CU
 			return rotationX;
 		}
 
-		// Creates a transformation matrix for rotating anAngle rad around the y-axis
-		//
-		static Matrix44 CreateRotateAroundY(const TYPE anAngle)
+		static Matrix44 CreateRotateAroundY(const TYPE aAngle)
 		{
 			Matrix44 rotationY;
 
-			rotationY.m11 = static_cast<TYPE>(cos(static_cast<double>(anAngle)));
+			rotationY.m11 = static_cast<TYPE>(cos(static_cast<double>(aAngle)));
 			rotationY.m12 = static_cast<TYPE>(0);
-			rotationY.m13 = static_cast<TYPE>(-sin(static_cast<double>(anAngle)));
+			rotationY.m13 = static_cast<TYPE>(-sin(static_cast<double>(aAngle)));
 			rotationY.m14 = static_cast<TYPE>(0);
 
 			rotationY.m21 = static_cast<TYPE>(0);
@@ -398,9 +367,9 @@ namespace CU
 			rotationY.m23 = static_cast<TYPE>(0);
 			rotationY.m24 = static_cast<TYPE>(0);
 
-			rotationY.m31 = static_cast<TYPE>(sin(static_cast<double>(anAngle)));
+			rotationY.m31 = static_cast<TYPE>(sin(static_cast<double>(aAngle)));
 			rotationY.m32 = static_cast<TYPE>(0);
-			rotationY.m33 = static_cast<TYPE>(cos(static_cast<double>(anAngle)));
+			rotationY.m33 = static_cast<TYPE>(cos(static_cast<double>(aAngle)));
 			rotationY.m34 = static_cast<TYPE>(0);
 
 			rotationY.m41 = static_cast<TYPE>(0);
@@ -411,19 +380,17 @@ namespace CU
 			return rotationY;
 		}
 
-		// Creates a transformation matrix for rotating anAngle rad around the z-axis
-		//
-		static Matrix44 CreateRotateAroundZ(const TYPE anAngle)
+		static Matrix44 CreateRotateAroundZ(const TYPE aAngle)
 		{
 			Matrix44 rotationZ;
 
-			rotationZ.m11 = static_cast<TYPE>(cos(static_cast<double>(anAngle)));
-			rotationZ.m12 = static_cast<TYPE>(sin(static_cast<double>(anAngle)));
+			rotationZ.m11 = static_cast<TYPE>(cos(static_cast<double>(aAngle)));
+			rotationZ.m12 = static_cast<TYPE>(sin(static_cast<double>(aAngle)));
 			rotationZ.m13 = static_cast<TYPE>(0);
 			rotationZ.m14 = static_cast<TYPE>(0);
 
-			rotationZ.m21 = static_cast<TYPE>(-sin(static_cast<double>(anAngle)));
-			rotationZ.m22 = static_cast<TYPE>(cos(static_cast<double>(anAngle)));
+			rotationZ.m21 = static_cast<TYPE>(-sin(static_cast<double>(aAngle)));
+			rotationZ.m22 = static_cast<TYPE>(cos(static_cast<double>(aAngle)));
 			rotationZ.m23 = static_cast<TYPE>(0);
 			rotationZ.m24 = static_cast<TYPE>(0);
 
@@ -440,51 +407,28 @@ namespace CU
 			return rotationZ;
 		}
 
-		// Returns a transposed copy of aMatrix
-		//
 		static Matrix44 Transpose(Matrix44 aMatrix)
 		{
-			Matrix44 temp = aMatrix;
+			Matrix44 transposed = aMatrix;
 
-			temp.m12 = aMatrix.m21;
-			temp.m13 = aMatrix.m31;
-			temp.m14 = aMatrix.m41;
+			transposed.Transpose();
 
-			temp.m21 = aMatrix.m12;
-			temp.m23 = aMatrix.m32;
-			temp.m24 = aMatrix.m42;
-
-			temp.m31 = aMatrix.m13;
-			temp.m32 = aMatrix.m23;
-			temp.m34 = aMatrix.m43;
-
-			temp.m41 = aMatrix.m14;
-			temp.m42 = aMatrix.m24;
-			temp.m43 = aMatrix.m34;
-			return temp;
+			return transposed;
 		}
 
-
-		// Sets the position part of a 3D transformation matrix 
-		// 
-		void SetPosition(const Vector3<TYPE> &aPosition)
+		void SetPosition(const Vector3<TYPE>& aPosition)
 		{
 			m41 = aPosition.x;
 			m42 = aPosition.y;
 			m43 = aPosition.z;
-
 		}
 
-
-
-		// Gets the position part of a 2D transformation matrix 
-		// 
-		Vector3<TYPE> GetPosition(void) const
+		Vector3<TYPE> GetPosition() const
 		{
 			return Vector3<TYPE>(m41, m42, m43);
 		}
 
-		Vector3<TYPE>& GetPosition(void)
+		Vector3<TYPE>& GetPosition()
 		{
 			return myPosition;
 		}
@@ -499,7 +443,7 @@ namespace CU
 		}
 
 		
-		Matrix44<TYPE> &SetRotation(const Matrix33<TYPE> &aMatrix)
+		Matrix44<TYPE>& SetRotation(const Matrix33<TYPE> &aMatrix)
 		{
 			m11 = aMatrix.m11;
 			m12 = aMatrix.m12;
@@ -516,8 +460,7 @@ namespace CU
 			return *this;
 		}
 
-		
-		Matrix44<TYPE> &Rotate(float anAngle, Axees anAxis)
+		Matrix44<TYPE>& Rotate(float anAngle, Axees anAxis)
 		{
 			Matrix44<TYPE> temp;
 
@@ -547,9 +490,65 @@ namespace CU
 			return *this;
 		}
 
+		/* rotates x,y then z*/
+		Matrix44<TYPE> &Rotate(const float x, const float y, const float z)
+		{
+			Rotate(x, Axees::X);
+			Rotate(y, Axees::Y);
+			Rotate(z, Axees::Z);
+
+			return *this;
+		}
+
+		Matrix44<TYPE> &Scale(const Vector3<TYPE> &aScaleVector)
+		{
+			Matrix44 scaleMatrix;
+			
+			scaleMatrix.m11 = aScaleVector.x;
+			scaleMatrix.m22 = aScaleVector.y;
+			scaleMatrix.m33 = aScaleVector.z;
+			scaleMatrix.m44 = 1;
+
+			*this = scaleMatrix * *this;
+
+			return *this;
+		}
+
 		void Move(const Vector3<TYPE> &aDisplacement)
 		{
 			SetPosition(aDisplacement * GetRotation() + Vector3<TYPE>(m41, m42, m43));
+		}
+
+		Matrix44& LookAt(const Vector3<TYPE>& aLookFrom, const Vector3<TYPE>& aLookTo)
+		{
+			const CU::Vector3f lookAt = aLookTo;
+			const CU::Vector3f lookFrom = aLookFrom;
+			static const CU::Vector3f objectUpVector(0.0f, 1.0f, 0.0f);
+
+			CU::Vector3f zAxis = lookAt - lookFrom;
+			zAxis.Normalize();
+			CU::Vector3f xAxis = objectUpVector.Cross(zAxis);
+			xAxis.Normalize();
+			CU::Vector3f yAxis = zAxis.Cross(xAxis);
+
+			m11 = xAxis.x;
+			m12 = xAxis.y;
+			m13 = xAxis.z;
+
+			m21 = yAxis.x;
+			m22 = yAxis.y;
+			m23 = yAxis.z;
+
+			m31 = zAxis.x;
+			m32 = zAxis.y;
+			m33 = zAxis.z;
+
+			return *this;
+		}
+
+		Matrix44& LookAt(const Vector3<TYPE>& aLookTo)
+		{
+			return LookAt(myPosition, aLookTo);
 		}
 
 		void InvertMe()
@@ -564,8 +563,6 @@ namespace CU
 			return matrix44;
 		}
 
-		// The data of this matrix
-		//
 #pragma warning( disable : 4201 ) // nonstandard extension used: nameless struct/union
 		union
 		{
@@ -595,49 +592,36 @@ namespace CU
 			std::array<TYPE, NumElements> myMatrix;
 		};
 #pragma warning( default : 4201 )
-		// Pre-created identity matrix
-		//
-		static const Matrix44   Identity,
-			Zero;
+
+		static const Matrix44 Identity;
+		static const Matrix44 Zero;
 	};
 
 
 	using Matrix44f = Matrix44<float>;
 
-
-	// Returns a new matrix which is the sum of aLeft and aRight
-	//
 	template<typename TYPE>
-	Matrix44<TYPE> operator +(Matrix44<TYPE> aLeft, const Matrix44<TYPE> &aRight)
+	Matrix44<TYPE> operator+(Matrix44<TYPE> aLeft, const Matrix44<TYPE> &aRight)
 	{
 		return aLeft += aRight;
 	}
 
-
-	// Returns a new matrix wich is the difference of aLeft and aRight
-	//
 	template<typename TYPE>
-	Matrix44<TYPE> operator -(Matrix44<TYPE> aLeft, const Matrix44<TYPE> &aRight)
+	Matrix44<TYPE> operator-(Matrix44<TYPE> aLeft, const Matrix44<TYPE> &aRight)
 	{
 		return aLeft -= aRight;
 	}
 
-
-	// Returns a new matrix which is the product of aLeft and aRight
-	//
 	template<typename TYPE>
-	Matrix44<TYPE> operator *(const Matrix44<TYPE>& aLeft, const Matrix44<TYPE> &aRight)
+	Matrix44<TYPE> operator*(const Matrix44<TYPE>& aLeft, const Matrix44<TYPE>& aRight)
 	{
 		Matrix44<TYPE> temp; // så att allignment med simd funkar.
 		temp = aLeft;
 		return temp *= aRight;
 	}
 
-
-	// Returns a new matrix which is the product of the vector aLeft and the matrix aRight
-	//
 	template<typename TYPE>
-	Vector4<TYPE> operator *(Vector4<TYPE> aLeft, const Matrix44<TYPE> &aRight)
+	Vector4<TYPE> operator*(Vector4<TYPE> aLeft, const Matrix44<TYPE> &aRight)
 	{
 		Vector4<TYPE> temp;
 
@@ -649,52 +633,33 @@ namespace CU
 		return temp;
 	}
 
-	// Returns a new vector which is the product of the vector aLeft and the matrix 
-	// aRight. Make sure you convert aLeft to a Vector4 and set it's .w-value to 1 
-	// 
-
-	//template<typename TYPE>
-	//Vector2<TYPE> operator *(Vector2<TYPE> aLeft, const Matrix33<TYPE> &aRight)
-	//{
-	//	Vector3<TYPE> temp(aLeft.x, aLeft.y, static_cast<TYPE>(0));
-	//	temp = temp * aRight;
-	//	return Vector2<TYPE>(temp.x, temp.y);
-	//}
 	template<typename TYPE>
-	Vector3<TYPE> operator *(Vector3<TYPE> aLeftValue, const Matrix44<TYPE> &aRightValue)
+	Vector3<TYPE> operator*(Vector3<TYPE> aLeftValue, const Matrix44<TYPE> &aRightValue)
 	{
 		Vector4<TYPE> tempVec(aLeftValue);
 		tempVec = tempVec * aRightValue;
 		return Vector3<TYPE>(tempVec.x, tempVec.y, tempVec.z);
 	}
 
-	// Compares aLeft and aRight componentwise
-	//
 	template<typename TYPE>
 	bool operator ==(const Matrix44<TYPE> &aLeft, const Matrix44<TYPE> &aRight)
 	{
 		if (aLeft.m11 == aRight.m11 && aLeft.m12 == aRight.m12 && aLeft.m13 == aRight.m13 && aLeft.m14 == aRight.m14 &&
-			aLeft.m21 == aRight.m21 && aLeft.m22 == aRight.m22 && aLeft.m23 == aRight.m23 && aLeft.m14 == aRight.m14 &&
-			aLeft.m31 == aRight.m31 && aLeft.m32 == aRight.m32 && aLeft.m33 == aRight.m33 && aLeft.m14 == aRight.m14)
+			aLeft.m21 == aRight.m21 && aLeft.m22 == aRight.m22 && aLeft.m23 == aRight.m23 && aLeft.m24 == aRight.m24 &&
+			aLeft.m31 == aRight.m31 && aLeft.m32 == aRight.m32 && aLeft.m33 == aRight.m33 && aLeft.m34 == aRight.m34 &&
+			aLeft.m41 == aRight.m41 && aLeft.m42 == aRight.m42 && aLeft.m43 == aRight.m43 && aLeft.m44 == aRight.m44)
 		{
 			return true;
 		}
 		return false;
 	}
 
-
-	// Returns the negated result of aLeft == aRight
-	//
 	template<typename TYPE>
 	bool operator !=(const Matrix44<TYPE> &aLeft, const Matrix44<TYPE> &aRight)
 	{
 		return (!(aLeft == aRight));
 	}
 
-	
-
-
 	template<typename TYPE> const Matrix44<TYPE> Matrix44<TYPE>::Zero(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	template<typename TYPE> const Matrix44<TYPE> Matrix44<TYPE>::Identity(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-
 }

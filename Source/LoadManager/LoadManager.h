@@ -19,6 +19,8 @@ public:
 	void SetCurrentPlayState(CPlayState* aPlaystate);
 	CPlayState* GetCurrentPLaystate() const;
 
+	void RegisterFunctions();
+
 private:
 	LoadManager();
 	~LoadManager();

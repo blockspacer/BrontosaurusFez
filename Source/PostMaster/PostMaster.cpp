@@ -56,14 +56,30 @@ PostMaster* PostMaster::GetInstancePtr()
 	return ourInstance;
 }
 
-void PostMaster::AppendSubscriber(Subscriber* aSubscriber, const eMessageType aMessageType)
+//void PostMaster::InsertSubscriber(Subscriber* aSubscriber, const eMessageType aMessageType)
+//{
+//	mySubscribers[IntCast(aMessageType)].Insert(0, aSubscriber);
+//}
+
+void PostMaster::Subscribe(Subscriber* aSubscriber, const eMessageType aMessageType, const int aPriority)
 {
-	mySubscribers[IntCast(aMessageType)].Add(aSubscriber);
+	aSubscriber->SetPriority(aPriority);
+	CU::GrowingArray<Subscriber*, int, false>& subscribers = mySubscribers[IntCast(aMessageType)];
+	for (int i = 0; i < subscribers.Size(); ++i)
+	{
+		if (subscribers[i]->GetPriority() < aPriority)
+		{
+			subscribers.Insert(i, aSubscriber);
+			return;
+		}
+	}
+
+	subscribers.Add(aSubscriber);
 }
 
-void PostMaster::InsertSubscriber(Subscriber* aSubscriber, const eMessageType aMessageType)
+void PostMaster::Subscribe(Subscriber* aSubscriber, const eMessageType aMessageType)
 {
-	mySubscribers[IntCast(aMessageType)].Insert(0, aSubscriber);
+	mySubscribers[IntCast(aMessageType)].Add(aSubscriber);
 }
 
 void PostMaster::UnSubscribe(Subscriber* aSubscriber, const eMessageType aMessageType)

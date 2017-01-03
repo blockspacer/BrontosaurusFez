@@ -4,7 +4,6 @@
 #include <Engine.h> //fixa camera instance sen
 #include <CommonUtilities.h>
 #include <Lights.h>
-#include <Time.h>
 #include <TimerManager.h>
 #include <Renderer.h>
 #include "Skybox.h"
@@ -15,10 +14,8 @@
 #include "Components/ModelComponentManager.h"
 #include "Components/GameObject.h"
 #include "Components/ModelComponent.h"
-#include "Components/ModelComponentManager.h"
 #include "Components/ParticleEmitterComponentManager.h"
 #include "Components/ComponentManager.h"
-#include "Components/InventoryComponent.h"
 
 #include "PostMaster/PopCurrentState.h"
 #include "PostMaster/ChangeLevel.h"
@@ -66,6 +63,7 @@
 #include "Components/ChaserController.h"
 #include "Components\SkillFactory.h"
 #include "SkillSystemComponent.h"
+#include "KevinLoader/KevinLoader.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
 #include "../BrontosaurusEngine/FireEmitterInstance.h"
@@ -106,6 +104,8 @@ CPlayState::~CPlayState()
 
 void CPlayState::Load()
 {
+
+
 	//start taking the time for loading level
 	CU::TimerManager timerMgr;
 	CU::TimerHandle handle = timerMgr.CreateTimer();
@@ -114,7 +114,7 @@ void CPlayState::Load()
 
 	MODELCOMP_MGR.SetScene(myScene);
 	myScene->SetSkybox("skybox.dds");
-
+	LoadManager::GetInstance().SetCurrentPlayState(this);
 
 	Lights::SDirectionalLight dirLight;
 	dirLight.color = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -135,6 +135,27 @@ void CPlayState::Load()
 
 
 	//hue hue dags att fula ner play state - Alex(Absolut inte Marcus); // snälla slå Johan inte mig(Alex);
+
+	//Loadingu like pingu
+
+	CU::CPJWrapper levelsFile;
+	const std::string errorString = levelsFile.Parse("Json/LevelList.json");
+
+	CU::CPJWrapper levelsArray = levelsFile.GetJsonObject().at("levels");
+
+	const int magicLevelNumberSuperDuperTusen = 0;
+
+	std::string levelPath = "Json/Levels/";
+	levelPath += levelsArray[magicLevelNumberSuperDuperTusen].GetString();
+	levelPath += "/LevelData.json";
+
+	KLoader::CKevinLoader &loader = KLoader::CKevinLoader::GetInstance();
+
+	const KLoader::eError loadError = loader.LoadFile(levelPath);
+	if (loadError != KLoader::eError::NO_LOADER_ERROR)
+	{
+		DL_ASSERT("Loading Failed");
+	}
 
 	//create an npc
 	CGameObject* npcObject1 = myGameObjectManager->CreateGameObject();
@@ -328,9 +349,9 @@ void CPlayState::Render()
 
 void CPlayState::OnEnter()
 {
-	//PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eStateMessage);
-	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eKeyboardMessage);
-	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eNextLevelPlease);
+	//PostMaster::GetInstance().Subscribe(this, eMessageType::eStateMessage);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eNextLevelPlease);
 	Audio::CAudioInterface::GetInstance()->LoadBank("Audio/playState.bnk");
 	Audio::CAudioInterface::GetInstance()->PostEvent("PlayCoolSong");
 	//Audio::CAudioInterface::GetInstance()->PostEvent("PlayerMoving_Play");
@@ -443,6 +464,11 @@ void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)
 	bonus3.BonusHealth = 3;
 	bonus3.BonusMovementSpeed = 3;
 	stat3->SetStats(base3, bonus3);
+}
+
+CGameObjectManager* CPlayState::GetObjectManager() const
+{
+	return myGameObjectManager;
 }
 
 void CPlayState::CreateManagersAndFactories()

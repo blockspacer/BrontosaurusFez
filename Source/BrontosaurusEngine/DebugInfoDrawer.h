@@ -4,6 +4,7 @@
 #include "../PostMaster/Subscriber.h"
 
 #include <atomic>
+#include "../CommonUtilities/BitSet.h"
 
 namespace CU
 {
@@ -36,15 +37,17 @@ public:
 	void ReleasedKey(const CU::eKeys& aKey);
 
 	void SetDrawCalls(const int aDrawCallsCount);
+	void UpdateFPSCounter();
 
 private:
-	void UpdateFPSCounter();
+	void UpdateLogicFPSCounter();
 	void UpdateDrawCallsCounter();
 	void UpdateMemoryUsage();
 
 	enum eDebugText
 	{
 		eDebugText_FPS,
+		eDebugText_LogicFPS,
 		eDebugText_DrawCalls,
 		eDebugText_MemoryUsage,
 		eDebugText_Length,
@@ -54,17 +57,15 @@ private:
 
 	CU::CountDown* myCountDown;
 
+	CU::TimerManager* myLogicThreadTimers;
 	CU::TimerManager* myRenderThreadTimers;
-	CU::TimerHandle myFPSTimer;
+	CU::TimerHandle myLogicFPSTimer;
 	CU::TimerHandle myUpdateTextTimer;
-	CU::TimerHandle myBlinkTimer;
+	CU::TimerHandle myUpdateTextTimer_RenderThread;
+	CU::TimerHandle myFPSTimer;
 
 	int myDrawCallsCount;
-	std::atomic_uint32_t myDebugFlags;
+	CU::CBitSet<eDebugText_Length> myDebugFlags;
 
 	std::atomic_bool myLeftControlIsDown;
-	//std::atomic_bool myShowFPS;
-	//std::atomic_bool myShowDrawCalls;
-	//std::atomic_bool myShowMemoryUsage;
 };
-

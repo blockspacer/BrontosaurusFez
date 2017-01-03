@@ -10,6 +10,8 @@
 #include "CommonUtilities/CommandLineManager.h"
 
 #include "Engine.h"
+#include "KevinLoader/KLoaderError.h"
+#include "KevinLoader/KevinLoader.h"
 
 
 CGame::CGame()
@@ -19,6 +21,7 @@ CGame::CGame()
 
 CGame::~CGame()
 {
+	KLoader::CKevinLoader::DestroyInstance();
 	CBackgroundLoadingManager::DestroyInstance();
 	SSlua::LuaWrapper::DestroyIfCreated();
 }
@@ -31,7 +34,7 @@ void CGame::Init()
 	 //SSlua::LuaWrapper::GetInstance().LoadCode("Scripts/GameMain.lua");
 	 //SSlua::LuaWrapper::GetInstance().RunLoadedCode();
 
-
+	 KLoader::CKevinLoader::CreateInstance();
 
 	if (CommandLineManager::GetInstance()->HasParameter("-skipMainMenu") == true)
 	{

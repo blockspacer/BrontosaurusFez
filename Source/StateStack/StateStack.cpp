@@ -11,8 +11,8 @@ StateStack::StateStack()
 	: mySwapStateFunction(nullptr), myStateToSwapTo(nullptr)
 {
 	myShouldUpdate = true;
-	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eStateStackMessage);
-	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eConsoleCalledUpon);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eStateStackMessage);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eConsoleCalledUpon);
 }
 
 StateStack::~StateStack()

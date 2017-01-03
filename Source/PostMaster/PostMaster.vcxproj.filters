@@ -25,9 +25,6 @@
     <ClCompile Include="MouseClicked.cpp">
       <Filter>Events\MouseClicked</Filter>
     </ClCompile>
-    <ClCompile Include="MouseDown.cpp">
-      <Filter>Events\MouseDown</Filter>
-    </ClCompile>
     <ClCompile Include="MouseMoved.cpp">
       <Filter>Events\MouseMoved</Filter>
     </ClCompile>
@@ -103,9 +100,6 @@
     <ClInclude Include="KeyReleased.h">
       <Filter>Events\KeyReleased</Filter>
     </ClInclude>
-    <ClInclude Include="MouseDown.h">
-      <Filter>Events\MouseDown</Filter>
-    </ClInclude>
     <ClInclude Include="MouseMoved.h">
       <Filter>Events\MouseMoved</Filter>
     </ClInclude>
@@ -173,6 +167,8 @@
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="ConsoleCalledUpon.h" />
+    <ClInclude Include="PopCurrentState.h" />
+    <ClInclude Include="PostMaster.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Events">
@@ -207,9 +203,6 @@
     </Filter>
     <Filter Include="Events\MouseClicked">
       <UniqueIdentifier>{d67e09b8-3db5-4b09-9a11-9ebb7092cf10}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Events\MouseDown">
-      <UniqueIdentifier>{330d2f35-8819-420c-9ba4-b35ece3ff42c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Events\MouseMoved">
       <UniqueIdentifier>{eaf100ea-a4ff-4983-8f1a-1d07cd6a7038}</UniqueIdentifier>

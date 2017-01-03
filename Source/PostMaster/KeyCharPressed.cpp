@@ -14,6 +14,5 @@ KeyCharPressed::~KeyCharPressed()
 
 eMessageReturn KeyCharPressed::DoEvent(CConsole *aConsole) const
 {
-	aConsole->TakeKeyBoardInputPressedChar(myKey);
-	return eMessageReturn::eContinue;
+	return aConsole->TakeKeyBoardInputPressedChar(myKey);
 }
