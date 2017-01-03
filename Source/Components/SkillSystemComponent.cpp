@@ -56,9 +56,11 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 	else if(aMessageType == eComponentMessageType::eSetSkillTargetPosition)
 	{
 		myTargetPosition = aMessageData.myVector3f;
+		myTargetPosition.z = myTargetPosition.y;
+		myTargetPosition.y = GetParent()->GetWorldPosition().y;
 		for(unsigned short i = 0; i < mySkills.Size(); i++)
 		{
-			mySkills[i]->SetTarget(aMessageData.myVector3f);
+			mySkills[i]->SetTarget(myTargetPosition);
 			if(mySkills[i]->GetIsSelected() == true)
 			{
 				mySkills[i]->Activate();
@@ -79,7 +81,11 @@ void SkillSystemComponent::Destroy()
 
 void SkillSystemComponent::AddSkill(const char * aSkillName)
 {
-	mySkills.Add(SkillFactory::GetInstance().CreateSkill(aSkillName));
+	eComponentMessageType type = eComponentMessageType::eAddSkill;
+	SComponentMessageData data;
+	data.myString = aSkillName;
+	GetParent()->NotifyComponents(type, data);
+	/*mySkills.Add(SkillFactory::GetInstance().CreateSkill(aSkillName));
 	mySkills.GetLast()->Init(GetParent());
-	mySkills.GetLast()->SetTarget(myTargetPosition);
+	mySkills.GetLast()->SetTarget(myTargetPosition);*/
 }

@@ -41,9 +41,12 @@ void Skill::Init(CGameObject * aUser)
 
 void Skill::BasicAttackUpdate(float aDeltaTime)
 {
-	if(CU::Vector3f(myUser->GetWorldPosition() - myTargetPosition).Length2() < 500.0f * 500.0f)
+	float distance = CU::Vector3f(myUser->GetWorldPosition() - myTargetPosition).Length2();
+	if(CU::Vector3f(myUser->GetWorldPosition() - myTargetPosition).Length2() < 50.0f * 50.0f)
 	{
-		eComponentMessageType type = eComponentMessageType::eTakeDamage;
+		eComponentMessageType type = eComponentMessageType::eStopMovement;
+		myUser->NotifyComponents(type, SComponentMessageData());
+		type = eComponentMessageType::eTakeDamage;
 		SComponentMessageData data;
 		data.myInt = 1000000000.0f;
 		//myTarget->NotifyComponents(type, data); //from collsionMan get if there is an enemy here then do attack!

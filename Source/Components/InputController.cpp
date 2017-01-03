@@ -10,6 +10,8 @@
 #include "CameraManager.h"
 #include "../CommonUtilities/Camera.h"
 
+#include <iostream>
+
 InputController::InputController(const CU::Camera& aPlayerCamera)
 	: myPlayerCamera(aPlayerCamera)
 {
@@ -38,6 +40,17 @@ eMessageReturn InputController::Recieve(const Message& aMessage)
 
 void InputController::Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData)
 {
+	if (aMessageType == eComponentMessageType::eAddSkill)
+	{
+		if(aMessageData.myString == "BasicAttack")
+		{
+			mySkillInputMessageActivators.Add(CU::eInputMessage::LEFTMOUSEBUTTON);
+		}
+		else
+		{
+			std::cout << "Skill not found when adding key binding." << std::endl;
+		}
+	}
 }
 
 void InputController::Destroy()
@@ -85,6 +98,9 @@ eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButto
 		eComponentMessageType type = eComponentMessageType::eSetNavigationTarget;
 		SComponentMessageData data;
 		data.myVector2f = targetPosition;
+		GetParent()->NotifyComponents(type, data);
+
+		type = eComponentMessageType::eSetSkillTargetPosition;
 		GetParent()->NotifyComponents(type, data);
 	}
 

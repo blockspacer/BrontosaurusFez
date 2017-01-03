@@ -176,8 +176,8 @@ void CPlayState::Load()
 	myPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
 	SkillSystemComponent* tempSkillSystemComponent = new SkillSystemComponent;
 	SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
-	tempSkillSystemComponent->AddSkill("BasicAttack");
 	myPlayerObject->AddComponent(tempSkillSystemComponent);
+	tempSkillSystemComponent->AddSkill("BasicAttack");
 	//create camera object:
 	//myCameraObject = myGameObjectManager->CreateGameObject();
 
