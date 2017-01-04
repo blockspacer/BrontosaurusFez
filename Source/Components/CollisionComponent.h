@@ -17,6 +17,8 @@ public:
 	void ActivateCollider();
 	void DeactivateCollider();
 
+	inline ICollider* GetCollider();
+
 private:
 	void OnCollisionEnter(ICollider* aCollider);
 	void OnCollisionUpdate(ICollider* aCollider);
@@ -24,3 +26,8 @@ private:
 	
 	ICollider* myCollider;
 };
+
+inline ICollider* CCollisionComponent::GetCollider()
+{
+	return myCollider;
+}
