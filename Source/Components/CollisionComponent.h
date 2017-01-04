@@ -12,7 +12,7 @@ public:
 
 	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
 	void Destroy() override;
-
+	void AddCollidsWith(const unsigned int aColliderTypes);
 private:
 	void OnCollisionEnter(ICollider* aCollider);
 	void OnCollisionUpdate(ICollider* aCollider);

@@ -64,6 +64,7 @@
 #include "Components\SkillFactory.h"
 #include "SkillSystemComponent.h"
 #include "KevinLoader/KevinLoader.h"
+#include "Components\CollisionComponentManager.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
 #include "../BrontosaurusEngine/FireEmitterInstance.h"
@@ -312,6 +313,7 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	MovementComponentManager::GetInstance().Update(aDeltaTime);
 	AIControllerManager::GetIstance().Update(aDeltaTime);
 	SkillSystemComponentManager::GetInstance().Update(aDeltaTime);
+	myCollisionComponentManager->Update();
 	myScene->Update(aDeltaTime);
 
 	myGameObjectManager->DestroyObjectsWaitingForDestruction();
@@ -478,6 +480,7 @@ void CPlayState::CreateManagersAndFactories()
 	myGUIManager = new GUI::GUIManager();
 	//myGUIManager->Init("Models/gui/gui.fbx", true);
 
+	myCollisionComponentManager = new CCollisionComponentManager;
 	CComponentManager::CreateInstance();
 	LoadManager::CreateInstance();
 	CAudioSourceComponentManager::Create();
@@ -490,4 +493,6 @@ void CPlayState::CreateManagersAndFactories()
 	AIControllerManager::Create();
 	SkillFactory::CreateInstance();
 	SkillSystemComponentManager::CreateInstance();
+	SkillSystemComponentManager::GetInstance().SetGameObjectManager(myGameObjectManager);
+	SkillSystemComponentManager::GetInstance().SetCollisionComponentManager(myCollisionComponentManager);
 }

@@ -59,3 +59,23 @@ void SkillSystemComponentManager::Update(const CU::Time & aDeltaTime)
 	}
 }
 
+void SkillSystemComponentManager::SetGameObjectManager(CGameObjectManager * aGameObjectMan)
+{
+	myGameObjectManager = aGameObjectMan;
+}
+
+void SkillSystemComponentManager::SetCollisionComponentManager(CCollisionComponentManager * aCollisionComponentManager)
+{
+	myCollisionComponentManager = aCollisionComponentManager;
+}
+
+CGameObjectManager * SkillSystemComponentManager::GetGameObjectManager()
+{
+	return myGameObjectManager;
+}
+
+CCollisionComponentManager * SkillSystemComponentManager::GetCollisionComponentManager()
+{
+	return myCollisionComponentManager;
+}
+
