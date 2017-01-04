@@ -85,7 +85,6 @@ CPlayState::~CPlayState()
 	SAFE_DELETE(myGameObjectManager);
 	SAFE_DELETE(myGUIManager);
 	
-	LoadManager::DestroyInstance();
 	
 	CModelComponentManager::Destroy();
 	CAudioSourceComponentManager::Destroy();
@@ -105,7 +104,7 @@ CPlayState::~CPlayState()
 
 void CPlayState::Load()
 {
-
+	LoadManagerGuard loadManagerGuard;
 
 	//start taking the time for loading level
 	CU::TimerManager timerMgr;
@@ -482,7 +481,6 @@ void CPlayState::CreateManagersAndFactories()
 
 	myCollisionComponentManager = new CCollisionComponentManager;
 	CComponentManager::CreateInstance();
-	LoadManager::CreateInstance();
 	CAudioSourceComponentManager::Create();
 	CModelComponentManager::Create();
 	CParticleEmitterComponentManager::Create();
