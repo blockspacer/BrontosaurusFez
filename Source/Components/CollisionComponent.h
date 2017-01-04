@@ -13,6 +13,9 @@ public:
 	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
 	void Destroy() override;
 
+	void ActivateCollider();
+	void DeactivateCollider();
+
 private:
 	void OnCollisionEnter(ICollider* aCollider);
 	void OnCollisionUpdate(ICollider* aCollider);
