@@ -33,6 +33,13 @@ void CCollisionComponentManager::Update()
 CCollisionComponent* CCollisionComponentManager::CreateCollisionComponent(const eColliderType aColliderType, Intersection::CollisionData& aCollisionData)
 {
 	ICollider* newCollider = CreateCollider(aColliderType, aCollisionData);
+	myCollisionManager->AddCollider(newCollider);
+
+	auto activateCallback = [this, newCollider]() { myCollisionManager->AddCollider(newCollider); };
+	auto deactivateCallback = [this, newCollider]() { myCollisionManager->RemoveCollider(newCollider); };
+
+	newCollider->AddActivationCallbacks(activateCallback, deactivateCallback);
+
 	CCollisionComponent* newCollisionComponent = new CCollisionComponent(newCollider);
 
 	myCollisionComponents.Add(newCollisionComponent);
@@ -45,6 +52,7 @@ void CCollisionComponentManager::DestroyCollisionComponent(CCollisionComponent* 
 	unsigned int index = myCollisionComponents.Find(aCollisionComponent);
 	if (index != myCollisionComponents.FoundNone)
 	{
+		myCollisionManager->RemoveCollider(aCollisionComponent->GetCollider());
 		myCollisionComponents.DeleteCyclicAtIndex(index);
 	}
 }

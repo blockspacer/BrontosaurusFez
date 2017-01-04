@@ -45,6 +45,16 @@ void CCollisionComponent::Destroy()
 	DL_ASSERT("not implemented");
 }
 
+void CCollisionComponent::ActivateCollider()
+{
+	myCollider->Activate();
+}
+
+void CCollisionComponent::DeactivateCollider()
+{
+	myCollider->Deactivate();
+}
+
 void CCollisionComponent::OnCollisionEnter(ICollider* aCollider)
 {
 	SComponentMessageData data;

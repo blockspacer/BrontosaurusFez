@@ -99,6 +99,8 @@ void CDebugInfoDrawer::Render(const CU::Vector2ui aTargetWindowSize)
 		}
 	}
 
+	myCountDown->Render();
+
 #endif // !_RETAIL_BUILD
 }
 

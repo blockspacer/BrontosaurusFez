@@ -20,9 +20,9 @@ namespace CU
 		goalTime.tm_sec = 0;
 		goalTime.tm_min = 0;
 		goalTime.tm_hour = 22;
-		goalTime.tm_mday = 23;
-		goalTime.tm_mon = 10;
-		goalTime.tm_year = 116;
+		goalTime.tm_mday = 8;
+		goalTime.tm_mon = 1;
+		goalTime.tm_year = 117;
 		goalTime.tm_wday = 0;
 		goalTime.tm_yday = 0;
 		goalTime.tm_isdst = 0;
