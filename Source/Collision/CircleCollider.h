@@ -10,6 +10,8 @@ class CCircleCollider :	public ICollider
 {
 public:
 	CCircleCollider();
+	CCircleCollider(Intersection::SCircle* someCircleData);
+	CCircleCollider(CU::Vector3f aPosition, float aRadius);
 	CCircleCollider(const CCircleCollider& aCopy);
 	CCircleCollider(CCircleCollider&& aTemporary);
 	~CCircleCollider();

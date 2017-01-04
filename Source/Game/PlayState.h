@@ -32,6 +32,7 @@ class DeathComponentFactory;
 class StatManager;
 class CTextInstance;
 class CParticleEmitterComponent;
+class CCollisionComponentManager;
 
 class CPlayState : public State, public Subscriber
 {
@@ -69,6 +70,7 @@ private:
 	CParticleEmitterComponent* myEmitterComp;
 
 	CGameObjectManager* myGameObjectManager;
+	CCollisionComponentManager* myCollisionComponentManager;
 	GUI::GUIManager* myGUIManager;
 	StatManager* myStatManager;
 	
