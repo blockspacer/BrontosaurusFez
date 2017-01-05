@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "FullScreenHelper.h"
-//#include <GrowingArray.h>
-#include "Engine.h" //stdafx??
 #include "DXFramework.h"
 #include "Effect.h"
 #include "RenderPackage.h"
@@ -89,25 +87,27 @@ void CFullScreenHelper::DoEffect(const eEffectType aEffectType, ID3D11ShaderReso
 
 void CFullScreenHelper::DoEffect(const eEffectType aEffectType, const CU::Vector4f & aRect, ID3D11ShaderResourceView * aRenderPackageResource, ID3D11ShaderResourceView * aSecondRenderPackageResource)
 {
-	CU::Vector2f windowSize;
-	windowSize.x = static_cast<float>(ENGINE->GetWindowSize().x);
-	windowSize.y = static_cast<float>(ENGINE->GetWindowSize().y);
+	if (aRect != CU::Vector4f::Zero)
+	{
+		CU::Vector2f windowSize;
+		windowSize.x = static_cast<float>(ENGINE->GetWindowSize().x);
+		windowSize.y = static_cast<float>(ENGINE->GetWindowSize().y);
 
-	CU::Vector4f windowRect;
-	windowRect.x = windowSize.x * aRect.x;
-	windowRect.y = windowSize.y * aRect.y;
-	windowRect.z = windowSize.x * aRect.z;
-	windowRect.w = windowSize.y * aRect.w;
+		CU::Vector4f windowRect;
+		windowRect.x = windowSize.x * aRect.x;
+		windowRect.y = windowSize.y * aRect.y;
+		windowRect.z = windowSize.x * aRect.z;
+		windowRect.w = windowSize.y * aRect.w;
 
-	D3D11_VIEWPORT viewport;
-	viewport.TopLeftX = windowRect.x;
-	viewport.TopLeftY = windowRect.y;
-	viewport.Width = windowRect.z - windowRect.x;
-	viewport.Height = windowRect.w - windowRect.y;
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
-	DEVICE_CONTEXT->RSSetViewports(1, &viewport);
-
+		D3D11_VIEWPORT viewport;
+		viewport.TopLeftX = windowRect.x;
+		viewport.TopLeftY = windowRect.y;
+		viewport.Width = windowRect.z - windowRect.x;
+		viewport.Height = windowRect.w - windowRect.y;
+		viewport.MinDepth = 0.0f;
+		viewport.MaxDepth = 1.0f;
+		DEVICE_CONTEXT->RSSetViewports(1, &viewport);
+	}
 	DoEffect(aEffectType, aRenderPackageResource, aSecondRenderPackageResource);
 }
 
