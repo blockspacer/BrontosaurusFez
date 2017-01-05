@@ -59,18 +59,22 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 		myTargetPosition.y = GetParent()->GetWorldPosition().y;
 		for(unsigned short i = 0; i < mySkills.Size(); i++)
 		{
-			mySkills[i]->SetTarget(myTargetPosition);
+			mySkills[i]->SetTargetPosition(myTargetPosition);
 			if(mySkills[i]->GetIsSelected() == true)
 			{
 				mySkills[i]->Activate();
 			}
 		}
 	}
+	else if (aMessageType == eComponentMessageType::eSetSkillTargetPosition)
+	{
+	
+	}
 	else if (aMessageType == eComponentMessageType::eAddSkill)
 	{
 		mySkills.Add(SkillFactory::GetInstance().CreateSkill(aMessageData.myString));
 		mySkills.GetLast()->Init(GetParent());
-		mySkills.GetLast()->SetTarget(myTargetPosition);
+		mySkills.GetLast()->SetTargetPosition(myTargetPosition);
 	}
 }
 

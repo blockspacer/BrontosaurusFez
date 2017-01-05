@@ -56,26 +56,31 @@ void Skill::Init(CGameObject * aUser)
 
 void Skill::BasicAttackUpdate(float aDeltaTime)
 {
-	float distance = CU::Vector3f(myUser->GetWorldPosition() - myTargetPosition).Length2();
-	if(CU::Vector3f(myUser->GetWorldPosition() - myTargetPosition).Length2() < 50.0f * 50.0f)
+	if(myTargetObject != nullptr)
 	{
-		eComponentMessageType type = eComponentMessageType::eStopMovement;
-		myUser->NotifyComponents(type, SComponentMessageData());
-		//TODO start Attack Animation
+		if(CU::Vector3f(myUser->GetWorldPosition() - myTargetObject->GetWorldPosition()).Length2() < 50.0f * 50.0f)
+		{
+			eComponentMessageType type = eComponentMessageType::eStopMovement;
+			myUser->NotifyComponents(type, SComponentMessageData());
+			//TODO start Attack Animation
 	
-		//TODO: Activate Collider;
-		type = eComponentMessageType::eSetIsColliderActive;
-		SComponentMessageData data;
-		data.myBool = true;
-		myColliderObject->NotifyComponents(type, data);
+			//TODO: Activate Collider;
+			type = eComponentMessageType::eSetIsColliderActive;
+			SComponentMessageData data;
+			data.myBool = true;
+			myColliderObject->NotifyComponents(type, data);
+		}
 	}
 }
 
-void Skill::SetTarget(CU::Vector3f aTargetPosition)
+void Skill::SetTargetPosition(CU::Vector3f aTargetPosition)
 {	
 	myTargetPosition = aTargetPosition;
 }
-
+void Skill::SetTargetObject(CGameObject* aTargetObject)
+{
+	myTargetObject = aTargetObject;
+}
 void Skill::OnActivation()
 {
 
