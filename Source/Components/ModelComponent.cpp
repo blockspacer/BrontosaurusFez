@@ -73,6 +73,9 @@ void CModelComponent::Receive(const eComponentMessageType aType, const SComponen
 	case eComponentMessageType::eSetVisibility:
 		SetVisibility(aData.myBool);
 		break;
+	case eComponentMessageType::eBasicAttack:
+		ChangeAnimation(aData.myString);
+		break;
 	}
 }
 
