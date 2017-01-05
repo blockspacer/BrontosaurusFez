@@ -68,7 +68,20 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 	}
 	else if (aMessageType == eComponentMessageType::eSetSkillTargetPosition)
 	{
-	
+		bool isAnythingSelected = false;
+		for (unsigned short i = 0; i < mySkills.Size(); i++)
+		{
+			mySkills[i]->SetTargetObject(aMessageData.myGameObject);
+			if (mySkills[i]->GetIsSelected() == true)
+			{
+				isAnythingSelected = true;
+				mySkills[i]->Activate();
+			}
+		}
+		if(isAnythingSelected == false)
+		{
+			mySkills[0]->Activate();
+		}
 	}
 	else if (aMessageType == eComponentMessageType::eAddSkill)
 	{
