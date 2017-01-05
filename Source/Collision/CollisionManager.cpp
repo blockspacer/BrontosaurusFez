@@ -46,6 +46,8 @@ void CCollisionManager::AddCollider(ICollider* aCollider)
 		return;
 	}
 
+	assert(myColliders.Find(aCollider) == myColliders.FoundNone && "Adding collider that already exists :O");
+
 	myColliders.Add(aCollider);
 }
 
