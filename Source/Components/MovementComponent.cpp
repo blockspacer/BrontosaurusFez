@@ -73,7 +73,9 @@ void MovementComponent::Receive(const eComponentMessageType aMessageType, const 
 		if(myPathPointer != nullptr)
 		{
 			myCurrentPathIndex = myPathPointer->Size();
-		
+			SComponentMessageData stoppedMovingMessage;
+			stoppedMovingMessage.myString = "idle";
+			GetParent()->NotifyComponents(eComponentMessageType::eStoppedMoving, stoppedMovingMessage);
 		}
 		break;
 	default:

@@ -63,12 +63,15 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 			eComponentMessageType type = eComponentMessageType::eStopMovement;
 			myUser->NotifyComponents(type, SComponentMessageData());
 			//TODO start Attack Animation
-	
+			SComponentMessageData statedAttackingMessage;
+			statedAttackingMessage.myString = "attack";
+			myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
 			//TODO: Activate Collider;
 			type = eComponentMessageType::eSetIsColliderActive;
 			SComponentMessageData data;
 			data.myBool = true;
 			myColliderObject->NotifyComponents(type, data);
+
 		}
 	}
 }

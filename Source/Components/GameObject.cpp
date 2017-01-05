@@ -31,6 +31,18 @@ CU::Vector3f CGameObject::GetWorldPosition()
 	}
 }
 
+void CGameObject::SetWorldPosition(CU::Vector3f aPosition)
+{
+	if (GetParent() != nullptr)
+	{				// Kanske fuckar, men tror det är lugnt.
+		GetParent()->SetWorldPosition(GetLocalTransform().GetPosition() + aPosition);
+	}
+	else
+	{
+		GetLocalTransform().SetPosition(aPosition);
+	}
+}
+
 void CGameObject::AddComponent(CComponent* aComponent)
 {
 	aComponent->myParent = this;
