@@ -23,12 +23,13 @@
       <Filter>LoadThings\LoadInputController</Filter>
     </ClInclude>
     <ClInclude Include="LoadMovementComponent.h">
-      <Filter>LoadMovementComponent</Filter>
+      <Filter>LoadThings\LoadMovementComponent</Filter>
     </ClInclude>
     <ClInclude Include="LoadNavigationComponent.h">
-      <Filter>LoadNavigationComponent</Filter>
+      <Filter>LoadThings\LoadNavigationComponent</Filter>
     </ClInclude>
     <ClInclude Include="LoadCamera.h" />
+    <ClInclude Include="LoadColliderComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -50,12 +51,13 @@
       <Filter>LoadThings\LoadInputController</Filter>
     </ClCompile>
     <ClCompile Include="LoadMovementComponent.cpp">
-      <Filter>LoadMovementComponent</Filter>
+      <Filter>LoadThings\LoadMovementComponent</Filter>
     </ClCompile>
     <ClCompile Include="LoadNavigationComponent.cpp">
-      <Filter>LoadNavigationComponent</Filter>
+      <Filter>LoadThings\LoadNavigationComponent</Filter>
     </ClCompile>
     <ClCompile Include="LoadCamera.cpp" />
+    <ClCompile Include="LoadColliderComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="VS">
@@ -79,10 +81,10 @@
     <Filter Include="LoadThings\LoadInputController">
       <UniqueIdentifier>{5e8ce6de-3252-4718-bb23-3b1bd182f2f4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="LoadMovementComponent">
+    <Filter Include="LoadThings\LoadMovementComponent">
       <UniqueIdentifier>{5666bf77-2502-4664-a479-4c4e972230a8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="LoadNavigationComponent">
+    <Filter Include="LoadThings\LoadNavigationComponent">
       <UniqueIdentifier>{b6d2b266-818e-40fa-9c5c-16a00d5ec9ba}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
