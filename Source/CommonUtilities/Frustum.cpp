@@ -46,7 +46,7 @@ namespace CU
 
 
 		Plane<float> farPlane = Plane<float>(CU::Point3f(0.f, 0.f, aFar), CU::Vector3f(0.f, 0.f, 1.0f));
-		Plane<float> nearPlane = CU::Plane<float>(CU::Point3f(0.f, 0.f, aNear), Vector3f(0.f, 0.f, -1.0f));
+		Plane<float> nearPlane = Plane<float>(CU::Point3f(0.f, 0.f, aNear), Vector3f(0.f, 0.f, -1.0f));
 
 		Plane<float> leftPlane;
 		Plane<float> rightPlane;
