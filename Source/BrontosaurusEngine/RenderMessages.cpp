@@ -2,16 +2,6 @@
 #include "RenderMessages.h"
 #include "Renderer.h"
 
-//#include "../CommonUtilities/matrix44.h"
-//#include "../CommonUtilities/DynamicString.h"
-//#include "../CommonUtilities/Vector2.h"
-//#include "../CommonUtilities/Camera.h"
-//
-//#include "../GUI/GUIPixelConstantBuffer.h"
-#include "CoolText.h"
-
-#include "EmitterData.h"
-
 SRenderMessage::SRenderMessage(const eRenderMessageType aRenderMessageType)
 	: myType(aRenderMessageType)
 {
@@ -24,12 +14,6 @@ SRenderMessage::~SRenderMessage()
 SRenderModelMessage::SRenderModelMessage()
 	: SRenderMessage(eRenderMessageType::eRenderModel)
 {
-}
-
-SRenderAnimationModelMessage::SRenderAnimationModelMessage()
-{
-	myType = eRenderMessageType::eRenderAnimationModel;
-	memset(myBoneMatrices, 0, ourMaxBoneCount * ourMatrixSize);
 }
 
 SRenderGUIModelMessage::SRenderGUIModelMessage()
@@ -76,4 +60,28 @@ SChangeStatesMessage::SChangeStatesMessage()
 SRenderTextMessage::SRenderTextMessage()
 	: SRenderMessage(eRenderMessageType::eRenderText)
 {
+}
+
+SRenderModelDepthMessage::SRenderModelDepthMessage()
+{
+	myType = eRenderMessageType::eRenderModelDepth;
+}
+
+SRenderCameraQueueMessage::SRenderCameraQueueMessage()
+	: SRenderMessage(eRenderMessageType::eRenderCameraQueue)
+{
+
+}
+
+SRenderFullscreenEffectMessage::SRenderFullscreenEffectMessage()
+	:SRenderMessage(SRenderMessage::eRenderMessageType::eRenderFullscreenEffect)
+{
+	myFirstUseDepthResource = false;
+	mySecondUseDepthResource = false;
+}
+
+SActivateRenderPackageMessage::SActivateRenderPackageMessage()
+	: SRenderMessage(SRenderMessage::eRenderMessageType::eActivateRenderPackage)
+{
+
 }
