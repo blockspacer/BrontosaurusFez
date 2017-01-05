@@ -98,6 +98,7 @@
     <ClCompile Include="StreakEmitterComponent.cpp">
       <Filter>Particles</Filter>
     </ClCompile>
+    <ClCompile Include="SkillComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -207,6 +208,7 @@
     <ClInclude Include="StreakEmitterComponent.h">
       <Filter>Particles</Filter>
     </ClInclude>
+    <ClInclude Include="SkillComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
