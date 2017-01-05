@@ -9,7 +9,7 @@ namespace CU
 	{
 	public:
 		Camera();
-		Camera(const float aFov, const float aProjectionWidth, const float aProjectionHeight, const float aNear, const float aFar, const Vector3f & aPosition);
+		Camera(const float aFov, const float aProjectionWidth, const float aProjectionHeight, const float aNear, const float aFar);
 		// Initializes the camera with screen height, screen width and it's world position 
 		// In the case of TGA2D both aProjectionWidth and aProjectionHeight should probably be 1. 
 		// maybe it's the same in BSR? we'll see about that
@@ -17,8 +17,16 @@ namespace CU
 		~Camera();
 
 		//Init yo
-		void Init(const float aFov, const float aProjectionWidth, const float aProjectionHeight, const float aNear, const float aFar, const Vector3f & aPosition);
+		//Perspective
+		void Init(const float aFov, const float aProjectionWidth, const float aProjectionHeight, const float aNear, const float aFar);
+
+		//orthographic
+		void Init(const float aProjectionWidth, const float aProjectionHeight, const float aNear, const float aFar);
+
+
+
 		void ReInit(const float aFov, const float aProjectionWidth, const float aProjectionHeight, const float aNear, const float aFar);
+		void ReInit(const float aProjectionWidth, const float aProjectionHeight, const float aNear, const float aFar);
 
 		
 
@@ -42,7 +50,6 @@ namespace CU
 
 		void SetTransformation(const Matrix44f & aTransformation);
 		const Matrix44f& GetTransformation() const;
-		inline float GetDistFarNear();
 		inline float GetFar();
 		inline float GetNear();
 		inline const CU::CFrustum& GetFrustum();
@@ -61,9 +68,6 @@ namespace CU
 		//supercool frustum that will be glorious and amazing
 		CFrustum myFrustum;
 
-		float mySpeed;
-
-		float myDistFarNear;
 		float myNear;
 		float myFar;
 	};
@@ -71,12 +75,6 @@ namespace CU
 	inline const CU::CFrustum & CU::Camera::GetFrustum()
 	{
 		return myFrustum;
-	}
-
-
-	float Camera::GetDistFarNear()
-	{
-		return myDistFarNear;
 	}
 
 	float Camera::GetFar()
