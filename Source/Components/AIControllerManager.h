@@ -8,7 +8,7 @@ public:
 	static void Create();
 	static void Destroy();
 
-	static AIControllerManager& GetIstance();
+	static AIControllerManager& GetInstance();
 
 	void AddController(CAIControllerComponent* aController);
 	void Update(const CU::Time& aDeltaTime);
