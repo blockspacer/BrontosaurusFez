@@ -10,6 +10,7 @@
 #include "../Collision/GroupCollider.h"
 
 #include "../Collision/Intersection.h"
+#include "ComponentManager.h"
 CCollisionComponentManager::CCollisionComponentManager()
 	: myCollisionComponents(32)
 	, myCollisionManager(nullptr)
@@ -44,6 +45,8 @@ CCollisionComponent* CCollisionComponentManager::CreateCollisionComponent(const 
 
 	myCollisionComponents.Add(newCollisionComponent);
 
+	CComponentManager::GetInstance().RegisterComponent(newCollisionComponent);
+
 	return newCollisionComponent;
 }
 
@@ -53,6 +56,7 @@ void CCollisionComponentManager::DestroyCollisionComponent(CCollisionComponent* 
 	if (index != myCollisionComponents.FoundNone)
 	{
 		myCollisionManager->RemoveCollider(aCollisionComponent->GetCollider());
+		CComponentManager::GetInstance().RemoveComponent(aCollisionComponent->GetId());
 		myCollisionComponents.DeleteCyclicAtIndex(index);
 	}
 }

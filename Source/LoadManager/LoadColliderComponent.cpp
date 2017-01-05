@@ -4,13 +4,43 @@
 #include "LoadManager.h"
 #include "ComponentManager.h"
 
-int LoadSphereCollider(KLoader::SLoadedComponentData someData)
-{
+#include <Collision/Intersection.h>
+#include "CollisionComponent.h"
+#include "CollisionComponentManager.h"
+#include "Collision/ICollider.h"
 
-	return 0;
+int LoadCircleCollider(KLoader::SLoadedComponentData someData)
+{
+	CPlayState* playState = LoadManager::GetInstance().GetCurrentPLaystate();
+	if (playState == nullptr) return 0;
+
+	CCollisionComponentManager* collisionManager = playState->GetCollisionManager();
+	if (collisionManager == nullptr) return 0;
+
+	//collect json-data
+	float circleRadius = someData.myData.at("Radius").GetFloat();
+	unsigned int colliderType = someData.myData.at("ColliderType").GetUInt();
+	const CPJWrapper& collidesWithArray = someData.myData.at("CollidesWith");
+	unsigned int collidesWith = 0;
+	for (size_t i = 0; i < collidesWithArray.Size(); ++i)
+	{
+		collidesWith |= collidesWithArray[i].GetUInt();
+	}
+
+
+	Intersection::CollisionData collisionData;
+	collisionData.myCircleData = new Intersection::SCircle();
+
+	collisionData.myCircleData->myRadius = circleRadius;
+
+	CCollisionComponent* collisionComponent = collisionManager->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, collisionData);
+	collisionComponent->SetColliderType(static_cast<eColliderType>(colliderType));
+	collisionComponent->AddCollidsWith(collidesWith);
+
+	return collisionComponent->GetId();
 }
 
-int LoadBoxCollider(KLoader::SLoadedComponentData someData)
+int LoadSquareCollider(KLoader::SLoadedComponentData someData)
 {
 	return 0;
 }

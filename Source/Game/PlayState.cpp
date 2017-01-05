@@ -73,7 +73,6 @@
 #include <Collision/Intersection.h>
 #include "CollisionComponent.h"
 #include "MouseComponent.h"
-static Matrix44f* locNpcLocalTransform = nullptr;
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -149,18 +148,17 @@ void CPlayState::Load()
 	//create an npc
 	CGameObject* npcObject1 = myGameObjectManager->CreateGameObject();
 	npcObject1->GetLocalTransform().Move(CU::Vector3f(0.0f, 000.0f, 500.0f));
-	locNpcLocalTransform = &npcObject1->GetLocalTransform();
 	CModelComponent* modelComponent1 = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
 	npcObject1->AddComponent(modelComponent1);
 
-	Intersection::CollisionData collisionData;
-	collisionData.myCircleData = new Intersection::SCircle();
-	collisionData.myCircleData->myCenterPosition.Set(npcObject1->GetWorldPosition().x, npcObject1->GetWorldPosition().z);
-	collisionData.myCircleData->myRadius = modelComponent1->GetModelInst()->GetModelBoundingBox().myRadius;
-	CCollisionComponent* collisionComponent = myCollisionComponentManager->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, collisionData);
-	collisionComponent->AddCollidsWith(eColliderType_Mouse);
-	collisionComponent->SetColliderType(eColliderType_Actor);
-	npcObject1->AddComponent(collisionComponent);
+	//Intersection::CollisionData collisionData;
+	//collisionData.myCircleData = new Intersection::SCircle();
+	//collisionData.myCircleData->myCenterPosition.Set(npcObject1->GetWorldPosition().x, npcObject1->GetWorldPosition().z);
+	//collisionData.myCircleData->myRadius = modelComponent1->GetModelInst()->GetModelBoundingBox().myRadius;
+	//CCollisionComponent* collisionComponent = myCollisionComponentManager->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, collisionData);
+	//collisionComponent->AddCollidsWith(eColliderType_Mouse);
+	//collisionComponent->SetColliderType(eColliderType_Actor);
+	//npcObject1->AddComponent(collisionComponent);
 
 
 	//create another npc
@@ -342,7 +340,6 @@ void CPlayState::Init()
 
 State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 {
-	DL_PRINT("npc pos: %f, %f, %f", locNpcLocalTransform->GetPosition().x, locNpcLocalTransform->GetPosition().y, locNpcLocalTransform->GetPosition().z);
 	Audio::CAudioInterface* audio = Audio::CAudioInterface::GetInstance();
 	if (audio != nullptr)
 	{
@@ -512,6 +509,11 @@ void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)
 CGameObjectManager* CPlayState::GetObjectManager() const
 {
 	return myGameObjectManager;
+}
+
+CCollisionComponentManager* CPlayState::GetCollisionManager()
+{
+	return myCollisionComponentManager;
 }
 
 void CPlayState::CreateManagersAndFactories()

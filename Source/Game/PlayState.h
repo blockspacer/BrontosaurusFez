@@ -58,6 +58,7 @@ public:
 	inline bool IsLoaded() const;
 
 	CGameObjectManager* GetObjectManager() const;
+	CCollisionComponentManager* GetCollisionManager();
 
 	//Denna ska bort
 	static SSlua::ArgumentList LuaFunction(SSlua::ArgumentList anArgumentList);

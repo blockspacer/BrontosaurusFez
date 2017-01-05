@@ -20,10 +20,10 @@ namespace CU
 
 enum eColliderType : unsigned int
 {
-	eColliderType_None = 1 << 0,
-	eColliderType_Actor = 1 << 1,
-	eColliderType_Wall = 1 << 2,
-	eColliderType_Mouse = 1 << 3,
+	eColliderType_None = 0,
+	eColliderType_Actor = 1 << 0,
+	eColliderType_Wall = 1 << 1,
+	eColliderType_Mouse = 1 << 2,
 };
 
 class ICollider

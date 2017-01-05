@@ -64,7 +64,6 @@ void CMouseComponent::MouseMoved(const CU::Vector2f& aMousePosition)
 
 	GetParent()->GetLocalTransform().SetPosition(targetPosition3D);
 	GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
-	DL_PRINT("mouse pos: %f, %f, %f", targetPosition3D.x, targetPosition3D.y, targetPosition3D.z);
 }
 
 eMessageReturn CMouseComponent::Recieve(const Message& aMessage)
