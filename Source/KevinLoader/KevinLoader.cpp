@@ -64,7 +64,7 @@ namespace KLoader
 	eError CKevinLoader::LoadFile(const std::string& aFilePath)
 	{
 		CU::CPJWrapper wrapper;
-		wrapper.Parse(aFilePath);
+		std::string mybeKeepThishshould = wrapper.Parse(aFilePath);
 
 		const eError loadObjectError = LoadObjects(wrapper);
 		if (loadObjectError != eError::NO_LOADER_ERROR)

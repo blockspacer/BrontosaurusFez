@@ -143,7 +143,12 @@ void CPlayState::Load()
 
 	CU::CPJWrapper levelsArray = levelsFile.GetJsonObject().at("levels");
 
+#ifdef _DEBUG
+	//const int levelIndex = levelsArray.Size() - 1;
 	const int levelIndex = 1;
+#else
+	const int levelIndex = 0;
+#endif
 
 	std::string levelPath = "Json/Levels/";
 	levelPath += levelsArray[levelIndex].GetString();
@@ -191,7 +196,7 @@ void CPlayState::Load()
 
 	myPlayerObject->AddComponent(new NavigationComponent());
 
-	CModelComponent* playerModelComponent = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
+	CModelComponent* playerModelComponent = CModelComponentManager::GetInstance().CreateComponent("Models/Placeholders/rulerGadjet.fbx");
 	myPlayerObject->AddComponent(playerModelComponent);
 
 	myPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
@@ -217,9 +222,10 @@ void CPlayState::Load()
 	CU::Matrix44f cameraTransformation = playerCamera.GetTransformation();
 	CU::Matrix44f newRotation;
 
-	newRotation.Rotate(PI / 2, CU::Axees::X);
+	newRotation.Rotate(PI / 4 * 4 , CU::Axees::Y);
 	newRotation.Rotate(PI / 4, CU::Axees::X);
-	newRotation.Rotate(PI / 1, CU::Axees::Z);
+
+	//newRotation.Rotate(PI / 1, CU::Axees::Z);
 
 	cameraTransformation.SetRotation(newRotation);
 	cameraTransformation.SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
