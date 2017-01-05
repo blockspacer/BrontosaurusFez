@@ -40,7 +40,7 @@ CModelInstance::CModelInstance(ModelId aModel, const CU::Matrix44f& aTransformat
 	, myModel(aModel)
 	, myAnimationCounter(0.f)
 	, myIsVisible(true)
-	, myCurrentAnimation("")
+	, myCurrentAnimation(nullptr)
 	, myHasAnimations(false)
 {
 }
@@ -63,8 +63,7 @@ void CModelInstance::Render(Lights::SDirectionalLight* aLight, CU::GrowingArray<
 {
 	if (ShouldRender() == true)
 	{
-		SRenderModelMessage* msg = nullptr;
-		(myHasAnimations != false) ? msg = new SRenderAnimationModelMessage() : msg = new SRenderModelMessage();
+		SRenderModelMessage* msg = new SRenderModelMessage();
 
 		msg->myDirectionalLight = aLight;
 		msg->myPointLights = aPointLightList;
