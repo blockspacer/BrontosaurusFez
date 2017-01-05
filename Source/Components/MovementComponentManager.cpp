@@ -3,6 +3,7 @@
 #include "MovementComponent.h"
 #include "ComponentManager.h"
 
+
 MovementComponentManager* MovementComponentManager::ourInstance = nullptr;
 
 MovementComponentManager::MovementComponentManager()
@@ -32,9 +33,14 @@ void MovementComponentManager::DestroyInstance()
 	SAFE_DELETE(ourInstance);
 }
 
-void MovementComponentManager::RegisterComponent(MovementComponent * aComponent)
+MovementComponent* MovementComponentManager::CreateAndRegisterComponent()
 {
-	myComponents.Add(aComponent);
+	MovementComponent* Component;
+	Component = new MovementComponent();
+	myComponents.Add(Component);
+	CComponentManager::GetInstance().RegisterComponent(Component);
+
+	return Component;
 }
 
 void MovementComponentManager::Update(const CU::Time & aDeltaTime)
