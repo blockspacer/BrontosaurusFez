@@ -180,7 +180,7 @@ namespace GUI
 			return nullptr;
 		}
 
-		CU::Camera* camera = new CU::Camera(aCamera->myFov * (180.f / PI_CONSTANT), aCamera->myAspectRatio, 1.f, aCamera->myNear, aCamera->myFar, aCamera->myTransformation.myPosition);
+		CU::Camera* camera = new CU::Camera(aCamera->myFov * (180.f / PI_CONSTANT), aCamera->myAspectRatio, 1.f, aCamera->myNear, aCamera->myFar);
 		camera->SetTransformation(aCamera->myTransformation);
 
 		return camera;
