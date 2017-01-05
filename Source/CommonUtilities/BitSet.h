@@ -5,9 +5,24 @@
 #endif // !assert
 
 #define INDEX_TO_BIT(A_INDEX) (static_cast<Type>(1) << A_INDEX)
+#define self (*this)
 
 namespace CU
 {
+	template<typename INTEGER_TYPE, unsigned long long BIT_COUNT>
+	struct AllBitsSet
+	{
+		using Type = INTEGER_TYPE;
+		static const Type AllBits = INDEX_TO_BIT(BIT_COUNT) | AllBitsSet<Type, BIT_COUNT - 1>::AllBits;
+	};
+
+	template<typename INTEGER_TYPE>
+	struct AllBitsSet<INTEGER_TYPE, 0>
+	{
+		using Type = INTEGER_TYPE;
+		static const Type AllBits = INDEX_TO_BIT(0);
+	};
+
 	template<bool CONDITION, typename IF_TRUE, typename IF_FALSE>
 	struct COMPILE_TIME_IF
 	{
@@ -24,7 +39,7 @@ namespace CU
 	class CBitSet
 	{
 	public:
-		using Type = typename COMPILE_TIME_IF<(BIT_COUNT <= 32), unsigned int, unsigned long long>::IfType;
+		using Type = typename COMPILE_TIME_IF<(BIT_COUNT <= 32u), unsigned int, unsigned long long>::IfType;
 
 		class CReference
 		{
@@ -65,14 +80,16 @@ namespace CU
 	CBitSet<BIT_COUNT>::CBitSet()
 		: myBits(0u)
 	{
-		static_assert(BIT_COUNT <= 64, "bitset not implemented to hold larger than unsigned long long");
+		static_assert(BIT_COUNT <= 64u, "bitset not implemented to hold larger than unsigned long long");
+		static_assert(BIT_COUNT > 0u, "bitset can not hold zero bits");
 	}
 
 	template<unsigned int BIT_COUNT>
 	CBitSet<BIT_COUNT>::CBitSet(const Type aNumber)
 		: myBits(aNumber)
 	{
-		static_assert(BIT_COUNT <= 64, "bitset not implemented to hold larger than unsigned long long");
+		static_assert(BIT_COUNT <= 64u, "bitset not implemented to hold larger than unsigned long long");
+		static_assert(BIT_COUNT > 0u, "bitset can not hold zero bits");
 	}
 
 	template<unsigned int BIT_COUNT>
@@ -84,7 +101,7 @@ namespace CU
 	inline typename CBitSet<BIT_COUNT>::CReference CBitSet<BIT_COUNT>::operator[](const Type aIndex)
 	{
 		assert(aIndex < BIT_COUNT && "bitset index out of range");
-		return CReference(*this, aIndex);
+		return CReference(self, aIndex);
 	}
 
 	template<unsigned int BIT_COUNT>
@@ -123,30 +140,22 @@ namespace CU
 
 	template<unsigned int BIT_COUNT>
 	inline bool CBitSet<BIT_COUNT>::All() const
-	{
-		for (unsigned int i = 0; i < BIT_COUNT; ++i)
-		{
-			if (Get(i) == false)
-			{
-				return false;
-			}
-		}
-
-		return true;
+	{		
+		return AllBitsSet<Type, BIT_COUNT - 1>::AllBits == myBits;
 	}
 
 	template<unsigned int BIT_COUNT>
 	inline typename CBitSet<BIT_COUNT>::CReference& CBitSet<BIT_COUNT>::CReference::operator=(const CReference& aValue)
 	{
-		*this = static_cast<bool>(aValue);
-		return *this;
+		self = static_cast<bool>(aValue);
+		return self;
 	}
 
 	template<unsigned int BIT_COUNT>
 	inline typename CBitSet<BIT_COUNT>::CReference& CBitSet<BIT_COUNT>::CReference::operator=(const bool aValue)
 	{
 		myBitSet.Set(myIndex, aValue);
-		return *this;
+		return self;
 	}
 
 	template<unsigned int BIT_COUNT>
@@ -170,3 +179,4 @@ namespace CU
 }
 
 #undef INDEX_TO_BIT
+#undef self

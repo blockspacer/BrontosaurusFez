@@ -4,6 +4,10 @@
 #include "LoadObject.h"
 #include "KevinLoader/KevinLoader.h"
 #include "LoadModel.h"
+#include "LoadInputController.h"
+#include "LoadNavigationComponent.h"
+#include "LoadMovementComponent.h"
+#include "LoadCamera.h"
 
 LoadManager* LoadManager::ourInstance = nullptr;
 
@@ -57,6 +61,13 @@ void LoadManager::RegisterFunctions()
 	loader.RegisterObjectLinkFunction(LinkObject);
 
 	loader.RegisterComponentLoadFunction("MeshFilter", LoadMeshFilter);
+	loader.RegisterComponentLoadFunction("InputController", LoadInputController);
+	loader.RegisterComponentLoadFunction("Navigation", LoadNavigationComponent);
+	loader.RegisterComponentLoadFunction("Movement", LoadMovementComponent);
+	loader.RegisterComponentLoadFunction("Camera", LoadCamera);
+	
+
+
 }
 
 LoadManager::LoadManager()

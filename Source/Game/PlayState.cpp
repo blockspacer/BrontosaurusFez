@@ -60,7 +60,7 @@
 #include <iostream>
 #include "StatComponent.h"
 #include "Components/AIControllerComponent.h"
-#include "Components/ChaserController.h"
+#include "Components/SeekController.h"
 #include "Components\SkillFactory.h"
 #include "SkillSystemComponent.h"
 #include "KevinLoader/KevinLoader.h"
@@ -115,6 +115,7 @@ void CPlayState::Load()
 	MODELCOMP_MGR.SetScene(myScene);
 	myScene->SetSkybox("skybox.dds");
 	LoadManager::GetInstance().SetCurrentPlayState(this);
+	LoadManager::GetInstance().SetCurrentScene(myScene);
 
 	Lights::SDirectionalLight dirLight;
 	dirLight.color = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -136,10 +137,7 @@ void CPlayState::Load()
 
 	//hue hue dags att fula ner play state - Alex(Absolut inte Marcus); // snälla slå Johan inte mig(Alex);
 
-	//Loadingu like pingu
-
-	CU::CPJWrapper levelsFile;
-	const std::string errorString = levelsFile.Parse("Json/LevelList.json");
+	
 
 	CU::CPJWrapper levelsArray = levelsFile.GetJsonObject().at("levels");
 
@@ -177,38 +175,39 @@ void CPlayState::Load()
 	CModelComponent* modelComponent2= CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
 	npcObject2->AddComponent(modelComponent2);
 
-
+	//Move Later for modification from unity
 	myScene->AddCamera(CScene::eCameraType::ePlayerOneCamera);
 	CU::Camera& playerCamera = myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera);
 	playerCamera.Init(60, WINDOW_SIZE_F.x, WINDOW_SIZE_F.y, 1.f, 75000.0f, { 0.0f, 0.0f, 0.f });
 
 	//create player:
-	myPlayerObject = myGameObjectManager->CreateGameObject();
-	PollingStation::playerObject = myPlayerObject;
 
-	InputController* tempInputController = new InputController(playerCamera);
-	InputControllerManager::GetInstance().RegisterComponent(tempInputController);
-	myPlayerObject->AddComponent(tempInputController);
+	//myPlayerObject = myGameObjectManager->CreateGameObject();
+	//PollingStation::playerObject = myPlayerObject;
 
-	MovementComponent* tempMovementController = new MovementComponent();
-	MovementComponentManager::GetInstance().RegisterComponent(tempMovementController);
-	myPlayerObject->AddComponent(tempMovementController);
+	//InputController* tempInputController = new InputController(playerCamera);
+	//InputControllerManager::GetInstance().RegisterComponent(tempInputController);
+	//myPlayerObject->AddComponent(tempInputController);
 
-	myPlayerObject->AddComponent(new NavigationComponent());
+	//MovementComponent* tempMovementController = new MovementComponent();
+	//MovementComponentManager::GetInstance().RegisterComponent(tempMovementController);
+	//myPlayerObject->AddComponent(tempMovementController);
 
-	CModelComponent* playerModelComponent = CModelComponentManager::GetInstance().CreateComponent("Models/Placeholders/rulerGadjet.fbx");
-	myPlayerObject->AddComponent(playerModelComponent);
+	//myPlayerObject->AddComponent(new NavigationComponent());
 
-	myPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
-	SkillSystemComponent* tempSkillSystemComponent = new SkillSystemComponent;
-	SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
-	myPlayerObject->AddComponent(tempSkillSystemComponent);
-	tempSkillSystemComponent->AddSkill("BasicAttack");
-	//create camera object:
-	//myCameraObject = myGameObjectManager->CreateGameObject();
+	//CModelComponent* playerModelComponent = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
+	//myPlayerObject->AddComponent(playerModelComponent);
 
-	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
-	cameraComponent->SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
+	//myPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
+	//SkillSystemComponent* tempSkillSystemComponent = new SkillSystemComponent;
+	//SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
+	//myPlayerObject->AddComponent(tempSkillSystemComponent);
+	//tempSkillSystemComponent->AddSkill("BasicAttack");
+	////create camera object:
+	////myCameraObject = myGameObjectManager->CreateGameObject();
+
+	//CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
+	//cameraComponent->SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 
 	//myCameraObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, -100.0f));
 
@@ -219,7 +218,7 @@ void CPlayState::Load()
 
 
 	//set camera position and rotation
-	CU::Matrix44f cameraTransformation = playerCamera.GetTransformation();
+	/*CU::Matrix44f cameraTransformation = playerCamera.GetTransformation();
 	CU::Matrix44f newRotation;
 
 	newRotation.Rotate(PI / 4 * 4 , CU::Axees::Y);
@@ -231,20 +230,44 @@ void CPlayState::Load()
 	cameraTransformation.SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
 	cameraTransformation.Move(CU::Vector3f(0.0f, 0.0f, -1100.0f));
 
-	playerCamera.SetTransformation(cameraTransformation);
-	cameraComponent->InitOffsetPosition();
+	playerCamera.SetTransformation(cameraTransformation);*/
 
-	myPlayerObject->AddComponent(cameraComponent);
+
+
+	//Loadingu like pingu
+
+	CU::CPJWrapper levelsFile;
+	const std::string errorString = levelsFile.Parse("Json/LevelList.json");
+
+	CU::CPJWrapper levelsArray = levelsFile.GetJsonObject().at("levels");
+
+	const int magicLevelNumberSuperDuperTusen = 0;
+
+	std::string levelPath = "Json/Levels/";
+	levelPath += levelsArray[magicLevelNumberSuperDuperTusen].GetString();
+	levelPath += "/LevelData.json";
+
+	KLoader::CKevinLoader &loader = KLoader::CKevinLoader::GetInstance();
+
+	const KLoader::eError loadError = loader.LoadFile(levelPath);
+	if (loadError != KLoader::eError::NO_LOADER_ERROR)
+	{
+		DL_ASSERT("Loading Failed");
+	}
+
+	//cameraComponent->InitOffsetPosition();
+
+	//myPlayerObject->AddComponent(cameraComponent);
 
 	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation()); //
 
 	//----MakeEnemy----
-	CGameObject* enemyObj = myGameObjectManager->CreateGameObject();
+	/*CGameObject* enemyObj = myGameObjectManager->CreateGameObject();
 	CModelComponent* tempEnemyModel = CModelComponentManager::GetInstance().CreateComponent("Models/Placeholders/tree.fbx");
 	CStatComponent* tempEnemyStatComponent = new CStatComponent();
 	CAIControllerComponent* AIController = new CAIControllerComponent();
 	CHealthComponent* tempEnemyHealthComponent = new CHealthComponent();
-	CChaserController* chaserController = new CChaserController();
+	CSeekController* chaserController = new CSeekController();
 	
 	enemyObj->AddComponent(tempEnemyModel);
 	enemyObj->AddComponent(AIController);
@@ -266,7 +289,7 @@ void CPlayState::Load()
 	
 	tempEnemyStatComponent->SetStats(baseStats, bonusStats);
 	
-	tempEnemyHealthComponent->Init();
+	tempEnemyHealthComponent->Init();*/
 	//-----------------
 
 	CFireEmitterInstance fireeeeeByCarl;
@@ -494,6 +517,7 @@ void CPlayState::CreateManagersAndFactories()
 	CParticleEmitterComponentManager::GetInstance().SetScene(myScene);
 	CCameraComponentManager::Create();
 	InputControllerManager::CreateInstance();
+	InputControllerManager::GetInstance().SetScene(myScene);
 	MovementComponentManager::CreateInstance();
 	AIControllerManager::Create();
 	SkillFactory::CreateInstance();
