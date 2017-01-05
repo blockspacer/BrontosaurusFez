@@ -11,9 +11,6 @@
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="SkillFactory.cpp" />
     <ClCompile Include="SkillSystemComponentManager.cpp" />
-    <ClCompile Include="AIControllerComponent.cpp">
-      <Filter>Controllers</Filter>
-    </ClCompile>
     <ClCompile Include="AIControllerManager.cpp">
       <Filter>Controllers</Filter>
     </ClCompile>
@@ -98,6 +95,15 @@
     <ClCompile Include="StreakEmitterComponent.cpp">
       <Filter>Particles</Filter>
     </ClCompile>
+    <ClCompile Include="WanderController.cpp">
+      <Filter>Controllers\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="FleeController.cpp">
+      <Filter>Controllers\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="AIControllerComponent.cpp">
+      <Filter>Controllers\Controllers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -124,9 +130,6 @@
       <Filter>Controllers</Filter>
     </ClInclude>
     <ClInclude Include="AIControllerManager.h">
-      <Filter>Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="AIControllerComponent.h">
       <Filter>Controllers</Filter>
     </ClInclude>
     <ClInclude Include="SeekController.h">
@@ -206,6 +209,15 @@
     </ClInclude>
     <ClInclude Include="StreakEmitterComponent.h">
       <Filter>Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="WanderController.h">
+      <Filter>Controllers\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="FleeController.h">
+      <Filter>Controllers\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="AIControllerComponent.h">
+      <Filter>Controllers\Controllers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
