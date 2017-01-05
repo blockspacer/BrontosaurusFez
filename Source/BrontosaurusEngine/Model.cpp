@@ -273,7 +273,7 @@ bool CModel::InitBuffers(CU::GrowingArray<SVertexDataCube>& aVertexList)
 	return true;
 }
 
-void CModel::Render(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aBoneBuffer)
+void CModel::Render(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aAnimationState, const float aAnimationTime)
 {
 	myEffect->Activate();
 
@@ -282,7 +282,7 @@ void CModel::Render(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLa
 		mySurface->Activate();
 	}
 	
-	UpdateCBuffer(aToWorldSpace, aLastFrameTransformation, aLight, aPointLightList, aBoneBuffer);
+	UpdateCBuffer(aToWorldSpace, aLastFrameTransformation, aLight, aPointLightList, aAnimationState, aAnimationTime);
 
 	UINT stride = myVertexSize;
 	UINT offset = 0;
@@ -302,7 +302,31 @@ void CModel::Render(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLa
 	}
 }
 
-void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aBoneBuffer) // TODO: Do not update some of the cbuffers	
+void CModel::Render(const CU::Matrix44f & aToWorldSpace, const char* aAnimationState, const float aAnimationTime)
+{
+	myEffect->ActivateForDepth();
+
+	UpdateCBuffer(aToWorldSpace, aToWorldSpace, nullptr, nullptr, aAnimationState, aAnimationTime);
+
+	UINT stride = myVertexSize;
+	UINT offset = 0;
+
+	SLodData& currentLodModel = GetCurrentLODModel(aToWorldSpace.GetPosition());
+
+	DEVICE_CONTEXT->IASetVertexBuffers(0, 1, &currentLodModel.myVertexBuffer, &stride, &offset);
+	DEVICE_CONTEXT->IASetIndexBuffer(currentLodModel.myIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+	if (myLODModels.GetLast().myIndexBuffer == nullptr)
+	{
+		DEVICE_CONTEXT->Draw(currentLodModel.myVertexCount, 0);
+	}
+	else
+	{
+		DEVICE_CONTEXT->DrawIndexed(currentLodModel.myIndexCount, 0, 0);
+	}
+}
+
+void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aAnimationState, const float aAnimationTime) // TODO: Do not update some of the cbuffers	
 {
 	// WorldSpace thingy
 	D3D11_MAPPED_SUBRESOURCE mappedSubResource;
@@ -333,19 +357,19 @@ void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix4
 
 
 	//ANIMATION BUFFER
-	if (aBoneBuffer != nullptr)
+	if (mySceneAnimator != nullptr && (aAnimationState != nullptr || aAnimationState != ""))
 	{
+
+		std::vector<mat4>& bones = GetBones(aAnimationTime, aAnimationState);
+
+		//memcpy(static_cast<void*>(msg->myBoneMatrices), &bones[0], min(sizeof(msg->myBoneMatrices), bones.size() * sizeof(mat4)));
+
 		ZeroMemory(&mappedSubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
 		DEVICE_CONTEXT->Map(myBoneBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubResource);
-		memcpy(mappedSubResource.pData, aBoneBuffer, ourMaxBoneBufferSize);
+		memcpy(mappedSubResource.pData, &bones[0], min(ourMaxBoneBufferSize, bones.size() * sizeof(mat4)));
 		DEVICE_CONTEXT->Unmap(myBoneBuffer, 0);
 		DEVICE_CONTEXT->VSSetConstantBuffers(3, 1, &myBoneBuffer);
 	}
-
-
-
-
-
 
 	if (aLight != nullptr && aPointLightList != nullptr)
 	{

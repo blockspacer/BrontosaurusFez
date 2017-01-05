@@ -78,8 +78,9 @@ public:
 	//Shape
 	bool Initialize(CEffect* aEffect, CSurface* aSurface);
 
-	void Render(const CU::Matrix44f & aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aBoneBuffer = nullptr);
-	
+	void Render(const CU::Matrix44f & aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aAnimationState = nullptr, const float aAnimationTime = 0.0f);
+	void Render(const CU::Matrix44f & aToWorldSpace, const char * aAnimationState, const float aAnimationTime);
+
 	inline bool GetInitialized() const;
 	inline const SSphereColData& GetCollisionData() const;
 
@@ -109,7 +110,7 @@ private:
 	bool InitBuffers(CU::GrowingArray<SVertexDataCube>& aVertexList, CU::GrowingArray<unsigned int>& aIndexList);
 	bool InitBuffers(CU::GrowingArray<SVertexDataCube>& aVertexList);
 	bool InitBuffers(const CLoaderMesh * aLoadedMesh);
-	void UpdateCBuffer(const CU::Matrix44f & aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aBoneBuffer);
+	void UpdateCBuffer(const CU::Matrix44f & aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aAnimationState = nullptr, const float aAnimationTime = 0.0f);
 
 	inline void SetBoundingBox(const CU::AABB& aAABB);
 
