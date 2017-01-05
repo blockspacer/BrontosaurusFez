@@ -66,7 +66,7 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 			}
 		}
 	}
-	else if (aMessageType == eComponentMessageType::eSetSkillTargetPosition)
+	else if (aMessageType == eComponentMessageType::eSetSkillTargetObject)
 	{
 		bool isAnythingSelected = false;
 		for (unsigned short i = 0; i < mySkills.Size(); i++)
