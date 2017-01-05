@@ -146,6 +146,7 @@ void CPlayState::Load()
 	const int levelIndex = 1;
 
 	std::string levelPath = "Json/Levels/";
+
 	levelPath += levelsArray[levelIndex].GetString();
 	levelPath += "/LevelData.json";
 

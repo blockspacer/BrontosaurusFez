@@ -24,7 +24,7 @@ CCollisionComponent::~CCollisionComponent()
 	SAFE_DELETE(myCollider);
 }
 
-void CCollisionComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData& /*aMessageData*/)
+void CCollisionComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData)
 {
 	if (myCollider == nullptr)
 	{
@@ -37,8 +37,19 @@ void CCollisionComponent::Receive(const eComponentMessageType aMessageType, cons
 	case eComponentMessageType::eMoving:
 		myCollider->SetPosition(GetParent()->GetWorldPosition());
 		break;
+	case eComponentMessageType::eSetIsColliderActive:
+		if (aMessageData.myBool == true)
+		{
+			myCollider->Activate();
+		}
+		else
+		{
+			myCollider->Deactivate();
+		}
+	break;
 	}
 }
+
 
 void CCollisionComponent::Destroy()
 {

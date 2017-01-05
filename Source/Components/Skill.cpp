@@ -7,6 +7,7 @@
 #include "GameObjectManager.h"
 #include "../Collision/Intersection.h"
 #include "../Collision/ICollider.h"
+#include "CollisionComponent.h"
 Skill::Skill()
 {
 	myIsActive = false;
@@ -21,7 +22,7 @@ Skill::Skill()
 	CCollisionComponent* collisionComponent = SkillSystemComponentManager::GetInstance().GetCollisionComponentManager()->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, circleCollisionData);
 	collisionComponent->AddCollidsWith(eColliderType::eColliderType_Actor);
 	myColliderObject->AddComponent(collisionComponent);
-	
+	collisionComponent->DeactivateCollider();
 	//ToDo Deactivate collider; Move this piece of shit to a better place.
 }
 
@@ -63,7 +64,10 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 		//TODO start Attack Animation
 	
 		//TODO: Activate Collider;
-
+		type = eComponentMessageType::eSetIsColliderActive;
+		SComponentMessageData data;
+		data.myBool = true;
+		myColliderObject->NotifyComponents(type, data);
 	}
 }
 
