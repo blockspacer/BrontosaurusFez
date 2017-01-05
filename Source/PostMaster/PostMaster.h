@@ -15,8 +15,9 @@ public:
 	static PostMaster& GetInstance();
 	static PostMaster* GetInstancePtr();
 
-	void AppendSubscriber(Subscriber* aSubscriber, const eMessageType aMessageType);
-	void InsertSubscriber(Subscriber* aSubscriber, const eMessageType aMessageType);
+	//void InsertSubscriber(Subscriber* aSubscriber, const eMessageType aMessageType);
+	void Subscribe(Subscriber* aSubscriber, const eMessageType aMessageType, const int aPriority);
+	void Subscribe(Subscriber* aSubscriber, const eMessageType aMessageType);
 	void UnSubscribe(Subscriber* aSubscriber, const eMessageType aMessageType);
 
 	void SendLetter(const Message& aMessage);

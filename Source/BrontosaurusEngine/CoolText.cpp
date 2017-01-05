@@ -42,17 +42,24 @@ void CCoolText::Render(const CU::DynamicString& aString, const CU::Vector2f& aPo
 	const std::string tempString = aString.c_str();
 	std::wstring wideString(tempString.begin(), tempString.end());
 
-	for (int i = 0; i < wideString.size(); ++i)
+	for (size_t i = 0; i < wideString.size(); ++i)
 	{
-		if (i > 0)
+		if (wideString[i] == L'\n') // fulhax för att ha new line av '\n'
+		{
+			penPosition.x = aPosition.x;
+			penPosition.y += (static_cast<float>(myFont.GetCharSize(L'H').y) / WINDOW_SIZE_F.y) * 1.2f;
+			continue;
+		}
+
+		if (i > 0 && wideString[i - 1] != L'\n'/*mer fulhax för att ha new line av '\n'*/)
 		{
 			const CU::Vector2i pixelAdvance = myFont.GetAdvance(wideString[i], wideString[i - 1], true);
-			const CU::Vector2f screenAdvance(static_cast<float>(pixelAdvance.x) / WINDOW_SIZE.x, static_cast<float>(pixelAdvance.y) / WINDOW_SIZE.y);
+			const CU::Vector2f screenAdvance(static_cast<float>(pixelAdvance.x) / WINDOW_SIZE_F.x, static_cast<float>(pixelAdvance.y) / WINDOW_SIZE_F.y);
 			penPosition += screenAdvance;
 		}
 
 		const CU::Vector2i bearing = myFont.GetBearing(wideString[i]);
-		const CU::Vector2f screenBearing(static_cast<float>(bearing.x) / WINDOW_SIZE.x, static_cast<float>(-bearing.y) / WINDOW_SIZE.y);
+		const CU::Vector2f screenBearing(static_cast<float>(bearing.x) / WINDOW_SIZE_F.x, static_cast<float>(-bearing.y) / WINDOW_SIZE_F.y);
 
 		RenderCharacter(wideString[i], penPosition + screenBearing, aColor);
 	}

@@ -233,6 +233,7 @@
   <ItemGroup>
     <ClInclude Include="AABB.h" />
     <ClInclude Include="binary_tree.h" />
+    <ClInclude Include="BitSet.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CommandLineManager.h" />
     <ClInclude Include="CommonUtilities.h" />
@@ -261,6 +262,8 @@
     <ClInclude Include="MemoryLeekLogger.h" />
     <ClInclude Include="StaticMemoryPool.h" />
     <ClInclude Include="MessageKyle.h" />
+    <ClInclude Include="picojson.h" />
+    <ClInclude Include="PJWrapper.h" />
     <ClInclude Include="plane.h" />
     <ClInclude Include="plane_volume.h" />
     <ClInclude Include="PostMasterKyle.h" />
@@ -334,6 +337,7 @@
     <ClCompile Include="Intersection.cpp" />
     <ClCompile Include="InvertMatrix.cpp" />
     <ClCompile Include="MemoryLeekLogger.cpp" />
+    <ClCompile Include="PJWrapper.cpp" />
     <ClCompile Include="PostMasterKyle.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="StackWalker.cpp" />

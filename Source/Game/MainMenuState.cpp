@@ -73,8 +73,8 @@ void MainMenuState::OnEnter()
 	}
 	else
 	{
-		PostMaster::GetInstance().InsertSubscriber(myGUIManager, eMessageType::eMouseMessage);
-		PostMaster::GetInstance().InsertSubscriber(myGUIManager, eMessageType::eKeyboardMessage);
+		PostMaster::GetInstance().Subscribe(myGUIManager, eMessageType::eMouseMessage, 5);
+		PostMaster::GetInstance().Subscribe(myGUIManager, eMessageType::eKeyboardMessage);
 	}
 	
 	myIsGoingToLevelSelect = false;

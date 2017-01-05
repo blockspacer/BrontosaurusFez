@@ -10,6 +10,18 @@ CCircleCollider::CCircleCollider()
 	myCircleData = new Intersection::SCircle();
 }
 
+CCircleCollider::CCircleCollider(Intersection::SCircle* someCircleData)
+{
+	myCircleData = someCircleData;
+}
+
+CCircleCollider::CCircleCollider(CU::Vector3f aPosition, float aRadius)
+{
+	myCircleData = new Intersection::SCircle();
+	myCircleData->myCenterPosition = aPosition;
+	myCircleData->myRadius = aRadius;
+}
+
 CCircleCollider::CCircleCollider(const CCircleCollider& aCopy)
 {
 	self = aCopy;

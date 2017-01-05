@@ -102,9 +102,7 @@ void CEngine::Render()
 	myDXFramework->ClearDepthStencil();
 	myDXFramework->ClearScreen();
 
-	//myDebugInfoDrawer->Update();
-	//myDebugInfoDrawer->Render(myWindowSize);
-
+	myDebugInfoDrawer->UpdateFPSCounter();
 
 
 	myRenderer->Render();
@@ -157,10 +155,15 @@ void CEngine::Start()
 
 		myRenderer->SwapWrite();
 
-
-		myUpdateCallbackFunction(myTimerManager->GetTimer(myTimerH).GetDeltaTime());
 		myWindowsWindow->Update();
-		myConsole->Update(myTimerManager->GetTimer(myTimerH).GetDeltaTime().GetSeconds());
+		bool consoleIsActive = myConsole->Update(myTimerManager->GetTimer(myTimerH).GetDeltaTime().GetSeconds());
+		if (consoleIsActive == false)
+		{
+			myUpdateCallbackFunction(myTimerManager->GetTimer(myTimerH).GetDeltaTime());
+		}
+
+		myDebugInfoDrawer->Update();
+		myDebugInfoDrawer->Render(myWindowSize);
 
 
 		Audio::CAudioInterface* audio = Audio::CAudioInterface::GetInstance();

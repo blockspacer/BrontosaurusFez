@@ -2,6 +2,8 @@
 #include "Component.h"
 #include "../PostMaster/Subscriber.h"
 
+#include "../CommonUtilities/vector2.h"
+
 namespace CU
 {
 	template <typename T>
@@ -25,10 +27,14 @@ public:
 	void Destroy() override;
 
 	eMessageReturn MouseClicked(const CU::eMouseButtons aMouseButton, const CU::Vector2f& aMousePosition);
+	eMessageReturn MouseReleased(const CU::eMouseButtons aMouseButton, const CU::Vector2f& aMousePosition);
+	eMessageReturn MouseMoved(const CU::Vector2f& aMousePosition);
 	eMessageReturn TakeInputMessage(const CU::eInputMessage aInputMessage);
 
 private:
 	CU::GrowingArray<CU::eInputMessage> mySkillInputMessageActivators;
+	CU::Vector2f myMousePosition;
 	const CU::Camera& myPlayerCamera;
+	bool myMouseIsDown;
 };
 

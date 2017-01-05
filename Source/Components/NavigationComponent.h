@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include "../CommonUtilities/CUvector.h"
 class NavigationComponent : public CComponent
 {
 public:

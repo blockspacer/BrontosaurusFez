@@ -76,6 +76,12 @@
     <Filter Include="CommandLineManager">
       <UniqueIdentifier>{a0465575-eaa9-406b-b536-f852d2cef5e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BitSet">
+      <UniqueIdentifier>{d56df7d9-58d7-4ffe-94a8-b9b80582123d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PicoJson">
+      <UniqueIdentifier>{45412c79-6444-4e53-b508-abe0a9c9403f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Timer.h">
@@ -331,6 +337,16 @@
     <ClInclude Include="CommandLineManager.h">
       <Filter>CommandLineManager</Filter>
     </ClInclude>
+    <ClInclude Include="BitSet.h">
+      <Filter>BitSet</Filter>
+    </ClInclude>
+    <ClInclude Include="QuickSort.h" />
+    <ClInclude Include="picojson.h">
+      <Filter>PicoJson</Filter>
+    </ClInclude>
+    <ClInclude Include="PJWrapper.h">
+      <Filter>PicoJson</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Timer.cpp">
@@ -401,6 +417,9 @@
     </ClCompile>
     <ClCompile Include="CommandLineManager.cpp">
       <Filter>CommandLineManager</Filter>
+    </ClCompile>
+    <ClCompile Include="PJWrapper.cpp">
+      <Filter>PicoJson</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

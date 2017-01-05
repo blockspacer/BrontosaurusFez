@@ -4,8 +4,7 @@ enum class eMessageType
 {
 	eWindowSizeChanged,
 	eMouseMessage,
-	eMouseDownMessage,
-	eMousePressed,
+	//eMouseDownMessage,
 	eKeyboardMessage,
 	eKeyPressed,
 	eInputMessagePressed,
@@ -24,8 +23,6 @@ enum class eMessageType
 	eObjectives,
 	eLevelOver,
 	eNextLevelPlease,
-	ePlayerGotNewWeapon,
-	ePlayerChangedWeapon,
 	eConsoleCalledUpon,
 	eLength,
 };

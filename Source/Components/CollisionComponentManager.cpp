@@ -9,6 +9,7 @@
 #include "../Collision/CircleCollider.h"
 #include "../Collision/GroupCollider.h"
 
+#include "../Collision/Intersection.h"
 CCollisionComponentManager::CCollisionComponentManager()
 	: myCollisionComponents(32)
 	, myCollisionManager(nullptr)
@@ -29,9 +30,16 @@ void CCollisionComponentManager::Update()
 	myCollisionManager->Render();
 }
 
-CCollisionComponent* CCollisionComponentManager::CreateCollisionComponent(const eColliderType aColliderType)
+CCollisionComponent* CCollisionComponentManager::CreateCollisionComponent(const eColliderType aColliderType, Intersection::CollisionData& aCollisionData)
 {
-	ICollider* newCollider = CreateCollider(aColliderType);
+	ICollider* newCollider = CreateCollider(aColliderType, aCollisionData);
+	myCollisionManager->AddCollider(newCollider);
+
+	auto activateCallback = [this, newCollider]() { myCollisionManager->AddCollider(newCollider); };
+	auto deactivateCallback = [this, newCollider]() { myCollisionManager->RemoveCollider(newCollider); };
+
+	newCollider->AddActivationCallbacks(activateCallback, deactivateCallback);
+
 	CCollisionComponent* newCollisionComponent = new CCollisionComponent(newCollider);
 
 	myCollisionComponents.Add(newCollisionComponent);
@@ -44,18 +52,19 @@ void CCollisionComponentManager::DestroyCollisionComponent(CCollisionComponent* 
 	unsigned int index = myCollisionComponents.Find(aCollisionComponent);
 	if (index != myCollisionComponents.FoundNone)
 	{
+		myCollisionManager->RemoveCollider(aCollisionComponent->GetCollider());
 		myCollisionComponents.DeleteCyclicAtIndex(index);
 	}
 }
 
-ICollider* CCollisionComponentManager::CreateCollider(const eColliderType aColliderType)
+ICollider* CCollisionComponentManager::CreateCollider(const eColliderType aColliderType, Intersection::CollisionData& aCollisionData)
 {
 	ICollider* newCollider = nullptr;
 
 	switch (aColliderType)
 	{
 	case CCollisionComponentManager::eColliderType::eCircle:
-		newCollider = new CCircleCollider();
+		newCollider = new CCircleCollider(aCollisionData.myCircleData);
 		break;
 	case CCollisionComponentManager::eColliderType::ePoint:
 		newCollider = new CPointCollider();

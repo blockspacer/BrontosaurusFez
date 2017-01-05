@@ -155,7 +155,7 @@ DynamicString& DynamicString::operator+=(const int aInt)
 
 DynamicString DynamicString::operator+(const DynamicString& aString) const
 {
-	return self + aString.c_str();
+	return DynamicString(self) += aString;
 }
 
 DynamicString DynamicString::operator+(const char* aLiteralString) const
@@ -301,7 +301,7 @@ bool DynamicString::IsInt() const
 {
 	assert(myString != nullptr);
 
-	const CU::DynamicString numbers = "1234567890";
+	const CU::DynamicString numbers = "1234567890-";
 
 	for (int i = 0; i < mySize; ++i)
 	{
@@ -324,7 +324,7 @@ bool DynamicString::IsFloat() const
 {
 	assert(myString != nullptr);
 
-	const CU::DynamicString numbers = "1234567890.";
+	const CU::DynamicString numbers = "1234567890.-";
 
 	for (int i = 0; i < mySize; ++i)
 	{
@@ -416,7 +416,7 @@ DynamicString& CU::DynamicString::CopyString(const char* aLiteralString, const i
 	return self;
 }
 
-DynamicString & CU::DynamicString::AddLiteralString(const char* aLiteralString, const int aSize)
+DynamicString& CU::DynamicString::AddLiteralString(const char* aLiteralString, const int aSize)
 {
 	if (aSize == FoundNone)
 	{

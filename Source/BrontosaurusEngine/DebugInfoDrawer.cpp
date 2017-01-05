@@ -15,14 +15,18 @@
 
 //TEMP INCLUDES
 #include "..\PostMaster\ChangeLevel.h"
+#include "../CommonUtilities/BitSet.h"
+
+template class CU::CBitSet<3>;
 
 CDebugInfoDrawer::CDebugInfoDrawer(unsigned int aDebugFlags)
 	: myOutputTexts(nullptr)
 	, myCountDown(nullptr)
-	, myRenderThreadTimers(nullptr)
-	, myFPSTimer(0)
+	, myLogicThreadTimers(nullptr)
+	, myLogicFPSTimer(0)
 	, myUpdateTextTimer(0)
-	, myBlinkTimer(0)
+	, myUpdateTextTimer_RenderThread(0)
+	, myFPSTimer(0)
 	, myDrawCallsCount(0)
 	, myDebugFlags(aDebugFlags)
 	, myLeftControlIsDown(false)
@@ -32,6 +36,10 @@ CDebugInfoDrawer::CDebugInfoDrawer(unsigned int aDebugFlags)
 	myOutputTexts[eDebugText_FPS] = new CTextInstance();
 	myOutputTexts[eDebugText_FPS]->Init();
 	myOutputTexts[eDebugText_FPS]->SetText("FPS: ");
+
+	myOutputTexts[eDebugText_LogicFPS] = new CTextInstance();
+	myOutputTexts[eDebugText_LogicFPS]->Init();
+	myOutputTexts[eDebugText_LogicFPS]->SetText("LOGIC FPS: ");
 
 	myOutputTexts[eDebugText_DrawCalls] = new CTextInstance();
 	myOutputTexts[eDebugText_DrawCalls]->Init();
@@ -43,13 +51,16 @@ CDebugInfoDrawer::CDebugInfoDrawer(unsigned int aDebugFlags)
 
 	myCountDown = new CU::CountDown();
 
+	myLogicThreadTimers = new CU::TimerManager();
 	myRenderThreadTimers = new CU::TimerManager();
 
+	myLogicFPSTimer = myLogicThreadTimers->CreateTimer();
+	myUpdateTextTimer = myLogicThreadTimers->CreateTimer();
+	myUpdateTextTimer_RenderThread = myRenderThreadTimers->CreateTimer();
 	myFPSTimer = myRenderThreadTimers->CreateTimer();
-	myUpdateTextTimer = myRenderThreadTimers->CreateTimer();
 
-	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eKeyboardMessage);
-	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eDrawCallsThisFrame);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eDrawCallsThisFrame);
 
 #endif // !_RETAIL_BUILD
 }
@@ -57,6 +68,7 @@ CDebugInfoDrawer::CDebugInfoDrawer(unsigned int aDebugFlags)
 CDebugInfoDrawer::~CDebugInfoDrawer()
 {
 #ifndef _RETAIL_BUILD
+	SAFE_DELETE(myLogicThreadTimers);
 	SAFE_DELETE(myRenderThreadTimers);
 	SAFE_DELETE(myCountDown);
 
@@ -76,30 +88,18 @@ void CDebugInfoDrawer::Render(const CU::Vector2ui aTargetWindowSize)
 	const float yStartPos = 2.f / targetWindowSize.y;
 	const float yOffset = 25.f / targetWindowSize.y;
 
-	int yCount = 0;
-
+	int yCount = 1;
 	for (int i = 0; i < myOutputTexts.Size(); ++i)
 	{
-		if (myDebugFlags & (1 << i))
+		//if (myDebugFlags & (1 << i))
+		if (myDebugFlags[i] == true)
 		{
 			myOutputTexts[i]->SetPosition({ xStartPos, yStartPos + yOffset * yCount++ });
 			myOutputTexts[i]->Render();
 		}
 	}
 
-	const CU::Timer& blinkTimer = myRenderThreadTimers->GetTimer(myBlinkTimer);
-	const float BlinkTime = 0.5f;
-	if (blinkTimer.GetLifeTime().GetSeconds() < BlinkTime * 2.f || true)
-	{
-		//if (blinkTimer.GetLifeTime().GetSeconds() < BlinkTime)
-		{
-			myCountDown->Render();
-		}
-	}
-	else
-	{
-		myRenderThreadTimers->ResetTimer(myBlinkTimer);
-	}
+	myCountDown->Render();
 
 #endif // !_RETAIL_BUILD
 }
@@ -107,9 +107,9 @@ void CDebugInfoDrawer::Render(const CU::Vector2ui aTargetWindowSize)
 void CDebugInfoDrawer::Update()
 {
 #ifndef _RETAIL_BUILD
-	myRenderThreadTimers->UpdateTimers();
+	myLogicThreadTimers->UpdateTimers();
 
-	UpdateFPSCounter();
+	UpdateLogicFPSCounter();
 	UpdateDrawCallsCounter();
 	UpdateMemoryUsage();
 
@@ -137,19 +137,22 @@ void CDebugInfoDrawer::PressedKey(const CU::eKeys& aKey)
 	case CU::eKeys::SEVEN:
 		if (myLeftControlIsDown == true)
 		{
-			myDebugFlags ^= eDebugFlags_FPS;
+			//myDebugFlags ^= eDebugFlags_FPS;
+			myDebugFlags.Flip(eDebugText_LogicFPS);
 		}
 		break;
 	case CU::eKeys::EIGHT:
 		if (myLeftControlIsDown == true)
 		{
-			myDebugFlags ^= eDebugFlags_DrawCalls;
+			//myDebugFlags ^= eDebugFlags_DrawCalls;
+			myDebugFlags.Flip(eDebugText_DrawCalls);
 		}
 		break;
 	case CU::eKeys::NINE:
 		if (myLeftControlIsDown == true)
 		{
-			myDebugFlags ^= eDebugFlags_MemoryUsage;
+			//myDebugFlags ^= eDebugFlags_MemoryUsage;
+			myDebugFlags.Flip(eDebugText_MemoryUsage);
 		}
 		break;
 	default:
@@ -178,12 +181,13 @@ void CDebugInfoDrawer::SetDrawCalls(const int aDrawCallsCount)
 
 void CDebugInfoDrawer::UpdateFPSCounter()
 {
-#ifndef _RETAIL_BUILD
-	const float SecondsBetweenRefreshes = 0.125f;
+	myRenderThreadTimers->UpdateTimers();
 
-	if (myRenderThreadTimers->GetTimer(myUpdateTextTimer).GetLifeTime().GetSeconds() > SecondsBetweenRefreshes)
+	const float SecondsBetweenRefreshes = 0.125f;
+	
+	if (myRenderThreadTimers->GetTimer(myUpdateTextTimer_RenderThread).GetLifeTime().GetSeconds() > SecondsBetweenRefreshes)
 	{
-		myRenderThreadTimers->ResetTimer(myUpdateTextTimer);
+		myRenderThreadTimers->ResetTimer(myUpdateTextTimer_RenderThread);
 
 		const int currentFPS = static_cast<int>(myRenderThreadTimers->GetTimer(myFPSTimer).GetFPS());
 		myOutputTexts[eDebugText_FPS]->SetText(CU::DynamicString("FPS: ") + currentFPS);
@@ -199,6 +203,33 @@ void CDebugInfoDrawer::UpdateFPSCounter()
 		else
 		{
 			myOutputTexts[eDebugText_FPS]->SetColor(CU::Vector4f(CTextInstance::White.x * 0.5f, CTextInstance::White.y * 0.5f, CTextInstance::White.z * 0.5f, 1.f));
+		}
+	}
+}
+
+void CDebugInfoDrawer::UpdateLogicFPSCounter()
+{
+#ifndef _RETAIL_BUILD
+	const float SecondsBetweenRefreshes = 0.125f;
+
+	if (myLogicThreadTimers->GetTimer(myUpdateTextTimer).GetLifeTime().GetSeconds() > SecondsBetweenRefreshes)
+	{
+		myLogicThreadTimers->ResetTimer(myUpdateTextTimer);
+
+		const int currentFPS = static_cast<int>(myLogicThreadTimers->GetTimer(myLogicFPSTimer).GetFPS());
+		myOutputTexts[eDebugText_LogicFPS]->SetText(CU::DynamicString("LOGIC FPS: ") + currentFPS);
+
+		if (currentFPS < 30)
+		{
+			myOutputTexts[eDebugText_LogicFPS]->SetColor(CU::Vector4f(CTextInstance::Red.x * 0.5f, CTextInstance::Red.y * 0.5f, CTextInstance::Red.z * 0.5f, 1.f));
+		}
+		else if (currentFPS < 60)
+		{
+			myOutputTexts[eDebugText_LogicFPS]->SetColor(CU::Vector4f(CTextInstance::Yellow.x * 0.5f, CTextInstance::Yellow.y * 0.5f, CTextInstance::Yellow.z * 0.5f, 1.f));
+		}
+		else
+		{
+			myOutputTexts[eDebugText_LogicFPS]->SetColor(CU::Vector4f(CTextInstance::White.x * 0.5f, CTextInstance::White.y * 0.5f, CTextInstance::White.z * 0.5f, 1.f));
 		}
 	}
 #endif // !_RETAIL_BUILD

@@ -4,7 +4,6 @@
 #include <Engine.h> //fixa camera instance sen
 #include <CommonUtilities.h>
 #include <Lights.h>
-#include <Time.h>
 #include <TimerManager.h>
 #include <Renderer.h>
 #include "Skybox.h"
@@ -15,10 +14,8 @@
 #include "Components/ModelComponentManager.h"
 #include "Components/GameObject.h"
 #include "Components/ModelComponent.h"
-#include "Components/ModelComponentManager.h"
 #include "Components/ParticleEmitterComponentManager.h"
 #include "Components/ComponentManager.h"
-#include "Components/InventoryComponent.h"
 
 #include "PostMaster/PopCurrentState.h"
 #include "PostMaster/ChangeLevel.h"
@@ -63,9 +60,11 @@
 #include <iostream>
 #include "StatComponent.h"
 #include "Components/AIControllerComponent.h"
-#include "Components/ChaserController.h"
+#include "Components/SeekController.h"
 #include "Components\SkillFactory.h"
 #include "SkillSystemComponent.h"
+#include "KevinLoader/KevinLoader.h"
+#include "Components\CollisionComponentManager.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
 #include "../BrontosaurusEngine/FireEmitterInstance.h"
@@ -86,7 +85,6 @@ CPlayState::~CPlayState()
 	SAFE_DELETE(myGameObjectManager);
 	SAFE_DELETE(myGUIManager);
 	
-	LoadManager::DestroyInstance();
 	
 	CModelComponentManager::Destroy();
 	CAudioSourceComponentManager::Destroy();
@@ -106,6 +104,8 @@ CPlayState::~CPlayState()
 
 void CPlayState::Load()
 {
+	LoadManagerGuard loadManagerGuard;
+
 	//start taking the time for loading level
 	CU::TimerManager timerMgr;
 	CU::TimerHandle handle = timerMgr.CreateTimer();
@@ -114,7 +114,8 @@ void CPlayState::Load()
 
 	MODELCOMP_MGR.SetScene(myScene);
 	myScene->SetSkybox("skybox.dds");
-
+	LoadManager::GetInstance().SetCurrentPlayState(this);
+	LoadManager::GetInstance().SetCurrentScene(myScene);
 
 	Lights::SDirectionalLight dirLight;
 	dirLight.color = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -151,38 +152,39 @@ void CPlayState::Load()
 	CModelComponent* modelComponent2= CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
 	npcObject2->AddComponent(modelComponent2);
 
-
+	//Move Later for modification from unity
 	myScene->AddCamera(CScene::eCameraType::ePlayerOneCamera);
 	CU::Camera& playerCamera = myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera);
 	playerCamera.Init(60, WINDOW_SIZE_F.x, WINDOW_SIZE_F.y, 1.f, 75000.0f);
 
 	//create player:
-	myPlayerObject = myGameObjectManager->CreateGameObject();
-	PollingStation::playerObject = myPlayerObject;
 
-	InputController* tempInputController = new InputController(playerCamera);
-	InputControllerManager::GetInstance().RegisterComponent(tempInputController);
-	myPlayerObject->AddComponent(tempInputController);
+	//myPlayerObject = myGameObjectManager->CreateGameObject();
+	//PollingStation::playerObject = myPlayerObject;
 
-	MovementComponent* tempMovementController = new MovementComponent();
-	MovementComponentManager::GetInstance().RegisterComponent(tempMovementController);
-	myPlayerObject->AddComponent(tempMovementController);
+	//InputController* tempInputController = new InputController(playerCamera);
+	//InputControllerManager::GetInstance().RegisterComponent(tempInputController);
+	//myPlayerObject->AddComponent(tempInputController);
 
-	myPlayerObject->AddComponent(new NavigationComponent());
+	//MovementComponent* tempMovementController = new MovementComponent();
+	//MovementComponentManager::GetInstance().RegisterComponent(tempMovementController);
+	//myPlayerObject->AddComponent(tempMovementController);
 
-	CModelComponent* playerModelComponent = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
-	myPlayerObject->AddComponent(playerModelComponent);
+	//myPlayerObject->AddComponent(new NavigationComponent());
 
-	myPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
-	SkillSystemComponent* tempSkillSystemComponent = new SkillSystemComponent;
-	SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
-	tempSkillSystemComponent->AddSkill("Not Implemented");
-	myPlayerObject->AddComponent(tempSkillSystemComponent);
-	//create camera object:
-	//myCameraObject = myGameObjectManager->CreateGameObject();
+	//CModelComponent* playerModelComponent = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
+	//myPlayerObject->AddComponent(playerModelComponent);
 
-	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
-	cameraComponent->SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
+	//myPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
+	//SkillSystemComponent* tempSkillSystemComponent = new SkillSystemComponent;
+	//SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
+	//myPlayerObject->AddComponent(tempSkillSystemComponent);
+	//tempSkillSystemComponent->AddSkill("BasicAttack");
+	////create camera object:
+	////myCameraObject = myGameObjectManager->CreateGameObject();
+
+	//CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
+	//cameraComponent->SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 
 	//myCameraObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, -100.0f));
 
@@ -193,30 +195,61 @@ void CPlayState::Load()
 
 
 	//set camera position and rotation
-	CU::Matrix44f cameraTransformation = playerCamera.GetTransformation();
+	/*CU::Matrix44f cameraTransformation = playerCamera.GetTransformation();
 	CU::Matrix44f newRotation;
 
-	newRotation.Rotate(PI / 2, CU::Axees::X);
+	newRotation.Rotate(PI / 4 * 4 , CU::Axees::Y);
 	newRotation.Rotate(PI / 4, CU::Axees::X);
-	newRotation.Rotate(PI / 1, CU::Axees::Z);
+
+	//newRotation.Rotate(PI / 1, CU::Axees::Z);
 
 	cameraTransformation.SetRotation(newRotation);
 	cameraTransformation.SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
 	cameraTransformation.Move(CU::Vector3f(0.0f, 0.0f, -1100.0f));
 
-	playerCamera.SetTransformation(cameraTransformation);
-	cameraComponent->InitOffsetPosition();
+	playerCamera.SetTransformation(cameraTransformation);*/
 
-	myPlayerObject->AddComponent(cameraComponent);
 
-	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation());
+
+	//Loadingu like pingu
+
+	CU::CPJWrapper levelsFile;
+	const std::string errorString = levelsFile.Parse("Json/LevelList.json");
+
+	CU::CPJWrapper levelsArray = levelsFile.GetJsonObject().at("levels");
+
+#ifdef _DEBUG
+	//const int levelIndex = levelsArray.Size() - 1;
+	const int levelIndex = 1;
+#else
+	const int levelIndex = 0;
+#endif
+
+	std::string levelPath = "Json/Levels/";
+	levelPath += levelsArray[levelIndex].GetString();
+	levelPath += "/LevelData.json";
+
+	KLoader::CKevinLoader &loader = KLoader::CKevinLoader::GetInstance();
+
+	const KLoader::eError loadError = loader.LoadFile(levelPath);
+	if (loadError != KLoader::eError::NO_LOADER_ERROR)
+	{
+		DL_ASSERT("Loading Failed");
+	}
+
+	//cameraComponent->InitOffsetPosition();
+
+	//myPlayerObject->AddComponent(cameraComponent);
+
+	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation()); //
+
 	//----MakeEnemy----
-	CGameObject* enemyObj = myGameObjectManager->CreateGameObject();
+	/*CGameObject* enemyObj = myGameObjectManager->CreateGameObject();
 	CModelComponent* tempEnemyModel = CModelComponentManager::GetInstance().CreateComponent("Models/Placeholders/tree.fbx");
 	CStatComponent* tempEnemyStatComponent = new CStatComponent();
 	CAIControllerComponent* AIController = new CAIControllerComponent();
 	CHealthComponent* tempEnemyHealthComponent = new CHealthComponent();
-	CChaserController* chaserController = new CChaserController();
+	CSeekController* chaserController = new CSeekController();
 	
 	enemyObj->AddComponent(tempEnemyModel);
 	enemyObj->AddComponent(AIController);
@@ -238,7 +271,7 @@ void CPlayState::Load()
 	
 	tempEnemyStatComponent->SetStats(baseStats, bonusStats);
 	
-	tempEnemyHealthComponent->Init();
+	tempEnemyHealthComponent->Init();*/
 	//-----------------
 
 	CFireEmitterInstance fireeeeeByCarl;
@@ -291,6 +324,7 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	MovementComponentManager::GetInstance().Update(aDeltaTime);
 	AIControllerManager::GetIstance().Update(aDeltaTime);
 	SkillSystemComponentManager::GetInstance().Update(aDeltaTime);
+	myCollisionComponentManager->Update();
 	myScene->Update(aDeltaTime);
 
 	myGameObjectManager->DestroyObjectsWaitingForDestruction();
@@ -328,9 +362,9 @@ void CPlayState::Render()
 
 void CPlayState::OnEnter()
 {
-	//PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eStateMessage);
-	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eKeyboardMessage);
-	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eNextLevelPlease);
+	//PostMaster::GetInstance().Subscribe(this, eMessageType::eStateMessage);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eNextLevelPlease);
 	Audio::CAudioInterface::GetInstance()->LoadBank("Audio/playState.bnk");
 	Audio::CAudioInterface::GetInstance()->PostEvent("PlayCoolSong");
 	//Audio::CAudioInterface::GetInstance()->PostEvent("PlayerMoving_Play");
@@ -445,6 +479,11 @@ void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)
 	stat3->SetStats(base3, bonus3);
 }
 
+CGameObjectManager* CPlayState::GetObjectManager() const
+{
+	return myGameObjectManager;
+}
+
 void CPlayState::CreateManagersAndFactories()
 {
 	myScene = new CScene();
@@ -452,16 +491,19 @@ void CPlayState::CreateManagersAndFactories()
 	myGUIManager = new GUI::GUIManager();
 	//myGUIManager->Init("Models/gui/gui.fbx", true);
 
+	myCollisionComponentManager = new CCollisionComponentManager;
 	CComponentManager::CreateInstance();
-	LoadManager::CreateInstance();
 	CAudioSourceComponentManager::Create();
 	CModelComponentManager::Create();
 	CParticleEmitterComponentManager::Create();
 	CParticleEmitterComponentManager::GetInstance().SetScene(myScene);
 	CCameraComponentManager::Create();
 	InputControllerManager::CreateInstance();
+	InputControllerManager::GetInstance().SetScene(myScene);
 	MovementComponentManager::CreateInstance();
 	AIControllerManager::Create();
 	SkillFactory::CreateInstance();
 	SkillSystemComponentManager::CreateInstance();
+	SkillSystemComponentManager::GetInstance().SetGameObjectManager(myGameObjectManager);
+	SkillSystemComponentManager::GetInstance().SetCollisionComponentManager(myCollisionComponentManager);
 }

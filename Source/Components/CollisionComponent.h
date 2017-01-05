@@ -12,6 +12,12 @@ public:
 
 	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
 	void Destroy() override;
+	void AddCollidsWith(const unsigned int aColliderTypes);
+
+	void ActivateCollider();
+	void DeactivateCollider();
+
+	inline ICollider* GetCollider();
 
 private:
 	void OnCollisionEnter(ICollider* aCollider);
@@ -20,3 +26,8 @@ private:
 	
 	ICollider* myCollider;
 };
+
+inline ICollider* CCollisionComponent::GetCollider()
+{
+	return myCollider;
+}

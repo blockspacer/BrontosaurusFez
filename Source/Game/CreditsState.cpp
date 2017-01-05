@@ -46,8 +46,8 @@ void CreditsState::Render()
 
 void CreditsState::OnEnter()
 {
-	//PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eStateMessage);
-	PostMaster::GetInstance().AppendSubscriber(this, eMessageType::eKeyboardMessage);
+	//PostMaster::GetInstance().Subscribe(this, eMessageType::eStateMessage);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
 	mysprite = new CSpriteInstance("Models/credits/CreditsScreen.dds",CU::Vector2f(1, 1),CU::Vector2f(0,1));
 }
 

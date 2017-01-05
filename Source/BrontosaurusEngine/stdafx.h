@@ -47,5 +47,7 @@
 #include "../CommonUtilities/vector2.h"
 #include "../CommonUtilities/vector3.h"
 #include "../CommonUtilities/vector4.h"
+#include "../CommonUtilities/matrix33.h"
+#include "../CommonUtilities/matrix44.h"
 
 // TODO: reference additional headers your program requires here

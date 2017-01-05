@@ -3,7 +3,6 @@
 #include "Skill.h"
 #include "SkillFactory.h"
 
-#include <iostream>
 SkillSystemComponent::SkillSystemComponent()
 {
 	mySkills.Init(4);
@@ -49,27 +48,46 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 		}
 		else
 		{
-			std::cout << "Tried to use a skill that was not in skillSystemComponent" << std::endl;
+			DL_PRINT_WARNING("Tried to use a skill that was not in skillSystemComponent");
 		}
 	
 	}
 	else if(aMessageType == eComponentMessageType::eSetSkillTargetPosition)
 	{
 		myTargetPosition = aMessageData.myVector3f;
+		myTargetPosition.z = myTargetPosition.y;
+		myTargetPosition.y = GetParent()->GetWorldPosition().y;
 		for(unsigned short i = 0; i < mySkills.Size(); i++)
 		{
-			mySkills[i]->SetTarget(aMessageData.myVector3f);
+			mySkills[i]->SetTargetPosition(myTargetPosition);
 			if(mySkills[i]->GetIsSelected() == true)
 			{
 				mySkills[i]->Activate();
 			}
 		}
 	}
+	else if (aMessageType == eComponentMessageType::eSetSkillTargetPosition)
+	{
+		bool isAnythingSelected = false;
+		for (unsigned short i = 0; i < mySkills.Size(); i++)
+		{
+			mySkills[i]->SetTargetObject(aMessageData.myGameObject);
+			if (mySkills[i]->GetIsSelected() == true)
+			{
+				isAnythingSelected = true;
+				mySkills[i]->Activate();
+			}
+		}
+		if(isAnythingSelected == false)
+		{
+			mySkills[0]->Activate();
+		}
+	}
 	else if (aMessageType == eComponentMessageType::eAddSkill)
 	{
 		mySkills.Add(SkillFactory::GetInstance().CreateSkill(aMessageData.myString));
 		mySkills.GetLast()->Init(GetParent());
-		mySkills.GetLast()->SetTarget(myTargetPosition);
+		mySkills.GetLast()->SetTargetPosition(myTargetPosition);
 	}
 }
 
@@ -79,7 +97,11 @@ void SkillSystemComponent::Destroy()
 
 void SkillSystemComponent::AddSkill(const char * aSkillName)
 {
-	mySkills.Add(SkillFactory::GetInstance().CreateSkill(aSkillName));
+	eComponentMessageType type = eComponentMessageType::eAddSkill;
+	SComponentMessageData data;
+	data.myString = aSkillName;
+	GetParent()->NotifyComponents(type, data);
+	/*mySkills.Add(SkillFactory::GetInstance().CreateSkill(aSkillName));
 	mySkills.GetLast()->Init(GetParent());
-	mySkills.GetLast()->SetTarget(myTargetPosition);
+	mySkills.GetLast()->SetTarget(myTargetPosition);*/
 }

@@ -29,11 +29,13 @@ class ICollider
 {
 public:
 	using Callback = std::function<void(ICollider*)>;
+	using VoidCallback = std::function<void(void)>;
 
-	ICollider() : myOnEnterCallback(nullptr), myOnUpdateCallback(nullptr), myOnExitCallback(nullptr), myHasCollidedWith(nullptr), myColliderType(eColliderType::eColliderType_None), myCollidesWith(0u) {}
+	ICollider() : myOnEnterCallback(nullptr), myOnUpdateCallback(nullptr), myOnExitCallback(nullptr), myHasCollidedWith(nullptr), myActivateCallback(nullptr), myDeactivateCallback(nullptr), myColliderType(eColliderType::eColliderType_None), myCollidesWith(0u) {}
 	virtual ~ICollider() {}
 
 	inline void InitCallbackFunctions(Callback aEnterCallback, Callback aUpdateCallback, Callback aExitCallback);
+	inline void AddActivationCallbacks(VoidCallback aActivationCallback, VoidCallback aDeactivationCallback);
 	inline void SetColliderType(const eColliderType aColliderType);
 	inline void AddCollidsWith(const unsigned int aColliderTypes);
 
@@ -52,6 +54,9 @@ public:
 	inline void OnCollisionUpdate(ICollider* aOther);
 	inline void OnCollisionExit(ICollider* aOther);
 
+	inline void Activate();
+	inline void Deactivate();
+
 	inline static bool CanCollide(const ICollider* aFirst, const ICollider* aSecond);
 	inline static bool HasCollided(const ICollider* aFirst, const ICollider* aSecond);
 
@@ -59,6 +64,9 @@ private:
 	Callback myOnEnterCallback;
 	Callback myOnUpdateCallback;
 	Callback myOnExitCallback;
+
+	VoidCallback myActivateCallback;
+	VoidCallback myDeactivateCallback;
 
 	ICollider* myHasCollidedWith;
 
@@ -81,6 +89,12 @@ inline void ICollider::InitCallbackFunctions(Callback aEnterCallback, Callback a
 	myOnEnterCallback = aEnterCallback;
 	myOnUpdateCallback = aUpdateCallback;
 	myOnExitCallback = aExitCallback;
+}
+
+inline void ICollider::AddActivationCallbacks(VoidCallback aActivationCallback, VoidCallback aDeactivationCallback)
+{
+	myActivateCallback = aActivationCallback;
+	myDeactivateCallback = aDeactivationCallback;
 }
 
 inline void ICollider::SetColliderType(const eColliderType aColliderType)
@@ -118,5 +132,21 @@ inline void ICollider::OnCollisionExit(ICollider* aOther)
 	if (myOnExitCallback != nullptr)
 	{
 		myOnExitCallback(aOther);
+	}
+}
+
+inline void ICollider::Activate()
+{
+	if (myActivateCallback != nullptr)
+	{
+		myActivateCallback();
+	}
+}
+
+inline void ICollider::Deactivate()
+{
+	if (myDeactivateCallback != nullptr)
+	{
+		myDeactivateCallback();
 	}
 }

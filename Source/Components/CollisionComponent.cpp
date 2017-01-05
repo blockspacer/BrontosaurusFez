@@ -24,7 +24,7 @@ CCollisionComponent::~CCollisionComponent()
 	SAFE_DELETE(myCollider);
 }
 
-void CCollisionComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData& /*aMessageData*/)
+void CCollisionComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData)
 {
 	if (myCollider == nullptr)
 	{
@@ -37,12 +37,33 @@ void CCollisionComponent::Receive(const eComponentMessageType aMessageType, cons
 	case eComponentMessageType::eMoving:
 		myCollider->SetPosition(GetParent()->GetWorldPosition());
 		break;
+	case eComponentMessageType::eSetIsColliderActive:
+		if (aMessageData.myBool == true)
+		{
+			myCollider->Activate();
+		}
+		else
+		{
+			myCollider->Deactivate();
+		}
+	break;
 	}
 }
+
 
 void CCollisionComponent::Destroy()
 {
 	DL_ASSERT("not implemented");
+}
+
+void CCollisionComponent::ActivateCollider()
+{
+	myCollider->Activate();
+}
+
+void CCollisionComponent::DeactivateCollider()
+{
+	myCollider->Deactivate();
 }
 
 void CCollisionComponent::OnCollisionEnter(ICollider* aCollider)
@@ -64,4 +85,9 @@ void CCollisionComponent::OnCollisionExit(ICollider* aCollider)
 	SComponentMessageData data;
 	data.myCollider = aCollider;
 	GetParent()->NotifyComponents(eComponentMessageType::eOnCollisionExit, data);
+}
+
+void CCollisionComponent::AddCollidsWith(const unsigned int aColliderTypes)
+{
+	myCollider->AddCollidsWith(aColliderTypes);
 }

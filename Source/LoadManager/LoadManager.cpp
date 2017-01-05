@@ -1,6 +1,13 @@
 #include "stdafx.h"
 #include "LoadManager.h"
 #include "DL_Debug.h"
+#include "LoadObject.h"
+#include "KevinLoader/KevinLoader.h"
+#include "LoadModel.h"
+#include "LoadInputController.h"
+#include "LoadNavigationComponent.h"
+#include "LoadMovementComponent.h"
+#include "LoadCamera.h"
 
 LoadManager* LoadManager::ourInstance = nullptr;
 
@@ -46,10 +53,29 @@ CPlayState* LoadManager::GetCurrentPLaystate() const
 	return myCurrentPlaystate;
 }
 
+void LoadManager::RegisterFunctions()
+{
+	KLoader::CKevinLoader &loader = KLoader::CKevinLoader::GetInstance();
+
+	loader.RegisterObjectLoadFunction(LoadObject);
+	loader.RegisterObjectLinkFunction(LinkObject);
+
+	loader.RegisterComponentLoadFunction("MeshFilter", LoadMeshFilter);
+	loader.RegisterComponentLoadFunction("InputController", LoadInputController);
+	loader.RegisterComponentLoadFunction("Navigation", LoadNavigationComponent);
+	loader.RegisterComponentLoadFunction("Movement", LoadMovementComponent);
+	loader.RegisterComponentLoadFunction("Camera", LoadCamera);
+	
+
+
+}
+
 LoadManager::LoadManager()
 {
 	myCurrentScene = nullptr;
 	myCurrentPlaystate = nullptr;
+
+	RegisterFunctions();
 }
 
 

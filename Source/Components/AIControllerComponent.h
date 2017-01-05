@@ -2,6 +2,7 @@
 #include "Component.h"
 #include "IController.h"
 
+//Blended Behaviour Controller
 class CAIControllerComponent : public CComponent
 {
 public:

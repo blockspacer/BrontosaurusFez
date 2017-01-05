@@ -32,6 +32,7 @@ class DeathComponentFactory;
 class StatManager;
 class CTextInstance;
 class CParticleEmitterComponent;
+class CCollisionComponentManager;
 
 class CPlayState : public State, public Subscriber
 {
@@ -56,6 +57,8 @@ public:
 
 	inline bool IsLoaded() const;
 
+	CGameObjectManager* GetObjectManager() const;
+
 	//Denna ska bort
 	static SSlua::ArgumentList LuaFunction(SSlua::ArgumentList anArgumentList);
 
@@ -67,6 +70,7 @@ private:
 	CParticleEmitterComponent* myEmitterComp;
 
 	CGameObjectManager* myGameObjectManager;
+	CCollisionComponentManager* myCollisionComponentManager;
 	GUI::GUIManager* myGUIManager;
 	StatManager* myStatManager;
 	

@@ -1,17 +1,17 @@
 #pragma once
+#include "Game/PlayState.h"
 
 class CScene;
-class CPlayState;
 
 #define LOAD_MGR LoadManager::GetInstance()
 
 class LoadManager
 {
 public:
-	
-	static void CreateInstance();
+	friend class LoadManagerGuard;
+
 	static LoadManager& GetInstance();
-	static void DestroyInstance();
+
 
 	void SetCurrentScene(CScene* aScene);
 	CScene* GetCurrentScene() const;
@@ -19,7 +19,12 @@ public:
 	void SetCurrentPlayState(CPlayState* aPlaystate);
 	CPlayState* GetCurrentPLaystate() const;
 
+	void RegisterFunctions();
+
 private:
+	static void CreateInstance();
+	static void DestroyInstance();
+
 	LoadManager();
 	~LoadManager();
 
@@ -29,3 +34,19 @@ private:
 	CPlayState* myCurrentPlaystate;
 };
 
+class LoadManagerGuard
+{
+public:
+	~LoadManagerGuard()
+	{
+		LoadManager::DestroyInstance();
+	}
+
+private:
+	LoadManagerGuard()
+	{
+		LoadManager::CreateInstance();
+	}
+
+	friend void CPlayState::Load();
+};

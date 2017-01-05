@@ -101,7 +101,7 @@ namespace GUI
 	{
 		if (myWasClicked == true && myFunction != nullptr)
 		{
-			myFunction();
+ 			myFunction();
 		}
 	}
 }

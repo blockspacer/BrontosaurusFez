@@ -69,6 +69,13 @@ void MovementComponent::Receive(const eComponentMessageType aMessageType, const 
 			GetParent()->NotifyComponents(eComponentMessageType::eStartedMoving, directionData);
 		}
 		break;
+	case eComponentMessageType::eStopMovement:
+		if(myPathPointer != nullptr)
+		{
+			myCurrentPathIndex = myPathPointer->Size();
+		
+		}
+		break;
 	default:
 		break;
 	}

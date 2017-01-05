@@ -16,7 +16,6 @@ class CreditsState;
 class CInputManager;
 class CDebugInfoDrawer;
 class LevelSelectState;
-class ControllerComponent;
 class EnemyEmitterComponent;
 class InputController;
 class CConsole;
