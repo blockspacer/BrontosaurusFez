@@ -38,8 +38,11 @@ public:
 	void Render();
 	void SwapWrite();
 	void ClearRenderQueue();
+
 	inline SRendererSettings& GetSettings();
 private:
+	void HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawCallCount);
+	
 	void Bloom();
 	void HDR();
 	void MotionBlur();
@@ -132,3 +135,4 @@ inline SRendererSettings& CRenderer::GetSettings()
 {
 	return mySettings;
 }
+
