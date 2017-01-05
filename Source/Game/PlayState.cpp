@@ -61,6 +61,7 @@
 #include "StatComponent.h"
 #include "Components/AIControllerComponent.h"
 #include "Components/SeekController.h"
+#include "Components\FleeController.h"
 #include "Components\SkillFactory.h"
 #include "SkillSystemComponent.h"
 #include "KevinLoader/KevinLoader.h"
@@ -232,36 +233,16 @@ void CPlayState::Load()
 
 	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation());
 
-	//----MakeEnemy----
-	CGameObject* enemyObj = myGameObjectManager->CreateGameObject();
-	CModelComponent* tempEnemyModel = CModelComponentManager::GetInstance().CreateComponent("Models/Placeholders/tree.fbx");
-	CStatComponent* tempEnemyStatComponent = new CStatComponent();
-	CAIControllerComponent* AIController = new CAIControllerComponent();
-	CHealthComponent* tempEnemyHealthComponent = new CHealthComponent();
-	CSeekController* chaserController = new CSeekController();
-	
-	enemyObj->AddComponent(tempEnemyModel);
-	enemyObj->AddComponent(AIController);
-	enemyObj->AddComponent(tempEnemyStatComponent);
-	enemyObj->AddComponent(tempEnemyHealthComponent);
-	
-	AIController->AddControllerBehaviour(chaserController);
-	
-	Stats::SBaseStats baseStats;
-	baseStats.Dexterity = 1337;
-	Stats::SBonusStats bonusStats;
-	
-	chaserController->SetMaxAcceleration(400);
-	chaserController->SetMaxSpeed(30);
-	chaserController->SetSlowDownRadius(100);
-	chaserController->SetTargetRadius(70);
-	
-	AIControllerManager::GetIstance().AddController(AIController);
-	
-	tempEnemyStatComponent->SetStats(baseStats, bonusStats);
-	
-	tempEnemyHealthComponent->Init();
-	//-----------------
+	//----CreateEnemies----
+	myEnemies.Init(8);
+	TEMP_CREATE_ENEMY();
+	myEnemies[0]->SetWorldPosition({ 0.f, 0.f, 0.f });
+	TEMP_CREATE_ENEMY();
+	myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
+	TEMP_CREATE_ENEMY();
+	myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
+
+	//---------------------
 
 	CFireEmitterInstance fireeeeeByCarl;
 	SFireEmitterData fireData;
@@ -311,7 +292,7 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	CParticleEmitterComponentManager::GetInstance().UpdateEmitters(aDeltaTime);
 	InputControllerManager::GetInstance().Update(aDeltaTime);
 	MovementComponentManager::GetInstance().Update(aDeltaTime);
-	AIControllerManager::GetIstance().Update(aDeltaTime);
+	AIControllerManager::GetInstance().Update(aDeltaTime);
 	SkillSystemComponentManager::GetInstance().Update(aDeltaTime);
 	myCollisionComponentManager->Update();
 	myScene->Update(aDeltaTime);
@@ -401,6 +382,33 @@ eMessageReturn CPlayState::Recieve(const Message& aMessage)
 	return aMessage.myEvent.DoEvent(this);
 }
 
+CGameObjectManager* CPlayState::GetObjectManager() const
+{
+	return myGameObjectManager;
+}
+
+void CPlayState::CreateManagersAndFactories()
+{
+	myScene = new CScene();
+	myGameObjectManager = new CGameObjectManager();
+	myGUIManager = new GUI::GUIManager();
+	//myGUIManager->Init("Models/gui/gui.fbx", true);
+
+	myCollisionComponentManager = new CCollisionComponentManager;
+	CComponentManager::CreateInstance();
+	CAudioSourceComponentManager::Create();
+	CModelComponentManager::Create();
+	CParticleEmitterComponentManager::Create();
+	CParticleEmitterComponentManager::GetInstance().SetScene(myScene);
+	CCameraComponentManager::Create();
+	InputControllerManager::CreateInstance();
+	MovementComponentManager::CreateInstance();
+	AIControllerManager::Create();
+	SkillFactory::CreateInstance();
+	SkillSystemComponentManager::CreateInstance();
+	SkillSystemComponentManager::GetInstance().SetGameObjectManager(myGameObjectManager);
+	SkillSystemComponentManager::GetInstance().SetCollisionComponentManager(myCollisionComponentManager);
+}
 
 void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)
 {
@@ -468,30 +476,40 @@ void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)
 	stat3->SetStats(base3, bonus3);
 }
 
-CGameObjectManager* CPlayState::GetObjectManager() const
-{
-	return myGameObjectManager;
-}
 
-void CPlayState::CreateManagersAndFactories()
+void CPlayState::TEMP_CREATE_ENEMY()
 {
-	myScene = new CScene();
-	myGameObjectManager = new CGameObjectManager();
-	myGUIManager = new GUI::GUIManager();
-	//myGUIManager->Init("Models/gui/gui.fbx", true);
+	CGameObject* enemyObj = myGameObjectManager->CreateGameObject();
+	CModelComponent* tempEnemyModel = CModelComponentManager::GetInstance().CreateComponent("Models/Placeholders/tree.fbx");
+	CStatComponent* tempEnemyStatComponent = new CStatComponent();
+	CAIControllerComponent* AIController = new CAIControllerComponent();
+	CHealthComponent* tempEnemyHealthComponent = new CHealthComponent();
+	CSeekController* seekController = new CSeekController();
+	CFleeController* fleeController = new CFleeController();
 
-	myCollisionComponentManager = new CCollisionComponentManager;
-	CComponentManager::CreateInstance();
-	CAudioSourceComponentManager::Create();
-	CModelComponentManager::Create();
-	CParticleEmitterComponentManager::Create();
-	CParticleEmitterComponentManager::GetInstance().SetScene(myScene);
-	CCameraComponentManager::Create();
-	InputControllerManager::CreateInstance();
-	MovementComponentManager::CreateInstance();
-	AIControllerManager::Create();
-	SkillFactory::CreateInstance();
-	SkillSystemComponentManager::CreateInstance();
-	SkillSystemComponentManager::GetInstance().SetGameObjectManager(myGameObjectManager);
-	SkillSystemComponentManager::GetInstance().SetCollisionComponentManager(myCollisionComponentManager);
+	enemyObj->AddComponent(tempEnemyModel);
+	enemyObj->AddComponent(AIController);
+	enemyObj->AddComponent(tempEnemyStatComponent);
+	enemyObj->AddComponent(tempEnemyHealthComponent);
+
+	AIController->AddControllerBehaviour(seekController);
+	AIController->AddControllerBehaviour(fleeController);
+
+	Stats::SBaseStats baseStats;
+	baseStats.Dexterity = 1337;
+	Stats::SBonusStats bonusStats;
+
+	seekController->SetMaxAcceleration(400);
+	seekController->SetMaxSpeed(30);
+	seekController->SetSlowDownRadius(100);
+	seekController->SetTargetRadius(70);
+
+	fleeController->SetTargetsToAvoid(&myEnemies);
+
+	AIControllerManager::GetInstance().AddController(AIController);
+
+	tempEnemyStatComponent->SetStats(baseStats, bonusStats);
+	tempEnemyHealthComponent->Init();
+
+	myEnemies.Add(enemyObj);
 }
