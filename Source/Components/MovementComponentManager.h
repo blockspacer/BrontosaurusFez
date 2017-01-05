@@ -1,4 +1,10 @@
 #pragma once
+
+namespace CU
+{
+	class Time;
+}
+
 class MovementComponent;
 class MovementComponentManager
 {
@@ -7,7 +13,7 @@ public:
 	static void CreateInstance();
 	static void DestroyInstance();
 
-	void RegisterComponent(MovementComponent* aComponent);
+	MovementComponent* CreateAndRegisterComponent();
 	void Update(const CU::Time& aDeltaTime);
 	~MovementComponentManager();
 
