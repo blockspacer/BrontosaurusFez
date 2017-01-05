@@ -137,8 +137,6 @@ void CPlayState::Load()
 
 	//hue hue dags att fula ner play state - Alex(Absolut inte Marcus); // snälla slå Johan inte mig(Alex);
 
-	
-
 	//create an npc
 	CGameObject* npcObject1 = myGameObjectManager->CreateGameObject();
 	npcObject1->GetLocalTransform().Move(CU::Vector3f(0.0f, 000.0f, 500.0f));
@@ -200,9 +198,10 @@ void CPlayState::Load()
 	/*CU::Matrix44f cameraTransformation = playerCamera.GetTransformation();
 	CU::Matrix44f newRotation;
 
-	newRotation.Rotate(PI / 2, CU::Axees::X);
+	newRotation.Rotate(PI / 4 * 4 , CU::Axees::Y);
 	newRotation.Rotate(PI / 4, CU::Axees::X);
-	newRotation.Rotate(PI / 1, CU::Axees::Z);
+
+	//newRotation.Rotate(PI / 1, CU::Axees::Z);
 
 	cameraTransformation.SetRotation(newRotation);
 	cameraTransformation.SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
@@ -219,10 +218,15 @@ void CPlayState::Load()
 
 	CU::CPJWrapper levelsArray = levelsFile.GetJsonObject().at("levels");
 
-	const int magicLevelNumberSuperDuperTusen = 0;
+#ifdef _DEBUG
+	//const int levelIndex = levelsArray.Size() - 1;
+	const int levelIndex = 1;
+#else
+	const int levelIndex = 0;
+#endif
 
 	std::string levelPath = "Json/Levels/";
-	levelPath += levelsArray[magicLevelNumberSuperDuperTusen].GetString();
+	levelPath += levelsArray[levelIndex].GetString();
 	levelPath += "/LevelData.json";
 
 	KLoader::CKevinLoader &loader = KLoader::CKevinLoader::GetInstance();
@@ -237,7 +241,7 @@ void CPlayState::Load()
 
 	//myPlayerObject->AddComponent(cameraComponent);
 
-	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation());
+	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation()); //
 
 	//----MakeEnemy----
 	/*CGameObject* enemyObj = myGameObjectManager->CreateGameObject();
