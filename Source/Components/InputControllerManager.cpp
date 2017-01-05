@@ -2,6 +2,7 @@
 #include "InputControllerManager.h"
 #include "InputController.h"
 #include "ComponentManager.h"
+#include "../BrontosaurusEngine/Scene.h"
 
 InputControllerManager* InputControllerManager::ourInstance = nullptr;
 
@@ -32,9 +33,19 @@ void InputControllerManager::DestroyInstance()
 	SAFE_DELETE(ourInstance);
 }
 
-void InputControllerManager::RegisterComponent(InputController * aComponent)
+void InputControllerManager::SetScene(CScene* aScene)
 {
-	myComponents.Add(aComponent);
+	myScene = aScene;
+}
+
+InputController* InputControllerManager::CreateAndRegisterComponent()
+{
+	InputController* Component;
+	Component = new InputController(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
+	myComponents.Add(Component);
+	CComponentManager::GetInstance().RegisterComponent(Component);
+
+	return Component;
 }
 
 void InputControllerManager::Update(const CU::Time & aDeltaTime)

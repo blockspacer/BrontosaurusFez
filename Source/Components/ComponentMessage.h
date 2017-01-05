@@ -57,12 +57,15 @@ enum class eComponentMessageType
 	eSetMaxHealthFromStats,
 	eSelectSkill,
 	eSetSkillTargetPosition,
+	eSetSkillTargetObject,
 	eAddSkill,
 	eTakeDamage,
 	eOnCollisionEnter,
 	eOnCollisionUpdate,
 	eOnCollisionExit,
 	eStopMovement,
+	eSetIsColliderActive,
+	eBasicAttack,
 };
 
 struct SComponentMessageData

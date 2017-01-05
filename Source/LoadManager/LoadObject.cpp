@@ -21,7 +21,7 @@ int LoadObject(KLoader::SLoadedComponentData someData)
 
 	const float positionX = PositionObject.at("x").GetNumber() * unityScale;
 	const float positionY = PositionObject.at("y").GetNumber() * unityScale;
-	const float positionZ = PositionObject.at("z").GetNumber() * unityScale ;
+	const float positionZ = PositionObject.at("z").GetNumber() * unityScale;
 
 	currentMatrix.SetPosition({positionX, positionY, positionZ});
 
