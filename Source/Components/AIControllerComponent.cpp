@@ -29,6 +29,11 @@ void CAIControllerComponent::RemoveControllerBehaviour(IController* aController)
 	myControllers.DeleteCyclicAtIndex(index);
 }
 
+const CU::Vector2f & CAIControllerComponent::GetVelocity()
+{
+	return myVelocity;
+}
+
 void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 {
 	CU::Vector2f Acceleration = CU::Vector2f::Zero;
