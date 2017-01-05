@@ -137,29 +137,6 @@ void CPlayState::Load()
 
 	//hue hue dags att fula ner play state - Alex(Absolut inte Marcus); // snälla slå Johan inte mig(Alex);
 
-	
-
-	CU::CPJWrapper levelsArray = levelsFile.GetJsonObject().at("levels");
-
-#ifdef _DEBUG
-	//const int levelIndex = levelsArray.Size() - 1;
-	const int levelIndex = 1;
-#else
-	const int levelIndex = 0;
-#endif
-
-	std::string levelPath = "Json/Levels/";
-	levelPath += levelsArray[levelIndex].GetString();
-	levelPath += "/LevelData.json";
-
-	KLoader::CKevinLoader &loader = KLoader::CKevinLoader::GetInstance();
-
-	const KLoader::eError loadError = loader.LoadFile(levelPath);
-	if (loadError != KLoader::eError::NO_LOADER_ERROR)
-	{
-		DL_ASSERT("Loading Failed");
-	}
-
 	//create an npc
 	CGameObject* npcObject1 = myGameObjectManager->CreateGameObject();
 	npcObject1->GetLocalTransform().Move(CU::Vector3f(0.0f, 000.0f, 500.0f));
@@ -241,10 +218,15 @@ void CPlayState::Load()
 
 	CU::CPJWrapper levelsArray = levelsFile.GetJsonObject().at("levels");
 
-	const int magicLevelNumberSuperDuperTusen = 0;
+#ifdef _DEBUG
+	//const int levelIndex = levelsArray.Size() - 1;
+	const int levelIndex = 1;
+#else
+	const int levelIndex = 0;
+#endif
 
 	std::string levelPath = "Json/Levels/";
-	levelPath += levelsArray[magicLevelNumberSuperDuperTusen].GetString();
+	levelPath += levelsArray[levelIndex].GetString();
 	levelPath += "/LevelData.json";
 
 	KLoader::CKevinLoader &loader = KLoader::CKevinLoader::GetInstance();
