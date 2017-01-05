@@ -12,18 +12,16 @@ CRenderPackage::CRenderPackage()
 	myDepth = nullptr;
 	myViewport = nullptr;
 	myDepthResource = nullptr;
-
 }
 
 CRenderPackage::~CRenderPackage()
 {
-	if (myTexture != nullptr) myTexture->Release();
-	if (myResource != nullptr) myResource->Release();
-	if (myTarget != nullptr) myTarget->Release();
-	if (myDepth != nullptr) myDepth->Release();
-	if (myViewport != nullptr) delete myViewport;
-	if (myDepthResource != nullptr) myDepthResource->Release();
-
+	SAFE_RELEASE(myTexture);
+	SAFE_RELEASE(myResource);
+	SAFE_RELEASE(myTarget);
+	SAFE_RELEASE(myDepth);
+	SAFE_RELEASE(myDepthResource);
+	SAFE_DELETE(myViewport);
 }
 
 void CRenderPackage::Init(const CU::Vector2ui & aSize, ID3D11Texture2D * aTexture, DXGI_FORMAT aFormat)
@@ -45,8 +43,6 @@ void CRenderPackage::Init(const CU::Vector2ui & aSize, ID3D11Texture2D * aTextur
 		result = DEVICE->CreateShaderResourceView(myTexture, nullptr, &myResource);
 		CHECK_RESULT(result, "Couldn't create shader resourse view for the RenderPackage");
 	}
-	
-
 
 	result = DEVICE->CreateRenderTargetView(myTexture, NULL, &myTarget);
 	CHECK_RESULT(result, "Couldn't create render target view for the RenderPackage");
@@ -98,6 +94,28 @@ ID3D11ShaderResourceView *& CRenderPackage::GetDepthResource()
 CU::Vector2f CRenderPackage::GetSize()
 {
 	return CU::Vector2f(myViewport->Width, myViewport->Height);
+}
+
+void CRenderPackage::operator=(const CRenderPackage& aLeft)
+{
+	myTexture = aLeft.myTexture;
+	SAFE_ADD_REF(myTexture);
+
+	myDepthResource = aLeft.myDepthResource;
+	SAFE_ADD_REF(myDepthResource);
+
+	myResource = aLeft.myResource;
+	SAFE_ADD_REF(myResource);
+
+	myTarget = aLeft.myTarget;
+	SAFE_ADD_REF(myTarget);
+
+	myDepth = aLeft.myDepth;
+	SAFE_ADD_REF(myDepth);
+
+	SAFE_DELETE(myViewport);
+	if (aLeft.myViewport != nullptr)
+		myViewport = new D3D11_VIEWPORT(*aLeft.myViewport);
 }
 
 void CRenderPackage::CreateTexture2D(const int aWidth, const int aHeight, DXGI_FORMAT aFormat)
