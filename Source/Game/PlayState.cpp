@@ -60,7 +60,7 @@
 #include <iostream>
 #include "StatComponent.h"
 #include "Components/AIControllerComponent.h"
-#include "Components/ChaserController.h"
+#include "Components/SeekController.h"
 #include "Components\SkillFactory.h"
 #include "SkillSystemComponent.h"
 #include "KevinLoader/KevinLoader.h"
@@ -239,7 +239,7 @@ void CPlayState::Load()
 	CStatComponent* tempEnemyStatComponent = new CStatComponent();
 	CAIControllerComponent* AIController = new CAIControllerComponent();
 	CHealthComponent* tempEnemyHealthComponent = new CHealthComponent();
-	CChaserController* chaserController = new CChaserController();
+	CSeekController* chaserController = new CSeekController();
 	
 	enemyObj->AddComponent(tempEnemyModel);
 	enemyObj->AddComponent(AIController);
