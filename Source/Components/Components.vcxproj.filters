@@ -95,6 +95,7 @@
     <ClCompile Include="StreakEmitterComponent.cpp">
       <Filter>Particles</Filter>
     </ClCompile>
+    <ClCompile Include="SkillComponent.cpp" />
     <ClCompile Include="WanderController.cpp">
       <Filter>Controllers\Controllers</Filter>
     </ClCompile>
@@ -210,6 +211,7 @@
     <ClInclude Include="StreakEmitterComponent.h">
       <Filter>Particles</Filter>
     </ClInclude>
+    <ClInclude Include="SkillComponent.h" />
     <ClInclude Include="WanderController.h">
       <Filter>Controllers\Controllers</Filter>
     </ClInclude>
