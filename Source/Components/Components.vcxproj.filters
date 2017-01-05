@@ -5,44 +5,98 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Precompiled</Filter>
     </ClCompile>
-    <ClCompile Include="StreakEmitterComponent.cpp" />
     <ClCompile Include="AudioSourceComponentManager.cpp" />
-    <ClCompile Include="AudioSourceComponent.cpp" />
-    <ClCompile Include="AudioSourceComponentManager.cpp" />
-    <ClCompile Include="ModelComponent.cpp" />
-    <ClCompile Include="ModelComponentManager.cpp" />
-    <ClCompile Include="ParticleEmitterComponent.cpp" />
-    <ClCompile Include="ParticleEmitterComponentManager.cpp" />
     <ClCompile Include="StreakEmitterComponent.cpp" />
-    <ClCompile Include="Component.cpp" />
-    <ClCompile Include="ComponentManager.cpp" />
-    <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="ObjectManager.cpp" />
-    <ClCompile Include="InputController.cpp" />
-    <ClCompile Include="NavigationComponent.cpp" />
-    <ClCompile Include="MovementComponent.cpp" />
-    <ClCompile Include="CameraComponent.cpp" />
-    <ClCompile Include="CameraManager.cpp" />
-    <ClCompile Include="InputControllerManager.cpp" />
-    <ClCompile Include="MovementComponentManager.cpp" />
     <ClCompile Include="SkillSystemComponent.cpp" />
     <ClCompile Include="Skill.cpp" />
-    <ClCompile Include="InventoryComponent.cpp" />
-    <ClCompile Include="StatComponent.cpp" />
-    <ClCompile Include="HealthComponent.cpp" />
-    <ClCompile Include="InventoryComponentManager.cpp" />
-    <ClCompile Include="ChaserController.cpp" />
     <ClCompile Include="SkillFactory.cpp" />
-    <ClCompile Include="MainStatComponent.cpp" />
     <ClCompile Include="SkillSystemComponentManager.cpp" />
     <ClCompile Include="AIControllerComponent.cpp">
-      <Filter>AIControllerComponent</Filter>
+      <Filter>Controllers</Filter>
     </ClCompile>
     <ClCompile Include="AIControllerManager.cpp">
-      <Filter>AIControllerComponent</Filter>
+      <Filter>Controllers</Filter>
     </ClCompile>
     <ClCompile Include="IController.cpp">
-      <Filter>AIControllerComponent\Behaviours</Filter>
+      <Filter>Controllers\Behaviours</Filter>
+    </ClCompile>
+    <ClCompile Include="InputController.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="InputControllerManager.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="SeekController.cpp">
+      <Filter>Controllers\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="MovementComponent.cpp">
+      <Filter>Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="MovementComponentManager.cpp">
+      <Filter>Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="NavigationComponent.cpp">
+      <Filter>Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSourceComponent.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSourceComponentManager.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraComponent.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraManager.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionComponent.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionComponentManager.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="InventoryComponent.cpp">
+      <Filter>Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="InventoryComponentManager.cpp">
+      <Filter>Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitterComponent.cpp">
+      <Filter>Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitterComponentManager.cpp">
+      <Filter>Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelComponent.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelComponentManager.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentManager.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectManager.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="StatComponent.cpp">
+      <Filter>Stats</Filter>
+    </ClCompile>
+    <ClCompile Include="MainStatComponent.cpp">
+      <Filter>Stats</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthComponent.cpp">
+      <Filter>Stats</Filter>
+    </ClCompile>
+    <ClCompile Include="StreakEmitterComponent.cpp">
+      <Filter>Particles</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -54,46 +108,104 @@
     <ClInclude Include="targetver.h">
       <Filter>Precompiled</Filter>
     </ClInclude>
-    <ClInclude Include="StreakEmitterComponent.h" />
     <ClInclude Include="AudioSourceComponentManager.h" />
-    <ClInclude Include="AudioSourceComponent.h" />
-    <ClInclude Include="AudioSourceComponentManager.h" />
-    <ClInclude Include="ModelComponent.h" />
-    <ClInclude Include="ModelComponentManager.h" />
-    <ClInclude Include="ParticleEmitterComponent.h" />
-    <ClInclude Include="ParticleEmitterComponentManager.h" />
     <ClInclude Include="StreakEmitterComponent.h" />
-    <ClInclude Include="Component.h" />
-    <ClInclude Include="ComponentManager.h" />
-    <ClInclude Include="GameObject.h" />
-    <ClInclude Include="ObjectManager.h" />
-    <ClInclude Include="ComponentMessage.h" />
-    <ClInclude Include="InputController.h" />
-    <ClInclude Include="NavigationComponent.h" />
-    <ClInclude Include="MovementComponent.h" />
-    <ClInclude Include="CameraComponent.h" />
-    <ClInclude Include="CameraManager.h" />
-    <ClInclude Include="InputControllerManager.h" />
-    <ClInclude Include="MovementComponentManager.h" />
     <ClInclude Include="SkillSystemComponent.h" />
     <ClInclude Include="Skill.h" />
-    <ClInclude Include="InventoryComponent.h" />
-    <ClInclude Include="StatComponent.h" />
-    <ClInclude Include="StatStructs.h" />
-    <ClInclude Include="HealthComponent.h" />
-    <ClInclude Include="InventoryComponentManager.h" />
-    <ClInclude Include="ChaserController.h" />
     <ClInclude Include="SkillFactory.h" />
-    <ClInclude Include="MainStatComponent.h" />
     <ClInclude Include="SkillSystemComponentManager.h" />
-    <ClInclude Include="AIControllerComponent.h">
-      <Filter>AIControllerComponent</Filter>
+    <ClInclude Include="IController.h">
+      <Filter>Controllers\Behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="InputControllerManager.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="InputController.h">
+      <Filter>Controllers</Filter>
     </ClInclude>
     <ClInclude Include="AIControllerManager.h">
-      <Filter>AIControllerComponent</Filter>
+      <Filter>Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="IController.h">
-      <Filter>AIControllerComponent\Behaviours</Filter>
+    <ClInclude Include="AIControllerComponent.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="SeekController.h">
+      <Filter>Controllers\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="NavigationComponent.h">
+      <Filter>Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementComponent.h">
+      <Filter>Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementComponentManager.h">
+      <Filter>Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSourceComponent.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSourceComponentManager.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraComponent.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraManager.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionComponent.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionComponentManager.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="InventoryComponent.h">
+      <Filter>Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="InventoryComponentManager.h">
+      <Filter>Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitterComponentManager.h">
+      <Filter>Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitterComponent.h">
+      <Filter>Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelComponentManager.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelComponent.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentManager.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentMessage.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectManager.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="StatComponent.h">
+      <Filter>Stats</Filter>
+    </ClInclude>
+    <ClInclude Include="StatStructs.h">
+      <Filter>Stats</Filter>
+    </ClInclude>
+    <ClInclude Include="MainStatComponent.h">
+      <Filter>Stats</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthComponent.h">
+      <Filter>Stats</Filter>
+    </ClInclude>
+    <ClInclude Include="StreakEmitterComponent.h">
+      <Filter>Particles</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -103,29 +215,47 @@
     <Filter Include="Precompiled">
       <UniqueIdentifier>{d8cf0127-23fb-4588-bc69-a680d6ea2ef5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Enemy">
-      <UniqueIdentifier>{4ef8cb0f-07cb-46f8-962f-53861bf44e80}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Components">
-      <UniqueIdentifier>{ec0249bc-11c1-4412-b780-cf92491e7d7c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObjects">
-      <UniqueIdentifier>{e38d96fe-3d9f-485f-8576-f488490b7e4d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Marker">
-      <UniqueIdentifier>{80c9e194-dabb-485a-aab3-3fc23b269d58}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Marker\Manager">
-      <UniqueIdentifier>{c3344500-7aa8-4ce1-9113-306969980fbf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Marker\MarkerInstance">
-      <UniqueIdentifier>{4cfa2c7f-78fe-4453-8df2-1dcf3bcd1562}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AIControllerComponent">
+    <Filter Include="Controllers">
       <UniqueIdentifier>{1e119105-f505-41ce-b31f-60906f40d6b0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AIControllerComponent\Behaviours">
+    <Filter Include="Controllers\Behaviours">
       <UniqueIdentifier>{3d135083-3cc1-4d4e-a9a9-5135b7b2d548}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\Controllers">
+      <UniqueIdentifier>{36ad59f7-9316-42d5-9d50-2d36b6abac9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Navigation">
+      <UniqueIdentifier>{39e06e8e-1484-4895-b5a6-72ea83515ad5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Particles">
+      <UniqueIdentifier>{083f76b5-74e5-4f57-86b9-71c6ebe9a69e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{80e033d5-791e-49e0-ab96-2916cd7bc107}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{317bd6ea-49ec-4d6a-84c6-f6d615cf1f03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collisions">
+      <UniqueIdentifier>{8d2c937d-bc83-4bc7-a289-a508b0b33583}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Inventory">
+      <UniqueIdentifier>{5a0bf4c8-92ee-445f-a2f6-6bec166bd20d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{068a1ac1-411c-443f-85f5-7e7d5f82bed1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{bc2bfc79-d74a-43b4-8423-6c38bdc96734}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{eb3ddca2-f61c-4ef9-aee6-0de16f80d576}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Skill">
+      <UniqueIdentifier>{d66b96a8-27b3-4524-87f5-96ca5e89929d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stats">
+      <UniqueIdentifier>{57b16321-6896-4bed-9386-44e6705c2103}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

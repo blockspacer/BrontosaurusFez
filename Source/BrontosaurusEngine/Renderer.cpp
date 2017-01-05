@@ -33,7 +33,7 @@ CRenderer::CRenderer()
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed);
 
 	mySettings.HDR = true;
-	mySettings.Bloom = false;
+	mySettings.Bloom = true;
 	mySettings.Motionblur = false;
 	mySettings.CromaticAberration = true;
 

@@ -8,7 +8,11 @@ namespace CU
 class CCollisionComponent;
 class CCollisionManager;
 class ICollider; //move this to CColliderFactory in Collision project
+namespace Intersection
+{
+	union CollisionData;
 
+}
 class CCollisionComponentManager
 {
 public:
@@ -24,11 +28,11 @@ public:
 
 	void Update();
 
-	CCollisionComponent* CreateCollisionComponent(const eColliderType aColliderType);
+	CCollisionComponent* CreateCollisionComponent(const eColliderType aColliderType, Intersection::CollisionData& aCollisionData);
 	void DestroyCollisionComponent(CCollisionComponent* aCollisionComponent);
 
 private:
-	ICollider* CreateCollider(const eColliderType aColliderType); //move this to CColliderFactory in Collision project
+	ICollider* CreateCollider(const eColliderType aColliderType, Intersection::CollisionData& aCollisionData); //move this to CColliderFactory in Collision project
 
 	CU::GrowingArray<CCollisionComponent*, unsigned int, false> myCollisionComponents;
 	CCollisionManager* myCollisionManager;

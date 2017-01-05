@@ -112,7 +112,7 @@ void Init(int argc, char* argv[])
 unsigned int DebugDrawerFlags()
 {
 #ifdef _DEBUG
-	return eDebugFlags_FPS | eDebugFlags_DrawCalls | eDebugFlags_MemoryUsage;
+	return eDebugFlags_FPS | eDebugFlags_LogicFPS | eDebugFlags_DrawCalls | eDebugFlags_MemoryUsage;
 #else //NDEBUG || _RETAIL_BUILD
 	return 0;
 #endif // _DEBUG

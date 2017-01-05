@@ -24,6 +24,7 @@ protected:
 	virtual void OnDeActivation();
 	
 	CGameObject* myUser;
+	CGameObject* myColliderObject;
 	CU::Vector3f myTargetPosition;
 	std::function<void(float)> myUpdateFunction;
 	bool myIsActive;

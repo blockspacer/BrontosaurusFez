@@ -8,9 +8,8 @@ class CHealthComponent : public CComponent, public Subscriber
 public:
 	CHealthComponent();
 	~CHealthComponent();
-	const float GetPrecentLeft();
-
-	void Update(const CU::Time& aDeltaTime);
+	float GetPrecentLeft() const;
+	
 	void SetHealth(const HealthPoint aValue);
 	void SetMaxHealth(const HealthPoint aValue);
 	void Init();

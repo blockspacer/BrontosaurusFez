@@ -60,10 +60,11 @@
 #include <iostream>
 #include "StatComponent.h"
 #include "Components/AIControllerComponent.h"
-#include "Components/ChaserController.h"
+#include "Components/SeekController.h"
 #include "Components\SkillFactory.h"
 #include "SkillSystemComponent.h"
 #include "KevinLoader/KevinLoader.h"
+#include "Components\CollisionComponentManager.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
 #include "../BrontosaurusEngine/FireEmitterInstance.h"
@@ -84,7 +85,6 @@ CPlayState::~CPlayState()
 	SAFE_DELETE(myGameObjectManager);
 	SAFE_DELETE(myGUIManager);
 	
-	LoadManager::DestroyInstance();
 	
 	CModelComponentManager::Destroy();
 	CAudioSourceComponentManager::Destroy();
@@ -104,7 +104,7 @@ CPlayState::~CPlayState()
 
 void CPlayState::Load()
 {
-
+	LoadManagerGuard loadManagerGuard;
 
 	//start taking the time for loading level
 	CU::TimerManager timerMgr;
@@ -238,13 +238,14 @@ void CPlayState::Load()
 	//myPlayerObject->AddComponent(cameraComponent);
 
 	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation());
+
 	//----MakeEnemy----
 	/*CGameObject* enemyObj = myGameObjectManager->CreateGameObject();
 	CModelComponent* tempEnemyModel = CModelComponentManager::GetInstance().CreateComponent("Models/Placeholders/tree.fbx");
 	CStatComponent* tempEnemyStatComponent = new CStatComponent();
 	CAIControllerComponent* AIController = new CAIControllerComponent();
 	CHealthComponent* tempEnemyHealthComponent = new CHealthComponent();
-	CChaserController* chaserController = new CChaserController();
+	CSeekController* chaserController = new CSeekController();
 	
 	enemyObj->AddComponent(tempEnemyModel);
 	enemyObj->AddComponent(AIController);
@@ -319,6 +320,7 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	MovementComponentManager::GetInstance().Update(aDeltaTime);
 	AIControllerManager::GetIstance().Update(aDeltaTime);
 	SkillSystemComponentManager::GetInstance().Update(aDeltaTime);
+	myCollisionComponentManager->Update();
 	myScene->Update(aDeltaTime);
 
 	myGameObjectManager->DestroyObjectsWaitingForDestruction();
@@ -485,8 +487,8 @@ void CPlayState::CreateManagersAndFactories()
 	myGUIManager = new GUI::GUIManager();
 	//myGUIManager->Init("Models/gui/gui.fbx", true);
 
+	myCollisionComponentManager = new CCollisionComponentManager;
 	CComponentManager::CreateInstance();
-	LoadManager::CreateInstance();
 	CAudioSourceComponentManager::Create();
 	CModelComponentManager::Create();
 	CParticleEmitterComponentManager::Create();
@@ -498,4 +500,6 @@ void CPlayState::CreateManagersAndFactories()
 	AIControllerManager::Create();
 	SkillFactory::CreateInstance();
 	SkillSystemComponentManager::CreateInstance();
+	SkillSystemComponentManager::GetInstance().SetGameObjectManager(myGameObjectManager);
+	SkillSystemComponentManager::GetInstance().SetCollisionComponentManager(myCollisionComponentManager);
 }

@@ -75,6 +75,17 @@ namespace Intersection
 
 	};
 	
+	union CollisionData
+	{
+		SSphere* mySphereData;
+		SCircle* myCircleData;
+		SPoint* myPointData;
+		SSquare* mySquareData;
+		AABB* myAABBData;
+		LineSegment3D* myLineSegment3DData;
+		LineSegment2D* myLineSegment2DData;
+		Fov90Frustum* myFov90FrustumData;
+	};
 	
 	void ClosestPointOnAABB(CU::Vector3f& aPoint, const AABB &aAABB);
 	float Distance2Points(const CU::Vector3f& aFirstVector, const CU::Vector3f& aSecondVector);
