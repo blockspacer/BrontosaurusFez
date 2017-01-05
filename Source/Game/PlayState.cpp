@@ -69,6 +69,11 @@
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
 #include "../BrontosaurusEngine/FireEmitterInstance.h"
 #include "../BrontosaurusEngine/FireEmitterData.h"
+#include "Collision/ICollider.h"
+#include <Collision/Intersection.h>
+#include "CollisionComponent.h"
+#include "MouseComponent.h"
+static Matrix44f* locNpcLocalTransform = nullptr;
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -157,12 +162,23 @@ void CPlayState::Load()
 		DL_ASSERT("Loading Failed");
 	}
 
+
+
 	//create an npc
 	CGameObject* npcObject1 = myGameObjectManager->CreateGameObject();
 	npcObject1->GetLocalTransform().Move(CU::Vector3f(0.0f, 000.0f, 500.0f));
-
+	locNpcLocalTransform = &npcObject1->GetLocalTransform();
 	CModelComponent* modelComponent1 = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
 	npcObject1->AddComponent(modelComponent1);
+
+	Intersection::CollisionData collisionData;
+	collisionData.myCircleData = new Intersection::SCircle();
+	collisionData.myCircleData->myCenterPosition.Set(npcObject1->GetWorldPosition().x, npcObject1->GetWorldPosition().z);
+	collisionData.myCircleData->myRadius = modelComponent1->GetModelInst()->GetModelBoundingBox().myRadius;
+	CCollisionComponent* collisionComponent = myCollisionComponentManager->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, collisionData);
+	collisionComponent->AddCollidsWith(eColliderType_Mouse);
+	collisionComponent->SetColliderType(eColliderType_Actor);
+	npcObject1->AddComponent(collisionComponent);
 
 
 	//create another npc
@@ -263,6 +279,23 @@ void CPlayState::Load()
 	tempEnemyHealthComponent->Init();
 	//-----------------
 
+
+
+
+	CGameObject* mouseObject = myGameObjectManager->CreateGameObject();
+
+	Intersection::CollisionData mouseCollisionData;
+	mouseCollisionData.myPointData = new Intersection::SPoint();
+	CCollisionComponent* mouseCollisionComponent = myCollisionComponentManager->CreateCollisionComponent(CCollisionComponentManager::eColliderType::ePoint, mouseCollisionData);
+	mouseCollisionComponent->AddCollidsWith(eColliderType_Actor);
+	mouseCollisionComponent->SetColliderType(eColliderType_Mouse);
+	mouseObject->AddComponent(mouseCollisionComponent);
+	CMouseComponent* mouseComponent = new CMouseComponent(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
+	mouseObject->AddComponent(mouseComponent);
+
+
+
+
 	CFireEmitterInstance fireeeeeByCarl;
 	SFireEmitterData fireData;
 	fireData.myScrollSpeeds[0] = 1.3f;
@@ -302,6 +335,7 @@ void CPlayState::Init()
 
 State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 {
+	DL_PRINT("npc pos: %f, %f, %f", locNpcLocalTransform->GetPosition().x, locNpcLocalTransform->GetPosition().y, locNpcLocalTransform->GetPosition().z);
 	Audio::CAudioInterface* audio = Audio::CAudioInterface::GetInstance();
 	if (audio != nullptr)
 	{

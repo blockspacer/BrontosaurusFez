@@ -76,6 +76,11 @@ void CCollisionComponent::OnCollisionExit(ICollider* aCollider)
 	GetParent()->NotifyComponents(eComponentMessageType::eOnCollisionExit, data);
 }
 
+void CCollisionComponent::SetColliderType(const eColliderType aColliderType)
+{
+	myCollider->SetColliderType(aColliderType);
+}
+
 void CCollisionComponent::AddCollidsWith(const unsigned int aColliderTypes)
 {
 	myCollider->AddCollidsWith(aColliderTypes);

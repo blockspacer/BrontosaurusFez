@@ -5,7 +5,7 @@
 #endif // !assert
 
 #define INDEX_TO_BIT(A_INDEX) (static_cast<Type>(1) << A_INDEX)
-#define self (self)
+#define self (*this)
 
 namespace CU
 {

@@ -17,7 +17,6 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="InputController.cpp" />
     <ClCompile Include="NavigationComponent.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
@@ -44,6 +43,10 @@
     <ClCompile Include="IController.cpp">
       <Filter>AIControllerComponent\Behaviours</Filter>
     </ClCompile>
+    <ClCompile Include="CollisionComponent.cpp" />
+    <ClCompile Include="CollisionComponentManager.cpp" />
+    <ClCompile Include="GameObjectManager.cpp" />
+    <ClCompile Include="MouseComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -66,7 +69,6 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="ComponentMessage.h" />
     <ClInclude Include="InputController.h" />
     <ClInclude Include="NavigationComponent.h" />
@@ -86,15 +88,13 @@
     <ClInclude Include="SkillFactory.h" />
     <ClInclude Include="MainStatComponent.h" />
     <ClInclude Include="SkillSystemComponentManager.h" />
-    <ClInclude Include="AIControllerComponent.h">
-      <Filter>AIControllerComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="AIControllerManager.h">
-      <Filter>AIControllerComponent</Filter>
-    </ClInclude>
     <ClInclude Include="IController.h">
       <Filter>AIControllerComponent\Behaviours</Filter>
     </ClInclude>
+    <ClInclude Include="CollisionComponent.h" />
+    <ClInclude Include="CollisionComponentManager.h" />
+    <ClInclude Include="GameObjectManager.h" />
+    <ClInclude Include="MouseComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

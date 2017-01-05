@@ -6,6 +6,7 @@
 
 #include "../BrontosaurusEngine/Engine.h"
 #include "Components/InputController.h"
+#include "Components/MouseComponent.h"
 
 MouseMoved::MouseMoved(const CU::Vector2f& aMousePosition)
 	: myMousePosition(aMousePosition)
@@ -49,6 +50,16 @@ eMessageReturn MouseMoved::DoEvent(InputController * aInputController) const
 	if (aInputController != nullptr)
 	{
 		aInputController->MouseMoved(myMousePosition);
+	}
+
+	return eMessageReturn::eContinue;
+}
+
+eMessageReturn MouseMoved::DoEvent(CMouseComponent * aMouseComponent) const
+{
+	if (aMouseComponent != nullptr)
+	{
+		aMouseComponent->MouseMoved(myMousePosition);
 	}
 
 	return eMessageReturn::eContinue;
