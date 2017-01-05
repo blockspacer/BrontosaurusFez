@@ -236,7 +236,7 @@ void CPlayState::Load()
 
 	myPlayerObject->AddComponent(cameraComponent);
 
-	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation());
+	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation()); //
 
 	//----MakeEnemy----
 	CGameObject* enemyObj = myGameObjectManager->CreateGameObject();
