@@ -17,32 +17,46 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="ObjectManager.cpp" />
-    <ClCompile Include="InputController.cpp" />
-    <ClCompile Include="NavigationComponent.cpp" />
-    <ClCompile Include="MovementComponent.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="CameraManager.cpp" />
-    <ClCompile Include="InputControllerManager.cpp" />
-    <ClCompile Include="MovementComponentManager.cpp" />
     <ClCompile Include="SkillSystemComponent.cpp" />
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="InventoryComponent.cpp" />
     <ClCompile Include="StatComponent.cpp" />
     <ClCompile Include="HealthComponent.cpp" />
     <ClCompile Include="InventoryComponentManager.cpp" />
-    <ClCompile Include="ChaserController.cpp" />
     <ClCompile Include="SkillFactory.cpp" />
     <ClCompile Include="MainStatComponent.cpp" />
     <ClCompile Include="SkillSystemComponentManager.cpp" />
     <ClCompile Include="AIControllerComponent.cpp">
-      <Filter>AIControllerComponent</Filter>
+      <Filter>Controllers</Filter>
     </ClCompile>
     <ClCompile Include="AIControllerManager.cpp">
-      <Filter>AIControllerComponent</Filter>
+      <Filter>Controllers</Filter>
     </ClCompile>
     <ClCompile Include="IController.cpp">
-      <Filter>AIControllerComponent\Behaviours</Filter>
+      <Filter>Controllers\Behaviours</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionComponent.cpp" />
+    <ClCompile Include="CollisionComponentManager.cpp" />
+    <ClCompile Include="GameObjectManager.cpp" />
+    <ClCompile Include="MovementComponent.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="MovementComponentManager.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="NavigationComponent.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="InputController.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="InputControllerManager.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="SeekController.cpp">
+      <Filter>Controllers\Controllers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -66,15 +80,9 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="ComponentMessage.h" />
-    <ClInclude Include="InputController.h" />
-    <ClInclude Include="NavigationComponent.h" />
-    <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CameraManager.h" />
-    <ClInclude Include="InputControllerManager.h" />
-    <ClInclude Include="MovementComponentManager.h" />
     <ClInclude Include="SkillSystemComponent.h" />
     <ClInclude Include="Skill.h" />
     <ClInclude Include="InventoryComponent.h" />
@@ -82,18 +90,38 @@
     <ClInclude Include="StatStructs.h" />
     <ClInclude Include="HealthComponent.h" />
     <ClInclude Include="InventoryComponentManager.h" />
-    <ClInclude Include="ChaserController.h" />
     <ClInclude Include="SkillFactory.h" />
     <ClInclude Include="MainStatComponent.h" />
     <ClInclude Include="SkillSystemComponentManager.h" />
-    <ClInclude Include="AIControllerComponent.h">
-      <Filter>AIControllerComponent</Filter>
+    <ClInclude Include="IController.h">
+      <Filter>Controllers\Behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionComponent.h" />
+    <ClInclude Include="CollisionComponentManager.h" />
+    <ClInclude Include="GameObjectManager.h" />
+    <ClInclude Include="NavigationComponent.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementComponent.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementComponentManager.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="InputControllerManager.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="InputController.h">
+      <Filter>Controllers</Filter>
     </ClInclude>
     <ClInclude Include="AIControllerManager.h">
-      <Filter>AIControllerComponent</Filter>
+      <Filter>Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="IController.h">
-      <Filter>AIControllerComponent\Behaviours</Filter>
+    <ClInclude Include="AIControllerComponent.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="SeekController.h">
+      <Filter>Controllers\Controllers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -121,11 +149,14 @@
     <Filter Include="Marker\MarkerInstance">
       <UniqueIdentifier>{4cfa2c7f-78fe-4453-8df2-1dcf3bcd1562}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AIControllerComponent">
+    <Filter Include="Controllers">
       <UniqueIdentifier>{1e119105-f505-41ce-b31f-60906f40d6b0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AIControllerComponent\Behaviours">
+    <Filter Include="Controllers\Behaviours">
       <UniqueIdentifier>{3d135083-3cc1-4d4e-a9a9-5135b7b2d548}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\Controllers">
+      <UniqueIdentifier>{36ad59f7-9316-42d5-9d50-2d36b6abac9b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
