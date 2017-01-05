@@ -30,6 +30,7 @@ public:
 
 	
 	void Activate();
+	void ActivateForDepth();
 
 private:
 	CDXFramework* myFramework;

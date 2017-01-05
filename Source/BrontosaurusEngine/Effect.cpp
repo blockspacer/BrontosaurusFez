@@ -74,3 +74,12 @@ void CEffect::Activate()
 	myFramework->GetDeviceContext()->IASetPrimitiveTopology(myTopology);
 }
 
+void CEffect::ActivateForDepth()
+{
+	myFramework->GetDeviceContext()->VSSetShader(myVertexShader, NULL, 0);
+	myFramework->GetDeviceContext()->PSSetShader(NULL, NULL, 0);
+	myFramework->GetDeviceContext()->GSSetShader(NULL, NULL, 0);
+	myFramework->GetDeviceContext()->IASetInputLayout(myLayout);
+	myFramework->GetDeviceContext()->IASetPrimitiveTopology(myTopology);
+}
+
