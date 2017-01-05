@@ -353,6 +353,47 @@ namespace CU
 		}
 
 
+		Matrix44 CreateOrthogonalProjectionMatrixLH(TYPE aNear, TYPE aFar, TYPE aWidth, TYPE aHeight)
+		{
+			//Matrix44 output = Matrix44::Identity;
+			//TYPE right = aWidth;
+			//TYPE left = static_cast<TYPE>(0);
+			//TYPE top = static_cast<TYPE>(0);
+			//TYPE bottom =  aHeight;
+			//TYPE far = aFar;
+			//TYPE near = aNear;
+
+			//output.m11 = static_cast<TYPE>(2) / (right - left);
+			//output.m22 = static_cast<TYPE>(2) / (top - bottom);
+			//output.m33 = static_cast<TYPE>(2) / (far - near);
+
+			//output.m41 = -(right + left) / (right - left);
+			//output.m42 = -(top + bottom) / (top - bottom);
+			//output.m43 = -(far + near) / (far - near);
+			//output.m44 = 1.0f;
+			//return output;
+
+
+			//Kevin Code
+
+			Matrix44f matrix;
+
+			matrix.m11 = 2.f / aWidth;
+
+			matrix.m22 = 2.f / aHeight;
+
+			matrix.m33 = 1.f / (aFar - aNear);
+			matrix.m43 = aNear / (aNear - aFar);
+
+			matrix.m44 = 1.f;
+
+			return matrix;
+
+
+
+
+		}
+
 		// Creates a transformation matrix for rotating anAngle rad around the x-axis
 		//
 		static Matrix44 CreateRotateAroundX(const TYPE anAngle)
