@@ -36,7 +36,7 @@ void AIControllerManager::Destroy()
 	}
 }
 
-AIControllerManager & AIControllerManager::GetIstance()
+AIControllerManager & AIControllerManager::GetInstance()
 {
 	return *ourInstance;
 }

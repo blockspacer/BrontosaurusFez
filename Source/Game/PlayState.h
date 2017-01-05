@@ -52,15 +52,17 @@ public:
 
 	eMessageReturn Recieve(const Message& aMessage) override;
 
-	void TEMP_ADD_HAT(CGameObject* aPlayerObject);
-	CGameObject* myPlayerObject; //TEMP
+
 
 	inline bool IsLoaded() const;
 
 	CGameObjectManager* GetObjectManager() const;
 
-	//Denna ska bort
+	//TEMP - BELOW THIS LINE
 	static SSlua::ArgumentList LuaFunction(SSlua::ArgumentList anArgumentList);
+
+	void TEMP_ADD_HAT(CGameObject* aPlayerObject);
+	CGameObject* myPlayerObject;
 
 private:
 	void CreateManagersAndFactories();
@@ -79,6 +81,11 @@ private:
 	int myLevelIndex;
 	std::atomic_bool  myIsLoaded;
 	bool myShouldReturnToLevelSelect;
+
+
+	//TEMP - BELOW THIS LINE
+	void TEMP_CREATE_ENEMY(); 
+	CU::GrowingArray<CGameObject*> myEnemies;
 };
 
 inline bool CPlayState::IsLoaded() const

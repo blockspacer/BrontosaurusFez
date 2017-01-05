@@ -16,6 +16,8 @@
 #include "../CommonUtilities/StaticArray.h"
 #include "../CommonUtilities/CUTime.h"
 #include "../CommonUtilities/MemoryLeekLogger.h"
+#include "../CommonUtilities/vector2.h"
+
 
 #include "GameObject.h"
 #include "ComponentMessage.h"
