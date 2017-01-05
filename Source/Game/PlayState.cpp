@@ -143,10 +143,10 @@ void CPlayState::Load()
 
 	CU::CPJWrapper levelsArray = levelsFile.GetJsonObject().at("levels");
 
-	const int magicLevelNumberSuperDuperTusen = 0;
+	const int levelIndex = 1;
 
 	std::string levelPath = "Json/Levels/";
-	levelPath += levelsArray[magicLevelNumberSuperDuperTusen].GetString();
+	levelPath += levelsArray[levelIndex].GetString();
 	levelPath += "/LevelData.json";
 
 	KLoader::CKevinLoader &loader = KLoader::CKevinLoader::GetInstance();
@@ -231,6 +231,7 @@ void CPlayState::Load()
 	myPlayerObject->AddComponent(cameraComponent);
 
 	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation());
+
 	//----MakeEnemy----
 	CGameObject* enemyObj = myGameObjectManager->CreateGameObject();
 	CModelComponent* tempEnemyModel = CModelComponentManager::GetInstance().CreateComponent("Models/Placeholders/tree.fbx");

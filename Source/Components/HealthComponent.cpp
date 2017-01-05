@@ -20,15 +20,11 @@ CHealthComponent::~CHealthComponent()
 {
 }
 
-const float CHealthComponent::GetPrecentLeft()
+float CHealthComponent::GetPrecentLeft() const
 {
 	return myPercentageLeft;
 }
 
-void CHealthComponent::Update(const CU::Time & aDeltaTime)
-{
-		
-}
 
 void CHealthComponent::SetHealth(const HealthPoint aValue)
 {
