@@ -11,6 +11,7 @@ CSeekController::CSeekController()
 	myTargetRadius = 0;
 	mySlowdownRadius = 0;
 	myMaxAcceleration = 0;
+	myAggroRange = 400;
 	myTarget = PollingStation::playerObject->GetWorldPosition();
 	myAcceleration = CU::Vector2f::Zero;
 	myControllerType = eControllerType::eArrive;
@@ -30,18 +31,21 @@ const CU::Vector2f CSeekController::Update(const CU::Time& aDeltaTime)
 
 	float distance = targetVelocity.Length();
 
-	if (distance < myTargetRadius)
+	if (distance > myAggroRange)
 	{
-		return CU::Vector2f(99999, 99999);
+		return CU::Vector2f::Zero;
 	}
-	float speed = myMaxSpeed;
-	
-	if (distance < mySlowdownRadius)
+	else if (distance < myTargetRadius)
 	{
+		return CU::Vector2f(99999, 99999); // ?
+	}
+	else if (distance < mySlowdownRadius)
+	{
+		float speed = myMaxSpeed;
 		speed = myMaxSpeed * distance / mySlowdownRadius;
+		targetVelocity.Normalize() *= speed;
 	}
 	
-	targetVelocity.Normalize() *= speed;
 	
 	CU::Vector2f acceleration;
 	acceleration = targetVelocity - myVelocity;

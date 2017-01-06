@@ -4,11 +4,13 @@
 #include "../Game/PollingStation.h"
 
 const CU::Vector2f StopVector = CU::Vector2f(99999, 99999);
+#define SCALAR 10 // due to being our game being so large.
 
 CAIControllerComponent::CAIControllerComponent()
 {
 	myControllers.Init(2);
 	myMaxVelocity = 70;
+	myVelocity = { 0.f,0.f };
 }
 
 
@@ -38,6 +40,7 @@ const CU::Vector2f & CAIControllerComponent::GetVelocity()
 void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 {
 	CU::Vector2f Acceleration = CU::Vector2f::Zero;
+	myVelocity = CU::Vector2f::Zero;
 	for (unsigned int i = 0; i < myControllers.Size(); ++i)
 	{
 		CU::Vector2f returnValue = myControllers[i]->Update(aDeltaTime);
@@ -48,6 +51,7 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 		}
 		Acceleration += returnValue;
 	}
+
 	myVelocity += Acceleration * aDeltaTime.GetSeconds();
 
 	if (myVelocity.Length() > myMaxVelocity)
@@ -56,7 +60,7 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 		myVelocity *= myMaxVelocity;
 	}
 
-	CU::Vector2f velocity = myVelocity * aDeltaTime.GetSeconds();
+	CU::Vector2f velocity = (myVelocity * SCALAR) * aDeltaTime.GetSeconds() ;
 
 	if(PollingStation::playerObject != nullptr)
 	{

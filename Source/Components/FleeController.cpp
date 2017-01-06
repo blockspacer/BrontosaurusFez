@@ -17,12 +17,12 @@ CFleeController::~CFleeController()
 const CU::Vector2f CFleeController::Update(const CU::Time & aDeltaTime)
 {
 	CU::Vector2f steering;	 // if this crashes, you either haven't added a controlelr parent, or the AIcontrollerComp as a parent to your gameObject
-	CU::Vector2f hostPos = GetControllerComponent()->GetParent()->GetWorldPosition();
-	CU::Vector2f hostVelocity = GetControllerComponent()->GetVelocity();
-	
+	const CU::Vector2f hostPos = GetControllerComponent()->GetParent()->GetWorldPosition();
+	const CU::Vector2f hostVelocity = GetControllerComponent()->GetVelocity();
+
 	for (int i = 0; i < myObjectsToAvoid->Size(); ++i)
 	{
-		CU::Vector2f objectPos = myObjectsToAvoid->At(i)->GetWorldPosition();
+		const CU::Vector2f objectPos = myObjectsToAvoid->At(i)->GetWorldPosition();
 
 		if (objectPos == hostPos)
 			continue;
