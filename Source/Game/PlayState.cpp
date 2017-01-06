@@ -219,8 +219,7 @@ void CPlayState::Load()
 	CU::CPJWrapper levelsArray = levelsFile.GetJsonObject().at("levels");
 
 #ifdef _DEBUG
-	//const int levelIndex = levelsArray.Size() - 1;
-	const int levelIndex = 1;
+	const int levelIndex = levelsArray.Size() - 1;
 #else
 	const int levelIndex = 0;
 #endif
