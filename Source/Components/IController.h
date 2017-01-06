@@ -6,9 +6,11 @@ class CAIControllerComponent;
 enum class eControllerType
 {
 	eDefault,
-	eChaser,
+	eSeek,
 	eBlend,
-	eArriver,
+	eArrive,
+	eFlee,
+	eWander,
 };
 
 class IController : public CComponent

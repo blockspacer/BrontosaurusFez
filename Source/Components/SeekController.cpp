@@ -13,7 +13,7 @@ CSeekController::CSeekController()
 	myMaxAcceleration = 0;
 	myTarget = PollingStation::playerObject->GetWorldPosition();
 	myAcceleration = CU::Vector2f::Zero;
-	myControllerType = eControllerType::eArriver;
+	myControllerType = eControllerType::eArrive;
 }
 
 

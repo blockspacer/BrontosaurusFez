@@ -12,6 +12,7 @@ public:
 	void AddControllerBehaviour(IController* aController);
 	void RemoveControllerBehaviour(IController* aController);
 
+	const CU::Vector2f& GetVelocity();
 	void Update(const CU::Time& aDeltaTime);
 	void Destroy() override;
 private:
