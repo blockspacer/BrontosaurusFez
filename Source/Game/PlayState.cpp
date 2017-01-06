@@ -48,24 +48,15 @@
 //
 
 //Temp Includes
-#include "Components/InputController.h"
-#include "Components/NavigationComponent.h"
-#include "Components/MovementComponent.h"
+
 #include "Components/HealthComponent.h"
 #include "MainStatComponent.h"
 #include "StatComponent.h"
-#include "CameraComponent.h"
-#include "BrontosaurusEngine/ModelInstance.h"
-#include "BrontosaurusEngine/WindowsWindow.h"
-#include <iostream>
-#include "StatComponent.h"
 #include "Components/AIControllerComponent.h"
 #include "Components/SeekController.h"
-#include "Components\FleeController.h"
-#include "Components\SkillFactory.h"
-#include "SkillSystemComponent.h"
+#include "Components/FleeController.h"
 #include "KevinLoader/KevinLoader.h"
-#include "Components\CollisionComponentManager.h"
+#include "Components/CollisionComponentManager.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
 #include "../BrontosaurusEngine/FireEmitterInstance.h"
