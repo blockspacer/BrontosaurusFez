@@ -412,6 +412,7 @@ void CPlayState::CreateManagersAndFactories()
 	CParticleEmitterComponentManager::GetInstance().SetScene(myScene);
 	CCameraComponentManager::Create();
 	InputControllerManager::CreateInstance();
+	InputControllerManager::GetInstance().SetScene(myScene);
 	MovementComponentManager::CreateInstance();
 	AIControllerManager::Create();
 	SkillFactory::CreateInstance();
@@ -520,21 +521,5 @@ void CPlayState::TEMP_CREATE_ENEMY()
 
 	tempEnemyStatComponent->SetStats(baseStats, bonusStats);
 	tempEnemyHealthComponent->Init();
-
-	myCollisionComponentManager = new CCollisionComponentManager;
-	CComponentManager::CreateInstance();
-	CAudioSourceComponentManager::Create();
-	CModelComponentManager::Create();
-	CParticleEmitterComponentManager::Create();
-	CParticleEmitterComponentManager::GetInstance().SetScene(myScene);
-	CCameraComponentManager::Create();
-	InputControllerManager::CreateInstance();
-	InputControllerManager::GetInstance().SetScene(myScene);
-	MovementComponentManager::CreateInstance();
-	AIControllerManager::Create();
-	SkillFactory::CreateInstance();
-	SkillSystemComponentManager::CreateInstance();
-	SkillSystemComponentManager::GetInstance().SetGameObjectManager(myGameObjectManager);
-	SkillSystemComponentManager::GetInstance().SetCollisionComponentManager(myCollisionComponentManager);
 	myEnemies.Add(enemyObj);
 }
