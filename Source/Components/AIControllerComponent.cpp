@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "AIControllerComponent.h"
 #include "GameObject.h"
+#include "../Game/PollingStation.h"
 
 const CU::Vector2f StopVector = CU::Vector2f(99999, 99999);
 
@@ -56,6 +57,16 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 	}
 
 	CU::Vector2f velocity = myVelocity * aDeltaTime.GetSeconds();
+
+	if(PollingStation::playerObject != nullptr)
+	{
+		if (CU::Vector3f(GetParent()->GetWorldPosition() - PollingStation::playerObject->GetWorldPosition()).Length2() < 2000.0f * 2000.0f)
+		{
+			SComponentMessageData data;
+			data.myGameObject = PollingStation::playerObject;
+			GetParent()->NotifyComponents(eComponentMessageType::eSetSkillTargetObject, data);
+		}
+	}
 
 	GetParent()->GetLocalTransform().Move(CU::Vector3f(velocity.x,0,velocity.y));
 	GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());

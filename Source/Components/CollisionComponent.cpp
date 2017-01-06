@@ -66,6 +66,11 @@ void CCollisionComponent::DeactivateCollider()
 	myCollider->Deactivate();
 }
 
+void CCollisionComponent::SetColliderType(const eColliderType aColliderType)
+{
+	myCollider->SetColliderType(aColliderType);
+}
+
 void CCollisionComponent::OnCollisionEnter(ICollider* aCollider)
 {
 	SComponentMessageData data;

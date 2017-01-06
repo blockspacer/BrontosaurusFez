@@ -2,7 +2,7 @@
 #include "Component.h"
 
 class ICollider;
-
+enum eColliderType : unsigned int;
 class CCollisionComponent : public CComponent
 {
 public:
@@ -13,6 +13,7 @@ public:
 	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
 	void Destroy() override;
 	void AddCollidsWith(const unsigned int aColliderTypes);
+	void SetColliderType(const eColliderType aColliderType);
 
 	void ActivateCollider();
 	void DeactivateCollider();

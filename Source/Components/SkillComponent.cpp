@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "SkillComponent.h"
-
+#include "../Collision/ICollider.h"
 
 SkillComponent::SkillComponent()
 {
@@ -33,9 +33,9 @@ void SkillComponent::Receive(const eComponentMessageType aMessageType, const SCo
 	SComponentMessageData data2;
 	switch (aMessageType)
 	{
-	case eComponentMessageType::eCollision:
+	case eComponentMessageType::eOnCollisionEnter:
 		data.myInt = myDamage;
-		aMessageData.myGameObject->NotifyComponents(eComponentMessageType::eTakeDamage, data);
+		aMessageData.myCollider->GetGameObject()->NotifyComponents(eComponentMessageType::eTakeDamage, data);
 		data2.myBool = false;
 		GetParent()->NotifyComponents(eComponentMessageType::eSetIsColliderActive, data2);
 		break;

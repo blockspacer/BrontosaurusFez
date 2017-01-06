@@ -8,6 +8,7 @@
 #include "../Collision/Intersection.h"
 #include "../Collision/ICollider.h"
 #include "CollisionComponent.h"
+#include "SkillComponent.h"
 Skill::Skill()
 {
 	myIsActive = false;
@@ -21,8 +22,11 @@ Skill::Skill()
 	circleCollisionData.myCircleData->myRadius = 100000.0f;
 	CCollisionComponent* collisionComponent = SkillSystemComponentManager::GetInstance().GetCollisionComponentManager()->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, circleCollisionData);
 	collisionComponent->AddCollidsWith(eColliderType::eColliderType_Actor);
+	collisionComponent->SetColliderType(eColliderType::eColliderType_Actor);
 	myColliderObject->AddComponent(collisionComponent);
 	collisionComponent->DeactivateCollider();
+	collisionComponent->GetCollider()->SetGameObject(myColliderObject);
+	myColliderObject->AddComponent(new SkillComponent());
 	//ToDo Deactivate collider; Move this piece of shit to a better place.
 }
 
@@ -69,6 +73,8 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 			//TODO: Activate Collider;
 			type = eComponentMessageType::eSetIsColliderActive;
 			SComponentMessageData data;
+			data.myBool = false;
+			myColliderObject->NotifyComponents(type, data);
 			data.myBool = true;
 			myColliderObject->NotifyComponents(type, data);
 
