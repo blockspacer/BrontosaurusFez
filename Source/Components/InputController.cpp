@@ -9,14 +9,17 @@
 #include "../BrontosaurusEngine/Engine.h"
 #include "CameraManager.h"
 #include "../CommonUtilities/Camera.h"
+#include "../CommonUtilities/EKeyboardKeys.h"
 
 #include <iostream>
 
 InputController::InputController(const CU::Camera& aPlayerCamera)
 	: myPlayerCamera(aPlayerCamera)
 	, myMouseIsDown(false)
+	, myIsShiftDown(false)
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
 	mySkillInputMessageActivators.Init(5);
 }
 
@@ -24,6 +27,7 @@ InputController::InputController(const CU::Camera& aPlayerCamera)
 InputController::~InputController()
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
 }
 
 void InputController::Update(float aDeltaTime)
@@ -72,6 +76,11 @@ void InputController::Update(float aDeltaTime)
 
 		type = eComponentMessageType::eSetSkillTargetPosition;
 		GetParent()->NotifyComponents(type, data);
+	}
+
+	if(myIsShiftDown == true)
+	{
+		GetParent()->NotifyComponents(eComponentMessageType::eStopMovement, SComponentMessageData());
 	}
 }
 
@@ -145,6 +154,24 @@ eMessageReturn InputController::TakeInputMessage(const CU::eInputMessage aInputM
 			data.myInt = i;
 			GetParent()->NotifyComponents(type, data);
 		}
+	}
+	return eMessageReturn::eContinue;
+}
+
+eMessageReturn InputController::TakeKeyPressed(const CU::eKeys & aKey)
+{
+	if(aKey == CU::eKeys::LSHIFT)
+	{
+		myIsShiftDown = true;
+	}
+	return eMessageReturn::eContinue;
+}
+
+eMessageReturn InputController::TakeKeyReleased(const CU::eKeys & aKey)
+{
+	if (aKey == CU::eKeys::LSHIFT)
+	{
+		myIsShiftDown = false;
 	}
 	return eMessageReturn::eContinue;
 }

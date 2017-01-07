@@ -2,7 +2,7 @@
 #include "KeyReleased.h"
 
 #include "../BrontosaurusEngine/DebugInfoDrawer.h"
-
+#include "../Components/InputController.h"
 
 KeyReleased::KeyReleased(const CU::eKeys& aKey)
 	: myKey(aKey)
@@ -21,4 +21,9 @@ eMessageReturn KeyReleased::DoEvent(CDebugInfoDrawer* aDebugInfoDrawer) const
 	}
 
 	return eMessageReturn::eContinue;
+}
+
+eMessageReturn KeyReleased::DoEvent(InputController * aInputController) const
+{
+	return aInputController->TakeKeyReleased(myKey);
 }
