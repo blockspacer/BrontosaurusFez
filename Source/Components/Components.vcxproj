@@ -247,6 +247,7 @@
     <ClInclude Include="ParticleEmitterComponentManager.h" />
     <ClInclude Include="Skill.h" />
     <ClInclude Include="SkillComponent.h" />
+    <ClInclude Include="SkillComponentManager.h" />
     <ClInclude Include="SkillFactory.h" />
     <ClInclude Include="SkillSystemComponent.h" />
     <ClInclude Include="SkillSystemComponentManager.h" />
@@ -288,6 +289,7 @@
     <ClCompile Include="ParticleEmitterComponentManager.cpp" />
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="SkillComponent.cpp" />
+    <ClCompile Include="SkillComponentManager.cpp" />
     <ClCompile Include="SkillFactory.cpp" />
     <ClCompile Include="SkillSystemComponent.cpp" />
     <ClCompile Include="SkillSystemComponentManager.cpp" />

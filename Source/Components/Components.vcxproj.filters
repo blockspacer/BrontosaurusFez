@@ -105,6 +105,7 @@
     <ClCompile Include="AIControllerComponent.cpp">
       <Filter>Controllers\Controllers</Filter>
     </ClCompile>
+    <ClCompile Include="SkillComponentManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -221,6 +222,7 @@
     <ClInclude Include="AIControllerComponent.h">
       <Filter>Controllers\Controllers</Filter>
     </ClInclude>
+    <ClInclude Include="SkillComponentManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
