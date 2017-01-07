@@ -106,6 +106,8 @@
       <Filter>Controllers\Controllers</Filter>
     </ClCompile>
     <ClCompile Include="SkillComponentManager.cpp" />
+    <ClCompile Include="DropComponent.cpp" />
+    <ClCompile Include="DropComponentManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -226,6 +228,8 @@
     <ClInclude Include="PlayerData.h">
       <Filter>Stats</Filter>
     </ClInclude>
+    <ClInclude Include="DropComponent.h" />
+    <ClInclude Include="DropComponentManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

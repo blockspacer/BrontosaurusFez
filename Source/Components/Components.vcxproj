@@ -224,6 +224,8 @@
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionComponentManager.h" />
+    <ClInclude Include="DropComponent.h" />
+    <ClInclude Include="DropComponentManager.h" />
     <ClInclude Include="FleeController.h" />
     <ClInclude Include="PlayerData.h" />
     <ClInclude Include="SeekController.h" />
@@ -268,6 +270,8 @@
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="CollisionComponentManager.cpp" />
+    <ClCompile Include="DropComponent.cpp" />
+    <ClCompile Include="DropComponentManager.cpp" />
     <ClCompile Include="FleeController.cpp" />
     <ClCompile Include="SeekController.cpp" />
     <ClCompile Include="Component.cpp" />
