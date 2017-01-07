@@ -223,6 +223,9 @@
       <Filter>Controllers\Controllers</Filter>
     </ClInclude>
     <ClInclude Include="SkillComponentManager.h" />
+    <ClInclude Include="PlayerData.h">
+      <Filter>Stats</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

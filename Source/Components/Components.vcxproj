@@ -225,6 +225,7 @@
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionComponentManager.h" />
     <ClInclude Include="FleeController.h" />
+    <ClInclude Include="PlayerData.h" />
     <ClInclude Include="SeekController.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />

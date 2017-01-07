@@ -13,7 +13,8 @@
 #include "KevinLoader/KLoaderError.h"
 #include "KevinLoader/KevinLoader.h"
 
-
+#include "PollingStation.h"
+#include "PlayerData.h"
 CGame::CGame()
 {
 }
@@ -35,6 +36,9 @@ void CGame::Init()
 	 //SSlua::LuaWrapper::GetInstance().RunLoadedCode();
 
 	 KLoader::CKevinLoader::CreateInstance();
+	 
+	 PollingStation::playerData = new PlayerData;
+	 PollingStation::playerData->myGold = 0;
 
 	if (CommandLineManager::GetInstance()->HasParameter("-skipMainMenu") == true)
 	{
