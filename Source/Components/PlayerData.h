@@ -4,6 +4,6 @@ struct PlayerData
 {
 
 	SBaseStats* myStats; // kanske inte borde vara pointer
-	float myGold;
+	short myGold;
 
 };

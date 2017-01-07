@@ -40,6 +40,8 @@
 
 #include "../Audio/AudioInterface.h"
 
+#include "PlayerData.h"
+
 #include "Components\SkillFactory.h"
 #include "Components\SkillSystemComponentManager.h"
 //Kanske Inte ska vara här?
@@ -210,7 +212,11 @@ void CPlayState::Load()
 
 	playerCamera.SetTransformation(cameraTransformation);*/
 
-
+	myGoldText = new CTextInstance;
+	myGoldText->SetColor(CTextInstance::Yellow);
+	myGoldText->SetPosition(CU::Vector2f(0.4f, 0.2f));
+	myGoldText->SetText("");
+	myGoldText->Init();
 
 	//Loadingu like pingu
 
@@ -308,6 +314,9 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	myScene->Update(aDeltaTime);
 
 	myGameObjectManager->DestroyObjectsWaitingForDestruction();
+	std::string goldAmount = "Gold: ";
+	goldAmount +=std::to_string(PollingStation::playerData->myGold);
+	myGoldText->SetText(goldAmount.c_str());
 
 	return myStatus;
 }
@@ -338,6 +347,8 @@ void CPlayState::Render()
 	msg.myRasterizerState = eRasterizerState::eDefault;
 	msg.mySamplerState = eSamplerState::eClamp;
 	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
+
+	myGoldText->Render();
 }
 
 void CPlayState::OnEnter()
