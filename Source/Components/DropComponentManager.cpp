@@ -38,7 +38,7 @@ void DropComponentManager::DestroyInstance()
 
 DropComponent* DropComponentManager::CreateAndRegisterComponent()
 {
-	DropComponent* Component;
+	DropComponent* Component = new DropComponent(50);
 	myComponents.Add(Component);
 	CComponentManager::GetInstance().RegisterComponent(Component);
 
