@@ -3,6 +3,8 @@
 #include"ComponentManager.h"
 #include "DropComponent.h"
 
+DropComponentManager* DropComponentManager::ourInstance = nullptr;
+
 DropComponentManager::DropComponentManager()
 {
 	myComponents.Init(100);

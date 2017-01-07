@@ -3,6 +3,8 @@
 #include"ComponentManager.h"
 #include "SkillComponent.h"
 
+SkillComponentManager* SkillComponentManager::ourInstance = nullptr;
+
 SkillComponentManager::SkillComponentManager()
 {
 	myComponents.Init(100);
