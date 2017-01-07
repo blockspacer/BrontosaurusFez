@@ -104,7 +104,7 @@ void InputController::Receive(const eComponentMessageType aMessageType, const SC
 	{
 		if(aMessageData.myString == "BasicAttack")
 		{
-			mySkillInputMessageActivators.Add(CU::eInputMessage::LEFTMOUSEBUTTON);
+			mySkillInputMessageActivators.Add(CU::eInputMessage::DIVIDE);
 		}
 		else
 		{
