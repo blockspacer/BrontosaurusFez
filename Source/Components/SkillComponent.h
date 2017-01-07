@@ -12,5 +12,7 @@ private:
 	unsigned short myDamage;
 	float myElapsedTime;
 	bool myIsAOE;
+
+	bool myIsActive;
 };
 

@@ -89,6 +89,16 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 		mySkills.GetLast()->Init(GetParent());
 		mySkills.GetLast()->SetTargetPosition(myTargetPosition);
 	}
+	else if (aMessageType == eComponentMessageType::eActivateSkillCollider)
+	{
+		for(unsigned short i = 0; i < mySkills.Size(); i++)
+		{
+			if(mySkills[i]->GetIsActive() == true)
+			{
+				mySkills[i]->ActivateCollider();
+			}
+		}
+	}
 }
 
 void SkillSystemComponent::Destroy()

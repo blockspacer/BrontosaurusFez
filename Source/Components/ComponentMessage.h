@@ -66,6 +66,7 @@ enum class eComponentMessageType
 	eStopMovement,
 	eSetIsColliderActive,
 	eBasicAttack,
+	eActivateSkillCollider,
 };
 
 struct SComponentMessageData
