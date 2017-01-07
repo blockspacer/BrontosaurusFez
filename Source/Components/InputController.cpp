@@ -74,8 +74,17 @@ void InputController::Update(float aDeltaTime)
 		data.myVector2f = targetPosition;
 		GetParent()->NotifyComponents(type, data);
 
-		type = eComponentMessageType::eSetSkillTargetPosition;
-		GetParent()->NotifyComponents(type, data);
+		if(myIsShiftDown == false)
+		{
+			type = eComponentMessageType::eSetSkillTargetPosition;
+			GetParent()->NotifyComponents(type, data);
+		
+		}
+		else
+		{
+			type = eComponentMessageType::eSetSkillTargetPositionWhileHoldingPosition;
+			GetParent()->NotifyComponents(type, data);
+		}
 	}
 
 	if(myIsShiftDown == true)

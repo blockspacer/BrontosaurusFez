@@ -30,6 +30,7 @@ protected:
 	CGameObject* myTargetObject;
 	CU::Vector3f myTargetPosition;
 	std::function<void(float)> myUpdateFunction;
+	float myRange;
 	float myCoolDown;
 	float myElapsedCoolDownTime;
 	bool myIsActive;

@@ -29,6 +29,7 @@ Skill::Skill()
 	//ToDo Deactivate collider; Move this piece of shit to a better place.
 	myCoolDown = 0.5f;
 	myElapsedCoolDownTime = myCoolDown;
+	myRange = 300.0f;
 }
 
 
@@ -73,10 +74,31 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 			statedAttackingMessage.myString = "attack";
 			myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
 			myElapsedCoolDownTime = 0.0f;
+			myColliderObject->SetWorldPosition(myTargetObject->GetWorldPosition());
+
 
 			ActivateCollider(); // Remove this later on and replace it with animation wait time.
 
 		}
+	}
+	else
+	{
+		SComponentMessageData statedAttackingMessage;
+		statedAttackingMessage.myString = "attack";
+		myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
+		myElapsedCoolDownTime = 0.0f;
+		CU::Vector3f direction = myTargetPosition - myUser->GetWorldPosition();
+		if(direction.Length2() > myRange * myRange)
+		{
+			direction.Normalize();
+			direction *= myRange;
+			myColliderObject->SetWorldPosition(myUser->GetWorldPosition() + direction);
+		}
+		else
+		{
+			myColliderObject->SetWorldPosition(myTargetPosition);
+		}
+		ActivateCollider(); // Remove this later on and replace it with animation wait time.
 	}
 }
 
