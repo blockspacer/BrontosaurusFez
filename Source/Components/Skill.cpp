@@ -66,17 +66,11 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 		{
 			eComponentMessageType type = eComponentMessageType::eStopMovement;
 			myUser->NotifyComponents(type, SComponentMessageData());
-			//TODO start Attack Animation
 			SComponentMessageData statedAttackingMessage;
 			statedAttackingMessage.myString = "attack";
 			myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
-			//TODO: Activate Collider;
-			type = eComponentMessageType::eSetIsColliderActive;
-			SComponentMessageData data;
-			data.myBool = false;
-			myColliderObject->NotifyComponents(type, data);
-			data.myBool = true;
-			myColliderObject->NotifyComponents(type, data);
+			
+			ActivateCollider();
 
 		}
 	}
@@ -89,6 +83,15 @@ void Skill::SetTargetPosition(CU::Vector3f aTargetPosition)
 void Skill::SetTargetObject(CGameObject* aTargetObject)
 {
 	myTargetObject = aTargetObject;
+}
+void Skill::ActivateCollider()
+{
+	eComponentMessageType type = eComponentMessageType::eSetIsColliderActive;
+	SComponentMessageData data;
+	data.myBool = false;
+	myColliderObject->NotifyComponents(type, data);
+	data.myBool = true;
+	myColliderObject->NotifyComponents(type, data);
 }
 void Skill::OnActivation()
 {
