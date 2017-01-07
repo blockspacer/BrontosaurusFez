@@ -26,7 +26,6 @@ Skill::Skill()
 	myColliderObject->AddComponent(collisionComponent);
 	collisionComponent->DeactivateCollider();
 	collisionComponent->GetCollider()->SetGameObject(myColliderObject);
-	myColliderObject->AddComponent(new SkillComponent());
 	//ToDo Deactivate collider; Move this piece of shit to a better place.
 	myCoolDown = 0.5f;
 	myElapsedCoolDownTime = myCoolDown;
@@ -59,6 +58,7 @@ void Skill::Update(float aDeltaTime)
 void Skill::Init(CGameObject * aUser)
 {
 	myUser = aUser;
+	myColliderObject->AddComponent(new SkillComponent(myUser));
 }
 
 void Skill::BasicAttackUpdate(float aDeltaTime)

@@ -1,11 +1,13 @@
 #include "stdafx.h"
 #include "SkillComponent.h"
 #include "../Collision/ICollider.h"
+#include "../Game/PollingStation.h"
 
-SkillComponent::SkillComponent()
+SkillComponent::SkillComponent(CGameObject* aUserObject)
 {
 	myDamage = 10000.0f;
 	myIsAOE = false;
+	myUserObject = aUserObject;
 }
 
 
@@ -33,20 +35,24 @@ void SkillComponent::Update(float aDeltaTime)
 
 void SkillComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
 {
-	SComponentMessageData data;
-	SComponentMessageData data2;
 	switch (aMessageType)
 	{
 	case eComponentMessageType::eOnCollisionEnter:
-		data.myInt = myDamage;
-		aMessageData.myCollider->GetGameObject()->NotifyComponents(eComponentMessageType::eTakeDamage, data);
-		if(myIsAOE == false)
+		if(myUserObject == PollingStation::playerObject)
 		{
-			data2.myBool = false;
-			GetParent()->NotifyComponents(eComponentMessageType::eSetIsColliderActive, data2);
-			myIsActive = false;
-		
+			if(aMessageData.myCollider->GetGameObject() != myUserObject)
+			{
+				DoDamage(aMessageData.myCollider->GetGameObject());
+			}
 		}
+		else
+		{
+			if(aMessageData.myCollider->GetGameObject() == PollingStation::playerObject)
+			{
+				DoDamage(aMessageData.myCollider->GetGameObject());
+			}
+		}
+		
 		break;
 	case eComponentMessageType::eSetIsColliderActive:
 		if(aMessageData.myBool == true)
@@ -62,4 +68,19 @@ void SkillComponent::Receive(const eComponentMessageType aMessageType, const SCo
 
 void SkillComponent::Destroy()
 {
+}
+
+void SkillComponent::DoDamage(CGameObject * aGameObjectToDamage)
+{
+	SComponentMessageData data;
+	SComponentMessageData data2;
+	data.myInt = myDamage;
+	aGameObjectToDamage->NotifyComponents(eComponentMessageType::eTakeDamage, data);
+	if (myIsAOE == false)
+	{
+		data2.myBool = false;
+		GetParent()->NotifyComponents(eComponentMessageType::eSetIsColliderActive, data2);
+		myIsActive = false;
+
+	}
 }
