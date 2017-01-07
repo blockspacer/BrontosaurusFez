@@ -28,6 +28,8 @@ Skill::Skill()
 	collisionComponent->GetCollider()->SetGameObject(myColliderObject);
 	myColliderObject->AddComponent(new SkillComponent());
 	//ToDo Deactivate collider; Move this piece of shit to a better place.
+	myCoolDown = 0.5f;
+	myElapsedCoolDownTime = myCoolDown;
 }
 
 
@@ -50,6 +52,7 @@ void Skill::Deactivate()
 
 void Skill::Update(float aDeltaTime)
 {
+	myElapsedCoolDownTime += aDeltaTime;
 	myUpdateFunction(aDeltaTime);
 }
 
@@ -69,8 +72,9 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 			SComponentMessageData statedAttackingMessage;
 			statedAttackingMessage.myString = "attack";
 			myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
-			
-			ActivateCollider();
+			myElapsedCoolDownTime = 0.0f;
+
+			ActivateCollider(); // Remove this later on and replace it with animation wait time.
 
 		}
 	}
@@ -100,4 +104,17 @@ void Skill::OnActivation()
 
 void Skill::OnDeActivation()
 {
+}
+
+void Skill::Select()
+{
+	if(myElapsedCoolDownTime >= myCoolDown)
+	{
+		myIsSelected = true;
+	}
+}
+
+void Skill::Deselect()
+{
+	myIsSelected = false;
 }

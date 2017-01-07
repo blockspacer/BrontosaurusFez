@@ -19,8 +19,8 @@ public:
 	inline const bool GetIsActive() const;
 	inline const bool GetIsSelected() const;
 	inline bool IsInited();
-	inline void Select();
-	inline void Deselect();
+	void Select();
+	void Deselect();
 protected:
 	virtual void OnActivation();
 	virtual void OnDeActivation();
@@ -30,6 +30,8 @@ protected:
 	CGameObject* myTargetObject;
 	CU::Vector3f myTargetPosition;
 	std::function<void(float)> myUpdateFunction;
+	float myCoolDown;
+	float myElapsedCoolDownTime;
 	bool myIsActive;
 	bool myIsSelected;
 };
@@ -54,12 +56,3 @@ inline bool Skill::IsInited()
 	return false;
 }
 
-inline void Skill::Select()
-{
-	myIsSelected = true;
-}
-
-inline void Skill::Deselect()
-{
-	myIsSelected = false;
-}
