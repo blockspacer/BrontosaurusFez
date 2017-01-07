@@ -68,6 +68,8 @@
 #include "SkillSystemComponent.h"
 #include "KevinLoader/KevinLoader.h"
 #include "Components\CollisionComponentManager.h"
+#include "SkillComponentManager.h"
+#include "DropComponentManager.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
 #include "../BrontosaurusEngine/FireEmitterInstance.h"
@@ -97,7 +99,8 @@ CPlayState::~CPlayState()
 	MovementComponentManager::DestroyInstance();
 	SkillSystemComponentManager::DestroyInstance();
 	AIControllerManager::Destroy();
-
+	SkillComponentManager::DestroyInstance();
+	DropComponentManager::DestroyInstance();
 	PollingStation::NullifyLevelSpecificData();
 
 	SkillFactory::DestroyInstance();
@@ -318,6 +321,9 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	goldAmount +=std::to_string(PollingStation::playerData->myGold);
 	myGoldText->SetText(goldAmount.c_str());
 
+	SkillComponentManager::GetInstance().Update(aDeltaTime);
+	DropComponentManager::GetInstance().Update(aDeltaTime);
+
 	return myStatus;
 }
 
@@ -430,6 +436,8 @@ void CPlayState::CreateManagersAndFactories()
 	SkillSystemComponentManager::CreateInstance();
 	SkillSystemComponentManager::GetInstance().SetGameObjectManager(myGameObjectManager);
 	SkillSystemComponentManager::GetInstance().SetCollisionComponentManager(myCollisionComponentManager);
+	SkillComponentManager::CreateInstance();
+	DropComponentManager::CreateInstance();
 }
 
 void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)
