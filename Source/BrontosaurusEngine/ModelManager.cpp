@@ -212,15 +212,15 @@ void CModelManager::LoadAnimations(const char * aPath, const ModelId aModelId)
 {
 	std::string modelName = aPath;
 	modelName -= std::string("idle.fbx"); //temporary bc there are no bones in the vertices in player.fbx, only in player_idle.fbx etc
-
-	std::string animationNames[5] = { ("idle"), ("walk"), ("pickup"), ("turnRight90"), ("turnLeft90") };
+	const ModelId animationCount = 6;
+	std::string animationNames[animationCount] = { ("idle"), ("walk"), ("pickup"), ("turnRight90"), ("turnLeft90"), ("attack") };
 
 	CModel* mdl = GetModel(aModelId);
 	const aiScene* scene = mdl->GetScene();
 	if (mdl != nullptr && scene->HasAnimations())// && mdl->GetScene->HasAnimations())
 	{
 		bool foundSpecial = false;
-		for (int i = 0; i < 5; ++i)
+		for (int i = 0; i < animationCount; ++i)
 		{
 			const std::string& animationName = animationNames[i];
 

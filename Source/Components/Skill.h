@@ -34,6 +34,8 @@ protected:
 	float myCoolDown;
 	float myAttackRadius2;
 	float myElapsedCoolDownTime;
+	float myAnimationTime;
+	float myAnimationTimeElapsed;
 	bool myIsActive;
 	bool myIsSelected;
 };
