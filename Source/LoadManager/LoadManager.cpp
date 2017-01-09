@@ -8,6 +8,7 @@
 #include "LoadNavigationComponent.h"
 #include "LoadMovementComponent.h"
 #include "LoadCamera.h"
+#include "LoadColliderComponent.h"
 
 LoadManager* LoadManager::ourInstance = nullptr;
 
@@ -65,7 +66,7 @@ void LoadManager::RegisterFunctions()
 	loader.RegisterComponentLoadFunction("Navigation", LoadNavigationComponent);
 	loader.RegisterComponentLoadFunction("Movement", LoadMovementComponent);
 	loader.RegisterComponentLoadFunction("Camera", LoadCamera);
-	
+	loader.RegisterComponentLoadFunction("CircleCollider", LoadCircleCollider);
 
 
 }

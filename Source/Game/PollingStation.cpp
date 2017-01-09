@@ -8,7 +8,7 @@ ValueObserver<int>* PollingStation::playerHealthBar = nullptr;
 ValueObserver<int>* PollingStation::playerBoostBar = nullptr;
 ValueObserver<int>* PollingStation::timeObjectiveBar = nullptr;
 CollisionManager* PollingStation::collsionManager = nullptr;
-CU::GrowingArray<WorldCenterComponent*> PollingStation::worldCenterComponents(4);
+PlayerData* PollingStation::playerData = nullptr;
 
 void PollingStation::NullifyLevelSpecificData()
 {
@@ -16,10 +16,4 @@ void PollingStation::NullifyLevelSpecificData()
 	playerHealthBar = nullptr;
 	playerBoostBar = nullptr;
 	collsionManager = nullptr;
-
-	if (worldCenterComponents.IsInitialized() == true)
-	{
-		//worldCenterComponents.DeleteAll();
-		worldCenterComponents.Destroy();
-	}
 }

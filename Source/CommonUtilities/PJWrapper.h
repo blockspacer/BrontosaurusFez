@@ -36,6 +36,8 @@ namespace CU
 		bool IsNumber() const;
 		double GetNumber();
 		double GetNumber() const;
+		float GetFloat() const;
+		unsigned int GetUInt() const;
 		bool IsString() const;
 		std::string GetString();
 		std::string GetString() const;

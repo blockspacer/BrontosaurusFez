@@ -19,6 +19,10 @@
 #include "../CommonUtilities/vector2.h"
 
 
+#include "../PostMaster/PostMaster.h"
+#include "../PostMaster/Message.h"
+#include "../PostMaster/Event.h"
+
 #include "GameObject.h"
 #include "ComponentMessage.h"
 

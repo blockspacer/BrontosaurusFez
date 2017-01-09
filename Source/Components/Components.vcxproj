@@ -224,7 +224,10 @@
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionComponentManager.h" />
+    <ClInclude Include="DropComponent.h" />
+    <ClInclude Include="DropComponentManager.h" />
     <ClInclude Include="FleeController.h" />
+    <ClInclude Include="PlayerData.h" />
     <ClInclude Include="SeekController.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
@@ -239,6 +242,7 @@
     <ClInclude Include="MainStatComponent.h" />
     <ClInclude Include="ModelComponent.h" />
     <ClInclude Include="ModelComponentManager.h" />
+    <ClInclude Include="MouseComponent.h" />
     <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="MovementComponentManager.h" />
     <ClInclude Include="NavigationComponent.h" />
@@ -246,6 +250,8 @@
     <ClInclude Include="ParticleEmitterComponent.h" />
     <ClInclude Include="ParticleEmitterComponentManager.h" />
     <ClInclude Include="Skill.h" />
+    <ClInclude Include="SkillComponent.h" />
+    <ClInclude Include="SkillComponentManager.h" />
     <ClInclude Include="SkillFactory.h" />
     <ClInclude Include="SkillSystemComponent.h" />
     <ClInclude Include="SkillSystemComponentManager.h" />
@@ -265,6 +271,8 @@
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="CollisionComponentManager.cpp" />
+    <ClCompile Include="DropComponent.cpp" />
+    <ClCompile Include="DropComponentManager.cpp" />
     <ClCompile Include="FleeController.cpp" />
     <ClCompile Include="SeekController.cpp" />
     <ClCompile Include="Component.cpp" />
@@ -279,6 +287,7 @@
     <ClCompile Include="MainStatComponent.cpp" />
     <ClCompile Include="ModelComponent.cpp" />
     <ClCompile Include="ModelComponentManager.cpp" />
+    <ClCompile Include="MouseComponent.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
     <ClCompile Include="MovementComponentManager.cpp" />
     <ClCompile Include="NavigationComponent.cpp" />
@@ -286,6 +295,8 @@
     <ClCompile Include="ParticleEmitterComponent.cpp" />
     <ClCompile Include="ParticleEmitterComponentManager.cpp" />
     <ClCompile Include="Skill.cpp" />
+    <ClCompile Include="SkillComponent.cpp" />
+    <ClCompile Include="SkillComponentManager.cpp" />
     <ClCompile Include="SkillFactory.cpp" />
     <ClCompile Include="SkillSystemComponent.cpp" />
     <ClCompile Include="SkillSystemComponentManager.cpp" />

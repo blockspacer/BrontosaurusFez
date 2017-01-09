@@ -34,6 +34,7 @@ void CCollisionComponent::Receive(const eComponentMessageType aMessageType, cons
 
 	switch (aMessageType)
 	{
+	case eComponentMessageType::eAddComponent:
 	case eComponentMessageType::eMoving:
 		myCollider->SetPosition(GetParent()->GetWorldPosition());
 		break;
@@ -47,6 +48,9 @@ void CCollisionComponent::Receive(const eComponentMessageType aMessageType, cons
 			myCollider->Deactivate();
 		}
 	break;
+	case eComponentMessageType::eDied:
+		myCollider->Deactivate();
+		break;
 	}
 }
 
@@ -85,6 +89,11 @@ void CCollisionComponent::OnCollisionExit(ICollider* aCollider)
 	SComponentMessageData data;
 	data.myCollider = aCollider;
 	GetParent()->NotifyComponents(eComponentMessageType::eOnCollisionExit, data);
+}
+
+void CCollisionComponent::SetColliderType(const eColliderType aColliderType)
+{
+	myCollider->SetColliderType(aColliderType);
 }
 
 void CCollisionComponent::AddCollidsWith(const unsigned int aColliderTypes)

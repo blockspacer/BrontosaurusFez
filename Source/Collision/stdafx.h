@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../CommonUtilities/GrowingArray.h"
+#include "../CommonUtilities/DL_Debug.h"
 #include "Intersection.h"
 
 #include "SquareCollider.h"

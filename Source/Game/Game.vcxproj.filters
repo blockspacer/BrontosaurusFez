@@ -27,6 +27,9 @@
     <ClCompile Include="SplashScreen.cpp">
       <Filter>States</Filter>
     </ClCompile>
+    <ClCompile Include="QuestManager.cpp">
+      <Filter>QuestManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackgroundLoadingManager.h" />
@@ -56,10 +59,19 @@
     <ClInclude Include="SplashScreen.h">
       <Filter>States</Filter>
     </ClInclude>
+    <ClInclude Include="QuestManager.h">
+      <Filter>QuestManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>QuestManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="States">
       <UniqueIdentifier>{e6c7f4ba-4ba3-4114-b270-6b080d89cadd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="QuestManager">
+      <UniqueIdentifier>{b29589e2-bda0-416d-8f96-aff01bf68937}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

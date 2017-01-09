@@ -89,6 +89,35 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 		mySkills.GetLast()->Init(GetParent());
 		mySkills.GetLast()->SetTargetPosition(myTargetPosition);
 	}
+	else if (aMessageType == eComponentMessageType::eActivateSkillCollider)
+	{
+		for(unsigned short i = 0; i < mySkills.Size(); i++)
+		{
+			if(mySkills[i]->GetIsActive() == true)
+			{
+				mySkills[i]->ActivateCollider();
+			}
+		}
+	}
+	else if(aMessageType == eComponentMessageType::eSetSkillTargetPositionWhileHoldingPosition)
+	{
+		bool isAnythingSelected = false;
+		myTargetPosition = aMessageData.myVector3f;
+		myTargetPosition.z = myTargetPosition.y;
+		myTargetPosition.y = GetParent()->GetWorldPosition().y;
+		for (unsigned short i = 0; i < mySkills.Size(); i++)
+		{
+			mySkills[i]->SetTargetPosition(myTargetPosition);
+			if (mySkills[i]->GetIsSelected() == true)
+			{
+				mySkills[i]->Activate();
+			}
+		}
+		if (isAnythingSelected == false)
+		{
+			mySkills[0]->Activate();
+		}
+	}
 }
 
 void SkillSystemComponent::Destroy()

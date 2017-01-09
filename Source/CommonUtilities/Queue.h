@@ -33,7 +33,7 @@ namespace CU
 	template <typename TYPE, typename SIZE_TYPE>
 	Queue<TYPE, SIZE_TYPE>::Queue(SIZE_TYPE aSize)
 	{
-		myData.Init(aSize, TYPE(), true);
+		myData.Init(aSize, TYPE());
 		myTail = 0;
 		mySize = 0;
 	}
@@ -68,7 +68,7 @@ namespace CU
 
 		if (newIndex >= myData.Size())
 		{
-			const SIZE_TYPE distanceToEnd = myData - myTail;
+			const SIZE_TYPE distanceToEnd = myData.Size() - myTail;
 			newIndex = mySize - distanceToEnd;
 		}
 
