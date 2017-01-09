@@ -13,7 +13,7 @@ enum class eControllerType
 	eWander,
 };
 
-class IController : public CComponent
+class IController
 {
 public:
 	IController();
