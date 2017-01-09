@@ -9,14 +9,17 @@
 #include "../BrontosaurusEngine/Engine.h"
 #include "CameraManager.h"
 #include "../CommonUtilities/Camera.h"
+#include "../CommonUtilities/EKeyboardKeys.h"
 
 #include <iostream>
 
 InputController::InputController(const CU::Camera& aPlayerCamera)
 	: myPlayerCamera(aPlayerCamera)
 	, myMouseIsDown(false)
+	, myIsShiftDown(false)
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
 	mySkillInputMessageActivators.Init(5);
 }
 
@@ -24,6 +27,7 @@ InputController::InputController(const CU::Camera& aPlayerCamera)
 InputController::~InputController()
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
 }
 
 void InputController::Update(float aDeltaTime)
@@ -43,14 +47,7 @@ void InputController::Update(float aDeltaTime)
 		direction.y = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m12) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m22) + myPlayerCamera.GetTransformation().m32;
 		direction.z = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m13) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m23) + myPlayerCamera.GetTransformation().m33;
 
-		//tested with transposed
-		//direction.x = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m11) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m12) + myPlayerCamera.GetTransformation().m13;
-		//direction.y = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m21) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m22) + myPlayerCamera.GetTransformation().m23;
-		//direction.z = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m31) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m32) + myPlayerCamera.GetTransformation().m33;
-
-		//direction = CU::Vector3f(CU::Vector4f(direction, 0.f) * myPlayerCamera.GetTransformation());
-
-		CU::Vector4f targetPosition3D;
+		CU::Vector3f targetPosition3D;
 		const CU::Vector3f groundNormal(0.f, 1.f, 0.f);
 		const float denominator = direction.Dot(groundNormal);
 		if (std::fabs(denominator) > 0.0001f)
@@ -70,8 +67,22 @@ void InputController::Update(float aDeltaTime)
 		data.myVector2f = targetPosition;
 		GetParent()->NotifyComponents(type, data);
 
-		type = eComponentMessageType::eSetSkillTargetPosition;
-		GetParent()->NotifyComponents(type, data);
+		if(myIsShiftDown == false)
+		{
+			type = eComponentMessageType::eSetSkillTargetPosition;
+			GetParent()->NotifyComponents(type, data);
+		
+		}
+		else
+		{
+			type = eComponentMessageType::eSetSkillTargetPositionWhileHoldingPosition;
+			GetParent()->NotifyComponents(type, data);
+		}
+	}
+
+	if(myIsShiftDown == true)
+	{
+		GetParent()->NotifyComponents(eComponentMessageType::eStopMovement, SComponentMessageData());
 	}
 }
 
@@ -86,7 +97,7 @@ void InputController::Receive(const eComponentMessageType aMessageType, const SC
 	{
 		if(aMessageData.myString == "BasicAttack")
 		{
-			mySkillInputMessageActivators.Add(CU::eInputMessage::LEFTMOUSEBUTTON);
+			mySkillInputMessageActivators.Add(CU::eInputMessage::DIVIDE);
 		}
 		else
 		{
@@ -136,7 +147,7 @@ eMessageReturn InputController::MouseMoved(const CU::Vector2f& aMousePosition)
 
 eMessageReturn InputController::TakeInputMessage(const CU::eInputMessage aInputMessage)
 {
-	for(unsigned short i = 0; i < mySkillInputMessageActivators.Size(); i++)
+	for(unsigned int i = 0; i < mySkillInputMessageActivators.Size(); i++)
 	{
 		if(mySkillInputMessageActivators[i] == aInputMessage)
 		{
@@ -145,6 +156,24 @@ eMessageReturn InputController::TakeInputMessage(const CU::eInputMessage aInputM
 			data.myInt = i;
 			GetParent()->NotifyComponents(type, data);
 		}
+	}
+	return eMessageReturn::eContinue;
+}
+
+eMessageReturn InputController::TakeKeyPressed(const CU::eKeys & aKey)
+{
+	if(aKey == CU::eKeys::LSHIFT)
+	{
+		myIsShiftDown = true;
+	}
+	return eMessageReturn::eContinue;
+}
+
+eMessageReturn InputController::TakeKeyReleased(const CU::eKeys & aKey)
+{
+	if (aKey == CU::eKeys::LSHIFT)
+	{
+		myIsShiftDown = false;
 	}
 	return eMessageReturn::eContinue;
 }

@@ -136,6 +136,16 @@ double CU::CPJWrapper::GetNumber() const
 	return myValue.get<double>();
 }
 
+float CU::CPJWrapper::GetFloat() const
+{
+	return static_cast<float>(GetNumber());
+}
+
+unsigned int CU::CPJWrapper::GetUInt() const
+{
+	return static_cast<unsigned int>(GetNumber());
+}
+
 bool CU::CPJWrapper::IsString() const
 {
 	return myValue.is<std::string>();

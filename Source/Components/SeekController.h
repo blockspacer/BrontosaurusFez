@@ -1,13 +1,8 @@
 #pragma once
 #include "IController.h"
-#include "../CommonUtilities/vector2.h"
 
 
-class CAIControllerComponent;
-
-
-
-class CSeekController : public IController
+class CSeekController : public IController  // Bugg, fiender kan typ gå in i orbit.
 {
 public:
 	CSeekController();
@@ -28,6 +23,7 @@ private:
 	float myMaxAcceleration;
 	float myTargetRadius;
 	float mySlowdownRadius;
+	float myAggroRange;
 
 	// Inherited via IController
 	void Destroy() override;

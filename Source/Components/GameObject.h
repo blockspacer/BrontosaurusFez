@@ -3,6 +3,10 @@
 #include "../CommonUtilities/matrix44.h"
 #include "../CommonUtilities/DynamicString.h"
 
+#ifndef _RETAIL_BUILD
+#define NAMED_GAME_OBJECTS
+#endif // !_RETAIL_BUILD
+
 class CGameObject :	public CComponent
 {
 public:
@@ -12,6 +16,7 @@ public:
 	CU::Matrix44f &GetLocalTransform();
 	CU::Matrix44f GetToWorldTransform();
 	CU::Vector3f GetWorldPosition();
+	void SetWorldPosition(CU::Vector3f);
 
 	void AddComponent(CComponent* aComponent);
 
@@ -38,10 +43,18 @@ private:
 
 inline void CGameObject::SetName(const CU::DynamicString& aName)
 {
+#ifdef NAMED_GAME_OBJECTS
 	myName = aName;
+#else
+	aName;
+#endif // NAMED_GAME_OBJECTS
 }
 
 inline const CU::DynamicString& CGameObject::GetName() const
 {
+#ifdef NAMED_GAME_OBJECTS
 	return myName;
+#else
+	return "";
+#endif // NAMED_GAME_OBJECTS
 }

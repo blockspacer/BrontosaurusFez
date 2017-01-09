@@ -4,6 +4,7 @@
 #include "../GUI/GUIManager/GUIManager.h"
 #include "Game/LevelSelectState.h"
 #include "Components/InputController.h"
+#include "Components/MouseComponent.h"
 
 MouseReleased::MouseReleased(const CU::Vector2f& aMousePosition, const CU::eMouseButtons& aMouseButton)
 	: myMousePosition(aMousePosition)
@@ -35,11 +36,21 @@ eMessageReturn MouseReleased::DoEvent(LevelSelectState* aLevelSelectState) const
 	return eMessageReturn::eContinue;
 }
 
-eMessageReturn MouseReleased::DoEvent(InputController * aInputController) const
+eMessageReturn MouseReleased::DoEvent(InputController* aInputController) const
 {
 	if (aInputController != nullptr)
 	{
 		aInputController->MouseReleased(myMouseButton, myMousePosition);
+	}
+
+	return eMessageReturn::eContinue;
+}
+
+eMessageReturn MouseReleased::DoEvent(CMouseComponent* aMouseComponent) const
+{
+	if (aMouseComponent != nullptr)
+	{
+		aMouseComponent->SetMouseIsDown(false);
 	}
 
 	return eMessageReturn::eContinue;

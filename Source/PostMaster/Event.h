@@ -19,6 +19,7 @@ class LevelSelectState;
 class EnemyEmitterComponent;
 class InputController;
 class CConsole;
+class CMouseComponent;
 
 //temp
 class CHealthComponent;
@@ -43,6 +44,7 @@ public:
 	virtual eMessageReturn DoEvent(EnemyEmitterComponent*) const { return eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(InputController*) const { return eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(CConsole*) const { return eMessageReturn::eContinue; }
+	virtual eMessageReturn DoEvent(CMouseComponent*) const { return eMessageReturn::eContinue; }
 
 	//temp
 	virtual eMessageReturn DoEvent(CHealthComponent*) const { return eMessageReturn::eContinue; }

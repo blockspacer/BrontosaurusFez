@@ -15,11 +15,12 @@ public:
 	void BasicAttackUpdate(float aDeltaTime); //we probably want to chagne this later
 	void SetTargetPosition(CU::Vector3f aTargetPosition);
 	void SetTargetObject(CGameObject* aTargetObject);
-	inline bool GetIsActive();
-	inline bool GetIsSelected();
+	void ActivateCollider();
+	inline const bool GetIsActive() const;
+	inline const bool GetIsSelected() const;
 	inline bool IsInited();
-	inline void Select();
-	inline void Deselect();
+	void Select();
+	void Deselect();
 protected:
 	virtual void OnActivation();
 	virtual void OnDeActivation();
@@ -29,17 +30,23 @@ protected:
 	CGameObject* myTargetObject;
 	CU::Vector3f myTargetPosition;
 	std::function<void(float)> myUpdateFunction;
+	float myRange;
+	float myCoolDown;
+	float myAttackRadius2;
+	float myElapsedCoolDownTime;
+	float myAnimationTime;
+	float myAnimationTimeElapsed;
 	bool myIsActive;
 	bool myIsSelected;
 };
 
 
-inline bool Skill::GetIsActive()
+inline const bool Skill::GetIsActive() const
 {
 	return myIsActive;
 }
 
-inline bool Skill::GetIsSelected()
+inline const bool Skill::GetIsSelected() const
 {
 	return myIsSelected;
 }
@@ -53,12 +60,3 @@ inline bool Skill::IsInited()
 	return false;
 }
 
-inline void Skill::Select()
-{
-	myIsSelected = true;
-}
-
-inline void Skill::Deselect()
-{
-	myIsSelected = false;
-}
