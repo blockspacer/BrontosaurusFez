@@ -12,7 +12,8 @@ public:
 	virtual void Deactivate();
 	virtual void Update(float aDeltaTime);
 	virtual void Init(CGameObject* aUser);
-	void BasicAttackUpdate(float aDeltaTime); //we probably want to chagne this later
+	void BasicAttackUpdate(float aDeltaTime);
+	void WhirlWindUpdate(float aDeltaTime);
 	void SetTargetPosition(CU::Vector3f aTargetPosition);
 	void SetTargetObject(CGameObject* aTargetObject);
 	void ActivateCollider();
