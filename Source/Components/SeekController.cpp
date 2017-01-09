@@ -4,6 +4,8 @@
 #include "../Game/PollingStation.h"
 #include "AIControllerComponent.h"
 
+#define SCALAR 3
+
 CSeekController::CSeekController()
 {
 	myMaxSpeed = 0;
@@ -53,7 +55,7 @@ const CU::Vector2f CSeekController::Update(const CU::Time& aDeltaTime)
 	{
 		acceleration.Normalize() *= myMaxAcceleration;
 	}
-	myAcceleration = acceleration;
+	myAcceleration = acceleration * SCALAR;
 	return myAcceleration * myWeight;
 }
 
