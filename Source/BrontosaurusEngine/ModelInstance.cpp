@@ -4,6 +4,7 @@
 #include "Model.h"
 #include "Engine.h"
 #include "Renderer.h"
+#include "RenderCamera.h"
 
 
 CModelInstance::CModelInstance(const char* aModelPath)
@@ -79,6 +80,34 @@ void CModelInstance::Render(Lights::SDirectionalLight* aLight, CU::GrowingArray<
 
 		RENDERER.AddRenderMessage(msg);
 
+		myLastFrame = myTransformation;
+	}
+}
+
+void CModelInstance::Render(Lights::SDirectionalLight * aLight, CU::GrowingArray<CPointLightInstance*>* aPointLightList, CRenderCamera & aRenderToCamera)
+{
+	if (ShouldRender() == true)
+	{
+		SRenderModelMessage* msg = new SRenderModelMessage();
+
+		msg->myDirectionalLight = aLight;
+		msg->myPointLights = aPointLightList;
+		msg->myModelID = myModel;
+		msg->myTransformation = myTransformation;
+		msg->myLastFrameTransformation = myLastFrame;
+
+		if (myHasAnimations != false)
+		{
+			msg->myAnimationTime = myAnimationCounter;
+			msg->myCurrentAnimation = myCurrentAnimation;
+		}
+
+		if (aPointLightList == nullptr && aLight == nullptr)
+		{
+			msg->myType = SRenderMessage::eRenderMessageType::eRenderModelDepth;
+		}
+
+		aRenderToCamera.AddRenderMessage(msg);
 		myLastFrame = myTransformation;
 	}
 }

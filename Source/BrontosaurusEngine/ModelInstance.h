@@ -17,6 +17,7 @@ namespace Lights
 }
 
 class CModel;
+class CRenderCamera;
 class CPointLightInstance;
 class CSceneAnimator;
 
@@ -49,6 +50,11 @@ public:
 
 	//Make GA StaticArray, no need for dynamicArray yo // or make it VectorOnStack?? :) // VectorOnAStick
 	void Render(Lights::SDirectionalLight* aLight, CU::GrowingArray<CPointLightInstance*>* aPointLightList);
+
+
+	//Edvin testar med kamera
+	void Render(Lights::SDirectionalLight* aLight, CU::GrowingArray<CPointLightInstance*>* aPointLightList, CRenderCamera& aRenderToCamera);
+
 	void Update(const CU::Time aDeltaTime);
 
 	void SetTransformation(CU::Matrix44f& aTransformation);
