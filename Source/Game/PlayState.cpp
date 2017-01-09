@@ -427,6 +427,11 @@ CGameObjectManager* CPlayState::GetObjectManager() const
 	return myGameObjectManager;
 }
 
+CCollisionComponentManager* CPlayState::GetCollisionManager()
+{
+	return myCollisionComponentManager;
+}
+
 void CPlayState::CreateManagersAndFactories()
 {
 	myScene = new CScene();
