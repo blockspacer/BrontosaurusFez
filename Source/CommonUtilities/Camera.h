@@ -36,9 +36,13 @@ namespace CU
 		// Returns the projection matrix 
 		const Matrix44f& GetProjection() const;
 		const Matrix44f& GetProjectionInverse() const;
+		inline const float GetProjectionWidth() const;
+		inline const float GetProjectionHeight() const;
 
 		const Vector3f GetPosition() const;
 		void SetPosition(const CU::Vector3f& aPosition);
+
+		void LookAt(const CU::Vector3f& aPosition);
 
 		void Translate(Vector3f aVector);
 		void Roll(const float aAngle);
@@ -68,6 +72,8 @@ namespace CU
 		//supercool frustum that will be glorious and amazing
 		CFrustum myFrustum;
 
+		float myWidth;
+		float myHeight;
 		float myNear;
 		float myFar;
 	};
@@ -87,4 +93,13 @@ namespace CU
 		return myNear;
 	}
 
+	inline const float CU::Camera::GetProjectionWidth() const
+	{
+		return myWidth;
+	}
+
+	inline const float Camera::GetProjectionHeight() const
+	{
+		return myHeight;
+	}
 } 

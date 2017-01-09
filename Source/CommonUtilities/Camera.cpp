@@ -38,6 +38,9 @@ namespace CU
 		myTransformation = Matrix44f::Identity;
 		myFar = aFar;
 		myNear = aNear;
+
+		myWidth = aProjectionWidth;
+		myHeight = aProjectionHeight;
 	}
 	//Orthographic, Width and Height does not care about pixelrino only ingame distances, 100  Width is 100 with ingame, if that is meters or whatever is up to game yo
 	void Camera::Init(const float aProjectionWidth, const float aProjectionHeight, const float aNear, const float aFar)
@@ -49,6 +52,10 @@ namespace CU
 		myTransformation = Matrix44f::Identity;
 		myFar = aFar;
 		myNear = aNear;
+
+		myWidth = aProjectionWidth;
+		myHeight = aProjectionHeight;
+
 	}
 
 	void Camera::ReInit(
@@ -64,6 +71,9 @@ namespace CU
 		myFrustum.SetFrustum(aFar, aNear, aFov, aProjectionWidth, aProjectionHeight);
 		myFar = aFar;
 		myNear = aNear;
+
+		myWidth = aProjectionWidth;
+		myHeight = aProjectionHeight;
 	}
 
 	void Camera::ReInit(
@@ -78,6 +88,9 @@ namespace CU
 		myFrustum.SetFrustum(aFar, aNear, 0.0f, aProjectionWidth, aProjectionHeight);
 		myFar = aFar;
 		myNear = aNear;
+
+		myWidth = aProjectionWidth;
+		myHeight = aProjectionHeight;
 	}
 
 	Matrix44f Camera::GetInverse() const
@@ -115,7 +128,10 @@ namespace CU
 
 		myTransformation = translationMatrix * myTransformation;
 	}
-
+	void Camera::LookAt(const CU::Vector3f& aPosition)
+	{
+		myTransformation.LookAt(aPosition);
+	}
 
 	void Camera::Roll(const float aAngle)
 	{
