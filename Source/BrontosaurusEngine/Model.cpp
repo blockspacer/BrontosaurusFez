@@ -406,7 +406,7 @@ void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix4
 		DEVICE_CONTEXT->Map(myLightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubResource);
 		memcpy(mappedSubResource.pData, &updatedLights, sizeof(Lights::SLightsBuffer));
 		DEVICE_CONTEXT->Unmap(myLightBuffer, 0);
-		DEVICE_CONTEXT->PSSetConstantBuffers(0, 1, &myLightBuffer);
+		DEVICE_CONTEXT->PSSetConstantBuffers(1, 1, &myLightBuffer);
 	}
 
 
