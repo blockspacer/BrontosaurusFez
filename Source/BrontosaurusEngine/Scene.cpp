@@ -74,6 +74,8 @@ CScene::CScene()
 	myParticleEmitters.Init(8);
 	myFireEmitters.Init(8);
 	mySkybox = nullptr;
+
+	myShadowCamera.InitOrthographic(3000, 3000, 2500.f, 1.f, 2048, 2048);
 }
 
 CScene::~CScene()
@@ -98,6 +100,17 @@ void CScene::Render()
 	cameraMsg.myCamera = myCameras[Intify(eCameraType::ePlayerOneCamera)];
 	RENDERER.AddRenderMessage(new SSetCameraMessage(cameraMsg));
 
+	//myShadowCamera.GetCamera().SetTransformation(myCameras[Intify(eCameraType::ePlayerOneCamera)].GetTransformation());
+
+
+	//CU::Matrix44f cam;
+	//cam.Rotate(0.f, 3.14f / 2.0f, - 3.14f / 4.0f);
+	//cam.myPosition = myCameras[Intify(eCameraType::ePlayerOneCamera)].GetPosition() + cam.myForwardVector * -100.f;
+	//cam.InvertMe();
+
+	myShadowCamera.GetCamera().SetTransformation(myCameras[Intify(eCameraType::ePlayerOneCamera)].GetTransformation());
+	//myShadowCamera.GetCamera().SetTransformation(cam);
+	myDirectionalLight.direction = myShadowCamera.GetCamera().GetTransformation().myForwardVector;
 
 	SChangeStatesMessage statemsg;
 	if (mySkybox != nullptr)
@@ -119,9 +132,33 @@ void CScene::Render()
 		statemsg.mySamplerState = eSamplerState::eClamp;
 
 		RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
+		myShadowCamera.AddRenderMessage(new SChangeStatesMessage(statemsg));
 	}
 
-	for (unsigned int i = 0; i < myModels.Size();++i)
+	for (unsigned int i = 0; i < myModels.Size(); ++i)
+	{
+		if (myModels[i] == nullptr || myModels[i]->ShouldRender() == false)
+		{
+			continue;
+		}
+
+		if (myShadowCamera.GetCamera().IsInside(myModels[i]->GetModelBoundingBox()) == false)
+		{
+			continue;
+		}
+
+		myModels[i]->Render(&myDirectionalLight, &myPointLights, myShadowCamera);
+
+	}
+
+	myShadowCamera.Render();
+	SSetShadowBuffer *shadowMSG = new SSetShadowBuffer();
+	shadowMSG->myCameraProjection = myShadowCamera.GetCamera().GetProjection();
+	shadowMSG->myCameraTransformation = myShadowCamera.GetCamera().GetInverse();
+	shadowMSG->myShadowBuffer = myShadowCamera.GetRenderPackage();
+	RENDERER.AddRenderMessage(shadowMSG);
+
+	for (unsigned int i = 0; i < myModels.Size(); ++i)
 	{
 		if (myModels[i] == nullptr || myModels[i]->ShouldRender() == false)
 		{
@@ -134,7 +171,9 @@ void CScene::Render()
 		}
 
 		myModels[i]->Render(&myDirectionalLight, &myPointLights);
+
 	}
+
 
 	SChangeStatesMessage* changeStateMessage = new SChangeStatesMessage();
 	changeStateMessage->myBlendState = eBlendState::eAlphaBlend;
@@ -142,6 +181,7 @@ void CScene::Render()
 	changeStateMessage->myRasterizerState = eRasterizerState::eNoCullingClockwise;
 	changeStateMessage->mySamplerState = eSamplerState::eClamp0Wrap1;
 
+	//myTestCamera.AddRenderMessage(changeStateMessage);
 	RENDERER.AddRenderMessage(changeStateMessage);
 
 	for (CFireEmitterInstance& fireEmitter : myFireEmitters)
@@ -150,22 +190,26 @@ void CScene::Render()
 		fireEmitter.Render();
 	}
 
-	statemsg.myBlendState = eBlendState::eAlphaBlend;
-	statemsg.myRasterizerState = eRasterizerState::eDefault;
-	statemsg.myDepthStencilState = eDepthStencilState::eReadOnly;
-	statemsg.mySamplerState = eSamplerState::eClamp;
+	//statemsg.myBlendState = eBlendState::eAlphaBlend;
+	//statemsg.myRasterizerState = eRasterizerState::eDefault;
+	//statemsg.myDepthStencilState = eDepthStencilState::eReadOnly;
+	//statemsg.mySamplerState = eSamplerState::eClamp;
 
-	RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
+	//RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
 
-	for (unsigned int i = 0; i < myParticleEmitters.Size(); ++i)
-	{
-		/*if (myParticleEmitters[i]->IsVisible() == false)
-		{
-			continue;
-		}*/
+	//for (unsigned int i = 0; i < myParticleEmitters.Size(); ++i)
+	//{
+	//	/*if (myParticleEmitters[i]->IsVisible() == false)
+	//	{
+	//		continue;
+	//	}*/
 
-		myParticleEmitters[i]->Render(GetCamera(eCameraType::ePlayerOneCamera));
-	}
+	//	myParticleEmitters[i]->Render(GetCamera(eCameraType::ePlayerOneCamera));
+	//}
+
+	SRenderToIntermediate * interMSG = new SRenderToIntermediate();
+	interMSG->myRenderPackage = myShadowCamera.GetRenderPackage();
+	RENDERER.AddRenderMessage(interMSG);
 }
 
 InstanceID CScene::AddModelInstance(CModelInstance* aModelInstance)
