@@ -7,34 +7,42 @@
 
 CRenderCamera::CRenderCamera()
 {
+	myRenderQueue.Init(32);
 }
 
 
 CRenderCamera::~CRenderCamera()
 {
-	
+	myRenderQueue.DeleteAll();
 }
 
-void CRenderCamera::Init(const float aFov, const float aWidth, const float aHeight, const float aFar, const float aNear, DXGI_FORMAT aFormat /*= DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM*/)
+void CRenderCamera::InitPerspective(const float aFov, const float aWidth, const float aHeight, const float aFar, const float aNear, DXGI_FORMAT aFormat /*= DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM*/)
 {
 	myCamera.Init(aFov, aWidth, aHeight, aNear, aFar);
+	CU::Vector2ui size(aWidth, aHeight);
+	myRenderPackage.Init(size, nullptr, aFormat);
 }
 
-void CRenderCamera::Init(const float aWidth, const float aHeight, const float aFar, const float aNear, DXGI_FORMAT aFormat /*= DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM*/)
+//ORTOGRAPHIC
+void CRenderCamera::InitOrthographic(const float aWidth, const float aHeight, const float aFar, const float aNear, const int aTextureWidth, const int aTextureHeight, DXGI_FORMAT aFormat /*= DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM*/)
 {
 	myCamera.Init(aWidth, aHeight, aNear, aFar);
+	CU::Vector2ui size(aTextureWidth, aTextureHeight);
+	myRenderPackage.Init(size, nullptr, aFormat);
+}
 
+void CRenderCamera::AddRenderMessage(SRenderMessage * aRenderMessage)
+{
+	myRenderQueue.Add(aRenderMessage);
 }
 
 void CRenderCamera::Render()
 {
-	SSetCameraMessage* setCamMsg = new SSetCameraMessage();
-	setCamMsg->myCamera = myCamera;
-	RENDERER.AddRenderMessage(setCamMsg);
 	SRenderCameraQueueMessage * camqueueMsg = new SRenderCameraQueueMessage();
+	camqueueMsg->myCamera = myCamera;
 	camqueueMsg->CameraRenderPackage = myRenderPackage;
 	camqueueMsg->CameraRenderQueue = myRenderQueue;
 	RENDERER.AddRenderMessage(camqueueMsg);
-
+	myRenderQueue.RemoveAll(); // these are deleted on the render thread
 }
 
