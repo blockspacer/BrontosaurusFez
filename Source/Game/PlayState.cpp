@@ -544,7 +544,7 @@ void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)
 }
 
 
-void CPlayState::CreateManagersAndFactories()
+void CPlayState::TEMP_CREATE_ENEMY()
 {
 	CGameObject* enemyObj = myGameObjectManager->CreateGameObject();
 	CModelComponent* tempEnemyModel = CModelComponentManager::GetInstance().CreateComponent("Models/Placeholders/tree.fbx");
