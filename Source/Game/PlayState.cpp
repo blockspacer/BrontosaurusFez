@@ -182,25 +182,25 @@ void CPlayState::Load()
 
 	//create player:
 
-	myPlayerObject = myGameObjectManager->CreateGameObject();
-	PollingStation::playerObject = myPlayerObject;
+	//myPlayerObject = myGameObjectManager->CreateGameObject();
+	//PollingStation::playerObject = myPlayerObject;
 
-	InputController* tempInputController = InputControllerManager::GetInstance().CreateAndRegisterComponent();
-	myPlayerObject->AddComponent(tempInputController);
+	//InputController* tempInputController = InputControllerManager::GetInstance().CreateAndRegisterComponent();
+	//myPlayerObject->AddComponent(tempInputController);
 
-	MovementComponent* tempMovementController = MovementComponentManager::GetInstance().CreateAndRegisterComponent();
-	myPlayerObject->AddComponent(tempMovementController);
+	//MovementComponent* tempMovementController = MovementComponentManager::GetInstance().CreateAndRegisterComponent();
+	//myPlayerObject->AddComponent(tempMovementController);
 
-	myPlayerObject->AddComponent(new NavigationComponent());
+	//myPlayerObject->AddComponent(new NavigationComponent());
 
-	CModelComponent* playerModelComponent = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
-	myPlayerObject->AddComponent(playerModelComponent);
+	//CModelComponent* playerModelComponent = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
+	//myPlayerObject->AddComponent(playerModelComponent);
 
-	myPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
-	SkillSystemComponent* tempSkillSystemComponent = new SkillSystemComponent;
-	SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
-	myPlayerObject->AddComponent(tempSkillSystemComponent);
-	tempSkillSystemComponent->AddSkill("BasicAttack");
+	//myPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
+	//SkillSystemComponent* tempSkillSystemComponent = new SkillSystemComponent;
+	//SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
+	//myPlayerObject->AddComponent(tempSkillSystemComponent);
+	//tempSkillSystemComponent->AddSkill("BasicAttack");
 	////create camera object:
 	////myCameraObject = myGameObjectManager->CreateGameObject();
 
@@ -268,13 +268,13 @@ void CPlayState::Load()
 	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation()); //
 
 	//----CreateEnemies----
-	myEnemies.Init(8);
-	TEMP_CREATE_ENEMY();
-	myEnemies[0]->SetWorldPosition({ 0.f, 0.f, 0.f });
-	TEMP_CREATE_ENEMY();
-	myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
-	TEMP_CREATE_ENEMY();
-	myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
+	//myEnemies.Init(8);
+	//TEMP_CREATE_ENEMY();
+	//myEnemies[0]->SetWorldPosition({ 0.f, 0.f, 0.f });
+	//TEMP_CREATE_ENEMY();
+	//myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
+	//TEMP_CREATE_ENEMY();
+	//myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
 
 	//---------------------
 
@@ -580,7 +580,7 @@ void CPlayState::TEMP_CREATE_ENEMY()
 	circleCollisionData.myCircleData->myCenterPosition = enemyObj->GetWorldPosition();
 	circleCollisionData.myCircleData->myRadius = 100000.0f;
 	CCollisionComponent* collisionComponent = SkillSystemComponentManager::GetInstance().GetCollisionComponentManager()->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, circleCollisionData);
-	collisionComponent->AddCollidsWith(eColliderType::eColliderType_Actor);
+	collisionComponent->AddCollidsWith(eColliderType::eColliderType_Skill);
 	collisionComponent->SetColliderType(eColliderType::eColliderType_Actor);
 	collisionComponent->GetCollider()->SetGameObject(enemyObj);
 	enemyObj->AddComponent(collisionComponent);
