@@ -5,11 +5,12 @@ class CollisionManager;
 template <typename ValueType>
 class ValueObserver;
 struct PlayerData;
+class CComponent;
 
 struct PollingStation
 {
 	static void NullifyLevelSpecificData();
-
+	static CComponent* PlayerInput;
 	static CGameObject* playerObject;
 	static PlayerData* playerData;
 	static ValueObserver<int>* playerHealthBar;
