@@ -2,19 +2,36 @@
 
 #include <assert.h>
 
+//FORWARD DECLERATION BEGIN
+//std::string and std::wstring
+
+template<class _Elem, class _Traits, class _Alloc>
+class basic_string;
+
+template<class _Elem>
+struct char_traits;
+
+template<class _Ty>
+class allocator;
+
+typedef basic_string<char, char_traits<char>, allocator<char>> string;
+typedef basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t>> wstring;
+
+//FORWARD DECLERATION END
+
 namespace CU
 {
+	
 	class DynamicString
 	{
 	public:
-		~DynamicString();
-
 		DynamicString();
 		DynamicString(const int aCapacity);
 		DynamicString(const DynamicString& aString);
 		DynamicString(DynamicString&& aString);
 		DynamicString(const char* aLiteralString);
 		DynamicString(const char aCharacter, const int aSize = 1);
+		~DynamicString();
 
 		DynamicString& operator=(DynamicString&& aString);
 		DynamicString& operator=(const DynamicString& aString);

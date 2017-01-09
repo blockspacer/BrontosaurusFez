@@ -18,8 +18,14 @@ public:
 
 	void MouseMoved(const CU::Vector2f& aMousePosition);
 
+	void SetMouseIsDown(const bool aIsDown);
+
 private:
+	void HandleCollision(CGameObject* aCollidedWith);
 	eMessageReturn Recieve(const Message& aMessage) override;
+
+	CGameObject* myHoveredGameObject;
+	bool myMouseIsDown;
 
 	const CU::Camera& myPlayerCamera;
 };

@@ -32,6 +32,7 @@ protected:
 	std::function<void(float)> myUpdateFunction;
 	float myRange;
 	float myCoolDown;
+	float myAttackRadius2;
 	float myElapsedCoolDownTime;
 	bool myIsActive;
 	bool myIsSelected;

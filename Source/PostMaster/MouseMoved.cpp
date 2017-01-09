@@ -45,7 +45,7 @@ eMessageReturn MouseMoved::DoEvent(GUICursor* aGUICursor) const
 	return eMessageReturn::eContinue;
 }
 
-eMessageReturn MouseMoved::DoEvent(InputController * aInputController) const
+eMessageReturn MouseMoved::DoEvent(InputController* aInputController) const
 {
 	if (aInputController != nullptr)
 	{
@@ -55,7 +55,7 @@ eMessageReturn MouseMoved::DoEvent(InputController * aInputController) const
 	return eMessageReturn::eContinue;
 }
 
-eMessageReturn MouseMoved::DoEvent(CMouseComponent * aMouseComponent) const
+eMessageReturn MouseMoved::DoEvent(CMouseComponent* aMouseComponent) const
 {
 	if (aMouseComponent != nullptr)
 	{

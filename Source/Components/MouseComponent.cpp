@@ -2,9 +2,13 @@
 #include "MouseComponent.h"
 #include "..\BrontosaurusEngine\Engine.h"
 #include "..\CommonUtilities\Camera.h"
+#include "..\Collision\ICollider.h"
+#include "..\Game\PollingStation.h"
 
 CMouseComponent::CMouseComponent(const CU::Camera& aPlayerCamera)
 	: myPlayerCamera(aPlayerCamera)
+	, myHoveredGameObject(nullptr)
+	, myMouseIsDown(false)
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage);
 }
@@ -18,7 +22,8 @@ void CMouseComponent::Receive(const eComponentMessageType aMessageType, const SC
 {
 	switch (aMessageType)
 	{
-	case eComponentMessageType::eOnCollisionEnter: //??
+	case eComponentMessageType::eOnCollisionEnter:
+		HandleCollision(aMessageData.myCollider->GetGameObject());
 		break;
 	}
 }
@@ -34,6 +39,7 @@ void CMouseComponent::MouseMoved(const CU::Vector2f& aMousePosition)
 	if (GetParent() == nullptr)
 	{
 		PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);
+		return;
 	}
 
 
@@ -69,4 +75,41 @@ void CMouseComponent::MouseMoved(const CU::Vector2f& aMousePosition)
 eMessageReturn CMouseComponent::Recieve(const Message& aMessage)
 {
 	return aMessage.myEvent.DoEvent(this);
+}
+
+void CMouseComponent::HandleCollision(CGameObject* aCollidedWith)
+{
+	if (aCollidedWith == PollingStation::playerObject)
+	{
+		return;
+	}
+	if (aCollidedWith == nullptr)
+	{
+		return;
+	}
+
+	myHoveredGameObject = aCollidedWith;
+
+	if (myMouseIsDown == true)
+	{
+		DL_PRINT("clicked on enemy: %s", aCollidedWith->GetName().c_str());
+
+		SComponentMessageData hitThisBastard;
+		hitThisBastard.myGameObject = aCollidedWith;
+		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eSetSkillTargetObject, hitThisBastard);
+	}
+}
+
+void CMouseComponent::SetMouseIsDown(const bool aIsDown)
+{
+	myMouseIsDown = aIsDown;
+
+	if (myMouseIsDown == true)
+	{
+		HandleCollision(myHoveredGameObject);
+	}
+	else
+	{
+		myHoveredGameObject = nullptr;
+	}
 }

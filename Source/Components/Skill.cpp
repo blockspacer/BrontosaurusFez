@@ -21,7 +21,7 @@ Skill::Skill()
 	circleCollisionData.myCircleData->myCenterPosition = myColliderObject->GetWorldPosition();
 	circleCollisionData.myCircleData->myRadius = 100000.0f;
 	CCollisionComponent* collisionComponent = SkillSystemComponentManager::GetInstance().GetCollisionComponentManager()->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, circleCollisionData);
-	collisionComponent->AddCollidsWith(eColliderType::eColliderType_Actor);
+	collisionComponent->AddCollidsWith(eColliderType::eColliderType_Enemy | eColliderType::eColliderType_Player);
 	collisionComponent->SetColliderType(eColliderType::eColliderType_Skill);
 	myColliderObject->AddComponent(collisionComponent);
 	collisionComponent->DeactivateCollider();
@@ -30,6 +30,7 @@ Skill::Skill()
 	myCoolDown = 0.5f;
 	myElapsedCoolDownTime = myCoolDown;
 	myRange = 300.0f;
+	myAttackRadius2 = 50.0f * 50.0f;
 }
 
 
@@ -66,7 +67,7 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 {
 	if(myTargetObject != nullptr)
 	{
-		if(CU::Vector3f(myUser->GetWorldPosition() - myTargetObject->GetWorldPosition()).Length2() < 50.0f * 50.0f)
+		if((myUser->GetWorldPosition() - myTargetObject->GetWorldPosition()).Length2() < myAttackRadius2)
 		{
 			eComponentMessageType type = eComponentMessageType::eStopMovement;
 			myUser->NotifyComponents(type, SComponentMessageData());

@@ -70,17 +70,17 @@ void SkillComponent::Destroy()
 {
 }
 
-void SkillComponent::DoDamage(CGameObject * aGameObjectToDamage)
+void SkillComponent::DoDamage(CGameObject* aGameObjectToDamage)
 {
-	SComponentMessageData data;
-	SComponentMessageData data2;
-	data.myInt = myDamage;
-	aGameObjectToDamage->NotifyComponents(eComponentMessageType::eTakeDamage, data);
+	SComponentMessageData damageData;
+	damageData.myInt = myDamage;
+	aGameObjectToDamage->NotifyComponents(eComponentMessageType::eTakeDamage, damageData);
+
 	if (myIsAOE == false)
 	{
-		data2.myBool = false;
-		GetParent()->NotifyComponents(eComponentMessageType::eSetIsColliderActive, data2);
+		SComponentMessageData deactivationData;
+		deactivationData.myBool = false;
+		GetParent()->NotifyComponents(eComponentMessageType::eSetIsColliderActive, deactivationData);
 		myIsActive = false;
-
 	}
 }
