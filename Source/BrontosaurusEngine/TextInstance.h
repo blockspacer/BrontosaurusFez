@@ -30,7 +30,7 @@ public:
 
 	inline void SetText(const CU::DynamicString& aString);
 	inline const CU::DynamicString& GetText() const;
-
+	float GetlineHeight() const;
 private:
 	CU::DynamicString myString;
 	CU::Vector4f myColor;

@@ -21,6 +21,7 @@ public:
 	CEffect* GetEffect();
 	CU::Vector2i GetCharSize(const wchar_t aChar);
 	CU::Vector2i GetBearing(const wchar_t aChar);
+	float GetlineHeight() const;
 private:
 	CFT_Font* myFontpointer;
 };

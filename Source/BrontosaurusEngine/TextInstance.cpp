@@ -55,3 +55,8 @@ void CTextInstance::Render()
 		CEngine::GetInstance()->GetRenderer().AddRenderMessage(changeStateMessage);
 	}
 }
+
+float CTextInstance::GetlineHeight() const
+{
+	return myText->GetlineHeight();
+}

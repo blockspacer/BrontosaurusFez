@@ -31,7 +31,7 @@ public:
 	~CCoolText();
 
 	void Render(const CU::DynamicString& aString, const CU::Vector2f& aPosition, const CU::Vector4f& aColor/*, const CU::Vector2i& aSize*/);
-
+	float GetlineHeight() const;
 private:
 	bool InitBuffers();
 
