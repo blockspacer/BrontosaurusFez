@@ -30,10 +30,10 @@ CRenderer::CRenderer()
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed);
 
-	mySettings.HDR = true;
-	mySettings.Bloom = true;
+	mySettings.HDR = false;
+	mySettings.Bloom = false;
 	mySettings.Motionblur = false;
-	mySettings.CromaticAberration = true;
+	mySettings.CromaticAberration = false;
 
 	myOncePerFrameBufferTimer = myTimers.CreateTimer();
 	myFireTimer = myTimers.CreateTimer();
@@ -127,8 +127,7 @@ void CRenderer::Render()
 
 
 	myBackBufferPackage.Activate();
-	myFullScreenHelper.DoEffect(CFullScreenHelper::eEffectType::eCopy, {0.0f, 0.0f, 1.0f, 0.5f}, renderTo->GetDepthResource());
-	myFullScreenHelper.DoEffect(CFullScreenHelper::eEffectType::eCopy, { 0.0f, 0.5f, 1.0f, 1.0f }, &myIntermediatePackage);
+	myFullScreenHelper.DoEffect(CFullScreenHelper::eEffectType::eCopy, &myIntermediatePackage);
 
 }
 
@@ -374,6 +373,9 @@ void CRenderer::CreateBuffer()
 	SOncePerFrameBuffer buffer;
 	buffer.myCameraMatrices.myCameraSpaceInverse = myCamera.GetInverse();
 	buffer.myCameraMatrices.myProjectionSpace = myCamera.GetProjection();
+	buffer.myShadowCameraMatrices.myCameraSpaceInverse = CU::Matrix44f::Zero;
+	buffer.myShadowCameraMatrices.myProjectionSpace = CU::Matrix44f::Zero;
+
 	buffer.deltaTime = 0.0f;
 	
 	buffer.time = 0.0f;
@@ -393,6 +395,11 @@ void CRenderer::UpdateBuffer()
 
 	updatedBuffer.myCameraMatrices.myCameraSpaceInverse = myCamera.GetInverse();
 	updatedBuffer.myCameraMatrices.myProjectionSpace = myCamera.GetProjection();
+
+	updatedBuffer.myShadowCameraMatrices.myCameraSpaceInverse = myCamera.GetInverse();
+	
+	updatedBuffer.myShadowCameraMatrices.myProjectionSpace = myCamera.GetProjection();
+
 	updatedBuffer.deltaTime = myTimers.GetTimer(myOncePerFrameBufferTimer).GetDeltaTime().GetSeconds();
 	updatedBuffer.time = myTimers.GetTimer(myOncePerFrameBufferTimer).GetLifeTime().GetSeconds();
 	updatedBuffer.fogStart = 0.0f;
@@ -405,6 +412,34 @@ void CRenderer::UpdateBuffer()
 	DEVICE_CONTEXT->VSSetConstantBuffers(0, 1, &myOncePerFrameBuffer);
 	DEVICE_CONTEXT->GSSetConstantBuffers(0, 1, &myOncePerFrameBuffer);
 
+}
+
+void CRenderer::UpdateBuffer(SSetShadowBuffer* msg) 
+{
+	D3D11_MAPPED_SUBRESOURCE mappedSubResource;
+	ZeroMemory(&mappedSubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+	SOncePerFrameBuffer updatedBuffer;
+
+	updatedBuffer.myCameraMatrices.myCameraSpaceInverse = myCamera.GetInverse();
+	updatedBuffer.myCameraMatrices.myProjectionSpace = myCamera.GetProjection();
+	
+	updatedBuffer.myShadowCameraMatrices.myCameraSpaceInverse = msg->myCameraTransformation;
+	updatedBuffer.myShadowCameraMatrices.myProjectionSpace = msg->myCameraProjection;
+
+	updatedBuffer.deltaTime = myTimers.GetTimer(myOncePerFrameBufferTimer).GetDeltaTime().GetSeconds();
+	updatedBuffer.time = myTimers.GetTimer(myOncePerFrameBufferTimer).GetLifeTime().GetSeconds();
+	updatedBuffer.fogStart = 0.0f;
+	updatedBuffer.fogEnd = 0.0f;
+
+	DEVICE_CONTEXT->Map(myOncePerFrameBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubResource);
+	memcpy(mappedSubResource.pData, &updatedBuffer, sizeof(SOncePerFrameBuffer));
+	DEVICE_CONTEXT->Unmap(myOncePerFrameBuffer, 0);
+
+	DEVICE_CONTEXT->VSSetConstantBuffers(0, 1, &myOncePerFrameBuffer);
+	DEVICE_CONTEXT->GSSetConstantBuffers(0, 1, &myOncePerFrameBuffer);
+	DEVICE_CONTEXT->PSSetConstantBuffers(0, 1, &myOncePerFrameBuffer);
+
+	DEVICE_CONTEXT->PSSetShaderResources(7, 1, &msg->myShadowBuffer.GetDepthResource());
 }
 
 void CRenderer::CreateRasterizerStates()
@@ -712,11 +747,27 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 	case SRenderMessage::eRenderMessageType::eRenderCameraQueue:
 	{
 		SRenderCameraQueueMessage* msg = static_cast<SRenderCameraQueueMessage*>(aRenderMesage);
+		CU::Camera previousCam = myCamera;;
+		myCamera = msg->myCamera;
+		UpdateBuffer();
+
+		msg->CameraRenderPackage.Clear();
 		msg->CameraRenderPackage.Activate();
 		for (int i = 0; i < msg->CameraRenderQueue.Size(); ++i)
 		{
 			HandleRenderMessage(msg->CameraRenderQueue[i], aDrawCallCount);
 		}
+		msg->CameraRenderQueue.DeleteAll();
+		myCamera = previousCam;
+		renderTo->Activate();
+		UpdateBuffer();
+		break;
+	}
+	case SRenderMessage::eRenderMessageType::eSetShadowBuffer:
+	{
+		SSetShadowBuffer* msg = static_cast<SSetShadowBuffer*>(aRenderMesage);
+		UpdateBuffer(msg);
+		break;
 	}
 	case SRenderMessage::eRenderMessageType::eRenderModel:
 	{
@@ -816,6 +867,13 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 		{
 			msg->myRenderPackage.Activate(msg->mySecondRenderPackage);
 		}
+		break;
+	}
+	case SRenderMessage::eRenderMessageType::eRenderToInterediate:
+	{
+		SActivateRenderPackageMessage* msg = static_cast<SActivateRenderPackageMessage*>(aRenderMesage);
+		myIntermediatePackage.Activate();
+		myFullScreenHelper.DoEffect(CFullScreenHelper::eEffectType::eCopy, {0.0f, 0.0f, 0.4f, 0.4f}, &msg->myRenderPackage);
 		break;
 	}
 	case SRenderMessage::eRenderMessageType::eRenderFullscreenEffect:

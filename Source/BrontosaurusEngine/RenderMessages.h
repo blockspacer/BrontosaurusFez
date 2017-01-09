@@ -59,6 +59,8 @@ struct SRenderMessage
 		eActivateRenderPackage,
 		eRenderFullscreenEffect,
 		eRenderDebugObjs,
+		eRenderToInterediate,
+		eSetShadowBuffer,
 	};
 
 	SRenderMessage(const eRenderMessageType aRenderMessageType);
@@ -93,12 +95,20 @@ struct SActivateRenderPackageMessage : SRenderMessage
 	bool useSecondPackage;
 };
 
+struct SRenderToIntermediate : SRenderMessage
+{
+	SRenderToIntermediate();
+	CRenderPackage myRenderPackage;
+};
+
 struct SRenderCameraQueueMessage : SRenderMessage
 {
 	//mebe put SetCameraMessage in here?
 	SRenderCameraQueueMessage();
+	CU::Camera myCamera;
 	CRenderPackage CameraRenderPackage;
 	CU::GrowingArray < SRenderMessage*, unsigned short, false> CameraRenderQueue;
+	bool RenderDepth;
 };
 
 struct SRenderModelMessage : SRenderMessage
@@ -113,6 +123,15 @@ struct SRenderModelMessage : SRenderMessage
 	float myAnimationTime;
 
 	int myModelID;
+};
+
+struct SSetShadowBuffer : SRenderMessage
+{
+	SSetShadowBuffer();
+
+	CRenderPackage myShadowBuffer;
+	CU::Matrix44f myCameraTransformation;
+	CU::Matrix44f myCameraProjection;
 };
 
 
@@ -193,3 +212,4 @@ struct SRenderTextMessage : SRenderMessage
 	CU::Vector2f myPosition;
 	CCoolText* myText;
 };
+

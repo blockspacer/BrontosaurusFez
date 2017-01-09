@@ -56,6 +56,8 @@ private:
 	void CreateBuffer();
 	void UpdateBuffer();
 
+	void UpdateBuffer(SSetShadowBuffer * msg);
+
 	void CreateRasterizerStates();
 	void CreateBlendStates();
 	void CreateDepthStencilStates();

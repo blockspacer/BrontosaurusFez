@@ -70,7 +70,7 @@ SRenderModelDepthMessage::SRenderModelDepthMessage()
 SRenderCameraQueueMessage::SRenderCameraQueueMessage()
 	: SRenderMessage(eRenderMessageType::eRenderCameraQueue)
 {
-
+	RenderDepth = false;
 }
 
 SRenderFullscreenEffectMessage::SRenderFullscreenEffectMessage()
@@ -84,4 +84,14 @@ SActivateRenderPackageMessage::SActivateRenderPackageMessage()
 	: SRenderMessage(SRenderMessage::eRenderMessageType::eActivateRenderPackage)
 {
 
+}
+
+SRenderToIntermediate::SRenderToIntermediate()
+	:SRenderMessage(SRenderMessage::eRenderMessageType::eRenderToInterediate)
+{
+}
+
+SSetShadowBuffer::SSetShadowBuffer()
+	: SRenderMessage(SRenderMessage::eRenderMessageType::eSetShadowBuffer)
+{
 }
