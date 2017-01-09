@@ -138,7 +138,7 @@ inline void ICollider::AddCollidsWith(const unsigned int aColliderTypes)
 
 inline void ICollider::OnCollisionEnter(ICollider* aOther)
 {
-	myHasCollidedWith.Add(aOther);
+	myHasCollidedWith.SafeAdd(aOther);
 
 	if (myOnEnterCallback != nullptr)
 	{
