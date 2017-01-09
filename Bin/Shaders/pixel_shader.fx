@@ -9,11 +9,23 @@ Texture2D emissiveMap : register(t4);
 Texture2D normalMap : register(t5);
 Texture2D metalnessMap : register(t6);
 
+Texture2D shadowBuffer : register(t7);
+
 SamplerState Sampler;
 
+cbuffer ConstantBuffer : register( b0 ) //to vertex
+{
+	float4x4 cameraSpaceInversed;
+	float4x4 projectionSpace;
+
+	float4x4 shadowCamInverse;
+	float4x4 shadowCamProjection;
+
+	float garbageo[4];
+}
 
 #define NUMBER_POINTLIGHTS 8
-cbuffer PixelShaderBuffer : register(b0) //to pixel
+cbuffer PixelShaderBuffer : register(b1) //to pixel
 {
 	float4 cameraPos;
 
@@ -430,6 +442,32 @@ PixelOutput PS_PBL(PosNormBinormTanTex_InputPixel input)
 	float3 visibility = PS_Visibility(input, myDirectionalLight.direction.xyz).color.xxx;
 	float3 directionSpecularity = lightColor * lambert * Dirrfresnel * distribution * visibility;
 
+
+	//Shadow magicz
+
+	float4 shadowCamPosition = input.worldPosition;
+	float4x4 sdwCinv = shadowCamInverse;
+	float4x4 sdwCPrj = shadowCamProjection;
+
+	shadowCamPosition = mul(shadowCamInverse, shadowCamPosition);
+	shadowCamPosition = mul(shadowCamProjection, shadowCamPosition);
+
+	shadowCamPosition /= shadowCamPosition.w;
+
+	float2 texCord;
+	texCord.x = shadowCamPosition.x * 0.5f + 0.5f;
+	texCord.y = shadowCamPosition.y * -0.5f + 0.5f;
+
+
+
+	float shadowCamDepth = shadowBuffer.SampleLevel(Sampler, texCord, 0).x;
+
+	if(shadowCamDepth < shadowCamPosition.z - 0.001f)
+	{
+		directionDiffuse.rgb = 0.0f;
+		directionSpecularity.rgb = 0.0f;
+	}
+
 // PointLight
 
 		//for(int i = 0; i < NUMBER_POINTLIGHTS; ++i)
@@ -465,8 +503,13 @@ PixelOutput PS_PBL(PosNormBinormTanTex_InputPixel input)
 		//    directionSpecularity += lightColor * lambert * Dirrfresnel * distribution * visibility * myPointLights[i].intensity * lightRange;
 		//}
 
+
+
+
+
 	PixelOutput output;
 	output.color = float4(ambientDiffuse + ambientSpecularity + directionDiffuse + directionSpecularity + emissive, 1.0f);
+	//output.color.rgb = shadowCamPosition.xyz;
 	return output;
 
 
