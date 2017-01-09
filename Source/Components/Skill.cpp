@@ -19,7 +19,7 @@ Skill::Skill()
 	Intersection::CollisionData circleCollisionData = Intersection::CollisionData();
 	circleCollisionData.myCircleData = new Intersection::SCircle;
 	circleCollisionData.myCircleData->myCenterPosition = myColliderObject->GetWorldPosition();
-	circleCollisionData.myCircleData->myRadius = 100000.0f;
+	circleCollisionData.myCircleData->myRadius = 200.0f;
 	CCollisionComponent* collisionComponent = SkillSystemComponentManager::GetInstance().GetCollisionComponentManager()->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, circleCollisionData);
 	collisionComponent->AddCollidsWith(eColliderType::eColliderType_Enemy | eColliderType::eColliderType_Player);
 	collisionComponent->SetColliderType(eColliderType::eColliderType_Skill);
@@ -146,6 +146,7 @@ void Skill::OnDeActivation()
 	SComponentMessageData statedAttackingMessage;
 	statedAttackingMessage.myString = "idle";
 	myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
+	myTargetObject = nullptr;
 }
 
 void Skill::Select()
