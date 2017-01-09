@@ -370,11 +370,7 @@ namespace CU
 
 		// Creates a transformation matrix for rotating anAngle rad around the x-axis
 		//
-		static Matrix44 CreateRotateAroundX(const TYPE anAngle)
-
-		// Creates a transformation matrix for rotating anAngle rad around the x-axis
-		//
-		static Matrix44 CreateRotateAroundX(const TYPE anAngle)
+		static Matrix44 CreateRotateAroundX(const TYPE aAngle)
 		{
 			Matrix44 rotationX;
 
