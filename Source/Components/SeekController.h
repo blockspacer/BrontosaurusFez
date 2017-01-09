@@ -24,5 +24,8 @@ private:
 	float myTargetRadius;
 	float mySlowdownRadius;
 	float myAggroRange;
+
+	// Inherited via IController
+	void Destroy() override;
 };
 

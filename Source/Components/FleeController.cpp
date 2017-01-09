@@ -54,3 +54,7 @@ void CFleeController::SetTargetsToAvoid( CU::GrowingArray<CGameObject*>* aTarget
 {
 	myObjectsToAvoid = aTargetList;
 }
+
+void CFleeController::Destroy()
+{
+}

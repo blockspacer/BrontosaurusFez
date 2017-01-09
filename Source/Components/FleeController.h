@@ -15,6 +15,7 @@ public:
 	void SetTargetsToAvoid( CU::GrowingArray<CGameObject*>* aTargetList);
 
 private:
+	void Destroy() override;
 	CU::GrowingArray<CGameObject*>* myObjectsToAvoid;
 	float myFleeRadius;
 };

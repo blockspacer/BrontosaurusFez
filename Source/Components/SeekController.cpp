@@ -87,3 +87,7 @@ void CSeekController::SetSlowDownRadius(const float aSlowdownRadius)
 {
 	mySlowdownRadius = aSlowdownRadius;
 }
+
+void CSeekController::Destroy()
+{
+}
