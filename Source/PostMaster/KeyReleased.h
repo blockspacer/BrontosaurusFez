@@ -13,7 +13,7 @@ public:
 	~KeyReleased();
 
 	eMessageReturn DoEvent(CDebugInfoDrawer* aDebugInfoDrawer) const;
-
+	eMessageReturn DoEvent(InputController* aDebugInfoDrawer) const;
 private:
 	const CU::eKeys& myKey;
 };

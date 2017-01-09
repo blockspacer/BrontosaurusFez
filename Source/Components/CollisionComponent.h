@@ -16,6 +16,7 @@ public:
 
 	void SetColliderType(const eColliderType aColliderType);
 	void AddCollidsWith(const unsigned int aColliderTypes);
+	void SetColliderType(const eColliderType aColliderType);
 
 	void ActivateCollider();
 	void DeactivateCollider();

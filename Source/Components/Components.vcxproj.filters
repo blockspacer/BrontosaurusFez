@@ -105,6 +105,9 @@
     <ClCompile Include="AIControllerComponent.cpp">
       <Filter>Controllers\Controllers</Filter>
     </ClCompile>
+    <ClCompile Include="SkillComponentManager.cpp" />
+    <ClCompile Include="DropComponent.cpp" />
+    <ClCompile Include="DropComponentManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -221,6 +224,12 @@
     <ClInclude Include="AIControllerComponent.h">
       <Filter>Controllers\Controllers</Filter>
     </ClInclude>
+    <ClInclude Include="SkillComponentManager.h" />
+    <ClInclude Include="PlayerData.h">
+      <Filter>Stats</Filter>
+    </ClInclude>
+    <ClInclude Include="DropComponent.h" />
+    <ClInclude Include="DropComponentManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

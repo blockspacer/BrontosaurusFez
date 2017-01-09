@@ -1,11 +1,13 @@
 #include "stdafx.h"
 #include "SkillComponent.h"
+#include "../Collision/ICollider.h"
+#include "../Game/PollingStation.h"
 
-
-SkillComponent::SkillComponent()
+SkillComponent::SkillComponent(CGameObject* aUserObject)
 {
 	myDamage = 10000.0f;
 	myIsAOE = false;
+	myUserObject = aUserObject;
 }
 
 
@@ -15,34 +17,48 @@ SkillComponent::~SkillComponent()
 
 void SkillComponent::Update(float aDeltaTime)
 {
-	if(myElapsedTime > 0.0f)
+	if(myIsActive == true)
 	{
-		SComponentMessageData data2;
-		data2.myBool = false;
-		GetParent()->NotifyComponents(eComponentMessageType::eSetIsColliderActive, data2);
-	}
-	else
-	{
-		myElapsedTime += aDeltaTime;
+		if(myElapsedTime > 0.0f)
+		{
+			SComponentMessageData data2;
+			data2.myBool = false;
+			GetParent()->NotifyComponents(eComponentMessageType::eSetIsColliderActive, data2);
+			myIsActive = false;
+		}
+		else
+		{
+			myElapsedTime += aDeltaTime;
+		}
 	}
 }
 
 void SkillComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
 {
-	SComponentMessageData data;
-	SComponentMessageData data2;
 	switch (aMessageType)
 	{
-	case eComponentMessageType::eCollision:
-		data.myInt = myDamage;
-		aMessageData.myGameObject->NotifyComponents(eComponentMessageType::eTakeDamage, data);
-		data2.myBool = false;
-		GetParent()->NotifyComponents(eComponentMessageType::eSetIsColliderActive, data2);
+	case eComponentMessageType::eOnCollisionEnter:
+		if(myUserObject == PollingStation::playerObject)
+		{
+			if(aMessageData.myCollider->GetGameObject() != myUserObject)
+			{
+				DoDamage(aMessageData.myCollider->GetGameObject());
+			}
+		}
+		else
+		{
+			if(aMessageData.myCollider->GetGameObject() == PollingStation::playerObject)
+			{
+				DoDamage(aMessageData.myCollider->GetGameObject());
+			}
+		}
+		
 		break;
 	case eComponentMessageType::eSetIsColliderActive:
 		if(aMessageData.myBool == true)
 		{
 			myElapsedTime = 0.0f;
+			myIsActive = true;
 		}
 		break;
 	default:
@@ -52,4 +68,19 @@ void SkillComponent::Receive(const eComponentMessageType aMessageType, const SCo
 
 void SkillComponent::Destroy()
 {
+}
+
+void SkillComponent::DoDamage(CGameObject * aGameObjectToDamage)
+{
+	SComponentMessageData data;
+	SComponentMessageData data2;
+	data.myInt = myDamage;
+	aGameObjectToDamage->NotifyComponents(eComponentMessageType::eTakeDamage, data);
+	if (myIsAOE == false)
+	{
+		data2.myBool = false;
+		GetParent()->NotifyComponents(eComponentMessageType::eSetIsColliderActive, data2);
+		myIsActive = false;
+
+	}
 }

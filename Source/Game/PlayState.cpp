@@ -40,6 +40,8 @@
 
 #include "../Audio/AudioInterface.h"
 
+#include "PlayerData.h"
+
 #include "Components\SkillFactory.h"
 #include "Components\SkillSystemComponentManager.h"
 //Kanske Inte ska vara här?
@@ -66,6 +68,13 @@
 #include "SkillSystemComponent.h"
 #include "KevinLoader/KevinLoader.h"
 #include "Components\CollisionComponentManager.h"
+#include "SkillComponentManager.h"
+#include "DropComponentManager.h"
+#include "../Collision/Intersection.h"
+#include "Components\CollisionComponent.h"
+#include "Components\CollisionComponentManager.h"
+#include "Collision\ICollider.h"
+#include "Components\DropComponent.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
 #include "../BrontosaurusEngine/FireEmitterInstance.h"
@@ -99,7 +108,8 @@ CPlayState::~CPlayState()
 	MovementComponentManager::DestroyInstance();
 	SkillSystemComponentManager::DestroyInstance();
 	AIControllerManager::Destroy();
-
+	SkillComponentManager::DestroyInstance();
+	DropComponentManager::DestroyInstance();
 	PollingStation::NullifyLevelSpecificData();
 
 	SkillFactory::DestroyInstance();
@@ -172,27 +182,25 @@ void CPlayState::Load()
 
 	//create player:
 
-	//myPlayerObject = myGameObjectManager->CreateGameObject();
-	//PollingStation::playerObject = myPlayerObject;
+	myPlayerObject = myGameObjectManager->CreateGameObject();
+	PollingStation::playerObject = myPlayerObject;
 
-	//InputController* tempInputController = new InputController(playerCamera);
-	//InputControllerManager::GetInstance().RegisterComponent(tempInputController);
-	//myPlayerObject->AddComponent(tempInputController);
+	InputController* tempInputController = InputControllerManager::GetInstance().CreateAndRegisterComponent();
+	myPlayerObject->AddComponent(tempInputController);
 
-	//MovementComponent* tempMovementController = new MovementComponent();
-	//MovementComponentManager::GetInstance().RegisterComponent(tempMovementController);
-	//myPlayerObject->AddComponent(tempMovementController);
+	MovementComponent* tempMovementController = MovementComponentManager::GetInstance().CreateAndRegisterComponent();
+	myPlayerObject->AddComponent(tempMovementController);
 
-	//myPlayerObject->AddComponent(new NavigationComponent());
+	myPlayerObject->AddComponent(new NavigationComponent());
 
-	//CModelComponent* playerModelComponent = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
-	//myPlayerObject->AddComponent(playerModelComponent);
+	CModelComponent* playerModelComponent = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
+	myPlayerObject->AddComponent(playerModelComponent);
 
-	//myPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
-	//SkillSystemComponent* tempSkillSystemComponent = new SkillSystemComponent;
-	//SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
-	//myPlayerObject->AddComponent(tempSkillSystemComponent);
-	//tempSkillSystemComponent->AddSkill("BasicAttack");
+	myPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
+	SkillSystemComponent* tempSkillSystemComponent = new SkillSystemComponent;
+	SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
+	myPlayerObject->AddComponent(tempSkillSystemComponent);
+	tempSkillSystemComponent->AddSkill("BasicAttack");
 	////create camera object:
 	////myCameraObject = myGameObjectManager->CreateGameObject();
 
@@ -222,7 +230,11 @@ void CPlayState::Load()
 
 	playerCamera.SetTransformation(cameraTransformation);*/
 
-
+	myGoldText = new CTextInstance;
+	myGoldText->SetColor(CTextInstance::Yellow);
+	myGoldText->SetPosition(CU::Vector2f(0.4f, 0.2f));
+	myGoldText->SetText("");
+	myGoldText->Init();
 
 	//Loadingu like pingu
 
@@ -232,8 +244,7 @@ void CPlayState::Load()
 	CU::CPJWrapper levelsArray = levelsFile.GetJsonObject().at("levels");
 
 #ifdef _DEBUG
-	//const int levelIndex = levelsArray.Size() - 1;
-	const int levelIndex = 1;
+	const int levelIndex = levelsArray.Size() - 1;
 #else
 	const int levelIndex = 0;
 #endif
@@ -257,13 +268,13 @@ void CPlayState::Load()
 	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation()); //
 
 	//----CreateEnemies----
-	/*myEnemies.Init(8);
+	myEnemies.Init(8);
 	TEMP_CREATE_ENEMY();
 	myEnemies[0]->SetWorldPosition({ 0.f, 0.f, 0.f });
 	TEMP_CREATE_ENEMY();
 	myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
 	TEMP_CREATE_ENEMY();
-	myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });*/
+	myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
 
 	//---------------------
 
@@ -338,6 +349,12 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	myScene->Update(aDeltaTime);
 
 	myGameObjectManager->DestroyObjectsWaitingForDestruction();
+	std::string goldAmount = "Gold: ";
+	goldAmount +=std::to_string(PollingStation::playerData->myGold);
+	myGoldText->SetText(goldAmount.c_str());
+
+	SkillComponentManager::GetInstance().Update(aDeltaTime);
+	DropComponentManager::GetInstance().Update(aDeltaTime);
 
 	return myStatus;
 }
@@ -368,6 +385,8 @@ void CPlayState::Render()
 	msg.myRasterizerState = eRasterizerState::eDefault;
 	msg.mySamplerState = eSamplerState::eClamp;
 	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
+
+	myGoldText->Render();
 }
 
 void CPlayState::OnEnter()
@@ -447,12 +466,15 @@ void CPlayState::CreateManagersAndFactories()
 	CParticleEmitterComponentManager::GetInstance().SetScene(myScene);
 	CCameraComponentManager::Create();
 	InputControllerManager::CreateInstance();
+	InputControllerManager::GetInstance().SetScene(myScene);
 	MovementComponentManager::CreateInstance();
 	AIControllerManager::Create();
 	SkillFactory::CreateInstance();
 	SkillSystemComponentManager::CreateInstance();
 	SkillSystemComponentManager::GetInstance().SetGameObjectManager(myGameObjectManager);
 	SkillSystemComponentManager::GetInstance().SetCollisionComponentManager(myCollisionComponentManager);
+	SkillComponentManager::CreateInstance();
+	DropComponentManager::CreateInstance();
 }
 
 void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)
@@ -553,23 +575,18 @@ void CPlayState::CreateManagersAndFactories()
 
 	AIControllerManager::GetInstance().AddController(AIController);
 
+	Intersection::CollisionData circleCollisionData = Intersection::CollisionData();
+	circleCollisionData.myCircleData = new Intersection::SCircle;
+	circleCollisionData.myCircleData->myCenterPosition = enemyObj->GetWorldPosition();
+	circleCollisionData.myCircleData->myRadius = 100000.0f;
+	CCollisionComponent* collisionComponent = SkillSystemComponentManager::GetInstance().GetCollisionComponentManager()->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, circleCollisionData);
+	collisionComponent->AddCollidsWith(eColliderType::eColliderType_Actor);
+	collisionComponent->SetColliderType(eColliderType::eColliderType_Actor);
+	collisionComponent->GetCollider()->SetGameObject(enemyObj);
+	enemyObj->AddComponent(collisionComponent);
+	enemyObj->AddComponent(DropComponentManager::GetInstance().CreateAndRegisterComponent());
+
 	tempEnemyStatComponent->SetStats(baseStats, bonusStats);
 	tempEnemyHealthComponent->Init();
-
-	myCollisionComponentManager = new CCollisionComponentManager;
-	CComponentManager::CreateInstance();
-	CAudioSourceComponentManager::Create();
-	CModelComponentManager::Create();
-	CParticleEmitterComponentManager::Create();
-	CParticleEmitterComponentManager::GetInstance().SetScene(myScene);
-	CCameraComponentManager::Create();
-	InputControllerManager::CreateInstance();
-	InputControllerManager::GetInstance().SetScene(myScene);
-	MovementComponentManager::CreateInstance();
-	AIControllerManager::Create();
-	SkillFactory::CreateInstance();
-	SkillSystemComponentManager::CreateInstance();
-	SkillSystemComponentManager::GetInstance().SetGameObjectManager(myGameObjectManager);
-	SkillSystemComponentManager::GetInstance().SetCollisionComponentManager(myCollisionComponentManager);
 	myEnemies.Add(enemyObj);
 }

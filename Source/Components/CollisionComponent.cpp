@@ -48,6 +48,9 @@ void CCollisionComponent::Receive(const eComponentMessageType aMessageType, cons
 			myCollider->Deactivate();
 		}
 	break;
+	case eComponentMessageType::eDied:
+		myCollider->Deactivate();
+		break;
 	}
 }
 
@@ -65,6 +68,11 @@ void CCollisionComponent::ActivateCollider()
 void CCollisionComponent::DeactivateCollider()
 {
 	myCollider->Deactivate();
+}
+
+void CCollisionComponent::SetColliderType(const eColliderType aColliderType)
+{
+	myCollider->SetColliderType(aColliderType);
 }
 
 void CCollisionComponent::OnCollisionEnter(ICollider* aCollider)

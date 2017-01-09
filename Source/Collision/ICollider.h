@@ -6,7 +6,7 @@ class CCircleCollider;
 class CPointCollider;
 class CSquareCollider;
 class CGroupCollider;
-
+class CGameObject;
 namespace CU
 {
 	template <typename T>
@@ -39,6 +39,8 @@ public:
 	inline void AddActivationCallbacks(VoidCallback aActivationCallback, VoidCallback aDeactivationCallback);
 	inline void SetColliderType(const eColliderType aColliderType);
 	inline void AddCollidsWith(const unsigned int aColliderTypes);
+	inline void SetGameObject(CGameObject* aGameObject);
+	inline CGameObject* GetGameObject();
 
 	virtual void RenderDebugLines() {}
 
@@ -70,6 +72,8 @@ private:
 	VoidCallback myDeactivateCallback;
 
 	ICollider* myHasCollidedWith;
+
+	CGameObject* myColliderObject;
 
 	eColliderType myColliderType;
 	unsigned int myCollidesWith;
@@ -150,4 +154,14 @@ inline void ICollider::Deactivate()
 	{
 		myDeactivateCallback();
 	}
+}
+
+inline void ICollider::SetGameObject(CGameObject* aGameObject)
+{
+	myColliderObject = aGameObject;
+}
+
+inline CGameObject* ICollider::GetGameObject()
+{
+	return myColliderObject;
 }

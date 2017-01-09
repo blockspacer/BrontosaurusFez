@@ -30,6 +30,7 @@ class StatManager;
 class CTextInstance;
 class CParticleEmitterComponent;
 class CCollisionComponentManager;
+class CTextInstance;
 
 class CPlayState : public State, public Subscriber
 {
@@ -73,7 +74,8 @@ private:
 	CCollisionComponentManager* myCollisionComponentManager;
 	GUI::GUIManager* myGUIManager;
 	StatManager* myStatManager;
-	
+	CTextInstance* myGoldText;
+
 	//CGameObject* myCameraObject;
 
 	int myLevelIndex;
