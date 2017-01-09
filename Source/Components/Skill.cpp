@@ -22,7 +22,7 @@ Skill::Skill()
 	circleCollisionData.myCircleData->myRadius = 100000.0f;
 	CCollisionComponent* collisionComponent = SkillSystemComponentManager::GetInstance().GetCollisionComponentManager()->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, circleCollisionData);
 	collisionComponent->AddCollidsWith(eColliderType::eColliderType_Actor);
-	collisionComponent->SetColliderType(eColliderType::eColliderType_Actor);
+	collisionComponent->SetColliderType(eColliderType::eColliderType_Skill);
 	myColliderObject->AddComponent(collisionComponent);
 	collisionComponent->DeactivateCollider();
 	collisionComponent->GetCollider()->SetGameObject(myColliderObject);

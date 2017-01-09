@@ -24,6 +24,7 @@ enum eColliderType : unsigned int
 	eColliderType_Actor = 1 << 0,
 	eColliderType_Wall = 1 << 1,
 	eColliderType_Mouse = 1 << 2,
+	eColliderType_Skill = 1 << 4,
 };
 
 class ICollider
