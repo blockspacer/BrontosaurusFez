@@ -38,6 +38,7 @@ private:
 	CU::GrowingArray<CU::eInputMessage> mySkillInputMessageActivators;
 	CU::Vector2f myMousePosition;
 	const CU::Camera& myPlayerCamera;
+	unsigned short mySkillActivatorKeyDown;
 	bool myMouseIsDown;
 	bool myIsShiftDown;
 };

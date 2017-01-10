@@ -89,9 +89,6 @@
     <ClCompile Include="MainStatComponent.cpp">
       <Filter>Stats</Filter>
     </ClCompile>
-    <ClCompile Include="HealthComponent.cpp">
-      <Filter>Stats</Filter>
-    </ClCompile>
     <ClCompile Include="StreakEmitterComponent.cpp">
       <Filter>Particles</Filter>
     </ClCompile>
@@ -109,10 +106,15 @@
     <ClCompile Include="DropComponent.cpp" />
     <ClCompile Include="DropComponentManager.cpp" />
     <ClCompile Include="MouseComponent.cpp" />
-    <ClCompile Include="FleeControllerManager.cpp">
-      <Filter>Controllers</Filter>
+    <ClCompile Include="HealthBarComponent.cpp">
+      <Filter>Health</Filter>
     </ClCompile>
-    <ClCompile Include="SeekControllerManager.cpp" />
+    <ClCompile Include="HealthComponent.cpp">
+      <Filter>Health</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthBarComponentManager.cpp">
+      <Filter>Health</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -213,9 +215,6 @@
     <ClInclude Include="MainStatComponent.h">
       <Filter>Stats</Filter>
     </ClInclude>
-    <ClInclude Include="HealthComponent.h">
-      <Filter>Stats</Filter>
-    </ClInclude>
     <ClInclude Include="StreakEmitterComponent.h">
       <Filter>Particles</Filter>
     </ClInclude>
@@ -238,12 +237,17 @@
     <ClInclude Include="MouseComponent.h" />
     <ClInclude Include="SkillData.h" />
     <ClInclude Include="HealthPoint.h">
-      <Filter>Stats</Filter>
+      <Filter>Health</Filter>
     </ClInclude>
-    <ClInclude Include="FleeControllerManager.h">
-      <Filter>Controllers</Filter>
+    <ClInclude Include="HealthBarComponent.h">
+      <Filter>Health</Filter>
     </ClInclude>
-    <ClInclude Include="SeekControllerManager.h" />
+    <ClInclude Include="HealthComponent.h">
+      <Filter>Health</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthBarComponentManager.h">
+      <Filter>Health</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -293,6 +297,9 @@
     </Filter>
     <Filter Include="Stats">
       <UniqueIdentifier>{57b16321-6896-4bed-9386-44e6705c2103}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Health">
+      <UniqueIdentifier>{2243d8bd-c78a-469c-9300-807743e2d21b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
