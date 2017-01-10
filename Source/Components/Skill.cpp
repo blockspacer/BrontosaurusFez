@@ -22,7 +22,7 @@ Skill::Skill(SkillData* aSkillDataPointer)
 	Intersection::CollisionData circleCollisionData = Intersection::CollisionData();
 	circleCollisionData.myCircleData = new Intersection::SCircle;
 	circleCollisionData.myCircleData->myCenterPosition = myColliderObject->GetWorldPosition();
-	circleCollisionData.myCircleData->myRadius = 200000.0f;
+	circleCollisionData.myCircleData->myRadius = 200.0f;
 	CCollisionComponent* collisionComponent = SkillSystemComponentManager::GetInstance().GetCollisionComponentManager()->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, circleCollisionData);
 	collisionComponent->AddCollidsWith(eColliderType::eColliderType_Enemy | eColliderType::eColliderType_Player);
 	collisionComponent->SetColliderType(eColliderType::eColliderType_Skill);
