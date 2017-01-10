@@ -31,6 +31,7 @@ class CTextInstance;
 class CParticleEmitterComponent;
 class CCollisionComponentManager;
 class CTextInstance;
+class CHealthBarComponentManager;
 
 class CPlayState : public State, public Subscriber
 {
@@ -86,6 +87,7 @@ private:
 	//TEMP - BELOW THIS LINE
 	void TEMP_CREATE_ENEMY(); 
 	CU::GrowingArray<CGameObject*> myEnemies;
+	CHealthBarComponentManager* myHealthBarManager;
 };
 
 inline bool CPlayState::IsLoaded() const

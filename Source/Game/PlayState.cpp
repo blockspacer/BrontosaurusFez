@@ -77,6 +77,8 @@
 #include "Components\DropComponent.h"
 #include "SkillData.h"
 #include "SkillFactory.h"
+#include "Components/HealthBarComponentManager.h"
+
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
 #include "../BrontosaurusEngine/FireEmitterInstance.h"
@@ -192,7 +194,7 @@ void CPlayState::Load()
 	basicSkillData->animationDuration = 0.5f;
 	basicSkillData->coolDown = 0.5f;
 	basicSkillData->isAOE = false;
-	basicSkillData->damage = 1000;
+	basicSkillData->damage = 34;
 	basicSkillData->skillName = "BasicAttack";
 	SkillFactory::GetInstance().RegisterSkillData(basicSkillData);
 
@@ -228,6 +230,7 @@ void CPlayState::Load()
 	playerCollisionComponent->SetColliderType(eColliderType_Player);
 	myPlayerObject->AddComponent(playerCollisionComponent);
 
+	myHealthBarManager = new CHealthBarComponentManager();
 
 	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
 	cameraComponent->SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
@@ -404,6 +407,7 @@ void CPlayState::Render()
 	msg.mySamplerState = eSamplerState::eClamp;
 	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
 
+	myHealthBarManager->Render();
 	myGoldText->Render();
 }
 
@@ -605,6 +609,9 @@ void CPlayState::TEMP_CREATE_ENEMY()
 	//collisionComponent->GetCollider()->SetGameObject(enemyObj);
 	enemyObj->AddComponent(collisionComponent);
 	enemyObj->AddComponent(DropComponentManager::GetInstance().CreateAndRegisterComponent());
+
+	CHealthBarComponent* healthBar = myHealthBarManager->CreateHealthbar();
+	enemyObj->AddComponent(healthBar);
 
 	tempEnemyStatComponent->SetStats(baseStats, bonusStats);
 	tempEnemyHealthComponent->Init();
