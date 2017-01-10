@@ -17,20 +17,17 @@ void SkillSystemComponent::Update(float aDeltaTime)
 {
 	for(unsigned short i = 0;  i < mySkills.Size(); i++)
 	{
-		if(mySkills[i]->GetIsActive() == true)
+		if(mySkills[i]->IsInited() == true)
 		{
-			if(mySkills[i]->IsInited() == true)
-			{
-				mySkills[i]->Update(aDeltaTime);
-			
-			}
-			else
-			{
-				mySkills[i]->Init(GetParent());
-				mySkills[i]->Update(aDeltaTime);
-			}
+			mySkills[i]->Update(aDeltaTime);
 			
 		}
+		else
+		{
+			mySkills[i]->Init(GetParent());
+			mySkills[i]->Update(aDeltaTime);
+		}
+			
 	}
 }
 

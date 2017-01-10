@@ -43,14 +43,19 @@ Skill::~Skill()
 
 void Skill::Activate()
 {
-	myIsActive = true;
-	OnActivation();
+	if (myElapsedCoolDownTime >= myCoolDown)
+	{
+		myIsActive = true;
+		OnActivation();
+	
+	}
 }
 
 void Skill::Deactivate()
 {
 	myIsActive = false;
 	myIsSelected = false;
+	myElapsedCoolDownTime = 0.0f;
 	OnDeActivation();
 }
 
@@ -58,13 +63,18 @@ void Skill::Update(float aDeltaTime)
 {
 	myElapsedCoolDownTime += aDeltaTime;
 
-	if (myAnimationTimeElapsed > myAnimationTime)
-	{
-		ActivateCollider(); // Remove this later on and replace it with animation wait time.
-		myAnimationTimeElapsed = 0.f;
-	}
 
-	myUpdateFunction(aDeltaTime);
+	if(myIsActive == true)
+	{
+		if (myAnimationTimeElapsed > myAnimationTime)
+		{
+			ActivateCollider(); // Remove this later on and replace it with animation wait time.
+			myAnimationTimeElapsed = 0.f;
+		}
+
+		myUpdateFunction(aDeltaTime);
+	
+	}
 }
 
 void Skill::Init(CGameObject * aUser)
