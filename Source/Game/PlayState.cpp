@@ -192,9 +192,20 @@ void CPlayState::Load()
 	basicSkillData->animationDuration = 0.5f;
 	basicSkillData->coolDown = 0.5f;
 	basicSkillData->isAOE = false;
-	basicSkillData->damage = 1000;
+	basicSkillData->damage = 10;
 	basicSkillData->skillName = "BasicAttack";
 	SkillFactory::GetInstance().RegisterSkillData(basicSkillData);
+
+	//AddSpinyToWhiny
+	SkillData* whirlWindSkillData = new SkillData;
+	whirlWindSkillData->activationRadius = 0.0f;
+	whirlWindSkillData->range = 300.0f;
+	whirlWindSkillData->animationDuration = 0.1f;
+	whirlWindSkillData->coolDown = 0.1f;
+	whirlWindSkillData->isAOE = false;
+	whirlWindSkillData->damage = 1;
+	whirlWindSkillData->skillName = "WhirlWind";
+	SkillFactory::GetInstance().RegisterSkillData(whirlWindSkillData);
 
 	//create player:
 
