@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "SkillFactory.h"
 #include "Skill.h"
-
+#include "SkillData.h"
 
 #include <iostream>
 
@@ -10,6 +10,7 @@ SkillFactory* SkillFactory::ourInstance = nullptr;
 SkillFactory::SkillFactory()
 {
 	mySkills.Init(500);
+	mySkillDataList.Init(25);
 }
 
 
@@ -34,12 +35,26 @@ void SkillFactory::DestroyInstance()
 	assert(ourInstance != nullptr && "input controller component manager not created (is NULL)");
 	ourInstance->mySkills.DeleteAll();
 	ourInstance->mySkills.Destroy();
+	ourInstance->mySkillDataList.DeleteAll();
+	ourInstance->mySkillDataList.Destroy();
 	SAFE_DELETE(ourInstance);
 }
 
 Skill * SkillFactory::CreateSkill(const char * aSkillName)
 {
-	Skill* newSkill = new Skill;
+	for(unsigned short i=0; i < mySkillDataList.Size(); i++)
+	{
+		if(mySkillDataList[i]->skillName == aSkillName)
+		{
+			Skill* newSkill = new Skill(mySkillDataList[i]);
+			mySkills.Add(newSkill);
+			return mySkills.GetLast();
+		}
+	}
+
+	DL_ASSERT("Skill Factory couldn't find a SkillData with that name. Check spelling and/or yell at Marcus.");
+	return nullptr;
+	/*Skill* newSkill = new Skill;
 	if(aSkillName == "BasicAttack")
 	{
 	
@@ -49,5 +64,10 @@ Skill * SkillFactory::CreateSkill(const char * aSkillName)
 	{
 		std::cout << "Skill not yet implemented" << std::endl;
 	}
-	return newSkill;
+	return newSkill;*/
+}
+
+void SkillFactory::RegisterSkillData(SkillData * aSkillData)
+{
+	mySkillDataList.Add(aSkillData);
 }
