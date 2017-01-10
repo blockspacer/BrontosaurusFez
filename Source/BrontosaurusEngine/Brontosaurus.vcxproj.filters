@@ -35,12 +35,6 @@
     <Filter Include="InputManager">
       <UniqueIdentifier>{f48fd75b-4e13-496c-a609-66700b73379c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Model\Sprite2DInstance">
-      <UniqueIdentifier>{1216c4f0-7ef5-4324-8c12-7a460e821044}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\Sprite">
-      <UniqueIdentifier>{32239091-809c-411d-abd3-9ba7fb80f436}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Texture">
       <UniqueIdentifier>{fdd69737-7092-4c65-8c25-ddb35c4fcb09}</UniqueIdentifier>
     </Filter>
@@ -70,6 +64,9 @@
     </Filter>
     <Filter Include="Fire">
       <UniqueIdentifier>{4d19949d-8af1-4814-975f-6ff6ac3be8da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sprite">
+      <UniqueIdentifier>{aeb03320-ae0b-495c-97dc-ce8e28d81244}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -149,12 +146,6 @@
     <ClInclude Include="InputManager.h">
       <Filter>InputManager</Filter>
     </ClInclude>
-    <ClInclude Include="Sprite.h">
-      <Filter>Model\Sprite</Filter>
-    </ClInclude>
-    <ClInclude Include="SpriteInstance.h">
-      <Filter>Model\Sprite2DInstance</Filter>
-    </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Texture</Filter>
     </ClInclude>
@@ -214,7 +205,6 @@
     <ClInclude Include="EmitterData.h">
       <Filter>Particles</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteManager.h" />
     <ClInclude Include="Synchronizer.h" />
     <ClInclude Include="BufferStructs.h">
       <Filter>ModelManager</Filter>
@@ -254,6 +244,15 @@
       <Filter>Light</Filter>
     </ClInclude>
     <ClInclude Include="RenderCamera.h" />
+    <ClInclude Include="Sprite.h">
+      <Filter>Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteInstance.h">
+      <Filter>Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteManager.h">
+      <Filter>Sprite</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -306,12 +305,6 @@
     <ClCompile Include="InputManager.cpp">
       <Filter>InputManager</Filter>
     </ClCompile>
-    <ClCompile Include="Sprite.cpp">
-      <Filter>Model\Sprite</Filter>
-    </ClCompile>
-    <ClCompile Include="SpriteInstance.cpp">
-      <Filter>Model\Sprite2DInstance</Filter>
-    </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Texture</Filter>
     </ClCompile>
@@ -357,7 +350,6 @@
     <ClCompile Include="StreakEmitter.cpp">
       <Filter>Streaks</Filter>
     </ClCompile>
-    <ClCompile Include="SpriteManager.cpp" />
     <ClCompile Include="ModelBatch.cpp">
       <Filter>Model</Filter>
     </ClCompile>
@@ -390,6 +382,15 @@
       <Filter>Light</Filter>
     </ClCompile>
     <ClCompile Include="RenderCamera.cpp" />
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteInstance.cpp">
+      <Filter>Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteManager.cpp">
+      <Filter>Sprite</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Brontosaurus.rc">
