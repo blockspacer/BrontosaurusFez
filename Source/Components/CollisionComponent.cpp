@@ -74,7 +74,7 @@ void CCollisionComponent::DeactivateCollider()
 
 void CCollisionComponent::OnCollisionEnter(ICollider* aCollider)
 {
-	DL_PRINT("%s collided with %s", GetParent()->GetName().c_str(), aCollider->GetGameObject()->GetName().c_str());
+	//DL_PRINT("%s collided with %s", GetParent()->GetName().c_str(), aCollider->GetGameObject()->GetName().c_str());
 	SComponentMessageData data;
 	data.myCollider = aCollider;
 	GetParent()->NotifyComponents(eComponentMessageType::eOnCollisionEnter, data);
@@ -82,7 +82,7 @@ void CCollisionComponent::OnCollisionEnter(ICollider* aCollider)
 
 void CCollisionComponent::OnCollisionExit(ICollider* aCollider)
 {
-	DL_PRINT("%s stopped colliding with %s", GetParent()->GetName().c_str(), aCollider->GetGameObject()->GetName().c_str());
+	//DL_PRINT("%s stopped colliding with %s", GetParent()->GetName().c_str(), aCollider->GetGameObject()->GetName().c_str());
 	SComponentMessageData data;
 	data.myCollider = aCollider;
 	GetParent()->NotifyComponents(eComponentMessageType::eOnCollisionExit, data);

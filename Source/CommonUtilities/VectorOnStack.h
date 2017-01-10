@@ -241,8 +241,8 @@ namespace CU
 		}
 	}
 
-	template<typename ObjectType, int Capacity, typename SizeType, bool UseSafeModeFlag>
-	inline void VectorOnStack<ObjectType, Capacity, SizeType, UseSafeModeFlag>::RemoveAtIndex(const SizeType aIndex)
+	template<typename ObjectType, int Capacity, typename SizeType, bool USE_SAFE_MODE>
+	inline void VectorOnStack<ObjectType, Capacity, SizeType, USE_SAFE_MODE>::RemoveAtIndex(const SizeType aIndex)
 	{
 #ifdef _DEBUG
 		bool useSafeMode = USE_SAFE_MODE;
@@ -253,14 +253,14 @@ namespace CU
 		{
 			if (USE_SAFE_MODE)
 			{
-				for (SizeType i = aIndex; i < myCapacity; ++i)
+				for (SizeType i = aIndex; i < Capacity; ++i)
 				{
-					myArray[i] = myArray[i + 1];
+					myVectorOnStack[i] = myVectorOnStack[i + 1];
 				}
 			}
 			else
 			{
-				memmove(myArray + aIndex, myArray + aIndex + 1, sizeof(ObjectType) * (mySize - aIndex)); //if wrong, it's here
+				memmove(myVectorOnStack + aIndex, myVectorOnStack + aIndex + 1, sizeof(ObjectType) * (mySize - aIndex)); //if wrong, it's here
 			}
 
 			--mySize;

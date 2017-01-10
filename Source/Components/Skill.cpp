@@ -10,6 +10,7 @@
 #include "CollisionComponent.h"
 #include "SkillComponent.h"
 #include "SkillData.h"
+#include "SkillComponentManager.h"
 Skill::Skill(SkillData* aSkillDataPointer)
 {
 	mySkillData = aSkillDataPointer;
@@ -21,7 +22,7 @@ Skill::Skill(SkillData* aSkillDataPointer)
 	Intersection::CollisionData circleCollisionData = Intersection::CollisionData();
 	circleCollisionData.myCircleData = new Intersection::SCircle;
 	circleCollisionData.myCircleData->myCenterPosition = myColliderObject->GetWorldPosition();
-	circleCollisionData.myCircleData->myRadius = 200.0f;
+	circleCollisionData.myCircleData->myRadius = 200000.0f;
 	CCollisionComponent* collisionComponent = SkillSystemComponentManager::GetInstance().GetCollisionComponentManager()->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, circleCollisionData);
 	collisionComponent->AddCollidsWith(eColliderType::eColliderType_Enemy | eColliderType::eColliderType_Player);
 	collisionComponent->SetColliderType(eColliderType::eColliderType_Skill);
@@ -79,7 +80,7 @@ void Skill::Update(float aDeltaTime)
 void Skill::Init(CGameObject * aUser)
 {
 	myUser = aUser;
-	myColliderObject->AddComponent(new SkillComponent(myUser, mySkillData));
+	myColliderObject->AddComponent(SkillComponentManager::GetInstance().CreateAndRegisterComponent(myUser, mySkillData));
 }
 
 void Skill::BasicAttackUpdate(float aDeltaTime)
@@ -100,6 +101,7 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 			myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
 			myElapsedCoolDownTime = 0.0f;
 			myColliderObject->SetWorldPosition(myTargetObject->GetWorldPosition());
+			myColliderObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 			myAnimationTimeElapsed += aDeltaTime;
 		}
 	}
@@ -121,6 +123,7 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 		{
 			myColliderObject->SetWorldPosition(myTargetPosition);
 		}
+		myColliderObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 		//ActivateCollider(); // Remove this later on and replace it with animation wait time.
 	}
 }
@@ -135,19 +138,18 @@ void Skill::SetTargetObject(CGameObject* aTargetObject)
 }
 void Skill::ActivateCollider()
 {
-	DL_PRINT("Animation done");
+	//DL_PRINT("Animation done");
 	Deactivate();
 	eComponentMessageType type = eComponentMessageType::eSetIsColliderActive;
 	SComponentMessageData data;
-	data.myBool = false;
-	myColliderObject->NotifyComponents(type, data);
+	
 	data.myBool = true;
 	myColliderObject->NotifyComponents(type, data);
 }
 void Skill::OnActivation()
 {
 	myAnimationTimeElapsed = 0.f;
-	DL_PRINT("Animation started");
+	//DL_PRINT("Animation started");
 }
 
 void Skill::OnDeActivation()
