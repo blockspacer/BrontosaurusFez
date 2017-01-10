@@ -2,11 +2,12 @@
 #include <functional>
 #include "../CommonUtilities/vector3.h"
 class CGameObject;
+struct SkillData;
 
 class Skill
 {
 public:
-	Skill();
+	Skill(SkillData* aSkillDataPointer);
 	~Skill();
 	virtual void Activate();
 	virtual void Deactivate();
@@ -26,16 +27,13 @@ protected:
 	virtual void OnActivation();
 	virtual void OnDeActivation();
 	
+	CU::Vector3f myTargetPosition;
+	std::function<void(float)> myUpdateFunction;
 	CGameObject* myUser;
 	CGameObject* myColliderObject;
 	CGameObject* myTargetObject;
-	CU::Vector3f myTargetPosition;
-	std::function<void(float)> myUpdateFunction;
-	float myRange;
-	float myCoolDown;
-	float myAttackRadius2;
+	SkillData* mySkillData;
 	float myElapsedCoolDownTime;
-	float myAnimationTime;
 	float myAnimationTimeElapsed;
 	bool myIsActive;
 	bool myIsSelected;

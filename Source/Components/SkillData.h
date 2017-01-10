@@ -1,6 +1,12 @@
 #pragma once
+#include "HealthPoint.h"
 struct SkillData
 {
-	float myRange;
-	float myCoolDown;
+	const char* skillName;
+	float range;
+	float coolDown;
+	float activationRadius;
+	float animationDuration;
+	HealthPoint damage;
+	bool isAOE;
 };

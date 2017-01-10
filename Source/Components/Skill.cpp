@@ -9,8 +9,10 @@
 #include "../Collision/ICollider.h"
 #include "CollisionComponent.h"
 #include "SkillComponent.h"
-Skill::Skill()
+#include "SkillData.h"
+Skill::Skill(SkillData* aSkillDataPointer)
 {
+	mySkillData = aSkillDataPointer;
 	myIsActive = false;
 	myIsSelected = false;
     myUpdateFunction = std::bind(&Skill::BasicAttackUpdate, this, std::placeholders::_1);
@@ -27,12 +29,9 @@ Skill::Skill()
 	collisionComponent->DeactivateCollider();
 	collisionComponent->GetCollider()->SetGameObject(myColliderObject);
 	//ToDo Deactivate collider; Move this piece of shit to a better place.
-	myCoolDown = 0.5f;
-	myElapsedCoolDownTime = myCoolDown;
-	myRange = 300.0f;
-	myAttackRadius2 = 160.0f * 160.0f;
 
-	myAnimationTime = 0.5f;
+	myElapsedCoolDownTime = mySkillData->coolDown;
+	
 	myAnimationTimeElapsed = 0.f;
 }
 
@@ -43,7 +42,7 @@ Skill::~Skill()
 
 void Skill::Activate()
 {
-	if (myElapsedCoolDownTime >= myCoolDown)
+	if (myElapsedCoolDownTime >= mySkillData->coolDown)
 	{
 		myIsActive = true;
 		OnActivation();
@@ -66,7 +65,7 @@ void Skill::Update(float aDeltaTime)
 
 	if(myIsActive == true)
 	{
-		if (myAnimationTimeElapsed > myAnimationTime)
+		if (myAnimationTimeElapsed > mySkillData->animationDuration)
 		{
 			ActivateCollider(); // Remove this later on and replace it with animation wait time.
 			myAnimationTimeElapsed = 0.f;
@@ -80,7 +79,7 @@ void Skill::Update(float aDeltaTime)
 void Skill::Init(CGameObject * aUser)
 {
 	myUser = aUser;
-	myColliderObject->AddComponent(new SkillComponent(myUser));
+	myColliderObject->AddComponent(new SkillComponent(myUser, mySkillData));
 }
 
 void Skill::BasicAttackUpdate(float aDeltaTime)
@@ -92,7 +91,7 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 
 	if(myTargetObject != nullptr)
 	{
-		if((myUser->GetWorldPosition() - myTargetObject->GetWorldPosition()).Length2() < myAttackRadius2)
+		if((myUser->GetWorldPosition() - myTargetObject->GetWorldPosition()).Length2() < mySkillData->activationRadius *  mySkillData->activationRadius)
 		{
 			eComponentMessageType type = eComponentMessageType::eStopMovement;
 			myUser->NotifyComponents(type, SComponentMessageData());
@@ -112,10 +111,10 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 		myElapsedCoolDownTime = 0.0f;
 		CU::Vector3f direction = myTargetPosition - myUser->GetWorldPosition();
 		myAnimationTimeElapsed += aDeltaTime;
-		if(direction.Length2() > myRange * myRange)
+		if(direction.Length2() > mySkillData->range * mySkillData->range)
 		{
 			direction.Normalize();
-			direction *= myRange;
+			direction *= mySkillData->range;
 			myColliderObject->SetWorldPosition(myUser->GetWorldPosition() + direction);
 		}
 		else
@@ -161,7 +160,7 @@ void Skill::OnDeActivation()
 
 void Skill::Select()
 {
-	if(myElapsedCoolDownTime >= myCoolDown)
+	if(myElapsedCoolDownTime >= mySkillData->coolDown)
 	{
 		myIsSelected = true;
 	}

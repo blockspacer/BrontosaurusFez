@@ -2,12 +2,12 @@
 #include "SkillComponent.h"
 #include "../Collision/ICollider.h"
 #include "../Game/PollingStation.h"
+#include "SkillData.h"
 
-SkillComponent::SkillComponent(CGameObject* aUserObject)
+SkillComponent::SkillComponent(CGameObject* aUserObject, SkillData* aSkillDataPointer)
 {
-	myDamage = 10000.0f;
-	myIsAOE = false;
 	myUserObject = aUserObject;
+	mySkillData = aSkillDataPointer;
 }
 
 
@@ -73,10 +73,10 @@ void SkillComponent::Destroy()
 void SkillComponent::DoDamage(CGameObject* aGameObjectToDamage)
 {
 	SComponentMessageData damageData;
-	damageData.myInt = myDamage;
+	damageData.myInt = mySkillData->damage;
 	aGameObjectToDamage->NotifyComponents(eComponentMessageType::eTakeDamage, damageData);
 
-	if (myIsAOE == false)
+	if (mySkillData->isAOE == false)
 	{
 		SComponentMessageData deactivationData;
 		deactivationData.myBool = false;
