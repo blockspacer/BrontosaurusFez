@@ -383,7 +383,7 @@ void CPlayState::Render()
 	msg.mySamplerState = eSamplerState::eClamp;
 	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
 
-	//myGUIManager->Render();
+	myGUIManager->Render();
 
 	msg.myBlendState = eBlendState::eNoBlend;
 	msg.myDepthStencilState = eDepthStencilState::eDefault;
@@ -461,7 +461,7 @@ void CPlayState::CreateManagersAndFactories()
 	myScene = new CScene();
 	myGameObjectManager = new CGameObjectManager();
 	myGUIManager = new GUI::GUIManager();
-	//myGUIManager->Init("Models/gui/gui.fbx", true);
+	myGUIManager->Init("Models/gui/guiBase.fbx");
 
 	myCollisionComponentManager = new CCollisionComponentManager;
 	CComponentManager::CreateInstance();

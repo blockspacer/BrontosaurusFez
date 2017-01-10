@@ -419,7 +419,7 @@ bool CFBXLoader::LoadGUIScene(const char* aFilePath, CLoaderScene& aSceneOut)
 	for (unsigned int i = 0; i < root->mNumChildren; ++i)
 	{
 		std::string name = root->mChildren[i]->mName.C_Str();
-		if (name.find("Grp") != std::string::npos)
+		if (name.find("Grp") != std::string::npos || name.find("Base") != std::string::npos)
 		{
 			modelGroup = root->mChildren[i];
 			break;
