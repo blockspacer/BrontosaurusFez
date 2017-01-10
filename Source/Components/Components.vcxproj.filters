@@ -108,6 +108,7 @@
     <ClCompile Include="SkillComponentManager.cpp" />
     <ClCompile Include="DropComponent.cpp" />
     <ClCompile Include="DropComponentManager.cpp" />
+    <ClCompile Include="MouseComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -230,6 +231,8 @@
     </ClInclude>
     <ClInclude Include="DropComponent.h" />
     <ClInclude Include="DropComponentManager.h" />
+    <ClInclude Include="MouseComponent.h" />
+    <ClInclude Include="SkillData.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

@@ -252,6 +252,7 @@
     <ClInclude Include="Skill.h" />
     <ClInclude Include="SkillComponent.h" />
     <ClInclude Include="SkillComponentManager.h" />
+    <ClInclude Include="SkillData.h" />
     <ClInclude Include="SkillFactory.h" />
     <ClInclude Include="SkillSystemComponent.h" />
     <ClInclude Include="SkillSystemComponentManager.h" />
