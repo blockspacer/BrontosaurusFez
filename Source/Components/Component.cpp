@@ -12,6 +12,14 @@ CComponent::~CComponent()
 {
 }
 
+void CComponent::NotifyParent(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData)
+{
+	if (myParent != nullptr)
+	{
+		myParent->NotifyComponents(aMessageType, aMessageData);
+	}
+}
+
 void CComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData)
 {
 	aMessageType;

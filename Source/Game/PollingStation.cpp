@@ -3,6 +3,7 @@
 
 
 CGameObject* PollingStation::playerObject = nullptr;
+CComponent* PollingStation::PlayerInput = nullptr;
 ValueObserver<int>* PollingStation::playerHealthBar = nullptr;
 ValueObserver<int>* PollingStation::playerBoostBar = nullptr;
 ValueObserver<int>* PollingStation::timeObjectiveBar = nullptr;

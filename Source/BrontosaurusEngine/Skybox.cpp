@@ -219,8 +219,8 @@ void CSkybox::UpdateCbuffer(const CU::Camera& aCamera)
 
 	CU::Vector4f updatedCameraPos(aCamera.GetPosition().x, aCamera.GetPosition().y, aCamera.GetPosition().z, 1.f);
 
-	DEVICE_CONTEXT->Map(myPSBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
-	memcpy(mappedSubresource.pData, &updatedCameraPos, sizeof(CU::Vector4f));
-	DEVICE_CONTEXT->Unmap(myPSBuffer, 0);
-	DEVICE_CONTEXT->PSSetConstantBuffers(0, 1, &myPSBuffer);
+	//DEVICE_CONTEXT->Map(myPSBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
+	//memcpy(mappedSubresource.pData, &updatedCameraPos, sizeof(CU::Vector4f));
+	//DEVICE_CONTEXT->Unmap(myPSBuffer, 0);
+	//DEVICE_CONTEXT->PSSetConstantBuffers(0, 1, &myPSBuffer);
 }

@@ -1,11 +1,13 @@
 #pragma once
 #include "Component.h"
+#include "HealthPoint.h"
 
 class CGameObject;
+struct SkillData;
 class SkillComponent : public CComponent
 {
 public:
-	SkillComponent(CGameObject* aUserObject);
+	SkillComponent(CGameObject* aUserObject, SkillData* aSkillDataPointer);
 	~SkillComponent();
 	void Update(float aDeltaTime);
 	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
@@ -13,9 +15,8 @@ public:
 	void DoDamage(CGameObject* aGameObjectToDamage);
 private:
 	CGameObject* myUserObject;
-	unsigned short myDamage;
+	SkillData* mySkillData;
 	float myElapsedTime;
-	bool myIsAOE;
 
 	bool myIsActive;
 };

@@ -61,7 +61,6 @@ enum class eComponentMessageType
 	eAddSkill,
 	eTakeDamage,
 	eOnCollisionEnter,
-	eOnCollisionUpdate,
 	eOnCollisionExit,
 	eStopMovement,
 	eSetIsColliderActive,

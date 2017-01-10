@@ -14,7 +14,6 @@ CCollisionComponent::CCollisionComponent(ICollider* aCollider)
 	
 	myCollider->InitCallbackFunctions(
 		std::bind(&CCollisionComponent::OnCollisionEnter, this, std::placeholders::_1),
-		std::bind(&CCollisionComponent::OnCollisionUpdate, this, std::placeholders::_1),
 		std::bind(&CCollisionComponent::OnCollisionExit, this, std::placeholders::_1)
 	);
 }
@@ -35,17 +34,20 @@ void CCollisionComponent::Receive(const eComponentMessageType aMessageType, cons
 	switch (aMessageType)
 	{
 	case eComponentMessageType::eAddComponent:
+		myCollider->SetGameObject(GetParent());
+		myCollider->SetPosition(GetParent()->GetWorldPosition());
+		break;
 	case eComponentMessageType::eMoving:
 		myCollider->SetPosition(GetParent()->GetWorldPosition());
 		break;
 	case eComponentMessageType::eSetIsColliderActive:
 		if (aMessageData.myBool == true)
 		{
-			myCollider->Activate();
+			ActivateCollider();
 		}
 		else
 		{
-			myCollider->Deactivate();
+			DeactivateCollider();
 		}
 	break;
 	case eComponentMessageType::eDied:
@@ -72,20 +74,15 @@ void CCollisionComponent::DeactivateCollider()
 
 void CCollisionComponent::OnCollisionEnter(ICollider* aCollider)
 {
+	//DL_PRINT("%s collided with %s", GetParent()->GetName().c_str(), aCollider->GetGameObject()->GetName().c_str());
 	SComponentMessageData data;
 	data.myCollider = aCollider;
 	GetParent()->NotifyComponents(eComponentMessageType::eOnCollisionEnter, data);
 }
 
-void CCollisionComponent::OnCollisionUpdate(ICollider* aCollider)
-{
-	SComponentMessageData data;
-	data.myCollider = aCollider;
-	GetParent()->NotifyComponents(eComponentMessageType::eOnCollisionUpdate, data);
-}
-
 void CCollisionComponent::OnCollisionExit(ICollider* aCollider)
 {
+	//DL_PRINT("%s stopped colliding with %s", GetParent()->GetName().c_str(), aCollider->GetGameObject()->GetName().c_str());
 	SComponentMessageData data;
 	data.myCollider = aCollider;
 	GetParent()->NotifyComponents(eComponentMessageType::eOnCollisionExit, data);

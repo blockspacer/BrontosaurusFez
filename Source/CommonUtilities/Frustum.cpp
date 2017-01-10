@@ -37,29 +37,44 @@ namespace CU
 			myPlanes.RemovePlanes();
 		}
 
+		float FovExtens = 15.0f;
 
-		//float AspectRatioX = aWidth / aHeight;
 		float AspectRatioY = aHeight / aWidth;
-		float FovX = (aFOV + 15) * (static_cast<float>(M_PI) / 180.0f);
+		float FovX = (aFOV + FovExtens) * (static_cast<float>(3.14159265f) / 180.0f);
 		float TanFovX = std::tan(FovX / 2.0f);
 		float FovY = 2.0f * std::atan(TanFovX * AspectRatioY);
 
 
 		Plane<float> farPlane = Plane<float>(CU::Point3f(0.f, 0.f, aFar), CU::Vector3f(0.f, 0.f, 1.0f));
-		Plane<float> nearPlane = CU::Plane<float>(CU::Point3f(0.f, 0.f, aNear), Vector3f(0.f, 0.f, -1.0f));
+		Plane<float> nearPlane = Plane<float>(CU::Point3f(0.f, 0.f, aNear), Vector3f(0.f, 0.f, -1.0f));
 
+		Plane<float> leftPlane;
+		Plane<float> rightPlane;
+		Plane<float> topPlane;
+		Plane<float> bottomPlane;
 
-		Plane<float> leftPlane = Plane<float>(Point3f(0.f, 0.f, 0.f),
-			Point3f(1.f, 0.f, 0.f) * Matrix33f::CreateRotateAroundY(FovX));
+		//Ortho
+		if (aFOV == 0.0f)
+		{
+			leftPlane = Plane<float>(Point3f((aWidth / 2), 0.f, 0.f), Point3f(1.f, 0.f, 0.f));
+			rightPlane = Plane<float>(Point3f(-(aWidth / 2), 0.f, 0.f), Point3f(-1.f, 0.f, 0.f));
+			topPlane = Plane<float>(Point3f(0.f, (aHeight / 2), 0.f), Point3f(0.f, 1.f, 0.f));
+			bottomPlane = Plane<float>(Point3f(0.f, -(aHeight / 2), 0.f), Point3f(0.f, -1.f, 0.f));
+		}
+		else //projo
+		{
+			leftPlane = Plane<float>(Point3f(0.f, 0.f, 0.f),
+				Point3f(1.f, 0.f, 0.f) * Matrix33f::CreateRotateAroundY(FovX));
 
-		Plane<float> rightPlane = Plane<float>(Point3f(0.f, 0.f, 0.f),
-			Point3f(-1.f, 0.f, 0.f) * Matrix33f::CreateRotateAroundY(-FovX));
+			rightPlane = Plane<float>(Point3f(0.f, 0.f, 0.f),
+				Point3f(-1.f, 0.f, 0.f) * Matrix33f::CreateRotateAroundY(-FovX));
 
-		Plane<float> topPlane = Plane<float>(Point3f(0.f, 0.f, 0.f),
-			Point3f(0.f, 1.f, 0.f) * Matrix33f::CreateRotateAroundX(-FovY));
+			topPlane = Plane<float>(Point3f(0.f, 0.f, 0.f),
+				Point3f(0.f, 1.f, 0.f) * Matrix33f::CreateRotateAroundX(-FovY));
 
-		CU::Plane<float> bottomPlane = Plane<float>(Point3f(0.f, 0.f, 0.f),
-			Point3f(0.f, -1.f, 0.f) * Matrix33f::CreateRotateAroundX(FovY));
+			bottomPlane = Plane<float>(Point3f(0.f, 0.f, 0.f),
+				Point3f(0.f, -1.f, 0.f) * Matrix33f::CreateRotateAroundX(FovY));
+		}
 
 
 		myPlanes.AddPlane(farPlane);

@@ -24,7 +24,6 @@ public:
 
 private:
 	void OnCollisionEnter(ICollider* aCollider);
-	void OnCollisionUpdate(ICollider* aCollider);
 	void OnCollisionExit(ICollider* aCollider);
 	
 	ICollider* myCollider;

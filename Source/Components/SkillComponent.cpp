@@ -2,12 +2,12 @@
 #include "SkillComponent.h"
 #include "../Collision/ICollider.h"
 #include "../Game/PollingStation.h"
+#include "SkillData.h"
 
-SkillComponent::SkillComponent(CGameObject* aUserObject)
+SkillComponent::SkillComponent(CGameObject* aUserObject, SkillData* aSkillDataPointer)
 {
-	myDamage = 10000.0f;
-	myIsAOE = false;
 	myUserObject = aUserObject;
+	mySkillData = aSkillDataPointer;
 }
 
 
@@ -70,17 +70,17 @@ void SkillComponent::Destroy()
 {
 }
 
-void SkillComponent::DoDamage(CGameObject * aGameObjectToDamage)
+void SkillComponent::DoDamage(CGameObject* aGameObjectToDamage)
 {
-	SComponentMessageData data;
-	SComponentMessageData data2;
-	data.myInt = myDamage;
-	aGameObjectToDamage->NotifyComponents(eComponentMessageType::eTakeDamage, data);
-	if (myIsAOE == false)
-	{
-		data2.myBool = false;
-		GetParent()->NotifyComponents(eComponentMessageType::eSetIsColliderActive, data2);
-		myIsActive = false;
+	SComponentMessageData damageData;
+	damageData.myInt = mySkillData->damage;
+	aGameObjectToDamage->NotifyComponents(eComponentMessageType::eTakeDamage, damageData);
 
+	if (mySkillData->isAOE == false)
+	{
+		SComponentMessageData deactivationData;
+		deactivationData.myBool = false;
+		GetParent()->NotifyComponents(eComponentMessageType::eSetIsColliderActive, deactivationData);
+		myIsActive = false;
 	}
 }

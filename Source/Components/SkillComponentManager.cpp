@@ -36,9 +36,9 @@ void SkillComponentManager::DestroyInstance()
 	SAFE_DELETE(ourInstance);
 }
 
-SkillComponent* SkillComponentManager::CreateAndRegisterComponent()
+SkillComponent* SkillComponentManager::CreateAndRegisterComponent(CGameObject* aGameObject, SkillData* someData)
 {
-	SkillComponent* Component;
+	SkillComponent* Component = new SkillComponent(aGameObject, someData);
 	myComponents.Add(Component);
 	CComponentManager::GetInstance().RegisterComponent(Component);
 

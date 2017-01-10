@@ -37,6 +37,7 @@ struct SLODDistances
 struct SOncePerFrameBuffer
 {
 	SCameraViewProjection myCameraMatrices;
+	SCameraViewProjection myShadowCameraMatrices;
 
 	float deltaTime;
 	float time;

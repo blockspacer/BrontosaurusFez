@@ -47,14 +47,7 @@ void InputController::Update(float aDeltaTime)
 		direction.y = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m12) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m22) + myPlayerCamera.GetTransformation().m32;
 		direction.z = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m13) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m23) + myPlayerCamera.GetTransformation().m33;
 
-		//tested with transposed
-		//direction.x = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m11) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m12) + myPlayerCamera.GetTransformation().m13;
-		//direction.y = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m21) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m22) + myPlayerCamera.GetTransformation().m23;
-		//direction.z = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m31) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m32) + myPlayerCamera.GetTransformation().m33;
-
-		//direction = CU::Vector3f(CU::Vector4f(direction, 0.f) * myPlayerCamera.GetTransformation());
-
-		CU::Vector4f targetPosition3D;
+		CU::Vector3f targetPosition3D;
 		const CU::Vector3f groundNormal(0.f, 1.f, 0.f);
 		const float denominator = direction.Dot(groundNormal);
 		if (std::fabs(denominator) > 0.0001f)
@@ -154,7 +147,7 @@ eMessageReturn InputController::MouseMoved(const CU::Vector2f& aMousePosition)
 
 eMessageReturn InputController::TakeInputMessage(const CU::eInputMessage aInputMessage)
 {
-	for(unsigned short i = 0; i < mySkillInputMessageActivators.Size(); i++)
+	for(unsigned int i = 0; i < mySkillInputMessageActivators.Size(); i++)
 	{
 		if(mySkillInputMessageActivators[i] == aInputMessage)
 		{

@@ -56,6 +56,14 @@ void CCollisionManager::RemoveCollider(ICollider* aCollider)
 	int index = myColliders.Find(aCollider);
 	if (index != myColliders.FoundNone)
 	{
+		auto& collidedWith = aCollider->GetCollidedWith();
+		for (const ICollider* collider : collidedWith)
+		{
+			const_cast<ICollider*>(collider)->GetCollidedWith().Remove(aCollider);
+		}
+
+		collidedWith.RemoveAll();
+
 		myColliders.RemoveCyclicAtIndex(index);
 	}
 }
@@ -71,21 +79,16 @@ void CCollisionManager::TestCollision(ICollider* aFirst, ICollider* aSecond)
 	{
 		if (ICollider::HasCollided(aFirst, aSecond) == false)
 		{
-			DL_PRINT("on collision enter!");
+			//DL_PRINT("on collision enter!");
 			aFirst->OnCollisionEnter(aSecond);
 			aSecond->OnCollisionEnter(aFirst);
-		}
-		else
-		{
-			aFirst->OnCollisionUpdate(aSecond);
-			aSecond->OnCollisionUpdate(aFirst);
 		}
 	}
 	else
 	{
 		if (ICollider::HasCollided(aFirst, aSecond) == true)
 		{
-			DL_PRINT("on collision exit!");
+			//DL_PRINT("on collision exit!");
 			aFirst->OnCollisionExit(aSecond);
 			aSecond->OnCollisionExit(aFirst);
 		}

@@ -7,6 +7,7 @@
 #include "Lights.h" //directional //make forward declaration
 #include "InstanceID.h"
 #include "Camera.h"
+#include "RenderCamera.h"
 
 class CSkybox;
 class CModelInstance;
@@ -83,6 +84,8 @@ private:
 
 	float myFogStart;
 	float myFogEnd;
+
+	CRenderCamera myShadowCamera;
 
 };
 

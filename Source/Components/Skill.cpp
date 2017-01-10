@@ -9,8 +9,11 @@
 #include "../Collision/ICollider.h"
 #include "CollisionComponent.h"
 #include "SkillComponent.h"
-Skill::Skill()
+#include "SkillData.h"
+#include "SkillComponentManager.h"
+Skill::Skill(SkillData* aSkillDataPointer)
 {
+	mySkillData = aSkillDataPointer;
 	myIsActive = false;
 	myIsSelected = false;
     myUpdateFunction = std::bind(&Skill::BasicAttackUpdate, this, std::placeholders::_1);
@@ -19,17 +22,18 @@ Skill::Skill()
 	Intersection::CollisionData circleCollisionData = Intersection::CollisionData();
 	circleCollisionData.myCircleData = new Intersection::SCircle;
 	circleCollisionData.myCircleData->myCenterPosition = myColliderObject->GetWorldPosition();
-	circleCollisionData.myCircleData->myRadius = 100000.0f;
+	circleCollisionData.myCircleData->myRadius = 200.0f;
 	CCollisionComponent* collisionComponent = SkillSystemComponentManager::GetInstance().GetCollisionComponentManager()->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, circleCollisionData);
-	collisionComponent->AddCollidsWith(eColliderType::eColliderType_Actor);
+	collisionComponent->AddCollidsWith(eColliderType::eColliderType_Enemy | eColliderType::eColliderType_Player);
 	collisionComponent->SetColliderType(eColliderType::eColliderType_Skill);
 	myColliderObject->AddComponent(collisionComponent);
 	collisionComponent->DeactivateCollider();
 	collisionComponent->GetCollider()->SetGameObject(myColliderObject);
 	//ToDo Deactivate collider; Move this piece of shit to a better place.
-	myCoolDown = 0.5f;
-	myElapsedCoolDownTime = myCoolDown;
-	myRange = 300.0f;
+
+	myElapsedCoolDownTime = mySkillData->coolDown;
+	
+	myAnimationTimeElapsed = 0.f;
 }
 
 
@@ -39,34 +43,56 @@ Skill::~Skill()
 
 void Skill::Activate()
 {
-	myIsActive = true;
-	OnActivation();
+	if (myElapsedCoolDownTime >= mySkillData->coolDown)
+	{
+		myIsActive = true;
+		OnActivation();
+	
+	}
 }
 
 void Skill::Deactivate()
 {
 	myIsActive = false;
 	myIsSelected = false;
+	myElapsedCoolDownTime = 0.0f;
 	OnDeActivation();
 }
 
 void Skill::Update(float aDeltaTime)
 {
 	myElapsedCoolDownTime += aDeltaTime;
-	myUpdateFunction(aDeltaTime);
+
+
+	if(myIsActive == true)
+	{
+		if (myAnimationTimeElapsed > mySkillData->animationDuration)
+		{
+			ActivateCollider(); // Remove this later on and replace it with animation wait time.
+			myAnimationTimeElapsed = 0.f;
+		}
+
+		myUpdateFunction(aDeltaTime);
+	
+	}
 }
 
 void Skill::Init(CGameObject * aUser)
 {
 	myUser = aUser;
-	myColliderObject->AddComponent(new SkillComponent(myUser));
+	myColliderObject->AddComponent(SkillComponentManager::GetInstance().CreateAndRegisterComponent(myUser, mySkillData));
 }
 
 void Skill::BasicAttackUpdate(float aDeltaTime)
 {
+	if (myIsActive == false)
+	{
+		return;
+	}
+
 	if(myTargetObject != nullptr)
 	{
-		if(CU::Vector3f(myUser->GetWorldPosition() - myTargetObject->GetWorldPosition()).Length2() < 50.0f * 50.0f)
+		if((myUser->GetWorldPosition() - myTargetObject->GetWorldPosition()).Length2() < mySkillData->activationRadius *  mySkillData->activationRadius)
 		{
 			eComponentMessageType type = eComponentMessageType::eStopMovement;
 			myUser->NotifyComponents(type, SComponentMessageData());
@@ -75,10 +101,8 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 			myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
 			myElapsedCoolDownTime = 0.0f;
 			myColliderObject->SetWorldPosition(myTargetObject->GetWorldPosition());
-
-
-			ActivateCollider(); // Remove this later on and replace it with animation wait time.
-
+			myColliderObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
+			myAnimationTimeElapsed += aDeltaTime;
 		}
 	}
 	else
@@ -88,17 +112,19 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 		myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
 		myElapsedCoolDownTime = 0.0f;
 		CU::Vector3f direction = myTargetPosition - myUser->GetWorldPosition();
-		if(direction.Length2() > myRange * myRange)
+		myAnimationTimeElapsed += aDeltaTime;
+		if(direction.Length2() > mySkillData->range * mySkillData->range)
 		{
 			direction.Normalize();
-			direction *= myRange;
+			direction *= mySkillData->range;
 			myColliderObject->SetWorldPosition(myUser->GetWorldPosition() + direction);
 		}
 		else
 		{
 			myColliderObject->SetWorldPosition(myTargetPosition);
 		}
-		ActivateCollider(); // Remove this later on and replace it with animation wait time.
+		myColliderObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
+		//ActivateCollider(); // Remove this later on and replace it with animation wait time.
 	}
 }
 
@@ -112,25 +138,31 @@ void Skill::SetTargetObject(CGameObject* aTargetObject)
 }
 void Skill::ActivateCollider()
 {
+	//DL_PRINT("Animation done");
+	Deactivate();
 	eComponentMessageType type = eComponentMessageType::eSetIsColliderActive;
 	SComponentMessageData data;
-	data.myBool = false;
-	myColliderObject->NotifyComponents(type, data);
+	
 	data.myBool = true;
 	myColliderObject->NotifyComponents(type, data);
 }
 void Skill::OnActivation()
 {
-
+	myAnimationTimeElapsed = 0.f;
+	//DL_PRINT("Animation started");
 }
 
 void Skill::OnDeActivation()
 {
+	SComponentMessageData statedAttackingMessage;
+	statedAttackingMessage.myString = "idle";
+	myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
+	myTargetObject = nullptr;
 }
 
 void Skill::Select()
 {
-	if(myElapsedCoolDownTime >= myCoolDown)
+	if(myElapsedCoolDownTime >= mySkillData->coolDown)
 	{
 		myIsSelected = true;
 	}

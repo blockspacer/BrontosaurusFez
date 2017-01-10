@@ -184,9 +184,6 @@ void CDXFramework::CreateDepthStencil(const int aWidth, const int aHeight, ID3D1
 	if (aDepthStencilView != nullptr)
 		aDepthStencilView->Release();
 
-
-
-	ID3D11DepthStencilState* depthStencilState = nullptr;
 	ID3D11Texture2D* depthStencilBuffer = nullptr;
 
 
@@ -210,34 +207,6 @@ void CDXFramework::CreateDepthStencil(const int aWidth, const int aHeight, ID3D1
 	result = myDevice->CreateTexture2D(&depthBufferDesc, NULL, &depthStencilBuffer);
 	CHECK_RESULT(result, "Failed to create Texture2D.");
 	
-	// Initialize the description of the stencil state.
-	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
-	ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
-	// Set up the description of the stencil state.
-	depthStencilDesc.DepthEnable = true;
-	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
-	depthStencilDesc.StencilEnable = true;
-	depthStencilDesc.StencilReadMask = 0xFF;
-	depthStencilDesc.StencilWriteMask = 0xFF;
-	// Stencil operations if pixel is front-facing
-	depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-	depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-
-	// Stencil operations if pixel is back-facing
-	depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-	depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-	result = myDevice->CreateDepthStencilState(&depthStencilDesc, &depthStencilState);
-	CHECK_RESULT(result, "Failed to create Depth Stencil State.");
-	myDeviceContext->OMSetDepthStencilState(depthStencilState, 1);
-	// Initailze the depth stencil view.
-
-
-
 	ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
 	// Set up the depth stencil view description.
 	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -248,9 +217,6 @@ void CDXFramework::CreateDepthStencil(const int aWidth, const int aHeight, ID3D1
 	CHECK_RESULT(result, "Failed to create Depth Stencil View.");
 	//myDeviceContext->OMSetRenderTargets(1, &myRenderTargetView, aDepthStencilView);
 
-
-
-
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
 	ZeroMemory(&srvd, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
 	srvd.Format = GetDepthSRVFormat(DXGI_FORMAT_D24_UNORM_S8_UINT);
@@ -258,8 +224,8 @@ void CDXFramework::CreateDepthStencil(const int aWidth, const int aHeight, ID3D1
 	srvd.Texture2D.MipLevels = 1;
 
 	result = myDevice->CreateShaderResourceView(depthStencilBuffer, &srvd, &aDepthStencilResource);
+	CHECK_RESULT(result, "Failed to create Shader Resouce View.");
 
-	depthStencilState->Release();
 	depthStencilBuffer->Release();
 
 }

@@ -1,5 +1,7 @@
 #pragma once
 class SkillComponent;
+struct SkillData;
+class CGameObject;
 class SkillComponentManager
 {
 public:
@@ -7,7 +9,7 @@ public:
 	static void CreateInstance();
 	static void DestroyInstance();
 
-	SkillComponent* CreateAndRegisterComponent();
+	SkillComponent* CreateAndRegisterComponent(CGameObject* aGameObject, SkillData* someData);
 	void Update(const CU::Time& aDeltaTime);
 private:
 	SkillComponentManager();
