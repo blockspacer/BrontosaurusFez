@@ -192,6 +192,7 @@ void CPlayState::Load()
 	basicSkillData->animationDuration = 0.5f;
 	basicSkillData->coolDown = 0.5f;
 	basicSkillData->isAOE = false;
+	basicSkillData->isChannel = false;
 	basicSkillData->damage = 10;
 	basicSkillData->skillName = "BasicAttack";
 	SkillFactory::GetInstance().RegisterSkillData(basicSkillData);
@@ -202,8 +203,9 @@ void CPlayState::Load()
 	whirlWindSkillData->range = 300.0f;
 	whirlWindSkillData->animationDuration = 0.1f;
 	whirlWindSkillData->coolDown = 0.1f;
-	whirlWindSkillData->isAOE = false;
-	whirlWindSkillData->damage = 1;
+	whirlWindSkillData->isAOE = true;
+	whirlWindSkillData->isChannel = true;
+	whirlWindSkillData->damage = 10;
 	whirlWindSkillData->skillName = "WhirlWind";
 	SkillFactory::GetInstance().RegisterSkillData(whirlWindSkillData);
 
@@ -229,6 +231,7 @@ void CPlayState::Load()
 	SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
 	myPlayerObject->AddComponent(tempSkillSystemComponent);
 	tempSkillSystemComponent->AddSkill("BasicAttack");
+	tempSkillSystemComponent->AddSkill("WhirlWind");
 
 	Intersection::CollisionData playerCollisionData;
 	playerCollisionData.myCircleData = new Intersection::SCircle();

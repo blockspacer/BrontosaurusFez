@@ -13,10 +13,21 @@
 #include "SkillComponentManager.h"
 Skill::Skill(SkillData* aSkillDataPointer)
 {
+	if (aSkillDataPointer->skillName == "BasicAttack")
+	{
+		myUpdateFunction = std::bind(&Skill::BasicAttackUpdate, this, std::placeholders::_1);
+	}
+	else if (aSkillDataPointer->skillName == "WhirlWind")
+	{
+		myUpdateFunction = std::bind(&Skill::WhirlWindUpdate, this, std::placeholders::_1);
+	}
+	else
+	{
+		DL_PRINT("Wow Skill couldn't find what skill to use as updatefunction. Check spelling and/or yell at Marcus.");
+	}
 	mySkillData = aSkillDataPointer;
 	myIsActive = false;
 	myIsSelected = false;
-    myUpdateFunction = std::bind(&Skill::BasicAttackUpdate, this, std::placeholders::_1);
 	myUser = nullptr;
 	myColliderObject = SkillSystemComponentManager::GetInstance().GetGameObjectManager()->CreateGameObject();
 	Intersection::CollisionData circleCollisionData = Intersection::CollisionData();
@@ -128,6 +139,16 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 	}
 }
 
+void Skill::WhirlWindUpdate(float aDeltaTime)
+{
+	myUser->NotifyComponents(eComponentMessageType::eStopMovement, SComponentMessageData());
+	SComponentMessageData statedAttackingMessage;
+	statedAttackingMessage.myString = "turnRight90";
+	myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
+	myElapsedCoolDownTime = 0.0f;
+	myAnimationTimeElapsed += aDeltaTime;
+}
+
 void Skill::SetTargetPosition(CU::Vector3f aTargetPosition)
 {	
 	myTargetPosition = aTargetPosition;
@@ -165,6 +186,10 @@ void Skill::Select()
 	if(myElapsedCoolDownTime >= mySkillData->coolDown)
 	{
 		myIsSelected = true;
+		if(mySkillData->isChannel == true)
+		{
+			Activate();
+		}
 	}
 }
 
