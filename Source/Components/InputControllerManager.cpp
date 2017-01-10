@@ -33,6 +33,11 @@ void InputControllerManager::DestroyInstance()
 	SAFE_DELETE(ourInstance);
 }
 
+CU::GrowingArray<InputController*>& InputControllerManager::GetComponents()
+{
+	return myComponents;
+}
+
 void InputControllerManager::SetScene(CScene* aScene)
 {
 	myScene = aScene;

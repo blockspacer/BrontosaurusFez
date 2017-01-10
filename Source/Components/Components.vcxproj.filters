@@ -109,6 +109,10 @@
     <ClCompile Include="DropComponent.cpp" />
     <ClCompile Include="DropComponentManager.cpp" />
     <ClCompile Include="MouseComponent.cpp" />
+    <ClCompile Include="FleeControllerManager.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="SeekControllerManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -236,6 +240,10 @@
     <ClInclude Include="HealthPoint.h">
       <Filter>Stats</Filter>
     </ClInclude>
+    <ClInclude Include="FleeControllerManager.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="SeekControllerManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

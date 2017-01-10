@@ -44,6 +44,9 @@
 
 #include "Components\SkillFactory.h"
 #include "Components\SkillSystemComponentManager.h"
+
+#include "FleeControllerManager.h"
+#include "SeekControllerManager.h"
 //Kanske Inte ska vara här?
 #include "../BrontosaurusEngine/Console.h"
 #include "AIControllerManager.h"
@@ -110,6 +113,8 @@ CPlayState::~CPlayState()
 	MovementComponentManager::DestroyInstance();
 	SkillSystemComponentManager::DestroyInstance();
 	AIControllerManager::Destroy();
+	FleeControllerManager::Destroy();
+	CSeekControllerManager::Destroy();
 	SkillComponentManager::DestroyInstance();
 	DropComponentManager::DestroyInstance();
 	PollingStation::NullifyLevelSpecificData();
@@ -198,7 +203,7 @@ void CPlayState::Load()
 
 	//create player:
 
-	myPlayerObject = myGameObjectManager->CreateGameObject();
+	/*myPlayerObject = myGameObjectManager->CreateGameObject();
 	myPlayerObject->SetName("Player");
 	PollingStation::playerObject = myPlayerObject;
 
@@ -226,7 +231,7 @@ void CPlayState::Load()
 	CCollisionComponent* playerCollisionComponent = myCollisionComponentManager->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, playerCollisionData);
 	playerCollisionComponent->AddCollidsWith(eColliderType_Mouse | eColliderType_Enemy);
 	playerCollisionComponent->SetColliderType(eColliderType_Player);
-	myPlayerObject->AddComponent(playerCollisionComponent);
+	myPlayerObject->AddComponent(playerCollisionComponent);*/
 
 
 	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
@@ -277,6 +282,9 @@ void CPlayState::Load()
 	{
 		DL_ASSERT("Loading Failed");
 	}
+	PollingStation::playerObject = PollingStation::PlayerInput->GetParent();
+	//CSeekControllerManager::GetInstance().SetTarget();
+	myGameObjectManager->SendObjectsDoneMessage();
 
 	//cameraComponent->InitOffsetPosition();
 
@@ -285,13 +293,13 @@ void CPlayState::Load()
 	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation()); //
 
 	//----CreateEnemies----
-	myEnemies.Init(8);
+	/*myEnemies.Init(8);
 	TEMP_CREATE_ENEMY();
 	myEnemies[0]->SetWorldPosition({ 0.f, 0.f, 0.f });
 	TEMP_CREATE_ENEMY();
 	myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
 	TEMP_CREATE_ENEMY();
-	myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
+	myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });*/
 
 	//---------------------
 
@@ -487,6 +495,8 @@ void CPlayState::CreateManagersAndFactories()
 	InputControllerManager::GetInstance().SetScene(myScene);
 	MovementComponentManager::CreateInstance();
 	AIControllerManager::Create();
+	FleeControllerManager::Create();
+	CSeekControllerManager::Create();
 	SkillFactory::CreateInstance();
 	SkillSystemComponentManager::CreateInstance();
 	SkillSystemComponentManager::GetInstance().SetGameObjectManager(myGameObjectManager);

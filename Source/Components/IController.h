@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include "../CommonUtilities/vector2.h"
 
 class CAIControllerComponent;
 
