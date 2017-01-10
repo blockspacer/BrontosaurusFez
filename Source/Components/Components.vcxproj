@@ -227,6 +227,7 @@
     <ClInclude Include="DropComponent.h" />
     <ClInclude Include="DropComponentManager.h" />
     <ClInclude Include="FleeController.h" />
+    <ClInclude Include="HealthPoint.h" />
     <ClInclude Include="PlayerData.h" />
     <ClInclude Include="SeekController.h" />
     <ClInclude Include="Component.h" />

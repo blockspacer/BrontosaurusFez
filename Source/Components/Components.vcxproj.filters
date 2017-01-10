@@ -233,6 +233,9 @@
     <ClInclude Include="DropComponentManager.h" />
     <ClInclude Include="MouseComponent.h" />
     <ClInclude Include="SkillData.h" />
+    <ClInclude Include="HealthPoint.h">
+      <Filter>Stats</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

@@ -1,7 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "../PostMaster/Subscriber.h"
-typedef int HealthPoint;
+#include "HealthPoint.h"
 
 class CHealthComponent : public CComponent, public Subscriber
 {
