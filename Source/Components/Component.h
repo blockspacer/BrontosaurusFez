@@ -45,7 +45,7 @@ private:
 	ComponentId myId;
 };
 
-inline CGameObject * CComponent::GetParent()
+inline CGameObject* CComponent::GetParent()
 {
 	return myParent;
 }
