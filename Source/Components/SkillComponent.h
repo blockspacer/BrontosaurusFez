@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include "HealthPoint.h"
 
 class CGameObject;
 class SkillComponent : public CComponent
@@ -13,7 +14,7 @@ public:
 	void DoDamage(CGameObject* aGameObjectToDamage);
 private:
 	CGameObject* myUserObject;
-	unsigned short myDamage;
+	HealthPoint myDamage;
 	float myElapsedTime;
 	bool myIsAOE;
 

@@ -227,6 +227,7 @@
     <ClInclude Include="DropComponent.h" />
     <ClInclude Include="DropComponentManager.h" />
     <ClInclude Include="FleeController.h" />
+    <ClInclude Include="HealthPoint.h" />
     <ClInclude Include="PlayerData.h" />
     <ClInclude Include="SeekController.h" />
     <ClInclude Include="Component.h" />
@@ -252,6 +253,7 @@
     <ClInclude Include="Skill.h" />
     <ClInclude Include="SkillComponent.h" />
     <ClInclude Include="SkillComponentManager.h" />
+    <ClInclude Include="SkillData.h" />
     <ClInclude Include="SkillFactory.h" />
     <ClInclude Include="SkillSystemComponent.h" />
     <ClInclude Include="SkillSystemComponentManager.h" />
