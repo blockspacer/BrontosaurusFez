@@ -1,10 +1,17 @@
 #pragma once
 
 #include "EMessageReturn.h"
+#include "../Game/QuestManager.h"
+#include "../Game/QuestDrawer.h"
 
 namespace GUI
 {
 	class GUIManager;
+}
+
+namespace QM
+{
+	class CQuestManager;
 }
 
 class State;
@@ -43,6 +50,8 @@ public:
 	virtual eMessageReturn DoEvent(EnemyEmitterComponent*) const { return eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(InputController*) const { return eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(CConsole*) const { return eMessageReturn::eContinue; }
+	virtual eMessageReturn DoEvent(QM::CQuestManager*) const { return eMessageReturn::eContinue; }
+	virtual eMessageReturn DoEvent(QM::CQuestDrawer *) const { return  eMessageReturn::eContinue; }
 
 	//temp
 	virtual eMessageReturn DoEvent(CHealthComponent*) const { return eMessageReturn::eContinue; }

@@ -62,6 +62,9 @@
       <Filter>Events\KeyCharPressed</Filter>
     </ClCompile>
     <ClCompile Include="ConsoleCalledUpon.cpp" />
+    <ClCompile Include="QuestDataUpdated.cpp">
+      <Filter>Events\QuestDataUpdated</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Subscriber.h">
@@ -169,6 +172,11 @@
     <ClInclude Include="ConsoleCalledUpon.h" />
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
+    <ClInclude Include="PopCurrentState.h" />
+    <ClInclude Include="PostMaster.h" />
+    <ClInclude Include="QuestDataUpdated.h">
+      <Filter>Events\QuestDataUpdated</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Events">
@@ -239,6 +247,9 @@
     </Filter>
     <Filter Include="Events\KeyCharPressed">
       <UniqueIdentifier>{a4ddbb42-71f7-432a-aecb-ff030a240365}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events\QuestDataUpdated">
+      <UniqueIdentifier>{5192a1de-0623-4ce8-8e60-448ee7391389}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
