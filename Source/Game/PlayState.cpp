@@ -75,6 +75,8 @@
 #include "Components\CollisionComponentManager.h"
 #include "Collision\ICollider.h"
 #include "Components\DropComponent.h"
+#include "SkillData.h"
+#include "SkillFactory.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
 #include "../BrontosaurusEngine/FireEmitterInstance.h"
@@ -182,6 +184,17 @@ void CPlayState::Load()
 	myScene->AddCamera(CScene::eCameraType::ePlayerOneCamera);
 	CU::Camera& playerCamera = myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera);
 	playerCamera.Init(60, WINDOW_SIZE_F.x, WINDOW_SIZE_F.y, 1.f, 75000.0f);
+	
+	//AddBasicAttack
+	SkillData* basicSkillData = new SkillData;
+	basicSkillData->activationRadius = 160.0f;
+	basicSkillData->range = 300.0f;
+	basicSkillData->animationDuration = 0.5f;
+	basicSkillData->coolDown = 0.5f;
+	basicSkillData->isAOE = false;
+	basicSkillData->damage = 1000;
+	basicSkillData->skillName = "BasicAttack";
+	SkillFactory::GetInstance().RegisterSkillData(basicSkillData);
 
 	//create player:
 
@@ -272,13 +285,13 @@ void CPlayState::Load()
 	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation()); //
 
 	//----CreateEnemies----
-	//myEnemies.Init(8);
-	//TEMP_CREATE_ENEMY();
-	//myEnemies[0]->SetWorldPosition({ 0.f, 0.f, 0.f });
-	//TEMP_CREATE_ENEMY();
-	//myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
-	//TEMP_CREATE_ENEMY();
-	//myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
+	myEnemies.Init(8);
+	TEMP_CREATE_ENEMY();
+	myEnemies[0]->SetWorldPosition({ 0.f, 0.f, 0.f });
+	TEMP_CREATE_ENEMY();
+	myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
+	TEMP_CREATE_ENEMY();
+	myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
 
 	//---------------------
 
