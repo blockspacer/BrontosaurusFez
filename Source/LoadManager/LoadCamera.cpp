@@ -15,9 +15,7 @@ int LoadCamera(KLoader::SLoadedComponentData someData)
 	CU::Matrix44f cameraTransformation = LoadManager::GetInstance().GetCurrentScene()->GetCamera(CScene::eCameraType::ePlayerOneCamera).GetTransformation();
 	CU::Matrix44f newRotation;
 
-	newRotation.Rotate(3.14159265f / 2, CU::Axees::X);
 	newRotation.Rotate(3.14159265f / 4, CU::Axees::X);
-	newRotation.Rotate(3.14159265f / 1, CU::Axees::Z);
 
 	cameraTransformation.SetRotation(newRotation);
 	cameraTransformation.SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
