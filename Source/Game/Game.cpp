@@ -14,8 +14,9 @@
 #include "KevinLoader/KevinLoader.h"
 #include "QuestManager.h"
 
-
-CGame::CGame(): mySplashScreen(nullptr)
+#include "PollingStation.h"
+#include "PlayerData.h"
+CGame::CGame()
 {
 }
 
@@ -35,6 +36,9 @@ void CGame::Init()
 	 QM::CQuestManager::CreateInstance();
 
 	 KLoader::CKevinLoader::CreateInstance();
+	 
+	 PollingStation::playerData = new PlayerData;
+	 PollingStation::playerData->myGold = 0;
 
 	if (CommandLineManager::GetInstance()->HasParameter("-skipMainMenu") == true)
 	{

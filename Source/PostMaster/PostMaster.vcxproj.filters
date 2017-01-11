@@ -115,7 +115,6 @@
     <ClInclude Include="WindowSizeChanged.h">
       <Filter>Events\WindowSizeChanged</Filter>
     </ClInclude>
-    <ClInclude Include="Event\MouseClicked.h" />
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="PushState.h" />
@@ -149,7 +148,6 @@
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="PushState.h" />
-    <ClInclude Include="MouseClicked.h" />
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="PushState.h" />
@@ -174,7 +172,10 @@
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
-    <ClInclude Include="QuestDataUpdated.h">
+    <ClInclude Include="MouseClicked.h">
+      <Filter>Events\MouseClicked</Filter>
+    </ClInclude>
+	<ClInclude Include="QuestDataUpdated.h">
       <Filter>Events\QuestDataUpdated</Filter>
     </ClInclude>
   </ItemGroup>

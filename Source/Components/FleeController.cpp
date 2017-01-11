@@ -5,9 +5,7 @@
 
 CFleeController::CFleeController()
 {
-	myWeight = 5.0;
 	myControllerType = eControllerType::eFlee;
-	myFleeRadius = 100.f;
 }
 
 CFleeController::~CFleeController()
@@ -17,12 +15,12 @@ CFleeController::~CFleeController()
 const CU::Vector2f CFleeController::Update(const CU::Time & aDeltaTime)
 {
 	CU::Vector2f steering;	 // if this crashes, you either haven't added a controlelr parent, or the AIcontrollerComp as a parent to your gameObject
-	CU::Vector2f hostPos = GetControllerComponent()->GetParent()->GetWorldPosition();
-	CU::Vector2f hostVelocity = GetControllerComponent()->GetVelocity();
-	
+	const CU::Vector2f hostPos = GetControllerComponent()->GetParent()->GetWorldPosition();
+	const CU::Vector2f hostVelocity = GetControllerComponent()->GetVelocity();
+
 	for (int i = 0; i < myObjectsToAvoid->Size(); ++i)
 	{
-		CU::Vector2f objectPos = myObjectsToAvoid->At(i)->GetWorldPosition();
+		const CU::Vector2f objectPos = myObjectsToAvoid->At(i)->GetWorldPosition();
 
 		if (objectPos == hostPos)
 			continue;
@@ -53,6 +51,22 @@ void CFleeController::SetFleeRadius(float aRadius)
 void CFleeController::SetTargetsToAvoid( CU::GrowingArray<CGameObject*>* aTargetList)
 {
 	myObjectsToAvoid = aTargetList;
+}
+
+void CFleeController::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
+{
+	switch (aMessageType)
+	{
+	case(eComponentMessageType::eObjectDone):
+	{
+		SComponentMessageData data;
+		data.myComponent = this;
+		NotifyParent(eComponentMessageType::eAddAIBehavior, data);
+	}
+		break;
+	default:
+		break;
+	}
 }
 
 void CFleeController::Destroy()

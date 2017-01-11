@@ -25,6 +25,8 @@ public:
 	void ClearAll();
 	void DumpAllAndReInit(); // this is the unsafe way to destroy everything with the assumption that the game objects don't own anything, mvh carl
 
+	void SendObjectsDoneMessage();
+
 private:
 	CU::GrowingArray<CU::Matrix44f> myMatrices;
 	CU::Stack<ComponentId> myFreeMatrices;

@@ -5,6 +5,8 @@
 #include "../CommonUtilities/Camera.h"
 
 #include "../GUI/GUIPixelConstantBuffer.h"
+#include "RenderPackage.h"
+#include "FullScreenHelper.h"
 
 
 class CSkybox;
@@ -43,7 +45,9 @@ struct SRenderMessage
 	enum class eRenderMessageType
 	{
 		eSetCamera,
+		eRenderCameraQueue,
 		eRenderModel,
+		eRenderModelDepth,
 		eRenderGUIModel,
 		eRenderSprite,
 		eChangeStates,
@@ -52,8 +56,11 @@ struct SRenderMessage
 		eRenderStreak,
 		eRenderFire,
 		eRenderText,
+		eActivateRenderPackage,
+		eRenderFullscreenEffect,
 		eRenderDebugObjs,
-		eRenderAnimationModel
+		eRenderToInterediate,
+		eSetShadowBuffer,
 	};
 
 	SRenderMessage(const eRenderMessageType aRenderMessageType);
@@ -61,6 +68,47 @@ struct SRenderMessage
 
 	eRenderMessageType myType;
 
+};
+
+struct SRenderFullscreenEffectMessage : SRenderMessage
+{
+	SRenderFullscreenEffectMessage();
+
+	CU::Vector4f myRect;
+
+	bool myFirstUseDepthResource;
+	bool mySecondUseDepthResource;
+
+	// If effect with only one renderpackage set only first
+	CRenderPackage myFirstPackage;
+	CRenderPackage mySecondPackage;
+
+	CFullScreenHelper::eEffectType myEffectType;
+
+};
+
+struct SActivateRenderPackageMessage : SRenderMessage
+{
+	SActivateRenderPackageMessage();
+	CRenderPackage myRenderPackage;
+	CRenderPackage mySecondRenderPackage;
+	bool useSecondPackage;
+};
+
+struct SRenderToIntermediate : SRenderMessage
+{
+	SRenderToIntermediate();
+	CRenderPackage myRenderPackage;
+};
+
+struct SRenderCameraQueueMessage : SRenderMessage
+{
+	//mebe put SetCameraMessage in here?
+	SRenderCameraQueueMessage();
+	CU::Camera myCamera;
+	CRenderPackage CameraRenderPackage;
+	CU::GrowingArray < SRenderMessage*, unsigned short, false> CameraRenderQueue;
+	bool RenderDepth;
 };
 
 struct SRenderModelMessage : SRenderMessage
@@ -77,13 +125,19 @@ struct SRenderModelMessage : SRenderMessage
 	int myModelID;
 };
 
-struct SRenderAnimationModelMessage : SRenderModelMessage 
+struct SSetShadowBuffer : SRenderMessage
 {
-	SRenderAnimationModelMessage();
-	static const unsigned int ourMaxBoneCount = 32u;
-	static const unsigned int ourMatrixSize = sizeof(CU::Matrix44f);
+	SSetShadowBuffer();
 
-	char myBoneMatrices[ourMaxBoneCount * ourMatrixSize];
+	CRenderPackage myShadowBuffer;
+	CU::Matrix44f myCameraTransformation;
+	CU::Matrix44f myCameraProjection;
+};
+
+
+struct SRenderModelDepthMessage : SRenderModelMessage
+{
+	SRenderModelDepthMessage();
 };
 
 struct SRenderGUIModelMessage : SRenderMessage
@@ -158,3 +212,4 @@ struct SRenderTextMessage : SRenderMessage
 	CU::Vector2f myPosition;
 	CCoolText *myText;
 };
+

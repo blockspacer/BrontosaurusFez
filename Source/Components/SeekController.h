@@ -14,6 +14,9 @@ public:
 	void SetMaxAcceleration(const float aMaxAcceleration);
 	void SetTargetRadius(const float aTargetRadius);
 	void SetSlowDownRadius(const float aSlowdownRadius);
+
+	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
+
 private:
 	CU::Vector2f myVelocity;
 	CU::Vector2f myTarget;
@@ -23,6 +26,7 @@ private:
 	float myMaxAcceleration;
 	float myTargetRadius;
 	float mySlowdownRadius;
+	float myAggroRange;
 
 	// Inherited via IController
 	void Destroy() override;

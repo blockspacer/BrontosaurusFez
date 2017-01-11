@@ -19,10 +19,10 @@ class CFullScreenHelper;
 
 
 class CRenderPackage
-{	
+{
 public:
 	friend CFullScreenHelper;
-	
+
 	CRenderPackage();
 	~CRenderPackage();
 	void Init(const CU::Vector2ui& aSize, ID3D11Texture2D* aTexture = nullptr, DXGI_FORMAT aFormat = DXGI_FORMAT_R8G8B8A8_UNORM);
@@ -31,6 +31,9 @@ public:
 	void Activate(CRenderPackage & aRenderPackage);
 	ID3D11ShaderResourceView*& GetDepthResource();
 	CU::Vector2f GetSize();
+
+	inline bool IsInit();
+	void operator= (const CRenderPackage& aLeft);
 
 private:
 	void CreateTexture2D(const int aWidth, const int aHeight, DXGI_FORMAT aFormat);
@@ -42,6 +45,11 @@ private:
 	ID3D11ShaderResourceView* myResource;
 	ID3D11RenderTargetView* myTarget;
 	ID3D11DepthStencilView* myDepth;
-	D3D11_VIEWPORT* myViewport; 
+	D3D11_VIEWPORT* myViewport;
 };
+
+inline bool CRenderPackage::IsInit()
+{
+	return myResource != nullptr;
+}
 

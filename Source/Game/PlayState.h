@@ -34,6 +34,8 @@ class StatManager;
 class CTextInstance;
 class CParticleEmitterComponent;
 class CCollisionComponentManager;
+class CTextInstance;
+class CHealthBarComponentManager;
 
 class CPlayState : public State, public Subscriber
 {
@@ -58,6 +60,7 @@ public:
 	inline bool IsLoaded() const;
 
 	CGameObjectManager* GetObjectManager() const;
+	CCollisionComponentManager* GetCollisionManager();
 
 	//TEMP - BELOW THIS LINE
 	static SSlua::ArgumentList LuaFunction(SSlua::ArgumentList anArgumentList);
@@ -76,7 +79,8 @@ private:
 	CCollisionComponentManager* myCollisionComponentManager;
 	GUI::GUIManager* myGUIManager;
 	StatManager* myStatManager;
-	
+	CTextInstance* myGoldText;
+
 	//CGameObject* myCameraObject;
 
 	int myLevelIndex;
@@ -88,6 +92,7 @@ private:
 	//TEMP - BELOW THIS LINE
 	void TEMP_CREATE_ENEMY(); 
 	CU::GrowingArray<CGameObject*> myEnemies;
+	CHealthBarComponentManager* myHealthBarManager;
 };
 
 inline bool CPlayState::IsLoaded() const
@@ -97,6 +102,6 @@ inline bool CPlayState::IsLoaded() const
 
 inline SSlua::ArgumentList CPlayState::LuaFunction(SSlua::ArgumentList anArgumentList)
 {
-	std::cout << "Du anropade en function från Konsolen Punkt 3.a klar" << std::endl;
+	DL_PRINT("Du anropade en function från Konsolen Punkt 3.a klar");
 	return SSlua::ArgumentList();
 }

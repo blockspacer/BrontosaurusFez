@@ -67,7 +67,6 @@
     <ClInclude Include="Pop2States.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="MessageType.h" />
-    <ClInclude Include="Event\MouseClicked.h" />
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="KeyDown.h" />
     <ClInclude Include="MouseMoved.h" />

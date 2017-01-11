@@ -28,6 +28,9 @@ float CHealthComponent::GetPrecentLeft() const
 
 void CHealthComponent::SetHealth(const HealthPoint aValue)
 {
+	bool wasAlreadyDead = false;
+	if (myHealth <= 0) wasAlreadyDead = true;
+
 	myHealth = aValue;
 	if (myHealth > myMaxHealth)
 	{
@@ -36,18 +39,21 @@ void CHealthComponent::SetHealth(const HealthPoint aValue)
 	myPercentageLeft = static_cast<float>(myHealth) / static_cast<float>(myMaxHealth);
 	if (myHealth <= 0)
 	{
-		//dead stuff
-		GetParent()->NotifyComponents(eComponentMessageType::eDied, SComponentMessageData());
-		SComponentMessageData data;
-		data.myBool = false;
-		GetParent()->NotifyComponents(eComponentMessageType::eSetVisibility, data);
+		if (wasAlreadyDead == false)
+		{
+			//dead stuff
+			GetParent()->NotifyComponents(eComponentMessageType::eDied, SComponentMessageData());
+			SComponentMessageData data;
+			data.myBool = false;
+			GetParent()->NotifyComponents(eComponentMessageType::eSetVisibility, data);
+		}
 	}
 }
 
 void CHealthComponent::SetMaxHealth(const HealthPoint aValue)
 {
 	myMaxHealth = aValue;
-	myHealth = myMaxHealth * myPercentageLeft;
+	SetHealth(myMaxHealth * myPercentageLeft);
 }
 
 void CHealthComponent::Init()

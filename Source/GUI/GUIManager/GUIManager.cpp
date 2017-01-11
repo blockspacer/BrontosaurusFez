@@ -57,13 +57,6 @@ void GUI::GUIManager::Init(const char* aGUIScenePath)
 
 	myCursor = new GUICursor();
 	PostMaster::GetInstance().Subscribe(myCursor, eMessageType::eMouseMessage, 6);
-
-
-	Widget* retryButton = myWidgetContainer->FindWidget("buttonRetry");
-	if (retryButton != nullptr)
-	{
-		retryButton->SetVisibility(false);
-	}
 }
 
 void GUI::GUIManager::Update(const CU::Time& aDeltaTime)

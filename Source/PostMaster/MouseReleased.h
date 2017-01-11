@@ -16,6 +16,7 @@ public:
 	eMessageReturn DoEvent(GUI::GUIManager* aGUIManager) const override;
 	eMessageReturn DoEvent(LevelSelectState* aLevelSelectState) const override;
 	eMessageReturn DoEvent(InputController* aInputController) const override;
+	eMessageReturn DoEvent(CMouseComponent* aMouseComponent) const override;
 
 private:
 	const CU::Vector2f myMousePosition;

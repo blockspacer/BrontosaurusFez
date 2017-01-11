@@ -237,12 +237,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AnimationController.h" />
+    <ClInclude Include="RenderCamera.h" />
     <ClInclude Include="Console.h" />
     <ClInclude Include="ConstBufferTemplate.h" />
     <ClInclude Include="CoolText.h" />
     <ClInclude Include="dds.h" />
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="DebugInfoDrawer.h" />
+    <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="DirectXHelpers.h" />
     <ClInclude Include="DXFramework.h" />
     <ClInclude Include="EDebugInfoDrawerFlags.h" />
@@ -307,10 +309,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimationController.cpp" />
+    <ClCompile Include="RenderCamera.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="CoolText.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="DebugInfoDrawer.cpp" />
+    <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="DXFramework.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Engine.cpp" />

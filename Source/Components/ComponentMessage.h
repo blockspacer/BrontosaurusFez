@@ -61,11 +61,14 @@ enum class eComponentMessageType
 	eAddSkill,
 	eTakeDamage,
 	eOnCollisionEnter,
-	eOnCollisionUpdate,
 	eOnCollisionExit,
 	eStopMovement,
 	eSetIsColliderActive,
 	eBasicAttack,
+	eActivateSkillCollider,
+	eSetSkillTargetPositionWhileHoldingPosition,
+	eObjectDone,
+	eAddAIBehavior
 };
 
 struct SComponentMessageData

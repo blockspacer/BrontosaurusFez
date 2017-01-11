@@ -9,6 +9,7 @@
 #include"Game\PauseMenu.h"
 #include "..\BrontosaurusEngine\ModelInstance.h"
 #include "../BrontosaurusEngine/Console.h"
+#include "../Components/InputController.h"
 
 //temp
 #include "Components\HealthComponent.h"
@@ -110,6 +111,11 @@ eMessageReturn KeyPressed::DoEvent(CConsole* /*aConsole*/) const
 {
 	//aConsole->TakeKeyBoardInputPressedChar(myKey);
 	return eMessageReturn::eContinue;
+}
+
+eMessageReturn KeyPressed::DoEvent(InputController * aInputController) const
+{
+	return aInputController->TakeKeyPressed(myKey);
 }
 
 eMessageReturn KeyPressed::DoEvent(CHealthComponent * aHealthComponent) const

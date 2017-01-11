@@ -89,9 +89,6 @@
     <ClCompile Include="MainStatComponent.cpp">
       <Filter>Stats</Filter>
     </ClCompile>
-    <ClCompile Include="HealthComponent.cpp">
-      <Filter>Stats</Filter>
-    </ClCompile>
     <ClCompile Include="StreakEmitterComponent.cpp">
       <Filter>Particles</Filter>
     </ClCompile>
@@ -105,6 +102,21 @@
     <ClCompile Include="AIControllerComponent.cpp">
       <Filter>Controllers\Controllers</Filter>
     </ClCompile>
+    <ClCompile Include="SkillComponentManager.cpp" />
+    <ClCompile Include="DropComponent.cpp" />
+    <ClCompile Include="DropComponentManager.cpp" />
+    <ClCompile Include="MouseComponent.cpp" />
+    <ClCompile Include="HealthBarComponent.cpp">
+      <Filter>Health</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthComponent.cpp">
+      <Filter>Health</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthBarComponentManager.cpp">
+      <Filter>Health</Filter>
+    </ClCompile>
+    <ClCompile Include="FleeControllerManager.cpp" />
+    <ClCompile Include="SeekControllerManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -205,9 +217,6 @@
     <ClInclude Include="MainStatComponent.h">
       <Filter>Stats</Filter>
     </ClInclude>
-    <ClInclude Include="HealthComponent.h">
-      <Filter>Stats</Filter>
-    </ClInclude>
     <ClInclude Include="StreakEmitterComponent.h">
       <Filter>Particles</Filter>
     </ClInclude>
@@ -221,6 +230,28 @@
     <ClInclude Include="AIControllerComponent.h">
       <Filter>Controllers\Controllers</Filter>
     </ClInclude>
+    <ClInclude Include="SkillComponentManager.h" />
+    <ClInclude Include="PlayerData.h">
+      <Filter>Stats</Filter>
+    </ClInclude>
+    <ClInclude Include="DropComponent.h" />
+    <ClInclude Include="DropComponentManager.h" />
+    <ClInclude Include="MouseComponent.h" />
+    <ClInclude Include="SkillData.h" />
+    <ClInclude Include="HealthPoint.h">
+      <Filter>Health</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthBarComponent.h">
+      <Filter>Health</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthComponent.h">
+      <Filter>Health</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthBarComponentManager.h">
+      <Filter>Health</Filter>
+    </ClInclude>
+    <ClInclude Include="FleeControllerManager.h" />
+    <ClInclude Include="SeekControllerManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -270,6 +301,9 @@
     </Filter>
     <Filter Include="Stats">
       <UniqueIdentifier>{57b16321-6896-4bed-9386-44e6705c2103}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Health">
+      <UniqueIdentifier>{2243d8bd-c78a-469c-9300-807743e2d21b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
