@@ -6,11 +6,12 @@ class CHealthBarComponent : public CComponent
 {
 	friend class CHealthBarComponentManager;
 public:
-	void UpdateSprite(CU::Vector2f aPos ,char aPercentHP);
+	void Update();
 
 private:
 	CHealthBarComponent();
 	~CHealthBarComponent();
+	void UpdateSprite(char aPercentHP);
 	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
 	void Render();
 	void Destroy();
