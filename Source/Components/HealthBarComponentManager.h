@@ -8,6 +8,7 @@ public:
 	~CHealthBarComponentManager();
 	CHealthBarComponent* GetHealthBarAt(short aIndex);
 	CHealthBarComponent* CreateHealthbar();
+	void Update();
 	void Render();
 private:
 	CU::GrowingArray<CHealthBarComponent*> myHealthbars;

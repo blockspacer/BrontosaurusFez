@@ -21,6 +21,14 @@ CHealthBarComponent* CHealthBarComponentManager::CreateHealthbar()
 	return myHealthbars.GetLast();
 }
 
+void CHealthBarComponentManager::Update()
+{
+	for (int i = 0; i < myHealthbars.Size(); ++i)
+	{
+		myHealthbars[i]->Update();
+	}
+}
+
 void CHealthBarComponentManager::Render()
 {
 	for (int i = 0; i < myHealthbars.Size(); ++i)
