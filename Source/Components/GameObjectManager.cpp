@@ -2,6 +2,7 @@
 #include "GameObjectManager.h"
 #include "GameObject.h"
 #include "ComponentManager.h"
+#include "ComponentMessage.h"
 
 CGameObjectManager::CGameObjectManager()
 {
@@ -87,6 +88,15 @@ void CGameObjectManager::DumpAllAndReInit()
 	myObjectsAboutToBeDestroyed.Destroy();
 	
 	InitGrowingArrays();
+}
+
+void CGameObjectManager::SendObjectsDoneMessage()
+{
+	SComponentMessageData data;
+	for (unsigned short i = 0; i < myObjectsCreated.Size(); i++)
+	{
+		myObjectsCreated[i]->NotifyComponents(eComponentMessageType::eObjectDone, data);
+	}
 }
 
 ComponentId CGameObjectManager::CreateMatrix(const CU::Matrix44f& aMatrix44f)

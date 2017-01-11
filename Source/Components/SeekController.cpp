@@ -8,13 +8,9 @@
 
 CSeekController::CSeekController()
 {
-	myMaxSpeed = 0;
-	myWeight = 1.0f;
 	myTargetRadius = 0;
-	mySlowdownRadius = 0;
-	myMaxAcceleration = 0;
-	myAggroRange = 400;
-	myTarget = PollingStation::playerObject->GetWorldPosition();
+	myAggroRange = 1000;
+	myTarget = CU::Vector2f::Zero;//PollingStation::playerObject->GetWorldPosition();
 	myAcceleration = CU::Vector2f::Zero;
 	myControllerType = eControllerType::eArrive;
 }
@@ -29,7 +25,7 @@ const CU::Vector2f CSeekController::Update(const CU::Time& aDeltaTime)
 	myTarget = CU::Vector2f(PollingStation::playerObject->GetWorldPosition().x, PollingStation::playerObject->GetWorldPosition().z);
 	CU::Vector2f position = CU::Vector2f(myController->GetParent()->GetWorldPosition().x, myController->GetParent()->GetWorldPosition().z);
 	CU::Vector2f targetVelocity = CU::Vector2f::Zero;
-	targetVelocity = myTarget - position;
+	targetVelocity = position - myTarget;
 
 	float distance = targetVelocity.Length();
 
@@ -66,7 +62,6 @@ void CSeekController::SetWeight(const float aWeight)
 
 void CSeekController::SetTarget(const CU::Vector2f & aPosition)
 {
-	myWeight = 1.0f;
 	myTarget = aPosition;
 }
 
@@ -88,6 +83,23 @@ void CSeekController::SetTargetRadius(const float aTargetRadius)
 void CSeekController::SetSlowDownRadius(const float aSlowdownRadius)
 {
 	mySlowdownRadius = aSlowdownRadius;
+}
+
+void CSeekController::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
+{
+
+	switch (aMessageType)
+	{
+	case(eComponentMessageType::eObjectDone):
+	{
+		SComponentMessageData data;
+		data.myComponent = this;
+		NotifyParent(eComponentMessageType::eAddAIBehavior, data);
+	}
+		break;
+	default:
+		break;
+	}
 }
 
 void CSeekController::Destroy()

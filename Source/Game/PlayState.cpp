@@ -44,6 +44,9 @@
 
 #include "Components\SkillFactory.h"
 #include "Components\SkillSystemComponentManager.h"
+
+#include "FleeControllerManager.h"
+#include "SeekControllerManager.h"
 //Kanske Inte ska vara här?
 #include "../BrontosaurusEngine/Console.h"
 #include "AIControllerManager.h"
@@ -112,6 +115,8 @@ CPlayState::~CPlayState()
 	MovementComponentManager::DestroyInstance();
 	SkillSystemComponentManager::DestroyInstance();
 	AIControllerManager::Destroy();
+	FleeControllerManager::Destroy();
+	CSeekControllerManager::Destroy();
 	SkillComponentManager::DestroyInstance();
 	DropComponentManager::DestroyInstance();
 	PollingStation::NullifyLevelSpecificData();
@@ -194,6 +199,7 @@ void CPlayState::Load()
 	basicSkillData->animationDuration = 0.5f;
 	basicSkillData->coolDown = 0.5f;
 	basicSkillData->isAOE = false;
+	basicSkillData->isChannel = false;
 	basicSkillData->damage = 34;
 	basicSkillData->skillName = "BasicAttack";
 	SkillFactory::GetInstance().RegisterSkillData(basicSkillData);
@@ -204,14 +210,15 @@ void CPlayState::Load()
 	whirlWindSkillData->range = 300.0f;
 	whirlWindSkillData->animationDuration = 0.1f;
 	whirlWindSkillData->coolDown = 0.1f;
-	whirlWindSkillData->isAOE = false;
-	whirlWindSkillData->damage = 1;
+	whirlWindSkillData->isAOE = true;
+	whirlWindSkillData->isChannel = true;
+	whirlWindSkillData->damage = 10;
 	whirlWindSkillData->skillName = "WhirlWind";
 	SkillFactory::GetInstance().RegisterSkillData(whirlWindSkillData);
 
 	//create player:
 
-	myPlayerObject = myGameObjectManager->CreateGameObject();
+	/*myPlayerObject = myGameObjectManager->CreateGameObject();
 	myPlayerObject->SetName("Player");
 	PollingStation::playerObject = myPlayerObject;
 
@@ -231,6 +238,7 @@ void CPlayState::Load()
 	SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
 	myPlayerObject->AddComponent(tempSkillSystemComponent);
 	tempSkillSystemComponent->AddSkill("BasicAttack");
+	tempSkillSystemComponent->AddSkill("WhirlWind");
 
 	Intersection::CollisionData playerCollisionData;
 	playerCollisionData.myCircleData = new Intersection::SCircle();
@@ -239,7 +247,7 @@ void CPlayState::Load()
 	CCollisionComponent* playerCollisionComponent = myCollisionComponentManager->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, playerCollisionData);
 	playerCollisionComponent->AddCollidsWith(eColliderType_Mouse | eColliderType_Enemy);
 	playerCollisionComponent->SetColliderType(eColliderType_Player);
-	myPlayerObject->AddComponent(playerCollisionComponent);
+	myPlayerObject->AddComponent(playerCollisionComponent);*/
 
 	myHealthBarManager = new CHealthBarComponentManager();
 
@@ -291,6 +299,9 @@ void CPlayState::Load()
 	{
 		DL_ASSERT("Loading Failed");
 	}
+	PollingStation::playerObject = PollingStation::PlayerInput->GetParent();
+	//CSeekControllerManager::GetInstance().SetTarget();
+	myGameObjectManager->SendObjectsDoneMessage();
 
 	//cameraComponent->InitOffsetPosition();
 
@@ -299,13 +310,13 @@ void CPlayState::Load()
 	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation()); //
 
 	//----CreateEnemies----
-	myEnemies.Init(8);
+	/*myEnemies.Init(8);
 	TEMP_CREATE_ENEMY();
 	myEnemies[0]->SetWorldPosition({ 0.f, 0.f, 0.f });
 	TEMP_CREATE_ENEMY();
 	myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
 	TEMP_CREATE_ENEMY();
-	myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
+	myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });*/
 
 	//---------------------
 
@@ -502,6 +513,8 @@ void CPlayState::CreateManagersAndFactories()
 	InputControllerManager::GetInstance().SetScene(myScene);
 	MovementComponentManager::CreateInstance();
 	AIControllerManager::Create();
+	FleeControllerManager::Create();
+	CSeekControllerManager::Create();
 	SkillFactory::CreateInstance();
 	SkillSystemComponentManager::CreateInstance();
 	SkillSystemComponentManager::GetInstance().SetGameObjectManager(myGameObjectManager);

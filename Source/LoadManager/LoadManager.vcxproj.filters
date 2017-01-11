@@ -30,6 +30,7 @@
     </ClInclude>
     <ClInclude Include="LoadCamera.h" />
     <ClInclude Include="LoadColliderComponent.h" />
+    <ClInclude Include="LoadAIController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -58,6 +59,7 @@
     </ClCompile>
     <ClCompile Include="LoadCamera.cpp" />
     <ClCompile Include="LoadColliderComponent.cpp" />
+    <ClCompile Include="LoadAIController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="VS">
