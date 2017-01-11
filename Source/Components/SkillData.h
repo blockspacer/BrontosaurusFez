@@ -9,4 +9,5 @@ struct SkillData
 	float animationDuration;
 	HealthPoint damage;
 	bool isAOE;
+	bool isChannel;
 };

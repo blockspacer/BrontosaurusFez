@@ -115,6 +115,8 @@
     <ClCompile Include="HealthBarComponentManager.cpp">
       <Filter>Health</Filter>
     </ClCompile>
+    <ClCompile Include="FleeControllerManager.cpp" />
+    <ClCompile Include="SeekControllerManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -248,6 +250,8 @@
     <ClInclude Include="HealthBarComponentManager.h">
       <Filter>Health</Filter>
     </ClInclude>
+    <ClInclude Include="FleeControllerManager.h" />
+    <ClInclude Include="SeekControllerManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

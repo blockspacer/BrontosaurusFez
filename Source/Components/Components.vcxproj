@@ -227,6 +227,7 @@
     <ClInclude Include="DropComponent.h" />
     <ClInclude Include="DropComponentManager.h" />
     <ClInclude Include="FleeController.h" />
+    <ClInclude Include="FleeControllerManager.h" />
     <ClInclude Include="HealthBarComponent.h" />
     <ClInclude Include="HealthBarComponentManager.h" />
     <ClInclude Include="HealthPoint.h" />
@@ -252,6 +253,7 @@
     <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="ParticleEmitterComponent.h" />
     <ClInclude Include="ParticleEmitterComponentManager.h" />
+    <ClInclude Include="SeekControllerManager.h" />
     <ClInclude Include="Skill.h" />
     <ClInclude Include="SkillComponent.h" />
     <ClInclude Include="SkillComponentManager.h" />
@@ -278,6 +280,7 @@
     <ClCompile Include="DropComponent.cpp" />
     <ClCompile Include="DropComponentManager.cpp" />
     <ClCompile Include="FleeController.cpp" />
+    <ClCompile Include="FleeControllerManager.cpp" />
     <ClCompile Include="HealthBarComponent.cpp" />
     <ClCompile Include="HealthBarComponentManager.cpp" />
     <ClCompile Include="SeekController.cpp" />
@@ -300,6 +303,7 @@
     <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="ParticleEmitterComponent.cpp" />
     <ClCompile Include="ParticleEmitterComponentManager.cpp" />
+    <ClCompile Include="SeekControllerManager.cpp" />
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="SkillComponent.cpp" />
     <ClCompile Include="SkillComponentManager.cpp" />

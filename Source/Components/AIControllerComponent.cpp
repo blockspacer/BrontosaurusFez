@@ -79,3 +79,14 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 void CAIControllerComponent::Destroy()
 {
 }
+
+void CAIControllerComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
+{
+	switch (aMessageType)
+	{
+	case(eComponentMessageType::eAddAIBehavior):
+		AddControllerBehaviour(static_cast<IController*>(aMessageData.myComponent));
+	default:
+		break;
+	}
+}
