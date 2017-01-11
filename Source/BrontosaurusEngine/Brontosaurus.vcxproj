@@ -298,6 +298,7 @@
     <ClInclude Include="BufferStructs.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextBitmap.h" />
+    <ClInclude Include="TextBox.h" />
     <ClInclude Include="TextInstance.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureManager.h" />
@@ -356,6 +357,7 @@
     <ClCompile Include="Surface.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextBitmap.cpp" />
+    <ClCompile Include="TextBox.cpp" />
     <ClCompile Include="TextInstance.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureManager.cpp" />

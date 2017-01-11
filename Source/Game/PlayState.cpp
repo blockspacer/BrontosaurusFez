@@ -61,6 +61,7 @@
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
 #include "../BrontosaurusEngine/FireEmitterInstance.h"
 #include "../BrontosaurusEngine/FireEmitterData.h"
+#include "QuestManager.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -96,13 +97,40 @@ CPlayState::~CPlayState()
 
 void CPlayState::Load()
 {
-	LoadManagerGuard loadManagerGuard;
-
 	//start taking the time for loading level
 	CU::TimerManager timerMgr;
 	CU::TimerHandle handle = timerMgr.CreateTimer();
 	timerMgr.StartTimer(handle);
 	CreateManagersAndFactories();
+
+	LoadManagerGuard loadManagerGuard;
+
+	QM::CQuestManager &questManager = QM::CQuestManager::GetInstance();
+
+	QM::SObjective objective1;
+	objective1.myName = "test 1";
+	objective1.myGoal = 1;
+	objective1.myText = "test by pressing f12(it works if you're lucky)";
+	questManager.AddEvent(QM::eEventType::OBJECTIVE, questManager.AddObjective(objective1));
+
+	QM::SObjective objective2;
+	objective2.myName = "test2";
+	objective2.myGoal = 1;
+	objective2.myText = "part of test quest two objective  one";
+	const QM::EventHandle objectiveHandle1 = questManager.AddObjective(objective2);
+
+	QM::SObjective objective3;
+	objective3.myName = "test3";
+	objective3.myGoal = 1;
+	objective3.myText = "blaaaaaaaaaaalalala lif is life";
+	const QM::EventHandle objectiveHandle2 = questManager.AddObjective(objective3);
+
+	QM::SQuest quest;
+	quest.myObjectives = { objectiveHandle1, objectiveHandle2 };
+	const QM::EventHandle questHandle = questManager.AddQuest(quest);
+	questManager.AddEvent(QM::eEventType::QUEST, questHandle);
+
+	questManager.CompleteEvent();
 
 	MODELCOMP_MGR.SetScene(myScene);
 	myScene->SetSkybox("skybox.dds");
@@ -329,6 +357,8 @@ void CPlayState::Render()
 	msg.myRasterizerState = eRasterizerState::eDefault;
 	msg.mySamplerState = eSamplerState::eClamp;
 	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
+
+	myQuestDrawer.Render();
 }
 
 void CPlayState::OnEnter()

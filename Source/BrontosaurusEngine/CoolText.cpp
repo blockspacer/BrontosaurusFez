@@ -29,6 +29,12 @@ CCoolText::CCoolText(const CU::DynamicString& aFontPath): myVertexConstantBuffer
 	InitBuffers();
 }
 
+CCoolText::CCoolText(const CCoolText& aCoolText)
+{
+	myFont = aCoolText.myFont;
+	InitBuffers();
+}
+
 CCoolText::~CCoolText()
 {
 }

@@ -8,6 +8,7 @@
 
 //temp includes
 #include <iostream>
+#include "QuestDrawer.h"
 
 namespace CU
 {
@@ -82,6 +83,7 @@ private:
 	std::atomic_bool  myIsLoaded;
 	bool myShouldReturnToLevelSelect;
 
+	QM::CQuestDrawer myQuestDrawer;
 
 	//TEMP - BELOW THIS LINE
 	void TEMP_CREATE_ENEMY(); 

@@ -250,6 +250,7 @@
     <ClInclude Include="FireEmitterData.h">
       <Filter>Fire</Filter>
     </ClInclude>
+    <ClInclude Include="TextBox.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -382,6 +383,7 @@
     <ClCompile Include="RenderMessages.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="TextBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Brontosaurus.rc">

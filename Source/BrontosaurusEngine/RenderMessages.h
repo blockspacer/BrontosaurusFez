@@ -156,5 +156,5 @@ struct SRenderTextMessage : SRenderMessage
 	CU::Vector4f myColor;
 	CU::DynamicString myString;
 	CU::Vector2f myPosition;
-	CCoolText* myText;
+	CCoolText *myText;
 };

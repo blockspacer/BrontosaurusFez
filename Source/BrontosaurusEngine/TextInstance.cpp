@@ -17,13 +17,18 @@ CTextInstance::CTextInstance()
 {
 }
 
+CTextInstance::CTextInstance(const CTextInstance& aTextInstance)
+{
+	*this = aTextInstance;
+}
+
 CTextInstance::~CTextInstance()
 {
-	SAFE_DELETE(myText);
 }
 
 void CTextInstance::Init(const CU::DynamicString& aFontPath)
 {
+	//maybe shouldn't be pointer
 	myText = new CCoolText(aFontPath);
 }
 
@@ -59,4 +64,24 @@ void CTextInstance::Render()
 float CTextInstance::GetlineHeight() const
 {
 	return myText->GetlineHeight();
+}
+
+CTextInstance& CTextInstance::operator=(const CTextInstance& aTextInstance)
+{
+	if (myText != nullptr)
+	{
+		delete myText;
+		myText = nullptr;
+	}
+
+	if (aTextInstance.myText != nullptr)
+	{
+		myText = new CCoolText(*aTextInstance.myText);
+	}
+
+	myColor = aTextInstance.myColor;
+	myPosition = aTextInstance.myPosition;
+	myString = aTextInstance.myString;
+
+	return *this;
 }

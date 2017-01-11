@@ -17,6 +17,7 @@ public:
 	static const CU::Vector4f White;
 
 	CTextInstance();
+	CTextInstance(const CTextInstance& aTextInstance);
 	~CTextInstance();
 
 	void Init(const CU::DynamicString& aFontPath = "Fonts/comic.ttf");
@@ -31,6 +32,8 @@ public:
 	inline void SetText(const CU::DynamicString& aString);
 	inline const CU::DynamicString& GetText() const;
 	float GetlineHeight() const;
+
+	CTextInstance& operator=(const CTextInstance& aTextInstance);
 private:
 	CU::DynamicString myString;
 	CU::Vector4f myColor;
