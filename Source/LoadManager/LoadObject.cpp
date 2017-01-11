@@ -19,16 +19,16 @@ int LoadObject(KLoader::SLoadedComponentData someData)
 
 	const float unityScale = 100;
 
-	const float positionX = PositionObject.at("x").GetNumber() * unityScale;
+	const float positionX = PositionObject.at("x").GetNumber() * unityScale * -1;
 	const float positionY = PositionObject.at("y").GetNumber() * unityScale;
-	const float positionZ = PositionObject.at("z").GetNumber() * unityScale;
+	const float positionZ = PositionObject.at("z").GetNumber() * unityScale * -1;
 
 	currentMatrix.SetPosition({positionX, positionY, positionZ});
 
 	CU::JsonObject RotationObject = someData.myData.at("rotation").GetJsonObject();
 
 	const float rotationX = RotationObject.at("x").GetNumber() / 180 * PI;
-	const float rotationY = RotationObject.at("y").GetNumber() / 180 * PI + PI;
+	const float rotationY = RotationObject.at("y").GetNumber() / 180 * PI;
 	const float rotationZ = RotationObject.at("z").GetNumber() / 180 * PI;
 
 	currentMatrix.Rotate(rotationX, rotationY, rotationZ);
