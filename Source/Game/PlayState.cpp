@@ -73,16 +73,15 @@
 #include "SkillFactory.h"
 #include "Components/HealthBarComponentManager.h"
 #include "Components/CollisionComponentManager.h"
-
+#include "ModelInstance.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
 #include "../BrontosaurusEngine/FireEmitterInstance.h"
 #include "../BrontosaurusEngine/FireEmitterData.h"
-#include "Collision/ICollider.h"
-#include <Collision/Intersection.h>
-#include "CollisionComponent.h"
+
 #include "MouseComponent.h"
 #include "QuestManager.h"
+
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -319,7 +318,7 @@ void CPlayState::Load()
 	{
 		DL_ASSERT("Loading Failed");
 	}
-	PollingStation::playerObject = PollingStation::PlayerInput->GetParent();
+	//PollingStation::playerObject = PollingStation::PlayerInput->GetParent();
 	//CSeekControllerManager::GetInstance().SetTarget();
 	myGameObjectManager->SendObjectsDoneMessage();
 
