@@ -14,6 +14,10 @@ public:
 	void SetMaxAcceleration(const float aMaxAcceleration);
 	void SetTargetRadius(const float aTargetRadius);
 	void SetSlowDownRadius(const float aSlowdownRadius);
+	void SetAggroRange(const float aRange);
+
+	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
+
 private:
 	CU::Vector2f myVelocity;
 	CU::Vector2f myTarget;

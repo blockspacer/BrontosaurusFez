@@ -13,6 +13,8 @@ public:
 	static void CreateInstance();
 	static void DestroyInstance();
 
+	CU::GrowingArray<InputController*>& GetComponents();
+
 	void SetScene(CScene* aScene);
 	InputController* CreateAndRegisterComponent();
 	void Update(const CU::Time& aDeltaTime);

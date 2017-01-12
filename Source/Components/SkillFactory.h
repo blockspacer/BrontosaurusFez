@@ -1,4 +1,6 @@
 #pragma once
+#include "SkillData.h"
+
 class Skill;
 class SkillFactory
 {
@@ -9,11 +11,13 @@ public:
 	static void CreateInstance();
 	static void DestroyInstance();
 
-	Skill* CreateSkill(const char* aSkillName);
+	Skill* CreateSkill(SkillData::SkillName aSkillName);
+	void RegisterSkillData(SkillData* aSkillData);
 private:
 	SkillFactory();
 	
 	CU::GrowingArray<Skill*> mySkills;
+	CU::GrowingArray<SkillData*> mySkillDataList;
 	static SkillFactory* ourInstance;
 };
 

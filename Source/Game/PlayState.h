@@ -6,6 +6,11 @@
 
 #include "../LuaWrapper/SSlua/SSlua.h"
 
+//temp includes
+#include <iostream>
+#include "QuestDrawer.h"
+#include "../PostMaster/Event.h"
+
 namespace CU
 {
 	class Time;
@@ -31,6 +36,7 @@ class CTextInstance;
 class CParticleEmitterComponent;
 class CCollisionComponentManager;
 class CTextInstance;
+class CHealthBarComponentManager;
 
 class CPlayState : public State, public Subscriber
 {
@@ -55,6 +61,7 @@ public:
 	inline bool IsLoaded() const;
 
 	CGameObjectManager* GetObjectManager() const;
+	CHealthBarComponentManager* GetHealthBarManager();
 	CCollisionComponentManager* GetCollisionManager();
 
 	//TEMP - BELOW THIS LINE
@@ -62,6 +69,10 @@ public:
 
 	void TEMP_ADD_HAT(CGameObject* aPlayerObject);
 	CGameObject* myPlayerObject;
+
+	QM::EventHandle fristObjective;
+	QM::EventHandle secondObjective;
+	QM::EventHandle thridObjective;
 
 private:
 	void CreateManagersAndFactories();
@@ -77,15 +88,18 @@ private:
 	CTextInstance* myGoldText;
 
 	//CGameObject* myCameraObject;
+	CMouseComponent* myMouseComponent;
 
 	int myLevelIndex;
 	std::atomic_bool  myIsLoaded;
 	bool myShouldReturnToLevelSelect;
 
+	QM::CQuestDrawer myQuestDrawer;
 
 	//TEMP - BELOW THIS LINE
 	void TEMP_CREATE_ENEMY(); 
 	CU::GrowingArray<CGameObject*> myEnemies;
+	CHealthBarComponentManager* myHealthBarManager;
 };
 
 inline bool CPlayState::IsLoaded() const

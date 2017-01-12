@@ -10,6 +10,7 @@
 #include "CameraManager.h"
 #include "../CommonUtilities/Camera.h"
 #include "../CommonUtilities/EKeyboardKeys.h"
+#include "SkillData.h"
 
 #include <iostream>
 
@@ -21,6 +22,7 @@ InputController::InputController(const CU::Camera& aPlayerCamera)
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
 	mySkillInputMessageActivators.Init(5);
+	mySkillActivatorKeyDown = -1;
 }
 
 
@@ -84,6 +86,14 @@ void InputController::Update(float aDeltaTime)
 	{
 		GetParent()->NotifyComponents(eComponentMessageType::eStopMovement, SComponentMessageData());
 	}
+
+	if(mySkillActivatorKeyDown >= 0)
+	{
+		eComponentMessageType type = eComponentMessageType::eSelectSkill;
+		SComponentMessageData data;
+		data.myInt = mySkillActivatorKeyDown;
+		GetParent()->NotifyComponents(type, data);
+	}
 }
 
 eMessageReturn InputController::Recieve(const Message& aMessage)
@@ -95,9 +105,17 @@ void InputController::Receive(const eComponentMessageType aMessageType, const SC
 {
 	if (aMessageType == eComponentMessageType::eAddSkill)
 	{
-		if(aMessageData.myString == "BasicAttack")
+		if(aMessageData.myInt == static_cast<int>(SkillData::SkillName::BasicAttack))
 		{
 			mySkillInputMessageActivators.Add(CU::eInputMessage::DIVIDE);
+		}
+		else if (aMessageData.myInt == static_cast<int>(SkillData::SkillName::WhirlWind))
+		{
+			mySkillInputMessageActivators.Add(CU::eInputMessage::TWO);
+		}
+		else if (aMessageData.myInt == static_cast<int>(SkillData::SkillName::SweepAttack))
+		{
+			mySkillInputMessageActivators.Add(CU::eInputMessage::ONE);
 		}
 		else
 		{
@@ -166,6 +184,15 @@ eMessageReturn InputController::TakeKeyPressed(const CU::eKeys & aKey)
 	{
 		myIsShiftDown = true;
 	}
+
+	for (unsigned short i = 0; i < mySkillInputMessageActivators.Size(); i++)
+	{
+		if (mySkillInputMessageActivators[i] == static_cast<CU::eInputMessage>(aKey))
+		{
+			mySkillActivatorKeyDown = i;
+		}
+	}
+
 	return eMessageReturn::eContinue;
 }
 
@@ -174,6 +201,14 @@ eMessageReturn InputController::TakeKeyReleased(const CU::eKeys & aKey)
 	if (aKey == CU::eKeys::LSHIFT)
 	{
 		myIsShiftDown = false;
+	}
+
+	for(unsigned short i = 0; i < mySkillInputMessageActivators.Size(); i++)
+	{
+		if(mySkillInputMessageActivators[i] == static_cast<CU::eInputMessage>(aKey))
+		{
+			mySkillActivatorKeyDown = -1;
+		}
 	}
 	return eMessageReturn::eContinue;
 }

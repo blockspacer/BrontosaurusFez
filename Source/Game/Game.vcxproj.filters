@@ -30,6 +30,9 @@
     <ClCompile Include="QuestManager.cpp">
       <Filter>QuestManager</Filter>
     </ClCompile>
+    <ClCompile Include="QuestDrawer.cpp">
+      <Filter>QuestManager\QuestDrawer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackgroundLoadingManager.h" />
@@ -65,6 +68,9 @@
     <ClInclude Include="Event.h">
       <Filter>QuestManager</Filter>
     </ClInclude>
+    <ClInclude Include="QuestDrawer.h">
+      <Filter>QuestManager\QuestDrawer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="States">
@@ -72,6 +78,9 @@
     </Filter>
     <Filter Include="QuestManager">
       <UniqueIdentifier>{b29589e2-bda0-416d-8f96-aff01bf68937}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="QuestManager\QuestDrawer">
+      <UniqueIdentifier>{9a07a5b7-1f30-4254-a41d-51f10733cc67}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

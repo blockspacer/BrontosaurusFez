@@ -27,12 +27,14 @@ enum eColliderType : unsigned int
 	eColliderType_Player = 1 << 0,
 	eColliderType_Wall = 1 << 1,
 	eColliderType_Mouse = 1 << 2,
-	eColliderType_Skill = 1 << 4,
+	eColliderType_Skill = 1 << 3,
 	eColliderType_Enemy = 1 << 4,
 };
 
 class ICollider
 {
+	static const int ourMaxNumberOfCollides = 4;
+
 public:
 	using Callback = std::function<void(ICollider*)>;
 	using VoidCallback = std::function<void(void)>;
@@ -46,6 +48,7 @@ public:
 	inline void AddCollidsWith(const unsigned int aColliderTypes);
 	inline void SetGameObject(ColliderOwner aGameObject);
 	inline ColliderOwner GetGameObject();
+	inline CU::VectorOnStack<const ICollider*, ourMaxNumberOfCollides>& GetCollidedWith();
 
 	virtual void RenderDebugLines() {}
 
@@ -74,7 +77,6 @@ private:
 	VoidCallback myActivateCallback;
 	VoidCallback myDeactivateCallback;
 
-	static const int ourMaxNumberOfCollides = 4;
 	CU::VectorOnStack<const ICollider*, ourMaxNumberOfCollides> myHasCollidedWith;
 
 	ColliderOwner myColliderObject;
@@ -155,7 +157,6 @@ inline void ICollider::OnCollisionExit(ICollider* aOther)
 		myOnExitCallback(aOther);
 	}
 }
-
 inline void ICollider::Activate()
 {
 	if (myActivateCallback != nullptr)
@@ -180,4 +181,9 @@ inline void ICollider::SetGameObject(ColliderOwner aGameObject)
 inline ColliderOwner ICollider::GetGameObject()
 {
 	return myColliderObject;
+}
+
+inline CU::VectorOnStack<const ICollider*, ICollider::ourMaxNumberOfCollides>& ICollider::GetCollidedWith()
+{
+	return myHasCollidedWith;
 }

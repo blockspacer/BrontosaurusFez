@@ -9,10 +9,12 @@ enum class eComponentMessageType;
 
 enum class eComponentType
 {
+	eGameObject,
 	eModel,
 	eDebugSphere,
 	eCamera,
 	eInventory,
+	eHealthBar,
 	eMainStat,
 	eStat,
 	eNone,
@@ -45,7 +47,7 @@ private:
 	ComponentId myId;
 };
 
-inline CGameObject * CComponent::GetParent()
+inline CGameObject* CComponent::GetParent()
 {
 	return myParent;
 }

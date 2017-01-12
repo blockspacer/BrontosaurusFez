@@ -254,6 +254,7 @@
     <ClInclude Include="InputWrapper.h" />
     <ClInclude Include="Intersection.h" />
     <ClInclude Include="InvertMatrix.h" />
+    <ClInclude Include="JsonValue.h" />
     <ClInclude Include="line.h" />
     <ClInclude Include="line_volume.h" />
     <ClInclude Include="matrix.h" />
@@ -336,6 +337,7 @@
     <ClCompile Include="InputWrapper.cpp" />
     <ClCompile Include="Intersection.cpp" />
     <ClCompile Include="InvertMatrix.cpp" />
+    <ClCompile Include="JsonValue.cpp" />
     <ClCompile Include="MemoryLeekLogger.cpp" />
     <ClCompile Include="PJWrapper.cpp" />
     <ClCompile Include="PostMasterKyle.cpp" />

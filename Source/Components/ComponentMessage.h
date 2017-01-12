@@ -41,7 +41,7 @@ enum class eComponentMessageType
 	eDied,
 	eRespawned,
 	eHeal,
-	eTookDamage,
+	ePercentHPLeft,
 	eLootDropped,
 	eLootPickedUp,
 	eCollectStats,
@@ -67,6 +67,8 @@ enum class eComponentMessageType
 	eBasicAttack,
 	eActivateSkillCollider,
 	eSetSkillTargetPositionWhileHoldingPosition,
+	eObjectDone,
+	eAddAIBehavior
 };
 
 struct SComponentMessageData
@@ -78,9 +80,11 @@ struct SComponentMessageData
 		CComponent* myComponent;
 		CComponent* myComponents[2];
 		CGameObject* myGameObject;
+		int myInt;
+		unsigned short myUShort;
+		unsigned char myUChar;
 		bool myBool;
 		const char* myString;
-		int myInt;
 		CU::Matrix33f myProjectileRotationMatrix;
 		CU::Matrix44f myMatrix44;
 		CU::Vector2f myVector2f;
@@ -88,7 +92,6 @@ struct SComponentMessageData
 		CU::GrowingArray<CU::Vector3f>* myVector3ListPointer;
 		
 		eComponentType myComponentTypeAdded;
-		unsigned short myUnsingedShort;
 		Stats::STotalStats myStatStruct;
 		ICollider* myCollider;
 	};

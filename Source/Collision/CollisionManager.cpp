@@ -56,6 +56,14 @@ void CCollisionManager::RemoveCollider(ICollider* aCollider)
 	int index = myColliders.Find(aCollider);
 	if (index != myColliders.FoundNone)
 	{
+		auto& collidedWith = aCollider->GetCollidedWith();
+		for (const ICollider* collider : collidedWith)
+		{
+			const_cast<ICollider*>(collider)->GetCollidedWith().Remove(aCollider);
+		}
+
+		collidedWith.RemoveAll();
+
 		myColliders.RemoveCyclicAtIndex(index);
 	}
 }

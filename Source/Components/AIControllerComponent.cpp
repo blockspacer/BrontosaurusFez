@@ -16,7 +16,7 @@ CAIControllerComponent::CAIControllerComponent()
 
 CAIControllerComponent::~CAIControllerComponent()
 {
-	myControllers.DeleteAll();
+	//myControllers.DeleteAll();
 }
 
 void CAIControllerComponent::AddControllerBehaviour(IController* aController)
@@ -71,11 +71,21 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 			GetParent()->NotifyComponents(eComponentMessageType::eSetSkillTargetObject, data);
 		}
 	}
-
 	GetParent()->GetLocalTransform().Move(CU::Vector3f(velocity.x,0,velocity.y));
 	GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 }
 
 void CAIControllerComponent::Destroy()
 {
+}
+
+void CAIControllerComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
+{
+	switch (aMessageType)
+	{
+	case(eComponentMessageType::eAddAIBehavior):
+		AddControllerBehaviour(static_cast<IController*>(aMessageData.myComponent));
+	default:
+		break;
+	}
 }

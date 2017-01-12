@@ -216,7 +216,9 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="LoadAIController.h" />
     <ClInclude Include="LoadCamera.h" />
+    <ClInclude Include="LoadHealthComponent.h" />
     <ClInclude Include="LoadManager.h" />
     <ClInclude Include="LoadModel.h" />
     <ClInclude Include="LoadMovementComponent.h" />
@@ -224,12 +226,15 @@
     <ClInclude Include="LoadObject.h" />
     <ClInclude Include="LoadInputController.h" />
     <ClInclude Include="LoadColliderComponent.h" />
+    <ClInclude Include="LoadSkillSystemComponent.h" />
     <ClInclude Include="LuaFunctions.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="LoadAIController.cpp" />
     <ClCompile Include="LoadCamera.cpp" />
+    <ClCompile Include="LoadHealthComponent.cpp" />
     <ClCompile Include="LoadManager.cpp" />
     <ClCompile Include="LoadModel.cpp" />
     <ClCompile Include="LoadMovementComponent.cpp" />
@@ -237,6 +242,7 @@
     <ClCompile Include="LoadObject.cpp" />
     <ClCompile Include="LoadInputController.cpp" />
     <ClCompile Include="LoadColliderComponent.cpp" />
+    <ClCompile Include="LoadSkillSystemComponent.cpp" />
     <ClCompile Include="LuaFunctions.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

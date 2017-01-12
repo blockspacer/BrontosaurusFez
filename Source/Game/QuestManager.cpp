@@ -3,6 +3,10 @@
 #include "PostMaster/PostMaster.h"
 #include "CommonUtilities.h"
 #include "PostMaster/EMessageReturn.h"
+#include "PostMaster/Message.h"
+#include "PostMaster/Event.h"
+#include "PostMaster/QuestDataUpdated.h"
+#include "PJWrapper.h"
 QM::CQuestManager* QM::CQuestManager::ourInstance = nullptr;
 
 void QM::CQuestManager::CreateInstance()
@@ -47,6 +51,8 @@ void QM::CQuestManager::UpdateObjective(EventHandle anObjectiveHandle, int anAmm
 			currentObjective.myAmmount = MIN(currentObjective.myGoal, currentObjective.myAmmount + anAmmount);
 		}
 	}
+
+	SendUpdateMessage();
 }
 
 bool QM::CQuestManager::CheckIfQuestComplete() const
@@ -63,10 +69,18 @@ bool QM::CQuestManager::CheckIfQuestComplete() const
 	return true;
 }
 
-void QM::CQuestManager::CompleteEvent(EventHandle anObjectiveHandle)
+void QM::CQuestManager::CompleteEvent()
 {
 	if (myCurrentObjectives.myObjectives.Size() > 0 && CheckIfQuestComplete() == false)
 	{
+		return;
+	}
+
+	myCurrentObjectives = SQuest();
+
+	if (myEvents.Size() < 1)
+	{
+		SendUpdateMessage();
 		return;
 	}
 
@@ -75,11 +89,7 @@ void QM::CQuestManager::CompleteEvent(EventHandle anObjectiveHandle)
 	switch (nextEvent.myType)
 	{
 	case eEventType::OBJECTIVE:
-		{
-			SQuest newQuest;
-			newQuest.myObjectives.Add(nextEvent.myHandle);
-			myCurrentObjectives = newQuest;
-		}
+		myCurrentObjectives.myObjectives.Add(nextEvent.myHandle);
 		break;
 	case eEventType::QUEST:
 		myCurrentObjectives = myQuests[nextEvent.myHandle];
@@ -89,50 +99,50 @@ void QM::CQuestManager::CompleteEvent(EventHandle anObjectiveHandle)
 		DL_ASSERT("not implemented yet");
 		break;
 	}
+	SendUpdateMessage();
 }
 
-QM::EventHandle QM::CQuestManager::AddEvent(const SObjective& anObjective)
+void QM::CQuestManager::AddEvent(const QM::eEventType anEventType, const QM::EventHandle anEventHandle)
 {
-	SEvent newEvent;
-	newEvent.myType = eEventType::OBJECTIVE;
-	newEvent.myHandle = AddObjective(anObjective);
-
-	myEvents.Push(newEvent);
-	return newEvent.myHandle;
+	const SEvent tempEvent = { anEventType, anEventHandle };
+	AddEvent(tempEvent);
 }
 
-QM::EventHandle QM::CQuestManager::AddEvent(SQuest aQuest)
+void QM::CQuestManager::AddEvent(const SEvent& anEvent)
 {
-	SEvent newEvent;
-	newEvent.myType = eEventType::QUEST;
-	newEvent.myHandle = AddQuest(aQuest);
-
-	myEvents.Push(newEvent);
-	return newEvent.myHandle;
+	myEvents.Push(anEvent);
 }
 
-QM::SQuest QM::CQuestManager::GetCurrentObjectives() const
+QM::SQuest QM::CQuestManager::GetCurrentQuest() const
 {
 	return myCurrentObjectives;
 }
 
 eMessageReturn QM::CQuestManager::Recieve(const Message& aMessage)
 {
-	return eMessageReturn::eContinue;
+	return aMessage.myEvent.DoEvent(this);
 }
 
 QM::CQuestManager::CQuestManager()
 {
 	myObjectives.Init(4);
 	myQuests.Init(4);
-
+	myError = "";
+	myLoadSuccess = true;
 	POSTMASTER.Subscribe(this, eMessageType::QuestRelated);
 }
 
 
 QM::CQuestManager::~CQuestManager()
 {
-	POSTMASTER.UnSubscribeEveryWhere(this);
+	POSTMASTER.UnSubscribe(this, eMessageType::QuestRelated);
+}
+
+void QM::CQuestManager::SendUpdateMessage()
+{
+	CQuestDataUpdated thisEvent;
+
+	PostMaster::GetInstance().SendLetter(eMessageType::QuestRelated, thisEvent);
 }
 
 QM::EventHandle QM::CQuestManager::AddObjective(SObjective anObjective)
@@ -147,4 +157,35 @@ QM::EventHandle QM::CQuestManager::AddQuest(SQuest anObjective)
 	const EventHandle handle = myQuests.Size();
 	myQuests.Add(anObjective);
 	return handle;
+}
+
+QM::SObjective QM::CQuestManager::GetObjective(const int aObjective)
+{
+	return myObjectives[aObjective];
+}
+
+QM::EventHandle QM::CQuestManager::GetObjectiveHandle(std::string anObjectiveName)
+{
+	return myObjectiveHandles[anObjectiveName];
+}
+
+bool QM::CQuestManager::LoadQuestlines(std::string aQuestlinesFile)
+{
+	CU::CPJWrapper jsonDoc;
+	std::string errorString;
+	jsonDoc.Parse(aQuestlinesFile);
+
+
+
+
+	const CU::JsonObject rootObject = jsonDoc.GetJsonObject();
+	if (rootObject.count("questline") < 1)
+	{
+		myError = "missing \"questline\" object in quest file: ";
+		myError += aQuestlinesFile;
+		myLoadSuccess = false;
+		return false;
+	}
+	
+
 }

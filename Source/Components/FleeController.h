@@ -14,6 +14,9 @@ public:
 	void SetFleeRadius(float aRadius);
 	void SetTargetsToAvoid( CU::GrowingArray<CGameObject*>* aTargetList);
 
+
+	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
+
 private:
 	void Destroy() override;
 	CU::GrowingArray<CGameObject*>* myObjectsToAvoid;

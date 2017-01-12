@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Component.h"
+#include "SkillData.h"
+#include "../CommonUtilities/vector3.h"
 class Skill;
 class SkillSystemComponent : public CComponent
 {
@@ -10,9 +12,10 @@ public:
 	void Update(float aDeltaTime);
 	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
 	void Destroy() override;
-	void AddSkill(const char* aSkillName);
+	void AddSkill(SkillData::SkillName aSkillName);
 private:
 	CU::GrowingArray<Skill*> mySkills;
 	CU::Vector3f myTargetPosition;
+	bool myIsActive;
 };
 

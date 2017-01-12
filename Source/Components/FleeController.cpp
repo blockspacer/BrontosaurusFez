@@ -5,9 +5,7 @@
 
 CFleeController::CFleeController()
 {
-	myWeight = 5.0;
 	myControllerType = eControllerType::eFlee;
-	myFleeRadius = 100.f;
 }
 
 CFleeController::~CFleeController()
@@ -53,6 +51,22 @@ void CFleeController::SetFleeRadius(float aRadius)
 void CFleeController::SetTargetsToAvoid( CU::GrowingArray<CGameObject*>* aTargetList)
 {
 	myObjectsToAvoid = aTargetList;
+}
+
+void CFleeController::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
+{
+	switch (aMessageType)
+	{
+	case(eComponentMessageType::eObjectDone):
+	{
+		SComponentMessageData data;
+		data.myComponent = this;
+		NotifyParent(eComponentMessageType::eAddAIBehavior, data);
+	}
+		break;
+	default:
+		break;
+	}
 }
 
 void CFleeController::Destroy()

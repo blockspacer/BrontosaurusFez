@@ -18,7 +18,7 @@ void CInventoryComponent::Receive(const eComponentMessageType aMessageType, cons
 	switch (aMessageType)
 	{
 		case eComponentMessageType::eLootPickedUp:
-			AddGold(aMessageData.myUnsingedShort);
+			AddGold(aMessageData.myUShort);
 			break;
 	}
 
