@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "PJWrapper.h"
 #include <fstream>
+#include <d3d11sdklayers.h>
 
 CU::CPJWrapper::CPJWrapper()
 {
@@ -11,14 +12,23 @@ CU::CPJWrapper::~CPJWrapper()
 {
 }
 
-std::string CU::CPJWrapper::Parse(std::string afilePath)
+bool CU::CPJWrapper::Parse(std::string afilePath, std::string* anErrorString)
 {
 	std::ifstream file(afilePath);
 
 	std::string error = picojson::parse(myValue, file);
 	file.close();
 
-	return error;
+	if (error != "")
+	{
+		if (anErrorString != nullptr)
+		{
+			*anErrorString = error;
+		}
+		return false;
+	}
+
+	return true;
 }
 
 CU::eJsonType CU::CPJWrapper::GetType()
@@ -210,6 +220,16 @@ CU::CPJWrapper CU::CPJWrapper::operator[](const int anIndex) const
 	return tempArray[anIndex];
 }
 
+CU::CPJWrapper CU::CPJWrapper::operator[](std::string aKey)
+{
+	return at(aKey);
+}
+
+CU::CPJWrapper CU::CPJWrapper::operator[](std::string aKey) const
+{
+	return at(aKey);
+}
+
 size_t CU::CPJWrapper::Size()
 {
 	if (IsArray() == false && IsObject() == false && IsString() == false)
@@ -272,15 +292,7 @@ CU::JsonObject CU::CPJWrapper::GetJsonObject()
 		DL_ASSERT("trying to get jason value as an Object when it's not an Object");
 	}
 
-	picojson::object object = myValue.get<picojson::object>();
-
-	JsonObject resultObject;
-	for (auto pair : object)
-	{
-		resultObject[pair.first] = CPJWrapper(pair.second);
-	}
-
-	return resultObject;
+	return *this;
 }
 
 CU::JsonObject CU::CPJWrapper::GetJsonObject() const
@@ -290,15 +302,31 @@ CU::JsonObject CU::CPJWrapper::GetJsonObject() const
 		DL_ASSERT("trying to get jason value as an Object when it's not an Object");
 	}
 
-	picojson::object object = myValue.get<picojson::object>();
+	return *this;
+}
 
-	JsonObject resultObject;
-	for (auto pair : object)
-	{
-		resultObject[pair.first] = CPJWrapper(pair.second);
-	}
+CU::CPJWrapper CU::CPJWrapper::at(std::string aKey)
+{
+	GetJsonObject();
+	return CPJWrapper(myValue.get<picojson::object>().at(aKey));
+}
 
-	return resultObject;
+CU::CPJWrapper CU::CPJWrapper::at(std::string aKey) const
+{
+	GetJsonObject();
+	return CPJWrapper(myValue.get<picojson::object>().at(aKey));
+}
+
+unsigned CU::CPJWrapper::count(std::string aKey)
+{
+	GetJsonObject();
+	return myValue.get<picojson::object>().count(aKey);
+}
+
+unsigned CU::CPJWrapper::count(std::string aKey) const
+{
+	GetJsonObject();
+	return myValue.get<picojson::object>().count(aKey);
 }
 
 CU::CPJWrapper::CPJWrapper(picojson::value aValue)

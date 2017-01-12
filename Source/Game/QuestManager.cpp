@@ -173,7 +173,7 @@ bool QM::CQuestManager::LoadQuestlines(std::string aQuestlinesFile)
 {
 	CU::CPJWrapper jsonDoc;
 	std::string errorString;
-	jsonDoc.Parse(aQuestlinesFile);
+	jsonDoc.Parse(aQuestlinesFile,nullptr);
 
 
 

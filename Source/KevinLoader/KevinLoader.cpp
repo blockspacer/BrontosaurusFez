@@ -64,7 +64,7 @@ namespace KLoader
 	eError CKevinLoader::LoadFile(const std::string& aFilePath)
 	{
 		CU::CPJWrapper wrapper;
-		std::string mybeKeepThishshould = wrapper.Parse(aFilePath);
+		wrapper.Parse(aFilePath, nullptr);
 
 		const eError loadObjectError = LoadObjects(wrapper);
 		if (loadObjectError != eError::NO_LOADER_ERROR)
@@ -159,16 +159,10 @@ namespace KLoader
 		{
 			const CU::CPJWrapper currentObject= objectsArray[i];
 			SLoadedComponentData componentData;
-			CU::JsonObject data;
 
 			componentData.myTypeName = currentObject.GetJsonObject()["name"].GetString();
 
-			data["name"] = currentObject.GetJsonObject()["name"];
-			data["position"] = currentObject.GetJsonObject()["position"];
-			data["rotation"] = currentObject.GetJsonObject()["rotation"];
-			data["scale"] = currentObject.GetJsonObject()["scale"];
-
-			componentData.myData = data;
+			componentData.myData = currentObject;
 
 			const KId currentID = currentObject.GetJsonObject()["id"].GetNumber() * -1;
 

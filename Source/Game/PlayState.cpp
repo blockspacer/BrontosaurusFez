@@ -317,7 +317,7 @@ void CPlayState::Load()
 	//Loadingu like pingu
 
 	CU::CPJWrapper levelsFile;
-	const std::string errorString = levelsFile.Parse("Json/LevelList.json");
+	levelsFile.Parse("Json/LevelList.json");
 
 	CU::CPJWrapper levelsArray = levelsFile.GetJsonObject().at("levels");
 
