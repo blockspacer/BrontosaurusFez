@@ -10,13 +10,13 @@ public:
 	CRenderCamera();
 	~CRenderCamera();
 
-	void InitPerspective(const float aFov, const float aWidth, const float aHeight, const float aFar, const float aNear, DXGI_FORMAT aFormat = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
-	void InitOrthographic(const float aWidth, const float aHeight, const float aFar, const float aNear, const int aTextureWidth, const int aTextureHeight, DXGI_FORMAT aFormat = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
+	void InitPerspective(const float aFov, const float aWidth, const float aHeight, const float aFar, const float aNear, ID3D11Texture2D * aTexture = nullptr, DXGI_FORMAT aFormat = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
+	void InitOrthographic(const float aWidth, const float aHeight, const float aFar, const float aNear, const int aTextureWidth, const int aTextureHeight, ID3D11Texture2D * aTexture = nullptr, DXGI_FORMAT aFormat = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
 	
 	inline void SetCamera(const CU::Camera& aCamera);
 	inline CU::Camera& GetCamera();
 
-	inline const CRenderPackage& GetRenderPackage() const;
+	inline CRenderPackage& GetRenderPackage();
 
 
 	void AddRenderMessage(SRenderMessage* aRenderMessage);
@@ -28,7 +28,7 @@ private:
 	CU::GrowingArray<SRenderMessage*, unsigned short, false> myRenderQueue;
 };
 
-inline const CRenderPackage & CRenderCamera::GetRenderPackage() const
+inline CRenderPackage & CRenderCamera::GetRenderPackage() 
 {
 	return myRenderPackage;
 }
