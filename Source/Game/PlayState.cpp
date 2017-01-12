@@ -249,10 +249,10 @@ void CPlayState::Load()
 	SkillData* SweepAttack = new SkillData;
 	SweepAttack->activationRadius = 0.0f;
 	SweepAttack->range = 300.0f;
-	SweepAttack->animationDuration = 0.1f;
-	SweepAttack->coolDown = 0.1f;
+	SweepAttack->animationDuration = 0.5f;
+	SweepAttack->coolDown = 0.5f;
 	SweepAttack->isAOE = true;
-	SweepAttack->isChannel = true;
+	SweepAttack->isChannel = false;
 	SweepAttack->damage = 30;
 	SweepAttack->manaCost = 10;
 	SweepAttack->skillName = SkillData::SkillName::SweepAttack;
@@ -260,7 +260,7 @@ void CPlayState::Load()
 
 	////create player:
 
-	/*myPlayerObject = myGameObjectManager->CreateGameObject();
+	myPlayerObject = myGameObjectManager->CreateGameObject();
 	myPlayerObject->SetName("Player");
 	PollingStation::playerObject = myPlayerObject;
 
@@ -297,7 +297,7 @@ void CPlayState::Load()
 	playerCollisionComponent->SetColliderType(eColliderType_Player);
 	myPlayerObject->AddComponent(playerCollisionComponent);
 	CHealthBarComponent* healthBar = myHealthBarManager->CreateHealthbar();
-	myPlayerObject->AddComponent(healthBar);*/
+	myPlayerObject->AddComponent(healthBar);
 
 
 	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
@@ -365,12 +365,12 @@ void CPlayState::Load()
 
 	//----CreateEnemies----
 	myEnemies.Init(8);
-	//TEMP_CREATE_ENEMY();
-	//myEnemies[0]->SetWorldPosition({ -300.f, 0.f, -400.f });
-	//TEMP_CREATE_ENEMY();
-	//myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
-	//TEMP_CREATE_ENEMY();
-	//myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
+	TEMP_CREATE_ENEMY();
+	myEnemies[0]->SetWorldPosition({ -300.f, 0.f, -400.f });
+	TEMP_CREATE_ENEMY();
+	myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
+	TEMP_CREATE_ENEMY();
+	myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
 
 	//---------------------
 
@@ -522,6 +522,11 @@ void CPlayState::OnExit()
 void CPlayState::Pause()
 {
 	PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PushState(PushState::eState::ePauseScreen, -1)));
+}
+
+void CPlayState::BuyHats()
+{
+	PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PushState(PushState::eState::eHatShop, -1)));
 }
 
 void CPlayState::NextLevel()

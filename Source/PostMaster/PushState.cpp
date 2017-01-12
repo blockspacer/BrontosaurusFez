@@ -1,10 +1,11 @@
 #include "stdafx.h"
 #include "PushState.h"
 
-#include "../StateStack/StateStack.h"
-#include "../Game/PlayState.h"
-#include "../Game/CreditsState.h"
-#include "../Game/PauseMenu.h"
+#include "StateStack/StateStack.h"
+#include "Game/PlayState.h"
+#include "Game/CreditsState.h"
+#include "Game/PauseMenu.h"
+#include "Game/HatShopState.h"
 #include "Game/LevelSelectState.h"
 #include "Game/MainMenuState.h"
 #include "Game/LoadState.h"
@@ -42,6 +43,9 @@ eMessageReturn PushState::DoEvent(StateStack* aStateStack) const
 			break;
 		case eState::ePauseScreen:
 			aStateStack->PushState(new PauseMenu(*aStateStack));
+			break;
+		case eState::eHatShop:
+			aStateStack->PushState(new HatShopState(*aStateStack));
 			break;
 		case eState::eLevelSelect:
 			static_cast<MainMenuState*>(aStateStack->GetCurrentState())->SetIsGoingToLevelSelect(true);
