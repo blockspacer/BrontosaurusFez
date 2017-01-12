@@ -27,6 +27,15 @@ void CHealthBarComponentManager::Update()
 {
 	for (int i = 0; i < myHealthbars.Size(); ++i)
 	{
+		if (myHealthbars[i]->ShouldBeDeleted() == true)
+		{
+			myHealthbars.RemoveCyclicAtIndex(i);
+		}
+	}
+
+
+	for (int i = 0; i < myHealthbars.Size(); ++i)
+	{
 		myHealthbars[i]->Update();
 	}
 }
