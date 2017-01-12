@@ -224,6 +224,7 @@ void CPlayState::Load()
 	basicSkillData->isChannel = false;
 	basicSkillData->damage = 34;
 	basicSkillData->skillName = "BasicAttack";
+	basicSkillData->manaCost = 0;
 	SkillFactory::GetInstance().RegisterSkillData(basicSkillData);
 
 	//AddSpinyToWhiny
@@ -235,7 +236,9 @@ void CPlayState::Load()
 	whirlWindSkillData->isAOE = true;
 	whirlWindSkillData->isChannel = true;
 	whirlWindSkillData->damage = 10;
+	whirlWindSkillData->manaCost = 1;
 	whirlWindSkillData->skillName = "WhirlWind";
+	
 	SkillFactory::GetInstance().RegisterSkillData(whirlWindSkillData);
 
 
@@ -249,11 +252,12 @@ void CPlayState::Load()
 	SweepAttack->isChannel = true;
 	SweepAttack->damage = 30;
 	SweepAttack->skillName = "SweepAttack";
+	SweepAttack->manaCost = 10;
 	SkillFactory::GetInstance().RegisterSkillData(SweepAttack);
 
 	//create player:
 
-	/*myPlayerObject = myGameObjectManager->CreateGameObject();
+	myPlayerObject = myGameObjectManager->CreateGameObject();
 	myPlayerObject->SetName("Player");
 	PollingStation::playerObject = myPlayerObject;
 
@@ -290,7 +294,7 @@ void CPlayState::Load()
 	playerCollisionComponent->SetColliderType(eColliderType_Player);
 	myPlayerObject->AddComponent(playerCollisionComponent);
 	CHealthBarComponent* healthBar = myHealthBarManager->CreateHealthbar();
-	myPlayerObject->AddComponent(healthBar);*/
+	myPlayerObject->AddComponent(healthBar);
 
 
 	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
@@ -352,13 +356,13 @@ void CPlayState::Load()
 	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation()); //
 
 	//----CreateEnemies----
-	/*myEnemies.Init(8);
+	myEnemies.Init(8);
 	TEMP_CREATE_ENEMY();
 	myEnemies[0]->SetWorldPosition({ -300.f, 0.f, -400.f });
 	TEMP_CREATE_ENEMY();
 	myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
 	TEMP_CREATE_ENEMY();
-	myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });*/
+	myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
 
 	//---------------------
 

@@ -7,6 +7,7 @@ struct SkillData
 	float coolDown;
 	float activationRadius;
 	float animationDuration;
+	float manaCost;
 	HealthPoint damage;
 	bool isAOE;
 	bool isChannel;
