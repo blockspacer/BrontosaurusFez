@@ -22,6 +22,7 @@ public:
 	//temp
 	eMessageReturn DoEvent(CHealthComponent* aHealthComponent) const override;
 	eMessageReturn DoEvent(CRenderer* aRenderer) const override;
+	eMessageReturn DoEvent(HatShopState* aHatShop) const override;
 
 private:
 	const CU::eKeys& myKey;

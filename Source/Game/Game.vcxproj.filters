@@ -33,6 +33,9 @@
     <ClCompile Include="QuestDrawer.cpp">
       <Filter>QuestManager\QuestDrawer</Filter>
     </ClCompile>
+    <ClCompile Include="HatShopState.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackgroundLoadingManager.h" />
@@ -70,6 +73,9 @@
     </ClInclude>
     <ClInclude Include="QuestDrawer.h">
       <Filter>QuestManager\QuestDrawer</Filter>
+    </ClInclude>
+    <ClInclude Include="HatShopState.h">
+      <Filter>States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
