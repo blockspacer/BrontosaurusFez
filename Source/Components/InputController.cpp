@@ -112,6 +112,10 @@ void InputController::Receive(const eComponentMessageType aMessageType, const SC
 		{
 			mySkillInputMessageActivators.Add(CU::eInputMessage::ONE);
 		}
+		else if (aMessageData.myString == "SweepAttack")
+		{
+			mySkillInputMessageActivators.Add(CU::eInputMessage::TWO);
+		}
 		else
 		{
 			std::cout << "Skill not found when adding key binding." << std::endl;

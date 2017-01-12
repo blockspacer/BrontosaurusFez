@@ -27,6 +27,8 @@ const CU::Vector2f CSeekController::Update(const CU::Time& aDeltaTime)
 	CU::Vector2f targetVelocity = CU::Vector2f::Zero;
 	targetVelocity = myTarget - position;
 
+
+
 	float distance = targetVelocity.Length();
 
 	if (distance > myAggroRange)

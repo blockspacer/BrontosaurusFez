@@ -14,5 +14,6 @@ public:
 private:
 	CU::GrowingArray<Skill*> mySkills;
 	CU::Vector3f myTargetPosition;
+	bool myIsActive;
 };
 

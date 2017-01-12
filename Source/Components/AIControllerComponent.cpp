@@ -71,7 +71,6 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 			GetParent()->NotifyComponents(eComponentMessageType::eSetSkillTargetObject, data);
 		}
 	}
-
 	GetParent()->GetLocalTransform().Move(CU::Vector3f(velocity.x,0,velocity.y));
 	GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 }
