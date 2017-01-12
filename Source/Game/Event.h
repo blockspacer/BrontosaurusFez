@@ -24,8 +24,8 @@ namespace QM
 		SObjective():myAmmount(0), myGoal(0){} 
 		std::string myName;
 		std::string myText;
-		int myAmmount;
-		int myGoal;
+		short myAmmount;
+		short myGoal;
 	};
 
 	struct SQuest

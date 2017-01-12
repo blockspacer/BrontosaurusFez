@@ -20,6 +20,7 @@ namespace QM
 
 	private:
 		CTextBox myTextBox;
+		CTextInstance* myQuestCompleteText;
 	};
 }
 

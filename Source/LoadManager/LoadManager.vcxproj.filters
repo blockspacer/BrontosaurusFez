@@ -33,6 +33,7 @@
     <ClInclude Include="LoadAIController.h" />
     <ClInclude Include="LoadSkillSystemComponent.h" />
     <ClInclude Include="LoadHealthComponent.h" />
+    <ClInclude Include="LoadHealthBarComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -64,6 +65,7 @@
     <ClCompile Include="LoadAIController.cpp" />
     <ClCompile Include="LoadSkillSystemComponent.cpp" />
     <ClCompile Include="LoadHealthComponent.cpp" />
+    <ClCompile Include="LoadHealthBarComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="VS">
