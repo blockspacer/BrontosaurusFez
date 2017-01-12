@@ -21,6 +21,10 @@ Skill::Skill(SkillData* aSkillDataPointer)
 	{
 		myUpdateFunction = std::bind(&Skill::WhirlWindUpdate, this, std::placeholders::_1);
 	}
+	else if (aSkillDataPointer->skillName == "SweepAttack")
+	{
+		myUpdateFunction = std::bind(&Skill::WhirlWindUpdate, this, std::placeholders::_1);
+	}
 	else
 	{
 		DL_PRINT("Wow Skill couldn't find what skill to use as updatefunction. Check spelling and/or yell at Marcus.");
@@ -111,7 +115,7 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 			statedAttackingMessage.myString = "attack";
 			myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
 			myElapsedCoolDownTime = 0.0f;
-			myColliderObject->SetWorldPosition(myTargetObject->GetWorldPosition());
+			myColliderObject->GetLocalTransform().SetPosition(myTargetObject->GetWorldPosition());
 			myColliderObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 			myAnimationTimeElapsed += aDeltaTime;
 		}
@@ -132,7 +136,7 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 		}
 		else
 		{
-			myColliderObject->SetWorldPosition(myTargetPosition);
+			myColliderObject->GetLocalTransform().SetPosition(myTargetPosition);
 		}
 		myColliderObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 		//ActivateCollider(); // Remove this later on and replace it with animation wait time.
@@ -141,12 +145,25 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 
 void Skill::WhirlWindUpdate(float aDeltaTime)
 {
-	myUser->NotifyComponents(eComponentMessageType::eStopMovement, SComponentMessageData());
 	SComponentMessageData statedAttackingMessage;
 	statedAttackingMessage.myString = "turnRight90";
 	myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
 	myElapsedCoolDownTime = 0.0f;
 	myAnimationTimeElapsed += aDeltaTime;
+	myColliderObject->GetLocalTransform().SetPosition(myUser->GetWorldPosition());
+	myColliderObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
+}
+
+void Skill::SweepAttackUpdate(float aDeltaTime)
+{
+	myUser->NotifyComponents(eComponentMessageType::eStopMovement, SComponentMessageData());
+	SComponentMessageData startedAttackingMessage;
+	startedAttackingMessage.myString = "turnLeft90";
+	myUser->NotifyComponents(eComponentMessageType::eBasicAttack, startedAttackingMessage);
+	myElapsedCoolDownTime = 0.0f;
+	myAnimationTimeElapsed += aDeltaTime;
+	myColliderObject->GetLocalTransform().SetPosition(myUser->GetWorldPosition());
+	myColliderObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 }
 
 void Skill::SetTargetPosition(CU::Vector3f aTargetPosition)
