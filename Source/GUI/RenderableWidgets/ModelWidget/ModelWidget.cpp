@@ -21,6 +21,7 @@ namespace GUI
 		, myPixelConstantBufferStruct(nullptr)
 		, myMillisecondsLeftSinceMouseEnter(0.f)
 	{
+
 		CModelManager::ModelId model = MODELMGR->LoadGUIModel(aLoaderMesh, aTexturePaths);
 		myModelInstance = new CModelInstance(model, aLoaderMesh->myTransformation);
 		myPixelConstantBufferStruct = new SPixelConstantBuffer();

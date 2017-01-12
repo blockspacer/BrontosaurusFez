@@ -9,7 +9,6 @@
 CSeekController::CSeekController()
 {
 	myTargetRadius = 0;
-	myAggroRange = 1000;
 	myTarget = CU::Vector2f::Zero;//PollingStation::playerObject->GetWorldPosition();
 	myAcceleration = CU::Vector2f::Zero;
 	myControllerType = eControllerType::eArrive;
@@ -85,6 +84,11 @@ void CSeekController::SetTargetRadius(const float aTargetRadius)
 void CSeekController::SetSlowDownRadius(const float aSlowdownRadius)
 {
 	mySlowdownRadius = aSlowdownRadius;
+}
+
+void CSeekController::SetAggroRange(const float aRange)
+{
+	myAggroRange = aRange;
 }
 
 void CSeekController::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
