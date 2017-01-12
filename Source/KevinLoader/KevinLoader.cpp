@@ -153,7 +153,7 @@ namespace KLoader
 			return eError::MISSING_OBJECTS;
 		}
 
-		const CU::CPJWrapper objectsArray = rootObject["objects"];
+		const CU::CPJWrapper& objectsArray = rootObject["objects"];
 
 		for (int i = 0; i < objectsArray.Size(); ++i)
 		{
@@ -170,7 +170,7 @@ namespace KLoader
 
 			componentData.myData = data;
 
-			const KId currentID = currentObject.GetJsonObject()["id"].GetNumber() * -1;
+			const KId currentID = currentObject.GetJsonObject()["id"].GetInt() * -1;
 
 			LinkObject currentLink;
 
@@ -182,7 +182,7 @@ namespace KLoader
 			if (currentObject.GetJsonObject().count("parent") > 0)
 			{
 				const CU::CPJWrapper parentIDObj = currentObject.GetJsonObject()["parent"];
-				const KId parentId = parentIDObj.GetNumber() * -1;
+				const KId parentId = parentIDObj.GetInt() * -1;
 				if (myLinkObjects.count(parentId) == 0)
 				{
 					myLinkObjects[parentId] = LinkObject();
@@ -224,7 +224,7 @@ namespace KLoader
 
 			if (currentLink.myChildren.Size() > 0)
 			{
-				for (int i = 0; i < currentLink.myChildren.Size(); ++i)
+				for (unsigned int i = 0; i < currentLink.myChildren.Size(); ++i)
 				{
 					if (myObjectLinkFunction)
 					{

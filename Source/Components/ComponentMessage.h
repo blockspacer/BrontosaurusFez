@@ -41,7 +41,7 @@ enum class eComponentMessageType
 	eDied,
 	eRespawned,
 	eHeal,
-	eTookDamage,
+	ePercentHPLeft,
 	eLootDropped,
 	eLootPickedUp,
 	eCollectStats,

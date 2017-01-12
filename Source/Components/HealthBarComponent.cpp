@@ -3,29 +3,30 @@
 #include "Camera.h"
 #include "../BrontosaurusEngine/Engine.h"
 
-CHealthBarComponent::CHealthBarComponent()
-{					
-	myType = eComponentType::eHealthBar;									 // POS, get npc
-	mySprite = new CSpriteInstance("Sprites/healthBar.dds", { 0.06f, 0.01f }, { 0.5f, 0.5f }, { 0.f, 0.f ,1.f, 1.f }, { 1.f, 0.f, 0.f, 0.f });
-	myBGSprite = new CSpriteInstance("Sprites/healthBar.dds", { 0.063f, 0.01f }, { 0.5f, 0.5f }, { 0.f, 0.f ,0.8f, 1.f }, { 0.1f, 0.1f, 0.1f, 0.f });
+CHealthBarComponent::CHealthBarComponent() : myBarSize(0.06f,0.01f)
+{		
+	myType = eComponentType::eHealthBar;
+	mySprite = new CSpriteInstance("Sprites/healthBar.dds", myBarSize,   { 0.5f, 0.5f }, { 0.f, 0.f ,1.0f, 1.f }, { 1.f, 0.f, 0.f, 0.f });
+	myBGSprite = new CSpriteInstance("Sprites/healthBar.dds", myBarSize, { 0.5f, 0.5f }, { 0.f, 0.f ,0.8f, 1.f }, { 0.1f, 0.1f, 0.1f, 0.f });
 	myHasAppeared = false;
 	myShouldBeDeleted = false;
 }
 
 CHealthBarComponent::~CHealthBarComponent()
 {
+	SAFE_DELETE(mySprite);
+	SAFE_DELETE(myBGSprite);
 }
 
 void CHealthBarComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData)
 {
 	switch (aMessageType)
 	{
-	case eComponentMessageType::eTakeDamage:
-		UpdateSprite(aMessageData.myUChar); //msgData
-		break;
 	case eComponentMessageType::eDied:
-		//Mark for deletion in Mgr.
 		Destroy();
+		break;
+	case eComponentMessageType::ePercentHPLeft:
+		UpdateSprite(aMessageData.myUChar); //msgData
 		break;
 	}
 }
@@ -38,9 +39,11 @@ void CHealthBarComponent::UpdateSprite(char aPercentHP)
 		mySprite->SetColor({ 1.f, 0.f, 0.f, 1.f });
 		myHasAppeared = true;
 	}
-	//CU::Vector4f rect = mySprite->GetRect();
-	//rect.z -= 0.1;
-	//mySprite->SetRect(rect);
+
+
+	CU::Vector2f size = myBarSize;
+	size.x *= ((float)aPercentHP / 100.f);
+	mySprite->SetSize(size);
 }
 
 void CHealthBarComponent::Update()
@@ -76,8 +79,6 @@ void CHealthBarComponent::Render() // Create manager that renders everything, me
 
 void CHealthBarComponent::Destroy()
 {
-	SAFE_DELETE(mySprite);
-	SAFE_DELETE(myBGSprite);
 	myShouldBeDeleted = true;
 }
 

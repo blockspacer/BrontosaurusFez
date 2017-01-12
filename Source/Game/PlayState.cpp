@@ -42,8 +42,8 @@
 
 #include "PlayerData.h"
 
-#include "Components\SkillFactory.h"
-#include "Components\SkillSystemComponentManager.h"
+#include "Components/SkillFactory.h"
+#include "Components/SkillSystemComponentManager.h"
 
 #include "FleeControllerManager.h"
 #include "SeekControllerManager.h"
@@ -53,43 +53,37 @@
 //
 
 //Temp Includes
-#include "Components/InputController.h"
-#include "Components/NavigationComponent.h"
-#include "Components/MovementComponent.h"
+
 #include "Components/HealthComponent.h"
 #include "MainStatComponent.h"
 #include "StatComponent.h"
-#include "CameraComponent.h"
-#include "BrontosaurusEngine/ModelInstance.h"
-#include "BrontosaurusEngine/WindowsWindow.h"
-#include <iostream>
-#include "StatComponent.h"
 #include "Components/AIControllerComponent.h"
 #include "Components/SeekController.h"
-#include "Components\FleeController.h"
-#include "Components\SkillFactory.h"
-#include "SkillSystemComponent.h"
+#include "Components/FleeController.h"
 #include "KevinLoader/KevinLoader.h"
-#include "Components\CollisionComponentManager.h"
+#include "Components/CollisionComponentManager.h"
 #include "SkillComponentManager.h"
 #include "DropComponentManager.h"
 #include "../Collision/Intersection.h"
-#include "Components\CollisionComponent.h"
-#include "Components\CollisionComponentManager.h"
-#include "Collision\ICollider.h"
-#include "Components\DropComponent.h"
+#include "Components/CollisionComponent.h"
+#include "Components/InputController.h"
+#include "Components/MovementComponent.h"
+#include "Collision/ICollider.h"
+#include "Components/DropComponent.h"
 #include "SkillData.h"
-#include "SkillFactory.h"
-#include "Components/HealthBarComponentManager.h"
 
+#include "Components/HealthBarComponentManager.h"
+#include "SkillSystemComponent.h"
+#include "ModelInstance.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
 #include "../BrontosaurusEngine/FireEmitterInstance.h"
 #include "../BrontosaurusEngine/FireEmitterData.h"
-#include "Collision/ICollider.h"
-#include <Collision/Intersection.h>
-#include "CollisionComponent.h"
+
 #include "MouseComponent.h"
+#include "QuestManager.h"
+#include "NavigationComponent.h"
+
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -128,13 +122,41 @@ CPlayState::~CPlayState()
 
 void CPlayState::Load()
 {
-	LoadManagerGuard loadManagerGuard;
-
 	//start taking the time for loading level
 	CU::TimerManager timerMgr;
 	CU::TimerHandle handle = timerMgr.CreateTimer();
 	timerMgr.StartTimer(handle);
 	CreateManagersAndFactories();
+
+	LoadManagerGuard loadManagerGuard;
+
+	QM::CQuestManager &questManager = QM::CQuestManager::GetInstance();
+
+	QM::SObjective objective1;
+	objective1.myName = "test 1";
+	objective1.myGoal = 1;
+	objective1.myText = "test by pressing f12(it works if you're lucky)";
+	fristObjective = questManager.AddObjective(objective1);
+	questManager.AddEvent(QM::eEventType::OBJECTIVE, fristObjective);
+
+	QM::SObjective objective2;
+	objective2.myName = "test2";
+	objective2.myGoal = 1;
+	objective2.myText = "part of test quest two objective  one";
+	secondObjective = questManager.AddObjective(objective2);
+
+	QM::SObjective objective3;
+	objective3.myName = "test3";
+	objective3.myGoal = 1;
+	objective3.myText = "blaaaaaaaaaaalalala lif is life";
+	thridObjective = questManager.AddObjective(objective3);
+
+	QM::SQuest quest;
+	quest.myObjectives = { secondObjective, thridObjective };
+	const QM::EventHandle questHandle = questManager.AddQuest(quest);
+	questManager.AddEvent(QM::eEventType::QUEST, questHandle);
+
+	questManager.CompleteEvent();
 
 	MODELCOMP_MGR.SetScene(myScene);
 	myScene->SetSkybox("skybox.dds");
@@ -268,12 +290,10 @@ void CPlayState::Load()
 	//playerCollisionComponent->SetColliderType(eColliderType_Player);
 	//myPlayerObject->AddComponent(playerCollisionComponent);
 
-	/*myHealthBarManager = new CHealthBarComponentManager();
-
 	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
 	cameraComponent->SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 
-	myHealthBarManager = new CHealthBarComponentManager(playerCamera);*/
+	myHealthBarManager = new CHealthBarComponentManager(playerCamera);
 
 	//set camera position and rotation
 	/*CU::Matrix44f cameraTransformation = playerCamera.GetTransformation();
@@ -320,7 +340,7 @@ void CPlayState::Load()
 	{
 		DL_ASSERT("Loading Failed");
 	}
-	PollingStation::playerObject = PollingStation::PlayerInput->GetParent();
+	//PollingStation::playerObject = PollingStation::PlayerInput->GetParent();
 	//CSeekControllerManager::GetInstance().SetTarget();
 	myGameObjectManager->SendObjectsDoneMessage();
 
@@ -454,6 +474,8 @@ void CPlayState::Render()
 
 	//myHealthBarManager->Render();
 	myGoldText->Render();
+
+	myQuestDrawer.Render();
 }
 
 void CPlayState::OnEnter()
@@ -544,6 +566,7 @@ void CPlayState::CreateManagersAndFactories()
 	SkillSystemComponentManager::GetInstance().SetCollisionComponentManager(myCollisionComponentManager);
 	SkillComponentManager::CreateInstance();
 	DropComponentManager::CreateInstance();
+	myHealthBarManager = new CHealthBarComponentManager(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 }
 
 void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)
