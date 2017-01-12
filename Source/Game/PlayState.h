@@ -6,6 +6,11 @@
 
 #include "../LuaWrapper/SSlua/SSlua.h"
 
+//temp includes
+#include <iostream>
+#include "QuestDrawer.h"
+#include "../PostMaster/Event.h"
+
 namespace CU
 {
 	class Time;
@@ -64,6 +69,10 @@ public:
 	void TEMP_ADD_HAT(CGameObject* aPlayerObject);
 	CGameObject* myPlayerObject;
 
+	QM::EventHandle fristObjective;
+	QM::EventHandle secondObjective;
+	QM::EventHandle thridObjective;
+
 private:
 	void CreateManagersAndFactories();
 
@@ -83,6 +92,7 @@ private:
 	std::atomic_bool  myIsLoaded;
 	bool myShouldReturnToLevelSelect;
 
+	QM::CQuestDrawer myQuestDrawer;
 
 	//TEMP - BELOW THIS LINE
 	void TEMP_CREATE_ENEMY(); 

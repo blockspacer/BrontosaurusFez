@@ -59,3 +59,8 @@ CU::Vector2i CFT_FontFacade::GetBearing(const wchar_t aChar)
 {
 	return  myFontpointer->GetBearing(aChar);
 }
+
+float CFT_FontFacade::GetlineHeight() const
+{
+	return  myFontpointer->GetlineHeight();
+}

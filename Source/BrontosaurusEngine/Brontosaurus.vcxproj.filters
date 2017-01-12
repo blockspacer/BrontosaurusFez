@@ -253,6 +253,7 @@
     <ClInclude Include="SpriteManager.h">
       <Filter>Sprite</Filter>
     </ClInclude>
+    <ClInclude Include="TextBox.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -391,6 +392,7 @@
     <ClCompile Include="SpriteManager.cpp">
       <Filter>Sprite</Filter>
     </ClCompile>
+    <ClCompile Include="TextBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Brontosaurus.rc">

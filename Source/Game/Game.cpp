@@ -12,6 +12,7 @@
 #include "Engine.h"
 #include "KevinLoader/KLoaderError.h"
 #include "KevinLoader/KevinLoader.h"
+#include "QuestManager.h"
 
 #include "PollingStation.h"
 #include "PlayerData.h"
@@ -25,15 +26,14 @@ CGame::~CGame()
 	KLoader::CKevinLoader::DestroyInstance();
 	CBackgroundLoadingManager::DestroyInstance();
 	SSlua::LuaWrapper::DestroyIfCreated();
+	QM::CQuestManager::DestroyInstance();
+
 }
 
 void CGame::Init()
 {
 	 CBackgroundLoadingManager::CreateInstance();
-	 //LuaFunctions::RegisterFunctions();
-	 //SSlua::LuaWrapper::GetInstance().AddScriptPath("Scripts");
-	 //SSlua::LuaWrapper::GetInstance().LoadCode("Scripts/GameMain.lua");
-	 //SSlua::LuaWrapper::GetInstance().RunLoadedCode();
+	 QM::CQuestManager::CreateInstance();
 
 	 KLoader::CKevinLoader::CreateInstance();
 	 
