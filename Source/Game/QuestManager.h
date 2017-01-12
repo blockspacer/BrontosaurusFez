@@ -27,13 +27,19 @@ namespace QM
 		EventHandle AddObjective(SObjective anObjective);
 		EventHandle AddQuest(SQuest anObjective);
 		SObjective GetObjective(const int aObjective);
+
+		EventHandle GetObjectiveHandle(std::string anObjectiveName);
+
+		bool LoadQuestlines(std::string aQuestline);
+
+		std::string myError;
 	private:
 		CQuestManager();
 		~CQuestManager();
 
 		static void SendUpdateMessage();
 
-		CU::Queue<SEvent> myEvents;
+		CU::Queue<SEvent, unsigned short> myEvents;
 		CU::GrowingArray<SObjective, EventHandle> myObjectives;
 		CU::GrowingArray<SQuest, EventHandle> myQuests;
 
@@ -41,6 +47,7 @@ namespace QM
 
 		std::map<std::string, EventHandle> myObjectiveHandles;
 
+		bool myLoadSuccess;
 		static CQuestManager* ourInstance;
 	};
 	

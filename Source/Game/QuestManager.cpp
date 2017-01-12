@@ -6,6 +6,7 @@
 #include "PostMaster/Message.h"
 #include "PostMaster/Event.h"
 #include "PostMaster/QuestDataUpdated.h"
+#include "PJWrapper.h"
 QM::CQuestManager* QM::CQuestManager::ourInstance = nullptr;
 
 void QM::CQuestManager::CreateInstance()
@@ -77,6 +78,12 @@ void QM::CQuestManager::CompleteEvent()
 
 	myCurrentObjectives = SQuest();
 
+	if (myEvents.Size() < 1)
+	{
+		SendUpdateMessage();
+		return;
+	}
+
 	const SEvent nextEvent = myEvents.Pop();
 
 	switch (nextEvent.myType)
@@ -120,7 +127,8 @@ QM::CQuestManager::CQuestManager()
 {
 	myObjectives.Init(4);
 	myQuests.Init(4);
-
+	myError = "";
+	myLoadSuccess = true;
 	POSTMASTER.Subscribe(this, eMessageType::QuestRelated);
 }
 
@@ -154,4 +162,30 @@ QM::EventHandle QM::CQuestManager::AddQuest(SQuest anObjective)
 QM::SObjective QM::CQuestManager::GetObjective(const int aObjective)
 {
 	return myObjectives[aObjective];
+}
+
+QM::EventHandle QM::CQuestManager::GetObjectiveHandle(std::string anObjectiveName)
+{
+	return myObjectiveHandles[anObjectiveName];
+}
+
+bool QM::CQuestManager::LoadQuestlines(std::string aQuestlinesFile)
+{
+	CU::CPJWrapper jsonDoc;
+	std::string errorString;
+	jsonDoc.Parse(aQuestlinesFile);
+
+
+
+
+	const CU::JsonObject rootObject = jsonDoc.GetJsonObject();
+	if (rootObject.count("questline") < 1)
+	{
+		myError = "missing \"questline\" object in quest file: ";
+		myError += aQuestlinesFile;
+		myLoadSuccess = false;
+		return false;
+	}
+	
+
 }

@@ -9,6 +9,7 @@
 //temp includes
 #include <iostream>
 #include "QuestDrawer.h"
+#include "../PostMaster/Event.h"
 
 namespace CU
 {
@@ -67,6 +68,10 @@ public:
 
 	void TEMP_ADD_HAT(CGameObject* aPlayerObject);
 	CGameObject* myPlayerObject;
+
+	QM::EventHandle fristObjective;
+	QM::EventHandle secondObjective;
+	QM::EventHandle thridObjective;
 
 private:
 	void CreateManagersAndFactories();
