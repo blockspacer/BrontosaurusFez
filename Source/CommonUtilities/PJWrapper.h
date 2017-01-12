@@ -4,7 +4,7 @@
 namespace CU
 {
 	class CPJWrapper;
-	typedef std::map<std::string, CPJWrapper> JsonObject;
+	typedef CPJWrapper JsonObject;
 
 	enum class eJsonType
 	{
@@ -24,7 +24,7 @@ namespace CU
 		CPJWrapper(const picojson::value& aValue);
 		~CPJWrapper();
 
-		std::string Parse(const std::string& afilePath);
+		bool Parse(std::string afilePath, std::string* anErrorString = nullptr);
 
 		eJsonType GetType();
 		CU::eJsonType GetType() const;
@@ -46,12 +46,21 @@ namespace CU
 		bool IsArray() const;
 		CPJWrapper operator[](const int anIndex);
 		CPJWrapper operator[](const int anIndex) const;
+		CPJWrapper operator[](std::string aKey);
+		CPJWrapper operator[](std::string aKey) const;
 		size_t Size();
 		size_t Size() const;
 		bool IsObject() const;
 		JsonObject GetJsonObject();
 		JsonObject GetJsonObject()const;
 
+		CPJWrapper at(std::string aKey);
+		CPJWrapper at(std::string aKey)const;
+
+		unsigned count(std::string aKey);
+		unsigned count(std::string aKey)const;
+
+		
 	private:
 		picojson::value myValue;
 	};
