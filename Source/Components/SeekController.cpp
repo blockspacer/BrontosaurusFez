@@ -25,7 +25,9 @@ const CU::Vector2f CSeekController::Update(const CU::Time& aDeltaTime)
 	myTarget = CU::Vector2f(PollingStation::playerObject->GetWorldPosition().x, PollingStation::playerObject->GetWorldPosition().z);
 	CU::Vector2f position = CU::Vector2f(myController->GetParent()->GetWorldPosition().x, myController->GetParent()->GetWorldPosition().z);
 	CU::Vector2f targetVelocity = CU::Vector2f::Zero;
-	targetVelocity = position - myTarget;
+	targetVelocity = myTarget - position;
+
+
 
 	float distance = targetVelocity.Length();
 
