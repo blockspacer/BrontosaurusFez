@@ -52,6 +52,7 @@ public:
 	void OnExit() override;
 	void Pause();
 	void BuyHats();
+	void GiveHatToPlayer();
 
 	void NextLevel();
 
