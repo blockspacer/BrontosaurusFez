@@ -638,7 +638,8 @@ void* CFBXLoader::LoadModelInternal(CLoaderModel* someInput)
 
 	if (!does_file_exist(model->myModelPath.c_str()))
 	{
-		MessageBox(nullptr, L"File Not Found", L"Load error", MB_OK | MB_ICONERROR);
+		DL_MESSAGE_BOX("File not found: %s", model->myModelPath.c_str());
+		//MessageBox(nullptr, longModelPath.c_str(), L"Load error", MB_OK | MB_ICONERROR);
 		OutputDebugStringA("File not found");
 		return nullptr;
 	}

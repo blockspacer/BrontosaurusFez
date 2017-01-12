@@ -30,6 +30,8 @@ namespace GUI
 		void SetVisibility(const bool aVisibility) override;
 		void OnMouseEnter(const CU::Vector2f& aMousePosition) override;
 
+		void OnPositionChanged(const CU::Vector2f aDisplacement) override;
+
 		SPixelConstantBuffer& GetPixelConstantBufferStruct();
 
 		void SetFlashTimeToMax();
@@ -42,6 +44,8 @@ namespace GUI
 		void ConvertPosition3DTo2D(const CU::Camera& aGUICamera, const CU::Vector3f& aPosition3D, CU::Vector2f& aPosition2D);
 
 		CU::Matrix44f myOriginalTransformation;
+		CU::Vector3f myMinPoint;
+		CU::Vector3f myMaxPoint;
 
 		CModelInstance* myModelInstance;
 		SPixelConstantBuffer* myPixelConstantBufferStruct;

@@ -83,8 +83,10 @@ namespace GUI
 
 	void Widget::SetLocalPosition(const CU::Vector2f& aPosition)
 	{
+		CU::Vector2f displacement = aPosition - myImplementation->myPosition;
 		myImplementation->myPosition = aPosition;
 		OnPositionChanged();
+		OnPositionChanged(displacement);
 	}
 
 	void Widget::SetSize(const CU::Vector2f& aSize)

@@ -6,10 +6,11 @@ class CTextInstance;
 
 namespace GUI
 {
+	class ModelWidget;
 	class CToolTipDecorator : public WidgetDecorator
 	{
 	public:
-		CToolTipDecorator(Widget* aDecoratedWidget, const std::string& aTooltipText);
+		CToolTipDecorator(Widget* aDecoratedWidget, ModelWidget* aBackGround, const std::string& aTooltipText);
 		~CToolTipDecorator();
 
 		void Render() override;
@@ -21,6 +22,7 @@ namespace GUI
 
 	private:
 		CU::Vector2f myOffsetToMouse;
+		ModelWidget* myBackGround;
 		CTextInstance* myTextInstance;
 		bool myShouldRender;
 	};

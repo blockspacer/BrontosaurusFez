@@ -499,7 +499,7 @@ void CPlayState::OnEnter()
 	Audio::CAudioInterface::GetInstance()->LoadBank("Audio/playState.bnk");
 	Audio::CAudioInterface::GetInstance()->PostEvent("PlayCoolSong");
 	//Audio::CAudioInterface::GetInstance()->PostEvent("PlayerMoving_Play");
-	//myGUIManager->RestartRenderAndUpdate();
+	myGUIManager->RestartRenderAndUpdate();
 }
 
 void CPlayState::OnExit()

@@ -13,6 +13,8 @@
 
 const float MillisecondsToFlash = 500.f;
 
+static const CU::Camera* locGUICamera = nullptr;
+
 namespace GUI
 {
 	ModelWidget::ModelWidget(CLoaderMesh* aLoaderMesh, const CU::GrowingArray<CU::DynamicString>& aTexturePaths, const CU::Camera& aGUICamera)
@@ -21,11 +23,15 @@ namespace GUI
 		, myPixelConstantBufferStruct(nullptr)
 		, myMillisecondsLeftSinceMouseEnter(0.f)
 	{
+		locGUICamera = &aGUICamera;
+
 
 		CModelManager::ModelId model = MODELMGR->LoadGUIModel(aLoaderMesh, aTexturePaths);
 		myModelInstance = new CModelInstance(model, aLoaderMesh->myTransformation);
 		myPixelConstantBufferStruct = new SPixelConstantBuffer();
 		myOriginalTransformation = aLoaderMesh->myTransformation;
+		myMinPoint = aLoaderMesh->myMinPoint;
+		myMaxPoint = aLoaderMesh->myMaxPoint;
 
 		CU::Vector2f screenMinPosition;
 		ConvertPosition3DTo2D(aGUICamera, aLoaderMesh->myMinPoint, screenMinPosition);
@@ -83,7 +89,44 @@ namespace GUI
 	void ModelWidget::OnMouseEnter(const CU::Vector2f& aMousePosition)
 	{
 		SUPRESS_UNUSED_WARNING(aMousePosition);
-		//myMillisecondsLeftSinceMouseEnter = MillisecondsToFlash;
+	}
+
+	void ModelWidget::OnPositionChanged(const CU::Vector2f aDisplacement)
+	{
+		if (locGUICamera == nullptr)
+		{
+			return;
+		}
+
+
+		CU::Vector2f newPosition = GetLocalPosition();
+		CU::Vector2f oldPosition = newPosition - aDisplacement;
+		
+
+		//convert pixel mouse position to world ground position
+		CU::Vector2f mousePosNormalizedSpace = newPosition * 2.f - CU::Vector2f::One;
+		mousePosNormalizedSpace.y *= -1;
+		CU::Vector4f mousePosNormalizedHomogeneousSpace(mousePosNormalizedSpace, CU::Vector2f::Zero);
+		CU::Vector4f screenToCameraSpaceRay = mousePosNormalizedHomogeneousSpace * locGUICamera->GetProjectionInverse();
+
+		CU::Vector3f direction;
+		direction.x = (screenToCameraSpaceRay.x * locGUICamera->GetTransformation().m11) + (screenToCameraSpaceRay.y * locGUICamera->GetTransformation().m21) + locGUICamera->GetTransformation().m31;
+		direction.y = (screenToCameraSpaceRay.x * locGUICamera->GetTransformation().m12) + (screenToCameraSpaceRay.y * locGUICamera->GetTransformation().m22) + locGUICamera->GetTransformation().m32;
+		direction.z = (screenToCameraSpaceRay.x * locGUICamera->GetTransformation().m13) + (screenToCameraSpaceRay.y * locGUICamera->GetTransformation().m23) + locGUICamera->GetTransformation().m33;
+
+		CU::Vector3f targetPosition3D;
+		const CU::Vector3f groundNormal(0.f, 1.f, 0.f);
+		const float denominator = direction.Dot(groundNormal);
+		if (std::fabs(denominator) > 0.0001f)
+		{
+			const float t = (myModelInstance->GetTransformation().GetPosition() - locGUICamera->GetPosition()).Dot(groundNormal) / denominator;
+			if (std::fabs(t) > 0.0001f)
+			{
+				targetPosition3D = locGUICamera->GetPosition() + direction * t;
+			}
+		}
+
+		myModelInstance->SetPosition(targetPosition3D);
 	}
 
 	void ModelWidget::Render()

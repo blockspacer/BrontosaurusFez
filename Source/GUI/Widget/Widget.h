@@ -47,6 +47,7 @@ namespace GUI
 		virtual Widget* MouseIsOver(const CU::Vector2f& aMousePosition);
 
 		virtual void OnPositionChanged() {}
+		virtual void OnPositionChanged(const CU::Vector2f aDisplaceMent) { SUPRESS_UNUSED_WARNING(aDisplaceMent); }
 
 		virtual void SetWorldPosition(const CU::Vector2f& aPosition);
 		virtual void SetLocalPosition(const CU::Vector2f& aPosition);
