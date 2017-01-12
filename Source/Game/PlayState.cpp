@@ -188,9 +188,9 @@ void CPlayState::Load()
 	//npcObject2->AddComponent(modelComponent2);
 
 	//Move Later for modification from unity
-	//myScene->AddCamera(CScene::eCameraType::ePlayerOneCamera);
-	//CU::Camera& playerCamera = myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera);
-	//playerCamera.Init(60, WINDOW_SIZE_F.x, WINDOW_SIZE_F.y, 1.f, 75000.0f);
+	myScene->AddCamera(CScene::eCameraType::ePlayerOneCamera);
+	CU::Camera& playerCamera = myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera);
+	playerCamera.Init(60, WINDOW_SIZE_F.x, WINDOW_SIZE_F.y, 1.f, 75000.0f);
 	
 	//AddBasicAttack
 	SkillData* basicSkillData = new SkillData;
@@ -268,12 +268,12 @@ void CPlayState::Load()
 	//playerCollisionComponent->SetColliderType(eColliderType_Player);
 	//myPlayerObject->AddComponent(playerCollisionComponent);
 
-	myHealthBarManager = new CHealthBarComponentManager();
+	/*myHealthBarManager = new CHealthBarComponentManager();
 
 	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
 	cameraComponent->SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 
-	myHealthBarManager = new CHealthBarComponentManager(playerCamera);
+	myHealthBarManager = new CHealthBarComponentManager(playerCamera);*/
 
 	//set camera position and rotation
 	/*CU::Matrix44f cameraTransformation = playerCamera.GetTransformation();
@@ -331,13 +331,13 @@ void CPlayState::Load()
 	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation()); //
 
 	//----CreateEnemies----
-	myEnemies.Init(8);
+	/*myEnemies.Init(8);
 	TEMP_CREATE_ENEMY();
 	myEnemies[0]->SetWorldPosition({ -300.f, 0.f, -400.f });
 	TEMP_CREATE_ENEMY();
 	myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
 	TEMP_CREATE_ENEMY();
-	myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
+	myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });*/
 
 	//---------------------
 
@@ -420,7 +420,7 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	SkillComponentManager::GetInstance().Update(aDeltaTime);
 	DropComponentManager::GetInstance().Update(aDeltaTime);
 
-	myHealthBarManager->Update();
+	//myHealthBarManager->Update();
 
 	return myStatus;
 }
@@ -452,7 +452,7 @@ void CPlayState::Render()
 	msg.mySamplerState = eSamplerState::eClamp;
 	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
 
-	myHealthBarManager->Render();
+	//myHealthBarManager->Render();
 	myGoldText->Render();
 }
 
