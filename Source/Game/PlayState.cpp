@@ -90,12 +90,14 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 	, myLevelIndex(aLevelIndex)
 	, myShouldReturnToLevelSelect(aShouldReturnToLevelSelect)
 	, myScene(nullptr)
+	, myMouseComponent(nullptr)
 {
 	myIsLoaded = false;
 }
 
 CPlayState::~CPlayState()
 {
+	SAFE_DELETE(myMouseComponent);
 	SAFE_DELETE(myScene);
 	SAFE_DELETE(myGameObjectManager);
 	SAFE_DELETE(myGUIManager);
@@ -375,8 +377,8 @@ void CPlayState::Load()
 	mouseCollisionComponent->AddCollidsWith(eColliderType_Enemy | eColliderType_Player);
 	mouseCollisionComponent->SetColliderType(eColliderType_Mouse);
 	mouseObject->AddComponent(mouseCollisionComponent);
-	CMouseComponent* mouseComponent = new CMouseComponent(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
-	mouseObject->AddComponent(mouseComponent);
+	myMouseComponent = new CMouseComponent(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
+	mouseObject->AddComponent(myMouseComponent);
 
 
 

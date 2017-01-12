@@ -88,6 +88,7 @@ private:
 	CTextInstance* myGoldText;
 
 	//CGameObject* myCameraObject;
+	CMouseComponent* myMouseComponent;
 
 	int myLevelIndex;
 	std::atomic_bool  myIsLoaded;

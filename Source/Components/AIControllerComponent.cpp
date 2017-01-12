@@ -16,7 +16,7 @@ CAIControllerComponent::CAIControllerComponent()
 
 CAIControllerComponent::~CAIControllerComponent()
 {
-	myControllers.DeleteAll();
+	//myControllers.DeleteAll();
 }
 
 void CAIControllerComponent::AddControllerBehaviour(IController* aController)
