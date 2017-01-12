@@ -258,11 +258,6 @@ namespace CU
 			JSON_ERROR("json value is null");
 			return CJsonValue();
 		}
-		if (GetType() == eJsonType::JSON_NULL)
-		{
-			myValue->serialize(false);
-			myValue;
-		}
 		if (IsObject() == false)
 		{
 			eJsonType type = GetType();

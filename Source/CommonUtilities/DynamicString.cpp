@@ -104,6 +104,11 @@ DynamicString& DynamicString::operator=(const DynamicString& aString)
 
 DynamicString& DynamicString::operator=(const char* aLiteralString)
 {
+	if (aLiteralString == nullptr)
+	{
+		return self;
+	}
+
 	int size = CountLiteralStringLength(aLiteralString);
 
 	return CopyString(aLiteralString, size);
@@ -454,6 +459,11 @@ void DynamicString::PreprocessBoyerMoore(int aTable[], const int aTableSize, con
 
 int DynamicString::CountLiteralStringLength(const char* aLiteralString)
 {
+	if (aLiteralString == nullptr)
+	{
+		return FoundNone;
+	}
+
 	for (int length = 0; length < MaxAllowedStringSize; ++length)
 	{
 		if (aLiteralString[length] == '\0')
