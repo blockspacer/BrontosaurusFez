@@ -31,6 +31,7 @@
     <ClInclude Include="LoadCamera.h" />
     <ClInclude Include="LoadColliderComponent.h" />
     <ClInclude Include="LoadAIController.h" />
+    <ClInclude Include="LoadSkillSystemComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -60,6 +61,7 @@
     <ClCompile Include="LoadCamera.cpp" />
     <ClCompile Include="LoadColliderComponent.cpp" />
     <ClCompile Include="LoadAIController.cpp" />
+    <ClCompile Include="LoadSkillSystemComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="VS">

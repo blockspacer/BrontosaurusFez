@@ -25,6 +25,7 @@ int LoadSeekController(KLoader::SLoadedComponentData someData)
 	
 	//set stuff
 
+	seek->SetAggroRange(someData.myData.at("AggroRange").GetFloat());
 	seek->SetMaxAcceleration(someData.myData.at("MaxAcceleration").GetFloat());
 	seek->SetMaxSpeed(someData.myData.at("MaxSpeed").GetFloat());
 	seek->SetSlowDownRadius(someData.myData.at("SlowDownRadius").GetFloat());
