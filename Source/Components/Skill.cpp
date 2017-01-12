@@ -179,6 +179,7 @@ void Skill::SweepAttackUpdate(float aDeltaTime)
 void Skill::SetTargetPosition(CU::Vector3f aTargetPosition)
 {	
 	myTargetPosition = aTargetPosition;
+	myTargetObject = nullptr;
 }
 void Skill::SetTargetObject(CGameObject* aTargetObject)
 {
@@ -213,6 +214,7 @@ void Skill::Select()
 	if(myElapsedCoolDownTime >= mySkillData->coolDown)
 	{
 		myIsSelected = true;
+		myTargetObject = nullptr;
 		if(mySkillData->isChannel == true)
 		{
 			Activate();

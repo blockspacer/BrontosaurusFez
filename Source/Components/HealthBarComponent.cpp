@@ -49,7 +49,7 @@ void CHealthBarComponent::UpdateSprite(char aPercentHP)
 void CHealthBarComponent::Update()
 {
 
-	CU::Vector3f cameraPos = myPlayerCamera->GetTransformation().GetPosition();
+	/*CU::Vector3f cameraPos = myPlayerCamera->GetTransformation().GetPosition();
 	CU::Vector3f unitPos = GetParent()->GetWorldPosition();
 
 
@@ -65,7 +65,52 @@ void CHealthBarComponent::Update()
 	CU::Vector2f displacementVector = { 0.025f, 0.1f };
 
 	mySprite->SetPosition(hpBarPos - displacementVector);
-	myBGSprite->SetPosition(mySprite->GetPosition());
+	myBGSprite->SetPosition(mySprite->GetPosition());*/
+
+	CU::Vector4f objectPosition(GetParent()->GetToWorldTransform().GetPosition());
+
+	const CU::Vector4f cameraSpacePosition = objectPosition * myPlayerCamera->GetTransformation().GetInverted();
+
+	const CU::Vector4f projectionSpaceCubePos = cameraSpacePosition *  myPlayerCamera->GetProjection();
+
+	const CU::Vector4f position3D = projectionSpaceCubePos / projectionSpaceCubePos.w;
+
+	const CU::Vector2f projectionSpacePos(position3D.x, position3D.y);
+
+	CU::Vector2<float> temp;
+
+	if (cameraSpacePosition.z <= 0)
+	{
+		temp = -projectionSpacePos;
+		//if (myPosition.Length() < 1)
+		{
+			temp = temp.GetNormalized() * 0.95f;
+		}
+	}
+	else
+	{
+		temp = projectionSpacePos;
+		if (temp.Length() > 1)
+		{
+			temp = temp.GetNormalized() * 0.95f;
+		}
+	}
+
+	if (temp.Length() > 1)
+	{
+		int apa = 1;
+	}
+
+	temp.x = CLAMP(temp.x, -1.f, 1.f);
+	temp.y = CLAMP(temp.y, -1.f, 1.f);
+
+	temp.x = temp.x / 2.0f + 0.5f;
+	temp.y = -temp.y / 2.0f + 0.5f;
+
+	temp -= CU::Vector2f(0.025f, 0.1f);
+
+	mySprite->SetPosition(temp);
+	myBGSprite->SetPosition(temp);
 }
 
 void CHealthBarComponent::Render() // Create manager that renders everything, mebe bebe.
