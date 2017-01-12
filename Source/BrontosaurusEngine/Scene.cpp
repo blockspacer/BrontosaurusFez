@@ -190,26 +190,28 @@ void CScene::Render()
 		fireEmitter.Render();
 	}
 
-	//statemsg.myBlendState = eBlendState::eAlphaBlend;
-	//statemsg.myRasterizerState = eRasterizerState::eDefault;
-	//statemsg.myDepthStencilState = eDepthStencilState::eReadOnly;
-	//statemsg.mySamplerState = eSamplerState::eClamp;
+	statemsg.myBlendState = eBlendState::eAlphaBlend;
+	statemsg.myRasterizerState = eRasterizerState::eDefault;
+	statemsg.myDepthStencilState = eDepthStencilState::eReadOnly;
+	statemsg.mySamplerState = eSamplerState::eClamp;
 
-	//RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
+	RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
 
-	//for (unsigned int i = 0; i < myParticleEmitters.Size(); ++i)
-	//{
-	//	/*if (myParticleEmitters[i]->IsVisible() == false)
-	//	{
-	//		continue;
-	//	}*/
+	for (unsigned int i = 0; i < myParticleEmitters.Size(); ++i)
+	{
+		/*if (myParticleEmitters[i]->IsVisible() == false)
+		{
+			continue;
+		}*/
 
-	//	myParticleEmitters[i]->Render(GetCamera(eCameraType::ePlayerOneCamera));
-	//}
+		myParticleEmitters[i]->Render(GetCamera(eCameraType::ePlayerOneCamera));
+	}
 
-	SRenderToIntermediate * interMSG = new SRenderToIntermediate();
-	interMSG->myRenderPackage = myShadowCamera.GetRenderPackage();
-	RENDERER.AddRenderMessage(interMSG);
+	//SRenderToIntermediate * interMSG = new SRenderToIntermediate();
+	//interMSG->myRect = { 0.5f, 0.5f, 0.0f, 0.0f };
+	//interMSG->useDepthResource = false;
+	//interMSG->myRenderPackage = myShadowCamera.GetRenderPackage();
+	//RENDERER.AddRenderMessage(interMSG);
 }
 
 InstanceID CScene::AddModelInstance(CModelInstance* aModelInstance)
