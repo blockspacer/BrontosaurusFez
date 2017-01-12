@@ -148,6 +148,7 @@ void QM::CQuestManager::SendUpdateMessage()
 QM::EventHandle QM::CQuestManager::AddObjective(SObjective anObjective)
 {
 	const EventHandle handle = myObjectives.Size();
+	myObjectiveHandles[anObjective.myName] = handle;
 	myObjectives.Add(anObjective);
 	return handle;
 }

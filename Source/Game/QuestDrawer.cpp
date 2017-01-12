@@ -6,11 +6,18 @@
 #include "DynamicString.h"
 #include "vector2.h"
 #include "PostMaster/PostMaster.h"
+#include "TextInstance.h"
 
 
 QM::CQuestDrawer::CQuestDrawer()
 {
 	myTextBox.SetPosition(CU::Vector2f(0.f, 0.2f));
+
+	myQuestCompleteText = new CTextInstance;
+	myQuestCompleteText->Init();
+	myQuestCompleteText->SetPosition(CU::Vector2f(0.f, 0.8f));
+	myQuestCompleteText->SetText("press enter to complete quest :)");
+
 	PostMaster::GetInstance().Subscribe(this, eMessageType::QuestRelated);
 	UpdateText();
 }
@@ -59,6 +66,11 @@ void QM::CQuestDrawer::UpdateText()
 void QM::CQuestDrawer::Render()
 {
 	myTextBox.Render();
+
+	if (QM::CQuestManager::GetInstance().CheckIfQuestComplete())
+	{
+		myQuestCompleteText->Render();
+	}
 }
 
 eMessageReturn QM::CQuestDrawer::Recieve(const Message& aMessage)
