@@ -99,6 +99,8 @@ struct SRenderToIntermediate : SRenderMessage
 {
 	SRenderToIntermediate();
 	CRenderPackage myRenderPackage;
+	CU::Vector4f myRect;
+	bool useDepthResource;
 };
 
 struct SRenderCameraQueueMessage : SRenderMessage

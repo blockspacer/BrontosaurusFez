@@ -87,8 +87,10 @@ SActivateRenderPackageMessage::SActivateRenderPackageMessage()
 }
 
 SRenderToIntermediate::SRenderToIntermediate()
-	:SRenderMessage(SRenderMessage::eRenderMessageType::eRenderToInterediate)
+	: SRenderMessage(SRenderMessage::eRenderMessageType::eRenderToInterediate),
+	useDepthResource(0)
 {
+	myRect = CU::Vector4f::Zero;
 }
 
 SSetShadowBuffer::SSetShadowBuffer()
