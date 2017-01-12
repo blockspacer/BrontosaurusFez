@@ -72,8 +72,8 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 		break;
 	case eComponentMessageType::eTakeDamage:
 		SetHealth(myHealth - aMessageData.myInt);
-		break;
-	default:
+		SComponentMessageData data; data.myUChar = myPercentageLeft * 100;
+		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data);
 		break;
 	}
 }
