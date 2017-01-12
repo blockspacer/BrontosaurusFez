@@ -1,6 +1,4 @@
 #pragma once
-//#include <vector3.h>
-//#include <vector4.h>
 #include "../CommonUtilities/vector3.h"
 #include "../CommonUtilities/vector4.h"
 
