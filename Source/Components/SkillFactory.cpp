@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "SkillFactory.h"
 #include "Skill.h"
-#include "SkillData.h"
 
 #include <iostream>
 
@@ -40,7 +39,7 @@ void SkillFactory::DestroyInstance()
 	SAFE_DELETE(ourInstance);
 }
 
-Skill * SkillFactory::CreateSkill(const char * aSkillName)
+Skill * SkillFactory::CreateSkill(SkillData::SkillName aSkillName)
 {
 	for(unsigned short i=0; i < mySkillDataList.Size(); i++)
 	{
@@ -52,7 +51,7 @@ Skill * SkillFactory::CreateSkill(const char * aSkillName)
 		}
 	}
 
-	DL_ASSERT("Skill Factory couldn't find a SkillData with that name. Check spelling and/or yell at Marcus.");
+	DL_ASSERT("Skill Factory couldn't find a SkillData with that name. Check spelling and/or yell at Marcus and maybe Alex.");
 	return nullptr;
 	/*Skill* newSkill = new Skill;
 	if(aSkillName == "BasicAttack")

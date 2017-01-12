@@ -9,6 +9,8 @@ public:
 	void Update(float aDeltaTime);
 	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
 	void Destroy() override;
+
+	void SetMovementSpeed(const float aMovementspeed);
 private:
 	float myMovementSpeed;
 	CU::GrowingArray<CU::Vector3f>* myPathPointer;

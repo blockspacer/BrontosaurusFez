@@ -151,6 +151,11 @@ float CU::CPJWrapper::GetFloat() const
 	return static_cast<float>(GetNumber());
 }
 
+int CU::CPJWrapper::GetInt() const
+{
+	return static_cast<int>(GetNumber());
+}
+
 unsigned int CU::CPJWrapper::GetUInt() const
 {
 	return static_cast<unsigned int>(GetNumber());
@@ -161,7 +166,7 @@ bool CU::CPJWrapper::IsString() const
 	return myValue.is<std::string>();
 }
 
-std::string CU::CPJWrapper::GetString()
+std::string& CU::CPJWrapper::GetString()
 {
 	if (IsString() == false)
 	{
@@ -171,7 +176,7 @@ std::string CU::CPJWrapper::GetString()
 	return  myValue.get<std::string>();
 }
 
-std::string CU::CPJWrapper::GetString() const
+const std::string& CU::CPJWrapper::GetString() const
 {
 	if (IsString() == false)
 	{
@@ -193,7 +198,7 @@ CU::CPJWrapper CU::CPJWrapper::operator[](const int anIndex)
 		DL_ASSERT("pico json value is not an array");
 	}
 
-	const picojson::array tempArray = myValue.get<picojson::array>();
+	const picojson::array& tempArray = myValue.get<picojson::array>();
 
 	if (anIndex >= tempArray.size() || anIndex < 0)
 	{
@@ -210,7 +215,7 @@ CU::CPJWrapper CU::CPJWrapper::operator[](const int anIndex) const
 		DL_ASSERT("pico json value is not an array");
 	}
 
-	const picojson::array tempArray = myValue.get<picojson::array>();
+	const picojson::array& tempArray = myValue.get<picojson::array>();
 
 	if (anIndex >= tempArray.size() || anIndex < 0)
 	{
@@ -329,7 +334,7 @@ unsigned CU::CPJWrapper::count(std::string aKey) const
 	return myValue.get<picojson::object>().count(aKey);
 }
 
-CU::CPJWrapper::CPJWrapper(picojson::value aValue)
+CU::CPJWrapper::CPJWrapper(const picojson::value& aValue)
 {
 	myValue = aValue;
 }

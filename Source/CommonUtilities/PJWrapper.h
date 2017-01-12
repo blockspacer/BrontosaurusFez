@@ -21,8 +21,7 @@ namespace CU
 	{
 	public:
 		CPJWrapper();
-		CPJWrapper(picojson::value aValue);
-		CPJWrapper(const eJsonType aType);
+		CPJWrapper(const picojson::value& aValue);
 		~CPJWrapper();
 
 		bool Parse(std::string afilePath, std::string* anErrorString = nullptr);
@@ -38,10 +37,12 @@ namespace CU
 		double GetNumber();
 		double GetNumber() const;
 		float GetFloat() const;
+		int GetInt() const;
 		unsigned int GetUInt() const;
+
 		bool IsString() const;
-		std::string GetString();
-		std::string GetString() const;
+		std::string& GetString();
+		const std::string& GetString() const;
 		bool IsArray() const;
 		CPJWrapper operator[](const int anIndex);
 		CPJWrapper operator[](const int anIndex) const;

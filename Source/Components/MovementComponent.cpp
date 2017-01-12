@@ -86,3 +86,8 @@ void MovementComponent::Receive(const eComponentMessageType aMessageType, const 
 void MovementComponent::Destroy()
 {
 }
+
+void MovementComponent::SetMovementSpeed(const float aMovementspeed)
+{
+	myMovementSpeed = aMovementspeed;
+}

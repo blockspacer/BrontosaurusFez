@@ -10,6 +10,7 @@
 #include "..\BrontosaurusEngine\ModelInstance.h"
 #include "../BrontosaurusEngine/Console.h"
 #include "../Components/InputController.h"
+#include "Game/HatShopState.h"
 
 //temp
 #include "Components\HealthComponent.h"
@@ -58,6 +59,9 @@ eMessageReturn KeyPressed::DoEvent(CPlayState* aPlayState) const
 	{
 		switch (myKey)
 		{
+		case CU::eKeys::S:
+			aPlayState->BuyHats();
+			break;
 		case CU::eKeys::F7:
 			aPlayState->NextLevel();
 			break;
@@ -166,5 +170,18 @@ eMessageReturn KeyPressed::DoEvent(CRenderer* aRenderer) const
 		break;
 	}
 
+	return eMessageReturn::eContinue;
+}
+
+eMessageReturn KeyPressed::DoEvent(HatShopState * aHatShop) const
+{
+	int br = 0;
+	br++;
+	switch (myKey)
+	{
+	case CU::eKeys::ESCAPE:
+		aHatShop->CloseShop();
+		break;
+	}
 	return eMessageReturn::eContinue;
 }

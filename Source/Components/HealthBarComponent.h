@@ -22,6 +22,7 @@ private:
 	const CU::Camera* myPlayerCamera;
 	CSpriteInstance* mySprite;
 	CSpriteInstance* myBGSprite;
+	const CU::Vector2f myBarSize;
 	bool myHasAppeared;
 	bool myShouldBeDeleted;
 };

@@ -3,11 +3,11 @@
 #include "Camera.h"
 #include "../BrontosaurusEngine/Engine.h"
 
-CHealthBarComponent::CHealthBarComponent()
-{					
-	myType = eComponentType::eHealthBar;									 // POS, get npc
-	mySprite = new CSpriteInstance("Sprites/healthBar.dds", { 0.06f, 0.01f }, { 0.5f, 0.5f }, { 0.f, 0.f ,1.f, 1.f }, { 1.f, 0.f, 0.f, 0.f });
-	myBGSprite = new CSpriteInstance("Sprites/healthBar.dds", { 0.063f, 0.01f }, { 0.5f, 0.5f }, { 0.f, 0.f ,0.8f, 1.f }, { 0.1f, 0.1f, 0.1f, 0.f });
+CHealthBarComponent::CHealthBarComponent() : myBarSize(0.06f,0.01f)
+{		
+	myType = eComponentType::eHealthBar;
+	mySprite = new CSpriteInstance("Sprites/healthBar.dds", myBarSize,   { 0.5f, 0.5f }, { 0.f, 0.f ,1.0f, 1.f }, { 1.f, 0.f, 0.f, 0.f });
+	myBGSprite = new CSpriteInstance("Sprites/healthBar.dds", myBarSize, { 0.5f, 0.5f }, { 0.f, 0.f ,0.8f, 1.f }, { 0.1f, 0.1f, 0.1f, 0.f });
 	myHasAppeared = false;
 	myShouldBeDeleted = false;
 }
@@ -25,10 +25,9 @@ void CHealthBarComponent::Receive(const eComponentMessageType aMessageType, cons
 	case eComponentMessageType::eDied:
 		Destroy();
 		break;
-	case eComponentMessageType::eTakeDamage:
+	case eComponentMessageType::ePercentHPLeft:
 		UpdateSprite(aMessageData.myUChar); //msgData
 		break;
-
 	}
 }
 
@@ -42,9 +41,9 @@ void CHealthBarComponent::UpdateSprite(char aPercentHP)
 	}
 
 
-	CU::Vector4f rect = mySprite->GetRect();
-	//rect.z -= 0.1;
-	//mySprite->SetRect(rect);
+	CU::Vector2f size = myBarSize;
+	size.x *= ((float)aPercentHP / 100.f);
+	mySprite->SetSize(size);
 }
 
 void CHealthBarComponent::Update()

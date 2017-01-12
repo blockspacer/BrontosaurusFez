@@ -23,6 +23,9 @@ public:
 	inline void SetColor(const CU::Vector4f& aColor);
 	inline const CU::Vector4f& GetColor() const;
 
+	inline void SetSize(const CU::Vector2f& aSize);
+	inline const CU::Vector2f& GetSize() const;
+
 	CU::Vector2f GetTextureSize() const;
 
 
@@ -63,4 +66,14 @@ inline void CSpriteInstance::SetColor(const CU::Vector4f& aColor)
 inline const CU::Vector4f& CSpriteInstance::GetColor() const
 {
 	return myColor;
+}
+
+inline void CSpriteInstance::SetSize(const CU::Vector2f& aSize)
+{
+	mySize = aSize;
+}
+
+inline const CU::Vector2f& CSpriteInstance::GetSize() const
+{
+	return mySize;
 }
