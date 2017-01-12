@@ -662,6 +662,7 @@ void* CFBXLoader::LoadModelInternal(CLoaderModel* someInput)
 		aiMesh* fbxMesh = scene->mMeshes[n];
 
 		DetermineAndLoadVerticies(fbxMesh, mesh);
+		DetermineBoxCollider(fbxMesh->mVertices, fbxMesh->mNumVertices, *mesh);
 
 		for (unsigned int i = 0; i < fbxMesh->mNumFaces; i++)
 		{

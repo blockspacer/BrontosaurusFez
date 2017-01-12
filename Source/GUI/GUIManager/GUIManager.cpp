@@ -195,6 +195,8 @@ eMessageReturn GUI::GUIManager::MouseMoved(const CU::Vector2f& aMousePosition)
 
 	Widget* widget = myWidgetContainer->MouseIsOver(mousePosition);
 
+
+
 	if (widget == myWidgetAtMouse)
 	{
 		if (myWidgetAtMouse != nullptr && myWidgetAtMouse != myWidgetContainer)

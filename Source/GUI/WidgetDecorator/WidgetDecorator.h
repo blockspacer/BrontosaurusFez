@@ -19,10 +19,10 @@ namespace GUI
 		virtual void Update(const CU::Time& aDeltaTime) override;
 		virtual void Render();
 
-		virtual void OnMouseMove(const CU::Vector2f& aPosition) override;
-		virtual void OnMousePressed(const CU::Vector2f& aPosition, const CU::eMouseButtons aButton) override;
-		virtual void OnMouseDown(const CU::Vector2f& aPosition, const CU::eMouseButtons aButton) override;
-		virtual void OnMouseReleased(const CU::Vector2f& aPosition, const CU::eMouseButtons aButton) override;
+		virtual void OnMouseMove(const CU::Vector2f& aMousePosition) override;
+		virtual void OnMousePressed(const CU::Vector2f& aMousePosition, const CU::eMouseButtons aButton) override;
+		virtual void OnMouseDown(const CU::Vector2f& aMousePosition, const CU::eMouseButtons aButton) override;
+		virtual void OnMouseReleased(const CU::Vector2f& aMousePosition, const CU::eMouseButtons aButton) override;
 		virtual void OnMouseEnter(const CU::Vector2f& aMousePosition) override;
 		virtual void OnMouseExit(const CU::Vector2f& aMousePosition) override;
 
@@ -41,7 +41,7 @@ namespace GUI
 		virtual void OnMouseDrag(const CU::Vector2f& aDisplacement, const CU::eMouseButtons aButton) override;
 		virtual void OnGotFocus() override;
 		virtual void OnLostFocus() override;
-		//virtual Widget* MouseIsOver(const CU::Vector2f& aPosition) override;
+		virtual Widget* MouseIsOver(const CU::Vector2f& aPosition) override;
 		virtual void SetWorldPosition(const CU::Vector2f& aPosition) override;
 		virtual void SetLocalPosition(const CU::Vector2f& aPosition) override;
 		virtual void SetVisibilityRecursive(const bool aVisibility) override;

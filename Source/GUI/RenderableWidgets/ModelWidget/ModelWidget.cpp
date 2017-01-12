@@ -38,28 +38,6 @@ namespace GUI
 		AddDebugLines();
 	}
 
-	//ModelWidget::ModelWidget(CModelInstance* aModelInstance, const CU::DynamicString& aName)
-	//	: Widget(CU::Vector2f::Zero, CU::Vector2f::One, aName, true)
-	//	, myModelInstance(nullptr)
-	//	, myPixelConstantBufferStruct(nullptr)
-	//	, myMillisecondsLeftSinceMouseEnter(0.f)
-	//{
-	//	myModelInstance = aModelInstance;
-	//	myPixelConstantBufferStruct = new SPixelConstantBuffer();
-	//	myOriginalTransformation = aModelInstance->GetTransformation();
-
-	//	CU::Vector2f screenMinPosition;
-	//	
-	//	ConvertPosition3DTo2D(aModelInstance->GetModel()->GetBoundingBox().myMinPos, screenMinPosition);
-
-	//	CU::Vector2f screenMaxPosition;
-	//	ConvertPosition3DTo2D(aModelInstance->GetModel()->GetBoundingBox().myMaxPos, screenMaxPosition);
-
-	//	SetWorldPosition(CU::Vector2f(screenMinPosition.x, 1.f - screenMaxPosition.y));
-	//	SetSize(screenMaxPosition - screenMinPosition);
-	//	AddDebugLines();
-	//}
-
 	ModelWidget::~ModelWidget()
 	{
 		SAFE_DELETE(myModelInstance);

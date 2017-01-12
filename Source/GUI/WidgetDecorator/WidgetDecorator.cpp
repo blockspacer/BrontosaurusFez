@@ -114,10 +114,10 @@ namespace GUI
 		myDecoratedWidget->OnLostFocus();
 	}
 
-	//GUI::Widget* WidgetDecorator::MouseIsOver(const CU::Vector2f& aPosition)
-	//{
-	//	return myDecoratedWidget->MouseIsOver(aPosition);
-	//}
+	GUI::Widget* WidgetDecorator::MouseIsOver(const CU::Vector2f& aPosition)
+	{
+		return myDecoratedWidget->MouseIsOver(aPosition);
+	}
 
 	void WidgetDecorator::SetWorldPosition(const CU::Vector2f& aPosition)
 	{
