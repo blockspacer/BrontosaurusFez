@@ -93,11 +93,10 @@ namespace GUI
 
 	void ModelWidget::OnPositionChanged(const CU::Vector2f aDisplacement)
 	{
-		if (locGUICamera == nullptr)
+		if (locGUICamera == nullptr || GetSize() == CU::Vector2f::One)
 		{
 			return;
 		}
-
 
 		CU::Vector2f newPosition = GetLocalPosition();
 		CU::Vector2f oldPosition = newPosition - aDisplacement;
@@ -125,8 +124,8 @@ namespace GUI
 				targetPosition3D = locGUICamera->GetPosition() + direction * t;
 			}
 		}
-
-		myModelInstance->SetPosition(targetPosition3D);
+		CU::Vector3f modelPos = myModelInstance->GetTransformation().GetPosition();
+		myModelInstance->SetPosition(targetPosition3D + CU::Vector3f(myMaxPoint.x - myMinPoint.x, 0.f, myMaxPoint.z - myMinPoint.z) - modelPos);
 	}
 
 	void ModelWidget::Render()
