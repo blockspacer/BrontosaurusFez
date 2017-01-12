@@ -2,7 +2,14 @@
 #include "HealthPoint.h"
 struct SkillData
 {
-	const char* skillName;
+	enum class SkillName
+	{
+		BasicAttack,
+		SweepAttack,
+		WhirlWind
+	};
+
+	SkillName skillName;
 	float range;
 	float coolDown;
 	float activationRadius;

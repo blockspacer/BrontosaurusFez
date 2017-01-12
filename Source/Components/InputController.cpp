@@ -10,6 +10,7 @@
 #include "CameraManager.h"
 #include "../CommonUtilities/Camera.h"
 #include "../CommonUtilities/EKeyboardKeys.h"
+#include "SkillData.h"
 
 #include <iostream>
 
@@ -104,15 +105,15 @@ void InputController::Receive(const eComponentMessageType aMessageType, const SC
 {
 	if (aMessageType == eComponentMessageType::eAddSkill)
 	{
-		if(aMessageData.myString == "BasicAttack")
+		if(aMessageData.myInt == static_cast<int>(SkillData::SkillName::BasicAttack))
 		{
 			mySkillInputMessageActivators.Add(CU::eInputMessage::DIVIDE);
 		}
-		else if (aMessageData.myString == "WhirlWind")
+		else if (aMessageData.myInt == static_cast<int>(SkillData::SkillName::WhirlWind))
 		{
 			mySkillInputMessageActivators.Add(CU::eInputMessage::TWO);
 		}
-		else if (aMessageData.myString == "SweepAttack")
+		else if (aMessageData.myInt == static_cast<int>(SkillData::SkillName::SweepAttack))
 		{
 			mySkillInputMessageActivators.Add(CU::eInputMessage::ONE);
 		}
