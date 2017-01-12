@@ -9,6 +9,7 @@ CHealthBarComponent::CHealthBarComponent()
 	mySprite = new CSpriteInstance("Sprites/healthBar.dds", { 0.06f, 0.01f }, { 0.5f, 0.5f }, { 0.f, 0.f ,1.f, 1.f }, { 1.f, 0.f, 0.f, 0.f });
 	myBGSprite = new CSpriteInstance("Sprites/healthBar.dds", { 0.063f, 0.01f }, { 0.5f, 0.5f }, { 0.f, 0.f ,0.8f, 1.f }, { 0.1f, 0.1f, 0.1f, 0.f });
 	myHasAppeared = false;
+	myShouldBeDeleted = false;
 }
 
 CHealthBarComponent::~CHealthBarComponent()
@@ -37,9 +38,9 @@ void CHealthBarComponent::UpdateSprite(char aPercentHP)
 		mySprite->SetColor({ 1.f, 0.f, 0.f, 1.f });
 		myHasAppeared = true;
 	}
-	CU::Vector4f rect = mySprite->GetRect();
-	rect.z -= 0.1;
-	mySprite->SetRect(rect);
+	//CU::Vector4f rect = mySprite->GetRect();
+	//rect.z -= 0.1;
+	//mySprite->SetRect(rect);
 }
 
 void CHealthBarComponent::Update()
@@ -75,11 +76,9 @@ void CHealthBarComponent::Render() // Create manager that renders everything, me
 
 void CHealthBarComponent::Destroy()
 {
-	mySprite->~CSpriteInstance();
-	mySprite = nullptr;
-
-	myBGSprite->~CSpriteInstance();
-	myBGSprite = nullptr;
+	SAFE_DELETE(mySprite);
+	SAFE_DELETE(myBGSprite);
+	myShouldBeDeleted = true;
 }
 
 void CHealthBarComponent::SetCamera(const CU::Camera& aPlayerCamera)

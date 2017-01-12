@@ -7,8 +7,8 @@ namespace CU { class Camera; }
 class CHealthBarComponent : public CComponent
 {
 	friend class CHealthBarComponentManager;
-	//Because fuck public
 
+	//Because fuck public
 private:
 	CHealthBarComponent();
 	~CHealthBarComponent();
@@ -18,8 +18,10 @@ private:
 	void Render();
 	void Destroy();
 	void SetCamera(const CU::Camera& aPlayerCamera);
+	__forceinline bool ShouldBeDeleted() { return myShouldBeDeleted; }
 	const CU::Camera* myPlayerCamera;
 	CSpriteInstance* mySprite;
 	CSpriteInstance* myBGSprite;
 	bool myHasAppeared;
+	bool myShouldBeDeleted;
 };
