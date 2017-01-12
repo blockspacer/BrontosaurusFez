@@ -42,8 +42,8 @@
 
 #include "PlayerData.h"
 
-#include "Components\SkillFactory.h"
-#include "Components\SkillSystemComponentManager.h"
+#include "Components/SkillFactory.h"
+#include "Components/SkillSystemComponentManager.h"
 
 #include "FleeControllerManager.h"
 #include "SeekControllerManager.h"
@@ -61,18 +61,19 @@
 #include "Components/SeekController.h"
 #include "Components/FleeController.h"
 #include "KevinLoader/KevinLoader.h"
-#include "Components\CollisionComponentManager.h"
+#include "Components/CollisionComponentManager.h"
 #include "SkillComponentManager.h"
 #include "DropComponentManager.h"
 #include "../Collision/Intersection.h"
-#include "Components\CollisionComponent.h"
-#include "Components\CollisionComponentManager.h"
-#include "Collision\ICollider.h"
-#include "Components\DropComponent.h"
+#include "Components/CollisionComponent.h"
+#include "Components/InputController.h"
+#include "Components/MovementComponent.h"
+#include "Collision/ICollider.h"
+#include "Components/DropComponent.h"
 #include "SkillData.h"
-#include "SkillFactory.h"
+
 #include "Components/HealthBarComponentManager.h"
-#include "Components/CollisionComponentManager.h"
+#include "SkillSystemComponent.h"
 #include "ModelInstance.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
@@ -81,6 +82,7 @@
 
 #include "MouseComponent.h"
 #include "QuestManager.h"
+#include "NavigationComponent.h"
 
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
