@@ -61,6 +61,7 @@ public:
 	inline bool IsLoaded() const;
 
 	CGameObjectManager* GetObjectManager() const;
+	CHealthBarComponentManager* GetHealthBarManager();
 	CCollisionComponentManager* GetCollisionManager();
 
 	//TEMP - BELOW THIS LINE
@@ -87,6 +88,7 @@ private:
 	CTextInstance* myGoldText;
 
 	//CGameObject* myCameraObject;
+	CMouseComponent* myMouseComponent;
 
 	int myLevelIndex;
 	std::atomic_bool  myIsLoaded;

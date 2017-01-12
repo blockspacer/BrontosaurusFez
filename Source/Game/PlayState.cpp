@@ -90,12 +90,14 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 	, myLevelIndex(aLevelIndex)
 	, myShouldReturnToLevelSelect(aShouldReturnToLevelSelect)
 	, myScene(nullptr)
+	, myMouseComponent(nullptr)
 {
 	myIsLoaded = false;
 }
 
 CPlayState::~CPlayState()
 {
+	SAFE_DELETE(myMouseComponent);
 	SAFE_DELETE(myScene);
 	SAFE_DELETE(myGameObjectManager);
 	SAFE_DELETE(myGUIManager);
@@ -326,12 +328,12 @@ void CPlayState::Load()
 
 	//Loadingu like pingu
 
-	CU::CPJWrapper levelsFile;
-	const std::string errorString = levelsFile.Parse("Json/LevelList.json");
+	CU::CJsonValue levelsFile;
+	const std::string& errorString = levelsFile.Parse("Json/LevelList.json");
 
-	CU::CPJWrapper levelsArray = levelsFile.GetJsonObject().at("levels");
+	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
-#ifdef _DEBUG
+#ifdef _DEBUGkk
 	const int levelIndex = levelsArray.Size() - 1;
 #else
 	const int levelIndex = 0;
@@ -381,8 +383,8 @@ void CPlayState::Load()
 	mouseCollisionComponent->AddCollidsWith(eColliderType_Enemy | eColliderType_Player);
 	mouseCollisionComponent->SetColliderType(eColliderType_Mouse);
 	mouseObject->AddComponent(mouseCollisionComponent);
-	CMouseComponent* mouseComponent = new CMouseComponent(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
-	mouseObject->AddComponent(mouseComponent);
+	myMouseComponent = new CMouseComponent(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
+	mouseObject->AddComponent(myMouseComponent);
 
 
 
@@ -541,6 +543,11 @@ eMessageReturn CPlayState::Recieve(const Message& aMessage)
 CGameObjectManager* CPlayState::GetObjectManager() const
 {
 	return myGameObjectManager;
+}
+
+CHealthBarComponentManager * CPlayState::GetHealthBarManager()
+{
+	return myHealthBarManager;
 }
 
 CCollisionComponentManager* CPlayState::GetCollisionManager()

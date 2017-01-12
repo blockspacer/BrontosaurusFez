@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "KevinLoader.h"
 #include "../CommonUtilities/DL_Debug.h"
-#include "../CommonUtilities/PJWrapper.h"
+//#include "../CommonUtilities/PJWrapper.h"
 #include "../BrontosaurusEngine/Console.h"
 #include <fstream>
+#include <string>
 
 namespace KLoader
 {
@@ -63,7 +64,7 @@ namespace KLoader
 
 	eError CKevinLoader::LoadFile(const std::string& aFilePath)
 	{
-		CU::CPJWrapper wrapper;
+		CU::CJsonValue wrapper;
 		std::string mybeKeepThishshould = wrapper.Parse(aFilePath);
 
 		const eError loadObjectError = LoadObjects(wrapper);
@@ -81,7 +82,7 @@ namespace KLoader
 		return eError::NO_LOADER_ERROR;
 	}
 
-	void CKevinLoader::PrintMissingComponents(CU::DynamicString componentName)
+	void CKevinLoader::PrintMissingComponents(const std::string& aComponentName)
 	{
 #ifndef _RETAIL_BUILD
 		const char * fileName = "IMPORTANT_FOR_PROG_MISSING_COMPONENTS.txt";
@@ -98,10 +99,10 @@ namespace KLoader
 			missingComponetsFile.open(fileName, std::ofstream::app);
 		}
 
-		const CU::DynamicString outString = componentName + " ---> was not loded due to note beeing suported yet!!   poke a prog to fix or if prog, fix plz";
+		const std::string outString = aComponentName + " ---> was not loded due to note beeing suported yet!!   poke a prog to fix or if prog, fix plz";
 
 		DL_PRINT(outString.c_str());
-		missingComponetsFile << outString.c_str() << std::endl;
+		missingComponetsFile << outString << std::endl;
 		missingComponetsFile.close();
 #endif
 	}
@@ -117,60 +118,57 @@ namespace KLoader
 	{
 	}
 
-	int CKevinLoader::LoadComponent(const std::string& aIdString, const CU::CPJWrapper& aRoot)
+	int CKevinLoader::LoadComponent(const std::string& aIdString, const CU::CJsonValue& aRoot)
 	{
-		const CU::JsonObject rootObject = aRoot.GetJsonObject();
-		const CU::JsonObject componentsObject = rootObject.at("components").GetJsonObject();
+		//const CU::JsonObject rootObject = aRoot.GetJsonObject();
+		const CU::CJsonValue componentsObject = aRoot["components"];
 
-		if (componentsObject.count(aIdString) == 0)
+		if (componentsObject.HasKey(aIdString) == false)
 		{
 			return 0;
 		}
 
-		const CU::JsonObject currentComponent = componentsObject.at(aIdString).GetJsonObject();
-		const std::string type = currentComponent.at("type").GetString();
+		const CU::CJsonValue currentComponent = componentsObject[aIdString];
+		const std::string& type = currentComponent["type"].GetString();
 		if (myLoadFunctions.count(type) == 0)
 		{
-			PrintMissingComponents(type.c_str());
+			PrintMissingComponents(type);
 			return 0;
 		}
 
 		SLoadedComponentData componentData;
 
 		componentData.myTypeName = type;
-		componentData.myData = currentComponent.at("data").GetJsonObject();
+		componentData.myData = currentComponent["data"];
 
 		return myLoadFunctions[type](componentData);
 	}
 
-	eError CKevinLoader::LoadObjects(const CU::CPJWrapper& aRoot)
+	eError CKevinLoader::LoadObjects(const CU::CJsonValue& aRoot)
 	{
-		CU::JsonObject rootObject = aRoot.GetJsonObject();
+		//CU::JsonObject rootObject = aRoot.GetJsonObject();
 
-		if (rootObject.count("objects") == 0 || rootObject["objects"].IsArray() == false )
+		if (aRoot.HasKey("objects") == false || aRoot["objects"].IsArray() == false )
 		{
 			myError = "LevelData json document missing objects array";
 			return eError::MISSING_OBJECTS;
 		}
 
-		const CU::CPJWrapper& objectsArray = rootObject["objects"];
+		const CU::CJsonValue& objectsArray = aRoot["objects"];
 
 		for (int i = 0; i < objectsArray.Size(); ++i)
 		{
-			const CU::CPJWrapper currentObject= objectsArray[i];
+			CU::CJsonValue currentObject = objectsArray[i];
 			SLoadedComponentData componentData;
-			CU::JsonObject data;
 
-			componentData.myTypeName = currentObject.GetJsonObject()["name"].GetString();
+			componentData.myTypeName = currentObject["name"].GetString();
+			componentData.myData = currentObject;
+			//componentData.myData["name"] = currentObject["name"];
+			//componentData.myData["position"] = currentObject["position"];
+			//componentData.myData["rotation"] = currentObject["rotation"];
+			//componentData.myData["scale"] = currentObject["scale"];
 
-			data["name"] = currentObject.GetJsonObject()["name"];
-			data["position"] = currentObject.GetJsonObject()["position"];
-			data["rotation"] = currentObject.GetJsonObject()["rotation"];
-			data["scale"] = currentObject.GetJsonObject()["scale"];
-
-			componentData.myData = data;
-
-			const KId currentID = currentObject.GetJsonObject()["id"].GetInt() * -1;
+			const KId currentID = currentObject["id"].GetInt() * -1;
 
 			LinkObject currentLink;
 
@@ -179,9 +177,9 @@ namespace KLoader
 				currentLink = myLinkObjects[currentID];
 			}
 			
-			if (currentObject.GetJsonObject().count("parent") > 0)
+			if (currentObject.HasKey("parent") == true)
 			{
-				const CU::CPJWrapper parentIDObj = currentObject.GetJsonObject()["parent"];
+				const CU::CJsonValue parentIDObj = currentObject["parent"];
 				const KId parentId = parentIDObj.GetInt() * -1;
 				if (myLinkObjects.count(parentId) == 0)
 				{
@@ -198,10 +196,10 @@ namespace KLoader
 
 			 currentLink.myIndex = myObjectLoadFunction(componentData);
 
-			 const CU::CPJWrapper componentsArray = currentObject.GetJsonObject()["components"];
+			 const CU::CJsonValue componentsArray = currentObject["components"];
 			 for (int j = 0; j < componentsArray.Size(); ++j)
 			 {
-				 std::string IdString = componentsArray[j].GetString();
+				 const std::string& IdString = componentsArray[j].GetString();
 
 				 const int componentId = LoadComponent(IdString, aRoot);
 

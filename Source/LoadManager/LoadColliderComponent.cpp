@@ -20,9 +20,9 @@ int LoadCircleCollider(KLoader::SLoadedComponentData someData)
 	//collect json-data
 	float circleRadius = someData.myData.at("Radius").GetFloat();
 	unsigned int colliderType = someData.myData.at("ColliderType").GetUInt();
-	const CPJWrapper& collidesWithArray = someData.myData.at("CollidesWith");
+	const CJsonValue& collidesWithArray = someData.myData.at("CollidesWith");
 	unsigned int collidesWith = 0;
-	for (size_t i = 0; i < collidesWithArray.Size(); ++i)
+	for (int i = 0; i < collidesWithArray.Size(); ++i)
 	{
 		collidesWith |= collidesWithArray[i].GetUInt();
 	}
