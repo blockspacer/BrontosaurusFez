@@ -271,8 +271,6 @@ void CPlayState::Load()
 	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
 	cameraComponent->SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 
-	myHealthBarManager = new CHealthBarComponentManager(playerCamera);
-
 	//set camera position and rotation
 	CU::Matrix44f cameraTransformation = playerCamera.GetTransformation();
 	CU::Matrix44f newRotation;
@@ -542,6 +540,7 @@ void CPlayState::CreateManagersAndFactories()
 	SkillSystemComponentManager::GetInstance().SetCollisionComponentManager(myCollisionComponentManager);
 	SkillComponentManager::CreateInstance();
 	DropComponentManager::CreateInstance();
+	myHealthBarManager = new CHealthBarComponentManager(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 }
 
 void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)
