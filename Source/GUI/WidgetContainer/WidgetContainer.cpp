@@ -39,7 +39,7 @@ namespace GUI
 			{
 				Widget* removedWidget = it->second;
 				myWidgets.erase(it);
-				myOrderedWidgets.Remove(it->second);
+				myOrderedWidgets.Remove(removedWidget);
 				return removedWidget;
 			}
 		}
