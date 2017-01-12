@@ -111,11 +111,11 @@ void InputController::Receive(const eComponentMessageType aMessageType, const SC
 		}
 		else if (aMessageData.myInt == static_cast<int>(SkillData::SkillName::WhirlWind))
 		{
-			mySkillInputMessageActivators.Add(CU::eInputMessage::ONE);
+			mySkillInputMessageActivators.Add(CU::eInputMessage::TWO);
 		}
 		else if (aMessageData.myInt == static_cast<int>(SkillData::SkillName::SweepAttack))
 		{
-			mySkillInputMessageActivators.Add(CU::eInputMessage::TWO);
+			mySkillInputMessageActivators.Add(CU::eInputMessage::ONE);
 		}
 		else
 		{
