@@ -9,6 +9,7 @@
 #include <BarWidget/BarWidget.h>
 #include <WidgetDecorator/TextWidget/TextWidget.h>
 #include "Button/ButtonAnimation.h"
+#include "ToolTipDecorator.h"
 
 #include "../BrontosaurusEngine/FBXLoader.h"
 #include "../BrontosaurusEngine/Engine.h"
@@ -79,7 +80,10 @@ namespace GUI
 		CLoaderModel* loaderMOdel = loader.LoadModel("Models/gui/knapp01.fbx");
 		Widget* widget = new ModelWidget(loaderMOdel->myMeshes.at(0), aLoaderScene->myTextures, *guiCamera);
 
-		//widget = new CToolTipDecorator(widget, tooltipText);
+		CLoaderModel* loaderMOdel2 = loader.LoadModel("Models/gui/guiTooltip.fbx");
+		ModelWidget* backgroundModel = new ModelWidget(loaderMOdel2->myMeshes.at(0), aLoaderScene->myTextures, *guiCamera);
+		std::string tooltipText = "hey im a tooltip";
+		widget = new CToolTipDecorator(widget, backgroundModel, tooltipText);
 
 		if (widget != nullptr)
 		{

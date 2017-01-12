@@ -19,6 +19,7 @@
     <ClInclude Include="GUICursor\GUICursor.h" />
     <ClInclude Include="BarWidget\BarWidget.h" />
     <ClInclude Include="Button\ButtonAnimation.h" />
+    <ClInclude Include="ToolTipDecorator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -37,5 +38,6 @@
     <ClCompile Include="GUICursor\GUICursor.cpp" />
     <ClCompile Include="BarWidget\BarWidget.cpp" />
     <ClCompile Include="Button\ButtonAnimation.cpp" />
+    <ClCompile Include="ToolTipDecorator.cpp" />
   </ItemGroup>
 </Project>

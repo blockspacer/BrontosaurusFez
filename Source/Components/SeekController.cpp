@@ -21,6 +21,11 @@ CSeekController::~CSeekController()
 
 const CU::Vector2f CSeekController::Update(const CU::Time& aDeltaTime)
 {
+	if (PollingStation::playerObject == nullptr)
+	{
+		return CU::Vector2f::Zero;
+	}
+
 	myTarget = CU::Vector2f(PollingStation::playerObject->GetWorldPosition().x, PollingStation::playerObject->GetWorldPosition().z);
 	CU::Vector2f position = CU::Vector2f(myController->GetParent()->GetWorldPosition().x, myController->GetParent()->GetWorldPosition().z);
 	CU::Vector2f targetVelocity = CU::Vector2f::Zero;

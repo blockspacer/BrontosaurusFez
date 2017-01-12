@@ -33,20 +33,21 @@ namespace GUI
 		virtual void Update(const CU::Time& aDeltaTime) { SUPRESS_UNUSED_WARNING(aDeltaTime); }
 		virtual void Render() {}
 
-		virtual void OnMouseMove(const CU::Vector2f& aPosition) { SUPRESS_UNUSED_WARNING(aPosition); }
+		virtual void OnMouseMove(const CU::Vector2f& aMousePosition) { SUPRESS_UNUSED_WARNING(aMousePosition); }
 		virtual void OnMouseDrag(const CU::Vector2f& aDisplacement, const CU::eMouseButtons aButton) { SUPRESS_UNUSED_WARNING(aDisplacement); SUPRESS_UNUSED_WARNING(aButton); }
-		virtual void OnMousePressed(const CU::Vector2f& aPosition, const CU::eMouseButtons aButton) { SUPRESS_UNUSED_WARNING(aPosition); SUPRESS_UNUSED_WARNING(aButton); }
-		virtual void OnMouseDown(const CU::Vector2f& aPosition, const CU::eMouseButtons aButton) { SUPRESS_UNUSED_WARNING(aPosition); SUPRESS_UNUSED_WARNING(aButton); }
-		virtual void OnMouseReleased(const CU::Vector2f& aPosition, const CU::eMouseButtons aButton) { SUPRESS_UNUSED_WARNING(aPosition); SUPRESS_UNUSED_WARNING(aButton); }
+		virtual void OnMousePressed(const CU::Vector2f& aMousePosition, const CU::eMouseButtons aButton) { SUPRESS_UNUSED_WARNING(aMousePosition); SUPRESS_UNUSED_WARNING(aButton); }
+		virtual void OnMouseDown(const CU::Vector2f& aMousePosition, const CU::eMouseButtons aButton) { SUPRESS_UNUSED_WARNING(aMousePosition); SUPRESS_UNUSED_WARNING(aButton); }
+		virtual void OnMouseReleased(const CU::Vector2f& aMousePosition, const CU::eMouseButtons aButton) { SUPRESS_UNUSED_WARNING(aMousePosition); SUPRESS_UNUSED_WARNING(aButton); }
 		virtual void OnMouseEnter(const CU::Vector2f& aMousePosition) { SUPRESS_UNUSED_WARNING(aMousePosition); }
 		virtual void OnMouseExit(const CU::Vector2f& aMousePosition) { SUPRESS_UNUSED_WARNING(aMousePosition); }
 		virtual void OnGotFocus() {}
 		virtual void OnLostFocus() {}
 
 		virtual Widget* FindWidget(const CU::DynamicString& aWidgetName);
-		virtual Widget* MouseIsOver(const CU::Vector2f& aPosition);
+		virtual Widget* MouseIsOver(const CU::Vector2f& aMousePosition);
 
 		virtual void OnPositionChanged() {}
+		virtual void OnPositionChanged(const CU::Vector2f aDisplaceMent) { SUPRESS_UNUSED_WARNING(aDisplaceMent); }
 
 		virtual void SetWorldPosition(const CU::Vector2f& aPosition);
 		virtual void SetLocalPosition(const CU::Vector2f& aPosition);

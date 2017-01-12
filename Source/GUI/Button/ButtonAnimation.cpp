@@ -9,8 +9,8 @@ namespace GUI
 
 	ButtonAnimation::ButtonAnimation(Widget* aModelWidget)
 		: WidgetDecorator(aModelWidget, aModelWidget->GetLocalPosition(), aModelWidget->GetSize(), aModelWidget->GetName() + "_ButtonAnimation", aModelWidget->IsVisible())
-		, myAnimationIsDoneCallback(nullptr)
 		, myAnimationState(eAnimationState::eInActive)
+		, myAnimationIsDoneCallback(nullptr)
 		, myAnimationTimer(nullptr)
 		, myResetPosition(0.f)
 	{

@@ -55,6 +55,8 @@ void GUI::GUIManager::Init(const char* aGUIScenePath)
 {
 	myWidgetContainer = WidgetFactory::CreateGUIScene(aGUIScenePath, myCamera);
 
+	myWidgetContainer->MoveToFront("");
+
 	myCursor = new GUICursor();
 	PostMaster::GetInstance().Subscribe(myCursor, eMessageType::eMouseMessage, 6);
 }
@@ -72,7 +74,7 @@ void GUI::GUIManager::Update(const CU::Time& aDeltaTime)
 void GUI::GUIManager::Render()
 {
 	SChangeStatesMessage* changeStateMessage = new SChangeStatesMessage();
-	changeStateMessage->myDepthStencilState = eDepthStencilState::eDefault; //if mouse is under buttons, this is the problem
+	changeStateMessage->myDepthStencilState = eDepthStencilState::eDisableDepth; //if mouse is under buttons, this is the problem
 	changeStateMessage->myRasterizerState = eRasterizerState::eDefault;
 	changeStateMessage->myBlendState = eBlendState::eAlphaBlend;
 	changeStateMessage->mySamplerState = eSamplerState::eClamp;
@@ -194,6 +196,8 @@ eMessageReturn GUI::GUIManager::MouseMoved(const CU::Vector2f& aMousePosition)
 	CU::Vector2f mousePosition = myCursor->GetPosition();
 
 	Widget* widget = myWidgetContainer->MouseIsOver(mousePosition);
+
+
 
 	if (widget == myWidgetAtMouse)
 	{
