@@ -21,7 +21,7 @@ CU::Matrix44f CGameObject::GetToWorldTransform()
 }
 CU::Vector3f CGameObject::GetWorldPosition()
 {
-	if (GetParent() != nullptr)
+	if (myParent != nullptr)
 	{
 		return GetLocalTransform().GetPosition() + GetParent()->GetWorldPosition();
 	}
@@ -34,7 +34,7 @@ CU::Vector3f CGameObject::GetWorldPosition()
 void CGameObject::SetWorldPosition(CU::Vector3f aPosition)
 {
 	if (GetParent() != nullptr)
-	{				// Kanske fuckar, men tror det är lugnt.
+	{
 		GetParent()->SetWorldPosition(GetLocalTransform().GetPosition() + aPosition);
 	}
 	else
@@ -88,6 +88,7 @@ void CGameObject::Receive(const eComponentMessageType aMessageType, const SCompo
 
 CGameObject::CGameObject(CGameObjectManager &aManager) : myTransformId(0), myManager(aManager)
 {
+	myType = eComponentType::eGameObject;
 	myComponents.Init(4);
 }
 

@@ -268,8 +268,6 @@ void CPlayState::Load()
 	playerCollisionComponent->SetColliderType(eColliderType_Player);
 	myPlayerObject->AddComponent(playerCollisionComponent);
 
-	myHealthBarManager = new CHealthBarComponentManager();
-
 	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
 	cameraComponent->SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 
@@ -331,7 +329,7 @@ void CPlayState::Load()
 	//----CreateEnemies----
 	myEnemies.Init(8);
 	TEMP_CREATE_ENEMY();
-	myEnemies[0]->SetWorldPosition({ 0.f, 0.f, 0.f });
+	myEnemies[0]->SetWorldPosition({ -300.f, 0.f, -400.f });
 	TEMP_CREATE_ENEMY();
 	myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
 	TEMP_CREATE_ENEMY();
@@ -417,6 +415,8 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 
 	SkillComponentManager::GetInstance().Update(aDeltaTime);
 	DropComponentManager::GetInstance().Update(aDeltaTime);
+
+	myHealthBarManager->Update();
 
 	return myStatus;
 }
@@ -540,6 +540,7 @@ void CPlayState::CreateManagersAndFactories()
 	SkillSystemComponentManager::GetInstance().SetCollisionComponentManager(myCollisionComponentManager);
 	SkillComponentManager::CreateInstance();
 	DropComponentManager::CreateInstance();
+	myHealthBarManager = new CHealthBarComponentManager(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 }
 
 void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)
@@ -654,7 +655,7 @@ void CPlayState::TEMP_CREATE_ENEMY()
 	enemyObj->AddComponent(DropComponentManager::GetInstance().CreateAndRegisterComponent());
 
 	CHealthBarComponent* healthBar = myHealthBarManager->CreateHealthbar();
-	enemyObj->AddComponent(healthBar);
+	enemyObj->AddComponent(&*healthBar);
 
 	SkillSystemComponent* tempSkillSystemComponent = new SkillSystemComponent;
 	SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);

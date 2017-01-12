@@ -9,10 +9,12 @@ enum class eComponentMessageType;
 
 enum class eComponentType
 {
+	eGameObject,
 	eModel,
 	eDebugSphere,
 	eCamera,
 	eInventory,
+	eHealthBar,
 	eMainStat,
 	eStat,
 	eNone,
