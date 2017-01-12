@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "HealthBarComponentManager.h"
+#include "Camera.h"
 
-CHealthBarComponentManager::CHealthBarComponentManager()
+CHealthBarComponentManager::CHealthBarComponentManager(const CU::Camera& aCamera) : myPlayerCamera(aCamera)
 {
 	myHealthbars.Init(64);
 }
@@ -18,6 +19,7 @@ CHealthBarComponent* CHealthBarComponentManager::GetHealthBarAt(short aIndex)
 CHealthBarComponent* CHealthBarComponentManager::CreateHealthbar()
 {
 	myHealthbars.Add(new CHealthBarComponent());
+	myHealthbars.GetLast()->SetCamera(myPlayerCamera);
 	return myHealthbars.GetLast();
 }
 
