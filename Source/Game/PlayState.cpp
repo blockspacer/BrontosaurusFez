@@ -524,6 +524,11 @@ void CPlayState::Pause()
 	PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PushState(PushState::eState::ePauseScreen, -1)));
 }
 
+void CPlayState::BuyHats()
+{
+	PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PushState(PushState::eState::eHatShop, -1)));
+}
+
 void CPlayState::NextLevel()
 {
 	if (myShouldReturnToLevelSelect == true)

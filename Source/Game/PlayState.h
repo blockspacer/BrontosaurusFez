@@ -51,6 +51,7 @@ public:
 	void OnEnter() override;
 	void OnExit() override;
 	void Pause();
+	void BuyHats();
 
 	void NextLevel();
 
