@@ -1,6 +1,6 @@
 #pragma once
 #include "Event.h"
-#include "PostMaster/Subscriber.h"
+#include "../PostMaster/Subscriber.h"
 #include <map>
 #include "Queue.h"
 
@@ -15,22 +15,31 @@ namespace QM
 
 		void UpdateObjective(EventHandle anObjectiveHandle, int anAmmount = 1);
 		bool CheckIfQuestComplete()const;
-		void CompleteEvent(EventHandle anObjectiveHandle);
+		void CompleteEvent();
 
-		EventHandle AddEvent(const SObjective& anObjective);
-		EventHandle AddEvent(SQuest anQuest);
+		void AddEvent(const eEventType anEventType, const EventHandle anEventHandle);
+		void AddEvent(const SEvent &anEvent);
 
-		SQuest GetCurrentObjectives() const;
+		SQuest GetCurrentQuest() const;
 
 		eMessageReturn Recieve(const Message& aMessage)override;
+
+		EventHandle AddObjective(SObjective anObjective);
+		EventHandle AddQuest(SQuest anObjective);
+		SObjective GetObjective(const int aObjective);
+
+		EventHandle GetObjectiveHandle(std::string anObjectiveName);
+
+		bool LoadQuestlines(std::string aQuestline);
+
+		std::string myError;
 	private:
 		CQuestManager();
 		~CQuestManager();
 
-		EventHandle AddObjective(SObjective anObjective);
-		EventHandle AddQuest(SQuest anObjective);
+		static void SendUpdateMessage();
 
-		CU::Queue<SEvent> myEvents;
+		CU::Queue<SEvent, unsigned short> myEvents;
 		CU::GrowingArray<SObjective, EventHandle> myObjectives;
 		CU::GrowingArray<SQuest, EventHandle> myQuests;
 
@@ -38,6 +47,7 @@ namespace QM
 
 		std::map<std::string, EventHandle> myObjectiveHandles;
 
+		bool myLoadSuccess;
 		static CQuestManager* ourInstance;
 	};
 	

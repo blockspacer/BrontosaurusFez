@@ -98,6 +98,12 @@ void PostMaster::SendLetter(const Message& aMessage)
 	}
 }
 
+void PostMaster::SendLetter(const eMessageType aMessageType, const Event& aEvent)
+{
+	Message message(aMessageType, aEvent);
+	SendLetter(message);
+}
+
 PostMaster::PostMaster()
 {
 	for (int i = 0; i < mySubscribers.Size(); ++i)

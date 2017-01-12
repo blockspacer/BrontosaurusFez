@@ -4,6 +4,7 @@
 
 #define POSTMASTER PostMaster::GetInstance()
 
+class Event;
 class Subscriber;
 class Message;
 
@@ -21,6 +22,7 @@ public:
 	void UnSubscribe(Subscriber* aSubscriber, const eMessageType aMessageType);
 
 	void SendLetter(const Message& aMessage);
+	void SendLetter(const eMessageType aMessageType, const Event& aEvent);
 
 private:
 	PostMaster();

@@ -11,6 +11,7 @@ namespace CU
 		~Queue();
 
 		void Push(TYPE anObject);
+		void Push(const Queue aQueue);
 
 		TYPE Peek()const;
 		TYPE Pop();
@@ -74,6 +75,15 @@ namespace CU
 
 		myData[newIndex] = anObject;
 		++mySize;
+	}
+
+	template <typename TYPE, typename SIZE_TYPE>
+	void Queue<TYPE, SIZE_TYPE>::Push(const Queue aQueue)
+	{
+		while (aQueue.Size() > 0)
+		{
+			Push(aQueue.Pop());
+		}
 	}
 
 	template <typename TYPE, typename SIZE_TYPE>

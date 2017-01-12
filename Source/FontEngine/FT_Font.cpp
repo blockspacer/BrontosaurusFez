@@ -69,7 +69,6 @@ CU::Vector2i CFT_Font::GetAdvance(const wchar_t aNextChar, const wchar_t aPrevoi
 
 CU::Vector2i CFT_Font::GetAdvance(const FT_UInt aNextGlyph, const FT_UInt aPrevoiusGlyph, const bool aUseKerning)
 {
-
 	FT_Vector ftAdvance;
 
 	const FT_UInt resetGlyph = myCurrentGlyph.myGlyphIndex;
@@ -122,6 +121,11 @@ CU::Vector2i CFT_Font::GetBearing(const FT_UInt aChar)
 CEffect* CFT_Font::GetEffect() const
 {
 	return myEffect;
+}
+
+float CFT_Font::GetlineHeight() const
+{
+	return myFace->height / 64;
 }
 
 FT_Error CFT_Font::LoadGlyph(FT_UInt aGlyphIndex)

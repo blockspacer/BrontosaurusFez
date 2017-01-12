@@ -65,8 +65,22 @@ eMessageReturn KeyPressed::DoEvent(CPlayState* aPlayState) const
 		case CU::eKeys::ESCAPE:
 			aPlayState->Pause();
 			break;
-			case CU::eKeys::H:
-				aPlayState->TEMP_ADD_HAT(aPlayState->myPlayerObject);
+		case CU::eKeys::H:
+			aPlayState->TEMP_ADD_HAT(aPlayState->myPlayerObject);
+		case CU::eKeys::F11:
+			{
+				QM::CQuestManager& questManager = QM::CQuestManager::GetInstance();
+				questManager.UpdateObjective(aPlayState->fristObjective);
+				questManager.UpdateObjective(aPlayState->secondObjective);
+				questManager.UpdateObjective(aPlayState->thridObjective);
+			}
+			break;
+		case CU::eKeys::RETURN:
+		{
+			QM::CQuestManager& questManager = QM::CQuestManager::GetInstance();
+			questManager.CompleteEvent();
+		}
+			break;
 		default:
 			break;
 		}

@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+#include "GrowingArray.h"
 
 namespace QM
 {
@@ -19,6 +21,7 @@ namespace QM
 
 	struct SObjective
 	{
+		SObjective():myAmmount(0), myGoal(0){} 
 		std::string myName;
 		std::string myText;
 		int myAmmount;

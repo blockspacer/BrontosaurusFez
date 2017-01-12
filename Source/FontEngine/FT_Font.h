@@ -40,6 +40,7 @@ public:
 	//void SetLineGap(const int pt)
 
 	CEffect* GetEffect() const;
+	float GetlineHeight() const;
 	FT_Face myFace;
 	const char* myFacePath;
 

@@ -29,6 +29,12 @@ CCoolText::CCoolText(const CU::DynamicString& aFontPath): myVertexConstantBuffer
 	InitBuffers();
 }
 
+CCoolText::CCoolText(const CCoolText& aCoolText)
+{
+	myFont = aCoolText.myFont;
+	InitBuffers();
+}
+
 CCoolText::~CCoolText()
 {
 }
@@ -47,7 +53,7 @@ void CCoolText::Render(const CU::DynamicString& aString, const CU::Vector2f& aPo
 		if (wideString[i] == L'\n') // fulhax för att ha new line av '\n'
 		{
 			penPosition.x = aPosition.x;
-			penPosition.y += (static_cast<float>(myFont.GetCharSize(L'H').y) / WINDOW_SIZE_F.y) * 1.2f;
+			penPosition.y += GetlineHeight();
 			continue;
 		}
 
@@ -63,6 +69,11 @@ void CCoolText::Render(const CU::DynamicString& aString, const CU::Vector2f& aPo
 
 		RenderCharacter(wideString[i], penPosition + screenBearing, aColor);
 	}
+}
+
+float CCoolText::GetlineHeight() const
+{
+	return myFont.GetlineHeight() / WINDOW_SIZE_F.y;
 }
 
 bool CCoolText::InitBuffers()
