@@ -7,7 +7,7 @@ namespace picojson
 
 namespace CU
 {
-	enum class eJsonType
+	enum class eJsoneValueType
 	{
 		JSON_NULL,
 		BOOL,
@@ -30,7 +30,7 @@ namespace CU
 
 		std::string Parse(const std::string& aFilePath);
 
-		eJsonType GetType() const;
+		eJsoneValueType GetType() const;
 		int Size() const;
 
 		bool IsNull() const;

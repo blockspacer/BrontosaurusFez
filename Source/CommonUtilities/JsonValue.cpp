@@ -77,34 +77,34 @@ namespace CU
 		return errorMessage;
 	}
 
-	eJsonType CJsonValue::GetType() const
+	eJsoneValueType CJsonValue::GetType() const
 	{
 		if (IsObject() == true)
 		{
-			return eJsonType::OBJECT;
+			return eJsoneValueType::OBJECT;
 		}
 
 		if (IsArray() == true)
 		{
-			return eJsonType::ARRAY;
+			return eJsoneValueType::ARRAY;
 		}
 
 		if (IsString() == true)
 		{
-			return eJsonType::STRING;
+			return eJsoneValueType::STRING;
 		}
 
 		if (IsNumber() == true)
 		{
-			return eJsonType::NUMBER;
+			return eJsoneValueType::NUMBER;
 		}
 
 		if (IsBool() == true)
 		{
-			return eJsonType::BOOL;
+			return eJsoneValueType::BOOL;
 		}
 
-		return eJsonType::JSON_NULL;
+		return eJsoneValueType::JSON_NULL;
 	}
 
 	int CJsonValue::Size() const
@@ -258,14 +258,9 @@ namespace CU
 			JSON_ERROR("json value is null");
 			return CJsonValue();
 		}
-		if (GetType() == eJsonType::JSON_NULL)
-		{
-			myValue->serialize(false);
-			myValue;
-		}
 		if (IsObject() == false)
 		{
-			eJsonType type = GetType();
+			eJsoneValueType type = GetType();
 			JSON_ERROR("json value is not an object");
 			return CJsonValue();
 		}

@@ -27,6 +27,7 @@ class EnemyEmitterComponent;
 class InputController;
 class CConsole;
 class CMouseComponent;
+class HatShopState;
 
 //temp
 class CHealthComponent;
@@ -42,6 +43,7 @@ public:
 	virtual eMessageReturn DoEvent(PauseMenu*) const { return eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(GUICursor*) const { return eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(CPlayState*) const { return eMessageReturn::eContinue; }
+	virtual eMessageReturn DoEvent(HatShopState*) const { return eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(StateStack*) const { return eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(CreditsState*) const { return eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(CInputManager*) const { return eMessageReturn::eContinue; }

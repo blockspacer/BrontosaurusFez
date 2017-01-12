@@ -12,7 +12,11 @@ CModelInstance::CModelInstance(const char* aModelPath)
 	myIsVisible = true;
 	myAnimationCounter = 0.f;
 	myModel = MODELMGR->LoadModel(aModelPath);
-	myHasAnimations = MODELMGR->GetModel(myModel)->HasAnimations();
+	CModel* model = MODELMGR->GetModel(myModel);
+	if (model != nullptr)
+	{
+		myHasAnimations = model->HasAnimations();
+	}
 	myCurrentAnimation = "idle";
 }
 

@@ -12,6 +12,7 @@
 #include "LoadAIController.h"
 #include "LoadSkillSystemComponent.h"
 #include "LoadHealthComponent.h"
+#include "LoadHealthBarComponent.h"
 
 LoadManager* LoadManager::ourInstance = nullptr;
 
@@ -75,6 +76,7 @@ void LoadManager::RegisterFunctions()
 	loader.RegisterComponentLoadFunction("fleeController", LoadFleeController);
 	loader.RegisterComponentLoadFunction("SkillSystemComponent", LoadSkillSystemComponent);
 	loader.RegisterComponentLoadFunction("HealthComponent", LoadHealthComponent);
+	loader.RegisterComponentLoadFunction("HealthBarComponent", LoadHealthBarComponent);
 
 }
 
