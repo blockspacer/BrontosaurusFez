@@ -162,7 +162,17 @@ void Skill::SweepAttackUpdate(float aDeltaTime)
 	myUser->NotifyComponents(eComponentMessageType::eBasicAttack, startedAttackingMessage);
 	myElapsedCoolDownTime = 0.0f;
 	myAnimationTimeElapsed += aDeltaTime;
-	myColliderObject->GetLocalTransform().SetPosition(myUser->GetWorldPosition());
+	CU::Vector3f direction = myTargetPosition - myUser->GetWorldPosition();
+	if (direction.Length2() > mySkillData->range * mySkillData->range)
+	{
+		direction.Normalize();
+		direction *= mySkillData->range;
+		myColliderObject->SetWorldPosition(myUser->GetWorldPosition() + direction);
+	}
+	else
+	{
+		myColliderObject->GetLocalTransform().SetPosition(myTargetPosition);
+	}
 	myColliderObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 }
 
