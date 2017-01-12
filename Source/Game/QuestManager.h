@@ -3,6 +3,7 @@
 #include "../PostMaster/Subscriber.h"
 #include <map>
 #include "Queue.h"
+#include "PJWrapper.h"
 
 namespace QM
 {
@@ -30,8 +31,10 @@ namespace QM
 
 		EventHandle GetObjectiveHandle(std::string anObjectiveName);
 
+		EventHandle LoadObjective(const CU::CPJWrapper& anEvent, const std::string& aFileName);
+		EventHandle LoadQuest(const CU::CPJWrapper& aCurrentEvent, const std::string& aQuestlinesFile);
 		bool LoadQuestlines(std::string aQuestline);
-
+		bool GetIfLoadingSuceeded() const;
 		std::string myError;
 	private:
 		CQuestManager();

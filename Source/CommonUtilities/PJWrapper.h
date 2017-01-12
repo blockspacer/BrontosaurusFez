@@ -58,6 +58,8 @@ namespace CU
 
 		unsigned count(std::string aKey);
 		unsigned count(std::string aKey)const;
+
+		
 	private:
 		picojson::value myValue;
 	};

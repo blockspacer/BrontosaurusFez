@@ -35,6 +35,9 @@ void CGame::Init()
 	 CBackgroundLoadingManager::CreateInstance();
 	 QM::CQuestManager::CreateInstance();
 
+	 QM::CQuestManager::GetInstance().LoadQuestlines("Json/Quests/QuestStart.json");
+	 QM::CQuestManager::GetInstance().CompleteEvent();
+
 	 KLoader::CKevinLoader::CreateInstance();
 	 
 	 PollingStation::playerData = new PlayerData;

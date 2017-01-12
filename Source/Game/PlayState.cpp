@@ -130,34 +130,6 @@ void CPlayState::Load()
 
 	LoadManagerGuard loadManagerGuard;
 
-	QM::CQuestManager &questManager = QM::CQuestManager::GetInstance();
-
-	QM::SObjective objective1;
-	objective1.myName = "test 1";
-	objective1.myGoal = 1;
-	objective1.myText = "test by pressing f12(it works if you're lucky)";
-	fristObjective = questManager.AddObjective(objective1);
-	questManager.AddEvent(QM::eEventType::OBJECTIVE, fristObjective);
-
-	QM::SObjective objective2;
-	objective2.myName = "test2";
-	objective2.myGoal = 1;
-	objective2.myText = "part of test quest two objective  one";
-	secondObjective = questManager.AddObjective(objective2);
-
-	QM::SObjective objective3;
-	objective3.myName = "test3";
-	objective3.myGoal = 1;
-	objective3.myText = "blaaaaaaaaaaalalala lif is life";
-	thridObjective = questManager.AddObjective(objective3);
-
-	QM::SQuest quest;
-	quest.myObjectives = { secondObjective, thridObjective };
-	const QM::EventHandle questHandle = questManager.AddQuest(quest);
-	questManager.AddEvent(QM::eEventType::QUEST, questHandle);
-
-	questManager.CompleteEvent();
-
 	MODELCOMP_MGR.SetScene(myScene);
 	myScene->SetSkybox("skybox.dds");
 	LoadManager::GetInstance().SetCurrentPlayState(this);

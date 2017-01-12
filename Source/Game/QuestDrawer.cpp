@@ -12,6 +12,7 @@ QM::CQuestDrawer::CQuestDrawer()
 {
 	myTextBox.SetPosition(CU::Vector2f(0.f, 0.2f));
 	PostMaster::GetInstance().Subscribe(this, eMessageType::QuestRelated);
+	UpdateText();
 }
 
 
@@ -22,27 +23,36 @@ QM::CQuestDrawer::~CQuestDrawer()
 
 void QM::CQuestDrawer::UpdateText()
 {
-	const SQuest quest = CQuestManager::GetInstance().GetCurrentQuest();
-
-	myTextBox.Clear();
-	for (int i = 0; i < quest.myObjectives.Size(); ++i)
+	if (QM::CQuestManager::GetInstance().GetIfLoadingSuceeded())
 	{
-		const SObjective objective = CQuestManager::GetInstance().GetObjective(quest.myObjectives[i]);
-		CU::DynamicString textLine1;
-		textLine1 += objective.myName.c_str();
-		textLine1 += ": ";
-		CU::DynamicString textLine2;
-		textLine2 += objective.myText.c_str();
-		textLine2 += " (";
-		textLine2 += objective.myAmmount;
-		textLine2 += "/";
-		textLine2 += objective.myGoal;
-		textLine2 += ")";
+		const SQuest quest = CQuestManager::GetInstance().GetCurrentQuest();
 
-		myTextBox.AddText(textLine1);
-		myTextBox.NewLine();
-		myTextBox.AddText(textLine2);
-		myTextBox.NewLine();
+		myTextBox.Clear();
+		for (int i = 0; i < quest.myObjectives.Size(); ++i)
+		{
+			const SObjective objective = CQuestManager::GetInstance().GetObjective(quest.myObjectives[i]);
+			CU::DynamicString textLine1;
+			textLine1 += objective.myName.c_str();
+			textLine1 += ": ";
+			CU::DynamicString textLine2;
+			textLine2 += objective.myText.c_str();
+			textLine2 += " (";
+			textLine2 += objective.myAmmount;
+			textLine2 += "/";
+			textLine2 += objective.myGoal;
+			textLine2 += ")";
+
+			myTextBox.AddText(textLine1);
+			myTextBox.NewLine();
+			myTextBox.AddText(textLine2);
+			myTextBox.NewLine();
+		}
+	}
+	else
+	{
+		myTextBox.Clear();
+		CU::DynamicString error = CQuestManager::GetInstance().myError.c_str();
+		myTextBox.AddText(error);
 	}
 }
 
