@@ -260,7 +260,7 @@ void CPlayState::Load()
 
 	////create player:
 
-	myPlayerObject = myGameObjectManager->CreateGameObject();
+	/*myPlayerObject = myGameObjectManager->CreateGameObject();
 	myPlayerObject->SetName("Player");
 	PollingStation::playerObject = myPlayerObject;
 
@@ -297,7 +297,10 @@ void CPlayState::Load()
 	playerCollisionComponent->SetColliderType(eColliderType_Player);
 	myPlayerObject->AddComponent(playerCollisionComponent);
 	CHealthBarComponent* healthBar = myHealthBarManager->CreateHealthbar();
-	myPlayerObject->AddComponent(healthBar);
+	myPlayerObject->AddComponent(healthBar);*/
+
+
+
 
 
 	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
