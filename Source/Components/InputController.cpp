@@ -110,11 +110,11 @@ void InputController::Receive(const eComponentMessageType aMessageType, const SC
 		}
 		else if (aMessageData.myString == "WhirlWind")
 		{
-			mySkillInputMessageActivators.Add(CU::eInputMessage::ONE);
+			mySkillInputMessageActivators.Add(CU::eInputMessage::TWO);
 		}
 		else if (aMessageData.myString == "SweepAttack")
 		{
-			mySkillInputMessageActivators.Add(CU::eInputMessage::TWO);
+			mySkillInputMessageActivators.Add(CU::eInputMessage::ONE);
 		}
 		else
 		{
