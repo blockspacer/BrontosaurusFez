@@ -340,7 +340,7 @@ void CPlayState::Load()
 	{
 		DL_ASSERT("Loading Failed");
 	}
-	//PollingStation::playerObject = PollingStation::PlayerInput->GetParent();
+	PollingStation::playerObject = PollingStation::PlayerInput->GetParent();
 	//CSeekControllerManager::GetInstance().SetTarget();
 	myGameObjectManager->SendObjectsDoneMessage();
 
