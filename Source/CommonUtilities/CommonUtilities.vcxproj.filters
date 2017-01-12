@@ -347,6 +347,9 @@
     <ClInclude Include="PJWrapper.h">
       <Filter>PicoJson</Filter>
     </ClInclude>
+    <ClInclude Include="JsonValue.h">
+      <Filter>PicoJson</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Timer.cpp">
@@ -419,6 +422,9 @@
       <Filter>CommandLineManager</Filter>
     </ClCompile>
     <ClCompile Include="PJWrapper.cpp">
+      <Filter>PicoJson</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonValue.cpp">
       <Filter>PicoJson</Filter>
     </ClCompile>
   </ItemGroup>

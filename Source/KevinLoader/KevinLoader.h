@@ -2,10 +2,11 @@
 #include <functional>
 #include <map>
 #include "KLoaderError.h"
-#include "../CommonUtilities/PJWrapper.h"
+//#include "../CommonUtilities/PJWrapper.h"
 #include "../CommonUtilities/DynamicString.h"
 #include "../CommonUtilities/GrowingArray.h"
 
+#include "../CommonUtilities/JsonValue.h"
 
 namespace KLoader
 {
@@ -24,7 +25,7 @@ namespace KLoader
 	struct SLoadedComponentData
 	{
 		std::string myTypeName;
-		CU::JsonObject myData;
+		CU::CJsonValue myData;
 	};
 
 	typedef std::function<int(SLoadedComponentData)> LoadFunction;
@@ -48,15 +49,15 @@ namespace KLoader
 
 		std::string GetError();
 
-		void PrintMissingComponents(CU::DynamicString componentName);
+		void PrintMissingComponents(const std::string& componentName);
 
 	private:
 		CKevinLoader();
 		~CKevinLoader();
 
-		int LoadComponent(const std::string& aIdString, const CU::CPJWrapper& aRoot);
+		int LoadComponent(const std::string& aIdString, const CU::CJsonValue& aRoot);
 
-		eError LoadObjects(const CU::CPJWrapper& aWrapper);
+		eError LoadObjects(const CU::CJsonValue& aWrapper);
 		eError LinkObjects();
 
 		std::map<std::string, LoadFunction> myLoadFunctions;

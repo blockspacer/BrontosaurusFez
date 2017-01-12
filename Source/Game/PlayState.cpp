@@ -316,12 +316,12 @@ void CPlayState::Load()
 
 	//Loadingu like pingu
 
-	CU::CPJWrapper levelsFile;
-	const std::string errorString = levelsFile.Parse("Json/LevelList.json");
+	CU::CJsonValue levelsFile;
+	const std::string& errorString = levelsFile.Parse("Json/LevelList.json");
 
-	CU::CPJWrapper levelsArray = levelsFile.GetJsonObject().at("levels");
+	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
-#ifdef _DEBUG
+#ifdef _DEBUGkk
 	const int levelIndex = levelsArray.Size() - 1;
 #else
 	const int levelIndex = 0;
