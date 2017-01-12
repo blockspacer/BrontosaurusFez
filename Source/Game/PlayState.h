@@ -61,6 +61,7 @@ public:
 	inline bool IsLoaded() const;
 
 	CGameObjectManager* GetObjectManager() const;
+	CHealthBarComponentManager* GetHealthBarManager();
 	CCollisionComponentManager* GetCollisionManager();
 
 	//TEMP - BELOW THIS LINE

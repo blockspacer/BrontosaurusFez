@@ -537,6 +537,11 @@ CGameObjectManager* CPlayState::GetObjectManager() const
 	return myGameObjectManager;
 }
 
+CHealthBarComponentManager * CPlayState::GetHealthBarManager()
+{
+	return myHealthBarManager;
+}
+
 CCollisionComponentManager* CPlayState::GetCollisionManager()
 {
 	return myCollisionComponentManager;
