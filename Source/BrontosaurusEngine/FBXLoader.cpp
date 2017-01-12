@@ -657,6 +657,7 @@ void* CFBXLoader::LoadModelInternal(CLoaderModel* someInput)
 	for (unsigned int n = 0; n < scene->mNumMeshes; ++n)
 	{
 		CLoaderMesh* mesh = model->CreateMesh();
+		mesh->myName = someInput->myModelPath.c_str();
 
 		aiMesh* fbxMesh = scene->mMeshes[n];
 

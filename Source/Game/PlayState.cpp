@@ -327,7 +327,7 @@ void CPlayState::Load()
 
 	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
-#ifdef _DEBUGkk
+#ifdef _DEBUG
 	const int levelIndex = levelsArray.Size() - 1;
 #else
 	const int levelIndex = 0;
@@ -344,7 +344,10 @@ void CPlayState::Load()
 	{
 		DL_ASSERT("Loading Failed");
 	}
-	PollingStation::playerObject = PollingStation::PlayerInput->GetParent();
+	if (PollingStation::PlayerInput != nullptr)
+	{
+		PollingStation::playerObject = PollingStation::PlayerInput->GetParent();
+	}
 	//CSeekControllerManager::GetInstance().SetTarget();
 	myGameObjectManager->SendObjectsDoneMessage();
 

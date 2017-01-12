@@ -73,6 +73,19 @@ namespace GUI
 			}
 		}
 
+		CU::DynamicString widgetName = "CarlWasHere";
+		CFBXLoader loader;
+		CLoaderModel* loaderMOdel = loader.LoadModel("Models/gui/knapp01.fbx");
+		Widget* widget = new ModelWidget(loaderMOdel->myMeshes.at(0), aLoaderScene->myTextures, *guiCamera);
+
+		//widget = new CToolTipDecorator(widget, tooltipText);
+
+		if (widget != nullptr)
+		{
+			baseWidgetContainer->AddWidget(widget->GetName(), widget);
+		}
+
+
 		return baseWidgetContainer;
 	}
 
