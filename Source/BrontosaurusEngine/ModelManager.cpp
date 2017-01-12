@@ -211,7 +211,7 @@ void CModelManager::RemoveModel(const ModelId aModelID)
 void CModelManager::LoadAnimations(const char * aPath, const ModelId aModelId)
 {
 	std::string modelName = aPath;
-	modelName -= std::string("idle.fbx"); //temporary bc there are no bones in the vertices in player.fbx, only in player_idle.fbx etc
+	modelName -= std::string("idle2.fbx"); //temporary bc there are no bones in the vertices in player.fbx, only in player_idle.fbx etc
 	const ModelId animationCount = 6;
 	std::string animationNames[animationCount] = { ("idle"), ("walk"), ("pickup"), ("turnRight90"), ("turnLeft90"), ("attack") };
 
