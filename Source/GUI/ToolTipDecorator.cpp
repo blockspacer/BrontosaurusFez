@@ -17,6 +17,8 @@ namespace GUI
 		myTextInstance->Init();
 		myTextInstance->SetPosition(aDecoratedWidget->GetWorldPosition());
 		myTextInstance->SetText(aTooltipText.c_str());
+
+		myBackGround->SetLocalPosition(aDecoratedWidget->GetWorldPosition());
 	}
 
 	CToolTipDecorator::~CToolTipDecorator()
@@ -28,21 +30,26 @@ namespace GUI
 	void CToolTipDecorator::OnMouseEnter(const CU::Vector2f& aMousePosition)
 	{
 		myShouldRender = true;
+		myBackGround->SetLocalPosition(aMousePosition + myOffsetToMouse);
 		myTextInstance->SetPosition(aMousePosition + myOffsetToMouse);
 	}
 
 	void CToolTipDecorator::OnMouseExit(const CU::Vector2f& aMousePosition)
 	{
 		myShouldRender = false;
+		myBackGround->SetLocalPosition(aMousePosition + myOffsetToMouse);
 		myTextInstance->SetPosition(aMousePosition + myOffsetToMouse);
 	}
 
 	GUI::Widget* CToolTipDecorator::MouseIsOver(const CU::Vector2f& aPosition)
 	{
-		if (WidgetDecorator::MouseIsOver(aPosition) == myDecoratedWidget)
+		Widget* mouseIsOver = WidgetDecorator::MouseIsOver(aPosition);
+		if (mouseIsOver == myDecoratedWidget)
 		{
 			return this;
 		}
+
+		return mouseIsOver;
 	}
 
 	void CToolTipDecorator::Render()
