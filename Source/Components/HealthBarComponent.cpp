@@ -58,7 +58,7 @@ void CHealthBarComponent::Update()
 
 	CU::Vector2f hpBarPos = UnitPosNormalized;
 
-	CU::Vector2f displacementVector = { 0.f, 0.2f };
+	CU::Vector2f displacementVector = { 0.025f, 0.1f };
 
 	mySprite->SetPosition(hpBarPos - displacementVector);
 	myBGSprite->SetPosition(mySprite->GetPosition());
