@@ -33,7 +33,6 @@ void CHealthBarComponentManager::Update()
 		}
 	}
 
-
 	for (int i = 0; i < myHealthbars.Size(); ++i)
 	{
 		myHealthbars[i]->Update();

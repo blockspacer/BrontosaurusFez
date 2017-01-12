@@ -14,19 +14,21 @@ CHealthBarComponent::CHealthBarComponent()
 
 CHealthBarComponent::~CHealthBarComponent()
 {
+	SAFE_DELETE(mySprite);
+	SAFE_DELETE(myBGSprite);
 }
 
 void CHealthBarComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData)
 {
 	switch (aMessageType)
 	{
+	case eComponentMessageType::eDied:
+		Destroy();
+		break;
 	case eComponentMessageType::eTakeDamage:
 		UpdateSprite(aMessageData.myUChar); //msgData
 		break;
-	case eComponentMessageType::eDied:
-		//Mark for deletion in Mgr.
-		Destroy();
-		break;
+
 	}
 }
 
@@ -38,7 +40,9 @@ void CHealthBarComponent::UpdateSprite(char aPercentHP)
 		mySprite->SetColor({ 1.f, 0.f, 0.f, 1.f });
 		myHasAppeared = true;
 	}
-	//CU::Vector4f rect = mySprite->GetRect();
+
+
+	CU::Vector4f rect = mySprite->GetRect();
 	//rect.z -= 0.1;
 	//mySprite->SetRect(rect);
 }
@@ -76,8 +80,6 @@ void CHealthBarComponent::Render() // Create manager that renders everything, me
 
 void CHealthBarComponent::Destroy()
 {
-	SAFE_DELETE(mySprite);
-	SAFE_DELETE(myBGSprite);
 	myShouldBeDeleted = true;
 }
 
