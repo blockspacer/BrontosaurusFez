@@ -8,6 +8,7 @@
 
 int LoadMovementComponent(KLoader::SLoadedComponentData someData)
 {
-	CComponent* Component = MovementComponentManager::GetInstance().CreateAndRegisterComponent();
+	MovementComponent* Component = MovementComponentManager::GetInstance().CreateAndRegisterComponent();
+	Component->SetMovementSpeed(someData.myData.at("MovementSpeed").GetFloat());
 	return Component->GetId();
 }

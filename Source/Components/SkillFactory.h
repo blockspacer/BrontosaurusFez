@@ -1,6 +1,7 @@
 #pragma once
+#include "SkillData.h"
+
 class Skill;
-struct SkillData;
 class SkillFactory
 {
 public:
@@ -10,7 +11,7 @@ public:
 	static void CreateInstance();
 	static void DestroyInstance();
 
-	Skill* CreateSkill(const char* aSkillName);
+	Skill* CreateSkill(SkillData::SkillName aSkillName);
 	void RegisterSkillData(SkillData* aSkillData);
 private:
 	SkillFactory();

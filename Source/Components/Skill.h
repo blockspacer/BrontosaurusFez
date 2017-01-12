@@ -21,6 +21,7 @@ public:
 	void ActivateCollider();
 	inline const bool GetIsActive() const;
 	inline const bool GetIsSelected() const;
+	inline SkillData* GetSkillData();
 	inline bool IsInited();
 	void Select();
 	void Deselect();
@@ -49,6 +50,11 @@ inline const bool Skill::GetIsActive() const
 inline const bool Skill::GetIsSelected() const
 {
 	return myIsSelected;
+}
+
+inline SkillData * Skill::GetSkillData()
+{
+	return mySkillData;
 }
 
 inline bool Skill::IsInited()

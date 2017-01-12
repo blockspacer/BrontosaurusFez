@@ -29,6 +29,10 @@ void SkillSystemComponent::Update(float aDeltaTime)
 			{
 				mySkills[i]->Init(GetParent());
 				mySkills[i]->Update(aDeltaTime);
+				eComponentMessageType type = eComponentMessageType::eAddSkill;
+				SComponentMessageData data;
+				data.myInt = static_cast<int>(mySkills[i]->GetSkillData()->skillName);
+				GetParent()->NotifyComponents(type, data);
 			}
 
 		}
@@ -84,12 +88,6 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 			mySkills[0]->Activate();
 		}
 	}
-	else if (aMessageType == eComponentMessageType::eAddSkill)
-	{
-		mySkills.Add(SkillFactory::GetInstance().CreateSkill(aMessageData.myString));
-		mySkills.GetLast()->Init(GetParent());
-		mySkills.GetLast()->SetTargetPosition(myTargetPosition);
-	}
 	else if (aMessageType == eComponentMessageType::eActivateSkillCollider)
 	{
 		for(unsigned short i = 0; i < mySkills.Size(); i++)
@@ -129,13 +127,8 @@ void SkillSystemComponent::Destroy()
 {
 }
 
-void SkillSystemComponent::AddSkill(const char * aSkillName)
+void SkillSystemComponent::AddSkill(SkillData::SkillName aSkillName)
 {
-	eComponentMessageType type = eComponentMessageType::eAddSkill;
-	SComponentMessageData data;
-	data.myString = aSkillName;
-	GetParent()->NotifyComponents(type, data);
-	/*mySkills.Add(SkillFactory::GetInstance().CreateSkill(aSkillName));
-	mySkills.GetLast()->Init(GetParent());
-	mySkills.GetLast()->SetTarget(myTargetPosition);*/
+	mySkills.Add(SkillFactory::GetInstance().CreateSkill(aSkillName));
+	mySkills.GetLast()->SetTargetPosition(myTargetPosition);
 }

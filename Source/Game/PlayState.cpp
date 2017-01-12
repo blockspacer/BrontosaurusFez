@@ -100,6 +100,7 @@ CPlayState::~CPlayState()
 	SAFE_DELETE(myGameObjectManager);
 	SAFE_DELETE(myGUIManager);
 	
+
 	
 	CModelComponentManager::Destroy();
 	CAudioSourceComponentManager::Destroy();
@@ -163,6 +164,7 @@ void CPlayState::Load()
 	LoadManager::GetInstance().SetCurrentPlayState(this);
 	LoadManager::GetInstance().SetCurrentScene(myScene);
 
+
 	Lights::SDirectionalLight dirLight;
 	dirLight.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	dirLight.direction = { 0.0f, 0.0f, 1.0f, 1.0f };
@@ -176,7 +178,7 @@ void CPlayState::Load()
 	//LUA_WRAPPER.CallLuaFunction("GameLoad", levelIndex);
 
 	//kanske inte ska ske så här?
-	LUA_WRAPPER.RegisterFunction(SSlua::LuaCallbackFunction(&CPlayState::LuaFunction), "Func", "lol", true);
+	LUA_WRAPPER.RegisterFunction(SSlua::LuaCallbackFunction(&CPlayState::LuaFunction), "Func", "loll", true);
 	CONSOLE->GetLuaFunctions();
 	//
 
@@ -223,7 +225,7 @@ void CPlayState::Load()
 	basicSkillData->isAOE = false;
 	basicSkillData->isChannel = false;
 	basicSkillData->damage = 34;
-	basicSkillData->skillName = "BasicAttack";
+	basicSkillData->skillName = SkillData::SkillName::BasicAttack;
 	SkillFactory::GetInstance().RegisterSkillData(basicSkillData);
 
 	//AddSpinyToWhiny
@@ -235,7 +237,7 @@ void CPlayState::Load()
 	whirlWindSkillData->isAOE = true;
 	whirlWindSkillData->isChannel = true;
 	whirlWindSkillData->damage = 10;
-	whirlWindSkillData->skillName = "WhirlWind";
+	whirlWindSkillData->skillName = SkillData::SkillName::WhirlWind;
 	SkillFactory::GetInstance().RegisterSkillData(whirlWindSkillData);
 
 
@@ -248,65 +250,67 @@ void CPlayState::Load()
 	SweepAttack->isAOE = true;
 	SweepAttack->isChannel = true;
 	SweepAttack->damage = 30;
-	SweepAttack->skillName = "SweepAttack";
+	SweepAttack->skillName = SkillData::SkillName::SweepAttack;
 	SkillFactory::GetInstance().RegisterSkillData(SweepAttack);
 
-	//create player:
+	////create player:
 
-	myPlayerObject = myGameObjectManager->CreateGameObject();
-	myPlayerObject->SetName("Player");
-	PollingStation::playerObject = myPlayerObject;
+	//myPlayerObject = myGameObjectManager->CreateGameObject();
+	//myPlayerObject->SetName("Player");
+	//PollingStation::playerObject = myPlayerObject;
 
-	InputController* tempInputController = InputControllerManager::GetInstance().CreateAndRegisterComponent();
-	myPlayerObject->AddComponent(tempInputController);
-	PollingStation::PlayerInput = tempInputController;
+	//InputController* tempInputController = InputControllerManager::GetInstance().CreateAndRegisterComponent();
+	//myPlayerObject->AddComponent(tempInputController);
+	//PollingStation::PlayerInput = tempInputController;
 
-	MovementComponent* tempMovementController = MovementComponentManager::GetInstance().CreateAndRegisterComponent();
-	myPlayerObject->AddComponent(tempMovementController);
+	//MovementComponent* tempMovementController = MovementComponentManager::GetInstance().CreateAndRegisterComponent();
+	//myPlayerObject->AddComponent(tempMovementController);
 
-	myPlayerObject->AddComponent(new NavigationComponent());
+	//myPlayerObject->AddComponent(new NavigationComponent());
 
-	CModelComponent* playerModelComponent = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
-	myPlayerObject->AddComponent(playerModelComponent);
+	//CModelComponent* playerModelComponent = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
+	//myPlayerObject->AddComponent(playerModelComponent);
 
-	myPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
-	SkillSystemComponent* tempSkillSystemComponent = new SkillSystemComponent;
-	SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
-	myPlayerObject->AddComponent(tempSkillSystemComponent);
-	tempSkillSystemComponent->AddSkill("BasicAttack");
-	tempSkillSystemComponent->AddSkill("WhirlWind");
-	tempSkillSystemComponent->AddSkill("SweepAttack");
+	//myPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
+	//SkillSystemComponent* tempSkillSystemComponent = new SkillSystemComponent;
+	//SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
+	//myPlayerObject->AddComponent(tempSkillSystemComponent);
+	//tempSkillSystemComponent->AddSkill("BasicAttack");
+	//tempSkillSystemComponent->AddSkill("WhirlWind");
+	//tempSkillSystemComponent->AddSkill("SweepAttack");
 
-	CHealthComponent* tempHealthCompoennt = new CHealthComponent();
-	tempHealthCompoennt->SetMaxHealth(1000);
-	myPlayerObject->AddComponent(tempHealthCompoennt);
+	//CHealthComponent* tempHealthCompoennt = new CHealthComponent();
+	//tempHealthCompoennt->SetMaxHealth(1000);
+	//myPlayerObject->AddComponent(tempHealthCompoennt);
 
-	Intersection::CollisionData playerCollisionData;
-	playerCollisionData.myCircleData = new Intersection::SCircle();
-	playerCollisionData.myCircleData->myCenterPosition.Set(myPlayerObject->GetWorldPosition().x, myPlayerObject->GetWorldPosition().z);
-	playerCollisionData.myCircleData->myRadius = sqrtf(playerModelComponent->GetModelInst()->GetModelBoundingBox().myRadius);
-	CCollisionComponent* playerCollisionComponent = myCollisionComponentManager->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, playerCollisionData);
-	playerCollisionComponent->AddCollidsWith(eColliderType_Mouse | eColliderType_Enemy);
-	playerCollisionComponent->SetColliderType(eColliderType_Player);
-	myPlayerObject->AddComponent(playerCollisionComponent);
+	//Intersection::CollisionData playerCollisionData;
+	//playerCollisionData.myCircleData = new Intersection::SCircle();
+	//playerCollisionData.myCircleData->myCenterPosition.Set(myPlayerObject->GetWorldPosition().x, myPlayerObject->GetWorldPosition().z);
+	//playerCollisionData.myCircleData->myRadius = sqrtf(playerModelComponent->GetModelInst()->GetModelBoundingBox().myRadius);
+	//CCollisionComponent* playerCollisionComponent = myCollisionComponentManager->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, playerCollisionData);
+	//playerCollisionComponent->AddCollidsWith(eColliderType_Mouse | eColliderType_Enemy);
+	//playerCollisionComponent->SetColliderType(eColliderType_Player);
+	//myPlayerObject->AddComponent(playerCollisionComponent);
 
 	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
 	cameraComponent->SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 
+	myHealthBarManager = new CHealthBarComponentManager(playerCamera);
+
 	//set camera position and rotation
-	CU::Matrix44f cameraTransformation = playerCamera.GetTransformation();
+	/*CU::Matrix44f cameraTransformation = playerCamera.GetTransformation();
 	CU::Matrix44f newRotation;
 
 	newRotation.Rotate(PI / 4 * 4 , CU::Axees::Y);
-	newRotation.Rotate(PI / 4, CU::Axees::X);
+	newRotation.Rotate(PI / 4, CU::Axees::X);*/
 
 	//newRotation.Rotate(PI / 1, CU::Axees::Z);
 
-	cameraTransformation.SetRotation(newRotation);
+	/*cameraTransformation.SetRotation(newRotation);
 	cameraTransformation.SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
 	cameraTransformation.Move(CU::Vector3f(0.0f, 0.0f, -1100.0f));
 
-	playerCamera.SetTransformation(cameraTransformation);
+	playerCamera.SetTransformation(cameraTransformation);*/
 
 	myGoldText = new CTextInstance;
 	myGoldText->SetColor(CTextInstance::Yellow);
@@ -338,7 +342,7 @@ void CPlayState::Load()
 	{
 		DL_ASSERT("Loading Failed");
 	}
-	//PollingStation::playerObject = PollingStation::PlayerInput->GetParent();
+	PollingStation::playerObject = PollingStation::PlayerInput->GetParent();
 	//CSeekControllerManager::GetInstance().SetTarget();
 	myGameObjectManager->SendObjectsDoneMessage();
 
@@ -349,13 +353,13 @@ void CPlayState::Load()
 	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation()); //
 
 	//----CreateEnemies----
-	myEnemies.Init(8);
+	/*myEnemies.Init(8);
 	TEMP_CREATE_ENEMY();
 	myEnemies[0]->SetWorldPosition({ -300.f, 0.f, -400.f });
 	TEMP_CREATE_ENEMY();
 	myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
 	TEMP_CREATE_ENEMY();
-	myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
+	myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });*/
 
 	//---------------------
 
@@ -438,7 +442,7 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	SkillComponentManager::GetInstance().Update(aDeltaTime);
 	DropComponentManager::GetInstance().Update(aDeltaTime);
 
-	myHealthBarManager->Update();
+	//myHealthBarManager->Update();
 
 	return myStatus;
 }
@@ -470,7 +474,7 @@ void CPlayState::Render()
 	msg.mySamplerState = eSamplerState::eClamp;
 	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
 
-	myHealthBarManager->Render();
+	//myHealthBarManager->Render();
 	myGoldText->Render();
 
 	myQuestDrawer.Render();
@@ -531,6 +535,11 @@ eMessageReturn CPlayState::Recieve(const Message& aMessage)
 CGameObjectManager* CPlayState::GetObjectManager() const
 {
 	return myGameObjectManager;
+}
+
+CHealthBarComponentManager * CPlayState::GetHealthBarManager()
+{
+	return myHealthBarManager;
 }
 
 CCollisionComponentManager* CPlayState::GetCollisionManager()
@@ -684,7 +693,7 @@ void CPlayState::TEMP_CREATE_ENEMY()
 	SkillSystemComponent* tempSkillSystemComponent = new SkillSystemComponent;
 	SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
 	enemyObj->AddComponent(tempSkillSystemComponent);
-	tempSkillSystemComponent->AddSkill("BasicAttack");
+//	tempSkillSystemComponent->AddSkill("BasicAttack");
 
 	tempEnemyStatComponent->SetStats(baseStats, bonusStats);
 	tempEnemyHealthComponent->Init();
