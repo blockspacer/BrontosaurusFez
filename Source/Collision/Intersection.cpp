@@ -332,6 +332,14 @@ bool Intersection::PointInsideSquare(const SSquare& aSquare, const SPoint& aPoin
 	return true;
 }
 
+bool Intersection::PointInsideTriangle(const STriangle& aTriangle, const SPoint& aPoint)
+{
+	//if point inside all lines of triangle: true
+
+
+	return false;
+}
+
 bool Intersection::CircleVsSquare(const SCircle& aCircle, const SSquare& aSquare)
 {
 	SSquare extendedSquare;
@@ -339,6 +347,20 @@ bool Intersection::CircleVsSquare(const SCircle& aCircle, const SSquare& aSquare
 	extendedSquare.myMinPosition = aSquare.myMinPosition - CU::Vector2f::One * aCircle.myRadius;
 	
 	return PointInsideSquare(extendedSquare, SPoint(aCircle.myCenterPosition));
+}
+
+bool Intersection::CircleVsTriangle(const SCircle& aCircle, const STriangle& aTriangle)
+{
+	assert(!"not implemented");
+	//don't know, alt: circle collides with either line of triangle || circle is completely inside triangle || triangle is completely inside circle
+	return false;
+}
+
+bool Intersection::SquareVsTriangle(const SSquare& aSquare, const STriangle& aTriangle)
+{
+	assert(!"not implemented");
+	//don't know, alt: circle collides with either line of triangle || circle is completely inside triangle || triangle is completely inside circle
+	return false;
 }
 
 bool Intersection::SquareVsSquare(const SSquare& aFirst, const SSquare& aSecond)

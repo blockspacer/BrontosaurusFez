@@ -3,10 +3,17 @@
 #include <functional>
 #include "VectorOnStack.h"
 
+#ifndef SUPRESS_UNUSED_WARNING
+#define SUPRESS_UNUSED_WARNING(variable) variable
+#endif // !SUPRESS_UNUSED_WARNING
+
 class CCircleCollider;
 class CPointCollider;
 class CSquareCollider;
+class CTriangleCollider;
 class CGroupCollider;
+
+class CCollisionRenderer;
 
 using ColliderOwner = class CGameObject*;
 
@@ -50,12 +57,13 @@ public:
 	inline ColliderOwner GetGameObject();
 	inline CU::VectorOnStack<const ICollider*, ourMaxNumberOfCollides>& GetCollidedWith();
 
-	virtual void RenderDebugLines() {}
+	virtual void RenderDebugLines(CCollisionRenderer& aCollisionRenderer) { SUPRESS_UNUSED_WARNING(aCollisionRenderer); }
 
 	virtual bool TestCollision(ICollider* aCollider) = 0;
 	virtual bool TestCollision(CPointCollider* aPointCollider) = 0;
 	virtual bool TestCollision(CCircleCollider* aCircleCollider) = 0;
 	virtual bool TestCollision(CSquareCollider* aSquareCollider) = 0;
+	virtual bool TestCollision(CTriangleCollider* aTriangleCollider) = 0;
 	virtual bool TestCollision(CGroupCollider* aGroupCollider) = 0;
 
 	virtual void SetPosition(const CU::Vector3f& aPosition) = 0;

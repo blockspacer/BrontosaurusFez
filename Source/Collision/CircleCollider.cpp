@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "CircleCollider.h"
-#include "Intersection.h"
+#include "CollisionRenderMessages.h"
 
 const Intersection::SCircle CCircleCollider::ourNullCircle = {};
 
@@ -39,16 +39,24 @@ CCircleCollider::~CCircleCollider()
 
 CCircleCollider& CCircleCollider::operator=(const CCircleCollider& aCopy)
 {
+	SAFE_DELETE(myCircleData);
 	myCircleData = new Intersection::SCircle(*aCopy.myCircleData);
 	return self;
 }
 
 CCircleCollider& CCircleCollider::operator=(CCircleCollider&& aTemporary)
 {
+	SAFE_DELETE(myCircleData);
 	myCircleData = aTemporary.myCircleData;
 	aTemporary.myCircleData = nullptr;
 
 	return self;
+}
+
+void CCircleCollider::RenderDebugLines(CCollisionRenderer& aCollisionRenderer)
+{
+	Collision::CRenderCircle* renderCommand = new Collision::CRenderCircle(&GetData());
+	aCollisionRenderer.AddToRender(renderCommand);
 }
 
 bool CCircleCollider::TestCollision(ICollider* aCollider)
@@ -70,6 +78,11 @@ bool CCircleCollider::TestCollision(CSquareCollider* aSquareCollider)
 {
 	assert(!"point collider not implemented");
 	return false;
+}
+
+bool CCircleCollider::TestCollision(CTriangleCollider* aTriangleCollider)
+{
+	return Intersection::CircleVsTriangle(GetData(), aTriangleCollider->GetData());
 }
 
 bool CCircleCollider::TestCollision(CGroupCollider* aGroupCollider)

@@ -42,6 +42,11 @@ namespace Intersection
 		CU::Vector2f myMaxPosition;
 	};
 
+	struct STriangle 
+	{
+		CU::StaticArray<CU::Vector2f, 3> myPoints;
+	};
+
 	struct AABB
 	{
 		CU::Vector3f myCenterPos;
@@ -108,6 +113,9 @@ namespace Intersection
 	bool CircleVsCircle(const SCircle& aFirst, const SCircle& aSecond);
 	bool PointInsideCircle(const SCircle& aCircle, const SPoint& aPoint);
 	bool PointInsideSquare(const SSquare& aSquare, const SPoint& aPoint);
+	bool PointInsideTriangle(const STriangle& aTriangle, const SPoint& aPoint);
 	bool CircleVsSquare(const SCircle& aCircle, const SSquare& aSquare);
+	bool CircleVsTriangle(const SCircle& aCircle, const STriangle& aTriangle);
+	bool SquareVsTriangle(const SSquare& aSquare, const STriangle& aTriangle);
 	bool SquareVsSquare(const SSquare& aFirst, const SSquare& aSecond);
 }

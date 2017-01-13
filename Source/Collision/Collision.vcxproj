@@ -190,6 +190,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CollisionManager.cpp" />
+    <ClCompile Include="CollisionRenderer.cpp" />
+    <ClCompile Include="CollisionRenderMessages.cpp" />
     <ClCompile Include="PointCollider.cpp" />
     <ClCompile Include="SquareCollider.cpp" />
     <ClCompile Include="CircleCollider.cpp" />
@@ -198,9 +200,12 @@
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TriangleCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CollisionManager.h" />
+    <ClInclude Include="CollisionRenderer.h" />
+    <ClInclude Include="CollisionRenderMessages.h" />
     <ClInclude Include="PointCollider.h" />
     <ClInclude Include="SquareCollider.h" />
     <ClInclude Include="CircleCollider.h" />
@@ -210,6 +215,7 @@
     <ClInclude Include="line.h" />
     <ClInclude Include="plane.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TriangleCollider.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CommonUtilities\CommonUtilities.vcxproj">

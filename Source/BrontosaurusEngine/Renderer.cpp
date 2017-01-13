@@ -23,6 +23,7 @@
 #include "../PostMaster/DrawCallsCount.h"
 
 #include "../GUI/GUIPixelConstantBuffer.h"
+#include "LineDrawer.h"
 
 #define HDR_FORMAT DXGI_FORMAT_R32G32B32A32_FLOAT
 
@@ -912,6 +913,13 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 
 		emitter->Render(fireTimer.GetLifeTime(), msg->myToWorldMatrix);
 		++aDrawCallCount;
+		break;
+	}
+	case SRenderMessage::eRenderMessageType::eRenderLineBuffer:
+	{
+		SRenderLineBuffer* msg = static_cast<SRenderLineBuffer*>(aRenderMesage);
+		CLineDrawer& lineDrawer = ENGINE->GetLineDrawer();
+		lineDrawer.RenderLineChunk(msg->myLineBuffer);
 		break;
 	}
 	}

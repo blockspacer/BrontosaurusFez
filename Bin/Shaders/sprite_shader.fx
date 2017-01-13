@@ -10,7 +10,7 @@ struct PixelInput
 	float4 color : COLOR;
 };
 
-cbuffer VertexConstantBuffer : register(b0)
+cbuffer VertexConstantBuffer : register(b1)
 {
 	float2 position;
 	float2 size;

@@ -21,6 +21,7 @@ public:
 	bool TestCollision(CPointCollider* aPointCollider) override;
 	bool TestCollision(CCircleCollider* aCircleCollider) override;
 	bool TestCollision(CSquareCollider* aSquareCollider) override;
+	bool TestCollision(CTriangleCollider* aTriangleCollider) override;
 	bool TestCollision(CGroupCollider* aGroupCollider) override;
 
 	void SetPosition(const CU::Vector3f& aPosition) override;

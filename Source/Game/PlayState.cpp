@@ -487,8 +487,8 @@ void CPlayState::Render()
 	myGUIManager->Render();
 
 	msg.myBlendState = eBlendState::eNoBlend;
-	msg.myDepthStencilState = eDepthStencilState::eDefault;
-	msg.myRasterizerState = eRasterizerState::eDefault;
+	msg.myDepthStencilState = eDepthStencilState::eDisableDepth;
+	msg.myRasterizerState = eRasterizerState::eNoCulling;
 	msg.mySamplerState = eSamplerState::eClamp;
 	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
 
@@ -496,6 +496,7 @@ void CPlayState::Render()
 	myGoldText->Render();
 
 	myQuestDrawer.Render();
+	myCollisionComponentManager->Render();
 }
 
 void CPlayState::OnEnter()
