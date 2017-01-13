@@ -197,7 +197,7 @@ void CPlayState::Load()
 	CGameObject* npcObject1 = myGameObjectManager->CreateGameObject();
 	npcObject1->SetName("npcObject1");
 	npcObject1->GetLocalTransform().Move(CU::Vector3f(0.0f, 000.0f, 500.0f));
-	CModelComponent* modelComponent1 = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
+	CModelComponent* modelComponent1 = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle2.fbx");
 	npcObject1->AddComponent(modelComponent1);
 
 	Intersection::CollisionData collisionData;
@@ -304,9 +304,9 @@ void CPlayState::Load()
 	myPlayerObject->AddComponent(playerCollisionComponent);
 	CHealthBarComponent* healthBar = myHealthBarManager->CreateHealthbar();
 	myPlayerObject->AddComponent(healthBar);
-	myPlayerObject->AddComponent(ManaComponentManager::GetInstance().CreateAndRegisterComponent(200));
+	myPlayerObject->AddComponent(ManaComponentManager::GetInstance().CreateAndRegisterComponent(200));*/
 
-*/
+
 
 
 	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
@@ -373,13 +373,13 @@ void CPlayState::Load()
 	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation()); //
 
 	//----CreateEnemies----
-	//myEnemies.Init(8);
-	//TEMP_CREATE_ENEMY();
-	//myEnemies[0]->SetWorldPosition({ -300.f, 0.f, -400.f });
-	//TEMP_CREATE_ENEMY();
-	//myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
-	//TEMP_CREATE_ENEMY();
-	//myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
+	/*myEnemies.Init(8);
+	TEMP_CREATE_ENEMY();
+	myEnemies[0]->SetWorldPosition({ -300.f, 0.f, -400.f });
+	TEMP_CREATE_ENEMY();
+	myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
+	TEMP_CREATE_ENEMY();
+	myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });*/
 
 	//---------------------
 

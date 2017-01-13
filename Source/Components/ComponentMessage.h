@@ -72,7 +72,8 @@ enum class eComponentMessageType
 	eAddAIBehavior,
 	eCheckIfCanUseSkill,
 	eBurnMana,
-	ePercentMPLeft
+	ePercentMPLeft,
+	eSetMaxManaFromStats
 };
 
 struct SComponentMessageData
