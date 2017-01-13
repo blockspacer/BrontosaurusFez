@@ -50,6 +50,7 @@
 //Kanske Inte ska vara här?
 #include "../BrontosaurusEngine/Console.h"
 #include "AIControllerManager.h"
+#include "ManaComponentManager.h"
 //
 
 //Temp Includes
@@ -75,6 +76,7 @@
 #include "Components/HealthBarComponentManager.h"
 #include "SkillSystemComponent.h"
 #include "ModelInstance.h"
+#include "ManaComponent.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
 #include "../BrontosaurusEngine/FireEmitterInstance.h"
@@ -83,7 +85,6 @@
 #include "MouseComponent.h"
 #include "QuestManager.h"
 #include "NavigationComponent.h"
-
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -118,6 +119,7 @@ CPlayState::~CPlayState()
 	SkillComponentManager::DestroyInstance();
 	DropComponentManager::DestroyInstance();
 	PollingStation::NullifyLevelSpecificData();
+	ManaComponentManager::DestroyInstance();
 
 	SkillFactory::DestroyInstance();
 	CComponentManager::DestroyInstance();
@@ -195,7 +197,7 @@ void CPlayState::Load()
 	CGameObject* npcObject1 = myGameObjectManager->CreateGameObject();
 	npcObject1->SetName("npcObject1");
 	npcObject1->GetLocalTransform().Move(CU::Vector3f(0.0f, 000.0f, 500.0f));
-	CModelComponent* modelComponent1 = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
+	CModelComponent* modelComponent1 = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle2.fbx");
 	npcObject1->AddComponent(modelComponent1);
 
 	Intersection::CollisionData collisionData;
@@ -256,7 +258,7 @@ void CPlayState::Load()
 	SweepAttack->animationDuration = 0.5f;
 	SweepAttack->coolDown = 0.5f;
 	SweepAttack->isAOE = true;
-	SweepAttack->isChannel = false;
+	SweepAttack->isChannel = true;
 	SweepAttack->damage = 30;
 	SweepAttack->manaCost = 10;
 	SweepAttack->skillName = SkillData::SkillName::SweepAttack;
@@ -301,11 +303,11 @@ void CPlayState::Load()
 	playerCollisionComponent->SetColliderType(eColliderType_Player);
 	myPlayerObject->AddComponent(playerCollisionComponent);
 	CHealthBarComponent* healthBar = myHealthBarManager->CreateHealthbar();
-	myPlayerObject->AddComponent(healthBar);*/
+	myPlayerObject->AddComponent(healthBar);
+	myPlayerObject->AddComponent(ManaComponentManager::GetInstance().CreateAndRegisterComponent(200));
 
 
-
-
+*/
 
 	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
 	cameraComponent->SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
@@ -371,13 +373,13 @@ void CPlayState::Load()
 	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation()); //
 
 	//----CreateEnemies----
-	myEnemies.Init(8);
-	TEMP_CREATE_ENEMY();
-	myEnemies[0]->SetWorldPosition({ -300.f, 0.f, -400.f });
-	TEMP_CREATE_ENEMY();
-	myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
-	TEMP_CREATE_ENEMY();
-	myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
+	//myEnemies.Init(8);
+	//TEMP_CREATE_ENEMY();
+	//myEnemies[0]->SetWorldPosition({ -300.f, 0.f, -400.f });
+	//TEMP_CREATE_ENEMY();
+	//myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
+	//TEMP_CREATE_ENEMY();
+	//myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
 
 	//---------------------
 
@@ -603,6 +605,7 @@ void CPlayState::CreateManagersAndFactories()
 	SkillComponentManager::CreateInstance();
 	DropComponentManager::CreateInstance();
 	myHealthBarManager = new CHealthBarComponentManager(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
+	ManaComponentManager::CreateInstance();
 }
 
 void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)
@@ -714,7 +717,7 @@ void CPlayState::TEMP_CREATE_ENEMY()
 	collisionComponent->SetColliderType(eColliderType::eColliderType_Enemy);
 	//collisionComponent->GetCollider()->SetGameObject(enemyObj);
 	enemyObj->AddComponent(collisionComponent);
-	enemyObj->AddComponent(DropComponentManager::GetInstance().CreateAndRegisterComponent());
+	enemyObj->AddComponent(DropComponentManager::GetInstance().CreateAndRegisterComponent(50));
 
 	CHealthBarComponent* healthBar = myHealthBarManager->CreateHealthbar();
 	enemyObj->AddComponent(&*healthBar);
@@ -723,6 +726,7 @@ void CPlayState::TEMP_CREATE_ENEMY()
 	SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
 	enemyObj->AddComponent(tempSkillSystemComponent);
 	tempSkillSystemComponent->AddSkill(SkillData::SkillName::BasicAttack);
+	enemyObj->AddComponent(ManaComponentManager::GetInstance().CreateAndRegisterComponent(200));
 
 	tempEnemyStatComponent->SetStats(baseStats, bonusStats);
 	tempEnemyHealthComponent->Init();

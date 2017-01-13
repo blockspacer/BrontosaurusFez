@@ -6,6 +6,7 @@
 class ICollider;
 class CComponent;
 class CGameObject;
+class Skill;
 
 namespace CU
 {
@@ -68,7 +69,11 @@ enum class eComponentMessageType
 	eActivateSkillCollider,
 	eSetSkillTargetPositionWhileHoldingPosition,
 	eObjectDone,
-	eAddAIBehavior
+	eAddAIBehavior,
+	eCheckIfCanUseSkill,
+	eBurnMana,
+	ePercentMPLeft,
+	eSetMaxManaFromStats
 };
 
 struct SComponentMessageData
@@ -94,6 +99,7 @@ struct SComponentMessageData
 		eComponentType myComponentTypeAdded;
 		Stats::STotalStats myStatStruct;
 		ICollider* myCollider;
+		Skill* mySkill;
 	};
 };
 

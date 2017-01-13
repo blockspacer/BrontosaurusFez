@@ -231,6 +231,9 @@
     <ClInclude Include="HealthBarComponent.h" />
     <ClInclude Include="HealthBarComponentManager.h" />
     <ClInclude Include="HealthPoint.h" />
+    <ClInclude Include="ManaComponent.h" />
+    <ClInclude Include="ManaComponentManager.h" />
+    <ClInclude Include="ManaPoint.h" />
     <ClInclude Include="PlayerData.h" />
     <ClInclude Include="SeekController.h" />
     <ClInclude Include="Component.h" />
@@ -283,6 +286,8 @@
     <ClCompile Include="FleeControllerManager.cpp" />
     <ClCompile Include="HealthBarComponent.cpp" />
     <ClCompile Include="HealthBarComponentManager.cpp" />
+    <ClCompile Include="ManaComponent.cpp" />
+    <ClCompile Include="ManaComponentManager.cpp" />
     <ClCompile Include="SeekController.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentManager.cpp" />
