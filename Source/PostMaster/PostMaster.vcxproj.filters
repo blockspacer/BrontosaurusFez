@@ -186,6 +186,8 @@
     <ClInclude Include="HatBought.h">
       <Filter>Events\HatBought</Filter>
     </ClInclude>
+    <ClInclude Include="PopCurrentState.h" />
+    <ClInclude Include="PostMaster.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Events">

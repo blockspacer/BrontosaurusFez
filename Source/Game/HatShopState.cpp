@@ -53,7 +53,7 @@ void HatShopState::OnEnter()
 void HatShopState::OnExit()
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyPressed);
-	myGUIManager->RestartRenderAndUpdate();
+	myGUIManager->PauseRenderAndUpdate();
 }
 
 void HatShopState::BuyHat()

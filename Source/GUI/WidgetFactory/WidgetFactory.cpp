@@ -24,6 +24,7 @@
 #include "../PostMaster/HatBought.h"
 
 #include "../Game/PollingStation.h"
+#include  "../Components/PlayerData.h"
 
 using size_ga = CU::GrowingArray<CLoaderMesh*>::size_type;
 
@@ -183,7 +184,14 @@ namespace GUI
 		}
 		else if (widgetName.Find("buy") != widgetName.FoundNone)
 		{
-			auto buyHatMessage = [] { PostMaster::GetInstance().SendLetter(Message(eMessageType::eHatAdded, HatBought())); };
+			auto buyHatMessage = [] 
+			{ 
+				if (PollingStation::playerData->myGold >= 50 /*Should be something like hat->GetCost() later*/)
+				{
+					PostMaster::GetInstance().SendLetter(Message(eMessageType::eHatAdded, HatBought()));
+					PollingStation::playerData->myGold -= 50;
+				}
+			};
 			Button* button = new Button(buyHatMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
 			button->AddWidget("Animation", new ButtonAnimation(aWidget));
 			return button;
