@@ -120,6 +120,7 @@
     <ClCompile Include="ManaComponent.cpp">
       <Filter>Mana</Filter>
     </ClCompile>
+    <ClCompile Include="ManaComponentManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -261,6 +262,7 @@
     <ClInclude Include="ManaPoint.h">
       <Filter>Mana</Filter>
     </ClInclude>
+    <ClInclude Include="ManaComponentManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

@@ -50,6 +50,7 @@
 //Kanske Inte ska vara här?
 #include "../BrontosaurusEngine/Console.h"
 #include "AIControllerManager.h"
+#include "ManaComponentManager.h"
 //
 
 //Temp Includes
@@ -75,6 +76,7 @@
 #include "Components/HealthBarComponentManager.h"
 #include "SkillSystemComponent.h"
 #include "ModelInstance.h"
+#include "ManaComponent.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
 #include "../BrontosaurusEngine/FireEmitterInstance.h"
@@ -83,7 +85,6 @@
 #include "MouseComponent.h"
 #include "QuestManager.h"
 #include "NavigationComponent.h"
-
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -118,6 +119,7 @@ CPlayState::~CPlayState()
 	SkillComponentManager::DestroyInstance();
 	DropComponentManager::DestroyInstance();
 	PollingStation::NullifyLevelSpecificData();
+	ManaComponentManager::DestroyInstance();
 
 	SkillFactory::DestroyInstance();
 	CComponentManager::DestroyInstance();
@@ -301,10 +303,10 @@ void CPlayState::Load()
 	playerCollisionComponent->SetColliderType(eColliderType_Player);
 	myPlayerObject->AddComponent(playerCollisionComponent);
 	CHealthBarComponent* healthBar = myHealthBarManager->CreateHealthbar();
-	myPlayerObject->AddComponent(healthBar);*/
+	myPlayerObject->AddComponent(healthBar);
+	myPlayerObject->AddComponent(ManaComponentManager::GetInstance().CreateAndRegisterComponent(200));
 
-
-
+*/
 
 
 	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
@@ -371,13 +373,13 @@ void CPlayState::Load()
 	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation()); //
 
 	//----CreateEnemies----
-	myEnemies.Init(8);
-	TEMP_CREATE_ENEMY();
-	myEnemies[0]->SetWorldPosition({ -300.f, 0.f, -400.f });
-	TEMP_CREATE_ENEMY();
-	myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
-	TEMP_CREATE_ENEMY();
-	myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
+	//myEnemies.Init(8);
+	//TEMP_CREATE_ENEMY();
+	//myEnemies[0]->SetWorldPosition({ -300.f, 0.f, -400.f });
+	//TEMP_CREATE_ENEMY();
+	//myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
+	//TEMP_CREATE_ENEMY();
+	//myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
 
 	//---------------------
 
@@ -602,6 +604,7 @@ void CPlayState::CreateManagersAndFactories()
 	SkillComponentManager::CreateInstance();
 	DropComponentManager::CreateInstance();
 	myHealthBarManager = new CHealthBarComponentManager(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
+	ManaComponentManager::CreateInstance();
 }
 
 void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)
@@ -722,6 +725,7 @@ void CPlayState::TEMP_CREATE_ENEMY()
 	SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
 	enemyObj->AddComponent(tempSkillSystemComponent);
 	tempSkillSystemComponent->AddSkill(SkillData::SkillName::BasicAttack);
+	enemyObj->AddComponent(ManaComponentManager::GetInstance().CreateAndRegisterComponent(200));
 
 	tempEnemyStatComponent->SetStats(baseStats, bonusStats);
 	tempEnemyHealthComponent->Init();
