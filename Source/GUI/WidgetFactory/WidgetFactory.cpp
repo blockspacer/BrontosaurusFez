@@ -9,6 +9,7 @@
 #include <BarWidget/BarWidget.h>
 #include <WidgetDecorator/TextWidget/TextWidget.h>
 #include "Button/ButtonAnimation.h"
+#include "ToolTipDecorator.h"
 
 #include "../BrontosaurusEngine/FBXLoader.h"
 #include "../BrontosaurusEngine/Engine.h"
@@ -20,6 +21,7 @@
 #include "../PostMaster/PushState.h"
 #include "../PostMaster/PopCurrentState.h"
 #include "../PostMaster/Pop2States.h"
+#include "../PostMaster/HatBought.h"
 
 #include "../Game/PollingStation.h"
 
@@ -62,7 +64,7 @@ namespace GUI
 			Widget* widget = new ModelWidget(meshes[i], aLoaderScene->myTextures, *guiCamera);
 
 			if (widget->GetName().Find("button") != CU::DynamicString::FoundNone || widget->GetName().Find("Button") != CU::DynamicString::FoundNone
-				|| widget->GetName() == "Resume" || widget->GetName() == "Return")
+				|| widget->GetName() == "Resume" || widget->GetName() == "Return" || widget->GetName().Find("Knapp") != CU::DynamicString::FoundNone || widget->GetName() == "knapp")
 			{
 				widget = CreateButton(widget);
 			}
@@ -78,7 +80,10 @@ namespace GUI
 		CLoaderModel* loaderMOdel = loader.LoadModel("Models/gui/knapp01.fbx");
 		Widget* widget = new ModelWidget(loaderMOdel->myMeshes.at(0), aLoaderScene->myTextures, *guiCamera);
 
-		//widget = new CToolTipDecorator(widget, tooltipText);
+		CLoaderModel* loaderMOdel2 = loader.LoadModel("Models/gui/guiTooltip.fbx");
+		ModelWidget* backgroundModel = new ModelWidget(loaderMOdel2->myMeshes.at(0), aLoaderScene->myTextures, *guiCamera);
+		std::string tooltipText = "hey im a tooltip";
+		widget = new CToolTipDecorator(widget, backgroundModel, tooltipText);
 
 		if (widget != nullptr)
 		{
@@ -173,6 +178,13 @@ namespace GUI
 		{
 			auto pushLevelMessage = [] { PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PushState(PushState::eState::ePlayState, 14))); };
 			Button* button = new Button(pushLevelMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
+			button->AddWidget("Animation", new ButtonAnimation(aWidget));
+			return button;
+		}
+		else if (widgetName.Find("buy") != widgetName.FoundNone)
+		{
+			auto buyHatMessage = [] { PostMaster::GetInstance().SendLetter(Message(eMessageType::eHatAdded, HatBought())); };
+			Button* button = new Button(buyHatMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
 			button->AddWidget("Animation", new ButtonAnimation(aWidget));
 			return button;
 		}

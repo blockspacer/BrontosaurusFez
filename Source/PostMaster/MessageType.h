@@ -25,6 +25,7 @@ enum class eMessageType
 	eNextLevelPlease,
 	eConsoleCalledUpon,
 	QuestRelated,
+	eHatAdded,
 	eLength,
 };
 //Ifall du vill lägga till en till messagetyp så kompilera om Postmaster Projekter annars kraschar det. 

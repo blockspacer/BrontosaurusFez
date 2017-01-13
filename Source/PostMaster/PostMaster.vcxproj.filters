@@ -65,6 +65,9 @@
     <ClCompile Include="QuestDataUpdated.cpp">
       <Filter>Events\QuestDataUpdated</Filter>
     </ClCompile>
+    <ClCompile Include="HatBought.cpp">
+      <Filter>Events\HatBought</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Subscriber.h">
@@ -175,8 +178,13 @@
     <ClInclude Include="MouseClicked.h">
       <Filter>Events\MouseClicked</Filter>
     </ClInclude>
-	<ClInclude Include="QuestDataUpdated.h">
+    <ClInclude Include="QuestDataUpdated.h">
       <Filter>Events\QuestDataUpdated</Filter>
+    </ClInclude>
+    <ClInclude Include="PopCurrentState.h" />
+    <ClInclude Include="PostMaster.h" />
+    <ClInclude Include="HatBought.h">
+      <Filter>Events\HatBought</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -251,6 +259,9 @@
     </Filter>
     <Filter Include="Events\QuestDataUpdated">
       <UniqueIdentifier>{5192a1de-0623-4ce8-8e60-448ee7391389}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events\HatBought">
+      <UniqueIdentifier>{f8d9236a-d0ce-4fde-b2d9-ca9b0c1a607c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

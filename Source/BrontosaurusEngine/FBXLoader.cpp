@@ -419,7 +419,7 @@ bool CFBXLoader::LoadGUIScene(const char* aFilePath, CLoaderScene& aSceneOut)
 	for (unsigned int i = 0; i < root->mNumChildren; ++i)
 	{
 		std::string name = root->mChildren[i]->mName.C_Str();
-		if (name.find("Grp") != std::string::npos || name.find("Base") != std::string::npos)
+		if (name.find("Grp") != std::string::npos || name.find("Base") != std::string::npos || name.find("shop") != std::string::npos || name.find("buy") != std::string::npos) //TODO: Solv this hell
 		{
 			modelGroup = root->mChildren[i];
 			break;
@@ -638,7 +638,8 @@ void* CFBXLoader::LoadModelInternal(CLoaderModel* someInput)
 
 	if (!does_file_exist(model->myModelPath.c_str()))
 	{
-		MessageBox(nullptr, L"File Not Found", L"Load error", MB_OK | MB_ICONERROR);
+		DL_MESSAGE_BOX("File not found: %s", model->myModelPath.c_str());
+		//MessageBox(nullptr, longModelPath.c_str(), L"Load error", MB_OK | MB_ICONERROR);
 		OutputDebugStringA("File not found");
 		return nullptr;
 	}
@@ -662,6 +663,7 @@ void* CFBXLoader::LoadModelInternal(CLoaderModel* someInput)
 		aiMesh* fbxMesh = scene->mMeshes[n];
 
 		DetermineAndLoadVerticies(fbxMesh, mesh);
+		DetermineBoxCollider(fbxMesh->mVertices, fbxMesh->mNumVertices, *mesh);
 
 		for (unsigned int i = 0; i < fbxMesh->mNumFaces; i++)
 		{

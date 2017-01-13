@@ -93,6 +93,7 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 	, myMouseComponent(nullptr)
 {
 	myIsLoaded = false;
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eHatAdded);
 }
 
 CPlayState::~CPlayState()
@@ -120,7 +121,7 @@ CPlayState::~CPlayState()
 
 	SkillFactory::DestroyInstance();
 	CComponentManager::DestroyInstance();
-
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eHatAdded);
 }
 
 void CPlayState::Load()
@@ -505,7 +506,7 @@ void CPlayState::OnEnter()
 	Audio::CAudioInterface::GetInstance()->LoadBank("Audio/playState.bnk");
 	Audio::CAudioInterface::GetInstance()->PostEvent("PlayCoolSong");
 	//Audio::CAudioInterface::GetInstance()->PostEvent("PlayerMoving_Play");
-	//myGUIManager->RestartRenderAndUpdate();
+	myGUIManager->RestartRenderAndUpdate();
 }
 
 void CPlayState::OnExit()
@@ -533,6 +534,11 @@ void CPlayState::Pause()
 void CPlayState::BuyHats()
 {
 	PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PushState(PushState::eState::eHatShop, -1)));
+}
+
+void CPlayState::GiveHatToPlayer()
+{
+	TEMP_ADD_HAT(PollingStation::playerObject);
 }
 
 void CPlayState::NextLevel()

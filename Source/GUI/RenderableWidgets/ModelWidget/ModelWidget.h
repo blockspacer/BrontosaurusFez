@@ -21,7 +21,6 @@ namespace GUI
 		friend class ButtonAnimation;
 
 		ModelWidget(CLoaderMesh* aLoaderMesh, const CU::GrowingArray<CU::DynamicString>& aTexturePaths, const CU::Camera& aGUICamera);
-		//ModelWidget(CModelInstance* aModelInstance, const CU::DynamicString& aName);
 		~ModelWidget();
 
 		void Update(const CU::Time& aDeltaTime) override;
@@ -30,6 +29,8 @@ namespace GUI
 		void SetInactivePosition(const CU::Vector3f& aPosition);
 		void SetVisibility(const bool aVisibility) override;
 		void OnMouseEnter(const CU::Vector2f& aMousePosition) override;
+
+		void OnPositionChanged(const CU::Vector2f aDisplacement) override;
 
 		SPixelConstantBuffer& GetPixelConstantBufferStruct();
 
@@ -43,6 +44,8 @@ namespace GUI
 		void ConvertPosition3DTo2D(const CU::Camera& aGUICamera, const CU::Vector3f& aPosition3D, CU::Vector2f& aPosition2D);
 
 		CU::Matrix44f myOriginalTransformation;
+		CU::Vector3f myMinPoint;
+		CU::Vector3f myMaxPoint;
 
 		CModelInstance* myModelInstance;
 		SPixelConstantBuffer* myPixelConstantBufferStruct;
