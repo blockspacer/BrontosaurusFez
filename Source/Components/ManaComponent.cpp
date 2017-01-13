@@ -5,6 +5,8 @@
 #include "..\PostMaster\EMessageReturn.h"
 #include "..\PostMaster\Event.h"
 #include "..\PostMaster\Message.h"
+#include "Skill.h"
+#include "SkillData.h"
 
 ManaComponent::ManaComponent()
 {
@@ -68,11 +70,22 @@ void ManaComponent::Receive(const eComponentMessageType aMessageType, const SCom
 	case eComponentMessageType::eStatsUpdated:
 		SetMaxMana(aMessageData.myStatStruct.MaxMana);
 		break;
-	case eComponentMessageType::eTakeDamage:
+	case eComponentMessageType::eBurnMana:
 		SetMana(myMana - aMessageData.myInt);
 		SComponentMessageData data; data.myUChar = myPercentageLeft * 100;
 		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data);
 		break;
+	case eComponentMessageType::eCheckIfCanUseSkill:
+	{
+		if (myMana >= aMessageData.mySkill->GetSkillData()->manaCost)
+		{
+			SComponentMessageData data;
+			data.myInt = aMessageData.mySkill->GetSkillData()->manaCost;
+			GetParent()->NotifyComponents(eComponentMessageType::eBurnMana, data);
+			aMessageData.mySkill->Activate();
+		}
+		break;
+	}
 	}
 }
 
