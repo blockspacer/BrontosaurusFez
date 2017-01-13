@@ -716,7 +716,7 @@ void CPlayState::TEMP_CREATE_ENEMY()
 	collisionComponent->SetColliderType(eColliderType::eColliderType_Enemy);
 	//collisionComponent->GetCollider()->SetGameObject(enemyObj);
 	enemyObj->AddComponent(collisionComponent);
-	enemyObj->AddComponent(DropComponentManager::GetInstance().CreateAndRegisterComponent());
+	enemyObj->AddComponent(DropComponentManager::GetInstance().CreateAndRegisterComponent(50));
 
 	CHealthBarComponent* healthBar = myHealthBarManager->CreateHealthbar();
 	enemyObj->AddComponent(&*healthBar);

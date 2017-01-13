@@ -218,6 +218,7 @@
   <ItemGroup>
     <ClInclude Include="LoadAIController.h" />
     <ClInclude Include="LoadCamera.h" />
+    <ClInclude Include="LoadDropComponent.h" />
     <ClInclude Include="LoadHealthBarComponent.h" />
     <ClInclude Include="LoadHealthComponent.h" />
     <ClInclude Include="LoadManager.h" />
@@ -235,6 +236,7 @@
   <ItemGroup>
     <ClCompile Include="LoadAIController.cpp" />
     <ClCompile Include="LoadCamera.cpp" />
+    <ClCompile Include="LoadDropComponent.cpp" />
     <ClCompile Include="LoadHealthBarComponent.cpp" />
     <ClCompile Include="LoadHealthComponent.cpp" />
     <ClCompile Include="LoadManager.cpp" />
