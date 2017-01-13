@@ -36,9 +36,9 @@ void DropComponentManager::DestroyInstance()
 	SAFE_DELETE(ourInstance);
 }
 
-DropComponent* DropComponentManager::CreateAndRegisterComponent()
+DropComponent* DropComponentManager::CreateAndRegisterComponent(unsigned short aAmountToDrop)
 {
-	DropComponent* Component = new DropComponent(50);
+	DropComponent* Component = new DropComponent(aAmountToDrop);
 	myComponents.Add(Component);
 	CComponentManager::GetInstance().RegisterComponent(Component);
 

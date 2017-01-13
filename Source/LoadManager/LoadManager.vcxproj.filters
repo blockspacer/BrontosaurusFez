@@ -34,6 +34,7 @@
     <ClInclude Include="LoadSkillSystemComponent.h" />
     <ClInclude Include="LoadHealthComponent.h" />
     <ClInclude Include="LoadHealthBarComponent.h" />
+    <ClInclude Include="LoadDropComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -66,6 +67,7 @@
     <ClCompile Include="LoadSkillSystemComponent.cpp" />
     <ClCompile Include="LoadHealthComponent.cpp" />
     <ClCompile Include="LoadHealthBarComponent.cpp" />
+    <ClCompile Include="LoadDropComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="VS">
