@@ -221,6 +221,7 @@
     <ClInclude Include="LoadDropComponent.h" />
     <ClInclude Include="LoadHealthBarComponent.h" />
     <ClInclude Include="LoadHealthComponent.h" />
+    <ClInclude Include="LoadManaComponent.h" />
     <ClInclude Include="LoadManager.h" />
     <ClInclude Include="LoadModel.h" />
     <ClInclude Include="LoadMovementComponent.h" />
@@ -239,6 +240,7 @@
     <ClCompile Include="LoadDropComponent.cpp" />
     <ClCompile Include="LoadHealthBarComponent.cpp" />
     <ClCompile Include="LoadHealthComponent.cpp" />
+    <ClCompile Include="LoadManaComponent.cpp" />
     <ClCompile Include="LoadManager.cpp" />
     <ClCompile Include="LoadModel.cpp" />
     <ClCompile Include="LoadMovementComponent.cpp" />

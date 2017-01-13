@@ -14,6 +14,7 @@
 #include "LoadHealthComponent.h"
 #include "LoadHealthBarComponent.h"
 #include "LoadDropComponent.h"
+#include "LoadManaComponent.h"
 
 LoadManager* LoadManager::ourInstance = nullptr;
 
@@ -79,6 +80,7 @@ void LoadManager::RegisterFunctions()
 	loader.RegisterComponentLoadFunction("HealthComponent", LoadHealthComponent);
 	loader.RegisterComponentLoadFunction("HealthBarComponent", LoadHealthBarComponent);
 	loader.RegisterComponentLoadFunction("DropComponent", LoadDropComponent);
+	loader.RegisterComponentLoadFunction("ManaComponent", LoadManaComponent);
 
 }
 
