@@ -8,9 +8,9 @@
 #include "Skill.h"
 #include "SkillData.h"
 
-ManaComponent::ManaComponent()
+ManaComponent::ManaComponent(ManaPoint aMaxAmountOfMana)
 {
-	myMaxMana = 100;
+	myMaxMana = aMaxAmountOfMana;
 	myMana = myMaxMana;
 	myPercentageLeft = static_cast<float>(myMana) / static_cast<float>(myMaxMana);
 }

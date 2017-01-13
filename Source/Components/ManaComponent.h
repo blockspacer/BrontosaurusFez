@@ -6,7 +6,7 @@
 class ManaComponent : public CComponent
 {
 public:
-	ManaComponent();
+	ManaComponent(ManaPoint aMaxAmountOfMana);
 	~ManaComponent();
 	float GetPrecentLeft() const;
 
