@@ -96,7 +96,14 @@ void CInputManager::UpdateMouse()
 		{
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eMouseMessage, MouseReleased(mousePosition, CU::eMouseButtons::LBUTTON)));
 		}
-
+		if (myDInputWrapper->IsMouseButtonPressed(CU::eMouseButtons::RBUTTON) == true)
+		{
+			PostMaster::GetInstance().SendLetter(Message(eMessageType::eMouseMessage, MouseClicked(mousePosition, CU::eMouseButtons::RBUTTON)));
+		}
+		if (myDInputWrapper->IsMouseButtonReleased(CU::eMouseButtons::RBUTTON) == true)
+		{
+			PostMaster::GetInstance().SendLetter(Message(eMessageType::eMouseMessage, MouseReleased(mousePosition, CU::eMouseButtons::RBUTTON)));
+		}
 		//myDInputWrapper->SetMousePosition(CEngine::GetInstance()->GetWindowSize().x / 2, CEngine::GetInstance()->GetWindowSize().y / 2);
 	}
 	
