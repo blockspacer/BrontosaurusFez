@@ -471,6 +471,8 @@ void CPlayState::Render()
 {
 	myScene->Render();
 
+	myCollisionComponentManager->Render();
+
 	SChangeStatesMessage msg;
 	msg.myBlendState = eBlendState::eAlphaBlend;
 	msg.myDepthStencilState = eDepthStencilState::eDefault;
@@ -498,7 +500,6 @@ void CPlayState::Render()
 	myGoldText->Render();
 
 	myQuestDrawer.Render();
-	myCollisionComponentManager->Render();
 }
 
 void CPlayState::OnEnter()
