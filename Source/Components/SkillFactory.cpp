@@ -4,6 +4,9 @@
 
 #include <iostream>
 
+#include "../CommonUtilities/PJWrapper.h"
+
+
 SkillFactory* SkillFactory::ourInstance = nullptr;
 
 SkillFactory::SkillFactory()
@@ -69,4 +72,45 @@ Skill * SkillFactory::CreateSkill(SkillData::SkillName aSkillName)
 void SkillFactory::RegisterSkillData(SkillData * aSkillData)
 {
 	mySkillDataList.Add(aSkillData);
+}
+
+void SkillFactory::RegisterSkills()
+{
+	std::string error;
+	CU::CPJWrapper json;
+	json.Parse("");
+
+	if (json.count("name") < 1)
+	{
+		DL_PRINT("Json file is missing");
+	}
+
+	SkillData skill;
+	skill.activationRadius = json.at("activationRadius").GetFloat();
+	skill.animationDuration = json.at("animationDuration").GetFloat();
+	skill.coolDown = json.at("coolDown").GetFloat();
+	skill.damage = json.at("damage").GetUInt();
+	skill.isAOE = json.at("isAOE").GetBool();
+	skill.isChannel = json.at("isChannel").GetBool();
+	skill.manaCost = json.at("manaCost").GetUInt();
+	skill.range = json.at("range").GetFloat();
+	
+	std::string name = json.at("name").GetString();
+
+	if (name == "WhirlWind")
+	{
+		skill.skillName = SkillData::SkillName::WhirlWind;
+	}
+	else if (name == "BasicAttack")
+	{
+		skill.skillName = SkillData::SkillName::BasicAttack;
+	}
+	else if (name == "SweepAttack")
+	{
+		skill.skillName = SkillData::SkillName::SweepAttack;
+	}
+	else
+	{
+		DL_PRINT("Couldn't find match for skill name in json file");
+	}
 }
