@@ -68,6 +68,7 @@
     <ClCompile Include="HatBought.cpp">
       <Filter>Events\HatBought</Filter>
     </ClCompile>
+    <ClCompile Include="DroppedFile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Subscriber.h">
@@ -186,6 +187,9 @@
     <ClInclude Include="HatBought.h">
       <Filter>Events\HatBought</Filter>
     </ClInclude>
+    <ClInclude Include="PopCurrentState.h" />
+    <ClInclude Include="PostMaster.h" />
+    <ClInclude Include="DroppedFile.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Events">
@@ -262,6 +266,9 @@
     </Filter>
     <Filter Include="Events\HatBought">
       <UniqueIdentifier>{f8d9236a-d0ce-4fde-b2d9-ca9b0c1a607c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events\DroppedFile">
+      <UniqueIdentifier>{72344672-2104-4df1-bcbe-3b47f7faa274}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

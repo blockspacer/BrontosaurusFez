@@ -30,6 +30,7 @@
     <ClCompile Include="ChangeLevel.cpp" />
     <ClCompile Include="ConsoleCalledUpon.cpp" />
     <ClCompile Include="DrawCallsCount.cpp" />
+    <ClCompile Include="DroppedFile.cpp" />
     <ClCompile Include="FocusChange.cpp" />
     <ClCompile Include="HatBought.cpp" />
     <ClCompile Include="InputMessagePressed.cpp" />
@@ -57,6 +58,7 @@
     <ClInclude Include="ChangeLevel.h" />
     <ClInclude Include="ConsoleCalledUpon.h" />
     <ClInclude Include="DrawCallsCount.h" />
+    <ClInclude Include="DroppedFile.h" />
     <ClInclude Include="EMessageReturn.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="FocusChange.h" />
