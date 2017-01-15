@@ -186,7 +186,7 @@ void CPlayState::Load()
 	//LUA_WRAPPER.CallLuaFunction("GameLoad", levelIndex);
 
 	//kanske inte ska ske så här?
-	LUA_WRAPPER.RegisterFunction(SSlua::LuaCallbackFunction(&CPlayState::LuaFunction), "Func", "loll", true);
+	//LUA_WRAPPER.RegisterFunction(SSlua::LuaCallbackFunction(&CPlayState::LuaFunction), "Func", "loll", true);
 	CONSOLE->GetLuaFunctions();
 	//
 

@@ -12,6 +12,9 @@
 #include "../Components/InputController.h"
 #include "Game/HatShopState.h"
 
+#include "../Game/QuestManager.h"
+#include "../Game/QuestDrawer.h"
+
 //temp
 #include "Components\HealthComponent.h"
 #include "../BrontosaurusEngine/Renderer.h"

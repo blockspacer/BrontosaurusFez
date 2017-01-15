@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "../StateStack/StateStack.h"
 #include "BackgroundLoadingManager.h"
 

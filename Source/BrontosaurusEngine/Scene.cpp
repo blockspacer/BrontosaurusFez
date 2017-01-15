@@ -218,8 +218,8 @@ InstanceID CScene::AddModelInstance(CModelInstance* aModelInstance)
 
 	if (myFreeModels.Size() < 1)
 	{
-		myModels.Add(aModelInstance);
 		id = myModels.Size();
+		myModels.Add(aModelInstance);
 		return id;
 	}
 

@@ -7,6 +7,8 @@ public:
 	DroppedFile(const std::string& aFilePath);
 	~DroppedFile();
 
+	eMessageReturn DoEvent(CModelViewer* aModelViewer) const override;
+
 private:
 	std::string myFilePath;
 };

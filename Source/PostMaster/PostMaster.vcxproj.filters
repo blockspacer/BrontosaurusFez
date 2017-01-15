@@ -53,7 +53,6 @@
     <ClCompile Include="PushState.cpp" />
     <ClCompile Include="PushState.cpp" />
     <ClCompile Include="PushState.cpp" />
-    <ClCompile Include="FocusChange.cpp" />
     <ClCompile Include="PushState.cpp">
       <Filter>Events\PushState</Filter>
     </ClCompile>
@@ -68,7 +67,12 @@
     <ClCompile Include="HatBought.cpp">
       <Filter>Events\HatBought</Filter>
     </ClCompile>
-    <ClCompile Include="DroppedFile.cpp" />
+    <ClCompile Include="FocusChange.cpp">
+      <Filter>Events\FocusChanged</Filter>
+    </ClCompile>
+    <ClCompile Include="DroppedFile.cpp">
+      <Filter>Events\DroppedFile</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Subscriber.h">
@@ -155,7 +159,6 @@
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="PushState.h" />
-    <ClInclude Include="FocusChange.h" />
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="PushState.h">
@@ -189,7 +192,12 @@
     </ClInclude>
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
-    <ClInclude Include="DroppedFile.h" />
+    <ClInclude Include="FocusChange.h">
+      <Filter>Events\FocusChanged</Filter>
+    </ClInclude>
+    <ClInclude Include="DroppedFile.h">
+      <Filter>Events\DroppedFile</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Events">
@@ -246,17 +254,11 @@
     <Filter Include="Events\ScoreEvent">
       <UniqueIdentifier>{ca991c21-247d-4812-8570-59036411bae4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Events\DestroyCollider">
-      <UniqueIdentifier>{18e4e388-1364-4dfa-9b2f-6451bdc2935f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Events\ChangeLevel">
       <UniqueIdentifier>{05022f39-b2a0-4da8-9eac-0d6341726143}</UniqueIdentifier>
     </Filter>
     <Filter Include="Events\PopTop2States">
       <UniqueIdentifier>{8d37bc54-7120-4ef6-9af6-9c26d6a05c0f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Events\InputMessagePressed">
-      <UniqueIdentifier>{1c03f578-17ff-4d90-b49c-3dbfe800b681}</UniqueIdentifier>
     </Filter>
     <Filter Include="Events\KeyCharPressed">
       <UniqueIdentifier>{a4ddbb42-71f7-432a-aecb-ff030a240365}</UniqueIdentifier>
