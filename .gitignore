@@ -380,3 +380,9 @@ Bin/Text/carl_font_2.fnt
 *.jpg
 *.mat
 /Bin/Json/Quests/Quest jsonInstruktioner.docx
+Bin/ModelViewer_Debug.exp
+Bin/ModelViewer_Debug.lib
+Bin/ModelViewer_ModelViewer.exp
+Bin/ModelViewer_ModelViewer.lib
+Bin/ModelViewer_ModelViewerRelease.exp
+Bin/ModelViewer_ModelViewerRelease.lib

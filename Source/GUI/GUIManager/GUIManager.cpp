@@ -80,9 +80,12 @@ void GUI::GUIManager::Render()
 	changeStateMessage->mySamplerState = eSamplerState::eClamp;
 	RENDERER.AddRenderMessage(changeStateMessage);
 
-	SSetCameraMessage* setCameraMessage = new SSetCameraMessage();
-	setCameraMessage->myCamera = *myCamera;
-	RENDERER.AddRenderMessage(setCameraMessage);
+	if (myCamera != nullptr)
+	{
+		SSetCameraMessage* setCameraMessage = new SSetCameraMessage();
+		setCameraMessage->myCamera = *myCamera;
+		RENDERER.AddRenderMessage(setCameraMessage);
+	}
 
 	myWidgetContainer->Render();
 
@@ -90,10 +93,13 @@ void GUI::GUIManager::Render()
 	{
 		myCursor->Render();
 	}
-	
-	setCameraMessage = new SSetCameraMessage();
-	setCameraMessage->myCamera = *myCamera;
-	RENDERER.AddRenderMessage(setCameraMessage);
+
+	if (myCamera != nullptr)
+	{
+		SSetCameraMessage* setCameraMessage = new SSetCameraMessage();
+		setCameraMessage->myCamera = *myCamera;
+		RENDERER.AddRenderMessage(setCameraMessage);
+	}
 }
 
 void GUI::GUIManager::AddWidget(const CU::DynamicString& aName, Widget* aWidget)

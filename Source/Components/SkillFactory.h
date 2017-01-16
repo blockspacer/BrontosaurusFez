@@ -13,6 +13,7 @@ public:
 
 	Skill* CreateSkill(SkillData::SkillName aSkillName);
 	void RegisterSkillData(SkillData* aSkillData);
+	void RegisterSkills();
 private:
 	SkillFactory();
 	

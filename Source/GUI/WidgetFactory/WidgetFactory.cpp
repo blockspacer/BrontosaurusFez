@@ -78,16 +78,19 @@ namespace GUI
 		CU::DynamicString widgetName = "CarlWasHere";
 		CFBXLoader loader;
 		CLoaderModel* loaderMOdel = loader.LoadModel("Models/gui/knapp01.fbx");
-		Widget* widget = new ModelWidget(loaderMOdel->myMeshes.at(0), aLoaderScene->myTextures, *guiCamera);
-
-		CLoaderModel* loaderMOdel2 = loader.LoadModel("Models/gui/guiTooltip.fbx");
-		ModelWidget* backgroundModel = new ModelWidget(loaderMOdel2->myMeshes.at(0), aLoaderScene->myTextures, *guiCamera);
-		std::string tooltipText = "hey im a tooltip";
-		widget = new CToolTipDecorator(widget, backgroundModel, tooltipText);
-
-		if (widget != nullptr)
+		if (loaderMOdel != nullptr)
 		{
-			baseWidgetContainer->AddWidget(widget->GetName(), widget);
+			Widget* widget = new ModelWidget(loaderMOdel->myMeshes.at(0), aLoaderScene->myTextures, *guiCamera);
+
+			CLoaderModel* loaderMOdel2 = loader.LoadModel("Models/gui/guiTooltip.fbx");
+			ModelWidget* backgroundModel = new ModelWidget(loaderMOdel2->myMeshes.at(0), aLoaderScene->myTextures, *guiCamera);
+			std::string tooltipText = "hey im a tooltip";
+			widget = new CToolTipDecorator(widget, backgroundModel, tooltipText);
+
+			if (widget != nullptr)
+			{
+				baseWidgetContainer->AddWidget(widget->GetName(), widget);
+			}
 		}
 
 
@@ -201,7 +204,7 @@ namespace GUI
 	{
 		if (aCamera == nullptr)
 		{
-			DL_ASSERT("GUI Widget factory got CLoaderCamera that is NULL");
+			DL_MESSAGE_BOX("GUI Widget factory got CLoaderCamera that is NULL");
 			return nullptr;
 		}
 

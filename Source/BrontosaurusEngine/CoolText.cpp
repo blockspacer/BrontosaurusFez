@@ -150,6 +150,6 @@ void CCoolText::UpdateAndSetVertexConstantBuffer(const CU::Vector2f& aPosition, 
 	memcpy(mappedSubResource.pData, &cbufferStruct, sizeof(SVertexConstantBufferType));
 	context.Unmap(myVertexConstantBuffer, 0);
 
-	context.VSSetConstantBuffers(0, 1, &myVertexConstantBuffer);
+	context.VSSetConstantBuffers(1, 1, &myVertexConstantBuffer);
 }
 

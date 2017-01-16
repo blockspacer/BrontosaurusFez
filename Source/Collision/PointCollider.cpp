@@ -46,6 +46,11 @@ bool CPointCollider::TestCollision(CSquareCollider* aSquareCollider)
 	return Intersection::PointInsideSquare(aSquareCollider->GetData(), GetData());
 }
 
+bool CPointCollider::TestCollision(CTriangleCollider* aTriangleCollider)
+{
+	return Intersection::PointInsideTriangle(aTriangleCollider->GetData(), GetData());
+}
+
 bool CPointCollider::TestCollision(CGroupCollider* aGroupCollider)
 {
 	return aGroupCollider->TestCollision(this);

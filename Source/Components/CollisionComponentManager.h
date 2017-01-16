@@ -27,6 +27,7 @@ public:
 	~CCollisionComponentManager();
 
 	void Update();
+	void Render();
 
 	CCollisionComponent* CreateCollisionComponent(const eColliderType aColliderType, Intersection::CollisionData& aCollisionData);
 	void DestroyCollisionComponent(CCollisionComponent* aCollisionComponent);

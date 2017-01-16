@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "QuestDataUpdated.h"
 
+#include "../Game/QuestManager.h"
+#include "../Game/QuestDrawer.h"
 
 CQuestDataUpdated::CQuestDataUpdated()
 {

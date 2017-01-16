@@ -13,22 +13,37 @@ CLineDrawer::CLineDrawer()
 	: myLines2D(8)
 	, myLineHandles2D(8)
 	, myVertexBuffer2D(nullptr)
+	, myEffect3D(nullptr)
+	, myVertexBuffer3D(nullptr)
 {
-	const unsigned int shaderBluePrint = EModelBluePrint::EModelBluePrint_Position;
-
 	CShaderManager* shaderManager = CEngine::GetInstance()->GetShaderManager();
-	ID3D11VertexShader* vertexShader = shaderManager->LoadVertexShader(L"Shaders/line_shader.fx", shaderBluePrint);
-	ID3D11PixelShader* pixelShader = shaderManager->LoadPixelShader(L"Shaders/line_shader.fx", shaderBluePrint);
-	ID3D11InputLayout* inputLayout = shaderManager->LoadInputLayout(L"Shaders/line_shader.fx", shaderBluePrint);
+	if (shaderManager == nullptr) return;
 
-	myEffect = new CEffect(vertexShader, pixelShader, nullptr, inputLayout, D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_LINELIST);
+	const unsigned int shaderBluePrint2d = EModelBluePrint::EModelBluePrint_Position;
+
+	ID3D11VertexShader* vertexShader2d = shaderManager->LoadVertexShader(L"Shaders/line_shader.fx", shaderBluePrint2d);
+	ID3D11PixelShader* pixelShader2d = shaderManager->LoadPixelShader(L"Shaders/line_shader.fx", shaderBluePrint2d);
+	ID3D11InputLayout* inputLayout2d = shaderManager->LoadInputLayout(L"Shaders/line_shader.fx", shaderBluePrint2d);
+
+	myEffect2D = new CEffect(vertexShader2d, pixelShader2d, nullptr, inputLayout2d, D3D_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+
+	if (std::ifstream("Shaders/line_shader.fx").good())
+	{
+		const unsigned int shaderBluePrint3d = EModelBluePrint::EModelBluePrint_Position;
+
+		ID3D11VertexShader* vertexShader3d = shaderManager->LoadVertexShader(L"Shaders/line_shader_3d.fx", shaderBluePrint3d);
+		ID3D11PixelShader* pixelShader3d = shaderManager->LoadPixelShader(L"Shaders/line_shader_3d.fx", shaderBluePrint3d);
+		ID3D11InputLayout* inputLayout3d = shaderManager->LoadInputLayout(L"Shaders/line_shader_3d.fx", shaderBluePrint3d);
+
+		myEffect3D = new CEffect(vertexShader3d, pixelShader3d, nullptr, inputLayout3d, D3D_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	}
 
 	CreateVertexBuffers();
 }
 
 CLineDrawer::~CLineDrawer()
 {
-	SAFE_DELETE(myEffect);
+	SAFE_DELETE(myEffect2D);
 }
 
 void CLineDrawer::Render()
@@ -97,28 +112,68 @@ void CLineDrawer::RemoveLine2D(const LineHandle aLineHandle)
 	}
 }
 
+void CLineDrawer::RenderLineChunk(const CU::GrowingArray<char, unsigned short, false>& aLineChunk)
+{
+	if (myVertexBuffer3D == nullptr) return;
+	if (aLineChunk.Size() <= 0) return;
+
+	ID3D11DeviceContext* context = DEVICE_CONTEXT;
+	if (context == nullptr) return;
+	
+	myEffect3D->Activate();
+
+	UpdateVertexBuffer3D(aLineChunk, *context);
+
+	UINT stride = sizeof(float) * 4u;
+	UINT offset = 0;
+
+	context->IASetVertexBuffers(0, 1, &myVertexBuffer3D, &stride, &offset);
+	context->Draw(static_cast<UINT>(aLineChunk.Size()) / stride, 0u);
+}
+
 void CLineDrawer::CreateVertexBuffers()
 {
-	D3D11_BUFFER_DESC vertexBufferDesc = {};
+	ID3D11Device* device = DEVICE;
+	if (device == nullptr) return;
 
-	vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	vertexBufferDesc.ByteWidth = sizeof(SLine2D) * ourMaxNumberOfLines;
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	vertexBufferDesc.MiscFlags = 0;
+	//2D
+	{
+		D3D11_BUFFER_DESC vertexBufferDesc = {};
 
-	HRESULT result = DEVICE->CreateBuffer(&vertexBufferDesc, nullptr, &myVertexBuffer2D);
-	CHECK_RESULT(result, "Failed to create vertex buffer.");
+		vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+		vertexBufferDesc.ByteWidth = sizeof(SLine2D) * ourMaxNumberOfLines;
+		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		vertexBufferDesc.MiscFlags = 0;
+
+		HRESULT result = device->CreateBuffer(&vertexBufferDesc, nullptr, &myVertexBuffer2D);
+		CHECK_RESULT(result, "Failed to create vertex buffer.");
+	}
+
+	//3D
+	if (std::ifstream("Shaders/line_shader.fx").good())
+	{
+		D3D11_BUFFER_DESC vertexBufferDesc = {};
+
+		vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+		vertexBufferDesc.ByteWidth = sizeof(SLine2D) * ourMaxNumberOfLines;
+		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		vertexBufferDesc.MiscFlags = 0;
+
+		HRESULT result = device->CreateBuffer(&vertexBufferDesc, nullptr, &myVertexBuffer3D);
+		CHECK_RESULT(result, "Failed to create vertex buffer.");
+	}
 }
 
 void CLineDrawer::RenderLines2D()
 {
 	if (myVertexBuffer2D != nullptr)
 	{
-		ID3D11DeviceContext* context = CEngine::GetInstance()->GetFramework()->GetDeviceContext();
+		ID3D11DeviceContext* context = DEVICE_CONTEXT;
 		if (context != nullptr)
 		{
-			myEffect->Activate();
+			myEffect2D->Activate();
 
 			UpdateVertexBuffer2D();
 
@@ -155,4 +210,12 @@ void CLineDrawer::UpdateVertexBuffer2D()
 			context->Unmap(myVertexBuffer2D, 0);
 		}
 	}
+}
+
+void CLineDrawer::UpdateVertexBuffer3D(const CU::GrowingArray<char, unsigned short, false>& aLineChunk, ID3D11DeviceContext& aContext)
+{
+	D3D11_MAPPED_SUBRESOURCE mappedSubresource = {};
+	aContext.Map(myVertexBuffer3D, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
+	memcpy(mappedSubresource.pData, aLineChunk.AsVoidPointer(), min(aLineChunk.ByteSize(), ourMaxNumberOfLines * sizeof(float) * 4u * 2u));
+	aContext.Unmap(myVertexBuffer3D, 0);
 }

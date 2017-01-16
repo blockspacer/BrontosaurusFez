@@ -186,7 +186,7 @@ void CPlayState::Load()
 	//LUA_WRAPPER.CallLuaFunction("GameLoad", levelIndex);
 
 	//kanske inte ska ske så här?
-	LUA_WRAPPER.RegisterFunction(SSlua::LuaCallbackFunction(&CPlayState::LuaFunction), "Func", "loll", true);
+	//LUA_WRAPPER.RegisterFunction(SSlua::LuaCallbackFunction(&CPlayState::LuaFunction), "Func", "loll", true);
 	CONSOLE->GetLuaFunctions();
 	//
 
@@ -258,7 +258,7 @@ void CPlayState::Load()
 	SweepAttack->animationDuration = 0.5f;
 	SweepAttack->coolDown = 0.5f;
 	SweepAttack->isAOE = true;
-	SweepAttack->isChannel = false;
+	SweepAttack->isChannel = true;
 	SweepAttack->damage = 30;
 	SweepAttack->manaCost = 10;
 	SweepAttack->skillName = SkillData::SkillName::SweepAttack;
@@ -304,10 +304,10 @@ void CPlayState::Load()
 	myPlayerObject->AddComponent(playerCollisionComponent);
 	CHealthBarComponent* healthBar = myHealthBarManager->CreateHealthbar();
 	myPlayerObject->AddComponent(healthBar);
-	myPlayerObject->AddComponent(ManaComponentManager::GetInstance().CreateAndRegisterComponent(200));*/
+	myPlayerObject->AddComponent(ManaComponentManager::GetInstance().CreateAndRegisterComponent(200));
 
 
-
+*/
 
 	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
 	cameraComponent->SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
@@ -373,13 +373,13 @@ void CPlayState::Load()
 	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation()); //
 
 	//----CreateEnemies----
-	/*myEnemies.Init(8);
-	TEMP_CREATE_ENEMY();
-	myEnemies[0]->SetWorldPosition({ -300.f, 0.f, -400.f });
-	TEMP_CREATE_ENEMY();
-	myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
-	TEMP_CREATE_ENEMY();
-	myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });*/
+	//myEnemies.Init(8);
+	//TEMP_CREATE_ENEMY();
+	//myEnemies[0]->SetWorldPosition({ -300.f, 0.f, -400.f });
+	//TEMP_CREATE_ENEMY();
+	//myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
+	//TEMP_CREATE_ENEMY();
+	//myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
 
 	//---------------------
 
@@ -471,6 +471,8 @@ void CPlayState::Render()
 {
 	myScene->Render();
 
+	myCollisionComponentManager->Render();
+
 	SChangeStatesMessage msg;
 	msg.myBlendState = eBlendState::eAlphaBlend;
 	msg.myDepthStencilState = eDepthStencilState::eDefault;
@@ -489,8 +491,8 @@ void CPlayState::Render()
 	myGUIManager->Render();
 
 	msg.myBlendState = eBlendState::eNoBlend;
-	msg.myDepthStencilState = eDepthStencilState::eDefault;
-	msg.myRasterizerState = eRasterizerState::eDefault;
+	msg.myDepthStencilState = eDepthStencilState::eDisableDepth;
+	msg.myRasterizerState = eRasterizerState::eNoCulling;
 	msg.mySamplerState = eSamplerState::eClamp;
 	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
 

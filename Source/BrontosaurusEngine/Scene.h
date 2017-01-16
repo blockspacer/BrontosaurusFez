@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Stack.h>
-#include <GrowingArray.h>
 #include <StaticArray.h>
 
 #include "Lights.h" //directional //make forward declaration

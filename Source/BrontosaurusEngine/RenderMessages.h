@@ -61,6 +61,7 @@ struct SRenderMessage
 		eRenderDebugObjs,
 		eRenderToInterediate,
 		eSetShadowBuffer,
+		eRenderLineBuffer,
 	};
 
 	SRenderMessage(const eRenderMessageType aRenderMessageType);
@@ -213,3 +214,9 @@ struct SRenderTextMessage : SRenderMessage
 	CCoolText *myText;
 };
 
+
+struct SRenderLineBuffer : SRenderMessage
+{
+	SRenderLineBuffer(const CU::GrowingArray<char, unsigned short, false>& aLineBuffer);
+	CU::GrowingArray<char, unsigned short, false> myLineBuffer;
+};

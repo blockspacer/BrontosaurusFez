@@ -83,7 +83,7 @@ bool CModelLoader::LoadModel(const char* aPath, CModel* aNewModel) //TODO: FIX T
 	
 	std::string modelPath = aPath;
 	std::wstring directory = std::wstring(modelPath.begin(), modelPath.end());
-	directory = directory.substr(0, directory.find_last_of('/') + 1);
+	directory = directory.substr(0, ((directory.find_last_of('/') != std::wstring::npos) ? directory.find_last_of('/') : directory.find_last_of('\\')) + 1);
 
 
 	CU::GrowingArray<const wchar_t*> texturePaths;

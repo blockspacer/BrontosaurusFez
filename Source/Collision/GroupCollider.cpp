@@ -33,11 +33,11 @@ CGroupCollider& CGroupCollider::operator=(CGroupCollider&& aTemporary)
 	return self;
 }
 
-void CGroupCollider::RenderDebugLines()
+void CGroupCollider::RenderDebugLines(CCollisionRenderer& aCollisionRenderer)
 {
 	for (ICollider* collider : myColliders)
 	{
-		collider->RenderDebugLines();
+		collider->RenderDebugLines(aCollisionRenderer);
 	}
 }
 

@@ -14,7 +14,7 @@ public:
 	CGroupCollider& operator=(const CGroupCollider& aCopy);
 	CGroupCollider& operator=(CGroupCollider&& aTemporary);
 
-	void RenderDebugLines() override;
+	void RenderDebugLines(CCollisionRenderer& aCollisionRenderer) override;
 
 	bool TestCollision(ICollider* aCollider) override;
 	bool TestCollision(CPointCollider* aPointCollider) override;
