@@ -182,9 +182,6 @@ eMessageReturn KeyPressed::DoEvent(HatShopState * aHatShop) const
 	case CU::eKeys::ESCAPE:
 		aHatShop->CloseShop();
 		break;
-	case CU::eKeys::B:
-		aHatShop->BuyHat();
-		break;
 	}
 	return eMessageReturn::eContinue;
 }

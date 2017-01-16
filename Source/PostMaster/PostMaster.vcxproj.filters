@@ -68,6 +68,7 @@
     <ClCompile Include="HatBought.cpp">
       <Filter>Events\HatBought</Filter>
     </ClCompile>
+    <ClCompile Include="BuyButtonPressed.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Subscriber.h">
@@ -188,6 +189,9 @@
     </ClInclude>
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
+    <ClInclude Include="PopCurrentState.h" />
+    <ClInclude Include="PostMaster.h" />
+    <ClInclude Include="BuyButtonPressed.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Events">

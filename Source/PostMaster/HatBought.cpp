@@ -3,8 +3,9 @@
 
 #include "Game/PlayState.h"
 
-HatBought::HatBought()
+HatBought::HatBought(const std::string& aHatName)
 {
+	myHatName = aHatName;
 }
 
 

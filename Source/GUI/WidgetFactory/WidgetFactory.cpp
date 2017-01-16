@@ -16,12 +16,13 @@
 
 #include "../CommonUtilities/Camera.h"
 
-#include "../PostMaster/PostMaster.h"
-#include "../PostMaster/Message.h"
-#include "../PostMaster/PushState.h"
-#include "../PostMaster/PopCurrentState.h"
-#include "../PostMaster/Pop2States.h"
-#include "../PostMaster/HatBought.h"
+#include "PostMaster/PostMaster.h"
+#include "PostMaster/Message.h"
+#include "PostMaster/PushState.h"
+#include "PostMaster/PopCurrentState.h"
+#include "PostMaster/Pop2States.h"
+#include "PostMaster/HatBought.h"
+#include "PostMaster/BuyButtonPressed.h"
 
 #include "../Game/PollingStation.h"
 #include  "../Components/PlayerData.h"
@@ -186,11 +187,7 @@ namespace GUI
 		{
 			auto buyHatMessage = [] 
 			{ 
-				if (PollingStation::playerData->myGold >= 50 /*Should be something like hat->GetCost() later*/)
-				{
-					PostMaster::GetInstance().SendLetter(Message(eMessageType::eHatAdded, HatBought()));
-					PollingStation::playerData->myGold -= 50;
-				}
+				PostMaster::GetInstance().SendLetter(Message(eMessageType::eBuyButtonPressed, BuyButtonPressed()));
 			};
 			Button* button = new Button(buyHatMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
 			button->AddWidget("Animation", new ButtonAnimation(aWidget));

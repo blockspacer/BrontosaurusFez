@@ -373,13 +373,13 @@ void CPlayState::Load()
 	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation()); //
 
 	//----CreateEnemies----
-	//myEnemies.Init(8);
-	//TEMP_CREATE_ENEMY();
-	//myEnemies[0]->SetWorldPosition({ -300.f, 0.f, -400.f });
-	//TEMP_CREATE_ENEMY();
-	//myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
-	//TEMP_CREATE_ENEMY();
-	//myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
+	myEnemies.Init(8);
+	TEMP_CREATE_ENEMY();
+	myEnemies[0]->SetWorldPosition({ -300.f, 0.f, -400.f });
+	TEMP_CREATE_ENEMY();
+	myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
+	TEMP_CREATE_ENEMY();
+	myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
 
 	//---------------------
 
