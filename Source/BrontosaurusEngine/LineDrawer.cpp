@@ -27,7 +27,7 @@ CLineDrawer::CLineDrawer()
 
 	myEffect2D = new CEffect(vertexShader2d, pixelShader2d, nullptr, inputLayout2d, D3D_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
-	if (std::ifstream("Shaders/line_shader.fx").good())
+	if (std::ifstream("Shaders/line_shader_3d.fx").good())
 	{
 		const unsigned int shaderBluePrint3d = EModelBluePrint::EModelBluePrint_Position;
 
