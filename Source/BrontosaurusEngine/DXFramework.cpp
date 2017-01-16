@@ -96,7 +96,7 @@ void CDXFramework::ClearScreen()
 void CDXFramework::ClearDepthStencil()
 {
 	// Clear the depth buffer.
-	myDeviceContext->ClearDepthStencilView(myDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	myDeviceContext->ClearDepthStencilView(myDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 }
 
