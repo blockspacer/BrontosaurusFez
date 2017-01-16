@@ -36,6 +36,7 @@
     <ClCompile Include="HatShopState.cpp">
       <Filter>States</Filter>
     </ClCompile>
+    <ClCompile Include="HatMaker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackgroundLoadingManager.h" />
@@ -77,6 +78,7 @@
     <ClInclude Include="HatShopState.h">
       <Filter>States</Filter>
     </ClInclude>
+    <ClInclude Include="HatMaker.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="States">

@@ -9,6 +9,7 @@
 #include "PostMaster/HatBought.h"
 #include "GUI/GUIManager/GUIManager.h"
 #include "Components/PlayerData.h"
+#include "KevinLoader/KevinLoader.h"
 
 HatShopState::HatShopState(StateStack & aStateStack) :
 	State(aStateStack)
@@ -19,23 +20,26 @@ HatShopState::HatShopState(StateStack & aStateStack) :
 
 	GUI::GUIManager tempMan;
 	tempMan.Init("models/gui/buyKnapp.fbx");
-	myGUIManager->AddWidget("buyknapp", tempMan.RemoveWidget("buyKnapp"));
+	myGUIManager->AddWidget("buyknapp", tempMan.RemoveWidget("buyKnapp") );
 	mySelections.Init(3);
 
-	SShopSelection* selection1 = new SShopSelection();
-	selection1->HatName = "firsthat";
-	selection1->myCost = 50;
-	mySelections.Add(*selection1);
+	CU::CJsonValue value;
+	const std::string& errorString = value.Parse("Json/Hats/HatBluePrints.json");
 
-	SShopSelection* selection2 = new SShopSelection();
-	selection2->HatName = "secondhat";
-	selection2->myCost = 100;
-	mySelections.Add(*selection2);
+	CU::CJsonValue hatsArray = value.at("Hats");
 
-	SShopSelection* selection3 = new SShopSelection();
-	selection3->HatName = "thirdhat";
-	selection3->myCost = 150;
-	mySelections.Add(*selection3);
+	for (unsigned int i = 0; i < hatsArray.Size(); ++i)
+	{
+		if (hatsArray[i].at("AvailableInShop").GetBool() == true)
+		{
+			SShopSelection* shopSelection = new SShopSelection();
+			shopSelection->HatName = hatsArray[i].at("HatName").GetString();
+			shopSelection->myCost = hatsArray[i].at("ShopCost").GetInt();
+			mySelections.Add(shopSelection);
+		}
+	}
+	int br = 0;
+	++br;
 }
 
 HatShopState::~HatShopState()
@@ -54,7 +58,7 @@ void HatShopState::Init()
 State::eStatus HatShopState::Update(const CU::Time & aDeltaTime)
 {
 	myGUIManager->Update(aDeltaTime);
-	myCurrentlySelected = &mySelections[0];
+	myCurrentlySelected = mySelections[0];
 	return myStatus;
 }
 
@@ -87,7 +91,7 @@ void HatShopState::ValidatePurchase()
 		{
 			PostMaster::GetInstance().SendLetter(eMessageType::eHatAdded,HatBought(myCurrentlySelected->HatName));
 			PollingStation::playerData->myGold -= myCurrentlySelected->myCost;
-			mySelections.Remove(*myCurrentlySelected);
+			mySelections.DeleteCyclic(myCurrentlySelected);
 			myCurrentlySelected = nullptr;
 		}
 	}

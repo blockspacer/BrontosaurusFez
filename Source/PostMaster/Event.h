@@ -28,6 +28,7 @@ class CConsole;
 class CMouseComponent;
 class HatShopState;
 class CModelViewer;
+class CHatMaker;
 
 //temp
 class CHealthComponent;
@@ -57,6 +58,7 @@ public:
 	virtual eMessageReturn DoEvent(QM::CQuestManager*) const { return eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(QM::CQuestDrawer*) const { return  eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(CModelViewer*) const { return  eMessageReturn::eContinue; }
+	virtual eMessageReturn DoEvent(CHatMaker*) const { return eMessageReturn::eContinue; }
 
 	//temp
 	virtual eMessageReturn DoEvent(CHealthComponent*) const { return eMessageReturn::eContinue; }

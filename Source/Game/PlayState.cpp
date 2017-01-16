@@ -54,7 +54,7 @@
 //
 
 //Temp Includes
-
+#include "HatMaker.h"
 #include "Components/HealthComponent.h"
 #include "MainStatComponent.h"
 #include "StatComponent.h"
@@ -425,6 +425,8 @@ void CPlayState::Load()
 	fireeeeeByCarl.GetTransformation().m33 *= 2.f;
 	myScene->AddFireEmitters(fireeeeeByCarl);
 	
+	myHatMaker->LoadBluePrints("Json/Hats/HatBluePrints.json");
+
 	myIsLoaded = true;
 
 	//get time to load the level:
@@ -607,6 +609,7 @@ void CPlayState::CreateManagersAndFactories()
 	DropComponentManager::CreateInstance();
 	myHealthBarManager = new CHealthBarComponentManager(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 	ManaComponentManager::CreateInstance();
+	myHatMaker = new CHatMaker(myGameObjectManager);
 }
 
 void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)

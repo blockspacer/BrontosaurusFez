@@ -57,7 +57,7 @@ public:
 	// Inherited via Subscriber
 	eMessageReturn Recieve(const Message & aMessage) override;
 private:
-	CU::GrowingArray<SShopSelection> mySelections;
+	CU::GrowingArray<SShopSelection*> mySelections;
 	GUI::GUIManager* myGUIManager;
 	SShopSelection* myCurrentlySelected;
 	bool myIsInitied;

@@ -41,6 +41,7 @@ class CParticleEmitterComponent;
 class CCollisionComponentManager;
 class CTextInstance;
 class CHealthBarComponentManager;
+class CHatmaker;
 
 class CPlayState : public State, public Subscriber
 {
@@ -90,6 +91,7 @@ private:
 	GUI::GUIManager* myGUIManager;
 	StatManager* myStatManager;
 	CTextInstance* myGoldText;
+	CHatMaker* myHatMaker;
 
 	//CGameObject* myCameraObject;
 	CMouseComponent* myMouseComponent;

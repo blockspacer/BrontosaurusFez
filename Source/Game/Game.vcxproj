@@ -236,6 +236,7 @@
     <ClCompile Include="BackgroundLoadingManager.cpp" />
     <ClCompile Include="CreditsState.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="HatMaker.cpp" />
     <ClCompile Include="HatShopState.cpp" />
     <ClCompile Include="LevelSelectState.cpp" />
     <ClCompile Include="LoadingAnimation.cpp" />
@@ -257,6 +258,7 @@
     <ClInclude Include="CreditsState.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="HatMaker.h" />
     <ClInclude Include="HatShopState.h" />
     <ClInclude Include="LevelSelectState.h" />
     <ClInclude Include="LoadingAnimation.h" />
