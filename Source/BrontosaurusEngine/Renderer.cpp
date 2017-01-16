@@ -744,6 +744,14 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 {
 	switch (aRenderMesage->myType)
 	{
+	case SRenderMessage::eRenderMessageType::eRenderNavMesh:
+	{
+		SRenderNavmeshMessage* msg = static_cast<SRenderNavmeshMessage*>(aRenderMesage);
+		CModel* model = msg->myModel;
+		model->Render(msg->myTransformation, msg->myTransformation, nullptr, nullptr, nullptr, 0.0f);
+		++aDrawCallCount;
+		break;
+	}
 	case SRenderMessage::eRenderMessageType::eRenderCameraQueue:
 	{
 		SRenderCameraQueueMessage* msg = static_cast<SRenderCameraQueueMessage*>(aRenderMesage);

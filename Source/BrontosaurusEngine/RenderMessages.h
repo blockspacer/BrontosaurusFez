@@ -61,6 +61,7 @@ struct SRenderMessage
 		eRenderDebugObjs,
 		eRenderToInterediate,
 		eSetShadowBuffer,
+		eRenderNavMesh,
 	};
 
 	SRenderMessage(const eRenderMessageType aRenderMessageType);
@@ -69,6 +70,15 @@ struct SRenderMessage
 	eRenderMessageType myType;
 
 };
+
+
+struct SRenderNavmeshMessage : SRenderMessage
+{
+	SRenderNavmeshMessage();
+	CU::Matrix44f myTransformation;
+	CModel* myModel;
+};
+
 
 struct SRenderFullscreenEffectMessage : SRenderMessage
 {

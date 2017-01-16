@@ -97,3 +97,9 @@ SSetShadowBuffer::SSetShadowBuffer()
 	: SRenderMessage(SRenderMessage::eRenderMessageType::eSetShadowBuffer)
 {
 }
+
+SRenderNavmeshMessage::SRenderNavmeshMessage()
+	: SRenderMessage(SRenderMessage::eRenderMessageType::eRenderNavMesh)
+{
+	myModel = nullptr;
+}
