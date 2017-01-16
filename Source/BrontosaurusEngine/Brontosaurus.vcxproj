@@ -237,6 +237,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AnimationController.h" />
+    <ClInclude Include="Navmesh.h" />
+    <ClInclude Include="ObjLoader.h" />
     <ClInclude Include="RenderCamera.h" />
     <ClInclude Include="Console.h" />
     <ClInclude Include="ConstBufferTemplate.h" />
@@ -309,6 +311,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimationController.cpp" />
+    <ClCompile Include="Navmesh.cpp" />
+    <ClCompile Include="ObjLoader.cpp" />
     <ClCompile Include="RenderCamera.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="CoolText.cpp" />
