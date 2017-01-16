@@ -24,6 +24,12 @@ CPointCollider::~CPointCollider()
 	SAFE_DELETE(myPointData);
 }
 
+void CPointCollider::RenderDebugLines(CCollisionRenderer& aCollisionRenderer)
+{
+	Collision::CRenderPoint* renderPointMessage = new Collision::CRenderPoint(GetData());
+	aCollisionRenderer.AddToRender(renderPointMessage);
+}
+
 bool CPointCollider::TestCollision(ICollider* aCollider)
 {
 	return aCollider->TestCollision(this);
@@ -44,6 +50,11 @@ bool CPointCollider::TestCollision(CCircleCollider* aCircleCollider)
 bool CPointCollider::TestCollision(CSquareCollider* aSquareCollider)
 {
 	return Intersection::PointInsideSquare(aSquareCollider->GetData(), GetData());
+}
+
+bool CPointCollider::TestCollision(CTriangleCollider* aTriangleCollider)
+{
+	return Intersection::PointInsideTriangle(aTriangleCollider->GetData(), GetData());
 }
 
 bool CPointCollider::TestCollision(CGroupCollider* aGroupCollider)

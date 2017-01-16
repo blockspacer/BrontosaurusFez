@@ -67,7 +67,7 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 			mySkills[i]->SetTargetPosition(myTargetPosition);
 			if(mySkills[i]->GetIsSelected() == true)
 			{
-				mySkills[i]->Activate();
+				mySkills[i]->TryToActivate();
 			}
 		}
 	}
@@ -80,12 +80,12 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 			if (mySkills[i]->GetIsSelected() == true)
 			{
 				isAnythingSelected = true;
-				mySkills[i]->Activate();
+				mySkills[i]->TryToActivate();
 			}
 		}
 		if(isAnythingSelected == false)
 		{
-			mySkills[0]->Activate();
+			mySkills[0]->TryToActivate();
 		}
 	}
 	else if (aMessageType == eComponentMessageType::eActivateSkillCollider)
@@ -109,12 +109,12 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 			mySkills[i]->SetTargetPosition(myTargetPosition);
 			if (mySkills[i]->GetIsSelected() == true)
 			{
-				mySkills[i]->Activate();
+				mySkills[i]->TryToActivate();
 			}
 		}
 		if (isAnythingSelected == false)
 		{
-			mySkills[0]->Activate();
+			mySkills[0]->TryToActivate();
 		}
 	}
 	else if (aMessageType == eComponentMessageType::eDied)

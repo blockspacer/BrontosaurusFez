@@ -381,7 +381,7 @@ bool CFBXLoader::LoadGUIScene(const char* aFilePath, CLoaderScene& aSceneOut)
 {
 	if (does_file_exist(aFilePath) == false)
 	{
-		DL_ASSERT("fbx file not found: %s", aFilePath);
+		DL_MESSAGE_BOX("fbx file not found: %s", aFilePath);
 		return false;
 	}
 
@@ -389,13 +389,13 @@ bool CFBXLoader::LoadGUIScene(const char* aFilePath, CLoaderScene& aSceneOut)
 	aSceneOut.myScene = scene;
 	if (scene->mNumCameras < 1)
 	{
-		DL_ASSERT("fbx file has no camera: %s", aFilePath);
+		DL_MESSAGE_BOX("fbx file has no camera: %s", aFilePath);
 		return false;
 	}
 
 	if (scene->mNumCameras > 1)
 	{
-		DL_ASSERT("fbx file has more than one camera: %s\n(Carl don't know what to do with this)", aFilePath);
+		DL_MESSAGE_BOX("fbx file has more than one camera: %s\n(Carl don't know what to do with this)", aFilePath);
 		return false;
 	}
 
@@ -405,13 +405,13 @@ bool CFBXLoader::LoadGUIScene(const char* aFilePath, CLoaderScene& aSceneOut)
 	aiNode* root = scene->mRootNode;
 	if (root == nullptr)
 	{
-		DL_ASSERT("fbx file has no root node: %s", aFilePath);
+		DL_MESSAGE_BOX("fbx file has no root node: %s", aFilePath);
 		return false;
 	}
 
 	if (root->mNumChildren == 0)
 	{
-		DL_ASSERT("fbx file root node is empty or massive: %s", aFilePath);
+		DL_MESSAGE_BOX("fbx file root node is empty or massive: %s", aFilePath);
 		return false;
 	}
 

@@ -186,7 +186,7 @@ void CPlayState::Load()
 	//LUA_WRAPPER.CallLuaFunction("GameLoad", levelIndex);
 
 	//kanske inte ska ske så här?
-	LUA_WRAPPER.RegisterFunction(SSlua::LuaCallbackFunction(&CPlayState::LuaFunction), "Func", "loll", true);
+	//LUA_WRAPPER.RegisterFunction(SSlua::LuaCallbackFunction(&CPlayState::LuaFunction), "Func", "loll", true);
 	CONSOLE->GetLuaFunctions();
 	//
 
@@ -197,7 +197,7 @@ void CPlayState::Load()
 	CGameObject* npcObject1 = myGameObjectManager->CreateGameObject();
 	npcObject1->SetName("npcObject1");
 	npcObject1->GetLocalTransform().Move(CU::Vector3f(0.0f, 000.0f, 500.0f));
-	CModelComponent* modelComponent1 = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
+	CModelComponent* modelComponent1 = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle2.fbx");
 	npcObject1->AddComponent(modelComponent1);
 
 	Intersection::CollisionData collisionData;
@@ -258,7 +258,7 @@ void CPlayState::Load()
 	SweepAttack->animationDuration = 0.5f;
 	SweepAttack->coolDown = 0.5f;
 	SweepAttack->isAOE = true;
-	SweepAttack->isChannel = false;
+	SweepAttack->isChannel = true;
 	SweepAttack->damage = 30;
 	SweepAttack->manaCost = 10;
 	SweepAttack->skillName = SkillData::SkillName::SweepAttack;
@@ -306,8 +306,8 @@ void CPlayState::Load()
 	myPlayerObject->AddComponent(healthBar);
 	myPlayerObject->AddComponent(ManaComponentManager::GetInstance().CreateAndRegisterComponent(200));
 
-*/
 
+*/
 
 	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
 	cameraComponent->SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
@@ -373,13 +373,13 @@ void CPlayState::Load()
 	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation()); //
 
 	//----CreateEnemies----
-	myEnemies.Init(8);
-	TEMP_CREATE_ENEMY();
-	myEnemies[0]->SetWorldPosition({ -300.f, 0.f, -400.f });
-	TEMP_CREATE_ENEMY();
-	myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
-	TEMP_CREATE_ENEMY();
-	myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
+	//myEnemies.Init(8);
+	//TEMP_CREATE_ENEMY();
+	//myEnemies[0]->SetWorldPosition({ -300.f, 0.f, -400.f });
+	//TEMP_CREATE_ENEMY();
+	//myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
+	//TEMP_CREATE_ENEMY();
+	//myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
 
 	//---------------------
 
@@ -471,6 +471,8 @@ void CPlayState::Render()
 {
 	myScene->Render();
 
+	myCollisionComponentManager->Render();
+
 	SChangeStatesMessage msg;
 	msg.myBlendState = eBlendState::eAlphaBlend;
 	msg.myDepthStencilState = eDepthStencilState::eDefault;
@@ -489,8 +491,8 @@ void CPlayState::Render()
 	myGUIManager->Render();
 
 	msg.myBlendState = eBlendState::eNoBlend;
-	msg.myDepthStencilState = eDepthStencilState::eDefault;
-	msg.myRasterizerState = eRasterizerState::eDefault;
+	msg.myDepthStencilState = eDepthStencilState::eDisableDepth;
+	msg.myRasterizerState = eRasterizerState::eNoCulling;
 	msg.mySamplerState = eSamplerState::eClamp;
 	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
 
@@ -716,7 +718,7 @@ void CPlayState::TEMP_CREATE_ENEMY()
 	collisionComponent->SetColliderType(eColliderType::eColliderType_Enemy);
 	//collisionComponent->GetCollider()->SetGameObject(enemyObj);
 	enemyObj->AddComponent(collisionComponent);
-	enemyObj->AddComponent(DropComponentManager::GetInstance().CreateAndRegisterComponent());
+	enemyObj->AddComponent(DropComponentManager::GetInstance().CreateAndRegisterComponent(50));
 
 	CHealthBarComponent* healthBar = myHealthBarManager->CreateHealthbar();
 	enemyObj->AddComponent(&*healthBar);

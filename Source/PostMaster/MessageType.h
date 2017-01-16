@@ -4,7 +4,6 @@ enum class eMessageType
 {
 	eWindowSizeChanged,
 	eMouseMessage,
-	//eMouseDownMessage,
 	eKeyboardMessage,
 	eKeyPressed,
 	eInputMessagePressed,
@@ -26,6 +25,7 @@ enum class eMessageType
 	eConsoleCalledUpon,
 	QuestRelated,
 	eHatAdded,
+	eDroppedFile,
 	eBuyButtonPressed,
 	eLength,
 };

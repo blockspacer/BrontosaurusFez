@@ -37,17 +37,6 @@ void ManaComponent::SetMana(const ManaPoint aValue)
 		myMana = myMaxMana;
 	}
 	myPercentageLeft = static_cast<float>(myMana) / static_cast<float>(myMaxMana);
-	if (myMana <= 0)
-	{
-		if (wasAlreadyDead == false)
-		{
-			//dead stuff
-			GetParent()->NotifyComponents(eComponentMessageType::eDied, SComponentMessageData());
-			SComponentMessageData data;
-			data.myBool = false;
-			GetParent()->NotifyComponents(eComponentMessageType::eSetVisibility, data);
-		}
-	}
 }
 
 void ManaComponent::SetMaxMana(const ManaPoint aValue)
@@ -60,7 +49,7 @@ void ManaComponent::Init()
 {
 	SComponentMessageData data;
 	data.myComponent = this;
-	GetParent()->NotifyComponents(eComponentMessageType::eSetMaxHealthFromStats, data);
+	GetParent()->NotifyComponents(eComponentMessageType::eSetMaxManaFromStats, data);
 }
 
 void ManaComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
@@ -74,7 +63,7 @@ void ManaComponent::Receive(const eComponentMessageType aMessageType, const SCom
 	case eComponentMessageType::eBurnMana:
 		SetMana(myMana - aMessageData.myInt); 
 		data.myUChar = myPercentageLeft * 100;
-		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data);
+		GetParent()->NotifyComponents(eComponentMessageType::ePercentMPLeft, data);
 		break;
 	case eComponentMessageType::eCheckIfCanUseSkill:
 		if (myMana >= aMessageData.mySkill->GetSkillData()->manaCost)

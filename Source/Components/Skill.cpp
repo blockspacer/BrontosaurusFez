@@ -56,6 +56,17 @@ Skill::~Skill()
 {
 }
 
+void Skill::TryToActivate()
+{
+	if (myUser != nullptr)
+	{
+		SComponentMessageData data;
+		data.mySkill = this;
+		myUser->NotifyComponents(eComponentMessageType::eCheckIfCanUseSkill, data);
+
+	}
+}
+
 void Skill::Activate()
 {
 	if (myElapsedCoolDownTime >= mySkillData->coolDown)
@@ -217,7 +228,7 @@ void Skill::Select()
 		myTargetObject = nullptr;
 		if(mySkillData->isChannel == true)
 		{
-			Activate();
+			TryToActivate();
 		}
 	}
 }

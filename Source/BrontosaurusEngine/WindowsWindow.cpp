@@ -2,9 +2,12 @@
 #include "WindowsWindow.h"
 #include "Engine.h"
 #include "../PostMaster/PostMaster.h"
-#include "../PostMaster/FocusChange.h"
 #include "../PostMaster/Message.h"
+#include "../PostMaster/FocusChange.h"
 #include "../PostMaster/KeyCharPressed.h"
+#include "../PostMaster/DroppedFile.h"
+
+#include <Shellapi.h>
 
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -61,7 +64,7 @@ BOOL CWindowsWindow::InitInstance(const SInitWindowParams& aInitWindowParams)
 
 	MyRegisterClass(myHInst, aInitWindowParams.Name.c_str());
 	
-	myHWnd = CreateWindowW(aInitWindowParams.Name.c_str(), aInitWindowParams.Title.c_str(), WS_OVERLAPPEDWINDOW,
+	myHWnd = CreateWindowExW(WS_EX_ACCEPTFILES, aInitWindowParams.Name.c_str(), aInitWindowParams.Title.c_str(), WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, 0, aInitWindowParams.Width, aInitWindowParams.Height, nullptr, nullptr, myHInst, nullptr);
 
 	if (!myHWnd)
@@ -75,13 +78,25 @@ BOOL CWindowsWindow::InitInstance(const SInitWindowParams& aInitWindowParams)
 	return TRUE;
 }
 
-#include <sstream>
-
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	static std::stringstream writeTo;
 	switch (message)
 	{
+	case WM_DROPFILES:
+	{
+		HDROP hDropInfo = (HDROP)wParam;
+		char filePath[MAX_PATH];
+		for (int i = 0; DragQueryFileA(hDropInfo, i, filePath, sizeof(filePath)); i++)
+		{
+			PostMaster* pm = PostMaster::GetInstancePtr();
+			if (pm != nullptr)
+			{
+				pm->SendLetter(Message(eMessageType::eDroppedFile, DroppedFile(filePath)));
+			}
+		}
+		DragFinish(hDropInfo);
+	}
+		break;
 	case WM_KEYDOWN:
 
 		break;
@@ -89,15 +104,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		char keyPressed = static_cast<char>(wParam);
 		PostMaster::GetInstance().SendLetter(Message(eMessageType::eKeyPressed, KeyCharPressed(keyPressed)));
-		if (keyPressed == '\r')
-		{
-			DL_PRINT("%s", writeTo.str().c_str());
-			writeTo.str(std::string());
-		}
-		else
-		{
-			writeTo << keyPressed;
-		}
 	}
 	break;
 	case WM_SIZE:

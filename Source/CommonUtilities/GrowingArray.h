@@ -47,6 +47,7 @@ namespace CU
 		inline void Add(const ObjectType& aObject);
 		inline void Add(ObjectType&& aObject);
 		inline void Add(const GrowingArray& aArray);
+		inline void AddChunk(const void* aChunkPointer, const SizeType aByteSize);
 		inline void Insert(const SizeType aIndex, const ObjectType& aObject);
 		inline void Remove(const ObjectType& aObject);
 		inline void RemoveAtIndex(const SizeType aIndex);
@@ -78,6 +79,7 @@ namespace CU
 		inline void Resize(const SizeType aNewSize, const ObjectType& aObject);
 		inline void Destroy();
 
+		__forceinline SizeType ByteSize() const;
 		__forceinline SizeType Size() const;
 		__forceinline SizeType Capacity() const;
 		__forceinline bool IsInitialized() const;
@@ -336,6 +338,27 @@ namespace CU
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::AddChunk(const void* aChunkPointer, const SizeType aByteSize)
+	{
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		static_assert(!USE_SAFE_MODE, "Should not add chunk to non-pod array");
+
+		const SizeType numberOfAdds = aByteSize / sizeof(ObjectType);
+
+		if (mySize + numberOfAdds >= myCapacity)
+		{
+#define TEMP_MAX(a,b) (((a) > (b)) ? (a) : (b))
+			
+			Reallocate(TEMP_MAX(myCapacity * 2, mySize + numberOfAdds));
+
+#undef TEMP_MAX
+		}
+
+		memcpy(myArray + mySize, aChunkPointer, aByteSize);
+		mySize += numberOfAdds;
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
 	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Insert(const SizeType aIndex, const ObjectType& aObject)
 	{
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
@@ -589,6 +612,12 @@ namespace CU
 	{
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		CU::QuickSort(*this, 0, mySize, aCompareFunction);
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	__forceinline SizeType GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::ByteSize() const
+	{
+		return mySize * sizeof(ObjectType);
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>

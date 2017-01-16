@@ -4,10 +4,9 @@
 
 #include <atomic>
 
-#include "../LuaWrapper/SSlua/SSlua.h"
+//#include "../LuaWrapper/SSlua/SSlua.h"
 
 //temp includes
-#include <iostream>
 #include "QuestDrawer.h"
 #include "../PostMaster/Event.h"
 
@@ -19,6 +18,11 @@ namespace CU
 namespace GUI
 {
 	class GUIManager;
+}
+
+namespace QM
+{
+	typedef int EventHandle;
 }
 
 class CScene;
@@ -67,8 +71,6 @@ public:
 	CCollisionComponentManager* GetCollisionManager();
 
 	//TEMP - BELOW THIS LINE
-	static SSlua::ArgumentList LuaFunction(SSlua::ArgumentList anArgumentList);
-
 	void TEMP_ADD_HAT(CGameObject* aPlayerObject);
 	CGameObject* myPlayerObject;
 
@@ -109,8 +111,3 @@ inline bool CPlayState::IsLoaded() const
 	return myIsLoaded;
 }
 
-inline SSlua::ArgumentList CPlayState::LuaFunction(SSlua::ArgumentList anArgumentList)
-{
-	DL_PRINT("Du anropade en function från Konsolen Punkt 3.a klar");
-	return SSlua::ArgumentList();
-}

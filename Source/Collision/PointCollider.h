@@ -14,10 +14,13 @@ public:
 	CPointCollider(const CPointCollider& aCopy);
 	~CPointCollider();
 
+	void RenderDebugLines(CCollisionRenderer& aCollisionRenderer) override;
+
 	bool TestCollision(ICollider* aCollider) override;
 	bool TestCollision(CPointCollider* aPointCollider) override;
 	bool TestCollision(CCircleCollider* aCircleCollider) override;
 	bool TestCollision(CSquareCollider* aBoxCollider) override;
+	bool TestCollision(CTriangleCollider* aTriangleCollider) override;
 	bool TestCollision(CGroupCollider* aGroupCollider) override;
 
 	const Intersection::SPoint& GetData() const;

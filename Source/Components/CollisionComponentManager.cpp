@@ -11,6 +11,10 @@
 
 #include "../Collision/Intersection.h"
 #include "ComponentManager.h"
+
+#include "../BrontosaurusEngine/Engine.h"
+#include "../BrontosaurusEngine/Renderer.h"
+
 CCollisionComponentManager::CCollisionComponentManager()
 	: myCollisionComponents(32)
 	, myCollisionManager(nullptr)
@@ -29,6 +33,15 @@ void CCollisionComponentManager::Update()
 {
 	myCollisionManager->Update();
 	myCollisionManager->Render();
+}
+
+void CCollisionComponentManager::Render()
+{
+	const CU::GrowingArray<char, unsigned short, false>& lineVertexBuffer = myCollisionManager->GetLineVertexBuffer();
+	CRenderer& renderer = RENDERER;
+
+	SRenderLineBuffer* renderCollisionMessage = new SRenderLineBuffer(lineVertexBuffer);
+	renderer.AddRenderMessage(renderCollisionMessage);
 }
 
 CCollisionComponent* CCollisionComponentManager::CreateCollisionComponent(const eColliderType aColliderType, Intersection::CollisionData& aCollisionData)

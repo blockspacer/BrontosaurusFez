@@ -1,6 +1,7 @@
 #pragma once
 #pragma message("Static array compiled")
 #include <assert.h>
+#include <cstring>
 
 namespace CU
 {
@@ -13,6 +14,7 @@ namespace CU
 
 		StaticArray();
 		StaticArray(const StaticArray& aStaticArray);
+		StaticArray(Type (&aArray)[ArraySize]);
 		StaticArray(const Type& aObject);
 		~StaticArray();
 
@@ -26,9 +28,12 @@ namespace CU
 		iterator end();
 		const_iterator end() const;
 
+		inline const void* AsVoidPointer() const;
+
 		inline void Insert(int aIndex,Type& aObject);
 		inline void DeleteAll();
 
+		__forceinline int ByteSize() const;
 		__forceinline int Size() const;
 
 	private:
@@ -48,6 +53,15 @@ namespace CU
 		for (int i = 0; i < ArraySize; ++i)
 		{
 			myStaticArray[i] = aStaticArray[i];
+		}
+	}
+
+	template<typename Type, int ArraySize>
+	inline StaticArray<Type, ArraySize>::StaticArray(Type (&aArray)[ArraySize])
+	{
+		for (int i = 0; i < ArraySize; ++i)
+		{
+			myStaticArray[i] = aArray[i];
 		}
 	}
 
@@ -113,6 +127,12 @@ namespace CU
 		return (myStaticArray + ArraySize);
 	}
 
+	template<typename Type, int ArraySize>
+	inline const void * StaticArray<Type, ArraySize>::AsVoidPointer() const
+	{
+		return static_cast<const void*>(myStaticArray);
+	}
+
 	template <typename Type, int ArraySize>
 	inline void StaticArray<Type, ArraySize>::Insert(int aIndex, Type& aObject)
 	{
@@ -134,6 +154,12 @@ namespace CU
 			delete myStaticArray[i];
 			myStaticArray[i] = nullptr;
 		}
+	}
+
+	template<typename Type, int ArraySize>
+	inline int StaticArray<Type, ArraySize>::ByteSize() const
+	{
+		return ArraySize * sizeof(Type);
 	}
 
 	template<typename Type, int ArraySize>

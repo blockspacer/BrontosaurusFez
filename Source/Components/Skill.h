@@ -9,6 +9,7 @@ class Skill
 public:
 	Skill(SkillData* aSkillDataPointer);
 	~Skill();
+	virtual void TryToActivate();
 	virtual void Activate();
 	virtual void Deactivate();
 	virtual void Update(float aDeltaTime);
