@@ -14,6 +14,8 @@ public:
 	CPointCollider(const CPointCollider& aCopy);
 	~CPointCollider();
 
+	void RenderDebugLines(CCollisionRenderer& aCollisionRenderer) override;
+
 	bool TestCollision(ICollider* aCollider) override;
 	bool TestCollision(CPointCollider* aPointCollider) override;
 	bool TestCollision(CCircleCollider* aCircleCollider) override;

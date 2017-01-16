@@ -20,6 +20,7 @@ namespace Collision
 	{
 	public:
 		CRenderCircle(const Intersection::SCircle* aCircle);
+		~CRenderCircle();
 		void DoRenderCall(CU::GrowingArray<char, unsigned short, false>& aVertexBuffer) override;
 
 	private:
@@ -30,9 +31,21 @@ namespace Collision
 	{
 	public:
 		CRenderTriangle(const Intersection::STriangle* aCircle);
+		~CRenderTriangle();
 		void DoRenderCall(CU::GrowingArray<char, unsigned short, false>& aVertexBuffer) override;
 
 	private:
 		const Intersection::STriangle* myTriangle;
+	};
+
+	class CRenderPoint : public IRenderCommand
+	{
+	public:
+		CRenderPoint(const Intersection::SPoint& aPoint);
+		~CRenderPoint();
+		void DoRenderCall(CU::GrowingArray<char, unsigned short, false>& aVertexBuffer) override;
+
+	private:
+		const Intersection::SPoint& myPoint;
 	};
 }

@@ -2,7 +2,7 @@
 #include "CollisionRenderMessages.h"
 #include "../CommonUtilities/vector4.h"
 
-float WorldGroundY = 0.f;
+static float WorldGroundY = 0.f;
 
 #include "../Game/PollingStation.h"
 #include "../Components/GameObject.h"
@@ -21,6 +21,10 @@ Collision::IRenderCommand::~IRenderCommand()
 
 Collision::CRenderCircle::CRenderCircle(const Intersection::SCircle* aCircle)
 	: myCircle(aCircle)
+{
+}
+
+Collision::CRenderCircle::~CRenderCircle()
 {
 }
 
@@ -59,6 +63,10 @@ Collision::CRenderTriangle::CRenderTriangle(const Intersection::STriangle* aTria
 {
 }
 
+Collision::CRenderTriangle::~CRenderTriangle()
+{
+}
+
 void Collision::CRenderTriangle::DoRenderCall(CU::GrowingArray<char, unsigned short, false>& aVertexBuffer)
 {
 	CU::Vector4f triangleVertexBuffer[6u] =
@@ -69,4 +77,27 @@ void Collision::CRenderTriangle::DoRenderCall(CU::GrowingArray<char, unsigned sh
 	};
 
 	aVertexBuffer.AddChunk(triangleVertexBuffer, sizeof(triangleVertexBuffer));
+}
+
+Collision::CRenderPoint::CRenderPoint(const Intersection::SPoint& aPoint)
+	: myPoint(aPoint)
+{
+}
+
+Collision::CRenderPoint::~CRenderPoint()
+{
+}
+
+void Collision::CRenderPoint::DoRenderCall(CU::GrowingArray<char, unsigned short, false>& aVertexBuffer)
+{
+	static const float CrossRadius = 30.f;
+	CU::Vector4f pointCrossVertexBuffer[4] =
+	{
+		CU::Vector4f(myPoint.myPosition.x - CrossRadius, WorldGroundY, myPoint.myPosition.y - CrossRadius, 1.f),
+		CU::Vector4f(myPoint.myPosition.x + CrossRadius, WorldGroundY, myPoint.myPosition.y + CrossRadius, 1.f),
+		CU::Vector4f(myPoint.myPosition.x + CrossRadius, WorldGroundY, myPoint.myPosition.y - CrossRadius, 1.f),
+		CU::Vector4f(myPoint.myPosition.x - CrossRadius, WorldGroundY, myPoint.myPosition.y + CrossRadius, 1.f)
+	};
+
+	aVertexBuffer.AddChunk(pointCrossVertexBuffer, sizeof(pointCrossVertexBuffer));
 }

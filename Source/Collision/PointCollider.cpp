@@ -24,6 +24,12 @@ CPointCollider::~CPointCollider()
 	SAFE_DELETE(myPointData);
 }
 
+void CPointCollider::RenderDebugLines(CCollisionRenderer& aCollisionRenderer)
+{
+	Collision::CRenderPoint* renderPointMessage = new Collision::CRenderPoint(GetData());
+	aCollisionRenderer.AddToRender(renderPointMessage);
+}
+
 bool CPointCollider::TestCollision(ICollider* aCollider)
 {
 	return aCollider->TestCollision(this);
