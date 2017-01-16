@@ -75,7 +75,7 @@ CScene::CScene()
 	myFireEmitters.Init(8);
 	mySkybox = nullptr;
 
-	myShadowCamera.InitOrthographic(3000, 3000, 2500.f, 1.f, 2048, 2048);
+	myShadowCamera.InitOrthographic(7500, 7500, 4000.f, 0.1f, 4096, 4096);
 }
 
 CScene::~CScene()
@@ -208,8 +208,8 @@ void CScene::Render()
 	}
 
 	//SRenderToIntermediate * interMSG = new SRenderToIntermediate();
-	//interMSG->myRect = { 0.5f, 0.5f, 0.0f, 0.0f };
-	//interMSG->useDepthResource = false;
+	//interMSG->myRect = { 0.0f, 0.0f, 0.25f, 0.25f };
+	//interMSG->useDepthResource = true;
 	//interMSG->myRenderPackage = myShadowCamera.GetRenderPackage();
 	//RENDERER.AddRenderMessage(interMSG);
 }
