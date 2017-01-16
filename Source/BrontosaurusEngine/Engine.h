@@ -143,8 +143,6 @@ private:
 	CRenderer* myRenderer;
 	
 	bool myThreadRender;
-
-	CTextInstance myTestText;
 };
 
 CWindowsWindow* CEngine::GetWindow()
