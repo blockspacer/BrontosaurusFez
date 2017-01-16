@@ -47,6 +47,8 @@
 
 #include "FleeControllerManager.h"
 #include "SeekControllerManager.h"
+
+#include <time.h>
 //Kanske Inte ska vara här?
 #include "../BrontosaurusEngine/Console.h"
 #include "AIControllerManager.h"
@@ -132,8 +134,9 @@ void CPlayState::Load()
 	CU::TimerManager timerMgr;
 	CU::TimerHandle handle = timerMgr.CreateTimer();
 	timerMgr.StartTimer(handle);
-	CreateManagersAndFactories();
+	srand(time(NULL));
 
+	CreateManagersAndFactories();
 	LoadManagerGuard loadManagerGuard;
 
 	QM::CQuestManager &questManager = QM::CQuestManager::GetInstance();
