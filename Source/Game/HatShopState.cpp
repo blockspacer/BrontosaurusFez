@@ -28,6 +28,8 @@ HatShopState::HatShopState(StateStack & aStateStack) :
 
 	CU::CJsonValue hatsArray = value.at("Hats");
 
+
+	unsigned int i2 = hatsArray.Size();
 	for (unsigned int i = 0; i < hatsArray.Size(); ++i)
 	{
 		if (hatsArray[i].at("AvailableInShop").GetBool() == true)
@@ -58,7 +60,6 @@ void HatShopState::Init()
 State::eStatus HatShopState::Update(const CU::Time & aDeltaTime)
 {
 	myGUIManager->Update(aDeltaTime);
-	myCurrentlySelected = mySelections[0];
 	return myStatus;
 }
 
@@ -87,7 +88,7 @@ void HatShopState::ValidatePurchase()
 	short playerWallet = PollingStation::playerData->myGold;
 	if (myCurrentlySelected != nullptr)
 	{
-		if (playerWallet >= myCurrentlySelected->myCost)
+		if (playerWallet <= 0/*myCurrentlySelected->myCost*/)
 		{
 			PostMaster::GetInstance().SendLetter(eMessageType::eHatAdded,HatBought(myCurrentlySelected->HatName));
 			PollingStation::playerData->myGold -= myCurrentlySelected->myCost;
@@ -95,6 +96,15 @@ void HatShopState::ValidatePurchase()
 			myCurrentlySelected = nullptr;
 		}
 	}
+}
+
+void HatShopState::SetSelected(unsigned int aIndex)
+{
+	if (aIndex >= mySelections.Size())
+	{
+		aIndex = mySelections.Size() - 1;
+	}
+	myCurrentlySelected = mySelections[aIndex];
 }
 
 bool HatShopState::GetLetThroughRender() const

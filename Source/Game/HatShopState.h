@@ -52,6 +52,7 @@ public:
 	void OnEnter() override;
 	void OnExit() override;
 	void ValidatePurchase();
+	void SetSelected(unsigned int aIndex);
 	bool GetLetThroughRender() const override;
 
 	// Inherited via Subscriber
