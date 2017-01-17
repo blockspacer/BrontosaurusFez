@@ -51,10 +51,13 @@ namespace CU
 		inline void Insert(const SizeType aIndex, const ObjectType& aObject);
 		inline void Remove(const ObjectType& aObject);
 		inline void RemoveAtIndex(const SizeType aIndex);
-		inline void DeleteCyclic(const ObjectType& aObject);
-		inline void DeleteCyclicAtIndex(const SizeType aIndex);
 		inline void RemoveCyclic(const ObjectType& aObject);
 		inline void RemoveCyclicAtIndex(const SizeType aIndex);
+
+		inline void Delete(const ObjectType& aObject);
+		inline void DeleteAtIndex(const SizeType aIndex);
+		inline void DeleteCyclic(const ObjectType& aObject);
+		inline void DeleteCyclicAtIndex(const SizeType aIndex);
 		inline SizeType Find(const ObjectType& aObject);
 		inline bool Find(const ObjectType& aObject, SizeType& aReturnIndex);
 
@@ -416,7 +419,7 @@ namespace CU
 		{
 			if (USE_SAFE_MODE)
 			{
-				for (SizeType i = aIndex; i < myCapacity; ++i)
+				for (SizeType i = aIndex; i < mySize; ++i)
 				{
 					myArray[i] = myArray[i + 1];
 				}
@@ -426,6 +429,41 @@ namespace CU
 				memmove(myArray + aIndex, myArray + aIndex + 1, sizeof(ObjectType) * (mySize - aIndex)); //if wrong, it's here
 			}
 
+			--mySize;
+		}
+		else
+		{
+			RemoveAll();
+		}
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Delete(const ObjectType& aObject)
+	{
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		DeleteAtIndex(Find(aObject));
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::DeleteAtIndex(const SizeType aIndex)
+	{
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds");
+		if (mySize > 1)
+		{
+			delete myArray[aIndex];
+			myArray[aIndex] = nullptr;
+			if (USE_SAFE_MODE)
+			{
+				for (SizeType i = aIndex; i < myCapacity; ++i)
+				{
+					myArray[i] = myArray[i + 1];
+				}
+			}
+			else
+			{
+				memmove(myArray + aIndex, myArray + aIndex + 1, sizeof(ObjectType) * (mySize - aIndex)); //if wrong, it's here
+			}
 			--mySize;
 		}
 		else
