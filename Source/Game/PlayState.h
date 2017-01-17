@@ -26,22 +26,23 @@ namespace QM
 }
 
 class CScene;
-class CGameObject;
-class CGameObjectManager;
-class WeaponSystemComponent;
-class EnemyAIControllerComponent;
-class CollisionManager;
-class CPointLightInstance;
-class CModelComponent;
-class EnemyEmitterComponent;
-class DeathComponentFactory;
-class StatManager;
-class CTextInstance;
-class CParticleEmitterComponent;
-class CCollisionComponentManager;
-class CTextInstance;
-class CHealthBarComponentManager;
 class CHatmaker;
+class CGameObject;
+class StatManager;
+class CShopStorage;
+class CTextInstance;
+class CTextInstance;
+class CModelComponent;
+class CollisionManager;
+class CGameObjectManager;
+class CPointLightInstance;
+class EnemyEmitterComponent;
+class WeaponSystemComponent;
+class DeathComponentFactory;
+class CParticleEmitterComponent;
+class EnemyAIControllerComponent;
+class CCollisionComponentManager;
+class CHealthBarComponentManager;
 
 class CPlayState : public State, public Subscriber
 {
@@ -92,7 +93,7 @@ private:
 	StatManager* myStatManager;
 	CTextInstance* myGoldText;
 	CHatMaker* myHatMaker;
-
+	CShopStorage* myShopStorage;
 	//CGameObject* myCameraObject;
 	CMouseComponent* myMouseComponent;
 

@@ -7,6 +7,7 @@ public:
 	~HatBought();
 	
 	eMessageReturn DoEvent(CHatMaker* aPlayState) const override;
+	eMessageReturn DoEvent(CShopStorage* aPlayState) const override;
 private:
 	std::string myHatName;
 };

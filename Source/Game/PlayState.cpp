@@ -16,6 +16,8 @@
 #include "Components/ModelComponent.h"
 #include "Components/ParticleEmitterComponentManager.h"
 #include "Components/ComponentManager.h"
+#include "Components/SkillFactory.h"
+#include "Components/SkillSystemComponentManager.h"
 
 #include "PostMaster/PopCurrentState.h"
 #include "PostMaster/ChangeLevel.h"
@@ -32,18 +34,17 @@
 #include "BrontosaurusEngine/LineDrawer.h"
 #include "BrontosaurusEngine/TextInstance.h"
 
-#include "../LuaWrapper/SSlua/SSlua.h"
+#include "LuaWrapper/SSlua/SSlua.h"
 
-#include "../GUI/GUIManager/GUIManager.h"
+#include "GUI/GUIManager/GUIManager.h"
 
 #include "LoadManager/LoadManager.h"
 
-#include "../Audio/AudioInterface.h"
+#include "Audio/AudioInterface.h"
 
 #include "PlayerData.h"
 
-#include "Components/SkillFactory.h"
-#include "Components/SkillSystemComponentManager.h"
+#include "ShopStorage.h"
 
 #include "FleeControllerManager.h"
 #include "SeekControllerManager.h"
@@ -57,21 +58,21 @@
 
 //Temp Includes
 #include "HatMaker.h"
-#include "Components/HealthComponent.h"
 #include "MainStatComponent.h"
 #include "StatComponent.h"
-#include "Components/AIControllerComponent.h"
 #include "Components/SeekController.h"
-#include "Components/FleeController.h"
 #include "KevinLoader/KevinLoader.h"
-#include "Components/CollisionComponentManager.h"
 #include "SkillComponentManager.h"
 #include "DropComponentManager.h"
-#include "../Collision/Intersection.h"
+#include "Collision/Intersection.h"
+#include "Collision/ICollider.h"
+#include "Components/HealthComponent.h"
+#include "Components/AIControllerComponent.h"
+#include "Components/FleeController.h"
+#include "Components/CollisionComponentManager.h"
 #include "Components/CollisionComponent.h"
 #include "Components/InputController.h"
 #include "Components/MovementComponent.h"
-#include "Collision/ICollider.h"
 #include "Components/DropComponent.h"
 #include "SkillData.h"
 
@@ -81,8 +82,8 @@
 #include "ManaComponent.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
-#include "../BrontosaurusEngine/FireEmitterInstance.h"
-#include "../BrontosaurusEngine/FireEmitterData.h"
+#include "BrontosaurusEngine/FireEmitterInstance.h"
+#include "BrontosaurusEngine/FireEmitterData.h"
 
 #include "MouseComponent.h"
 #include "QuestManager.h"
@@ -122,6 +123,7 @@ CPlayState::~CPlayState()
 	DropComponentManager::DestroyInstance();
 	PollingStation::NullifyLevelSpecificData();
 	ManaComponentManager::DestroyInstance();
+	CShopStorage::Destroy();
 
 	SkillFactory::DestroyInstance();
 	CComponentManager::DestroyInstance();
@@ -137,6 +139,7 @@ void CPlayState::Load()
 	srand(time(NULL));
 
 	CreateManagersAndFactories();
+	CShopStorage::GetInstance().LoadStorage("Json/Hats/HatBluePrints.json");
 	LoadManagerGuard loadManagerGuard;
 
 	QM::CQuestManager &questManager = QM::CQuestManager::GetInstance();
@@ -612,6 +615,7 @@ void CPlayState::CreateManagersAndFactories()
 	SkillSystemComponentManager::GetInstance().SetCollisionComponentManager(myCollisionComponentManager);
 	SkillComponentManager::CreateInstance();
 	DropComponentManager::CreateInstance();
+	CShopStorage::Create();
 	myHealthBarManager = new CHealthBarComponentManager(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 	ManaComponentManager::CreateInstance();
 	myHatMaker = new CHatMaker(myGameObjectManager);
