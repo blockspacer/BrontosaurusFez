@@ -11,7 +11,7 @@ namespace Stats
 		float HealthDropChance = 1.0f;
 		float ManaDropChance = 1.0f;
 		float GoldGetModifier = 1.0f;
-		float ManaConstModifier = 1.0f;
+		float ManaCostModifier = 1.0f;
 		
 		SBaseStats operator+=(const SBaseStats& aStat)
 		{
@@ -19,7 +19,7 @@ namespace Stats
 			HealthDropChance += aStat.HealthDropChance;
 			ManaDropChance += aStat.ManaDropChance;
 			GoldGetModifier += aStat.GoldGetModifier;
-			ManaConstModifier += aStat.ManaConstModifier;
+			ManaCostModifier += aStat.ManaCostModifier;
 
 			return *this;
 		}
@@ -34,7 +34,7 @@ namespace Stats
 		float BonusHealthDropChance = 0.0f;
 		float BonusManaDropChance = 0.0f;
 		float BonusGoldGetModifier = 0.0f;
-		float BonusManaConstModifier = 0.0f;
+		float BonusManaCostModifier = 0.0f;
 
 		SBonusStats operator+=(const SBonusStats& aStats)
 		{
@@ -45,7 +45,7 @@ namespace Stats
 			BonusGoldGetModifier = aStats.BonusGoldGetModifier;
 			BonusHealthDropChance = aStats.BonusHealthDropChance;
 			BonusManaDropChance = aStats.BonusManaDropChance;
-			BonusManaConstModifier = aStats.BonusManaConstModifier;
+			BonusManaCostModifier = aStats.BonusManaCostModifier;
 			return *this;
 		}
 	};
