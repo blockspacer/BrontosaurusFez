@@ -127,7 +127,7 @@ void SkillSystemComponent::Destroy()
 {
 }
 
-void SkillSystemComponent::AddSkill(char* aSkillName)
+void SkillSystemComponent::AddSkill(const char* aSkillName)
 {
 	mySkills.Add(SkillFactory::GetInstance().CreateSkill(aSkillName));
 	mySkills.GetLast()->SetTargetPosition(myTargetPosition);

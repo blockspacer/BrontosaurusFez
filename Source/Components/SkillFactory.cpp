@@ -43,7 +43,7 @@ void SkillFactory::DestroyInstance()
 	SAFE_DELETE(ourInstance);
 }
 
-Skill * SkillFactory::CreateSkill(char* aSkillName)
+Skill * SkillFactory::CreateSkill(const char* aSkillName)
 {
 	for(unsigned short i=0; i < mySkillDataList.Size(); i++)
 	{

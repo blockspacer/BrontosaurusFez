@@ -10,10 +10,18 @@ int LoadSkillSystemComponent(KLoader::SLoadedComponentData someData)
 {
 	SkillSystemComponent* skillSystem = new SkillSystemComponent();
 	SkillSystemComponentManager::GetInstance().RegisterComponent(skillSystem);
-	//skillSystem->AddSkill(static_cast<SkillData::SkillName>(someData.myData.at("SkillName").GetUInt()));
-	skillSystem->AddSkill("BasicAttack");
-	skillSystem->AddSkill("SweepAttack");
-	skillSystem->AddSkill("WhirlWind");
+
+	if (someData.myData.at("Skills").Size() <= 0)
+	{
+		DL_PRINT("Skill component missing skills");
+	}
+
+	CU::CJsonValue levelsArray = someData.myData.at("Skills");
+
+	for (unsigned short i = 0; i < levelsArray.Size(); i++)
+	{
+		skillSystem->AddSkill(levelsArray[i].GetString().c_str());
+	}
 	CComponentManager::GetInstance().RegisterComponent(skillSystem);
 	return skillSystem->GetId();
 }
