@@ -134,6 +134,32 @@ namespace CU
 		return 0;
 	}
 
+	int CJsonValue::Count(const std::string & aKey)
+	{
+
+		if (myValue == nullptr)
+		{
+			JSON_ERROR("json value is null");
+			return 0;
+		}
+		if (IsArray() == false)
+		{
+			eJsoneValueType type = GetType();
+			JSON_ERROR("json value is not an array");
+			return 0;
+		}
+
+		const picojson::object& tempObject = myValue->get<picojson::object>();
+		auto it = tempObject.count(aKey);
+		if (it <= 0)
+		{
+			JSON_ERROR("json object invalid key");
+			return 0;
+		}
+
+		return it;
+	}
+
 	bool CJsonValue::IsNull() const
 	{
 		return myValue == nullptr || myValue->is<picojson::null>();
