@@ -10,9 +10,8 @@ namespace QM
 	class CQuestManager :public Subscriber
 	{
 	public:
-		static void CreateInstance();
-		static CQuestManager& GetInstance();
-		static void DestroyInstance();
+		CQuestManager();
+		~CQuestManager();
 
 		void UpdateObjective(EventHandle anObjectiveHandle, int anAmmount = 1);
 		bool CheckIfQuestComplete()const;
@@ -28,6 +27,7 @@ namespace QM
 		EventHandle AddObjective(SObjective anObjective);
 		EventHandle AddQuest(SQuest anObjective);
 		SObjective GetObjective(const int aObjective);
+		SObjective GetObjective(const int aObjective)const;
 
 		EventHandle GetObjectiveHandle(std::string anObjectiveName);
 
@@ -37,9 +37,6 @@ namespace QM
 		bool GetIfLoadingSuceeded() const;
 		std::string myError;
 	private:
-		CQuestManager();
-		~CQuestManager();
-
 		static void SendUpdateMessage();
 
 		CU::Queue<SEvent, unsigned short> myEvents;
@@ -51,7 +48,7 @@ namespace QM
 		std::map<std::string, EventHandle> myObjectiveHandles;
 
 		bool myLoadSuccess;
-		static CQuestManager* ourInstance;
+		int myProgression;
 	};
 	
 }

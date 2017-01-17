@@ -78,6 +78,9 @@ void MovementComponent::Receive(const eComponentMessageType aMessageType, const 
 			GetParent()->NotifyComponents(eComponentMessageType::eStoppedMoving, stoppedMovingMessage);
 		}
 		break;
+	case eComponentMessageType::eAddToMovementSpeed:
+		myMovementSpeed += aMessageData.myInt;
+		break;
 	default:
 		break;
 	}

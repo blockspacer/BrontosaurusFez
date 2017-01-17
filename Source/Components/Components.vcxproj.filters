@@ -127,6 +127,7 @@
     <ClCompile Include="PlayerManaMessenger.cpp">
       <Filter>Mana</Filter>
     </ClCompile>
+    <ClCompile Include="HatActivator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -275,6 +276,7 @@
     <ClInclude Include="PlayerManaMessenger.h">
       <Filter>Mana</Filter>
     </ClInclude>
+    <ClInclude Include="HatActivator.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

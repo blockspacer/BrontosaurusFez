@@ -73,6 +73,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ModelViewerRelease|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Subscriber.cpp" />
+    <ClCompile Include="UpdateQuestEvent.cpp" />
     <ClCompile Include="WindowSizeChanged.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -107,6 +108,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Subscriber.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="UpdateQuestEvent.h" />
     <ClInclude Include="WindowSizeChanged.h" />
   </ItemGroup>
   <ItemGroup>

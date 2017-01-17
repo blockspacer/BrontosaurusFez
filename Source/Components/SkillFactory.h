@@ -11,7 +11,7 @@ public:
 	static void CreateInstance();
 	static void DestroyInstance();
 
-	Skill* CreateSkill(char* aSkillName);
+	Skill* CreateSkill(const char* aSkillName);
 	void RegisterSkillData(SkillData* aSkillData);
 	void RegisterSkills();
 private:

@@ -6,52 +6,71 @@ namespace Stats
 	typedef int StatPoint;
 	struct SBaseStats
 	{
-		StatPoint Strength = 0;
-		StatPoint Dexterity = 0;
-		StatPoint Intelligence = 0;
-		StatPoint Vitality = 0;
+
+		float DamageModifier = 1.0f;
+		float HealthDropChance = 1.0f;
+		float ManaDropChance = 1.0f;
+		float GoldGetModifier = 1.0f;
+		float ManaCostModifier = 1.0f;
+		
 		SBaseStats operator+=(const SBaseStats& aStat)
 		{
-			Strength += aStat.Strength;
-			Dexterity += aStat.Dexterity;
-			Intelligence += aStat.Intelligence;
-			Vitality += aStat.Vitality;
+			DamageModifier += aStat.DamageModifier;
+			HealthDropChance += aStat.HealthDropChance;
+			ManaDropChance += aStat.ManaDropChance;
+			GoldGetModifier += aStat.GoldGetModifier;
+			ManaCostModifier += aStat.ManaCostModifier;
 
 			return *this;
 		}
 	};
 	struct SBonusStats
 	{
-		float BonusCritChance = 0.f;
-		float BonusCritDamage = 0.f;
-		float BonusMovementSpeed = 0.f;
-		int BonusArmor = 0;
-		int BonusDamage = 0;
 		HealthPoint BonusHealth = 0;
 		ManaPoint BonusMana = 0;
+
+		float BonusMovementSpeed = 0.0f;
+		float BonusDamageModifier = 0.0f;
+		float BonusHealthDropChance = 0.0f;
+		float BonusManaDropChance = 0.0f;
+		float BonusGoldGetModifier = 0.0f;
+		float BonusManaCostModifier = 0.0f;
+
 		SBonusStats operator+=(const SBonusStats& aStats)
 		{
-			BonusCritChance += aStats.BonusCritChance;
-			BonusCritDamage += aStats.BonusCritDamage;
 			BonusMovementSpeed += aStats.BonusMovementSpeed;
-			BonusArmor += aStats.BonusArmor;
-			BonusDamage += aStats.BonusDamage;
 			BonusHealth += aStats.BonusHealth;
 			BonusMana += aStats.BonusMana;
+			BonusDamageModifier += aStats.BonusDamageModifier;
+			BonusGoldGetModifier += aStats.BonusGoldGetModifier;
+			BonusHealthDropChance += aStats.BonusHealthDropChance;
+			BonusManaDropChance += aStats.BonusManaDropChance;
+			BonusManaCostModifier += aStats.BonusManaCostModifier;
 			return *this;
+		}
+
+		SBonusStats operator*=(const short aValue)
+		{
+			BonusMovementSpeed *= aValue;
+			BonusHealth *= aValue;
+			BonusMana *= aValue;
+			BonusDamageModifier *= aValue;
+			BonusGoldGetModifier *= aValue;
+			BonusHealthDropChance *= aValue;
+			BonusManaDropChance *= aValue;
+			BonusManaCostModifier *= aValue;
 		}
 	};
 	struct STotalStats
 	{
-		float CritChance;
-		float CritMultiplier;
-		float BlockChance;
-		float DodgeChance;
-		float DamageReduction;
-		float AttackSpeed;
-		int Armor;
-		int Damage;
 		HealthPoint MaxHealth;
 		ManaPoint MaxMana;
+
+		float MaxMovementSpeed;
+		float MaxDamageModifier;
+		float MaxHealthDropChance;
+		float MaxManaDropChance;
+		float MaxGoldGetModifier;
+		float MaxManaConstModifier;
 	};
 }

@@ -9,6 +9,7 @@
 //temp includes
 #include "QuestDrawer.h"
 #include "../PostMaster/Event.h"
+#include "QuestManager.h"
 
 namespace CU
 {
@@ -101,6 +102,7 @@ private:
 	std::atomic_bool  myIsLoaded;
 	bool myShouldReturnToLevelSelect;
 
+	QM::CQuestManager myQuestManager;
 	QM::CQuestDrawer myQuestDrawer;
 
 	//TEMP - BELOW THIS LINE

@@ -3,12 +3,18 @@
 //#include "..\PostMaster\Subscriber.h"
 
 class CGameObject;
-class CStatComponent;
+namespace Stats
+{
+	struct SBonusStats;	
+
+};
+class HatActivator;
 
 struct SHat
 {
-	const CStatComponent* stat;
+	Stats::SBonusStats* stat;
 	CGameObject* gameObject; // GameObj hatObj  -> AddComp(statComp)
+	HatActivator* hatActivator;
 };
 
 class CInventoryComponent : public CComponent//, public Subscriber

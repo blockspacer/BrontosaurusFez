@@ -5,9 +5,10 @@
 
 class ICollider;
 class CComponent;
+class CPickupComponent;
 class CGameObject;
 class Skill;
-
+struct SHat;
 namespace CU
 {
 	template<typename ObjectType, typename SizeType = unsigned int, bool USE_SAFE_MODE = true>
@@ -29,7 +30,6 @@ namespace CU
 	class Vector2;
 	using Vector2f = Vector2<float>;
 }
-
 enum class eComponentType : int;
 
 
@@ -73,7 +73,14 @@ enum class eComponentMessageType
 	eCheckIfCanUseSkill,
 	eBurnMana,
 	ePercentMPLeft,
-	eSetMaxManaFromStats
+	eSetMaxManaFromStats,
+	eAddHat,
+	eAddStats,
+	eAddToMaxHealth,
+	eAddToMaxMana,
+	eAddToMovementSpeed,
+	ePickUp,
+	eRestoreMana,
 };
 
 struct SComponentMessageData
@@ -84,6 +91,7 @@ struct SComponentMessageData
 	{
 		CComponent* myComponent;
 		CComponent* myComponents[2];
+		CPickupComponent* myPickupComponent;
 		CGameObject* myGameObject;
 		int myInt;
 		unsigned short myUShort;
@@ -98,8 +106,10 @@ struct SComponentMessageData
 		
 		eComponentType myComponentTypeAdded;
 		Stats::STotalStats myStatStruct;
+		Stats::SBonusStats* myStatsToAdd;
 		ICollider* myCollider;
 		Skill* mySkill;
+		SHat* myHat;
 	};
 };
 

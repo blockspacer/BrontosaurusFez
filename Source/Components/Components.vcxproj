@@ -356,6 +356,7 @@
     <ClInclude Include="DropComponentManager.h" />
     <ClInclude Include="FleeController.h" />
     <ClInclude Include="FleeControllerManager.h" />
+    <ClInclude Include="HatActivator.h" />
     <ClInclude Include="HealthBarComponent.h" />
     <ClInclude Include="HealthBarComponentManager.h" />
     <ClInclude Include="HealthPoint.h" />
@@ -414,6 +415,7 @@
     <ClCompile Include="DropComponentManager.cpp" />
     <ClCompile Include="FleeController.cpp" />
     <ClCompile Include="FleeControllerManager.cpp" />
+    <ClCompile Include="HatActivator.cpp" />
     <ClCompile Include="HealthBarComponent.cpp" />
     <ClCompile Include="HealthBarComponentManager.cpp" />
     <ClCompile Include="ManaComponent.cpp" />
