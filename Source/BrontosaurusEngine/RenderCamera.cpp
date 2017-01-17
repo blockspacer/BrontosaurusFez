@@ -16,19 +16,19 @@ CRenderCamera::~CRenderCamera()
 	myRenderQueue.DeleteAll();
 }
 
-void CRenderCamera::InitPerspective(const float aFov, const float aWidth, const float aHeight, const float aFar, const float aNear, DXGI_FORMAT aFormat /*= DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM*/)
+void CRenderCamera::InitPerspective(const float aFov, const float aWidth, const float aHeight, const float aFar, const float aNear, ID3D11Texture2D* aTexture , DXGI_FORMAT aFormat /*= DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM*/)
 {
 	myCamera.Init(aFov, aWidth, aHeight, aNear, aFar);
 	CU::Vector2ui size(aWidth, aHeight);
-	myRenderPackage.Init(size, nullptr, aFormat);
+	myRenderPackage.Init(size, aTexture, aFormat);
 }
 
 //ORTOGRAPHIC
-void CRenderCamera::InitOrthographic(const float aWidth, const float aHeight, const float aFar, const float aNear, const int aTextureWidth, const int aTextureHeight, DXGI_FORMAT aFormat /*= DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM*/)
+void CRenderCamera::InitOrthographic(const float aWidth, const float aHeight, const float aFar, const float aNear, const int aTextureWidth, const int aTextureHeight, ID3D11Texture2D* aTexture, DXGI_FORMAT aFormat /*= DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM*/)
 {
 	myCamera.Init(aWidth, aHeight, aNear, aFar);
 	CU::Vector2ui size(aTextureWidth, aTextureHeight);
-	myRenderPackage.Init(size, nullptr, aFormat);
+	myRenderPackage.Init(size, aTexture, aFormat);
 }
 
 void CRenderCamera::AddRenderMessage(SRenderMessage * aRenderMessage)

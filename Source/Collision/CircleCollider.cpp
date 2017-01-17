@@ -55,7 +55,7 @@ CCircleCollider& CCircleCollider::operator=(CCircleCollider&& aTemporary)
 
 void CCircleCollider::RenderDebugLines(CCollisionRenderer& aCollisionRenderer)
 {
-	Collision::CRenderCircle* renderCommand = new Collision::CRenderCircle(&GetData());
+	Collision::CRenderCircle* renderCommand = new Collision::CRenderCircle(GetData());
 	aCollisionRenderer.AddToRender(renderCommand);
 }
 

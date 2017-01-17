@@ -153,7 +153,7 @@ const CModelManager::ModelId CModelManager::LoadGUIModel(const CLoaderMesh* aLoa
 
 	return myModels[aLoaderMesh->myName];
 }
-const CModelManager::ModelId CModelManager::LoadGUIModel(const CLoaderMesh * aLoaderMesh, const CU::GrowingArray<CU::DynamicString>& aTexturePaths)
+const CModelManager::ModelId CModelManager::LoadGUIModel(const CLoaderMesh * aLoaderMesh, const CU::GrowingArray<std::string>& aTexturePaths)
 {
 	if (myModelList.Size() >= ourMaxNumberOfModels)
 	{

@@ -254,6 +254,10 @@
       <Filter>Sprite</Filter>
     </ClInclude>
     <ClInclude Include="TextBox.h" />
+    <ClInclude Include="Navmesh.h" />
+    <ClInclude Include="ObjLoader.h">
+      <Filter>Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -393,6 +397,8 @@
       <Filter>Sprite</Filter>
     </ClCompile>
     <ClCompile Include="TextBox.cpp" />
+    <ClCompile Include="Navmesh.cpp" />
+    <ClCompile Include="ObjLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Brontosaurus.rc">

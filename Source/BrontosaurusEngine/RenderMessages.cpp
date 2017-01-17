@@ -87,13 +87,21 @@ SActivateRenderPackageMessage::SActivateRenderPackageMessage()
 }
 
 SRenderToIntermediate::SRenderToIntermediate()
-	:SRenderMessage(eRenderMessageType::eRenderToInterediate)
+	: SRenderMessage(SRenderMessage::eRenderMessageType::eRenderToInterediate),
+	useDepthResource(0)
 {
+	myRect = CU::Vector4f::Zero;
 }
 
 SSetShadowBuffer::SSetShadowBuffer()
 	: SRenderMessage(eRenderMessageType::eSetShadowBuffer)
 {
+}
+
+SRenderNavmeshMessage::SRenderNavmeshMessage()
+	: SRenderMessage(SRenderMessage::eRenderMessageType::eRenderNavMesh)
+{
+	myModel = nullptr;
 }
 
 SRenderLineBuffer::SRenderLineBuffer(const CU::GrowingArray<char, unsigned short, false>& aLineBuffer)

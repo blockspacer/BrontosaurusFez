@@ -11,6 +11,7 @@
 #include "../BrontosaurusEngine/Console.h"
 #include "../Components/InputController.h"
 #include "Game/HatShopState.h"
+#include "../Components/CollisionComponentManager.h"
 
 #include "../Game/QuestManager.h"
 #include "../Game/QuestDrawer.h"
@@ -139,6 +140,19 @@ eMessageReturn KeyPressed::DoEvent(InputController * aInputController) const
 	return aInputController->TakeKeyPressed(myKey);
 }
 
+eMessageReturn KeyPressed::DoEvent(CCollisionComponentManager* aCollisionComponentManager) const
+{
+	if (myKey == CU::eKeys::F3)
+	{
+		if (aCollisionComponentManager != nullptr)
+		{
+			aCollisionComponentManager->FlipShouldRender();
+		}
+	}
+
+	return eMessageReturn::eContinue;
+}
+
 eMessageReturn KeyPressed::DoEvent(CHealthComponent * aHealthComponent) const
 {
 	switch (myKey)
@@ -160,14 +174,14 @@ eMessageReturn KeyPressed::DoEvent(CRenderer* aRenderer) const
 	}
 
 #ifdef _RETAIL_BUILD
-#error "detta är temp-kod, man ska för fan inte kunna stänga av bloom med b in game, mvh carl"
+//#error "detta är temp-kod, man ska för fan inte kunna stänga av bloom med b in game, mvh carl"
 #endif // _RETAIL_BUILD
 
 
 	switch (myKey)
 	{
 	case CU::eKeys::B:
-		aRenderer->GetSettings().Bloom = !aRenderer->GetSettings().Bloom;
+		//aRenderer->GetSettings().Bloom = !aRenderer->GetSettings().Bloom;
 		break;
 	default:
 		break;

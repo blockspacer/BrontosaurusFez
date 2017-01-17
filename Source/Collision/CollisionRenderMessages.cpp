@@ -19,7 +19,7 @@ Collision::IRenderCommand::~IRenderCommand()
 {
 }
 
-Collision::CRenderCircle::CRenderCircle(const Intersection::SCircle* aCircle)
+Collision::CRenderCircle::CRenderCircle(const Intersection::SCircle& aCircle)
 	: myCircle(aCircle)
 {
 }
@@ -39,17 +39,17 @@ void Collision::CRenderCircle::DoRenderCall(CU::GrowingArray<char, unsigned shor
 
 	for (float angle = 0.f; angle < Tau; angle += Incrementation)
 	{
-		const CU::Vector4f centerPointOnCircle(myCircle->myCenterPosition.x, WorldGroundY, myCircle->myCenterPosition.y, 1.f);
+		const CU::Vector4f centerPointOnCircle(myCircle.myCenterPosition.x, WorldGroundY, myCircle.myCenterPosition.y, 1.f);
 
 		CU::Vector4f firstPointOnCircle = centerPointOnCircle;
-		firstPointOnCircle.x += myCircle->myRadius * std::cosf(angle);
-		firstPointOnCircle.z += myCircle->myRadius * std::sinf(angle);
+		firstPointOnCircle.x += myCircle.myRadius * std::cosf(angle);
+		firstPointOnCircle.z += myCircle.myRadius * std::sinf(angle);
 
 		circleVertexBuffer.Add(firstPointOnCircle);
 
 		CU::Vector4f secondPointOnCircle = centerPointOnCircle;
-		secondPointOnCircle.x += myCircle->myRadius * std::cosf(angle + Incrementation);
-		secondPointOnCircle.z += myCircle->myRadius * std::sinf(angle + Incrementation);
+		secondPointOnCircle.x += myCircle.myRadius * std::cosf(angle + Incrementation);
+		secondPointOnCircle.z += myCircle.myRadius * std::sinf(angle + Incrementation);
 
 		circleVertexBuffer.Add(secondPointOnCircle);
 	}

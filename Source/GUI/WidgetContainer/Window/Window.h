@@ -14,13 +14,13 @@ namespace GUI
 	{
 	public:
 		Window(const CU::Vector2f& aPosition, const CU::Vector2f& aSize);
-		Window(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::DynamicString& aName);
+		Window(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const std::string& aName);
 		~Window();
 
 		void Render() override;
 		void OnPositionChanged() override;
 
 	private:
-		void Init(const CU::DynamicString& aBackgroundSpritePath, const CU::Vector2f& aBackgroundCoords);
+		void Init(const std::string& aBackgroundSpritePath, const CU::Vector2f& aBackgroundCoords);
 	};
 }

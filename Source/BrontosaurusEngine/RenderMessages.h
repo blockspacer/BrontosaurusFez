@@ -62,6 +62,7 @@ struct SRenderMessage
 		eRenderToInterediate,
 		eSetShadowBuffer,
 		eRenderLineBuffer,
+		eRenderNavMesh,
 	};
 
 	SRenderMessage(const eRenderMessageType aRenderMessageType);
@@ -70,6 +71,15 @@ struct SRenderMessage
 	eRenderMessageType myType;
 
 };
+
+
+struct SRenderNavmeshMessage : SRenderMessage
+{
+	SRenderNavmeshMessage();
+	CU::Matrix44f myTransformation;
+	CModel* myModel;
+};
+
 
 struct SRenderFullscreenEffectMessage : SRenderMessage
 {
@@ -100,6 +110,8 @@ struct SRenderToIntermediate : SRenderMessage
 {
 	SRenderToIntermediate();
 	CRenderPackage myRenderPackage;
+	CU::Vector4f myRect;
+	bool useDepthResource;
 };
 
 struct SRenderCameraQueueMessage : SRenderMessage

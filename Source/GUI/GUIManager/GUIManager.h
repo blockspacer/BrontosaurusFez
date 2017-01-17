@@ -36,10 +36,10 @@ namespace GUI
 		void Update(const CU::Time& aDeltaTime);
 		void Render();
 
-		void AddWidget(const CU::DynamicString& aName, Widget* aWidget);
-		void DeleteWidget(const CU::DynamicString& aName);
-		Widget* RemoveWidget(const CU::DynamicString& aName);
-		Widget* FindWidget(const CU::DynamicString& aName);
+		void AddWidget(const std::string& aName, Widget* aWidget);
+		void DeleteWidget(const std::string& aName);
+		Widget* RemoveWidget(const std::string& aName);
+		Widget* FindWidget(const std::string& aName);
 
 		void PauseRenderAndUpdate();
 		void RestartRenderAndUpdate();

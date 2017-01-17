@@ -8,7 +8,7 @@ namespace GUI
 	class ToolTip : public WidgetDecorator
 	{
 	public:
-		ToolTip(Widget* aDecoratedWidget, const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::DynamicString& aName, const bool aIsVisible = true);
+		ToolTip(Widget* aDecoratedWidget, const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const std::string& aName, const bool aIsVisible = true);
 		~ToolTip();
 
 		void OnMouseMove(const CU::Vector2f& aPosition) override;

@@ -11,7 +11,11 @@ struct SPixelConstantBuffer
 		eProgressBarValue,
 		eSkipEmissive,
 		eFlashButton,
-		eLength
+		eIsHealthBar,
+		eHealthPercent,
+		eIsManaBar,
+		eManaPercent,
+		eLength,
 	};
 
 	SPixelConstantBuffer() : myValues(0.f) {}

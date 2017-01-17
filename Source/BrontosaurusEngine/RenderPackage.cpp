@@ -48,7 +48,6 @@ void CRenderPackage::Init(const CU::Vector2ui & aSize, ID3D11Texture2D * aTextur
 	CHECK_RESULT(result, "Couldn't create render target view for the RenderPackage");
 	
 	FRAMEWORK->CreateDepthStencil(static_cast<unsigned int>(myViewport->Width), static_cast<unsigned int>(myViewport->Height), myDepth, myDepthResource );
-
 }
 
 void CRenderPackage::Clear()
@@ -89,6 +88,31 @@ void CRenderPackage::Activate(CRenderPackage& aRenderPackage)
 ID3D11ShaderResourceView *& CRenderPackage::GetDepthResource()
 {
 	return myDepthResource;
+}
+
+ID3D11ShaderResourceView *& CRenderPackage::GetResource()
+{
+	return myResource;
+}
+
+ID3D11Texture2D *& CRenderPackage::GetTexture()
+{
+	return myTexture;
+}
+
+void CRenderPackage::UpdateTexture(ID3D11Texture2D * aTexture)
+{
+	SAFE_RELEASE(myTexture);
+	SAFE_RELEASE(myTarget);
+	SAFE_RELEASE(myDepth);
+	SAFE_RELEASE(myDepthResource);
+	SAFE_RELEASE(myResource);
+
+	HRESULT result;
+	myTexture = aTexture;
+	result = DEVICE->CreateRenderTargetView(myTexture, NULL, &myTarget);
+	CHECK_RESULT(result, "Couldn't create render target view for the RenderPackage");
+	FRAMEWORK->CreateDepthStencil(static_cast<unsigned int>(myViewport->Width), static_cast<unsigned int>(myViewport->Height), myDepth, myDepthResource);
 }
 
 CU::Vector2f CRenderPackage::GetSize()

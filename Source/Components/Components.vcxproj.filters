@@ -121,6 +121,12 @@
       <Filter>Mana</Filter>
     </ClCompile>
     <ClCompile Include="ManaComponentManager.cpp" />
+    <ClCompile Include="PlayerHealthMessenger.cpp">
+      <Filter>Health</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerManaMessenger.cpp">
+      <Filter>Mana</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -263,6 +269,12 @@
       <Filter>Mana</Filter>
     </ClInclude>
     <ClInclude Include="ManaComponentManager.h" />
+    <ClInclude Include="PlayerHealthMessenger.h">
+      <Filter>Health</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerManaMessenger.h">
+      <Filter>Mana</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

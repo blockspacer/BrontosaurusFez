@@ -151,7 +151,7 @@ bool CModel::Initialize(CEffect* aEffect, CSurface* aSurface, CU::GrowingArray<S
 bool CModel::Initialize(CEffect* aEffect, CSurface* aSurface, CU::GrowingArray<SVertexDataCube>& aVertexList)
 {
 	Initialize(aEffect, aSurface);
-	myLODModels.Add(SLodData());
+	//myLODModels.Add(SLodData());
 	return InitBuffers(aVertexList);
 }
 
@@ -208,7 +208,7 @@ bool CModel::InitBuffers(CU::GrowingArray<SVertexDataCube>& aVertexList, CU::Gro
 {
 	myVertexSize = sizeof(SVertexDataCube);
 	myLODModels.GetLast().myIndexCount = aIndexList.Size();
-	myLODModels.GetLast().myIndexCount = aVertexList.Size();
+	myLODModels.GetLast().myVertexCount = aVertexList.Size();
 
 	// VERTEX BUFFER
 	D3D11_BUFFER_DESC vertexBufferDesc;

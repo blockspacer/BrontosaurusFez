@@ -34,6 +34,11 @@ cbuffer GUIPixelBuffer : register(b1)
 	float progressBarValue;
 	float skipEmissive;
 	float flashButton;
+	//new srtuff
+	float isHealthBar;
+	float healthPercent;
+	float isManaBar;
+	float manaPercent;
 
 	float4 cameraPosition;
 }

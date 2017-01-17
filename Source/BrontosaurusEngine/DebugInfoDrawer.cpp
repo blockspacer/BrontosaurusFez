@@ -181,6 +181,8 @@ void CDebugInfoDrawer::SetDrawCalls(const int aDrawCallsCount)
 
 void CDebugInfoDrawer::UpdateFPSCounter()
 {
+#ifndef _RETAIL_BUILD
+
 	myRenderThreadTimers->UpdateTimers();
 
 	const float SecondsBetweenRefreshes = 0.125f;
@@ -205,6 +207,8 @@ void CDebugInfoDrawer::UpdateFPSCounter()
 			myOutputTexts[eDebugText_FPS]->SetColor(CU::Vector4f(CTextInstance::White.x * 0.5f, CTextInstance::White.y * 0.5f, CTextInstance::White.z * 0.5f, 1.f));
 		}
 	}
+
+#endif // !_RETAIL_BUILD
 }
 
 void CDebugInfoDrawer::UpdateLogicFPSCounter()

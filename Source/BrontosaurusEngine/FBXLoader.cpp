@@ -480,7 +480,7 @@ bool CFBXLoader::LoadGUIScene(const char* aFilePath, CLoaderScene& aSceneOut)
 				//ExtractBaseName(temp.myTextures[i]);
 				AddFullPath(aFilePath, temp.myTextures[i]);
 			}
-			aSceneOut.myTextures.Add(temp.myTextures[i].c_str());
+			aSceneOut.myTextures.Add(temp.myTextures[i]);
 		}
 	}
 

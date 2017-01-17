@@ -136,13 +136,6 @@ void CInputManager::UpdateKeyboard()
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eKeyboardMessage, KeyReleased(myKeyDowns[i])));
 		}
 	}
-
-//#ifndef _RETAIL_BUILD
-//	if (myDInputWrapper->IsKeyboardKeyDown(CU::eKeys::ESCAPE) == true)
-//	{
-//		CEngine::GetInstance()->Shutdown();
-//	}
-//#endif // !_RETAIL_BUILD
 }
 
 void CInputManager::UpdateGamePad()
