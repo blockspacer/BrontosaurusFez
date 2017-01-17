@@ -25,3 +25,8 @@ void CMasterAI::DetermineHealthDrop()
 
 	//Each healthglobe could give you a percentage amount of HP, let's say 30%;
 }
+
+void CMasterAI::DetermineAmmountOfMinionsToSpawn()
+{
+
+}
