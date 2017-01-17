@@ -244,6 +244,10 @@
     <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="MasterAI.cpp" />
     <ClCompile Include="PauseMenu.cpp" />
+    <ClCompile Include="PickerUpperComponent.cpp" />
+    <ClCompile Include="PickupComponent.cpp" />
+    <ClCompile Include="PickupFactory.cpp" />
+    <ClCompile Include="PickupManager.cpp" />
     <ClCompile Include="PlayState.cpp" />
     <ClCompile Include="PollingStation.cpp" />
     <ClCompile Include="QuestDrawer.cpp" />
@@ -267,6 +271,11 @@
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="MasterAI.h" />
     <ClInclude Include="PauseMenu.h" />
+    <ClInclude Include="PickerUpperComponent.h" />
+    <ClInclude Include="PickupComponent.h" />
+    <ClInclude Include="PickupFactory.h" />
+    <ClInclude Include="PickupManager.h" />
+    <ClInclude Include="PickupType.h" />
     <ClInclude Include="PlayState.h" />
     <ClInclude Include="PollingStation.h" />
     <ClInclude Include="QuestDrawer.h" />
