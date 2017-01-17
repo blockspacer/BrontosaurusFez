@@ -3,10 +3,10 @@
 class HatBought : public Event
 {
 public:
-	HatBought();
+	HatBought(const std::string& aHatName);
 	~HatBought();
 	
-	eMessageReturn DoEvent(CPlayState* aPlayState) const override;
+	eMessageReturn DoEvent(CHatMaker* aPlayState) const override;
 private:
+	std::string myHatName;
 };
-

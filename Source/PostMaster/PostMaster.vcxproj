@@ -43,6 +43,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BuyButtonPressed.cpp" />
     <ClCompile Include="ChangeLevel.cpp" />
     <ClCompile Include="ConsoleCalledUpon.cpp" />
     <ClCompile Include="DrawCallsCount.cpp" />
@@ -75,6 +76,7 @@
     <ClCompile Include="WindowSizeChanged.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BuyButtonPressed.h" />
     <ClInclude Include="ChangeLevel.h" />
     <ClInclude Include="ConsoleCalledUpon.h" />
     <ClInclude Include="DrawCallsCount.h" />

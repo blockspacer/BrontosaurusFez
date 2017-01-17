@@ -26,6 +26,7 @@ enum class eMessageType
 	QuestRelated,
 	eHatAdded,
 	eDroppedFile,
+	eBuyButtonPressed,
 	ePlayerHealthChanged,
 	ePlayerManaChanged,
 	eLength,

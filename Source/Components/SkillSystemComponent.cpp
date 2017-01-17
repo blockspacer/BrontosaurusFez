@@ -31,7 +31,7 @@ void SkillSystemComponent::Update(float aDeltaTime)
 				mySkills[i]->Update(aDeltaTime);
 				eComponentMessageType type = eComponentMessageType::eAddSkill;
 				SComponentMessageData data;
-				data.myInt = static_cast<int>(mySkills[i]->GetSkillData()->skillName);
+				data.myString = mySkills[i]->GetSkillData()->skillName.c_str();
 				GetParent()->NotifyComponents(type, data);
 			}
 
@@ -127,7 +127,7 @@ void SkillSystemComponent::Destroy()
 {
 }
 
-void SkillSystemComponent::AddSkill(SkillData::SkillName aSkillName)
+void SkillSystemComponent::AddSkill(char* aSkillName)
 {
 	mySkills.Add(SkillFactory::GetInstance().CreateSkill(aSkillName));
 	mySkills.GetLast()->SetTargetPosition(myTargetPosition);

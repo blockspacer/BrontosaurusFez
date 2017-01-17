@@ -16,16 +16,18 @@
 
 #include "../CommonUtilities/Camera.h"
 
-#include "../PostMaster/PostMaster.h"
-#include "../PostMaster/Message.h"
-#include "../PostMaster/PushState.h"
-#include "../PostMaster/PopCurrentState.h"
-#include "../PostMaster/Pop2States.h"
-#include "../PostMaster/HatBought.h"
+#include "PostMaster/PostMaster.h"
+#include "PostMaster/Message.h"
+#include "PostMaster/PushState.h"
+#include "PostMaster/PopCurrentState.h"
+#include "PostMaster/Pop2States.h"
+#include "PostMaster/HatBought.h"
+#include "PostMaster/BuyButtonPressed.h"
 
 #include "../Game/PollingStation.h"
 #include "HealthWidget.h"
 #include "ManaWidget.h"
+#include  "../Components/PlayerData.h"
 
 using size_ga = CU::GrowingArray<CLoaderMesh*>::size_type;
 
@@ -197,7 +199,10 @@ namespace GUI
 		}
 		else if (widgetName.find("buy") != std::string::npos)
 		{
-			auto buyHatMessage = [] { PostMaster::GetInstance().SendLetter(Message(eMessageType::eHatAdded, HatBought())); };
+			auto buyHatMessage = [] 
+			{ 
+				PostMaster::GetInstance().SendLetter(Message(eMessageType::eBuyButtonPressed, BuyButtonPressed()));
+			};
 			Button* button = new Button(buyHatMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
 			button->AddWidget("Animation", new ButtonAnimation(aWidget));
 			return button;

@@ -56,7 +56,7 @@
 //
 
 //Temp Includes
-
+#include "HatMaker.h"
 #include "Components/HealthComponent.h"
 #include "MainStatComponent.h"
 #include "StatComponent.h"
@@ -227,45 +227,47 @@ void CPlayState::Load()
 	CU::Camera& playerCamera = myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera);
 	playerCamera.Init(60, WINDOW_SIZE_F.x, WINDOW_SIZE_F.y, 1.f, 75000.0f);
 	
-	//AddBasicAttack
-	SkillData* basicSkillData = new SkillData;
-	basicSkillData->activationRadius = 160.0f;
-	basicSkillData->range = 300.0f;
-	basicSkillData->animationDuration = 0.5f;
-	basicSkillData->coolDown = 0.5f;
-	basicSkillData->isAOE = false;
-	basicSkillData->isChannel = false;
-	basicSkillData->damage = 34;
-	basicSkillData->manaCost = 0;
-	basicSkillData->skillName = SkillData::SkillName::BasicAttack;
-	SkillFactory::GetInstance().RegisterSkillData(basicSkillData);
+	////AddBasicAttack
+	//SkillData* basicSkillData = new SkillData;
+	//basicSkillData->activationRadius = 160.0f;
+	//basicSkillData->range = 300.0f;
+	//basicSkillData->animationDuration = 0.5f;
+	//basicSkillData->coolDown = 0.5f;
+	//basicSkillData->isAOE = false;
+	//basicSkillData->isChannel = false;
+	//basicSkillData->damage = 34;
+	//basicSkillData->manaCost = 0;
+	//basicSkillData->skillName = SkillData::SkillName::BasicAttack;
+	//SkillFactory::GetInstance().RegisterSkillData(basicSkillData);
 
-	//AddSpinyToWhiny
-	SkillData* whirlWindSkillData = new SkillData;
-	whirlWindSkillData->activationRadius = 0.0f;
-	whirlWindSkillData->range = 300.0f;
-	whirlWindSkillData->animationDuration = 0.1f;
-	whirlWindSkillData->coolDown = 0.1f;
-	whirlWindSkillData->isAOE = true;
-	whirlWindSkillData->isChannel = true;
-	whirlWindSkillData->damage = 10;
-	whirlWindSkillData->manaCost = 1;
-	whirlWindSkillData->skillName = SkillData::SkillName::WhirlWind;
-	SkillFactory::GetInstance().RegisterSkillData(whirlWindSkillData);
+	////AddSpinyToWhiny
+	//SkillData* whirlWindSkillData = new SkillData;
+	//whirlWindSkillData->activationRadius = 0.0f;
+	//whirlWindSkillData->range = 300.0f;
+	//whirlWindSkillData->animationDuration = 0.1f;
+	//whirlWindSkillData->coolDown = 0.1f;
+	//whirlWindSkillData->isAOE = true;
+	//whirlWindSkillData->isChannel = true;
+	//whirlWindSkillData->damage = 10;
+	//whirlWindSkillData->manaCost = 1;
+	//whirlWindSkillData->skillName = SkillData::SkillName::WhirlWind;
+	//SkillFactory::GetInstance().RegisterSkillData(whirlWindSkillData);
 
 
-	//AddSweepAndWeepy
-	SkillData* SweepAttack = new SkillData;
-	SweepAttack->activationRadius = 0.0f;
-	SweepAttack->range = 300.0f;
-	SweepAttack->animationDuration = 0.5f;
-	SweepAttack->coolDown = 0.5f;
-	SweepAttack->isAOE = true;
-	SweepAttack->isChannel = true;
-	SweepAttack->damage = 30;
-	SweepAttack->manaCost = 10;
-	SweepAttack->skillName = SkillData::SkillName::SweepAttack;
-	SkillFactory::GetInstance().RegisterSkillData(SweepAttack);
+	////AddSweepAndWeepy
+	//SkillData* SweepAttack = new SkillData;
+	//SweepAttack->activationRadius = 0.0f;
+	//SweepAttack->range = 300.0f;
+	//SweepAttack->animationDuration = 0.5f;
+	//SweepAttack->coolDown = 0.5f;
+	//SweepAttack->isAOE = true;
+	//SweepAttack->isChannel = true;
+	//SweepAttack->damage = 30;
+	//SweepAttack->manaCost = 10;
+	//SweepAttack->skillName = SkillData::SkillName::SweepAttack;
+	//SkillFactory::GetInstance().RegisterSkillData(SweepAttack);
+
+	SkillFactory::GetInstance().RegisterSkills();
 
 	////create player:
 
@@ -428,6 +430,8 @@ void CPlayState::Load()
 	fireeeeeByCarl.GetTransformation().m33 *= 2.f;
 	myScene->AddFireEmitters(fireeeeeByCarl);
 	
+	myHatMaker->LoadBluePrints("Json/Hats/HatBluePrints.json");
+
 	myIsLoaded = true;
 
 	//get time to load the level:
@@ -610,6 +614,7 @@ void CPlayState::CreateManagersAndFactories()
 	DropComponentManager::CreateInstance();
 	myHealthBarManager = new CHealthBarComponentManager(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 	ManaComponentManager::CreateInstance();
+	myHatMaker = new CHatMaker(myGameObjectManager);
 }
 
 void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)
@@ -729,7 +734,7 @@ void CPlayState::TEMP_CREATE_ENEMY()
 	SkillSystemComponent* tempSkillSystemComponent = new SkillSystemComponent;
 	SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
 	enemyObj->AddComponent(tempSkillSystemComponent);
-	tempSkillSystemComponent->AddSkill(SkillData::SkillName::BasicAttack);
+	tempSkillSystemComponent->AddSkill("BasicAttack");
 	enemyObj->AddComponent(ManaComponentManager::GetInstance().CreateAndRegisterComponent(200));
 
 	tempEnemyStatComponent->SetStats(baseStats, bonusStats);

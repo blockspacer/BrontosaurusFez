@@ -1,10 +1,11 @@
 #include "stdafx.h"
 #include "HatBought.h"
 
-#include "Game/PlayState.h"
+#include "Game/HatMaker.h"
 
-HatBought::HatBought()
+HatBought::HatBought(const std::string& aHatName)
 {
+	myHatName = aHatName;
 }
 
 
@@ -12,8 +13,8 @@ HatBought::~HatBought()
 {
 }
 
-eMessageReturn HatBought::DoEvent(CPlayState * aPlayState) const
+eMessageReturn HatBought::DoEvent(CHatMaker * aHatMaker) const
 {
-	aPlayState->GiveHatToPlayer();
+	aHatMaker->MakeHatFromBluePrint(myHatName);
 	return eMessageReturn::eContinue;
 }

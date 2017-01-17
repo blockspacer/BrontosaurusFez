@@ -198,6 +198,7 @@
     </ClInclude>
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
+	<ClInclude Include="BuyButtonPressed.h" />
     <ClInclude Include="FocusChange.h">
       <Filter>Events\FocusChanged</Filter>
     </ClInclude>

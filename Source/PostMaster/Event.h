@@ -31,6 +31,7 @@ class CMouseComponent;
 class HatShopState;
 class CModelViewer;
 class CCollisionComponentManager;
+class CHatMaker;
 
 //temp
 class CHealthComponent;
@@ -64,6 +65,8 @@ public:
 	virtual eMessageReturn DoEvent(GUI::CHealthWidget*) const { return  eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(GUI::CManaWidget*) const { return  eMessageReturn::eContinue; }
 	
+	virtual eMessageReturn DoEvent(CHatMaker*) const { return eMessageReturn::eContinue; }
+
 	//temp
 	virtual eMessageReturn DoEvent(CHealthComponent*) const { return eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(CRenderer*) const { return eMessageReturn::eContinue; }
