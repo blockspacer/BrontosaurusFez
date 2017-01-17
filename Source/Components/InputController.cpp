@@ -105,15 +105,15 @@ void InputController::Receive(const eComponentMessageType aMessageType, const SC
 {
 	if (aMessageType == eComponentMessageType::eAddSkill)
 	{
-		if(aMessageData.myString == "BasicAttack")
+		if(strcmp(aMessageData.myString,"BasicAttack") == 0)
 		{
 			mySkillInputMessageActivators.Add(CU::eInputMessage::DIVIDE);
 		}
-		else if (aMessageData.myString == "WhirlWind")
+		else if (strcmp(aMessageData.myString, "WhirlWind") == 0)
 		{
 			mySkillInputMessageActivators.Add(CU::eInputMessage::SPACE);
 		}
-		else if (aMessageData.myString == "SweepAttack")
+		else if (strcmp(aMessageData.myString, "SweepAttack") == 0)
 		{
 			mySkillInputMessageActivators.Add(CU::eInputMessage::RIGHTMOUSEBUTTON);
 		}
