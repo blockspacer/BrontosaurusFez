@@ -18,6 +18,7 @@ Lib/*
 !Source/**/lib
 Temp/
 Bin/Audio/*
+Audio/*
 
 # User-specific files
 *.suo
