@@ -20,6 +20,15 @@
     <ClCompile Include="Intersection.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="CollisionRenderer.cpp">
+      <Filter>CollisionRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="TriangleCollider.cpp">
+      <Filter>Collider\TriangleCollider</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionRenderMessages.cpp">
+      <Filter>CollisionRenderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ICollider.h">
@@ -50,6 +59,15 @@
     <ClInclude Include="plane.h">
       <Filter>Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="CollisionRenderer.h">
+      <Filter>CollisionRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="TriangleCollider.h">
+      <Filter>Collider\TriangleCollider</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionRenderMessages.h">
+      <Filter>CollisionRenderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CollisionManager">
@@ -72,6 +90,12 @@
     </Filter>
     <Filter Include="Collider\SquareCollider">
       <UniqueIdentifier>{8d4f6a13-e948-4947-947a-a2ddcf17b96d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collider\TriangleCollider">
+      <UniqueIdentifier>{e442d1f9-9b62-4e86-8067-9e68cab6bb6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CollisionRenderer">
+      <UniqueIdentifier>{bdeda483-0ee9-46d9-940c-fc0350b97301}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

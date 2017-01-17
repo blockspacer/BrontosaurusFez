@@ -105,17 +105,17 @@ void InputController::Receive(const eComponentMessageType aMessageType, const SC
 {
 	if (aMessageType == eComponentMessageType::eAddSkill)
 	{
-		if(aMessageData.myInt == static_cast<int>(SkillData::SkillName::BasicAttack))
+		if(aMessageData.myString == "BasicAttack")
 		{
 			mySkillInputMessageActivators.Add(CU::eInputMessage::DIVIDE);
 		}
-		else if (aMessageData.myInt == static_cast<int>(SkillData::SkillName::WhirlWind))
+		else if (aMessageData.myString == "WhirlWind")
 		{
-			mySkillInputMessageActivators.Add(CU::eInputMessage::TWO);
+			mySkillInputMessageActivators.Add(CU::eInputMessage::SPACE);
 		}
-		else if (aMessageData.myInt == static_cast<int>(SkillData::SkillName::SweepAttack))
+		else if (aMessageData.myString == "SweepAttack")
 		{
-			mySkillInputMessageActivators.Add(CU::eInputMessage::ONE);
+			mySkillInputMessageActivators.Add(CU::eInputMessage::RIGHTMOUSEBUTTON);
 		}
 		else
 		{
@@ -137,6 +137,7 @@ eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButto
 	}
 	else if(aMouseButton == CU::eMouseButtons::RBUTTON)
 	{
+		myMousePosition = aMousePosition;
 		TakeInputMessage(CU::eInputMessage::RIGHTMOUSEBUTTON);
 	}
 	else if (aMouseButton == CU::eMouseButtons::MIDBUTTON)
@@ -151,6 +152,16 @@ eMessageReturn InputController::MouseReleased(const CU::eMouseButtons aMouseButt
 	if (aMouseButton == CU::eMouseButtons::LBUTTON)
 	{
 		myMouseIsDown = false;
+	}
+	if (aMouseButton == CU::eMouseButtons::RBUTTON)
+	{
+		for (unsigned short i = 0; i < mySkillInputMessageActivators.Size(); i++)
+		{
+			if (mySkillInputMessageActivators[i] == static_cast<CU::eInputMessage>(CU::eMouseButtons::RBUTTON))
+			{
+				mySkillActivatorKeyDown = -1;
+			}
+		}
 	}
 
 	return eMessageReturn::eContinue;
@@ -169,10 +180,11 @@ eMessageReturn InputController::TakeInputMessage(const CU::eInputMessage aInputM
 	{
 		if(mySkillInputMessageActivators[i] == aInputMessage)
 		{
-			eComponentMessageType type = eComponentMessageType::eSelectSkill;
+			mySkillActivatorKeyDown = i;
+			/*eComponentMessageType type = eComponentMessageType::eSelectSkill;
 			SComponentMessageData data;
 			data.myInt = i;
-			GetParent()->NotifyComponents(type, data);
+			GetParent()->NotifyComponents(type, data);*/
 		}
 	}
 	return eMessageReturn::eContinue;

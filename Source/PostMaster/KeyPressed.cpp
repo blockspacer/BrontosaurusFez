@@ -12,6 +12,9 @@
 #include "../Components/InputController.h"
 #include "Game/HatShopState.h"
 
+#include "../Game/QuestManager.h"
+#include "../Game/QuestDrawer.h"
+
 //temp
 #include "Components\HealthComponent.h"
 #include "../BrontosaurusEngine/Renderer.h"
@@ -175,15 +178,40 @@ eMessageReturn KeyPressed::DoEvent(CRenderer* aRenderer) const
 
 eMessageReturn KeyPressed::DoEvent(HatShopState * aHatShop) const
 {
-	int br = 0;
-	br++;
 	switch (myKey)
 	{
+	case CU::eKeys::ONE:
+		aHatShop->SetSelected(0);
+		break;
+	case CU::eKeys::TWO:
+		aHatShop->SetSelected(1);
+		break;
+	case CU::eKeys::THREE:
+		aHatShop->SetSelected(2);
+		break;
+	case CU::eKeys::FOUR:
+		aHatShop->SetSelected(3);
+		break;
+	case CU::eKeys::FIVE:
+		aHatShop->SetSelected(4);
+		break;
+	case CU::eKeys::SIX:
+		aHatShop->SetSelected(5);
+		break;
+	case CU::eKeys::SEVEN:
+		aHatShop->SetSelected(6);
+		break;
+	case CU::eKeys::EIGHT:
+		aHatShop->SetSelected(8);
+		break;
+	case CU::eKeys::NINE:
+		aHatShop->SetSelected(9);
+		break;
+	case CU::eKeys::ZERO:
+		aHatShop->SetSelected(10);
+		break;
 	case CU::eKeys::ESCAPE:
 		aHatShop->CloseShop();
-		break;
-	case CU::eKeys::B:
-		aHatShop->BuyHat();
 		break;
 	}
 	return eMessageReturn::eContinue;

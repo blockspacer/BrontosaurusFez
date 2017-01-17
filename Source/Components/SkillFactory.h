@@ -11,8 +11,9 @@ public:
 	static void CreateInstance();
 	static void DestroyInstance();
 
-	Skill* CreateSkill(SkillData::SkillName aSkillName);
+	Skill* CreateSkill(char* aSkillName);
 	void RegisterSkillData(SkillData* aSkillData);
+	void RegisterSkills();
 private:
 	SkillFactory();
 	

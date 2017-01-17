@@ -18,11 +18,14 @@ public:
 
 	CCircleCollider& operator=(const CCircleCollider& aCopy);
 	CCircleCollider& operator=(CCircleCollider&& aTemporary);
+	
+	void RenderDebugLines(CCollisionRenderer& aCollisionRenderer) override;
 
 	bool TestCollision(ICollider* aCollider) override;
 	bool TestCollision(CPointCollider* aCollider) override;
 	bool TestCollision(CCircleCollider* aCircleCollider) override;
 	bool TestCollision(CSquareCollider* aBoxCollider) override;
+	bool TestCollision(CTriangleCollider* aTriangleCollider) override;
 	bool TestCollision(CGroupCollider* aGroupCollider) override;
 
 	void SetPosition(const CU::Vector3f& aPosition) override;

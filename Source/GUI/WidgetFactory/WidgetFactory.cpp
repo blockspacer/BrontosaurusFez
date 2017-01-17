@@ -16,14 +16,16 @@
 
 #include "../CommonUtilities/Camera.h"
 
-#include "../PostMaster/PostMaster.h"
-#include "../PostMaster/Message.h"
-#include "../PostMaster/PushState.h"
-#include "../PostMaster/PopCurrentState.h"
-#include "../PostMaster/Pop2States.h"
-#include "../PostMaster/HatBought.h"
+#include "PostMaster/PostMaster.h"
+#include "PostMaster/Message.h"
+#include "PostMaster/PushState.h"
+#include "PostMaster/PopCurrentState.h"
+#include "PostMaster/Pop2States.h"
+#include "PostMaster/HatBought.h"
+#include "PostMaster/BuyButtonPressed.h"
 
 #include "../Game/PollingStation.h"
+#include  "../Components/PlayerData.h"
 
 using size_ga = CU::GrowingArray<CLoaderMesh*>::size_type;
 
@@ -78,16 +80,19 @@ namespace GUI
 		CU::DynamicString widgetName = "CarlWasHere";
 		CFBXLoader loader;
 		CLoaderModel* loaderMOdel = loader.LoadModel("Models/gui/knapp01.fbx");
-		Widget* widget = new ModelWidget(loaderMOdel->myMeshes.at(0), aLoaderScene->myTextures, *guiCamera);
-
-		CLoaderModel* loaderMOdel2 = loader.LoadModel("Models/gui/guiTooltip.fbx");
-		ModelWidget* backgroundModel = new ModelWidget(loaderMOdel2->myMeshes.at(0), aLoaderScene->myTextures, *guiCamera);
-		std::string tooltipText = "hey im a tooltip";
-		widget = new CToolTipDecorator(widget, backgroundModel, tooltipText);
-
-		if (widget != nullptr)
+		if (loaderMOdel != nullptr)
 		{
-			baseWidgetContainer->AddWidget(widget->GetName(), widget);
+			Widget* widget = new ModelWidget(loaderMOdel->myMeshes.at(0), aLoaderScene->myTextures, *guiCamera);
+
+			CLoaderModel* loaderMOdel2 = loader.LoadModel("Models/gui/guiTooltip.fbx");
+			ModelWidget* backgroundModel = new ModelWidget(loaderMOdel2->myMeshes.at(0), aLoaderScene->myTextures, *guiCamera);
+			std::string tooltipText = "hey im a tooltip";
+			widget = new CToolTipDecorator(widget, backgroundModel, tooltipText);
+
+			if (widget != nullptr)
+			{
+				baseWidgetContainer->AddWidget(widget->GetName(), widget);
+			}
 		}
 
 
@@ -183,7 +188,10 @@ namespace GUI
 		}
 		else if (widgetName.Find("buy") != widgetName.FoundNone)
 		{
-			auto buyHatMessage = [] { PostMaster::GetInstance().SendLetter(Message(eMessageType::eHatAdded, HatBought())); };
+			auto buyHatMessage = [] 
+			{ 
+				PostMaster::GetInstance().SendLetter(Message(eMessageType::eBuyButtonPressed, BuyButtonPressed()));
+			};
 			Button* button = new Button(buyHatMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
 			button->AddWidget("Animation", new ButtonAnimation(aWidget));
 			return button;
@@ -201,7 +209,7 @@ namespace GUI
 	{
 		if (aCamera == nullptr)
 		{
-			DL_ASSERT("GUI Widget factory got CLoaderCamera that is NULL");
+			DL_MESSAGE_BOX("GUI Widget factory got CLoaderCamera that is NULL");
 			return nullptr;
 		}
 

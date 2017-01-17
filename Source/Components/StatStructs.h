@@ -1,5 +1,6 @@
 #pragma once
-
+#include "HealthPoint.h"
+#include "ManaPoint.h"
 namespace Stats
 {
 	typedef int StatPoint;
@@ -26,7 +27,8 @@ namespace Stats
 		float BonusMovementSpeed = 0.f;
 		int BonusArmor = 0;
 		int BonusDamage = 0;
-		int BonusHealth = 0;
+		HealthPoint BonusHealth = 0;
+		ManaPoint BonusMana = 0;
 		SBonusStats operator+=(const SBonusStats& aStats)
 		{
 			BonusCritChance += aStats.BonusCritChance;
@@ -35,7 +37,7 @@ namespace Stats
 			BonusArmor += aStats.BonusArmor;
 			BonusDamage += aStats.BonusDamage;
 			BonusHealth += aStats.BonusHealth;
-
+			BonusMana += aStats.BonusMana;
 			return *this;
 		}
 	};
@@ -49,6 +51,7 @@ namespace Stats
 		float AttackSpeed;
 		int Armor;
 		int Damage;
-		int MaxHealth;
+		HealthPoint MaxHealth;
+		ManaPoint MaxMana;
 	};
 }

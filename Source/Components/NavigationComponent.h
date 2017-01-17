@@ -1,6 +1,13 @@
 #pragma once
 #include "Component.h"
-#include "../CommonUtilities/CUvector.h"
+
+namespace CU
+{
+	template<typename T>
+	class Vector3;
+	using Vector3f = Vector3<float>;
+}
+
 class NavigationComponent : public CComponent
 {
 public:

@@ -31,7 +31,7 @@ void SkillSystemComponent::Update(float aDeltaTime)
 				mySkills[i]->Update(aDeltaTime);
 				eComponentMessageType type = eComponentMessageType::eAddSkill;
 				SComponentMessageData data;
-				data.myInt = static_cast<int>(mySkills[i]->GetSkillData()->skillName);
+				data.myString = mySkills[i]->GetSkillData()->skillName.c_str();
 				GetParent()->NotifyComponents(type, data);
 			}
 
@@ -67,7 +67,7 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 			mySkills[i]->SetTargetPosition(myTargetPosition);
 			if(mySkills[i]->GetIsSelected() == true)
 			{
-				mySkills[i]->Activate();
+				mySkills[i]->TryToActivate();
 			}
 		}
 	}
@@ -80,12 +80,12 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 			if (mySkills[i]->GetIsSelected() == true)
 			{
 				isAnythingSelected = true;
-				mySkills[i]->Activate();
+				mySkills[i]->TryToActivate();
 			}
 		}
 		if(isAnythingSelected == false)
 		{
-			mySkills[0]->Activate();
+			mySkills[0]->TryToActivate();
 		}
 	}
 	else if (aMessageType == eComponentMessageType::eActivateSkillCollider)
@@ -109,12 +109,12 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 			mySkills[i]->SetTargetPosition(myTargetPosition);
 			if (mySkills[i]->GetIsSelected() == true)
 			{
-				mySkills[i]->Activate();
+				mySkills[i]->TryToActivate();
 			}
 		}
 		if (isAnythingSelected == false)
 		{
-			mySkills[0]->Activate();
+			mySkills[0]->TryToActivate();
 		}
 	}
 	else if (aMessageType == eComponentMessageType::eDied)
@@ -127,7 +127,7 @@ void SkillSystemComponent::Destroy()
 {
 }
 
-void SkillSystemComponent::AddSkill(SkillData::SkillName aSkillName)
+void SkillSystemComponent::AddSkill(char* aSkillName)
 {
 	mySkills.Add(SkillFactory::GetInstance().CreateSkill(aSkillName));
 	mySkills.GetLast()->SetTargetPosition(myTargetPosition);

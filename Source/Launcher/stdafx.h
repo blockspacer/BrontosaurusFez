@@ -11,8 +11,6 @@
 #include <string>
 #include <utility>
 
-#include <Game.h>
-#include <Engine.h>
 #include <GrowingArray.h>
 #include <CommandLineManager.h>
 #include <DL_Debug.h>
@@ -20,5 +18,7 @@
 #include "../PostMaster/PostMaster.h"
 #include "../BrontosaurusEngine/EDebugInfoDrawerFlags.h"
 #include "../Audio/AudioInterface.h"
+#include <Game.h>
+#include <Engine.h>
 
 // TODO: reference additional headers your program requires here

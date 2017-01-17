@@ -74,14 +74,14 @@ SRenderCameraQueueMessage::SRenderCameraQueueMessage()
 }
 
 SRenderFullscreenEffectMessage::SRenderFullscreenEffectMessage()
-	:SRenderMessage(SRenderMessage::eRenderMessageType::eRenderFullscreenEffect)
+	:SRenderMessage(eRenderMessageType::eRenderFullscreenEffect)
 {
 	myFirstUseDepthResource = false;
 	mySecondUseDepthResource = false;
 }
 
 SActivateRenderPackageMessage::SActivateRenderPackageMessage()
-	: SRenderMessage(SRenderMessage::eRenderMessageType::eActivateRenderPackage)
+	: SRenderMessage(eRenderMessageType::eActivateRenderPackage)
 {
 
 }
@@ -94,7 +94,7 @@ SRenderToIntermediate::SRenderToIntermediate()
 }
 
 SSetShadowBuffer::SSetShadowBuffer()
-	: SRenderMessage(SRenderMessage::eRenderMessageType::eSetShadowBuffer)
+	: SRenderMessage(eRenderMessageType::eSetShadowBuffer)
 {
 }
 
@@ -102,4 +102,10 @@ SRenderNavmeshMessage::SRenderNavmeshMessage()
 	: SRenderMessage(SRenderMessage::eRenderMessageType::eRenderNavMesh)
 {
 	myModel = nullptr;
+}
+
+SRenderLineBuffer::SRenderLineBuffer(const CU::GrowingArray<char, unsigned short, false>& aLineBuffer)
+	: SRenderMessage(eRenderMessageType::eRenderLineBuffer)
+	, myLineBuffer(aLineBuffer)
+{
 }

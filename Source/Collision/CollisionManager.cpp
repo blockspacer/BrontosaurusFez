@@ -8,12 +8,15 @@
 
 CCollisionManager::CCollisionManager()
 	: myColliders(32)
+	, myCollisionRenderer(nullptr)
 	, myShouldRenderDebugLines(false)
 {
+	myCollisionRenderer = new CCollisionRenderer();
 }
 
 CCollisionManager::~CCollisionManager()
 {
+	SAFE_DELETE(myCollisionRenderer);
 	assert(myColliders.Size() > 0 && "Colliders still exist that are not deleted :-(");
 }
 
@@ -31,9 +34,11 @@ void CCollisionManager::Update()
 void CCollisionManager::Render()
 {
 #ifdef RENDER_DEBUG_LINES
+	if (myCollisionRenderer == nullptr) return;
+
 	for (ICollider* collider : myColliders)
 	{
-		collider->RenderDebugLines();
+		collider->RenderDebugLines(*myCollisionRenderer);
 	}
 #endif // RENDER_DEBUG_LINES
 }
@@ -66,6 +71,11 @@ void CCollisionManager::RemoveCollider(ICollider* aCollider)
 
 		myColliders.RemoveCyclicAtIndex(index);
 	}
+}
+
+const CU::GrowingArray<char, unsigned short, false>& CCollisionManager::GetLineVertexBuffer()
+{
+	return myCollisionRenderer->PrepareBuffer();
 }
 
 void CCollisionManager::TestCollision(ICollider* aFirst, ICollider* aSecond)

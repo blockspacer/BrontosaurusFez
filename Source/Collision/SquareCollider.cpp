@@ -57,6 +57,11 @@ bool CSquareCollider::TestCollision(CSquareCollider* aSquareCollider)
 	return Intersection::SquareVsSquare(GetData(), aSquareCollider->GetData());
 }
 
+bool CSquareCollider::TestCollision(CTriangleCollider* aTriangleCollider)
+{
+	return Intersection::SquareVsTriangle(GetData(), aTriangleCollider->GetData());
+}
+
 bool CSquareCollider::TestCollision(CGroupCollider* aGroupCollider)
 {
 	return aGroupCollider->TestCollision(this);

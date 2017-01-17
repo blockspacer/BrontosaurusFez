@@ -4,6 +4,10 @@
 
 #include <iostream>
 
+#include "../CommonUtilities/PJWrapper.h"
+#include "../CommonUtilities/JsonValue.h"
+
+
 SkillFactory* SkillFactory::ourInstance = nullptr;
 
 SkillFactory::SkillFactory()
@@ -39,7 +43,7 @@ void SkillFactory::DestroyInstance()
 	SAFE_DELETE(ourInstance);
 }
 
-Skill * SkillFactory::CreateSkill(SkillData::SkillName aSkillName)
+Skill * SkillFactory::CreateSkill(char* aSkillName)
 {
 	for(unsigned short i=0; i < mySkillDataList.Size(); i++)
 	{
@@ -69,4 +73,28 @@ Skill * SkillFactory::CreateSkill(SkillData::SkillName aSkillName)
 void SkillFactory::RegisterSkillData(SkillData * aSkillData)
 {
 	mySkillDataList.Add(aSkillData);
+}
+
+void SkillFactory::RegisterSkills()
+{
+	CU::CJsonValue SkillBluePrints;
+	const std::string& errorString = SkillBluePrints.Parse("Json/Skills.json");
+	CU::CJsonValue levelsArray = SkillBluePrints.at("skills");
+
+	for (unsigned int i = 0; i < levelsArray.Size(); ++i)
+	{
+		SkillData* skill = new SkillData;
+		skill->activationRadius = levelsArray[i].at("activationRadius").GetFloat();
+		skill->animationDuration = levelsArray[i].at("animationDuration").GetFloat();
+		skill->coolDown = levelsArray[i].at("coolDown").GetFloat();
+		skill->damage = levelsArray[i].at("damage").GetUInt();
+		skill->isAOE = levelsArray[i].at("isAOE").GetBool();
+		skill->isChannel = levelsArray[i].at("isChannel").GetBool();
+		skill->manaCost = levelsArray[i].at("manaCost").GetUInt();
+		skill->range = levelsArray[i].at("range").GetFloat();
+			 
+		skill->skillName = levelsArray[i].at("name").GetString().c_str();
+
+		mySkillDataList.Add(skill);
+	}
 }

@@ -12,7 +12,6 @@ void CommandLineManager::CreateInstance(int argc, char * argv[])
 
 CommandLineManager* CommandLineManager::GetInstance()
 {
-	assert(myInstance != nullptr && "Command line parser not created (is NULL)");
 	return myInstance;
 }
 

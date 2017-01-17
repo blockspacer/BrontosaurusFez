@@ -24,7 +24,7 @@ int LoadSeekController(KLoader::SLoadedComponentData someData)
 	CSeekController* seek = CSeekControllerManager::GetInstance().CreateAndRegister();
 	
 	//set stuff
-
+	seek->SetTargetRadius(someData.myData.at("TargetRadius").GetFloat());
 	seek->SetAggroRange(someData.myData.at("AggroRange").GetFloat());
 	seek->SetMaxAcceleration(someData.myData.at("MaxAcceleration").GetFloat());
 	seek->SetMaxSpeed(someData.myData.at("MaxSpeed").GetFloat());

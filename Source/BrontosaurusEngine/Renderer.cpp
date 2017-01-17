@@ -23,6 +23,7 @@
 #include "../PostMaster/DrawCallsCount.h"
 
 #include "../GUI/GUIPixelConstantBuffer.h"
+#include "LineDrawer.h"
 
 #define HDR_FORMAT DXGI_FORMAT_R32G32B32A32_FLOAT
 
@@ -798,6 +799,7 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 		myGUIData.myInputPackage.Activate();
 		SRenderGUIModelMessage* msg = static_cast<SRenderGUIModelMessage*>(aRenderMesage);
 		CModel* model = CEngine::GetInstance()->GetModelManager()->GetModel(msg->myModelID);
+		if (model == nullptr) break;
 		if (model->HasConstantBuffer(CModel::eShaderStage::ePixel) == true)
 		{
 			msg->myPixelConstantBufferStruct.myCameraPosition = myCamera.GetPosition();
@@ -930,6 +932,18 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 
 		emitter->Render(fireTimer.GetLifeTime(), msg->myToWorldMatrix);
 		++aDrawCallCount;
+		break;
+	}
+	case SRenderMessage::eRenderMessageType::eRenderLineBuffer:
+	{
+		myGUIData.myInputPackage.Activate();
+		SRenderLineBuffer* msg = static_cast<SRenderLineBuffer*>(aRenderMesage);
+		CLineDrawer& lineDrawer = ENGINE->GetLineDrawer();
+		lineDrawer.RenderLineChunk(msg->myLineBuffer);
+		++aDrawCallCount;
+
+		if (mySettings.Motionblur == true) renderTo->Activate(myMotionBlurData.velocityPackage);
+		else renderTo->Activate();
 		break;
 	}
 	}
