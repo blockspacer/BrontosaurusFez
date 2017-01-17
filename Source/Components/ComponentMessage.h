@@ -5,6 +5,7 @@
 
 class ICollider;
 class CComponent;
+class CPickupComponent;
 class CGameObject;
 class Skill;
 struct SHat;
@@ -78,6 +79,8 @@ enum class eComponentMessageType
 	eAddToMaxHealth,
 	eAddToMaxMana,
 	eAddToMovementSpeed,
+	ePickUp,
+	eRestoreMana,
 };
 
 struct SComponentMessageData
@@ -88,6 +91,7 @@ struct SComponentMessageData
 	{
 		CComponent* myComponent;
 		CComponent* myComponents[2];
+		CPickupComponent* myPickupComponent;
 		CGameObject* myGameObject;
 		int myInt;
 		unsigned short myUShort;

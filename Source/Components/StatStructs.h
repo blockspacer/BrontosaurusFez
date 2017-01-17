@@ -41,12 +41,24 @@ namespace Stats
 			BonusMovementSpeed += aStats.BonusMovementSpeed;
 			BonusHealth += aStats.BonusHealth;
 			BonusMana += aStats.BonusMana;
-			BonusDamageModifier = aStats.BonusDamageModifier;
-			BonusGoldGetModifier = aStats.BonusGoldGetModifier;
-			BonusHealthDropChance = aStats.BonusHealthDropChance;
-			BonusManaDropChance = aStats.BonusManaDropChance;
-			BonusManaCostModifier = aStats.BonusManaCostModifier;
+			BonusDamageModifier += aStats.BonusDamageModifier;
+			BonusGoldGetModifier += aStats.BonusGoldGetModifier;
+			BonusHealthDropChance += aStats.BonusHealthDropChance;
+			BonusManaDropChance += aStats.BonusManaDropChance;
+			BonusManaCostModifier += aStats.BonusManaCostModifier;
 			return *this;
+		}
+
+		SBonusStats operator*=(const short aValue)
+		{
+			BonusMovementSpeed *= aValue;
+			BonusHealth *= aValue;
+			BonusMana *= aValue;
+			BonusDamageModifier *= aValue;
+			BonusGoldGetModifier *= aValue;
+			BonusHealthDropChance *= aValue;
+			BonusManaDropChance *= aValue;
+			BonusManaCostModifier *= aValue;
 		}
 	};
 	struct STotalStats
