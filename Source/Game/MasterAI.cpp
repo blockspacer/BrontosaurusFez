@@ -7,7 +7,7 @@ CMasterAI::CMasterAI()
 
 }
 
-CMasterAI::~CMasterAI()
+CMasterAI::~CMasterAI() //Maybe remove from comp project?
 {
 }
 
