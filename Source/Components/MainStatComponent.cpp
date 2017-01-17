@@ -42,10 +42,17 @@ void CMainStatComponent::CalculateTotalStats()
 	myTotalStats->MaxManaConstModifier = myBaseStats->ManaCostModifier + myBonusStats->BonusManaCostModifier;
 	
 	//Add message for speed health and mana
+	SComponentMessageData newMaxdata;
+	newMaxdata.myInt = myBonusStats->BonusHealth;
+	GetParent()->NotifyComponents(eComponentMessageType::eAddToMaxHealth, newMaxdata);
+	newMaxdata.myInt = myBonusStats->BonusMana;
+	GetParent()->NotifyComponents(eComponentMessageType::eAddToMaxMana, newMaxdata);
+	newMaxdata.myInt = myBonusStats->BonusMovementSpeed;
+	GetParent()->NotifyComponents(eComponentMessageType::eAddToMovementSpeed, newMaxdata);
 
 	SComponentMessageData data;
 	data.myStatStruct = *myTotalStats;
-	GetParent()->NotifyComponents(eComponentMessageType::eStatsUpdated,SComponentMessageData());
+	GetParent()->NotifyComponents(eComponentMessageType::eStatsUpdated, data);
 }
 
 void CMainStatComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
@@ -56,9 +63,10 @@ void CMainStatComponent::Receive(const eComponentMessageType aMessageType, const
 		static_cast<CHealthComponent*>(aMessageData.myComponent)->SetMaxHealth(myTotalStats->MaxHealth);
 		break;
 	case eComponentMessageType::eCollectStats:
-		CStatComponent* collectedStats = static_cast<CStatComponent*>(aMessageData.myComponent);
+		/*CStatComponent* collectedStats = static_cast<CStatComponent*>(aMessageData.myComponent);
 		*myBaseStats += *collectedStats->myBaseStats;
-		*myBonusStats += *collectedStats->myBonusStats;
+		*myBonusStats += *collectedStats->myBonusStats;*/
+		*myBonusStats += *aMessageData.myStatsToAdd;
 		CalculateTotalStats();
 		break;
 	}

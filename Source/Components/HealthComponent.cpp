@@ -67,8 +67,8 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 {
 	switch (aMessageType)
 	{
-	case eComponentMessageType::eStatsUpdated:
-		SetMaxHealth(aMessageData.myStatStruct.MaxHealth);
+	case eComponentMessageType::eAddToMaxHealth:
+		SetMaxHealth(myMaxHealth + aMessageData.myInt);
 		break;
 	case eComponentMessageType::eTakeDamage:
 		SetHealth(myHealth - aMessageData.myInt);

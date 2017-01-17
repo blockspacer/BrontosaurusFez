@@ -7,7 +7,7 @@ class ICollider;
 class CComponent;
 class CGameObject;
 class Skill;
-
+struct SHat;
 namespace CU
 {
 	template<typename ObjectType, typename SizeType = unsigned int, bool USE_SAFE_MODE = true>
@@ -72,7 +72,12 @@ enum class eComponentMessageType
 	eCheckIfCanUseSkill,
 	eBurnMana,
 	ePercentMPLeft,
-	eSetMaxManaFromStats
+	eSetMaxManaFromStats,
+	eAddHat,
+	eAddStats,
+	eAddToMaxHealth,
+	eAddToMaxMana,
+	eAddToMovementSpeed,
 };
 
 struct SComponentMessageData
@@ -97,8 +102,10 @@ struct SComponentMessageData
 		
 		eComponentType myComponentTypeAdded;
 		Stats::STotalStats myStatStruct;
+		Stats::SBonusStats* myStatsToAdd;
 		ICollider* myCollider;
 		Skill* mySkill;
+		SHat* myHat;
 	};
 };
 

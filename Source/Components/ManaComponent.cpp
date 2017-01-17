@@ -37,6 +37,9 @@ void ManaComponent::SetMana(const ManaPoint aValue)
 		myMana = myMaxMana;
 	}
 	myPercentageLeft = static_cast<float>(myMana) / static_cast<float>(myMaxMana);
+	SComponentMessageData data;
+	data.myUChar = myPercentageLeft * 100;
+	GetParent()->NotifyComponents(eComponentMessageType::ePercentMPLeft, data);
 }
 
 void ManaComponent::SetMaxMana(const ManaPoint aValue)
@@ -57,8 +60,8 @@ void ManaComponent::Receive(const eComponentMessageType aMessageType, const SCom
 	SComponentMessageData data;
 	switch (aMessageType)
 	{
-	case eComponentMessageType::eStatsUpdated:
-		SetMaxMana(aMessageData.myStatStruct.MaxMana);
+	case eComponentMessageType::eAddToMaxMana:
+		SetMaxMana(myMaxMana + aMessageData.myInt);
 		break;
 	case eComponentMessageType::eBurnMana:
 		SetMana(myMana - aMessageData.myInt); 
