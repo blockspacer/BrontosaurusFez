@@ -37,6 +37,7 @@
       <Filter>States</Filter>
     </ClCompile>
     <ClCompile Include="HatMaker.cpp" />
+    <ClCompile Include="MasterAI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackgroundLoadingManager.h" />
@@ -79,6 +80,7 @@
       <Filter>States</Filter>
     </ClInclude>
     <ClInclude Include="HatMaker.h" />
+    <ClInclude Include="MasterAI.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="States">
