@@ -40,6 +40,7 @@ void CHatMaker::LoadBluePrints(const std::string& aFilePath)
 		blueprint->HatModel = levelsArray[i].at("Model").GetString();
 
 		blueprint->myHatStruct = new SHat();
+		blueprint->myHatStruct->stat = new Stats::SBonusStats;
 		blueprint->myHatStruct->stat->BonusHealth = levelsArray[i].at("Health").GetFloat();
 		blueprint->myHatStruct->stat->BonusMana = levelsArray[i].at("Mana").GetFloat();
 		blueprint->myHatStruct->stat->BonusMovementSpeed = levelsArray[i].at("MoveSpeed").GetFloat();

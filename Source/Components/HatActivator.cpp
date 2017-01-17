@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "HatActivator.h"
-
-
+#include "../Game/PollingStation.h"
+#include "InventoryComponent.h"
 HatActivator::HatActivator(bool aIsActive, HatActivatorData* someData, SHat* aHatPointer)
 {
 	myIsActive = aIsActive;
@@ -105,9 +105,17 @@ void HatActivator::CheckManaLimit(float aManaPercentage)
 
 void HatActivator::Activate()
 {
+	myIsActive = true;
+	SComponentMessageData data;
+	data.myStatsToAdd = myHatStructPointer->stat;
+	PollingStation::playerObject->NotifyComponents(eComponentMessageType::eAddStats, data);
+	
 }
 
 void HatActivator::Deactivate()
 {
-	
+	myIsActive = false;
+	SComponentMessageData data;
+	data.myStatsToAdd = myHatStructPointer->stat;
+	PollingStation::playerObject->NotifyComponents(eComponentMessageType::eAddStats, data);
 }
