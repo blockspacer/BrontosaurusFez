@@ -12,4 +12,6 @@ struct SkillData
 	HealthPoint damage;
 	bool isAOE;
 	bool isChannel;
+	float damageModifier;
+	float manaCostModifier;
 };

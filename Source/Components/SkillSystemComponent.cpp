@@ -121,6 +121,13 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 	{
 		myIsActive = false;
 	}
+	else if(aMessageType == eComponentMessageType::eStatsUpdated)
+	{
+		for(int i = 0; i < mySkills.Size(); i++)
+		{
+			mySkills[i]->UpdateStats(aMessageData.myStatStruct);
+		}
+	}
 }
 
 void SkillSystemComponent::Destroy()
