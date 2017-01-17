@@ -136,7 +136,7 @@ namespace CU
 
 	int CJsonValue::Count(const std::string & aKey)
 	{
-
+		//maybe not work work in progress, feel free to remove or redo.
 		if (myValue == nullptr)
 		{
 			JSON_ERROR("json value is null");
