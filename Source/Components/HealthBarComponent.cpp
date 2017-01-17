@@ -48,33 +48,10 @@ void CHealthBarComponent::UpdateSprite(char aPercentHP)
 
 void CHealthBarComponent::Update()
 {
-
-	/*CU::Vector3f cameraPos = myPlayerCamera->GetTransformation().GetPosition();
-	CU::Vector3f unitPos = GetParent()->GetWorldPosition();
-
-
-	CU::Matrix44f cameraSpace = myPlayerCamera->GetProjection() * myPlayerCamera->GetInverse();
-
-	unitPos = unitPos * cameraSpace;
-
-	CU::Vector2f UnitPosNormalized = { unitPos.x / WINDOW_SIZE.x, -unitPos.y / WINDOW_SIZE.y };
-	UnitPosNormalized += {0.5f, 0.5f};
-
-	CU::Vector2f hpBarPos = UnitPosNormalized;
-
-	CU::Vector2f displacementVector = { 0.025f, 0.1f };
-
-	mySprite->SetPosition(hpBarPos - displacementVector);
-	myBGSprite->SetPosition(mySprite->GetPosition());*/
-
-	CU::Vector4f objectPosition(GetParent()->GetToWorldTransform().GetPosition());
-
-	const CU::Vector4f cameraSpacePosition = objectPosition * myPlayerCamera->GetTransformation().GetInverted();
-
+	CU::Vector4f objectPosition(GetParent()->GetToWorldTransform().GetPosition());	//GetInverse?
+	const CU::Vector4f cameraSpacePosition = objectPosition * myPlayerCamera->GetInverse();
 	const CU::Vector4f projectionSpaceCubePos = cameraSpacePosition *  myPlayerCamera->GetProjection();
-
 	const CU::Vector4f position3D = projectionSpaceCubePos / projectionSpaceCubePos.w;
-
 	const CU::Vector2f projectionSpacePos(position3D.x, position3D.y);
 
 	CU::Vector2<float> temp;
@@ -117,8 +94,8 @@ void CHealthBarComponent::Render() // Create manager that renders everything, me
 {
 	if (mySprite->GetColor().a != 0.f)
 	{
-		mySprite->Render();
 		myBGSprite->Render();
+		mySprite->Render();
 	}
 }
 
