@@ -5,14 +5,12 @@
 #include "Components/StatStructs.h"
 
 class CGameObjectManager;
-
+struct SHat;
 struct SHatBluePrint
 {
 	std::string HatName;
 	std::string HatModel;
-	Stats::SBaseStats BaseStats;
-	Stats::SBonusStats BonusStats;
-	Stats::STotalStats TotalStats;
+	SHat* myHatStruct;
 };
 
 class CHatMaker : public Subscriber
