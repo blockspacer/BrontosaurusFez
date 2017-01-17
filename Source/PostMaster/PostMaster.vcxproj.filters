@@ -73,6 +73,12 @@
     <ClCompile Include="DroppedFile.cpp">
       <Filter>Events\DroppedFile</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerManaChanged.cpp">
+      <Filter>Events\PlayerManaChanged</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerHealthChanged.cpp">
+      <Filter>Events\PlayerHealthChanged</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Subscriber.h">
@@ -198,6 +204,14 @@
     <ClInclude Include="DroppedFile.h">
       <Filter>Events\DroppedFile</Filter>
     </ClInclude>
+    <ClInclude Include="PopCurrentState.h" />
+    <ClInclude Include="PostMaster.h" />
+    <ClInclude Include="PlayerManaChanged.h">
+      <Filter>Events\PlayerManaChanged</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerHealthChanged.h">
+      <Filter>Events\PlayerHealthChanged</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Events">
@@ -271,6 +285,12 @@
     </Filter>
     <Filter Include="Events\DroppedFile">
       <UniqueIdentifier>{72344672-2104-4df1-bcbe-3b47f7faa274}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events\PlayerHealthChanged">
+      <UniqueIdentifier>{c006aa89-5a21-4756-8c1a-2c8142a1bec9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events\PlayerManaChanged">
+      <UniqueIdentifier>{f63214e8-c2ab-4f8f-a2b6-9c0b7b9d5c48}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

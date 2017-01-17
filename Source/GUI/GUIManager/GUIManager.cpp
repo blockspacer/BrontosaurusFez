@@ -102,9 +102,9 @@ void GUI::GUIManager::Render()
 	}
 }
 
-void GUI::GUIManager::AddWidget(const CU::DynamicString& aName, Widget* aWidget)
+void GUI::GUIManager::AddWidget(const std::string& aName, Widget* aWidget)
 {
-	if (aName.Empty() == true)
+	if (aName.empty() == true)
 	{
 		DL_ASSERT("Tried to add widget without a name to GUI manager");
 		return;
@@ -118,15 +118,15 @@ void GUI::GUIManager::AddWidget(const CU::DynamicString& aName, Widget* aWidget)
 	myWidgetContainer->AddWidget(aName, aWidget);
 }
 
-void GUI::GUIManager::DeleteWidget(const CU::DynamicString& aName)
+void GUI::GUIManager::DeleteWidget(const std::string& aName)
 {
 	Widget* widget = myWidgetContainer->RemoveWidget(aName);
 	SAFE_DELETE(widget);
 }
 
-GUI::Widget* GUI::GUIManager::RemoveWidget(const CU::DynamicString& aName)
+GUI::Widget* GUI::GUIManager::RemoveWidget(const std::string& aName)
 {
-	if (aName.Empty() == true)
+	if (aName.empty() == true)
 	{
 		DL_ASSERT("Tried to remove widget with empty name in GUI manager");
 		return nullptr;
@@ -135,9 +135,9 @@ GUI::Widget* GUI::GUIManager::RemoveWidget(const CU::DynamicString& aName)
 	return myWidgetContainer->RemoveWidget(aName);
 }
 
-GUI::Widget* GUI::GUIManager::FindWidget(const CU::DynamicString& aName)
+GUI::Widget* GUI::GUIManager::FindWidget(const std::string& aName)
 {
-	if (aName.Empty() == true)
+	if (aName.empty() == true)
 	{
 		DL_ASSERT("Tried to remove widget with empty name in GUI manager");
 		return nullptr;

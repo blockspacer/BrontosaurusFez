@@ -35,7 +35,7 @@ namespace GUIModleHelper
 		return surface;
 	}
 
-	CSurface* CreateSurface(const CU::GrowingArray<CU::DynamicString>& aTexturePaths)
+	CSurface* CreateSurface(const CU::GrowingArray<std::string>& aTexturePaths)
 	{
 		wchar_t buffer[32][512];
 		CU::GrowingArray<const wchar_t*> texturePaths(10);

@@ -3,7 +3,7 @@
 
 namespace GUI
 {
-	WidgetDecorator::WidgetDecorator(Widget* aWidget, const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::DynamicString& aName, const bool aIsVisible)
+	WidgetDecorator::WidgetDecorator(Widget* aWidget, const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const std::string& aName, const bool aIsVisible)
 		: Widget(aPosition, aSize, aName, aIsVisible), myDecoratedWidget(aWidget)
 	{
 	}
@@ -63,7 +63,7 @@ namespace GUI
 		myDecoratedWidget->SetVisibility(aVisibility);
 	}
 
-	Widget* WidgetDecorator::FindWidget(const CU::DynamicString& aWidgetName)
+	Widget* WidgetDecorator::FindWidget(const std::string& aWidgetName)
 	{
 		return myDecoratedWidget->FindWidget(aWidgetName);
 	}
@@ -73,7 +73,7 @@ namespace GUI
 		myDecoratedWidget->SetLocalPosition(GetLocalPosition());
 	}
 
-	const CU::DynamicString& WidgetDecorator::GetName() const
+	const std::string& WidgetDecorator::GetName() const
 	{
 		//return myDecoratedWidget->GetName();
 		return Widget::GetName();
@@ -134,7 +134,7 @@ namespace GUI
 		myDecoratedWidget->SetVisibilityRecursive(aVisibility);
 	}
 
-	void WidgetDecorator::SetName(const CU::DynamicString& aName)
+	void WidgetDecorator::SetName(const std::string& aName)
 	{
 		myDecoratedWidget->SetName(aName);
 	}

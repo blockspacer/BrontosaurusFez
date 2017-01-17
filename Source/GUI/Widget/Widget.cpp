@@ -14,7 +14,7 @@ namespace GUI
 
 	struct Widget::WidgetImpl
 	{
-		CU::DynamicString myName;
+		std::string myName;
 #ifdef _USE_LINE_DRAWER
 		LineHandle myLineHandles[4];
 #endif // _USE_LINE_DRAWER
@@ -25,11 +25,11 @@ namespace GUI
 	};
 
 	Widget::Widget(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const bool aIsVisible)
-		: Widget(aPosition, aSize, CU::DynamicString("NamelessWidget") + (++ourNamelessCount), aIsVisible)
+		: Widget(aPosition, aSize, std::string("NamelessWidget") + std::to_string(++ourNamelessCount), aIsVisible)
 	{
 	}
 
-	Widget::Widget(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::DynamicString& aName, const bool aIsVisible)
+	Widget::Widget(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const std::string& aName, const bool aIsVisible)
 	{
 		myImplementation = new WidgetImpl();
 		myImplementation->myName = aName;
@@ -49,7 +49,7 @@ namespace GUI
 		SAFE_DELETE(myImplementation);
 	}
 
-	Widget* Widget::FindWidget(const CU::DynamicString& aWidgetName)
+	Widget* Widget::FindWidget(const std::string& aWidgetName)
 	{
 		if (GetName() == aWidgetName)
 		{
@@ -109,7 +109,7 @@ namespace GUI
 		myImplementation->myIsVisible = aVisibility;
 	}
 
-	void Widget::SetName(const CU::DynamicString& aName)
+	void Widget::SetName(const std::string& aName)
 	{
 		myImplementation->myName = aName;
 	}
@@ -155,7 +155,7 @@ namespace GUI
 		return true;
 	}
 
-	const CU::DynamicString& Widget::GetName() const
+	const std::string& Widget::GetName() const
 	{
 		return myImplementation->myName;
 	}

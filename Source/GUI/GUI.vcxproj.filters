@@ -20,6 +20,8 @@
     <ClInclude Include="BarWidget\BarWidget.h" />
     <ClInclude Include="Button\ButtonAnimation.h" />
     <ClInclude Include="ToolTipDecorator.h" />
+    <ClInclude Include="HealthWidget.h" />
+    <ClInclude Include="ManaWidget.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -39,5 +41,7 @@
     <ClCompile Include="BarWidget\BarWidget.cpp" />
     <ClCompile Include="Button\ButtonAnimation.cpp" />
     <ClCompile Include="ToolTipDecorator.cpp" />
+    <ClCompile Include="HealthWidget.cpp" />
+    <ClCompile Include="ManaWidget.cpp" />
   </ItemGroup>
 </Project>

@@ -6,7 +6,7 @@
 
 namespace GUI
 {
-	SpriteWidget::SpriteWidget(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::DynamicString& aName, ModelComponent* /*aModelComponent*/, const bool aIsVisible)
+	SpriteWidget::SpriteWidget(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const std::string& aName, ModelComponent* /*aModelComponent*/, const bool aIsVisible)
 		: Widget(aPosition, aSize, aName, aIsVisible)
 		, myRenderObject(nullptr)
 	{

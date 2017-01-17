@@ -6,7 +6,7 @@
 
 namespace GUI
 {
-	BarWidget::BarWidget(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::DynamicString& aName, const bool aIsVisible, const int aMaxValue, const int aStartValue)
+	BarWidget::BarWidget(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const std::string& aName, const bool aIsVisible, const int aMaxValue, const int aStartValue)
 		: WidgetContainer(aPosition, aSize, aName, aIsVisible)
 		, myCachedChild(nullptr)
 		, myProgressValue(aStartValue)

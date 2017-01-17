@@ -18,13 +18,22 @@
 CCollisionComponentManager::CCollisionComponentManager()
 	: myCollisionComponents(32)
 	, myCollisionManager(nullptr)
+	, myShouldRender(false)
 {
 	myCollisionManager = new CCollisionManager();
+
+#ifdef _DEBUG
+	myShouldRender = true;
+#endif // _DEBUG
+
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
 }
 
 
 CCollisionComponentManager::~CCollisionComponentManager()
 {
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
+
 	myCollisionComponents.DeleteAll();
 	SAFE_DELETE(myCollisionManager);
 }
@@ -32,7 +41,11 @@ CCollisionComponentManager::~CCollisionComponentManager()
 void CCollisionComponentManager::Update()
 {
 	myCollisionManager->Update();
-	myCollisionManager->Render();
+
+	if (myShouldRender == true)
+	{
+		myCollisionManager->Render();
+	}
 }
 
 void CCollisionComponentManager::Render()
@@ -98,4 +111,14 @@ ICollider* CCollisionComponentManager::CreateCollider(const eColliderType aColli
 	}
 
 	return newCollider;
+}
+
+eMessageReturn CCollisionComponentManager::Recieve(const Message& aMessage)
+{
+	return aMessage.myEvent.DoEvent(this);
+}
+
+void CCollisionComponentManager::FlipShouldRender()
+{
+	myShouldRender = !myShouldRender;
 }
