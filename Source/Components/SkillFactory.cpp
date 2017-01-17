@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "../CommonUtilities/PJWrapper.h"
+#include "../CommonUtilities/JsonValue.h"
 
 
 SkillFactory* SkillFactory::ourInstance = nullptr;
@@ -42,7 +43,7 @@ void SkillFactory::DestroyInstance()
 	SAFE_DELETE(ourInstance);
 }
 
-Skill * SkillFactory::CreateSkill(SkillData::SkillName aSkillName)
+Skill * SkillFactory::CreateSkill(char* aSkillName)
 {
 	for(unsigned short i=0; i < mySkillDataList.Size(); i++)
 	{
@@ -76,41 +77,24 @@ void SkillFactory::RegisterSkillData(SkillData * aSkillData)
 
 void SkillFactory::RegisterSkills()
 {
-	std::string error;
-	CU::CPJWrapper json;
-	json.Parse("");
+	CU::CJsonValue SkillBluePrints;
+	const std::string& errorString = SkillBluePrints.Parse("Json/Skills.json");
+	CU::CJsonValue levelsArray = SkillBluePrints.at("skills");
 
-	if (json.count("name") < 1)
+	for (unsigned int i = 0; i < levelsArray.Size(); ++i)
 	{
-		DL_PRINT("Json file is missing");
-	}
+		SkillData* skill = new SkillData;
+		skill->activationRadius = levelsArray[i].at("activationRadius").GetFloat();
+		skill->animationDuration = levelsArray[i].at("animationDuration").GetFloat();
+		skill->coolDown = levelsArray[i].at("coolDown").GetFloat();
+		skill->damage = levelsArray[i].at("damage").GetUInt();
+		skill->isAOE = levelsArray[i].at("isAOE").GetBool();
+		skill->isChannel = levelsArray[i].at("isChannel").GetBool();
+		skill->manaCost = levelsArray[i].at("manaCost").GetUInt();
+		skill->range = levelsArray[i].at("range").GetFloat();
+			 
+		skill->skillName = levelsArray[i].at("name").GetString().c_str();
 
-	SkillData skill;
-	skill.activationRadius = json.at("activationRadius").GetFloat();
-	skill.animationDuration = json.at("animationDuration").GetFloat();
-	skill.coolDown = json.at("coolDown").GetFloat();
-	skill.damage = json.at("damage").GetUInt();
-	skill.isAOE = json.at("isAOE").GetBool();
-	skill.isChannel = json.at("isChannel").GetBool();
-	skill.manaCost = json.at("manaCost").GetUInt();
-	skill.range = json.at("range").GetFloat();
-	
-	std::string name = json.at("name").GetString();
-
-	if (name == "WhirlWind")
-	{
-		skill.skillName = SkillData::SkillName::WhirlWind;
-	}
-	else if (name == "BasicAttack")
-	{
-		skill.skillName = SkillData::SkillName::BasicAttack;
-	}
-	else if (name == "SweepAttack")
-	{
-		skill.skillName = SkillData::SkillName::SweepAttack;
-	}
-	else
-	{
-		DL_PRINT("Couldn't find match for skill name in json file");
+		mySkillDataList.Add(skill);
 	}
 }

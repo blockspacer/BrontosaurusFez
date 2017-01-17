@@ -13,15 +13,15 @@
 #include "SkillComponentManager.h"
 Skill::Skill(SkillData* aSkillDataPointer)
 {
-	if (aSkillDataPointer->skillName == SkillData::SkillName::BasicAttack)
+	if (aSkillDataPointer->skillName == "BasicAttack")
 	{
 		myUpdateFunction = std::bind(&Skill::BasicAttackUpdate, this, std::placeholders::_1);
 	}
-	else if (aSkillDataPointer->skillName == SkillData::SkillName::WhirlWind)
+	else if (aSkillDataPointer->skillName == "WhirlWind")
 	{
 		myUpdateFunction = std::bind(&Skill::WhirlWindUpdate, this, std::placeholders::_1);
 	}
-	else if (aSkillDataPointer->skillName == SkillData::SkillName::SweepAttack)
+	else if (aSkillDataPointer->skillName == "SweepAttack")
 	{
 		myUpdateFunction = std::bind(&Skill::SweepAttackUpdate, this, std::placeholders::_1);
 	}

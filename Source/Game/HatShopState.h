@@ -2,6 +2,7 @@
 #include "StateStack/State.h"
 #include "PostMaster/Subscriber.h"
 #include "CommonUtilities/GrowingArray.h"
+#include "CommonUtilities/vector2.h"
 #include <string>
 
 struct SShopSelection
@@ -54,6 +55,8 @@ public:
 	void ValidatePurchase();
 	void SetSelected(unsigned int aIndex);
 	bool GetLetThroughRender() const override;
+	bool GetLetThroughUpdate() const override;
+
 
 	// Inherited via Subscriber
 	eMessageReturn Recieve(const Message & aMessage) override;
@@ -61,5 +64,6 @@ private:
 	CU::GrowingArray<SShopSelection*> mySelections;
 	GUI::GUIManager* myGUIManager;
 	SShopSelection* myCurrentlySelected;
+	CU::Vector2f myWindowPosition;
 	bool myIsInitied;
 };

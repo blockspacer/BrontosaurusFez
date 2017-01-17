@@ -13,7 +13,7 @@ namespace GUI
 	class WidgetDecorator : public Widget
 	{
 	public:
-		WidgetDecorator(Widget* aWidget, const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::DynamicString& aName, const bool aIsVisible = true);
+		WidgetDecorator(Widget* aWidget, const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const std::string& aName, const bool aIsVisible = true);
 		virtual ~WidgetDecorator();
 
 		virtual void Update(const CU::Time& aDeltaTime) override;
@@ -29,10 +29,10 @@ namespace GUI
 		virtual void SetSize(const CU::Vector2f& aSize) override;
 		virtual void SetVisibility(const bool aVisibility) override;
 
-		virtual Widget* FindWidget(const CU::DynamicString& aWidgetName) override;
+		virtual Widget* FindWidget(const std::string& aWidgetName) override;
 		virtual void OnPositionChanged() override;
 
-		virtual const CU::DynamicString& GetName() const override;
+		virtual const std::string& GetName() const override;
 		virtual CU::Vector2f GetWorldPosition() const;
 		virtual const CU::Vector2f& GetLocalPosition() const;
 		virtual const CU::Vector2f& GetSize() const;
@@ -45,7 +45,7 @@ namespace GUI
 		virtual void SetWorldPosition(const CU::Vector2f& aPosition) override;
 		virtual void SetLocalPosition(const CU::Vector2f& aPosition) override;
 		virtual void SetVisibilityRecursive(const bool aVisibility) override;
-		virtual void SetName(const CU::DynamicString& aName) override;
+		virtual void SetName(const std::string& aName) override;
 		virtual bool HasDebugLines() const override;
 		virtual void RemoveDebugLines() const override;
 

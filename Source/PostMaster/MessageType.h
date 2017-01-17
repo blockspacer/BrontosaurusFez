@@ -27,6 +27,8 @@ enum class eMessageType
 	eHatAdded,
 	eDroppedFile,
 	eBuyButtonPressed,
+	ePlayerHealthChanged,
+	ePlayerManaChanged,
 	eLength,
 };
 //Ifall du vill lägga till en till messagetyp så kompilera om Postmaster Projekter annars kraschar det. 

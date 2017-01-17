@@ -30,7 +30,16 @@ public:
 	void Activate();
 	void Activate(CRenderPackage & aRenderPackage);
 	ID3D11ShaderResourceView*& GetDepthResource();
+	ID3D11ShaderResourceView*& GetResource();
+
+	ID3D11Texture2D*& GetTexture();
+
+	void UpdateTexture(ID3D11Texture2D* aTexture);
+	
 	CU::Vector2f GetSize();
+
+
+
 
 	inline bool IsInit();
 	void operator= (const CRenderPackage& aLeft);

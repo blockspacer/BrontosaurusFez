@@ -745,6 +745,14 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 {
 	switch (aRenderMesage->myType)
 	{
+	case SRenderMessage::eRenderMessageType::eRenderNavMesh:
+	{
+		SRenderNavmeshMessage* msg = static_cast<SRenderNavmeshMessage*>(aRenderMesage);
+		CModel* model = msg->myModel;
+		model->Render(msg->myTransformation, msg->myTransformation, nullptr, nullptr, nullptr, 0.0f);
+		++aDrawCallCount;
+		break;
+	}
 	case SRenderMessage::eRenderMessageType::eRenderCameraQueue:
 	{
 		SRenderCameraQueueMessage* msg = static_cast<SRenderCameraQueueMessage*>(aRenderMesage);
@@ -873,19 +881,29 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 	}
 	case SRenderMessage::eRenderMessageType::eRenderToInterediate:
 	{
-		SActivateRenderPackageMessage* msg = static_cast<SActivateRenderPackageMessage*>(aRenderMesage);
+		SRenderToIntermediate* msg = static_cast<SRenderToIntermediate*>(aRenderMesage);
 		myIntermediatePackage.Activate();
-		myFullScreenHelper.DoEffect(CFullScreenHelper::eEffectType::eCopy, {0.0f, 0.0f, 0.4f, 0.4f}, &msg->myRenderPackage);
+		myFullScreenHelper.DoEffect(
+			CFullScreenHelper::eEffectType::eCopy, 
+			msg->myRect, 
+			msg->useDepthResource ? msg->myRenderPackage.GetDepthResource() : msg->myRenderPackage.GetResource());
 		break;
 	}
 	case SRenderMessage::eRenderMessageType::eRenderFullscreenEffect:
 	{
 		SRenderFullscreenEffectMessage* msg = static_cast<SRenderFullscreenEffectMessage*>(aRenderMesage);
+
+		bool c1 = msg->myFirstUseDepthResource;
+		bool c2 = msg->mySecondUseDepthResource;
+
+		CRenderPackage& p1  = msg->myFirstPackage;
+		CRenderPackage& p2  = msg->mySecondPackage;
+
 		myFullScreenHelper.DoEffect(
 			msg->myEffectType,
 			msg->myRect,
-			&msg->myFirstPackage, 
-			&msg->mySecondPackage);
+			c1 ? p1.GetDepthResource() : p1.GetResource(), 
+			c2 ? p2.GetDepthResource() : p2.GetResource());
 
 		++aDrawCallCount;
 		break;

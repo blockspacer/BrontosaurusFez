@@ -17,7 +17,7 @@ static const CU::Camera* locGUICamera = nullptr;
 
 namespace GUI
 {
-	ModelWidget::ModelWidget(CLoaderMesh* aLoaderMesh, const CU::GrowingArray<CU::DynamicString>& aTexturePaths, const CU::Camera& aGUICamera)
+	ModelWidget::ModelWidget(CLoaderMesh* aLoaderMesh, const CU::GrowingArray<std::string>& aTexturePaths, const CU::Camera& aGUICamera)
 		: Widget(CU::Vector2f::Zero, CU::Vector2f::One, aLoaderMesh->myName, true)
 		, myModelInstance(nullptr)
 		, myPixelConstantBufferStruct(nullptr)

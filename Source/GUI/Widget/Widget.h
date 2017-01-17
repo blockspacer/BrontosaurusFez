@@ -27,7 +27,7 @@ namespace GUI
 	{
 	public:
 		Widget(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const bool aIsVisible);
-		Widget(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::DynamicString& aName, const bool aIsVisible);
+		Widget(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const std::string& aName, const bool aIsVisible);
 		virtual ~Widget();
 
 		virtual void Update(const CU::Time& aDeltaTime) { SUPRESS_UNUSED_WARNING(aDeltaTime); }
@@ -43,7 +43,7 @@ namespace GUI
 		virtual void OnGotFocus() {}
 		virtual void OnLostFocus() {}
 
-		virtual Widget* FindWidget(const CU::DynamicString& aWidgetName);
+		virtual Widget* FindWidget(const std::string& aWidgetName);
 		virtual Widget* MouseIsOver(const CU::Vector2f& aMousePosition);
 
 		virtual void OnPositionChanged() {}
@@ -54,14 +54,14 @@ namespace GUI
 		virtual void SetSize(const CU::Vector2f& aSize);
 		virtual void SetVisibility(const bool aVisibility);
 		virtual void SetVisibilityRecursive(const bool aVisibility);
-		virtual void SetName(const CU::DynamicString& aName);
+		virtual void SetName(const std::string& aName);
 
 		virtual CU::Vector2f GetWorldPosition() const;
 		virtual const CU::Vector2f& GetLocalPosition() const;
 		virtual const CU::Vector2f& GetSize() const;
 		virtual bool IsVisible() const;
 		virtual bool HasDebugLines() const;
-		virtual const CU::DynamicString& GetName() const;
+		virtual const std::string& GetName() const;
 
 		virtual void RemoveDebugLines() const;
 

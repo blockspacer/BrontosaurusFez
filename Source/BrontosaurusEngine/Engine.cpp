@@ -81,10 +81,6 @@ void CEngine::Init(SInitEngineParams& aInitEngineParams)
 	myConsole = new CConsole();
 	myConsole->Init();
 	myDebugInfoDrawer = new CDebugInfoDrawer(aInitEngineParams.myDebugFlags);
-	
-	myTestText.Init();
-	myTestText.SetText("Brontosaurs Fez: the hatty Engine");
-	myTestText.SetPosition({ 0.1f, 0.1f });
 
 	ShowCursor(TRUE);
 
@@ -108,7 +104,6 @@ void CEngine::Render()
 	myRenderer->Render();
 
 	myLineDrawer->Render();
-	myTestText.Render();
 	myDXFramework->Render();
 	myConsole->Render();
 }

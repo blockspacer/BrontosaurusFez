@@ -1,5 +1,5 @@
 #pragma once
-#include "Widget.h"
+#include "../Widget/Widget.h"
 #include <unordered_map>
 #include <string>
 
@@ -10,12 +10,12 @@ namespace GUI
 	public:
 
 		WidgetContainer(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const bool aIsVisible);
-		WidgetContainer(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::DynamicString& aName, const bool aIsVisible);
+		WidgetContainer(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const std::string& aName, const bool aIsVisible);
 		virtual ~WidgetContainer();
 
-		virtual void AddWidget(const CU::DynamicString& aWidgetName, Widget* aWidget);
-		Widget* RemoveWidget(const CU::DynamicString& aWidgetName);
-		Widget* FindWidget(const CU::DynamicString& aWidgetName) override;
+		virtual void AddWidget(const std::string& aWidgetName, Widget* aWidget);
+		Widget* RemoveWidget(const std::string& aWidgetName);
+		Widget* FindWidget(const std::string& aWidgetName) override;
 
 		virtual void Update(const CU::Time& aDeltaTime) override;
 		virtual void Render() override;
@@ -24,7 +24,7 @@ namespace GUI
 
 		virtual Widget* MouseIsOver(const CU::Vector2f& aPosition) override;
 
-		void MoveToFront(const CU::DynamicString& aWidgetName);
+		void MoveToFront(const std::string& aWidgetName);
 
 		inline virtual bool IsEmpty() const;
 

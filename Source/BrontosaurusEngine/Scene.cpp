@@ -75,7 +75,7 @@ CScene::CScene()
 	myFireEmitters.Init(8);
 	mySkybox = nullptr;
 
-	myShadowCamera.InitOrthographic(3000, 3000, 2500.f, 1.f, 2048, 2048);
+	myShadowCamera.InitOrthographic(7500, 7500, 4000.f, 0.1f, 4096, 4096);
 }
 
 CScene::~CScene()
@@ -190,26 +190,28 @@ void CScene::Render()
 		fireEmitter.Render();
 	}
 
-	//statemsg.myBlendState = eBlendState::eAlphaBlend;
-	//statemsg.myRasterizerState = eRasterizerState::eDefault;
-	//statemsg.myDepthStencilState = eDepthStencilState::eReadOnly;
-	//statemsg.mySamplerState = eSamplerState::eClamp;
+	statemsg.myBlendState = eBlendState::eAlphaBlend;
+	statemsg.myRasterizerState = eRasterizerState::eDefault;
+	statemsg.myDepthStencilState = eDepthStencilState::eReadOnly;
+	statemsg.mySamplerState = eSamplerState::eClamp;
 
-	//RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
+	RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
 
-	//for (unsigned int i = 0; i < myParticleEmitters.Size(); ++i)
-	//{
-	//	/*if (myParticleEmitters[i]->IsVisible() == false)
-	//	{
-	//		continue;
-	//	}*/
+	for (unsigned int i = 0; i < myParticleEmitters.Size(); ++i)
+	{
+		/*if (myParticleEmitters[i]->IsVisible() == false)
+		{
+			continue;
+		}*/
 
-	//	myParticleEmitters[i]->Render(GetCamera(eCameraType::ePlayerOneCamera));
-	//}
+		myParticleEmitters[i]->Render(GetCamera(eCameraType::ePlayerOneCamera));
+	}
 
-	SRenderToIntermediate * interMSG = new SRenderToIntermediate();
-	interMSG->myRenderPackage = myShadowCamera.GetRenderPackage();
-	RENDERER.AddRenderMessage(interMSG);
+	//SRenderToIntermediate * interMSG = new SRenderToIntermediate();
+	//interMSG->myRect = { 0.0f, 0.0f, 0.25f, 0.25f };
+	//interMSG->useDepthResource = true;
+	//interMSG->myRenderPackage = myShadowCamera.GetRenderPackage();
+	//RENDERER.AddRenderMessage(interMSG);
 }
 
 InstanceID CScene::AddModelInstance(CModelInstance* aModelInstance)

@@ -2,14 +2,8 @@
 #include "HealthPoint.h"
 struct SkillData
 {
-	enum class SkillName
-	{
-		BasicAttack,
-		SweepAttack,
-		WhirlWind
-	};
 
-	SkillName skillName;
+	std::string skillName;
 	float range;
 	float coolDown;
 	float activationRadius;
