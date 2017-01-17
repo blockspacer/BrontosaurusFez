@@ -16,7 +16,18 @@ bool CU::CPJWrapper::Parse(std::string afilePath, std::string* anErrorString)
 {
 	std::ifstream file(afilePath);
 
-	std::string error = picojson::parse(myValue, file);
+	std::string error;
+
+	if (file.good())
+	{
+		error = picojson::parse(myValue, file);	
+	}
+	else
+	{
+		error = "File missing :";
+		error += afilePath;
+	}
+
 	file.close();
 
 	if (error != "")
