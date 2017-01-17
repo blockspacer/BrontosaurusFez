@@ -48,7 +48,7 @@ void CHealthBarComponent::UpdateSprite(char aPercentHP)
 
 void CHealthBarComponent::Update()
 {
-	CU::Vector4f objectPosition(GetParent()->GetToWorldTransform().GetPosition());	//GetInverse?
+	CU::Vector4f objectPosition(GetParent()->GetToWorldTransform().GetPosition());
 	const CU::Vector4f cameraSpacePosition = objectPosition * myPlayerCamera->GetInverse();
 	const CU::Vector4f projectionSpaceCubePos = cameraSpacePosition *  myPlayerCamera->GetProjection();
 	const CU::Vector4f position3D = projectionSpaceCubePos / projectionSpaceCubePos.w;

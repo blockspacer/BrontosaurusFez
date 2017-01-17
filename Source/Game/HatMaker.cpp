@@ -37,18 +37,19 @@ void CHatMaker::LoadBluePrints(const std::string& aFilePath)
 		blueprint->HatName = levelsArray[i].at("HatName").GetString();
 		blueprint->HatModel = levelsArray[i].at("Model").GetString();
 
-		blueprint->BaseStats.Strength = levelsArray[i].at("Strength").GetInt();
-		blueprint->BaseStats.Dexterity = levelsArray[i].at("Dexterity").GetInt();
-		blueprint->BaseStats.Intelligence = levelsArray[i].at("Intelligence").GetInt();
-		blueprint->BaseStats.Vitality = levelsArray[i].at("Vitality").GetInt();
-
-		blueprint->BonusStats.BonusCritChance = levelsArray[i].at("CritChance").GetFloat();
-		blueprint->BonusStats.BonusCritDamage = levelsArray[i].at("CritDamage").GetFloat();
-		blueprint->BonusStats.BonusMovementSpeed = levelsArray[i].at("MoveSpeed").GetFloat();
-		blueprint->BonusStats.BonusArmor = levelsArray[i].at("Armor").GetFloat();
-		blueprint->BonusStats.BonusDamage = levelsArray[i].at("Damage").GetFloat();
 		blueprint->BonusStats.BonusHealth = levelsArray[i].at("Health").GetFloat();
 		blueprint->BonusStats.BonusMana = levelsArray[i].at("Mana").GetFloat();
+		blueprint->BonusStats.BonusMovementSpeed = levelsArray[i].at("MoveSpeed").GetFloat();
+		blueprint->BonusStats.BonusDamageModifier = levelsArray[i].at("DamageModifier").GetFloat();
+		blueprint->BonusStats.BonusGoldGetModifier = levelsArray[i].at("GoldGetModifier").GetFloat();
+		blueprint->BonusStats.BonusHealthDropChance = levelsArray[i].at("HealthDropChance").GetFloat();
+		blueprint->BonusStats.BonusManaDropChance = levelsArray[i].at("ManaDropChance").GetFloat();
+		blueprint->BonusStats.BonusManaCostModifier = levelsArray[i].at("ManaCostModifier").GetFloat();
+
+		float healthLimitActivation = levelsArray[i].at("HealthLimitActivation").GetFloat();
+		float manaLimitActivation = levelsArray[i].at("ManaLimitActivation").GetFloat();
+		bool isLimitActivationUnder = levelsArray[i].at("IsLimitActivatorUnder").GetBool();
+		
 
 		myBluePrints.emplace(blueprint->HatName, blueprint);
 	}
