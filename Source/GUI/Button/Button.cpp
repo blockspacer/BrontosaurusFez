@@ -8,7 +8,7 @@
 
 namespace GUI
 {
-	Button::Button(const std::function<void(void)>& aFunction, const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::DynamicString& aName)
+	Button::Button(const std::function<void(void)>& aFunction, const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const std::string& aName)
 		: WidgetContainer(aPosition, aSize, aName, true)
 		, myFunction(aFunction)
 		, myWasClicked(false)
@@ -19,7 +19,7 @@ namespace GUI
 	{
 	}
 
-	void Button::AddWidget(const CU::DynamicString& aWidgetName, Widget* aWidget)
+	void Button::AddWidget(const std::string& aWidgetName, Widget* aWidget)
 	{
 		WidgetContainer::AddWidget(aWidgetName, aWidget);
 

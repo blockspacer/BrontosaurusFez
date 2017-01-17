@@ -9,7 +9,7 @@ namespace GUI
 	class SpriteWidget : public Widget
 	{
 	public:
-		SpriteWidget(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::DynamicString& aName, ModelComponent* aModelComponent, const bool aIsVisible = true);
+		SpriteWidget(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const std::string& aName, ModelComponent* aModelComponent, const bool aIsVisible = true);
 		~SpriteWidget();
 
 		void Render() override;

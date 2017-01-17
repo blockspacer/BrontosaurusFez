@@ -8,7 +8,7 @@ namespace GUI
 	{
 	}
 
-	WidgetContainer::WidgetContainer(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::DynamicString& aName, const bool aIsVisible)
+	WidgetContainer::WidgetContainer(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const std::string& aName, const bool aIsVisible)
 		: Widget(aPosition, aSize, aName, aIsVisible), myOrderedWidgets(4)
 	{
 	}
@@ -23,7 +23,7 @@ namespace GUI
 		myWidgets.clear();
 	}
 
-	void WidgetContainer::AddWidget(const CU::DynamicString& aWidgetName, Widget* aWidget)
+	void WidgetContainer::AddWidget(const std::string& aWidgetName, Widget* aWidget)
 	{
 		assert(myWidgets.find(aWidgetName.c_str()) == myWidgets.end() && "There is already a Widget with that name.");
 		myWidgets[aWidgetName.c_str()] = aWidget;
@@ -31,7 +31,7 @@ namespace GUI
 		SetChild(aWidget);
 	}
 
-	Widget* WidgetContainer::RemoveWidget(const CU::DynamicString& aWidgetName)
+	Widget* WidgetContainer::RemoveWidget(const std::string& aWidgetName)
 	{
 		for (auto it = myWidgets.begin(); it != myWidgets.end(); ++it)
 		{
@@ -47,7 +47,7 @@ namespace GUI
 		return nullptr;
 	}
 
-	Widget* WidgetContainer::FindWidget(const CU::DynamicString& aWidgetName)
+	Widget* WidgetContainer::FindWidget(const std::string& aWidgetName)
 	{
 		auto it = myWidgets.find(aWidgetName.c_str());
 		if (it != myWidgets.end())
@@ -130,7 +130,7 @@ namespace GUI
 		return container;
 	}
 
-	void WidgetContainer::MoveToFront(const CU::DynamicString& aWidgetName)
+	void WidgetContainer::MoveToFront(const std::string& aWidgetName)
 	{
 		auto it = myWidgets.find(aWidgetName.c_str());
 		if (it != myWidgets.end())

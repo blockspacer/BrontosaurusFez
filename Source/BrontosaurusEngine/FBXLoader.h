@@ -38,7 +38,7 @@ public:
 	CLoaderScene() : myMeshes(2), myTextures(8), isLODScene(false), myScene(nullptr) {}
 	~CLoaderScene() { myMeshes.DeleteAll(); SAFE_DELETE(myCamera); }
 	std::string myAlbedoTexture;
-	CU::GrowingArray<CU::DynamicString> myTextures;
+	CU::GrowingArray<std::string> myTextures;
 	CU::GrowingArray<CLoaderMesh*> myMeshes;
 	CLoaderCamera* myCamera;
 	const struct aiScene* myScene;

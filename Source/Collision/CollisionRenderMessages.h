@@ -19,12 +19,12 @@ namespace Collision
 	class CRenderCircle : public IRenderCommand
 	{
 	public:
-		CRenderCircle(const Intersection::SCircle* aCircle);
+		CRenderCircle(const Intersection::SCircle& aCircle);
 		~CRenderCircle();
 		void DoRenderCall(CU::GrowingArray<char, unsigned short, false>& aVertexBuffer) override;
 
 	private:
-		const Intersection::SCircle* myCircle;
+		const Intersection::SCircle& myCircle;
 	};
 
 	class CRenderTriangle : public IRenderCommand

@@ -10,6 +10,7 @@
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 
 #include <utility>
+#include <string>
 
 #include "../CommonUtilities/DL_Debug.h"
 #include "../CommonUtilities/GrowingArray.h"
@@ -18,6 +19,10 @@
 #include "../CommonUtilities/DynamicString.h"
 #include "../CommonUtilities/vector2.h"
 #include "../CommonUtilities/CUTime.h"
+
+#include "../PostMaster/PostMaster.h"
+#include "../PostMaster/Message.h"
+#include "../PostMaster/Event.h"
 
 #ifndef SAFE_DELETE
 #define SAFE_DELETE(ptr) delete ptr; ptr = nullptr

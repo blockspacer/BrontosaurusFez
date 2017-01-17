@@ -11,6 +11,7 @@
 #include "../BrontosaurusEngine/Console.h"
 #include "../Components/InputController.h"
 #include "Game/HatShopState.h"
+#include "../Components/CollisionComponentManager.h"
 
 #include "../Game/QuestManager.h"
 #include "../Game/QuestDrawer.h"
@@ -137,6 +138,19 @@ eMessageReturn KeyPressed::DoEvent(CConsole* /*aConsole*/) const
 eMessageReturn KeyPressed::DoEvent(InputController * aInputController) const
 {
 	return aInputController->TakeKeyPressed(myKey);
+}
+
+eMessageReturn KeyPressed::DoEvent(CCollisionComponentManager* aCollisionComponentManager) const
+{
+	if (myKey == CU::eKeys::F3)
+	{
+		if (aCollisionComponentManager != nullptr)
+		{
+			aCollisionComponentManager->FlipShouldRender();
+		}
+	}
+
+	return eMessageReturn::eContinue;
 }
 
 eMessageReturn KeyPressed::DoEvent(CHealthComponent * aHealthComponent) const

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../PostMaster/Subscriber.h"
+
 namespace CU
 {
 	class Time;
@@ -7,13 +9,14 @@ namespace CU
 
 class CCollisionComponent;
 class CCollisionManager;
-class ICollider; //move this to CColliderFactory in Collision project
+class ICollider;
+
 namespace Intersection
 {
 	union CollisionData;
-
 }
-class CCollisionComponentManager
+
+class CCollisionComponentManager : public Subscriber
 {
 public:
 	enum class eColliderType
@@ -32,9 +35,14 @@ public:
 	CCollisionComponent* CreateCollisionComponent(const eColliderType aColliderType, Intersection::CollisionData& aCollisionData);
 	void DestroyCollisionComponent(CCollisionComponent* aCollisionComponent);
 
+	void FlipShouldRender();
+
 private:
-	ICollider* CreateCollider(const eColliderType aColliderType, Intersection::CollisionData& aCollisionData); //move this to CColliderFactory in Collision project
+	ICollider* CreateCollider(const eColliderType aColliderType, Intersection::CollisionData& aCollisionData);
+	eMessageReturn Recieve(const Message& aMessage) override;
 
 	CU::GrowingArray<CCollisionComponent*, unsigned int, false> myCollisionComponents;
 	CCollisionManager* myCollisionManager;
+
+	bool myShouldRender;
 };

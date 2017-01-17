@@ -11,7 +11,7 @@ namespace GUI
 		AddWidget("Dragging bar", new DraggableArea(GetLocalPosition(), CU::Vector2f(GetSize().x, 25.f), this));
 	}
 
-	Window::Window(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::DynamicString& aName)
+	Window::Window(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const std::string& aName)
 		: WidgetContainer(aPosition, aSize, aName, true)
 	{
 	}
@@ -20,7 +20,7 @@ namespace GUI
 	{
 	}
 
-	void Window::Init(const CU::DynamicString& /*aBackgroundSpritePath*/, const CU::Vector2f& /*aBackgroundCoords*/)
+	void Window::Init(const std::string& /*aBackgroundSpritePath*/, const CU::Vector2f& /*aBackgroundCoords*/)
 	{
 	}
 

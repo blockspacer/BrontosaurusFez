@@ -348,6 +348,8 @@
     <ClInclude Include="GUICursor\GUICursor.h" />
     <ClInclude Include="GUIManager\GUIManager.h" />
     <ClInclude Include="GUIPixelConstantBuffer.h" />
+    <ClInclude Include="HealthWidget.h" />
+    <ClInclude Include="ManaWidget.h" />
     <ClInclude Include="RenderableWidgets\ModelWidget\ModelWidget.h" />
     <ClInclude Include="RenderableWidgets\SpriteWidget\SpriteWidget.h" />
     <ClInclude Include="stdafx.h" />
@@ -368,6 +370,8 @@
     <ClCompile Include="DraggableArea\DraggableArea.cpp" />
     <ClCompile Include="GUICursor\GUICursor.cpp" />
     <ClCompile Include="GUIManager\GUIManager.cpp" />
+    <ClCompile Include="HealthWidget.cpp" />
+    <ClCompile Include="ManaWidget.cpp" />
     <ClCompile Include="RenderableWidgets\ModelWidget\ModelWidget.cpp" />
     <ClCompile Include="RenderableWidgets\SpriteWidget\SpriteWidget.cpp" />
     <ClCompile Include="stdafx.cpp">
