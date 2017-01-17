@@ -11,11 +11,6 @@ int LoadSkillSystemComponent(KLoader::SLoadedComponentData someData)
 	SkillSystemComponent* skillSystem = new SkillSystemComponent();
 	SkillSystemComponentManager::GetInstance().RegisterComponent(skillSystem);
 
-	if (someData.myData.at("Skills").Size() <= 0)
-	{
-		DL_PRINT("Skill component missing skills");
-	}
-
 	CU::CJsonValue levelsArray = someData.myData.at("Skills");
 
 	for (unsigned short i = 0; i < levelsArray.Size(); i++)
