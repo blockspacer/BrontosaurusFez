@@ -37,7 +37,7 @@ void CHatMaker::LoadBluePrints(const std::string& aFilePath)
 		blueprint->HatName = levelsArray[i].at("HatName").GetString();
 		blueprint->HatModel = levelsArray[i].at("Model").GetString();
 
-		blueprint->BaseStats.Strength = levelsArray[i].at("Strength").GetInt();
+		/*blueprint->BaseStats.Strength = levelsArray[i].at("Strength").GetInt();
 		blueprint->BaseStats.Dexterity = levelsArray[i].at("Dexterity").GetInt();
 		blueprint->BaseStats.Intelligence = levelsArray[i].at("Intelligence").GetInt();
 		blueprint->BaseStats.Vitality = levelsArray[i].at("Vitality").GetInt();
@@ -48,7 +48,7 @@ void CHatMaker::LoadBluePrints(const std::string& aFilePath)
 		blueprint->BonusStats.BonusArmor = levelsArray[i].at("Armor").GetFloat();
 		blueprint->BonusStats.BonusDamage = levelsArray[i].at("Damage").GetFloat();
 		blueprint->BonusStats.BonusHealth = levelsArray[i].at("Health").GetFloat();
-		blueprint->BonusStats.BonusMana = levelsArray[i].at("Mana").GetFloat();
+		blueprint->BonusStats.BonusMana = levelsArray[i].at("Mana").GetFloat();*/
 
 		myBluePrints.emplace(blueprint->HatName, blueprint);
 	}

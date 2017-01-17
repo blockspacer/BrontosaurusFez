@@ -29,7 +29,6 @@ namespace CU
 	class Vector2;
 	using Vector2f = Vector2<float>;
 }
-
 enum class eComponentType : int;
 
 
