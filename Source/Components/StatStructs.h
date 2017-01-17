@@ -59,6 +59,7 @@ namespace Stats
 			BonusHealthDropChance *= aValue;
 			BonusManaDropChance *= aValue;
 			BonusManaCostModifier *= aValue;
+			return *this;
 		}
 	};
 	struct STotalStats
