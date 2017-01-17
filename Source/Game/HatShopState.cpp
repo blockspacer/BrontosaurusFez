@@ -6,10 +6,11 @@
 #include "PostMaster/PopCurrentState.h"
 #include "Components/GameObject.h"
 #include "Components/GameObjectManager.h"
-#include "PostMaster/HatBought.h"
-#include "GUI/GUIManager/GUIManager.h"
 #include "Components/PlayerData.h"
+#include "PostMaster/HatBought.h"
 #include "KevinLoader/KevinLoader.h"
+#include "GUI/Widget/Widget.h"
+#include "GUI/GUIManager/GUIManager.h"
 
 HatShopState::HatShopState(StateStack & aStateStack) :
 	State(aStateStack)
@@ -17,19 +18,15 @@ HatShopState::HatShopState(StateStack & aStateStack) :
 	myCurrentlySelected = nullptr;
 	myGUIManager = new GUI::GUIManager();
 	myGUIManager->Init("models/gui/shopWindow.fbx");
-
 	GUI::GUIManager tempMan;
 	tempMan.Init("models/gui/buyKnapp.fbx");
 	myGUIManager->AddWidget("buyknapp", tempMan.RemoveWidget("buyKnapp") );
 	mySelections.Init(3);
-
 	CU::CJsonValue value;
 	const std::string& errorString = value.Parse("Json/Hats/HatBluePrints.json");
 
 	CU::CJsonValue hatsArray = value.at("Hats");
 
-
-	unsigned int i2 = hatsArray.Size();
 	for (unsigned int i = 0; i < hatsArray.Size(); ++i)
 	{
 		if (hatsArray[i].at("AvailableInShop").GetBool() == true)
@@ -40,8 +37,6 @@ HatShopState::HatShopState(StateStack & aStateStack) :
 			mySelections.Add(shopSelection);
 		}
 	}
-	int br = 0;
-	++br;
 }
 
 HatShopState::~HatShopState()
@@ -88,7 +83,7 @@ void HatShopState::ValidatePurchase()
 	short playerWallet = PollingStation::playerData->myGold;
 	if (myCurrentlySelected != nullptr)
 	{
-		if (playerWallet <= 0/*myCurrentlySelected->myCost*/)
+		if (playerWallet <= myCurrentlySelected->myCost)
 		{
 			PostMaster::GetInstance().SendLetter(eMessageType::eHatAdded,HatBought(myCurrentlySelected->HatName));
 			PollingStation::playerData->myGold -= myCurrentlySelected->myCost;
@@ -108,6 +103,11 @@ void HatShopState::SetSelected(unsigned int aIndex)
 }
 
 bool HatShopState::GetLetThroughRender() const
+{
+	return true;
+}
+
+bool HatShopState::GetLetThroughUpdate() const
 {
 	return true;
 }

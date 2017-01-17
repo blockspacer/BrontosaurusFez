@@ -1,7 +1,7 @@
 #pragma once
 #include "../PostMaster/Subscriber.h"
 #include "../CommonUtilities/stack.h"
-
+#include "State.h"
 #include <functional>
 
 class State;
@@ -21,6 +21,7 @@ public:
 	~StateStack();
 	void PushState(State *aState);
 	State* GetCurrentState();
+	const State::eStatus UpdateState(const CU::Time& aDeltaTime);
 	bool Update(const CU::Time& aDeltaTime);
 	void Render();
 	void Pop();

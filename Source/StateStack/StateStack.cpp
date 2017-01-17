@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "StateStack.h"
-#include "State.h"
+
 
 #include "../CommonUtilities/CUTime.h"
 #include "../PostMaster/PostMaster.h"
@@ -42,13 +42,24 @@ State* StateStack::GetCurrentState()
 	return myStates.Top();
 }
 
+const State::eStatus StateStack::UpdateState(const CU::Time & aDeltaTime)
+{
+	if (myStates.Top()->GetLetThroughUpdate() == true)
+	{
+		myStates.At(-2)->Update(aDeltaTime);
+	}
+	return myStates.Top()->Update(aDeltaTime);
+}
+
+
+
 bool StateStack::Update(const CU::Time& aDeltaTime)
 {
 	if (myStates.Size() > 0)
 	{
 		if (myShouldUpdate == true)
 		{
-			if (myStates.Top()->Update(aDeltaTime) == State::eStatus::ePop)
+			if (UpdateState(aDeltaTime) == State::eStatus::ePop)
 			{
 				Pop();
 			}

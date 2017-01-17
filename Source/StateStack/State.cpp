@@ -21,6 +21,11 @@ bool State::GetLetThroughRender() const
 	return false;
 }
 
+bool State::GetLetThroughUpdate() const
+{
+	return false;
+}
+
 void State::SetStateStatus(const eStatus aStatus)
 {
 	myStatus = aStatus;
