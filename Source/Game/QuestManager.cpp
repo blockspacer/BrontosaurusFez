@@ -7,35 +7,21 @@
 #include "PostMaster/Event.h"
 #include "PostMaster/QuestDataUpdated.h"
 #include "PJWrapper.h"
-QM::CQuestManager* QM::CQuestManager::ourInstance = nullptr;
 
-void QM::CQuestManager::CreateInstance()
+QM::CQuestManager::CQuestManager()
 {
-	if (ourInstance != nullptr)
-	{
-		DL_ASSERT("quest manager already created");
-	}
-
-	ourInstance = new CQuestManager();
+	myProgression = 0;
+	myObjectives.Init(4);
+	myQuests.Init(4);
+	myError = "";
+	myLoadSuccess = true;
+	POSTMASTER.Subscribe(this, eMessageType::QuestRelated);
 }
 
-QM::CQuestManager& QM::CQuestManager::GetInstance()
-{
-	if (ourInstance == nullptr)
-	{
-		DL_ASSERT("quest manager has not been created yet");
-	}
 
-	return *ourInstance;
-}
-
-void QM::CQuestManager::DestroyInstance()
+QM::CQuestManager::~CQuestManager()
 {
-	if (ourInstance != nullptr)
-	{
-		delete ourInstance;
-		ourInstance = nullptr;
-	}
+	POSTMASTER.UnSubscribe(this, eMessageType::QuestRelated);
 }
 
 void QM::CQuestManager::UpdateObjective(EventHandle anObjectiveHandle, int anAmmount)
@@ -75,6 +61,8 @@ void QM::CQuestManager::CompleteEvent()
 	{
 		return;
 	}
+
+	myProgression += 1;
 
 	myCurrentObjectives = SQuest();
 
@@ -123,20 +111,7 @@ eMessageReturn QM::CQuestManager::Recieve(const Message& aMessage)
 	return aMessage.myEvent.DoEvent(this);
 }
 
-QM::CQuestManager::CQuestManager()
-{
-	myObjectives.Init(4);
-	myQuests.Init(4);
-	myError = "";
-	myLoadSuccess = true;
-	POSTMASTER.Subscribe(this, eMessageType::QuestRelated);
-}
 
-
-QM::CQuestManager::~CQuestManager()
-{
-	POSTMASTER.UnSubscribe(this, eMessageType::QuestRelated);
-}
 
 void QM::CQuestManager::SendUpdateMessage()
 {
@@ -161,6 +136,11 @@ QM::EventHandle QM::CQuestManager::AddQuest(SQuest anObjective)
 }
 
 QM::SObjective QM::CQuestManager::GetObjective(const int aObjective)
+{
+	return myObjectives[aObjective];
+}
+
+QM::SObjective QM::CQuestManager::GetObjective(const int aObjective) const
 {
 	return myObjectives[aObjective];
 }

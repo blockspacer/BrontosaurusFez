@@ -79,6 +79,10 @@
     <ClCompile Include="PlayerHealthChanged.cpp">
       <Filter>Events\PlayerHealthChanged</Filter>
     </ClCompile>
+    <ClCompile Include="BuyButtonPressed.cpp" />
+    <ClCompile Include="UpdateQuestEvent.cpp">
+      <Filter>Events\UpdateQuest</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Subscriber.h">
@@ -198,7 +202,7 @@
     </ClInclude>
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
-	<ClInclude Include="BuyButtonPressed.h" />
+    <ClInclude Include="BuyButtonPressed.h" />
     <ClInclude Include="FocusChange.h">
       <Filter>Events\FocusChanged</Filter>
     </ClInclude>
@@ -212,6 +216,11 @@
     </ClInclude>
     <ClInclude Include="PlayerHealthChanged.h">
       <Filter>Events\PlayerHealthChanged</Filter>
+    </ClInclude>
+    <ClInclude Include="PopCurrentState.h" />
+    <ClInclude Include="PostMaster.h" />
+    <ClInclude Include="UpdateQuestEvent.h">
+      <Filter>Events\UpdateQuest</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -292,6 +301,9 @@
     </Filter>
     <Filter Include="Events\PlayerManaChanged">
       <UniqueIdentifier>{f63214e8-c2ab-4f8f-a2b6-9c0b7b9d5c48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events\UpdateQuest">
+      <UniqueIdentifier>{9a33bdd9-1da4-4bcd-b1c8-710ade999ff6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
