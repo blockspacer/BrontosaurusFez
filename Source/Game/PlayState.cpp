@@ -331,6 +331,11 @@ void CPlayState::Load()
 	levelPath += levelsArray[levelIndex].GetString();
 	levelPath += "/LevelData.json";
 
+	std::string questPath = "Json/Quests/";
+	questPath += levelsArray[levelIndex].GetString();
+	questPath += ".json";
+
+	myQuestManager.LoadQuestlines(questPath);
 	KLoader::CKevinLoader &loader = KLoader::CKevinLoader::GetInstance();
 
 	const KLoader::eError loadError = loader.LoadFile(levelPath);
