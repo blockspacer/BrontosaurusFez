@@ -41,14 +41,20 @@ void CHatMaker::LoadBluePrints(const std::string& aFilePath)
 
 		blueprint->myHatStruct = new SHat();
 		blueprint->myHatStruct->stat = new Stats::SBonusStats;
+		float BonusDamageModifier = levelsArray[i].at("DamageModifier").GetFloat();
+		BonusDamageModifier /= 100.0f;
+		float BonusGoldGetModifier = levelsArray[i].at("GoldGetModifier").GetFloat();
+		BonusGoldGetModifier /= 100.0f;
+		float BonusManaCostModifier = levelsArray[i].at("ManaCostModifier").GetFloat();
+		BonusManaCostModifier /= 100.0f;
 		blueprint->myHatStruct->stat->BonusHealth = levelsArray[i].at("Health").GetFloat();
 		blueprint->myHatStruct->stat->BonusMana = levelsArray[i].at("Mana").GetFloat();
 		blueprint->myHatStruct->stat->BonusMovementSpeed = levelsArray[i].at("MoveSpeed").GetFloat();
-		blueprint->myHatStruct->stat->BonusDamageModifier = levelsArray[i].at("DamageModifier").GetFloat();
-		blueprint->myHatStruct->stat->BonusGoldGetModifier = levelsArray[i].at("GoldGetModifier").GetFloat();
+		blueprint->myHatStruct->stat->BonusDamageModifier = BonusDamageModifier;
+		blueprint->myHatStruct->stat->BonusGoldGetModifier = BonusGoldGetModifier;
 		blueprint->myHatStruct->stat->BonusHealthDropChance = levelsArray[i].at("HealthDropChance").GetFloat();
 		blueprint->myHatStruct->stat->BonusManaDropChance = levelsArray[i].at("ManaDropChance").GetFloat();
-		blueprint->myHatStruct->stat->BonusManaCostModifier = levelsArray[i].at("ManaCostModifier").GetFloat();
+		blueprint->myHatStruct->stat->BonusManaCostModifier = BonusManaCostModifier;
 
 		HatActivatorData* hatActivatorData = new HatActivatorData;
 		float healthLimitActivator = levelsArray[i].at("HealthLimitActivation").GetFloat();
