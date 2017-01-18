@@ -40,6 +40,17 @@ void CShopStorage::RemoveHat(const std::string & aHatName)
 			break;
 		}
 	}
+	for (unsigned int i = 0; i < myStorage.StorageWithBuyOrder.Size(); ++i)
+	{
+		if (myStorage.StorageWithBuyOrder[i].Size() != 0)
+		{
+			if (myStorage.StorageWithBuyOrder[i][0].HatName == aHatName)
+			{
+				myStorage.StorageWithBuyOrder[i].Remove(myStorage.StorageWithBuyOrder[i][0]);
+				break;
+			}
+		}
+	}
 }
 
 void CShopStorage::LoadStorage(const std::string & aFilePath)
@@ -57,6 +68,59 @@ void CShopStorage::LoadStorage(const std::string & aFilePath)
 			shopSelection->myCost = hatsArray[i].at("ShopCost").GetInt();
 
 			myStorage.HatStorage.Add(*shopSelection);
+		}
+	}
+	SetupBuyOrder("Json/Hats/BuyOrder.json");
+}
+
+const CShopStorage::SMatchReturn CShopStorage::MatchHatWithName(const std::string & aHatName) const
+{
+	for (unsigned int i = 0; i < myStorage.HatStorage.Size(); ++i)
+	{
+		if (aHatName == myStorage.HatStorage[i].HatName)
+		{
+			CShopStorage::SMatchReturn returnData;
+			returnData.Matched = true;
+			returnData.MatchedWithThis = myStorage.HatStorage[i];
+			return returnData;
+		}
+	}
+	CShopStorage::SMatchReturn returnData;
+	returnData.Matched = false;
+	return returnData;
+}
+
+void CShopStorage::SetupBuyOrder(const std::string & aFilepath)
+{
+	CU::CJsonValue value;
+	const std::string& errorString = value.Parse("Json/Hats/BuyOrder.json");
+
+	CU::CJsonValue BuyOrderArray = value.at("BuyOrder");
+	if (BuyOrderArray.Size() != 0)
+	{
+		myStorage.StorageWithBuyOrder.Init(BuyOrderArray.Size());
+
+		for (unsigned int i = 0; i < BuyOrderArray.Size(); ++i)
+		{
+			CU::CJsonValue HatArray = BuyOrderArray[i].at("HatArray");
+			myStorage.StorageWithBuyOrder.Add(CU::GrowingArray<SShopSelection>());
+			myStorage.StorageWithBuyOrder[i].Init(HatArray.Size());
+
+			for (unsigned int j = 0; j < HatArray.Size(); ++j)
+			{
+				SMatchReturn matchdata = MatchHatWithName(HatArray[j].at("HatName").GetString());
+				if (matchdata.Matched == true)
+				{
+					SShopSelection newSelection;
+					newSelection.HatName = matchdata.MatchedWithThis.HatName;
+					newSelection.myCost = matchdata.MatchedWithThis.myCost;
+					myStorage.StorageWithBuyOrder[i].Add(newSelection);
+				}
+				else
+				{
+					DL_ASSERT("Hat name did not match (%s)", HatArray[i].at("HatName").GetString());
+				}
+			}
 		}
 	}
 }

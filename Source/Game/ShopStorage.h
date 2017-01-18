@@ -7,6 +7,7 @@
 
 struct SStorage 
 {
+	CU::GrowingArray<CU::GrowingArray<SShopSelection>> StorageWithBuyOrder;
 	CU::GrowingArray<SShopSelection> HatStorage;
 };
 
@@ -20,6 +21,16 @@ public:
 	void RemoveHat(const std::string& aHatName);
 	void LoadStorage(const std::string& aFilePath);
 private:
+	struct SMatchReturn
+	{
+		bool Matched;
+		SShopSelection MatchedWithThis;
+	};
+
+
+
+	const SMatchReturn MatchHatWithName(const std::string& aHatName) const;
+	void SetupBuyOrder(const std::string& aFilepath);
 	CShopStorage();
 	~CShopStorage();
 	friend class HatShopState;
