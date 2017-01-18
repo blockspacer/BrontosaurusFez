@@ -47,7 +47,8 @@ Skill::Skill(SkillData* aSkillDataPointer)
 	//ToDo Deactivate collider; Move this piece of shit to a better place.
 
 	myElapsedCoolDownTime = mySkillData->coolDown;
-	
+	mySkillData->manaCostModifier = 1.0f;
+	mySkillData->damageModifier = 1.0f;
 	myAnimationTimeElapsed = 0.f;
 }
 
@@ -236,4 +237,10 @@ void Skill::Select()
 void Skill::Deselect()
 {
 	myIsSelected = false;
+}
+
+void Skill::UpdateStats(Stats::STotalStats someStats)
+{
+	mySkillData->manaCostModifier = someStats.MaxManaConstModifier;
+	mySkillData->damageModifier = someStats.MaxDamageModifier;
 }

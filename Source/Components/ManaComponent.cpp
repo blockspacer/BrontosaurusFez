@@ -69,9 +69,9 @@ void ManaComponent::Receive(const eComponentMessageType aMessageType, const SCom
 		GetParent()->NotifyComponents(eComponentMessageType::ePercentMPLeft, data);
 		break;
 	case eComponentMessageType::eCheckIfCanUseSkill:
-		if (myMana >= aMessageData.mySkill->GetSkillData()->manaCost)
+		if (myMana >= static_cast<int>(aMessageData.mySkill->GetSkillData()->manaCost * aMessageData.mySkill->GetSkillData()->manaCostModifier))
 		{
-			data.myInt = aMessageData.mySkill->GetSkillData()->manaCost;
+			data.myInt = static_cast<int>(aMessageData.mySkill->GetSkillData()->manaCost * aMessageData.mySkill->GetSkillData()->manaCostModifier);
 			GetParent()->NotifyComponents(eComponentMessageType::eBurnMana, data);
 			aMessageData.mySkill->Activate();
 		}
