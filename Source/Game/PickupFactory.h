@@ -16,6 +16,7 @@ public:
 
 
 	void CreateHealthGlobe(CU::Vector3f aPosition);
+	void CreateGoldPickup(CU::Vector3f aPosition, const unsigned int aAmountToDrop);
 
 private:
 	void Init();
