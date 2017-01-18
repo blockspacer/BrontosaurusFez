@@ -50,6 +50,9 @@
 #include "FleeControllerManager.h"
 #include "SeekControllerManager.h"
 
+#include "PickupFactory.h"
+#include "PickupManager.h"
+
 #include <time.h>
 //Kanske Inte ska vara här?
 #include "../BrontosaurusEngine/Console.h"
@@ -127,6 +130,8 @@ CPlayState::~CPlayState()
 	PollingStation::NullifyLevelSpecificData();
 	ManaComponentManager::DestroyInstance();
 	CShopStorage::Destroy();
+	CPickupFactory::Destroy();
+	CPickupManager::DestroyInstance();
 
 	SkillFactory::DestroyInstance();
 	CComponentManager::DestroyInstance();
@@ -600,6 +605,8 @@ void CPlayState::CreateManagersAndFactories()
 	myHealthBarManager = new CHealthBarComponentManager(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 	ManaComponentManager::CreateInstance();
 	myHatMaker = new CHatMaker(myGameObjectManager);
+	CPickupFactory::Create(myGameObjectManager, myCollisionComponentManager);
+	CPickupManager::CreateInstance();
 }
 
 void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)

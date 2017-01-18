@@ -18,6 +18,7 @@
 #include "LoadSoundComponent.h"
 #include "LoadMainStatComponent.h"
 #include "LoadInventoryComponent.h"
+#include "LoadPickerupperComponent.h"
 
 LoadManager* LoadManager::ourInstance = nullptr;
 
@@ -87,6 +88,7 @@ void LoadManager::RegisterFunctions()
 	loader.RegisterComponentLoadFunction("SoundComponent", LoadSoundComponent);
 	loader.RegisterComponentLoadFunction("InventoryComponent", LoadInventoryComponet);
 	loader.RegisterComponentLoadFunction("MainStatComponent", LoadMainStatComponent);
+	loader.RegisterComponentLoadFunction("PickupComponent", LoadPickerupperComponent);
 
 }
 

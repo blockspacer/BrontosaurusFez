@@ -2,6 +2,7 @@
 #include "DropComponent.h"
 #include "../Game/PollingStation.h"
 #include "PlayerData.h"
+#include "../Game/PickupFactory.h"
 
 DropComponent::DropComponent(const int aAmountOfGoldToDrop)
 {
@@ -23,6 +24,10 @@ void DropComponent::Receive(const eComponentMessageType aMessageType, const SCom
 	if (aMessageType == eComponentMessageType::eDied)
 	{
 		PollingStation::playerData->myGold += myGoldToDrop;
+		if (CalculateDropHealthGlobe() == true)
+		{
+			CPickupFactory::GetInstance().CreateHealthGlobe(GetParent()->GetWorldPosition());
+		}
 	}
 }
 
