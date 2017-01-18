@@ -15,7 +15,7 @@ void CPickupComponent::Receive(const eComponentMessageType aMessageType, const S
 {
 	if (aMessageType == eComponentMessageType::eCollision)
 	{
-		GetParent()->NotifyComponents(eComponentMessageType::eObjectiveCompleted, SComponentMessageData());
+		//GetParent()->NotifyComponents(eComponentMessageType::eObjectiveCompleted, SComponentMessageData());
 		SComponentMessageData data;
 		data.myPickupComponent = this;
 		aMessageData.myComponents[0]->GetParent()->NotifyComponents(eComponentMessageType::ePickUp, data);
