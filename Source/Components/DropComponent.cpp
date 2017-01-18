@@ -4,10 +4,10 @@
 #include "PlayerData.h"
 #include "../Game/PickupFactory.h"
 
-DropComponent::DropComponent(const int aAmountOfGoldToDrop)
+DropComponent::DropComponent(const int aAmountOfGoldToDrop, const int aDropPercentChance)
 {
 	myGoldToDrop = aAmountOfGoldToDrop;
-	myHealthGlobeDropRate = 100;
+	myHealthGlobeDropRate = aDropPercentChance;
 }
 
 
