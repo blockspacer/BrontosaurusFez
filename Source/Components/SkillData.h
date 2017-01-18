@@ -14,4 +14,6 @@ struct SkillData
 	bool isChannel;
 	float damageModifier;
 	float manaCostModifier;
+	float damageBonus;
+	float manaRefund;
 };
