@@ -76,7 +76,6 @@ void Skill::Activate()
 	{
 		myIsActive = true;
 		OnActivation();
-	
 	}
 }
 
@@ -208,10 +207,12 @@ void Skill::ActivateCollider()
 	
 	data.myBool = true;
 	myColliderObject->NotifyComponents(type, data);
+
+	DL_PRINT("Activated Collider");
+	myAnimationTimeElapsed = 0.f;
 }
 void Skill::OnActivation()
 {
-	myAnimationTimeElapsed = 0.f;
 	SComponentMessageData data;
 	data.myInt = -mySkillData->manaRefund;
 	myUser->NotifyComponents(eComponentMessageType::eBurnMana, data);
