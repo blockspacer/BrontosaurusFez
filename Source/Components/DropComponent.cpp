@@ -6,6 +6,7 @@
 DropComponent::DropComponent(const int aAmountOfGoldToDrop)
 {
 	myGoldToDrop = aAmountOfGoldToDrop;
+	myHealthGlobeDropRate = 100;
 }
 
 
@@ -27,4 +28,17 @@ void DropComponent::Receive(const eComponentMessageType aMessageType, const SCom
 
 void DropComponent::Destroy()
 {
+}
+
+bool DropComponent::CalculateDropHealthGlobe()
+{
+	int result = (rand() % 100) +1;
+
+	if (result <= myHealthGlobeDropRate)
+	{
+		return true;
+	}
+
+
+	return false;
 }

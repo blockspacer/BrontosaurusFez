@@ -37,6 +37,8 @@
     <ClInclude Include="LoadDropComponent.h" />
     <ClInclude Include="LoadManaComponent.h" />
     <ClInclude Include="LoadSoundComponent.h" />
+    <ClInclude Include="LoadMainStatComponent.h" />
+    <ClInclude Include="LoadInventoryComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -72,6 +74,8 @@
     <ClCompile Include="LoadDropComponent.cpp" />
     <ClCompile Include="LoadManaComponent.cpp" />
     <ClCompile Include="LoadSoundComponent.cpp" />
+    <ClCompile Include="LoadMainStatComponent.cpp" />
+    <ClCompile Include="LoadInventoryComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="VS">
