@@ -74,7 +74,7 @@ void CHatMaker::LoadBluePrints(const std::string& aFilePath)
 			hatActivator = new HatActivator(false, hatActivatorData, blueprint->myHatStruct);
 		}
 		
-		
+		blueprint->myHatStruct->hatActivator = hatActivator;
 
 		myBluePrints.emplace(blueprint->HatName, blueprint);
 	}
