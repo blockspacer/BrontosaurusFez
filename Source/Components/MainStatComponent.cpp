@@ -13,7 +13,7 @@ CMainStatComponent::CMainStatComponent()
 	myBaseStats->GoldGetModifier = 1;
 	myBaseStats->HealthDropChance = 0;
 	myBaseStats->ManaDropChance = 0;
-	/*myBaseStats->ManaConstModifier = 1;*/
+	myBaseStats->ManaCostModifier = 1;
 
 	myBonusStats->BonusDamageModifier = 0.0f;
 	myBonusStats->BonusGoldGetModifier = 0.0f;
@@ -22,7 +22,7 @@ CMainStatComponent::CMainStatComponent()
 	myBonusStats->BonusMovementSpeed = 0.0f;
 	myBonusStats->BonusMana = 0;
 	myBonusStats->BonusManaDropChance = 0.0f;
-	/*myBonusStats->BonusManaConstModifier = 0.0f;*/
+	myBonusStats->BonusManaCostModifier = 0.0f;
 
 	myType = eComponentType::eMainStat;
 }

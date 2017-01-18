@@ -47,7 +47,10 @@ Skill::Skill(SkillData* aSkillDataPointer)
 	//ToDo Deactivate collider; Move this piece of shit to a better place.
 
 	myElapsedCoolDownTime = mySkillData->coolDown;
-	
+	mySkillData->manaCostModifier = 1.0f;
+	mySkillData->damageModifier = 1.0f;
+	mySkillData->damageBonus = 0.0f;
+	mySkillData->manaRefund = 0.0f;
 	myAnimationTimeElapsed = 0.f;
 }
 
@@ -209,6 +212,9 @@ void Skill::ActivateCollider()
 void Skill::OnActivation()
 {
 	myAnimationTimeElapsed = 0.f;
+	SComponentMessageData data;
+	data.myInt = -mySkillData->manaRefund;
+	myUser->NotifyComponents(eComponentMessageType::eBurnMana, data);
 	//DL_PRINT("Animation started");
 }
 
@@ -236,4 +242,10 @@ void Skill::Select()
 void Skill::Deselect()
 {
 	myIsSelected = false;
+}
+
+void Skill::UpdateStats(Stats::STotalStats someStats)
+{
+	mySkillData->manaCostModifier = someStats.MaxManaConstModifier;
+	mySkillData->damageModifier = someStats.MaxDamageModifier;
 }

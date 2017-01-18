@@ -37,6 +37,9 @@
     <ClInclude Include="LoadDropComponent.h" />
     <ClInclude Include="LoadManaComponent.h" />
     <ClInclude Include="LoadSoundComponent.h" />
+    <ClInclude Include="LoadMainStatComponent.h" />
+    <ClInclude Include="LoadInventoryComponent.h" />
+    <ClInclude Include="LoadPickerupperComponent.h" />
     <ClInclude Include="LoadObjectives.h">
       <Filter>LoadThings\LoadObjectives</Filter>
     </ClInclude>
@@ -75,6 +78,9 @@
     <ClCompile Include="LoadDropComponent.cpp" />
     <ClCompile Include="LoadManaComponent.cpp" />
     <ClCompile Include="LoadSoundComponent.cpp" />
+    <ClCompile Include="LoadMainStatComponent.cpp" />
+    <ClCompile Include="LoadInventoryComponent.cpp" />
+    <ClCompile Include="LoadPickerupperComponent.cpp" />
     <ClCompile Include="LoadObjectives.cpp">
       <Filter>LoadThings\LoadObjectives</Filter>
     </ClCompile>

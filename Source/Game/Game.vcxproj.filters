@@ -90,6 +90,10 @@
     <ClInclude Include="PickupManager.h" />
     <ClInclude Include="PickupType.h" />
     <ClInclude Include="PickupFactory.h" />
+    <ClInclude Include="ShopStorage.h" />
+    <ClInclude Include="ShopStructs.h">
+      <Filter>States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="States">

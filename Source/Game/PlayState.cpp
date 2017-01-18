@@ -40,6 +40,8 @@
 
 #include "../Audio/AudioInterface.h"
 
+#include "ShopStorage.h"
+
 #include "PlayerData.h"
 
 #include "Components/SkillFactory.h"
@@ -47,6 +49,9 @@
 
 #include "FleeControllerManager.h"
 #include "SeekControllerManager.h"
+
+#include "PickupFactory.h"
+#include "PickupManager.h"
 
 #include <time.h>
 //Kanske Inte ska vara här?
@@ -124,6 +129,9 @@ CPlayState::~CPlayState()
 	DropComponentManager::DestroyInstance();
 	PollingStation::NullifyLevelSpecificData();
 	ManaComponentManager::DestroyInstance();
+	CShopStorage::Destroy();
+	CPickupFactory::Destroy();
+	CPickupManager::DestroyInstance();
 
 	SkillFactory::DestroyInstance();
 	CComponentManager::DestroyInstance();
@@ -143,6 +151,8 @@ void CPlayState::Load()
 
 	QM::CQuestManager &questManager = myQuestManager;
 	questManager.CompleteEvent();
+
+	CShopStorage::GetInstance().LoadStorage("Json/Hats/HatBluePrints.json");
 
 	MODELCOMP_MGR.SetScene(myScene);
 	myScene->SetSkybox("skybox.dds");
@@ -581,6 +591,7 @@ void CPlayState::CreateManagersAndFactories()
 	CModelComponentManager::Create();
 	CParticleEmitterComponentManager::Create();
 	CParticleEmitterComponentManager::GetInstance().SetScene(myScene);
+	CShopStorage::Create();
 	CCameraComponentManager::Create();
 	InputControllerManager::CreateInstance();
 	InputControllerManager::GetInstance().SetScene(myScene);
@@ -597,6 +608,8 @@ void CPlayState::CreateManagersAndFactories()
 	myHealthBarManager = new CHealthBarComponentManager(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 	ManaComponentManager::CreateInstance();
 	myHatMaker = new CHatMaker(myGameObjectManager);
+	CPickupFactory::Create(myGameObjectManager, myCollisionComponentManager);
+	CPickupManager::CreateInstance();
 }
 
 void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)

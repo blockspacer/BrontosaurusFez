@@ -10,7 +10,12 @@ public:
 	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
 	void Destroy() override;
 
+
+private:
+	bool CalculateDropHealthGlobe();
+
 private:
 	int myGoldToDrop;
+	float myHealthGlobeDropRate;
 };
 
