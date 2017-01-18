@@ -344,6 +344,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ActivationComponent.h" />
     <ClInclude Include="AIControllerComponent.h" />
     <ClInclude Include="AIControllerManager.h" />
     <ClInclude Include="AudioSourceComponent.h" />
@@ -404,6 +405,7 @@
     <ClInclude Include="WanderController.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ActivationComponent.cpp" />
     <ClCompile Include="AIControllerComponent.cpp" />
     <ClCompile Include="AIControllerManager.cpp" />
     <ClCompile Include="AudioSourceComponent.cpp" />
