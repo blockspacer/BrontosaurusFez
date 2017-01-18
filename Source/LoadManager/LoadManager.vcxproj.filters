@@ -40,6 +40,9 @@
     <ClInclude Include="LoadMainStatComponent.h" />
     <ClInclude Include="LoadInventoryComponent.h" />
     <ClInclude Include="LoadPickerupperComponent.h" />
+    <ClInclude Include="LoadObjectives.h">
+      <Filter>LoadThings\LoadObjectives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -78,6 +81,9 @@
     <ClCompile Include="LoadMainStatComponent.cpp" />
     <ClCompile Include="LoadInventoryComponent.cpp" />
     <ClCompile Include="LoadPickerupperComponent.cpp" />
+    <ClCompile Include="LoadObjectives.cpp">
+      <Filter>LoadThings\LoadObjectives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="VS">
@@ -106,6 +112,9 @@
     </Filter>
     <Filter Include="LoadThings\LoadNavigationComponent">
       <UniqueIdentifier>{b6d2b266-818e-40fa-9c5c-16a00d5ec9ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoadThings\LoadObjectives">
+      <UniqueIdentifier>{8dce7b97-f485-40e9-87fb-181aa9cf31ea}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

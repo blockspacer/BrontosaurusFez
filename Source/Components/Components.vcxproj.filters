@@ -128,6 +128,9 @@
       <Filter>Mana</Filter>
     </ClCompile>
     <ClCompile Include="HatActivator.cpp" />
+    <ClCompile Include="EnemyObjectiveComponent.cpp">
+      <Filter>ObjectiveComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -277,6 +280,9 @@
       <Filter>Mana</Filter>
     </ClInclude>
     <ClInclude Include="HatActivator.h" />
+    <ClInclude Include="EnemyObjectiveComponent.h">
+      <Filter>ObjectiveComponents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -332,6 +338,9 @@
     </Filter>
     <Filter Include="Mana">
       <UniqueIdentifier>{65345747-c528-4ca8-bda9-2540eb0a8cb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ObjectiveComponents">
+      <UniqueIdentifier>{be41f97c-188c-4389-be95-7af68ac28724}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
