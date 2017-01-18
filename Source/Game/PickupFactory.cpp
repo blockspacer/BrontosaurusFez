@@ -5,6 +5,8 @@
 #include "../Components/CollisionComponent.h"
 #include "../Components/CollisionComponentManager.h"
 #include "../Components/Component.h"
+#include "../Components/ModelComponent.h"
+#include "../Components/ModelComponentManager.h"
 
 #include "../Collision/Intersection.h"
 #include "../Collision/ICollider.h"
@@ -39,7 +41,7 @@ void CPickupFactory::CreateHealthGlobe(CU::Vector3f aPosition)
 	CGameObject* healthGlobe = myGameObjectManager->CreateGameObject();
 	healthGlobe->SetWorldPosition(aPosition);
 
-	CPickupComponent* pickup = CPickupManager::GetInstance().CreatePickupComponent(ePickupType::HEALTH, 100000, 100000, 200000);
+	CPickupComponent* pickup = CPickupManager::GetInstance().CreatePickupComponent(ePickupType::HEALTH, 100, 100, 200);
 
 	healthGlobe->AddComponent(pickup);
 
@@ -56,8 +58,9 @@ void CPickupFactory::CreateHealthGlobe(CU::Vector3f aPosition)
 
 	healthGlobe->AddComponent(collider);
 
+	CModelComponent* model = CModelComponentManager::GetInstance().CreateComponent("Models/Pickups/healthSphere.fbx");
 
-
+	healthGlobe->AddComponent(model);
 
 	myObjects.Add(healthGlobe);
 	myComponents.Add(pickup);

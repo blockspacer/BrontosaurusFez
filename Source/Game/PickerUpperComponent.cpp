@@ -26,6 +26,7 @@ void CPickerUpperComponent::Receive(const eComponentMessageType aMessageType, co
 				messageData.myInt = data.myValue;
 				
 				GetParent()->NotifyComponents(eComponentMessageType::eHeal, messageData);
+				GetParent()->NotifyComponents(eComponentMessageType::eRestoreMana, messageData);
 			}
 			break;
 		case ePickupType::MANA:
