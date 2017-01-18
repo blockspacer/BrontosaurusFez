@@ -208,7 +208,6 @@ void Skill::ActivateCollider()
 	data.myBool = true;
 	myColliderObject->NotifyComponents(type, data);
 
-	DL_PRINT("Activated Collider");
 	myAnimationTimeElapsed = 0.f;
 }
 void Skill::OnActivation()
