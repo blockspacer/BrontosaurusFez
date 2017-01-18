@@ -2,6 +2,8 @@
 #include "InventoryComponent.h"
 #include "..\PostMaster\PostMaster.h"
 #include "HatActivator.h"
+#include "../Game/PollingStation.h"
+#include "PlayerData.h"
 CInventoryComponent::CInventoryComponent()
 {
 	myHats.Init(16);
@@ -55,6 +57,7 @@ void CInventoryComponent::AddHat(SHat& aHat)
 		SComponentMessageData data;
 		data.myStatsToAdd = myHats.GetLast().stat;
 		GetParent()->NotifyComponents(eComponentMessageType::eAddStats, data);
+		PollingStation::playerData->myGoldGetModifier += data.myStatsToAdd->BonusGoldGetModifier;
 	}
 }
 

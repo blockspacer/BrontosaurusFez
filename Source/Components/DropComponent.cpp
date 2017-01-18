@@ -23,7 +23,7 @@ void DropComponent::Receive(const eComponentMessageType aMessageType, const SCom
 {
 	if (aMessageType == eComponentMessageType::eDied)
 	{
-		PollingStation::playerData->myGold += myGoldToDrop;
+		PollingStation::playerData->myGold += myGoldToDrop * PollingStation::playerData->myGoldGetModifier;
 		if (CalculateDropHealthGlobe() == true)
 		{
 			CPickupFactory::GetInstance().CreateHealthGlobe(GetParent()->GetWorldPosition());
