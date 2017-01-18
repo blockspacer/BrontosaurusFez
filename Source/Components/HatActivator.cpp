@@ -9,10 +9,6 @@ HatActivator::HatActivator(bool aIsActive, HatActivatorData* someData, SHat* aHa
 	myData = someData;
 	myHatStructPointer = aHatPointer;
 
-	if(myIsActive == true)
-	{
-		Activate();
-	}
 }
 
 
