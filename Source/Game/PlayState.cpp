@@ -40,6 +40,8 @@
 
 #include "../Audio/AudioInterface.h"
 
+#include "ShopStorage.h"
+
 #include "PlayerData.h"
 
 #include "Components/SkillFactory.h"
@@ -124,6 +126,7 @@ CPlayState::~CPlayState()
 	DropComponentManager::DestroyInstance();
 	PollingStation::NullifyLevelSpecificData();
 	ManaComponentManager::DestroyInstance();
+	CShopStorage::Destroy();
 
 	SkillFactory::DestroyInstance();
 	CComponentManager::DestroyInstance();
@@ -143,6 +146,8 @@ void CPlayState::Load()
 
 	QM::CQuestManager &questManager = myQuestManager;
 	questManager.CompleteEvent();
+
+	CShopStorage::GetInstance().LoadStorage("Json/Hats/HatBluePrints.json");
 
 	MODELCOMP_MGR.SetScene(myScene);
 	myScene->SetSkybox("skybox.dds");
@@ -578,6 +583,7 @@ void CPlayState::CreateManagersAndFactories()
 	CModelComponentManager::Create();
 	CParticleEmitterComponentManager::Create();
 	CParticleEmitterComponentManager::GetInstance().SetScene(myScene);
+	CShopStorage::Create();
 	CCameraComponentManager::Create();
 	InputControllerManager::CreateInstance();
 	InputControllerManager::GetInstance().SetScene(myScene);
