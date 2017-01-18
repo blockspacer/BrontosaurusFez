@@ -419,7 +419,7 @@ namespace CU
 		{
 			if (USE_SAFE_MODE)
 			{
-				for (SizeType i = aIndex; i < mySize; ++i)
+				for (SizeType i = aIndex; i < mySize - 1; ++i)
 				{
 					myArray[i] = myArray[i + 1];
 				}

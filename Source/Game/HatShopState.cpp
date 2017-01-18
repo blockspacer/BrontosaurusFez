@@ -48,34 +48,66 @@ HatShopState::HatShopState(StateStack & aStateStack) :
 	}
 	for (unsigned int i = 0; i < CShopStorage::GetInstance().myStorage.HatStorage.Size(); ++i)
 	{
-		SShopSelection* shopSelection = new SShopSelection();
-		shopSelection->HatName = CShopStorage::GetInstance().myStorage.HatStorage[i].HatName;
-		shopSelection->myCost = CShopStorage::GetInstance().myStorage.HatStorage[i].myCost;
-
-		mySelections.Add(shopSelection);
-		myOptionsText.Add(new CTextInstance());
-		myCostText.Add(new CTextInstance());
-
-		std::string temp;
-
-		temp += std::to_string(i + 1);
-		temp += ". ";
-		temp += shopSelection->HatName.c_str();
-		myOptionsText.GetLast()->Init();
-		myOptionsText.GetLast()->SetText(temp.c_str());
-		myOptionsText.GetLast()->SetPosition(CU::Vector2f(0.02f, 0.2f + 0.1f * i));
-
-		temp = "Cost";
-		temp += ": ";
-		temp += std::to_string(shopSelection->myCost);
-		myCostText.GetLast()->Init();
-		myCostText.GetLast()->SetText(temp.c_str());
-		myCostText.GetLast()->SetPosition(CU::Vector2f(0.02f, 0.235f + 0.1f * i));
+		//SShopSelection* shopSelection = new SShopSelection();
+		//shopSelection->HatName = CShopStorage::GetInstance().myStorage.HatStorage[i].HatName;
+		//shopSelection->myCost = CShopStorage::GetInstance().myStorage.HatStorage[i].myCost;
+		//
+		//mySelections.Add(shopSelection);
+		//myOptionsText.Add(new CTextInstance());
+		//myCostText.Add(new CTextInstance());
+		//
+		//std::string temp;
+		//
+		//temp += std::to_string(i + 1);
+		//temp += ". ";
+		//temp += shopSelection->HatName.c_str();
+		//myOptionsText.GetLast()->Init();
+		//myOptionsText.GetLast()->SetText(temp.c_str());
+		//myOptionsText.GetLast()->SetPosition(CU::Vector2f(0.02f, 0.2f + 0.1f * i));
+		//
+		//temp = "Cost";
+		//temp += ": ";
+		//temp += std::to_string(shopSelection->myCost);
+		//myCostText.GetLast()->Init();
+		//myCostText.GetLast()->SetText(temp.c_str());
+		//myCostText.GetLast()->SetPosition(CU::Vector2f(0.02f, 0.235f + 0.1f * i));
 	}
+	for (unsigned int i = 0; i < CShopStorage::GetInstance().myStorage.StorageWithBuyOrder.Size(); ++i)
+	{
+		if (CShopStorage::GetInstance().myStorage.StorageWithBuyOrder[i].Size() != 0)
+		{
+			SShopSelection* shopSelection = new SShopSelection();
+			shopSelection->HatName = CShopStorage::GetInstance().myStorage.StorageWithBuyOrder[i][0].HatName;
+			shopSelection->myCost = CShopStorage::GetInstance().myStorage.StorageWithBuyOrder[i][0].myCost;
+
+			mySelections.Add(shopSelection);
+			myOptionsText.Add(new CTextInstance());
+			myCostText.Add(new CTextInstance());
+
+			std::string temp;
+
+			temp += std::to_string(i + 1);
+			temp += ". ";
+			temp += shopSelection->HatName.c_str();
+			myOptionsText.GetLast()->Init();
+			myOptionsText.GetLast()->SetText(temp.c_str());
+			myOptionsText.GetLast()->SetPosition(CU::Vector2f(0.02f, 0.2f + 0.1f * i));
+
+			temp = "Cost";
+			temp += ": ";
+			temp += std::to_string(shopSelection->myCost);
+			myCostText.GetLast()->Init();
+			myCostText.GetLast()->SetText(temp.c_str());
+			myCostText.GetLast()->SetPosition(CU::Vector2f(0.02f, 0.235f + 0.1f * i));
+		}
+	}
+	AdjustText();
 }
 
 HatShopState::~HatShopState()
 {
+	mySelections.DeleteAll();
+	myOptionsText.DeleteAll();
 }
 
 void HatShopState::CloseShop()
