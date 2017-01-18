@@ -55,8 +55,11 @@ void CInventoryComponent::AddHat(SHat& aHat)
 	if(myHats.GetLast().hatActivator->GetIsActive() == true)
 	{
 		SComponentMessageData data;
+		SComponentMessageData skillNameData;
+		skillNameData.myString = myHats.GetLast().skillname;
 		data.myStatsToAdd = myHats.GetLast().stat;
 		GetParent()->NotifyComponents(eComponentMessageType::eAddStats, data);
+		GetParent()->NotifyComponents(eComponentMessageType::eAddSkill, skillNameData);
 		PollingStation::playerData->myGoldGetModifier += data.myStatsToAdd->BonusGoldGetModifier;
 	}
 }

@@ -55,6 +55,7 @@ void CHatMaker::LoadBluePrints(const std::string& aFilePath)
 		blueprint->myHatStruct->stat->BonusHealthDropChance = levelsArray[i].at("HealthDropChance").GetFloat();
 		blueprint->myHatStruct->stat->BonusManaDropChance = levelsArray[i].at("ManaDropChance").GetFloat();
 		blueprint->myHatStruct->stat->BonusManaCostModifier = BonusManaCostModifier;
+		blueprint->myHatStruct->skillname = levelsArray[i].at("Skill").GetString().c_str();
 
 		HatActivatorData* hatActivatorData = new HatActivatorData;
 		float healthLimitActivator = levelsArray[i].at("HealthLimitActivation").GetFloat();
