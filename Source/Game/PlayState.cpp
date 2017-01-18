@@ -336,6 +336,9 @@ void CPlayState::Load()
 	questPath += ".json";
 
 	myQuestManager.LoadQuestlines(questPath);
+	myQuestManager.CompleteEvent();
+	myQuestDrawer.UpdateText();
+
 	KLoader::CKevinLoader &loader = KLoader::CKevinLoader::GetInstance();
 
 	const KLoader::eError loadError = loader.LoadFile(levelPath);

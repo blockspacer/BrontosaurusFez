@@ -357,6 +357,7 @@
     <ClInclude Include="LoadObject.h" />
     <ClInclude Include="LoadInputController.h" />
     <ClInclude Include="LoadColliderComponent.h" />
+    <ClInclude Include="LoadObjectives.h" />
     <ClInclude Include="LoadSkillSystemComponent.h" />
     <ClInclude Include="LoadSoundComponent.h" />
     <ClInclude Include="LuaFunctions.h" />
@@ -377,6 +378,7 @@
     <ClCompile Include="LoadObject.cpp" />
     <ClCompile Include="LoadInputController.cpp" />
     <ClCompile Include="LoadColliderComponent.cpp" />
+    <ClCompile Include="LoadObjectives.cpp" />
     <ClCompile Include="LoadSkillSystemComponent.cpp" />
     <ClCompile Include="LoadSoundComponent.cpp" />
     <ClCompile Include="LuaFunctions.cpp" />

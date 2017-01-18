@@ -16,6 +16,7 @@
 #include "LoadDropComponent.h"
 #include "LoadManaComponent.h"
 #include "LoadSoundComponent.h"
+#include "LoadObjectives.h"
 
 LoadManager* LoadManager::ourInstance = nullptr;
 
@@ -83,7 +84,7 @@ void LoadManager::RegisterFunctions()
 	loader.RegisterComponentLoadFunction("DropComponent", LoadDropComponent);
 	loader.RegisterComponentLoadFunction("ManaComponent", LoadManaComponent);
 	loader.RegisterComponentLoadFunction("SoundComponent", LoadSoundComponent);
-
+	loader.RegisterComponentLoadFunction("EnemyObjective", LoadEnemyObjective);
 }
 
 LoadManager::LoadManager()

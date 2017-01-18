@@ -354,6 +354,7 @@
     <ClInclude Include="CollisionComponentManager.h" />
     <ClInclude Include="DropComponent.h" />
     <ClInclude Include="DropComponentManager.h" />
+    <ClInclude Include="EnemyObjectiveComponent.h" />
     <ClInclude Include="FleeController.h" />
     <ClInclude Include="FleeControllerManager.h" />
     <ClInclude Include="HatActivator.h" />
@@ -413,6 +414,7 @@
     <ClCompile Include="CollisionComponentManager.cpp" />
     <ClCompile Include="DropComponent.cpp" />
     <ClCompile Include="DropComponentManager.cpp" />
+    <ClCompile Include="EnemyObjectiveComponent.cpp" />
     <ClCompile Include="FleeController.cpp" />
     <ClCompile Include="FleeControllerManager.cpp" />
     <ClCompile Include="HatActivator.cpp" />

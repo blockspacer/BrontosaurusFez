@@ -37,6 +37,9 @@
     <ClInclude Include="LoadDropComponent.h" />
     <ClInclude Include="LoadManaComponent.h" />
     <ClInclude Include="LoadSoundComponent.h" />
+    <ClInclude Include="LoadObjectives.h">
+      <Filter>LoadThings\LoadObjectives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -72,6 +75,9 @@
     <ClCompile Include="LoadDropComponent.cpp" />
     <ClCompile Include="LoadManaComponent.cpp" />
     <ClCompile Include="LoadSoundComponent.cpp" />
+    <ClCompile Include="LoadObjectives.cpp">
+      <Filter>LoadThings\LoadObjectives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="VS">
@@ -100,6 +106,9 @@
     </Filter>
     <Filter Include="LoadThings\LoadNavigationComponent">
       <UniqueIdentifier>{b6d2b266-818e-40fa-9c5c-16a00d5ec9ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoadThings\LoadObjectives">
+      <UniqueIdentifier>{8dce7b97-f485-40e9-87fb-181aa9cf31ea}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
