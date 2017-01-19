@@ -64,7 +64,7 @@ void ManaComponent::Receive(const eComponentMessageType aMessageType, const SCom
 		SetMaxMana(myMaxMana + aMessageData.myInt);
 		break;
 	case eComponentMessageType::eBurnMana:
-		SetMana(myMana - aMessageData.myInt); 
+		SetMana(myMana - aMessageData.myInt);
 		data.myUChar = myPercentageLeft * 100;
 		GetParent()->NotifyComponents(eComponentMessageType::ePercentMPLeft, data);
 		break;
@@ -75,6 +75,11 @@ void ManaComponent::Receive(const eComponentMessageType aMessageType, const SCom
 			GetParent()->NotifyComponents(eComponentMessageType::eBurnMana, data);
 			aMessageData.mySkill->Activate();
 		}
+		break;
+	case eComponentMessageType::eRestoreMana:
+		SetMana(myMana + aMessageData.myInt);
+		data.myUChar = myPercentageLeft * 100;
+		GetParent()->NotifyComponents(eComponentMessageType::ePercentMPLeft, data);
 		break;
 	}
 }

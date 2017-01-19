@@ -73,7 +73,7 @@ void SkillComponent::Destroy()
 void SkillComponent::DoDamage(CGameObject* aGameObjectToDamage)
 {
 	SComponentMessageData damageData;
-	damageData.myInt = static_cast<int>(mySkillData->damage * mySkillData->damageModifier);
+	damageData.myInt = static_cast<int>((mySkillData->damage + mySkillData->damageBonus) * mySkillData->damageModifier);
 	aGameObjectToDamage->NotifyComponents(eComponentMessageType::eTakeDamage, damageData);
 
 	if (mySkillData->isAOE == false)

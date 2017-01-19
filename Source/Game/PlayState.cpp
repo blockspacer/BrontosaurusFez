@@ -50,6 +50,9 @@
 #include "FleeControllerManager.h"
 #include "SeekControllerManager.h"
 
+#include "PickupFactory.h"
+#include "PickupManager.h"
+
 #include <time.h>
 //Kanske Inte ska vara här?
 #include "../BrontosaurusEngine/Console.h"
@@ -129,6 +132,8 @@ CPlayState::~CPlayState()
 	PollingStation::NullifyLevelSpecificData();
 	ManaComponentManager::DestroyInstance();
 	CShopStorage::Destroy();
+	CPickupFactory::Destroy();
+	CPickupManager::DestroyInstance();
 
 	SkillFactory::DestroyInstance();
 	CComponentManager::DestroyInstance();
@@ -146,8 +151,7 @@ void CPlayState::Load()
 	CreateManagersAndFactories();
 	LoadManagerGuard loadManagerGuard;
 
-	QM::CQuestManager &questManager = myQuestManager;
-	questManager.CompleteEvent();
+
 
 	CShopStorage::GetInstance().LoadStorage("Json/Hats/HatBluePrints.json");
 
@@ -343,6 +347,7 @@ void CPlayState::Load()
 	questPath += ".json";
 
 	myQuestManager.LoadQuestlines(questPath);
+	myQuestManager.CompleteEvent();
 	KLoader::CKevinLoader &loader = KLoader::CKevinLoader::GetInstance();
 
 	const KLoader::eError loadError = loader.LoadFile(levelPath);
@@ -447,6 +452,7 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	MovementComponentManager::GetInstance().Update(aDeltaTime);
 	AIControllerManager::GetInstance().Update(aDeltaTime);
 	SkillSystemComponentManager::GetInstance().Update(aDeltaTime);
+	CPickupManager::GetInstance().Update(aDeltaTime);
 	myCollisionComponentManager->Update();
 	myScene->Update(aDeltaTime);
 
@@ -605,6 +611,8 @@ void CPlayState::CreateManagersAndFactories()
 	myHealthBarManager = new CHealthBarComponentManager(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 	ManaComponentManager::CreateInstance();
 	myHatMaker = new CHatMaker(myGameObjectManager);
+	CPickupFactory::Create(myGameObjectManager, myCollisionComponentManager);
+	CPickupManager::CreateInstance();
 }
 
 void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)
@@ -716,7 +724,7 @@ void CPlayState::TEMP_CREATE_ENEMY()
 	collisionComponent->SetColliderType(eColliderType::eColliderType_Enemy);
 	//collisionComponent->GetCollider()->SetGameObject(enemyObj);
 	enemyObj->AddComponent(collisionComponent);
-	enemyObj->AddComponent(DropComponentManager::GetInstance().CreateAndRegisterComponent(50));
+	enemyObj->AddComponent(DropComponentManager::GetInstance().CreateAndRegisterComponent(50,100));
 
 	CHealthBarComponent* healthBar = myHealthBarManager->CreateHealthbar();
 	enemyObj->AddComponent(&*healthBar);

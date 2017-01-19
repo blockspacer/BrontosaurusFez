@@ -11,8 +11,9 @@ int LoadDropComponent(KLoader::SLoadedComponentData someData)
 
 	int temp = (rand() % someData.myData.at("MaxGoldToDropOnDeath").GetUInt()) + someData.myData.at("MinGoldToDropOnDeath").GetUInt();
 
+	short chance = someData.myData.at("PercentChanceToDropGlobe").GetUInt();
 
-	DropComponent* dropComp = DropComponentManager::GetInstance().CreateAndRegisterComponent(temp);
+	DropComponent* dropComp = DropComponentManager::GetInstance().CreateAndRegisterComponent(temp, chance);
 
 	
 

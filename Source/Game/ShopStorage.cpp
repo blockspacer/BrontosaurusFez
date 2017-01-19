@@ -56,16 +56,16 @@ void CShopStorage::RemoveHat(const std::string & aHatName)
 void CShopStorage::LoadStorage(const std::string & aFilePath)
 {
 	CU::CJsonValue value;
-	const std::string& errorString = value.Parse("Json/Hats/HatBluePrints.json");
+	value.Parse(aFilePath);
 
 	CU::CJsonValue hatsArray = value.at("Hats");
-	for (unsigned int i = 0; i < hatsArray.Size(); ++i)
+	for (int i = 0; i < hatsArray.Size(); ++i)
 	{
 		if (hatsArray[i].at("AvailableInShop").GetBool() == true)
 		{
 			SShopSelection* shopSelection = new SShopSelection();
 			shopSelection->HatName = hatsArray[i].at("HatName").GetString();
-			shopSelection->myCost = hatsArray[i].at("ShopCost").GetInt();
+			shopSelection->myCost = static_cast<SShopSelection::Cost>(hatsArray[i].at("ShopCost").GetInt());
 
 			myStorage.HatStorage.Add(*shopSelection);
 		}
@@ -93,20 +93,17 @@ const CShopStorage::SMatchReturn CShopStorage::MatchHatWithName(const std::strin
 void CShopStorage::SetupBuyOrder(const std::string & aFilepath)
 {
 	CU::CJsonValue value;
-	const std::string& errorString = value.Parse("Json/Hats/BuyOrder.json");
-
+	value.Parse(aFilepath);
 	CU::CJsonValue BuyOrderArray = value.at("BuyOrder");
 	if (BuyOrderArray.Size() != 0)
 	{
 		myStorage.StorageWithBuyOrder.Init(BuyOrderArray.Size());
-
-		for (unsigned int i = 0; i < BuyOrderArray.Size(); ++i)
+		for (int i = 0; i < BuyOrderArray.Size(); ++i)
 		{
 			CU::CJsonValue HatArray = BuyOrderArray[i].at("HatArray");
 			myStorage.StorageWithBuyOrder.Add(CU::GrowingArray<SShopSelection>());
 			myStorage.StorageWithBuyOrder[i].Init(HatArray.Size());
-
-			for (unsigned int j = 0; j < HatArray.Size(); ++j)
+			for (int j = 0; j < HatArray.Size(); ++j)
 			{
 				SMatchReturn matchdata = MatchHatWithName(HatArray[j].at("HatName").GetString());
 				if (matchdata.Matched == true)
@@ -116,10 +113,12 @@ void CShopStorage::SetupBuyOrder(const std::string & aFilepath)
 					newSelection.myCost = matchdata.MatchedWithThis.myCost;
 					myStorage.StorageWithBuyOrder[i].Add(newSelection);
 				}
+#ifndef _RETAIL_BUILD
 				else
 				{
 					DL_ASSERT("Hat name did not match (%s)", HatArray[i].at("HatName").GetString());
 				}
+#endif // !_RETAIL_BUILD
 			}
 		}
 	}

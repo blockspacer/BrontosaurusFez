@@ -128,6 +128,26 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 			mySkills[i]->UpdateStats(aMessageData.myStatStruct);
 		}
 	}
+	else if (aMessageType == eComponentMessageType::eActivateBurningBasicAttack)
+	{
+		for (int i = 0; i < mySkills.Size(); i++)
+		{
+			if(mySkills[i]->GetSkillData()->skillName == "BasicAttack")
+			{
+				mySkills[i]->GetSkillData()->damageBonus = 40.0f;
+			}
+		}
+	}
+	else if (aMessageType == eComponentMessageType::eActivateManaRefund)
+	{
+		for (int i = 0; i < mySkills.Size(); i++)
+		{
+			if (mySkills[i]->GetSkillData()->skillName == "SweepAttack")
+			{
+				mySkills[i]->GetSkillData()->manaRefund = 35.0f;
+			}
+		}
+	}
 }
 
 void SkillSystemComponent::Destroy()

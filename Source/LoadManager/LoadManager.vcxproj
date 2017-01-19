@@ -344,6 +344,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="LoadActivationComponent.h" />
     <ClInclude Include="LoadAIController.h" />
     <ClInclude Include="LoadCamera.h" />
     <ClInclude Include="LoadDropComponent.h" />
@@ -359,6 +360,8 @@
     <ClInclude Include="LoadObject.h" />
     <ClInclude Include="LoadInputController.h" />
     <ClInclude Include="LoadColliderComponent.h" />
+    <ClInclude Include="LoadPickerupperComponent.h" />
+    <ClInclude Include="LoadObjectives.h" />
     <ClInclude Include="LoadSkillSystemComponent.h" />
     <ClInclude Include="LoadSoundComponent.h" />
     <ClInclude Include="LuaFunctions.h" />
@@ -366,6 +369,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="LoadActivationComponent.cpp" />
     <ClCompile Include="LoadAIController.cpp" />
     <ClCompile Include="LoadCamera.cpp" />
     <ClCompile Include="LoadDropComponent.cpp" />
@@ -381,6 +385,8 @@
     <ClCompile Include="LoadObject.cpp" />
     <ClCompile Include="LoadInputController.cpp" />
     <ClCompile Include="LoadColliderComponent.cpp" />
+    <ClCompile Include="LoadPickerupperComponent.cpp" />
+    <ClCompile Include="LoadObjectives.cpp" />
     <ClCompile Include="LoadSkillSystemComponent.cpp" />
     <ClCompile Include="LoadSoundComponent.cpp" />
     <ClCompile Include="LuaFunctions.cpp" />

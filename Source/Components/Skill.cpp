@@ -49,6 +49,8 @@ Skill::Skill(SkillData* aSkillDataPointer)
 	myElapsedCoolDownTime = mySkillData->coolDown;
 	mySkillData->manaCostModifier = 1.0f;
 	mySkillData->damageModifier = 1.0f;
+	mySkillData->damageBonus = 0.0f;
+	mySkillData->manaRefund = 0.0f;
 	myAnimationTimeElapsed = 0.f;
 }
 
@@ -74,7 +76,6 @@ void Skill::Activate()
 	{
 		myIsActive = true;
 		OnActivation();
-	
 	}
 }
 
@@ -206,10 +207,14 @@ void Skill::ActivateCollider()
 	
 	data.myBool = true;
 	myColliderObject->NotifyComponents(type, data);
+
+	myAnimationTimeElapsed = 0.f;
 }
 void Skill::OnActivation()
 {
-	myAnimationTimeElapsed = 0.f;
+	SComponentMessageData data;
+	data.myInt = -mySkillData->manaRefund;
+	myUser->NotifyComponents(eComponentMessageType::eBurnMana, data);
 	//DL_PRINT("Animation started");
 }
 

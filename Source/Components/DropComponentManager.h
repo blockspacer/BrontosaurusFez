@@ -7,7 +7,7 @@ public:
 	static void CreateInstance();
 	static void DestroyInstance();
 
-	DropComponent* CreateAndRegisterComponent(unsigned short aAmountToDrop);
+	DropComponent* CreateAndRegisterComponent(unsigned short aAmountToDrop, unsigned short aPercentChance);
 	void Update(const CU::Time& aDeltaTime);
 private:
 	DropComponentManager();

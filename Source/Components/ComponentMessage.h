@@ -81,6 +81,9 @@ enum class eComponentMessageType
 	eAddToMovementSpeed,
 	ePickUp,
 	eRestoreMana,
+	eActivateBurningBasicAttack,
+	eActivateManaRefund,
+	eActivate,
 };
 
 struct SComponentMessageData

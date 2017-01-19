@@ -39,6 +39,7 @@ void QM::CQuestManager::UpdateObjective(EventHandle anObjectiveHandle, int anAmm
 	}
 
 	SendUpdateMessage();
+	CompleteEvent();
 }
 
 bool QM::CQuestManager::CheckIfQuestComplete() const

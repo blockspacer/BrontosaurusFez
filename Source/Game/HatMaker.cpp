@@ -32,7 +32,7 @@ void CHatMaker::LoadBluePrints(const std::string& aFilePath)
 	const std::string& errorString = HatBluePrint.Parse(aFilePath);
 	CU::CJsonValue levelsArray = HatBluePrint.at("Hats");
 
-	for (unsigned int i = 0; i < levelsArray.Size(); ++i)
+	for (int i = 0; i < levelsArray.Size(); ++i)
 	{
 		SHatBluePrint* blueprint = new SHatBluePrint();
 
@@ -100,8 +100,14 @@ void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName)
 			data.myHat = theBluePrint->myHatStruct;
 			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eAddHat, data);
 		}
-
-
+		if(theBluePrint->HatName == "BurningSlashHat")
+		{
+			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eActivateBurningBasicAttack, SComponentMessageData());
+		}
+		else if (theBluePrint->HatName == "SweepAttackHatLvl2")
+		{
+			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eActivateManaRefund, SComponentMessageData());
+		}
 	}
 }
 
