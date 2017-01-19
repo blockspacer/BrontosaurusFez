@@ -3,6 +3,9 @@
 #include "../Game/PollingStation.h"
 #include "PlayerData.h"
 #include "../Game/PickupFactory.h"
+#include "../Game/MasterAI.h"
+
+
 
 DropComponent::DropComponent(const int aAmountOfGoldToDrop, const int aDropPercentChance)
 {
@@ -40,7 +43,11 @@ bool DropComponent::CalculateDropHealthGlobe()
 {
 	int result = (rand() % 100) +1;
 
-	if (result <= myHealthGlobeDropRate)
+	float MasterAImodifier = CMasterAI::GetInstance().DetermineHealthDrop();
+	
+	//std::cout << "Modified Health drop chance: " << MasterAImodifier << std::endl;
+
+	if (result <= myHealthGlobeDropRate + MasterAImodifier)
 	{
 		return true;
 	}

@@ -10,6 +10,7 @@ ValueObserver<int>* PollingStation::timeObjectiveBar = nullptr;
 CollisionManager* PollingStation::collsionManager = nullptr;
 PlayerData* PollingStation::playerData = nullptr;
 
+
 void PollingStation::NullifyLevelSpecificData()
 {
 	playerObject = nullptr;

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "PlayerHealthMessenger.h"
 #include "..\PostMaster\PlayerHealthChanged.h"
+#include "../Game/PollingStation.h"
+#include "../Components/PlayerData.h"
 
 CPlayerHealthMessenger::CPlayerHealthMessenger()
 {
@@ -22,6 +24,7 @@ void CPlayerHealthMessenger::Receive(const eComponentMessageType aMessageType, c
 		break;
 	case eComponentMessageType::ePercentHPLeft:
 		PostMaster::GetInstance().SendLetter(eMessageType::ePlayerHealthChanged, CPlayerHealthChanged(static_cast<float>(aMessageData.myUChar) * 0.01f));
+		PollingStation::playerData->myPercentHPLeft = static_cast<float>(aMessageData.myUChar);
 		break;
 	}
 }
