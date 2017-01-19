@@ -81,22 +81,12 @@ namespace GUI
 	{
 		if (IsVisible() == true)
 		{
-			CU::GrowingArray<Widget*> invisiblez(10);
-			for (unsigned int i = 0; i < myOrderedWidgets.Size(); ++i)
+			for (int i = myOrderedWidgets.Size() - 1; i >= 0; --i)
 			{
 				if (myOrderedWidgets[i]->IsVisible() == true)
 				{
 					myOrderedWidgets[i]->Render();
 				}
-				else
-				{
-					invisiblez.Add(myOrderedWidgets[i]);
-				}
-			}
-
-			for (Widget* widget : invisiblez)
-			{
-				widget->GetSize();
 			}
 		}
 	}
@@ -127,12 +117,12 @@ namespace GUI
 		Widget* container = Widget::MouseIsOver(aPosition);
 		if (container != nullptr)
 		{
-			for (auto it = myWidgets.begin(); it != myWidgets.end(); ++it)
+			for (Widget* widget : myOrderedWidgets)
 			{
-				Widget* widget = it->second->MouseIsOver(aPosition);
-				if (widget != nullptr)
+				Widget* selectedWidget = widget->MouseIsOver(aPosition);
+				if (selectedWidget != nullptr)
 				{
-					return widget;
+					return selectedWidget;
 				}
 			}
 		}
@@ -141,6 +131,16 @@ namespace GUI
 	}
 
 	void WidgetContainer::MoveToFront(const std::string& aWidgetName)
+	{
+		auto it = myWidgets.find(aWidgetName);
+		if (it != myWidgets.end())
+		{
+			Widget* widgetToMove = it->second;
+			myOrderedWidgets.Remove(it->second);
+			myOrderedWidgets.Insert(0,widgetToMove);
+		}
+	}
+	void WidgetContainer::MoveToBack(const std::string & aWidgetName)
 	{
 		auto it = myWidgets.find(aWidgetName);
 		if (it != myWidgets.end())
