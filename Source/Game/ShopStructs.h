@@ -2,6 +2,12 @@
 #include <string>
 struct SShopSelection
 {
+	SShopSelection()
+	{
+		HatName = "";
+		myCost = 0;
+	}
+
 	typedef unsigned short Cost;
 	std::string HatName;
 	Cost myCost;
