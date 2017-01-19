@@ -10,7 +10,7 @@ public:
 
 
 	const float DetermineHealthDrop();
-	void DetermineAmmountOfMinionsToSpawn();
+	void DetermineAmountOfMinionsToSpawn();
 
 
 
