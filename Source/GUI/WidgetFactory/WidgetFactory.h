@@ -20,7 +20,7 @@ namespace GUI
 		static WidgetContainer* CreateGUIScene(const char* aFilePathFBX, CU::Camera*& aGUIManagerCameraOut);
 
 	private:
-		static WidgetContainer* CreateGUIScene(const CLoaderScene* aLoaderScene, CU::Camera*& aGUIManagerCameraOut);
+		static WidgetContainer* CreateGUIScene(const CLoaderScene* aLoaderScene, CU::Camera*& aGUIManagerCameraOut, const std::string& aJsonPath);
 		static Widget* CreateButton(Widget* aWidget);		
 
 		static CU::Camera* ParseCamera(const CLoaderCamera* aCamera);

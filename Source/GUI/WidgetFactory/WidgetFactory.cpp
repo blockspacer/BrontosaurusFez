@@ -10,24 +10,25 @@
 #include <WidgetDecorator/TextWidget/TextWidget.h>
 #include "Button/ButtonAnimation.h"
 #include "ToolTipDecorator.h"
+#include "HealthWidget.h"
+#include "ManaWidget.h"
 
 #include "../BrontosaurusEngine/FBXLoader.h"
 #include "../BrontosaurusEngine/Engine.h"
 
 #include "../CommonUtilities/Camera.h"
 
-#include "PostMaster/PostMaster.h"
-#include "PostMaster/Message.h"
-#include "PostMaster/PushState.h"
-#include "PostMaster/PopCurrentState.h"
-#include "PostMaster/Pop2States.h"
-#include "PostMaster/HatBought.h"
-#include "PostMaster/BuyButtonPressed.h"
+#include "../PostMaster/PostMaster.h"
+#include "../PostMaster/Message.h"
+#include "../PostMaster/PushState.h"
+#include "../PostMaster/PopCurrentState.h"
+#include "../PostMaster/Pop2States.h"
+#include "../PostMaster/HatBought.h"
+#include "../PostMaster/BuyButtonPressed.h"
 
 #include "../Game/PollingStation.h"
-#include "HealthWidget.h"
-#include "ManaWidget.h"
 #include  "../Components/PlayerData.h"
+#include "CommonUtilities/JsonValue.h"
 
 using size_ga = CU::GrowingArray<CLoaderMesh*>::size_type;
 
@@ -44,10 +45,13 @@ namespace GUI
 			DL_PRINT_WARNING("Failed to load GUI scene: %s\n", aFilePathFBX);
 		}
 
-		return CreateGUIScene(&guiScene, aGUIManagerCameraOut);
+		std::string jsonPath = aFilePathFBX;
+		jsonPath -= ".fbx";
+		jsonPath += ".json";
+		return CreateGUIScene(&guiScene, aGUIManagerCameraOut, jsonPath);
 	}
 
-	WidgetContainer* WidgetFactory::CreateGUIScene(const CLoaderScene* aLoaderScene, CU::Camera*& aGUIManagerCameraOut)
+	WidgetContainer* WidgetFactory::CreateGUIScene(const CLoaderScene* aLoaderScene, CU::Camera*& aGUIManagerCameraOut, const std::string& aJsonPath)
 	{
 		if (aLoaderScene == nullptr)
 		{
@@ -58,28 +62,46 @@ namespace GUI
 		CU::Camera* guiCamera = ParseCamera(aLoaderScene->myCamera);
 		aGUIManagerCameraOut = guiCamera;
 
+
+		CU::CJsonValue guiScene(aJsonPath);
+		CU::CJsonValue visibleFromStartArray = guiScene["VisibleFromStart"];
+		CU::GrowingArray<std::string> visibleWidgets(8u);
+		for (int i = 0; i < visibleFromStartArray.Size(); ++i)
+		{
+			std::string visibleWidget = visibleFromStartArray[i].GetString();
+			visibleWidgets.Add(visibleWidget);
+		}
+
 		WidgetContainer* baseWidgetContainer = new WidgetContainer(CU::Vector2f::Zero, CU::Vector2f(1.f, 1.f), "BaseWidgetContainer", true);
 
 		const CU::GrowingArray<CLoaderMesh*>& meshes = aLoaderScene->myMeshes;
 		for (size_ga i = 0; i < meshes.Size(); ++i)
 		{
 			std::string widgetName = meshes[i]->myName;
+			bool isVisible = visibleWidgets.Size() == 0 || visibleWidgets.Find(widgetName) != visibleWidgets.FoundNone;
+			Widget* widget = nullptr;
+			if (widgetName == "orbHealth" || widgetName == "orbMana")
+			{
+				widget = new ModelWidget(meshes[i], { "Models/gui/orbShader.dds" }, *guiCamera, isVisible);
+			}
+			else
+			{
+				widget = new ModelWidget(meshes[i], aLoaderScene->myTextures, *guiCamera, isVisible);
+			}
 
-			Widget* widget = new ModelWidget(meshes[i], aLoaderScene->myTextures, *guiCamera);
-
-			if (widget->GetName().find("button") != std::string::npos || widget->GetName().find("Button") != std::string::npos
+			if (widget->GetName()/*.find("ealth") != std::string::npos*/ == "orbHealth")
+			{
+				widget = CreateHealthBar(widget);
+			}
+			else if (widget->GetName()/*.find("ana") != std::string::npos*/ == "orbMana")
+			{
+				widget = CreateManaBar(widget);
+			}
+			else if (widget->GetName().find("button") != std::string::npos || widget->GetName().find("Button") != std::string::npos
 				|| widget->GetName() == "Resume" || widget->GetName() == "Return" || widget->GetName().find("Knapp") != std::string::npos
 				|| widget->GetName().find("knapp") != std::string::npos)
 			{
 				widget = CreateButton(widget);
-			}
-			else if (widget->GetName().find("ealth") != std::string::npos)
-			{
-				widget = CreateHealthBar(widget);
-			}
-			else if (widget->GetName().find("ana") != std::string::npos)
-			{
-				widget = CreateManaBar(widget);
 			}
 
 			if (widget != nullptr)
@@ -87,25 +109,6 @@ namespace GUI
 				baseWidgetContainer->AddWidget(widget->GetName(), widget);
 			}
 		}
-
-		//std::string widgetName = "CarlWasHere";
-		//CFBXLoader loader;
-		//CLoaderModel* loaderMOdel = loader.LoadModel("Models/gui/knapp01.fbx");
-		//if (loaderMOdel != nullptr)
-		//{
-		//	Widget* widget = new ModelWidget(loaderMOdel->myMeshes.at(0), aLoaderScene->myTextures, *guiCamera);
-
-		//	CLoaderModel* loaderMOdel2 = loader.LoadModel("Models/gui/guiTooltip.fbx");
-		//	ModelWidget* backgroundModel = new ModelWidget(loaderMOdel2->myMeshes.at(0), aLoaderScene->myTextures, *guiCamera);
-		//	std::string tooltipText = "hey im a tooltip";
-		//	widget = new CToolTipDecorator(widget, backgroundModel, tooltipText);
-
-		//	if (widget != nullptr)
-		//	{
-		//		baseWidgetContainer->AddWidget(widget->GetName(), widget);
-		//	}
-		//}
-
 
 		return baseWidgetContainer;
 	}
@@ -234,6 +237,7 @@ namespace GUI
 	{
 		CHealthWidget* healthWidget = new CHealthWidget(aWidget->GetWorldPosition(), aWidget->GetSize(), "PlayerHealthWidget");
 		healthWidget->AddWidget("Model", aWidget);
+		healthWidget->Init();
 		return healthWidget;
 	}
 
@@ -241,6 +245,7 @@ namespace GUI
 	{
 		CManaWidget* manaWidget = new CManaWidget(aWidget->GetWorldPosition(), aWidget->GetSize(), "PlayerManaWidget");
 		manaWidget->AddWidget("Model", aWidget);
+		manaWidget->Init();
 		return manaWidget;
 	}
 

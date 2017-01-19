@@ -21,6 +21,15 @@ cbuffer ConstantBuffer : register(b0)
 {
 	float4x4 cameraSpaceInversed;
 	float4x4 projectionSpace;
+
+	float4x4 garbageMatrix1;
+	float4x4 garbageMatrix2;
+	
+	float deltaTime;
+	float time;
+
+	float garbageFloat1;
+	float garbageFloat2;
 }
 
 cbuffer ToWorld : register(b1)
@@ -34,7 +43,6 @@ cbuffer GUIPixelBuffer : register(b1)
 	float progressBarValue;
 	float skipEmissive;
 	float flashButton;
-	//new srtuff
 	float isHealthBar;
 	float healthPercent;
 	float isManaBar;
@@ -56,6 +64,7 @@ SamplerState globalSamplerState;
 float4 PS_PBL(PixelInput input);
 float4 PS_HealthBar(PixelInput input);
 float4 PS_FlashButton(PixelInput input);
+float4 PS_OrbShader(PixelInput input);
 
 static const uint CubeMap_MipCount = 11;
 
@@ -87,7 +96,12 @@ PixelInput VS_PosNormBinormTanTex(VertexInput input)
 
 float4 PS_PosNormBinormTanTex(PixelInput input) : SV_TARGET
 {
-	float4 output = (1.f - isProgressBar) * PS_PBL(input); //albedo.Sample(globalSamplerState, input.uv);
+	float shouldDoPBL = (1.f - isProgressBar) * (1.f - isManaBar) * (1.f - isHealthBar);
+
+	float4 output = shouldDoPBL * PS_PBL(input);
+
+	output += isManaBar * PS_OrbShader(input);
+	output += isHealthBar * PS_OrbShader(input);
 
 	output += isProgressBar * PS_HealthBar(input);
 
@@ -398,4 +412,110 @@ float4 PS_PBL(PixelInput input)
 
 	float4 output = float4(ambientDiffuse + ambientSpecularity + directionDiffuse + directionSpecularity + emissive, 1.f);
 	return output;
+}
+
+
+//cbuffer UpdateAttributes : register(b2)
+//{
+//	float3 orbColor2
+////	<
+////		string UIName = "orbColor2";
+////		int UIOrder = 4;
+////		string UIWidget = "ColorPicker";
+////> 
+//	= { 0.0, 0.0775376, 0.672 };
+
+//	float3 orbColor1
+//	//<
+//	//	string UIName = "orbColor1";
+//	//	int UIOrder = 3;
+//	//	string UIWidget = "ColorPicker";
+//	//>
+//	 = { 0.0, 1.0, 0.923067 };
+
+//	float stars
+//	//<
+//	//	float UIMin = 0.0;
+//	//	float UISoftMin = 0.0;
+//	//	float UIMax = 1.0;
+//	//	float UISoftMax = 1.0;
+//	//	float UIStep = 0.01;
+//	//	string UIName = "stars";
+//	//	int UIOrder = 10;
+//	//	string UIWidget = "Slider";
+//	//>
+//	 = 1.0;
+
+//	float bubbleTimeFactor
+//	//<
+//	//	float UIMin = 0.0;
+//	//	float UISoftMin = 0.0;
+//	//	float UIMax = 99.0;
+//	//	float UISoftMax = 99.0;
+//	//	float UIStep = 0.01;
+//	//	string UIName = "bubbleTimeFactor";
+//	//	int UIOrder = 2;
+//	//	string UIWidget = "Slider";
+////>
+//	 = 0.15;
+
+//	float waveTimeFactor
+//	//<
+//	//	float UIMin = 0.0;
+//	//	float UISoftMin = 0.0;
+//	//	float UIMax = 99.0;
+//	//	float UISoftMax = 99.0;
+//	//	float UIStep = 0.01;
+//	//	string UIName = "waveTimeFactor";
+//	//	int UIOrder = 1;
+//	//	string UIWidget = "Slider";
+////> 
+//	= 0.1;
+
+//	float orbValue
+//	//<
+//	//	float UIMin = 0.0;
+//	//	float UISoftMin = 0.0;
+//	//	float UIMax = 1.0;
+//	//	float UISoftMax = 1.0;
+//	//	float UIStep = 0.01;
+//	//	string UIName = "orbValue";
+//	//	string UIWidget = "Slider";
+////> 
+//	= 0.780749;
+
+//};
+
+float4 PS_OrbShader(PixelInput input)
+{
+	static const float3 orbColor2 = { 0.0, 0.0775376, 0.672 };
+	static const float3 orbColor1 = { 0.0, 1.0, 0.923067 };
+	static const float bubbleTimeFactor = 0.15f;
+	static const float waveTimeFactor = 0.1f;
+
+	float stars = isManaBar;
+	float orbValue = manaPercent + healthPercent;
+
+	float SubOp = (stars - 0.5);
+	float AddOp = ((SubOp * 0.5) + input.uv.xy.x);
+	float MulOp = (time * bubbleTimeFactor);
+	float SubOp98 = (input.uv.xy.y - MulOp);
+	float2 VectorConstruct = float2(AddOp, SubOp98);
+	float4 Sampler = albedo.Sample(globalSamplerState, float2(VectorConstruct.xy.x, /*1 -*/ VectorConstruct.xy.y));
+	float4 Sampler100 = albedo.Sample(globalSamplerState, float2(input.uv.xy.x, /*1 - */input.uv.xy.y));
+	float AddOp137 = ((Sampler.xyz.z * 0.3) + Sampler100.xyz.y);
+	float MulOp64 = (time * waveTimeFactor);
+	float SubOp66 = (MulOp64 - input.uv.xy.x);
+	float SinOp = sin((time * 15.0));
+	float AddOp152 = ((SinOp * 0.001) + input.uv.xy.y);
+	float MulOp126 = (orbValue * 0.5);
+	float SubOp124 = ((AddOp152 + 0.25) - MulOp126);
+	float2 VectorConstruct63 = float2(SubOp66, SubOp124);
+	float4 Sampler36 = albedo.Sample(globalSamplerState, float2(VectorConstruct63.xy.x, 1 - VectorConstruct63.xy.y));
+	float SubOp128 = (Sampler36.xyz.x - (1.0 - Sampler100.w));
+	float SatOp = saturate(SubOp128);
+	float3 MulOp60 = (lerp(orbColor2.xyz, orbColor1.xyz, AddOp137) * SatOp);
+	float4 VectorConstruct61 = float4(MulOp60.x, MulOp60.y, MulOp60.z, SatOp);
+	
+	return VectorConstruct61;
 }

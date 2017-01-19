@@ -14,24 +14,24 @@ int LoadSkillSystemComponent(KLoader::SLoadedComponentData someData)
 	if (someData.myData.HasKey("Skills") == false)
 	{
 		DL_PRINT("SkillSystemComponent empty got no skills added");
-
+		return 0;
 	}
 	else
 	{
 
-	CU::CJsonValue levelsArray = someData.myData.at("Skills");
+		CU::CJsonValue levelsArray = someData.myData.at("Skills");
 
-	if (!(levelsArray.IsArray() && levelsArray.Size() > 0))
-	{
-		DL_PRINT("SkillSystemComponent missing values");
-	}
+		if (!(levelsArray.IsArray() && levelsArray.Size() > 0))
+		{
+			DL_PRINT("SkillSystemComponent missing values");
+		}
 
-	for (unsigned short i = 0; i < levelsArray.Size(); i++)
-	{
-		skillSystem->AddSkill(levelsArray[i].GetString().c_str());
-	}
-	CComponentManager::GetInstance().RegisterComponent(skillSystem);
-	return skillSystem->GetId();
+		for (unsigned short i = 0; i < levelsArray.Size(); i++)
+		{
+			skillSystem->AddSkill(levelsArray[i].GetString().c_str());
+		}
+		CComponentManager::GetInstance().RegisterComponent(skillSystem);
+		return skillSystem->GetId();
 	}
 
 }

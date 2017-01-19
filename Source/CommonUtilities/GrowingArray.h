@@ -4,12 +4,18 @@
 #include <string.h> // memcpy
 #include <initializer_list>
 #include "QuickSort.h"
-
+#include "StaticTypeTraits.h"
 
 #define self (*this)
 
 namespace CU
 {
+	template<bool IsPod, typename ObjectType, typename SizeType>
+	struct CopyArray;
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	struct Copy : CopyArray<IsPod<ObjectType>::Result || USE_SAFE_MODE, ObjectType, SizeType> {};
+
 	template<typename ObjectType, typename SizeType = unsigned int, bool USE_SAFE_MODE = true>
 	class GrowingArray
 	{
@@ -165,23 +171,11 @@ namespace CU
 		if (aGrowingArray.IsInitialized() == true)
 		{
 			Init(aGrowingArray.myCapacity);
-
 			mySize = aGrowingArray.mySize;
 
-			if (USE_SAFE_MODE)
-			{
-				for (SizeType i = 0; i < aGrowingArray.Size(); ++i)
-				{
-					myArray[i] = aGrowingArray[i];
-				}
-			}
-			else
-			{
-				if (Size() > 0)
-				{
-					memcpy(myArray, aGrowingArray.myArray, sizeof(ObjectType) * mySize);
-				}
-			}
+			static const bool isPod = IsPod<ObjectType>::Result;
+
+			Copy<ObjectType, SizeType, USE_SAFE_MODE>::DoCopy(myArray, aGrowingArray.myArray, mySize);
 		}
 
 		return self;
@@ -726,4 +720,28 @@ namespace CU
 		myCapacity = 0;
 		mySize = 0;
 	}
+
+	template<typename ObjectType, typename SizeType>
+	struct CopyArray<true, ObjectType, SizeType>
+	{
+		static void DoCopy(ObjectType aCopyToArray[], const ObjectType aCopyFromArray[], const SizeType aElementsToCopy)
+		{
+			if (aElementsToCopy > 0)
+			{
+				memcpy(aCopyToArray, aCopyFromArray, static_cast<size_t>(aElementsToCopy));
+			}
+		}
+	};
+
+	template<typename ObjectType, typename SizeType>
+	struct CopyArray<false, ObjectType, SizeType>
+	{
+		static void DoCopy(ObjectType aCopyToArray[], const ObjectType aCopyFromArray[], const SizeType aElementsToCopy)
+		{
+			for (SizeType i = 0; i < aElementsToCopy; ++i)
+			{
+				aCopyToArray[i] = aCopyFromArray[i];
+			}
+		}
+	};
 }
