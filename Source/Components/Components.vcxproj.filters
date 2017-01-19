@@ -134,6 +134,9 @@
     <ClCompile Include="ActivationComponent.cpp">
       <Filter>Activation</Filter>
     </ClCompile>
+    <ClCompile Include="ActivationObjectiveComponent.cpp">
+      <Filter>ObjectiveComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -288,6 +291,9 @@
     </ClInclude>
     <ClInclude Include="ActivationComponent.h">
       <Filter>Activation</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivationObjectiveComponent.h">
+      <Filter>ObjectiveComponents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

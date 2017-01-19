@@ -6,3 +6,4 @@ namespace KLoader
 }
 
 int LoadEnemyObjective(KLoader::SLoadedComponentData ComponentData);
+int LoadActivationObjective(KLoader::SLoadedComponentData ComponentData);
