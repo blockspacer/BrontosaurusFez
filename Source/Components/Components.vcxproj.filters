@@ -131,6 +131,12 @@
     <ClCompile Include="EnemyObjectiveComponent.cpp">
       <Filter>ObjectiveComponents</Filter>
     </ClCompile>
+    <ClCompile Include="ActivationComponent.cpp">
+      <Filter>Activation</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivationObjectiveComponent.cpp">
+      <Filter>ObjectiveComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -283,6 +289,12 @@
     <ClInclude Include="EnemyObjectiveComponent.h">
       <Filter>ObjectiveComponents</Filter>
     </ClInclude>
+    <ClInclude Include="ActivationComponent.h">
+      <Filter>Activation</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivationObjectiveComponent.h">
+      <Filter>ObjectiveComponents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -341,6 +353,9 @@
     </Filter>
     <Filter Include="ObjectiveComponents">
       <UniqueIdentifier>{be41f97c-188c-4389-be95-7af68ac28724}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Activation">
+      <UniqueIdentifier>{ce907b3f-4f14-4c78-b389-0defde24c5a8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

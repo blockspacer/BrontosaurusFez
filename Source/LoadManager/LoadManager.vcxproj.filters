@@ -37,11 +37,14 @@
     <ClInclude Include="LoadDropComponent.h" />
     <ClInclude Include="LoadManaComponent.h" />
     <ClInclude Include="LoadSoundComponent.h" />
-    <ClInclude Include="LoadMainStatComponent.h" />
-    <ClInclude Include="LoadInventoryComponent.h" />
-    <ClInclude Include="LoadPickerupperComponent.h" />
     <ClInclude Include="LoadObjectives.h">
       <Filter>LoadThings\LoadObjectives</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadInventoryComponent.h" />
+    <ClInclude Include="LoadMainStatComponent.h" />
+    <ClInclude Include="LoadPickerupperComponent.h" />
+    <ClInclude Include="LoadActivationComponent.h">
+      <Filter>LoadThings\LoadActivationComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -78,11 +81,14 @@
     <ClCompile Include="LoadDropComponent.cpp" />
     <ClCompile Include="LoadManaComponent.cpp" />
     <ClCompile Include="LoadSoundComponent.cpp" />
-    <ClCompile Include="LoadMainStatComponent.cpp" />
-    <ClCompile Include="LoadInventoryComponent.cpp" />
-    <ClCompile Include="LoadPickerupperComponent.cpp" />
     <ClCompile Include="LoadObjectives.cpp">
       <Filter>LoadThings\LoadObjectives</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadInventoryComponent.cpp" />
+    <ClCompile Include="LoadMainStatComponent.cpp" />
+    <ClCompile Include="LoadPickerupperComponent.cpp" />
+    <ClCompile Include="LoadActivationComponent.cpp">
+      <Filter>LoadThings\LoadActivationComponent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +121,9 @@
     </Filter>
     <Filter Include="LoadThings\LoadObjectives">
       <UniqueIdentifier>{8dce7b97-f485-40e9-87fb-181aa9cf31ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoadThings\LoadActivationComponent">
+      <UniqueIdentifier>{b0f93608-e747-461d-92ab-9f4ee3238b0f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

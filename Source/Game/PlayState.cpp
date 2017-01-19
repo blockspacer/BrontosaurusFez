@@ -149,8 +149,7 @@ void CPlayState::Load()
 	CreateManagersAndFactories();
 	LoadManagerGuard loadManagerGuard;
 
-	QM::CQuestManager &questManager = myQuestManager;
-	questManager.CompleteEvent();
+
 
 	CShopStorage::GetInstance().LoadStorage("Json/Hats/HatBluePrints.json");
 
@@ -346,6 +345,7 @@ void CPlayState::Load()
 	questPath += ".json";
 
 	myQuestManager.LoadQuestlines(questPath);
+	myQuestManager.CompleteEvent();
 	KLoader::CKevinLoader &loader = KLoader::CKevinLoader::GetInstance();
 
 	const KLoader::eError loadError = loader.LoadFile(levelPath);

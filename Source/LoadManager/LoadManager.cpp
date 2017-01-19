@@ -20,6 +20,7 @@
 #include "LoadInventoryComponent.h"
 #include "LoadPickerupperComponent.h"
 #include "LoadObjectives.h"
+#include "LoadActivationComponent.h"
 
 LoadManager* LoadManager::ourInstance = nullptr;
 
@@ -90,8 +91,9 @@ void LoadManager::RegisterFunctions()
 	loader.RegisterComponentLoadFunction("InventoryComponent", LoadInventoryComponet);
 	loader.RegisterComponentLoadFunction("MainStatComponent", LoadMainStatComponent);
 	loader.RegisterComponentLoadFunction("PickupComponent", LoadPickerupperComponent);
-
 	loader.RegisterComponentLoadFunction("EnemyObjective", LoadEnemyObjective);
+	loader.RegisterComponentLoadFunction("ActivationObjectiveComponent", LoadActivationObjective);
+	loader.RegisterComponentLoadFunction("ActivatorComponent", LoadActivationComponent);
 }
 
 LoadManager::LoadManager()
