@@ -145,6 +145,7 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 		myElapsedCoolDownTime = 0.0f;
 		CU::Vector3f direction = myTargetPosition - myUser->GetWorldPosition();
 		myAnimationTimeElapsed += aDeltaTime;
+		myUser->NotifyComponents(eComponentMessageType::eStopMovement, SComponentMessageData());
 		if(direction.Length2() > mySkillData->range * mySkillData->range)
 		{
 			direction.Normalize();
