@@ -212,23 +212,48 @@ void HatShopState::AdjustText()
 {
 	myOptionsText.DeleteAll();
 	myCostText.DeleteAll();
+	char row = 1;
 	for (unsigned int i = 0; i < mySelections.Size(); i++)
 	{
-		std::string temp;
-		temp += std::to_string(i + 1);
-		temp += ". ";
-		temp += mySelections[i]->HatName.c_str();
-		myOptionsText.Add(new CTextInstance());
-		myOptionsText.GetLast()->Init();
-		myOptionsText.GetLast()->SetText(temp.c_str());
-		myOptionsText.GetLast()->SetPosition(CU::Vector2f(0.02f, 0.2f + 0.1f * i));
 
-		temp = "Cost";
-		temp += ": ";
-		temp += std::to_string(mySelections[i]->myCost);
-		myCostText.Add(new CTextInstance());
-		myCostText.GetLast()->Init();
-		myCostText.GetLast()->SetText(temp.c_str());
-		myCostText.GetLast()->SetPosition(CU::Vector2f(0.02f, 0.235f + 0.1f * i));
+		if (i % 2 != 0)
+		{
+			std::string temp;
+			temp += std::to_string(i + 1);
+			temp += ". ";
+			temp += mySelections[i]->HatName.c_str();
+			myOptionsText.Add(new CTextInstance());
+			myOptionsText.GetLast()->Init("Fonts/comic.ttf",32);
+			myOptionsText.GetLast()->SetText(temp.c_str());
+			myOptionsText.GetLast()->SetPosition(CU::Vector2f(0.114f, 0.075f + 0.185f * row));
+
+			temp = "Cost";
+			temp += ": ";
+			temp += std::to_string(mySelections[i]->myCost);
+			myCostText.Add(new CTextInstance());
+			myCostText.GetLast()->Init("Fonts/comic.ttf",32);
+			myCostText.GetLast()->SetText(temp.c_str());
+			myCostText.GetLast()->SetPosition(CU::Vector2f(0.114f, 0.2f + 0.185f * row));
+			++row;
+		}
+		else
+		{
+			std::string temp;
+			temp += std::to_string(i + 1);
+			temp += ". ";
+			temp += mySelections[i]->HatName.c_str();
+			myOptionsText.Add(new CTextInstance());
+			myOptionsText.GetLast()->Init("Fonts/comic.ttf", 32);
+			myOptionsText.GetLast()->SetText(temp.c_str());
+			myOptionsText.GetLast()->SetPosition(CU::Vector2f(0.027f, 0.075f + 0.185f * row));
+
+			temp = "Cost";
+			temp += ": ";
+			temp += std::to_string(mySelections[i]->myCost);
+			myCostText.Add(new CTextInstance());
+			myCostText.GetLast()->Init("Fonts/comic.ttf", 32);
+			myCostText.GetLast()->SetText(temp.c_str());
+			myCostText.GetLast()->SetPosition(CU::Vector2f(0.027f, 0.2f + 0.185f * row));
+		}
 	}
 }
