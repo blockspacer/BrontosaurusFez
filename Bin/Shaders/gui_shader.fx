@@ -159,9 +159,9 @@ float GetSpecPowToMip(float fSpecPow, int nMips)
 	return float(nMips - 1 - 0) * (1.0f - clamp(fSmulMaxT / fMaxT, 0.0f, 1.0f));
 }
 
-float3 PS_Albedo(PixelInput input)
+float4 PS_Albedo(PixelInput input)
 {
-	float3 output = albedo.Sample(globalSamplerState, input.uv).xyz;
+	float4 output = albedo.Sample(globalSamplerState, input.uv);
 	return output;
 }
 
@@ -202,7 +202,7 @@ float3 PS_Metalness(PixelInput input)
 
 float3 PS_Substance(PixelInput input)
 {
-	float3 albedo = PS_Albedo(input);
+	float3 albedo = PS_Albedo(input).xyz;
 	float3 metalness = PS_Metalness(input);
 	float3 substance = (float3(0.04f, 0.04f, 0.04f) - (float3(0.04f, 0.04f, 0.04f) * metalness)) + albedo * metalness;
 	
@@ -287,7 +287,7 @@ float3 PS_Visibility(PixelInput input, float3 aDirection)
 
 float3 PS_MetalnessAlbedo(PixelInput input)
 {
-	float3 albedo = PS_Albedo(input);
+	float3 albedo = PS_Albedo(input).xyz;
 	float3 metalness = PS_Metalness(input);
 	float3 metalnessAlbedo = albedo - (albedo * metalness);
 
@@ -357,13 +357,13 @@ float4 PS_PBL(PixelInput input)
 {
 	float3 normal = PS_ObjectNormal(input);
 	float3 emissive = PS_Emissive(input);
-	float3 albedo = PS_Albedo(input);
+	float4 albedo = PS_Albedo(input);
 	float3 metalness = PS_Metalness(input);
-	float3 metalnessAlbedo = albedo - (albedo * metalness);
+	float3 metalnessAlbedo = albedo.xyz - (albedo.xyz * metalness);
 	float3 ambientOcclusion = PS_AmbientOcclusion(input);
 	float3 ambientLight = cubeMap.SampleLevel(globalSamplerState, normal.xyz, (uint) CubeMap_MipCount.x - 2).xyz; // FIX!
 	float roughness = PS_Roughness(input).x;
-	float3 substance = (float3(0.04f, 0.04f, 0.04f) - (float3(0.04f, 0.04f, 0.04f) * metalness)) + albedo * metalness;
+	float3 substance = (float3(0.04f, 0.04f, 0.04f) - (float3(0.04f, 0.04f, 0.04f) * metalness)) + albedo.xyz * metalness;
 	float3 toEye = normalize(cameraPosition.xyz - input.worldPosition.xyz);
 	float VdotN = dot(toEye.xyz, normal);
 	VdotN = saturate(VdotN);
@@ -411,6 +411,7 @@ float4 PS_PBL(PixelInput input)
 	float3 directionSpecularity = lightColor * lambert * Dirrfresnel * distribution * visibility;
 
 	float4 output = float4(ambientDiffuse + ambientSpecularity + directionDiffuse + directionSpecularity + emissive, 1.f);
+	output.a = albedo.a;
 	return output;
 }
 
@@ -491,8 +492,8 @@ float4 PS_OrbShader(PixelInput input)
 	static const float3 manaColor2 = { 0.0, 0.0775376, 0.672 };
 	static const float3 manaColor1 = { 0.0, 1.0, 0.923067 };
 	
-	static const float3 healthColor2 = { 1.0, 0.0775376, 0.672 };
-	static const float3 healthColor1 = { 1.0, 1.0, 0.923067 };
+	static const float3 healthColor2 = { 0.292, 0.019, 0.303 };
+	static const float3 healthColor1 = { 0.718, 0.042, 0.146 };
 
 	static const float bubbleTimeFactor = 0.15f;
 	static const float waveTimeFactor = 0.1f;
