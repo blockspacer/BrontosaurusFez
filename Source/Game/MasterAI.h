@@ -2,9 +2,26 @@
 class CMasterAI
 {
 public:
+	static void Create();
+
+	static void Destroy();
+
+	static CMasterAI& GetInstance();
+
+
+	const float DetermineHealthDrop();
+	void DetermineAmmountOfMinionsToSpawn();
+
+
+
+
+private:
 	CMasterAI();
 	~CMasterAI();
-	void DetermineHealthDrop();
-	void DetermineAmmountOfMinionsToSpawn();
+
+
+
+private:
+	static CMasterAI* ourInstance;
 };
 

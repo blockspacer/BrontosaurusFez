@@ -81,7 +81,7 @@ void LoadManager::RegisterFunctions()
 	loader.RegisterComponentLoadFunction("CircleCollider", LoadCircleCollider);
 	loader.RegisterComponentLoadFunction("AIController", LoadAIController);
 	loader.RegisterComponentLoadFunction("SeekController", LoadSeekController);
-	loader.RegisterComponentLoadFunction("fleeController", LoadFleeController);
+	loader.RegisterComponentLoadFunction("FleeController", LoadFleeController);
 	loader.RegisterComponentLoadFunction("SkillSystemComponent", LoadSkillSystemComponent);
 	loader.RegisterComponentLoadFunction("HealthComponent", LoadHealthComponent);
 	loader.RegisterComponentLoadFunction("HealthBarComponent", LoadHealthBarComponent);

@@ -16,6 +16,7 @@
 #include "Components/ModelComponent.h"
 #include "Components/ParticleEmitterComponentManager.h"
 #include "Components/ComponentManager.h"
+#include "Components\PlayerHealthMessenger.h"
 
 #include "PostMaster/PopCurrentState.h"
 #include "PostMaster/ChangeLevel.h"
@@ -52,6 +53,8 @@
 
 #include "PickupFactory.h"
 #include "PickupManager.h"
+
+#include "MasterAI.h"
 
 #include <time.h>
 //Kanske Inte ska vara här?
@@ -134,6 +137,7 @@ CPlayState::~CPlayState()
 	CShopStorage::Destroy();
 	CPickupFactory::Destroy();
 	CPickupManager::DestroyInstance();
+	CMasterAI::Destroy();
 
 	SkillFactory::DestroyInstance();
 	CComponentManager::DestroyInstance();
@@ -358,6 +362,12 @@ void CPlayState::Load()
 	if (PollingStation::PlayerInput != nullptr)
 	{
 		PollingStation::playerObject = PollingStation::PlayerInput->GetParent();
+
+		//Dísclaimer: fult men funkar //lägg till allt spelar specifikt som inte LD behöver störas av här
+		CPlayerHealthMessenger* healthMessenger = new CPlayerHealthMessenger();
+
+		PollingStation::playerObject->AddComponent(healthMessenger);
+
 	}
 	//CSeekControllerManager::GetInstance().SetTarget();
 	myGameObjectManager->SendObjectsDoneMessage();
@@ -613,6 +623,7 @@ void CPlayState::CreateManagersAndFactories()
 	myHatMaker = new CHatMaker(myGameObjectManager);
 	CPickupFactory::Create(myGameObjectManager, myCollisionComponentManager);
 	CPickupManager::CreateInstance();
+	CMasterAI::Create();
 }
 
 void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)
