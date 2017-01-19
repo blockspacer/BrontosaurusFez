@@ -4,6 +4,7 @@
 #include "../Components/GameObject.h"
 #include "PollingStation.h"
 #include "../Components/ComponentMessage.h"
+#include "../Collision/ICollider.h"
 //#include <iostream>
 
 void CPickupComponent::Destroy()
@@ -13,12 +14,12 @@ void CPickupComponent::Destroy()
 
 void CPickupComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData)
 {
-	if (aMessageType == eComponentMessageType::eCollision)
+	if (aMessageType == eComponentMessageType::eOnCollisionEnter)
 	{
 		//GetParent()->NotifyComponents(eComponentMessageType::eObjectiveCompleted, SComponentMessageData());
 		SComponentMessageData data;
 		data.myPickupComponent = this;
-		aMessageData.myComponents[0]->GetParent()->NotifyComponents(eComponentMessageType::ePickUp, data);
+		aMessageData.myCollider->GetGameObject()->NotifyComponents(eComponentMessageType::ePickUp, data);
 		return;
 	}
 }

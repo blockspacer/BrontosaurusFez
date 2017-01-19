@@ -6,6 +6,8 @@
 #include "PostMaster/Message.h"
 #include "../Components/GameObject.h"
 #include "../Components/ComponentMessage.h"
+#include "PollingStation.h"
+#include "PlayerData.h"
 
 CPickerUpperComponent::~CPickerUpperComponent()
 {
@@ -26,6 +28,7 @@ void CPickerUpperComponent::Receive(const eComponentMessageType aMessageType, co
 				messageData.myInt = data.myValue;
 				
 				GetParent()->NotifyComponents(eComponentMessageType::eHeal, messageData);
+				GetParent()->NotifyComponents(eComponentMessageType::eRestoreMana, messageData);
 			}
 			break;
 		case ePickupType::MANA:
@@ -35,6 +38,15 @@ void CPickerUpperComponent::Receive(const eComponentMessageType aMessageType, co
 				GetParent()->NotifyComponents(eComponentMessageType::eRestoreMana, messageData);
 			}
 			break;
+		case ePickupType::GOLD:
+		{
+
+			PollingStation::playerData->myGold += data.myValue;
+			//messageData.myInt = data.myValue;
+			
+			//GetParent()->NotifyComponents(eComponentMessageType::eActivateBurningBasicAttack, messageData);
+		}
+		break;
 		default: break;
 		}
 

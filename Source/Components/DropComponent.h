@@ -3,7 +3,7 @@
 class DropComponent : public CComponent
 {
 public:
-	DropComponent(const int aAmountOfGoldToDrop);
+	DropComponent(const int aAmountOfGoldToDrop, const int aDropPercentChance);
 	~DropComponent();
 
 	void Update(float aDeltaTime);

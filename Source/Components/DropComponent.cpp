@@ -4,10 +4,10 @@
 #include "PlayerData.h"
 #include "../Game/PickupFactory.h"
 
-DropComponent::DropComponent(const int aAmountOfGoldToDrop)
+DropComponent::DropComponent(const int aAmountOfGoldToDrop, const int aDropPercentChance)
 {
 	myGoldToDrop = aAmountOfGoldToDrop;
-	myHealthGlobeDropRate = 100;
+	myHealthGlobeDropRate = aDropPercentChance;
 }
 
 
@@ -23,7 +23,8 @@ void DropComponent::Receive(const eComponentMessageType aMessageType, const SCom
 {
 	if (aMessageType == eComponentMessageType::eDied)
 	{
-		PollingStation::playerData->myGold += myGoldToDrop;
+		//PollingStation::playerData->myGold += myGoldToDrop * PollingStation::playerData->myGoldGetModifier;
+		CPickupFactory::GetInstance().CreateGoldPickup(GetParent()->GetWorldPosition(),myGoldToDrop * PollingStation::playerData->myGoldGetModifier);
 		if (CalculateDropHealthGlobe() == true)
 		{
 			CPickupFactory::GetInstance().CreateHealthGlobe(GetParent()->GetWorldPosition());

@@ -346,9 +346,6 @@ void CPlayState::Load()
 	questPath += ".json";
 
 	myQuestManager.LoadQuestlines(questPath);
-	myQuestManager.CompleteEvent();
-	myQuestDrawer.UpdateText();
-
 	KLoader::CKevinLoader &loader = KLoader::CKevinLoader::GetInstance();
 
 	const KLoader::eError loadError = loader.LoadFile(levelPath);
@@ -450,6 +447,7 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	MovementComponentManager::GetInstance().Update(aDeltaTime);
 	AIControllerManager::GetInstance().Update(aDeltaTime);
 	SkillSystemComponentManager::GetInstance().Update(aDeltaTime);
+	CPickupManager::GetInstance().Update(aDeltaTime);
 	myCollisionComponentManager->Update();
 	myScene->Update(aDeltaTime);
 
@@ -721,7 +719,7 @@ void CPlayState::TEMP_CREATE_ENEMY()
 	collisionComponent->SetColliderType(eColliderType::eColliderType_Enemy);
 	//collisionComponent->GetCollider()->SetGameObject(enemyObj);
 	enemyObj->AddComponent(collisionComponent);
-	enemyObj->AddComponent(DropComponentManager::GetInstance().CreateAndRegisterComponent(50));
+	enemyObj->AddComponent(DropComponentManager::GetInstance().CreateAndRegisterComponent(50,100));
 
 	CHealthBarComponent* healthBar = myHealthBarManager->CreateHealthbar();
 	enemyObj->AddComponent(&*healthBar);
