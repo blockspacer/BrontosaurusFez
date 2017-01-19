@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "MasterAI.h"
 #include "PollingStation.h"
+#include "../Components/PlayerData.h"
+
+
+CMasterAI* CMasterAI::ourInstance = nullptr;
 
 CMasterAI::CMasterAI()
 {
@@ -16,9 +20,37 @@ CMasterAI::~CMasterAI() //Maybe remove from comp project?
 // make all dropcomponents use masterAI ?
 // or maybe i should make it more general, and let them communicate through the global postmaster.
 
-void CMasterAI::DetermineHealthDrop()
+void CMasterAI::Create()
 {
-	// PollingStation::playerData->myStats->health;  Can't get Health through pollingStation yet.
+	if (ourInstance == nullptr)
+	{
+		ourInstance = new CMasterAI();
+	}
+}
+
+void CMasterAI::Destroy()
+{
+	SAFE_DELETE(ourInstance);
+}
+
+CMasterAI & CMasterAI::GetInstance()
+{
+	return *ourInstance;
+}
+
+const float CMasterAI::DetermineHealthDrop()
+{
+
+	float result = 75 - PollingStation::playerData->myPercentHPLeft;
+
+	if (result < 0)
+	{
+		return 0;
+	}
+	return result;
+
+
+	//PollingStation::playerData->myStats->health;  Can't get Health through pollingStation yet.
 
 	//Droprate at 100% health should be 10%
 	//Droprate at 10% health should be 100%
