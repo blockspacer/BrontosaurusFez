@@ -17,4 +17,5 @@ struct PollingStation
 	static ValueObserver<int>* playerBoostBar;
 	static ValueObserver<int>* timeObjectiveBar;
 	static CollisionManager* collsionManager;
+	static CU::GrowingArray<CGameObject*> myThingsEnemiesShouldAvoid;
 };

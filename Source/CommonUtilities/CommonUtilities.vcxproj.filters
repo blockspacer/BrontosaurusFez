@@ -350,6 +350,7 @@
     <ClInclude Include="JsonValue.h">
       <Filter>PicoJson</Filter>
     </ClInclude>
+    <ClInclude Include="StaticTypeTraits.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Timer.cpp">

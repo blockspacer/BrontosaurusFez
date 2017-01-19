@@ -25,8 +25,8 @@ namespace GUI
 
 	void WidgetContainer::AddWidget(const std::string& aWidgetName, Widget* aWidget)
 	{
-		assert(myWidgets.find(aWidgetName.c_str()) == myWidgets.end() && "There is already a Widget with that name.");
-		myWidgets[aWidgetName.c_str()] = aWidget;
+		assert(myWidgets.find(aWidgetName) == myWidgets.end() && "There is already a Widget with that name.");
+		myWidgets[aWidgetName] = aWidget;
 		myOrderedWidgets.Add(aWidget);
 		SetChild(aWidget);
 	}
@@ -35,7 +35,7 @@ namespace GUI
 	{
 		for (auto it = myWidgets.begin(); it != myWidgets.end(); ++it)
 		{
-			if (aWidgetName == it->first.c_str())
+			if (aWidgetName == it->first)
 			{
 				Widget* removedWidget = it->second;
 				myWidgets.erase(it);
@@ -49,7 +49,7 @@ namespace GUI
 
 	Widget* WidgetContainer::FindWidget(const std::string& aWidgetName)
 	{
-		auto it = myWidgets.find(aWidgetName.c_str());
+		auto it = myWidgets.find(aWidgetName);
 		if (it != myWidgets.end())
 		{
 			return it->second;
@@ -81,12 +81,22 @@ namespace GUI
 	{
 		if (IsVisible() == true)
 		{
+			CU::GrowingArray<Widget*> invisiblez(10);
 			for (unsigned int i = 0; i < myOrderedWidgets.Size(); ++i)
 			{
 				if (myOrderedWidgets[i]->IsVisible() == true)
 				{
 					myOrderedWidgets[i]->Render();
 				}
+				else
+				{
+					invisiblez.Add(myOrderedWidgets[i]);
+				}
+			}
+
+			for (Widget* widget : invisiblez)
+			{
+				widget->GetSize();
 			}
 		}
 	}
@@ -132,7 +142,7 @@ namespace GUI
 
 	void WidgetContainer::MoveToFront(const std::string& aWidgetName)
 	{
-		auto it = myWidgets.find(aWidgetName.c_str());
+		auto it = myWidgets.find(aWidgetName);
 		if (it != myWidgets.end())
 		{
 			Widget* widgetToMove = it->second;

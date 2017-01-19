@@ -31,5 +31,4 @@ void CPlayerHealthMessenger::Receive(const eComponentMessageType aMessageType, c
 
 void CPlayerHealthMessenger::Destroy()
 {
-	throw std::logic_error("The method or operation is not implemented.");
 }

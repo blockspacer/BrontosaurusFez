@@ -95,6 +95,8 @@
 #include "MouseComponent.h"
 #include "QuestManager.h"
 #include "NavigationComponent.h"
+#include "PlayerHealthMessenger.h"
+#include "PlayerManaMessenger.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -334,7 +336,7 @@ void CPlayState::Load()
 
 	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
-#ifdef _DEBUG
+#ifdef _DEBUGsdf
 	const int levelIndex = levelsArray.Size() - 1;
 #else
 	const int levelIndex = 0;
@@ -402,8 +404,11 @@ void CPlayState::Load()
 	myMouseComponent = new CMouseComponent(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 	mouseObject->AddComponent(myMouseComponent);
 
-
-
+	if (PollingStation::playerObject != nullptr)
+	{
+		PollingStation::playerObject->AddComponent(new CPlayerHealthMessenger());
+		PollingStation::playerObject->AddComponent(new CPlayerManaMessenger());
+	}
 
 	CFireEmitterInstance fireeeeeByCarl;
 	SFireEmitterData fireData;

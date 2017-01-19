@@ -15,5 +15,6 @@ private:
 	float myMovementSpeed;
 	CU::GrowingArray<CU::Vector3f>* myPathPointer;
 	unsigned short myCurrentPathIndex;
+	bool myShouldMove;
 };
 
