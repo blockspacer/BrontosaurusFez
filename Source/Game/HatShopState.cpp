@@ -27,9 +27,6 @@ HatShopState::HatShopState(StateStack & aStateStack) :
 	myCurrentlySelected = nullptr;
 	myGUIManager = new GUI::GUIManager();
 	myGUIManager->Init("models/gui/shopWindow.fbx");
-	GUI::GUIManager tempMan;
-	tempMan.Init("models/gui/buyKnapp.fbx");
-	myGUIManager->AddWidget("buyknapp", tempMan.RemoveWidget("buyKnapp") );
 	CU::CJsonValue value;
 	const std::string& errorString = value.Parse("Json/Hats/HatBluePrints.json");
 
@@ -142,6 +139,7 @@ void HatShopState::OnEnter()
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eBuyButtonPressed);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eShopItemSelected);
 	myGUIManager->RestartRenderAndUpdate();
 	myCurrentlySelected = nullptr;
 }
@@ -150,6 +148,7 @@ void HatShopState::OnExit()
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyPressed);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eBuyButtonPressed);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eShopItemSelected);
 	myGUIManager->PauseRenderAndUpdate();
 }
 
@@ -169,18 +168,15 @@ void HatShopState::ValidatePurchase()
 	}
 }
 
-void HatShopState::SetSelected(unsigned int aIndex)
+void HatShopState::SetSelected(const char aIndex)
 {
-	if (aIndex >= mySelections.Size())
-	{
-		aIndex = mySelections.Size() - 1;
-	}
 	myCurrentlySelected = nullptr;
 	if (mySelections.Size() != 0)
 	{
 		myCurrentlySelected = mySelections[aIndex];
 	}
 
+	//Recolor the texts so you know which one is currently selected
 	if (myCurrentlySelected != nullptr)
 	{
 		for (unsigned int i = 0; i < mySelections.Size(); ++i)
