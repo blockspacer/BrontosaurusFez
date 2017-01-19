@@ -54,5 +54,5 @@ namespace CU
 	template<typename T> struct IsPointer : FalseResult {};
 	template<typename T> struct IsPointer<T*> : TrueResult {};
 
-	template<typename T> struct IsPod : BoolType<IsPointer<T>::Result || IsInteger<T>::Result || IsFloat<T>::Result> {};
+	template<typename T> struct IsPod : BoolType<IsPointer<T>::Result || IsIntegral<T>::Result> {};
 }

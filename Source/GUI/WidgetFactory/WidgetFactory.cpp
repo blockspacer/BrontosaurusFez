@@ -72,6 +72,17 @@ namespace GUI
 			visibleWidgets.Add(visibleWidget);
 		}
 
+		bool hasKeyHealthOrb = guiScene.HasKey("healthOrb");
+		std::string healthOrbName("");
+		std::string manaOrbName("");
+		std::string orbTexture("");
+		if (hasKeyHealthOrb == true)
+		{
+			healthOrbName = guiScene["healthOrb"].GetString();
+			manaOrbName = guiScene["manaOrb"].GetString();
+			orbTexture = guiScene["orbTexture"].GetString();
+		}
+
 		WidgetContainer* baseWidgetContainer = new WidgetContainer(CU::Vector2f::Zero, CU::Vector2f(1.f, 1.f), "BaseWidgetContainer", true);
 
 		const CU::GrowingArray<CLoaderMesh*>& meshes = aLoaderScene->myMeshes;
@@ -80,20 +91,20 @@ namespace GUI
 			std::string widgetName = meshes[i]->myName;
 			bool isVisible = visibleWidgets.Size() == 0 || visibleWidgets.Find(widgetName) != visibleWidgets.FoundNone;
 			Widget* widget = nullptr;
-			if (widgetName == "orbHealth" || widgetName == "orbMana")
+			if (hasKeyHealthOrb == true && (widgetName == healthOrbName || widgetName == manaOrbName))
 			{
-				widget = new ModelWidget(meshes[i], { "Models/gui/orbShader.dds" }, *guiCamera, isVisible);
+				widget = new ModelWidget(meshes[i], { orbTexture }, *guiCamera, isVisible);
 			}
 			else
 			{
 				widget = new ModelWidget(meshes[i], aLoaderScene->myTextures, *guiCamera, isVisible);
 			}
 
-			if (widget->GetName()/*.find("ealth") != std::string::npos*/ == "orbHealth")
+			if (widgetName == healthOrbName)
 			{
 				widget = CreateHealthBar(widget);
 			}
-			else if (widget->GetName()/*.find("ana") != std::string::npos*/ == "orbMana")
+			else if (widgetName == manaOrbName)
 			{
 				widget = CreateManaBar(widget);
 			}

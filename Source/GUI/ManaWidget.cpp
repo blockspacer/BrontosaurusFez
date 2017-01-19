@@ -23,6 +23,7 @@ namespace GUI
 		if (model != nullptr)
 		{
 			model->GetPixelConstantBufferStruct().myValues[SPixelConstantBuffer::eMember::eIsManaBar] = 1.f;
+			model->GetPixelConstantBufferStruct().myValues[SPixelConstantBuffer::eMember::eManaPercent] = 1.f;
 		}
 	}
 	

@@ -3,8 +3,8 @@
 #include "picojson.h"
 #include <fstream>
 
-#define JSON_ERROR(ERROR_MESSAGE) assert(ERROR_MESSAGE && false)
-#define  JSON_ERROR(ERROR_MESSAGE) DL_MESSAGE_BOX(ERROR_MESSAGE)
+//#define JSON_ERROR(ERROR_MESSAGE) assert(ERROR_MESSAGE && false)
+#define JSON_ERROR(ERROR_MESSAGE) DL_MESSAGE_BOX(ERROR_MESSAGE)
 
 namespace CU
 {
@@ -248,9 +248,26 @@ namespace CU
 
 	const std::string& CJsonValue::GetString() const
 	{
+		const static std::string nullString("");
+
 		if (myValue == nullptr)
 		{
 			JSON_ERROR("json value is null");
+			return nullString;
+		}
+		if (IsString() == false)
+		{
+			JSON_ERROR("json value is not string, returning \"\"");
+			return nullString;
+		}
+
+		return myValue->get<std::string>();
+	}
+
+	const std::string& CJsonValue::TryGetString() const
+	{
+		if (IsString() == false)
+		{
 			const static std::string nullString("");
 			return nullString;
 		}

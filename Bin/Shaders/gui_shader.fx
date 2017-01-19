@@ -488,21 +488,28 @@ float4 PS_PBL(PixelInput input)
 
 float4 PS_OrbShader(PixelInput input)
 {
-	static const float3 orbColor2 = { 0.0, 0.0775376, 0.672 };
-	static const float3 orbColor1 = { 0.0, 1.0, 0.923067 };
+	static const float3 manaColor2 = { 0.0, 0.0775376, 0.672 };
+	static const float3 manaColor1 = { 0.0, 1.0, 0.923067 };
+	
+	static const float3 healthColor2 = { 1.0, 0.0775376, 0.672 };
+	static const float3 healthColor1 = { 1.0, 1.0, 0.923067 };
+
 	static const float bubbleTimeFactor = 0.15f;
 	static const float waveTimeFactor = 0.1f;
 
 	float stars = isManaBar;
 	float orbValue = manaPercent + healthPercent;
 
+	float3 orbColor1 = isManaBar * manaColor1 + isHealthBar * healthColor1;
+	float3 orbColor2 = isManaBar * manaColor2 + isHealthBar * healthColor2;
+
 	float SubOp = (stars - 0.5);
 	float AddOp = ((SubOp * 0.5) + input.uv.xy.x);
 	float MulOp = (time * bubbleTimeFactor);
 	float SubOp98 = (input.uv.xy.y - MulOp);
 	float2 VectorConstruct = float2(AddOp, SubOp98);
-	float4 Sampler = albedo.Sample(globalSamplerState, float2(VectorConstruct.xy.x, /*1 -*/ VectorConstruct.xy.y));
-	float4 Sampler100 = albedo.Sample(globalSamplerState, float2(input.uv.xy.x, /*1 - */input.uv.xy.y));
+	float4 Sampler = albedo.Sample(globalSamplerState, float2(VectorConstruct.xy.x, 1 - VectorConstruct.xy.y));
+	float4 Sampler100 = albedo.Sample(globalSamplerState, float2(input.uv.xy.x, 1 - input.uv.xy.y));
 	float AddOp137 = ((Sampler.xyz.z * 0.3) + Sampler100.xyz.y);
 	float MulOp64 = (time * waveTimeFactor);
 	float SubOp66 = (MulOp64 - input.uv.xy.x);
