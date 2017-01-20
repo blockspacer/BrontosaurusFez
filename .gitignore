@@ -393,3 +393,4 @@ Bin/ModelViewer_ModelViewerRelease.lib
 *.exp
 Bin/Models/Error/error.e[0
 Bin/ModelViewer_Release.lib
+Unity/
