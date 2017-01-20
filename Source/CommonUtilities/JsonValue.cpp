@@ -3,7 +3,8 @@
 #include "picojson.h"
 #include <fstream>
 
-#define JSON_ERROR(ERROR_MESSAGE) assert(ERROR_MESSAGE && false)
+//#define JSON_ERROR(ERROR_MESSAGE) assert(ERROR_MESSAGE && false)
+#define JSON_ERROR(ERROR_MESSAGE) DL_MESSAGE_BOX(ERROR_MESSAGE)
 
 namespace CU
 {
@@ -66,7 +67,7 @@ namespace CU
 		std::ifstream jsonFile(aFilePath);
 		if (jsonFile.good() == false)
 		{
-			DL_ASSERT("Could not find json file %s", aFilePath.c_str());
+			JSON_ERROR("Could not find json file %s", aFilePath.c_str());
 			return "Error loading filePath " + aFilePath;
 		}
 
@@ -130,11 +131,11 @@ namespace CU
 			return static_cast<int>(myValue->get<std::string>().size());
 		}
 
-		DL_ASSERT("trying to get size from simple json value");
+		JSON_ERROR("trying to get size from simple json value");
 		return 0;
 	}
 
-	int CJsonValue::Count(const std::string & aKey)
+	int CJsonValue::Count(const std::string& aKey)
 	{
 		//maybe not work work in progress, feel free to remove or redo.
 		if (myValue == nullptr)
@@ -247,9 +248,26 @@ namespace CU
 
 	const std::string& CJsonValue::GetString() const
 	{
+		const static std::string nullString("");
+
 		if (myValue == nullptr)
 		{
 			JSON_ERROR("json value is null");
+			return nullString;
+		}
+		if (IsString() == false)
+		{
+			JSON_ERROR("json value is not string, returning \"\"");
+			return nullString;
+		}
+
+		return myValue->get<std::string>();
+	}
+
+	const std::string& CJsonValue::TryGetString() const
+	{
+		if (IsString() == false)
+		{
 			const static std::string nullString("");
 			return nullString;
 		}
@@ -262,6 +280,12 @@ namespace CU
 		if (myValue == nullptr)
 		{
 			JSON_ERROR("json value is null");
+			return CJsonValue();
+		}
+		if (IsArray() == false)
+		{
+			eJsoneValueType type = GetType();
+			JSON_ERROR("json value is not an array");
 			return CJsonValue();
 		}
 

@@ -1,32 +1,64 @@
 #include "stdafx.h"
 #include "MasterAI.h"
 #include "PollingStation.h"
+#include "../Components/PlayerData.h"
+#include "GameObject.h"
+#include "ComponentMessage.h"
+
+CMasterAI* CMasterAI::ourInstance = nullptr;
 
 CMasterAI::CMasterAI()
 {
 
 }
 
-CMasterAI::~CMasterAI() //Maybe remove from comp project?
+CMasterAI::~CMasterAI()
 {
 }
 
-// How to connect Master AI with the game?
-
-// make all dropcomponents use masterAI ?
-// or maybe i should make it more general, and let them communicate through the global postmaster.
-
-void CMasterAI::DetermineHealthDrop()
+void CMasterAI::Create()
 {
-	// PollingStation::playerData->myStats->health;  Can't get Health through pollingStation yet.
-
-	//Droprate at 100% health should be 10%
-	//Droprate at 10% health should be 100%
-
-	//Each healthglobe could give you a percentage amount of HP, let's say 30%;
+	if (ourInstance == nullptr)
+	{
+		ourInstance = new CMasterAI();
+	}
 }
 
-void CMasterAI::DetermineAmmountOfMinionsToSpawn()
+void CMasterAI::Destroy()
+{
+	SAFE_DELETE(ourInstance);
+}
+
+CMasterAI & CMasterAI::GetInstance()
+{
+	return *ourInstance;
+}
+
+const float CMasterAI::DetermineHealthDrop()
 {
 
+	float result = 75 - PollingStation::playerData->myPercentHPLeft;
+
+	if (result < 0)
+	{
+		return 0;
+	}
+	return result;
+}
+
+void CMasterAI::DetermineAmountOfMinionsToSpawn()
+{
+
+}
+
+void CMasterAI::CallForHelp(CGameObject* aEnemyObject, float aCallForHelpRadius)
+{
+	for(unsigned short i = 0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); i++)
+	{
+		float distance2 = CU::Vector3f(PollingStation::myThingsEnemiesShouldAvoid[i]->GetWorldPosition() - aEnemyObject->GetWorldPosition()).Length2();
+		if(distance2 < aCallForHelpRadius * aCallForHelpRadius)
+		{
+			PollingStation::myThingsEnemiesShouldAvoid[i]->NotifyComponents(eComponentMessageType::eCalledForHelp, SComponentMessageData());
+		}
+	}
 }

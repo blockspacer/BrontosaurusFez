@@ -21,6 +21,7 @@
 #include "LoadPickerupperComponent.h"
 #include "LoadObjectives.h"
 #include "LoadActivationComponent.h"
+#include "LoadOpenShopListenerComponent.h"
 
 LoadManager* LoadManager::ourInstance = nullptr;
 
@@ -81,7 +82,7 @@ void LoadManager::RegisterFunctions()
 	loader.RegisterComponentLoadFunction("CircleCollider", LoadCircleCollider);
 	loader.RegisterComponentLoadFunction("AIController", LoadAIController);
 	loader.RegisterComponentLoadFunction("SeekController", LoadSeekController);
-	loader.RegisterComponentLoadFunction("fleeController", LoadFleeController);
+	loader.RegisterComponentLoadFunction("FleeController", LoadFleeController);
 	loader.RegisterComponentLoadFunction("SkillSystemComponent", LoadSkillSystemComponent);
 	loader.RegisterComponentLoadFunction("HealthComponent", LoadHealthComponent);
 	loader.RegisterComponentLoadFunction("HealthBarComponent", LoadHealthBarComponent);
@@ -94,6 +95,7 @@ void LoadManager::RegisterFunctions()
 	loader.RegisterComponentLoadFunction("EnemyObjective", LoadEnemyObjective);
 	loader.RegisterComponentLoadFunction("ActivationObjectiveComponent", LoadActivationObjective);
 	loader.RegisterComponentLoadFunction("ActivatorComponent", LoadActivationComponent);
+	loader.RegisterComponentLoadFunction("ActivateShopComponent", LoadOpenShopListenerComponent);
 }
 
 LoadManager::LoadManager()

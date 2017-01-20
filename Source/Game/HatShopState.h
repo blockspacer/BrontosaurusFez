@@ -27,7 +27,7 @@ public:
 	void OnEnter() override;
 	void OnExit() override;
 	void ValidatePurchase();
-	void SetSelected(unsigned int aIndex);
+	void SetSelected(const char aIndex);
 	bool GetLetThroughRender() const override;
 	bool GetLetThroughUpdate() const override;
 

@@ -10,6 +10,7 @@ namespace GUI
 		CHealthWidget(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const std::string& aName);
 		~CHealthWidget();
 
+		void Init();
 		void SetHealthPercent(const float aHealthPercent);
 
 		eMessageReturn Recieve(const Message& aMessage) override;

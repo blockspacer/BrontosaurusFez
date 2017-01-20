@@ -16,6 +16,7 @@
 #include "Components/ModelComponent.h"
 #include "Components/ParticleEmitterComponentManager.h"
 #include "Components/ComponentManager.h"
+#include "Components\PlayerHealthMessenger.h"
 
 #include "PostMaster/PopCurrentState.h"
 #include "PostMaster/ChangeLevel.h"
@@ -52,6 +53,8 @@
 
 #include "PickupFactory.h"
 #include "PickupManager.h"
+
+#include "MasterAI.h"
 
 #include <time.h>
 //Kanske Inte ska vara här?
@@ -92,6 +95,8 @@
 #include "MouseComponent.h"
 #include "QuestManager.h"
 #include "NavigationComponent.h"
+#include "PlayerHealthMessenger.h"
+#include "PlayerManaMessenger.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -132,6 +137,7 @@ CPlayState::~CPlayState()
 	CShopStorage::Destroy();
 	CPickupFactory::Destroy();
 	CPickupManager::DestroyInstance();
+	CMasterAI::Destroy();
 
 	SkillFactory::DestroyInstance();
 	CComponentManager::DestroyInstance();
@@ -208,7 +214,7 @@ void CPlayState::Load()
 	//Move Later for modification from unity
 	myScene->AddCamera(CScene::eCameraType::ePlayerOneCamera);
 	CU::Camera& playerCamera = myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera);
-	playerCamera.Init(60, WINDOW_SIZE_F.x, WINDOW_SIZE_F.y, 1.f, 75000.0f);
+	playerCamera.Init(50, WINDOW_SIZE_F.x, WINDOW_SIZE_F.y, 1.f, 75000.0f);
 	
 	////AddBasicAttack
 	//SkillData* basicSkillData = new SkillData;
@@ -356,6 +362,12 @@ void CPlayState::Load()
 	if (PollingStation::PlayerInput != nullptr)
 	{
 		PollingStation::playerObject = PollingStation::PlayerInput->GetParent();
+
+		//Dísclaimer: fult men funkar //lägg till allt spelar specifikt som inte LD behöver störas av här
+		CPlayerHealthMessenger* healthMessenger = new CPlayerHealthMessenger();
+
+		PollingStation::playerObject->AddComponent(healthMessenger);
+
 	}
 	//CSeekControllerManager::GetInstance().SetTarget();
 	myGameObjectManager->SendObjectsDoneMessage();
@@ -392,8 +404,11 @@ void CPlayState::Load()
 	myMouseComponent = new CMouseComponent(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 	mouseObject->AddComponent(myMouseComponent);
 
-
-
+	if (PollingStation::playerObject != nullptr)
+	{
+		PollingStation::playerObject->AddComponent(new CPlayerHealthMessenger());
+		PollingStation::playerObject->AddComponent(new CPlayerManaMessenger());
+	}
 
 	CFireEmitterInstance fireeeeeByCarl;
 	SFireEmitterData fireData;
@@ -608,6 +623,7 @@ void CPlayState::CreateManagersAndFactories()
 	myHatMaker = new CHatMaker(myGameObjectManager);
 	CPickupFactory::Create(myGameObjectManager, myCollisionComponentManager);
 	CPickupManager::CreateInstance();
+	CMasterAI::Create();
 }
 
 void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)

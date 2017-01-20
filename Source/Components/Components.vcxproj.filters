@@ -137,6 +137,7 @@
     <ClCompile Include="ActivationObjectiveComponent.cpp">
       <Filter>ObjectiveComponents</Filter>
     </ClCompile>
+    <ClCompile Include="OpenShopListenerComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -295,6 +296,7 @@
     <ClInclude Include="ActivationObjectiveComponent.h">
       <Filter>ObjectiveComponents</Filter>
     </ClInclude>
+    <ClInclude Include="OpenShopListenerComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -356,6 +358,9 @@
     </Filter>
     <Filter Include="Activation">
       <UniqueIdentifier>{ce907b3f-4f14-4c78-b389-0defde24c5a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OpenShopListenerComponent">
+      <UniqueIdentifier>{4e77c44b-70f6-43e3-81aa-a5426b6a26c6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

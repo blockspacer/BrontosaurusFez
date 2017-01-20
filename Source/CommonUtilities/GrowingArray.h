@@ -4,12 +4,18 @@
 #include <string.h> // memcpy
 #include <initializer_list>
 #include "QuickSort.h"
-
+#include "StaticTypeTraits.h"
 
 #define self (*this)
 
 namespace CU
 {
+	template<bool IsPod, typename ObjectType, typename SizeType>
+	struct CopyArray;
+
+	template<bool IsPod, bool MoveUp, typename ObjectType, typename SizeType>
+	struct MoveArray;
+
 	template<typename ObjectType, typename SizeType = unsigned int, bool USE_SAFE_MODE = true>
 	class GrowingArray
 	{
@@ -94,6 +100,9 @@ namespace CU
 	private:
 		inline void Reallocate(const SizeType aNewSize);
 
+		struct Copy : CopyArray<IsPod<ObjectType>::Result || !USE_SAFE_MODE, ObjectType, SizeType> {};
+		template<bool MoveUp> struct Move : MoveArray<IsPod<ObjectType>::Result || !USE_SAFE_MODE, MoveUp, ObjectType, SizeType> {};
+
 		ObjectType* myArray;
 		SizeType mySize;
 		SizeType myCapacity;
@@ -152,11 +161,6 @@ namespace CU
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
 	GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>& GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::operator=(const GrowingArray& aGrowingArray)
 	{
-#ifdef _DEBUG
-		bool useSafeMode = USE_SAFE_MODE;
-		if (useSafeMode) useSafeMode;
-#endif // _DEBUG
-
 		if (IsInitialized() == true)
 		{
 			Destroy();
@@ -165,23 +169,9 @@ namespace CU
 		if (aGrowingArray.IsInitialized() == true)
 		{
 			Init(aGrowingArray.myCapacity);
-
 			mySize = aGrowingArray.mySize;
 
-			if (USE_SAFE_MODE)
-			{
-				for (SizeType i = 0; i < aGrowingArray.Size(); ++i)
-				{
-					myArray[i] = aGrowingArray[i];
-				}
-			}
-			else
-			{
-				if (Size() > 0)
-				{
-					memcpy(myArray, aGrowingArray.myArray, sizeof(ObjectType) * mySize);
-				}
-			}
+			Copy::DoCopy(myArray, aGrowingArray.myArray, mySize);
 		}
 
 		return self;
@@ -227,7 +217,7 @@ namespace CU
 
 		for (SizeType i = 0; i < aStartCapacity; ++i)
 		{
-			Add(aItemToFillWith);
+			Add(aItemToFillWith); //fill array -> memset?
 		}
 	}
 
@@ -258,7 +248,7 @@ namespace CU
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
-	inline ObjectType & GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::At(const SizeType aIndex)
+	inline ObjectType& GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::At(const SizeType aIndex)
 	{
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds");
@@ -311,8 +301,7 @@ namespace CU
 			Reallocate(myCapacity * 2);
 		}
 
-		myArray[mySize] = aObject;
-		++mySize;
+		myArray[mySize++] = aObject;
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
@@ -325,8 +314,7 @@ namespace CU
 			Reallocate(myCapacity * 2);
 		}
 
-		myArray[mySize] = std::move(aObject);
-		++mySize;
+		myArray[mySize++] = std::move(aObject);
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
@@ -344,7 +332,7 @@ namespace CU
 	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::AddChunk(const void* aChunkPointer, const SizeType aByteSize)
 	{
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
-		static_assert(!USE_SAFE_MODE, "Should not add chunk to non-pod array");
+		static_assert(!USE_SAFE_MODE || IsPod<ObjectType>::Result, "Should not add chunk to non-pod array");
 
 		const SizeType numberOfAdds = aByteSize / sizeof(ObjectType);
 
@@ -365,28 +353,13 @@ namespace CU
 	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Insert(const SizeType aIndex, const ObjectType& aObject)
 	{
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
-#ifdef _DEBUG
-		bool useSafeMode = USE_SAFE_MODE;
-		if (useSafeMode) useSafeMode;
-#endif // _DEBUG
-
 
 		if (mySize >= myCapacity)
 		{
 			Reallocate(myCapacity * 2);
 		}
 
-		if (USE_SAFE_MODE)
-		{
-			for (SizeType i = mySize; i > aIndex; i--)
-			{
-				myArray[i] = myArray[i - 1];
-			}
-		}
-		else
-		{
-			memmove(myArray + aIndex + 1, myArray + aIndex, sizeof(ObjectType) * (mySize - aIndex)); //if wrong, it's here
-		}
+		Move<true>::DoMove(myArray, 1, aIndex, mySize);
 
 		myArray[aIndex] = aObject;
 		++mySize;
@@ -410,31 +383,12 @@ namespace CU
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds");
 
-#ifdef _DEBUG
-		bool useSafeMode = USE_SAFE_MODE;
-		if (useSafeMode) useSafeMode;
-#endif // _DEBUG
-
 		if (mySize > 1)
 		{
-			if (USE_SAFE_MODE)
-			{
-				for (SizeType i = aIndex; i < mySize - 1; ++i)
-				{
-					myArray[i] = myArray[i + 1];
-				}
-			}
-			else
-			{
-				memmove(myArray + aIndex, myArray + aIndex + 1, sizeof(ObjectType) * (mySize - aIndex)); //if wrong, it's here
-			}
+			Move<false>::DoMove(myArray, 1, aIndex, mySize);
+		}
 
-			--mySize;
-		}
-		else
-		{
-			RemoveAll();
-		}
+		--mySize;
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
@@ -449,27 +403,9 @@ namespace CU
 	{
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds");
-		if (mySize > 1)
-		{
-			delete myArray[aIndex];
-			myArray[aIndex] = nullptr;
-			if (USE_SAFE_MODE)
-			{
-				for (SizeType i = aIndex; i < myCapacity; ++i)
-				{
-					myArray[i] = myArray[i + 1];
-				}
-			}
-			else
-			{
-				memmove(myArray + aIndex, myArray + aIndex + 1, sizeof(ObjectType) * (mySize - aIndex)); //if wrong, it's here
-			}
-			--mySize;
-		}
-		else
-		{
-			RemoveAll();
-		}
+
+		delete myArray[aIndex];
+		RemoveAtIndex(aIndex);
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
@@ -490,14 +426,8 @@ namespace CU
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds!");
 
-		if (myArray[aIndex] != nullptr)
-		{
-			delete myArray[aIndex];
-			myArray[aIndex] = nullptr;
-		}
-
-		myArray[aIndex] = myArray[mySize - 1];
-		--mySize;
+		delete myArray[aIndex];
+		myArray[aIndex] = myArray[--mySize];
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
@@ -571,7 +501,7 @@ namespace CU
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
-	inline ObjectType * GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::AsPointer(const SizeType aIndex)
+	inline ObjectType* GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::AsPointer(const SizeType aIndex)
 	{
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds");
@@ -579,7 +509,7 @@ namespace CU
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
-	inline const ObjectType * GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::AsPointer(const SizeType aIndex) const
+	inline const ObjectType* GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::AsPointer(const SizeType aIndex) const
 	{
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds");
@@ -587,7 +517,7 @@ namespace CU
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
-	inline void * GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::AsVoidPointer(const SizeType aIndex)
+	inline void* GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::AsVoidPointer(const SizeType aIndex)
 	{
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds");
@@ -595,7 +525,7 @@ namespace CU
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
-	inline const void * GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::AsVoidPointer(const SizeType aIndex) const
+	inline const void* GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::AsVoidPointer(const SizeType aIndex) const
 	{
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		assert((aIndex >= 0 && aIndex < mySize) && "Index out of bounds");
@@ -708,10 +638,7 @@ namespace CU
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		ObjectType *newArray = new ObjectType[aNewSize];
 
-		for (SizeType i = 0; i < mySize; ++i)
-		{
-			newArray[i] = myArray[i];
-		}
+		Copy::DoCopy(newArray, myArray, mySize);
 
 		delete[] myArray;
 		myArray = newArray;
@@ -726,4 +653,70 @@ namespace CU
 		myCapacity = 0;
 		mySize = 0;
 	}
+
+	template<typename ObjectType, typename SizeType>
+	struct CopyArray<true, ObjectType, SizeType>
+	{
+		static void DoCopy(ObjectType aCopyToArray[], const ObjectType aCopyFromArray[], const SizeType aElementsToCopy)
+		{
+			if (aElementsToCopy > 0)
+			{
+				memcpy(aCopyToArray, aCopyFromArray, static_cast<size_t>(aElementsToCopy * sizeof(ObjectType)));
+			}
+		}
+	};
+
+	template<typename ObjectType, typename SizeType>
+	struct CopyArray<false, ObjectType, SizeType>
+	{
+		static void DoCopy(ObjectType aCopyToArray[], const ObjectType aCopyFromArray[], const SizeType aElementsToCopy)
+		{
+			for (SizeType i = 0; i < aElementsToCopy; ++i)
+			{
+				aCopyToArray[i] = aCopyFromArray[i];
+			}
+		}
+	};
+
+	template<typename ObjectType, typename SizeType>
+	struct MoveArray<true, true, ObjectType, SizeType>
+	{
+		static void DoMove(ObjectType aArray[], const SizeType aElementsToMove, const SizeType aStartIndex, const SizeType aArraySize)
+		{
+			memmove(aArray + aStartIndex + aElementsToMove, aArray + aStartIndex, sizeof(ObjectType) * (aArraySize - aStartIndex));
+		}
+	};
+
+	template<typename ObjectType, typename SizeType>
+	struct MoveArray<true, false, ObjectType, SizeType>
+	{
+		static void DoMove(ObjectType aArray[], const SizeType aElementsToMove, const SizeType aStartIndex, const SizeType aArraySize)
+		{
+			memmove(aArray + aStartIndex, aArray + aStartIndex + aElementsToMove, sizeof(ObjectType) * (aArraySize - aStartIndex));
+		}
+	};
+
+	template<typename ObjectType, typename SizeType>
+	struct MoveArray<false, false, ObjectType, SizeType>
+	{
+		static void DoMove(ObjectType aArray[], const SizeType aElementsToMove, const SizeType aStartIndex, const SizeType aArraySize)
+		{
+			for (SizeType i = aArraySize; i > aStartIndex; --i)
+			{
+				aArray[i] = aArray[i - aElementsToMove];
+			}
+		}
+	};
+
+	template<typename ObjectType, typename SizeType>
+	struct MoveArray<false, true, ObjectType, SizeType>
+	{
+		static void DoMove(ObjectType aArray[], const SizeType aElementsToMove, const SizeType aStartIndex, const SizeType aArraySize)
+		{
+			for (SizeType i = aStartIndex; i < aArraySize - aElementsToMove; ++i)
+			{
+				aArray[i] = aArray[i + aElementsToMove];
+			}
+		}
+	};
 }

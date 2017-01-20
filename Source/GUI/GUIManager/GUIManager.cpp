@@ -77,7 +77,7 @@ void GUI::GUIManager::Render()
 	changeStateMessage->myDepthStencilState = eDepthStencilState::eDisableDepth; //if mouse is under buttons, this is the problem
 	changeStateMessage->myRasterizerState = eRasterizerState::eDefault;
 	changeStateMessage->myBlendState = eBlendState::eAlphaBlend;
-	changeStateMessage->mySamplerState = eSamplerState::eClamp;
+	changeStateMessage->mySamplerState = eSamplerState::eWrap;
 	RENDERER.AddRenderMessage(changeStateMessage);
 
 	if (myCamera != nullptr)

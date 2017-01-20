@@ -51,6 +51,7 @@ namespace CU
 		unsigned int GetUInt() const;
 
 		const std::string& GetString() const;
+		const std::string& TryGetString() const;
 
 		CJsonValue operator[](const int aIndex) const;
 		CJsonValue operator[](const std::string& aKey) const;

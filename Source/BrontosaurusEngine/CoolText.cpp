@@ -35,6 +35,15 @@ CCoolText::CCoolText(const CCoolText& aCoolText)
 	InitBuffers();
 }
 
+CCoolText::CCoolText(const CU::DynamicString & aFontPath, const int aPixelSize):
+	myVertexBuffer(nullptr),
+	myPixelConstantBuffer(nullptr)
+{
+	myFont = CFontEngineFacade::GetInstance().GetFace(aFontPath.c_str());
+	myFont.SetSize(aPixelSize, 0, 0);
+	InitBuffers();
+}
+
 CCoolText::~CCoolText()
 {
 }

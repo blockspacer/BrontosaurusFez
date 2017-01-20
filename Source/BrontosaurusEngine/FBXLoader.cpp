@@ -425,6 +425,11 @@ bool CFBXLoader::LoadGUIScene(const char* aFilePath, CLoaderScene& aSceneOut)
 			break;
 		}
 	}
+
+	if (root->mNumChildren >= 3)
+	{
+		modelGroup = root;
+	}
 	
 	CU::GrowingArray<aiNode*> nodes(4);
 	LoadMeshChildren(modelGroup, nodes);

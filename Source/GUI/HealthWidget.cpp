@@ -9,11 +9,6 @@ namespace GUI
 		: WidgetContainer(aPosition, aSize, aName, true)
 		, myHealthPercent(1.f)
 	{
-		ModelWidget* model = *FindWidget("Model");
-		if (model != nullptr)
-		{
-			model->GetPixelConstantBufferStruct().myValues[SPixelConstantBuffer::eMember::eIsHealthBar] = 1.f;
-		}
 		PostMaster::GetInstance().Subscribe(this, eMessageType::ePlayerHealthChanged);
 	}
 
@@ -22,6 +17,16 @@ namespace GUI
 		PostMaster::GetInstance().UnSubscribe(this, eMessageType::ePlayerHealthChanged);
 	}
 	
+	void CHealthWidget::Init()
+	{
+		ModelWidget* model = *FindWidget("Model");
+		if (model != nullptr)
+		{
+			model->GetPixelConstantBufferStruct().myValues[SPixelConstantBuffer::eMember::eIsHealthBar] = 1.f;
+			model->GetPixelConstantBufferStruct().myValues[SPixelConstantBuffer::eMember::eHealthPercent] = 1.f;
+		}
+	}
+
 	void CHealthWidget::SetHealthPercent(const float aHealthPercent)
 	{
 		myHealthPercent = aHealthPercent;
@@ -29,7 +34,7 @@ namespace GUI
 		ModelWidget* model = *FindWidget("Model");
 		if (model != nullptr)
 		{
-			//model->GetPixelConstantBufferStruct().myValues[SPixelConstantBuffer::eMember::eHealthPercent] = aHealthPercent;
+			model->GetPixelConstantBufferStruct().myValues[SPixelConstantBuffer::eMember::eHealthPercent] = aHealthPercent;
 		}
 	}
 

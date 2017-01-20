@@ -10,24 +10,26 @@
 #include <WidgetDecorator/TextWidget/TextWidget.h>
 #include "Button/ButtonAnimation.h"
 #include "ToolTipDecorator.h"
+#include "HealthWidget.h"
+#include "ManaWidget.h"
 
 #include "../BrontosaurusEngine/FBXLoader.h"
 #include "../BrontosaurusEngine/Engine.h"
 
 #include "../CommonUtilities/Camera.h"
 
-#include "PostMaster/PostMaster.h"
-#include "PostMaster/Message.h"
-#include "PostMaster/PushState.h"
-#include "PostMaster/PopCurrentState.h"
-#include "PostMaster/Pop2States.h"
-#include "PostMaster/HatBought.h"
-#include "PostMaster/BuyButtonPressed.h"
+#include "../PostMaster/PostMaster.h"
+#include "../PostMaster/Message.h"
+#include "../PostMaster/PushState.h"
+#include "../PostMaster/PopCurrentState.h"
+#include "../PostMaster/Pop2States.h"
+#include "../PostMaster/HatBought.h"
+#include "../PostMaster/BuyButtonPressed.h"
+#include "PostMaster/ShopItemButtonPressed.h"
 
 #include "../Game/PollingStation.h"
-#include "HealthWidget.h"
-#include "ManaWidget.h"
 #include  "../Components/PlayerData.h"
+#include "CommonUtilities/JsonValue.h"
 
 using size_ga = CU::GrowingArray<CLoaderMesh*>::size_type;
 
@@ -44,10 +46,13 @@ namespace GUI
 			DL_PRINT_WARNING("Failed to load GUI scene: %s\n", aFilePathFBX);
 		}
 
-		return CreateGUIScene(&guiScene, aGUIManagerCameraOut);
+		std::string jsonPath = aFilePathFBX;
+		jsonPath -= ".fbx";
+		jsonPath += ".json";
+		return CreateGUIScene(&guiScene, aGUIManagerCameraOut, jsonPath);
 	}
 
-	WidgetContainer* WidgetFactory::CreateGUIScene(const CLoaderScene* aLoaderScene, CU::Camera*& aGUIManagerCameraOut)
+	WidgetContainer* WidgetFactory::CreateGUIScene(const CLoaderScene* aLoaderScene, CU::Camera*& aGUIManagerCameraOut, const std::string& aJsonPath)
 	{
 		if (aLoaderScene == nullptr)
 		{
@@ -58,28 +63,65 @@ namespace GUI
 		CU::Camera* guiCamera = ParseCamera(aLoaderScene->myCamera);
 		aGUIManagerCameraOut = guiCamera;
 
+
+		CU::CJsonValue guiScene(aJsonPath);
+		CU::CJsonValue visibleFromStartArray = guiScene["VisibleFromStart"];
+		CU::GrowingArray<std::string> visibleWidgets(8u);
+		for (int i = 0; i < visibleFromStartArray.Size(); ++i)
+		{
+			std::string visibleWidget = visibleFromStartArray[i].GetString();
+			visibleWidgets.Add(visibleWidget);
+		}
+
+		CU::CJsonValue buttons = guiScene["Buttons"];
+		CU::GrowingArray<std::string> buttonNames(8u);
+		for (int i = 0; i < buttons.Size(); i++)
+		{
+			buttonNames.Add(buttons[i].GetString());
+		}
+
+
+		bool hasKeyHealthOrb = guiScene.HasKey("healthOrb");
+		std::string healthOrbName("");
+		std::string manaOrbName("");
+		std::string orbTexture("");
+		if (hasKeyHealthOrb == true)
+		{
+			healthOrbName = guiScene["healthOrb"].GetString();
+			manaOrbName = guiScene["manaOrb"].GetString();
+			orbTexture = guiScene["orbTexture"].GetString();
+		}
+
 		WidgetContainer* baseWidgetContainer = new WidgetContainer(CU::Vector2f::Zero, CU::Vector2f(1.f, 1.f), "BaseWidgetContainer", true);
 
 		const CU::GrowingArray<CLoaderMesh*>& meshes = aLoaderScene->myMeshes;
 		for (size_ga i = 0; i < meshes.Size(); ++i)
 		{
 			std::string widgetName = meshes[i]->myName;
+			bool isVisible = visibleWidgets.Size() == 0 || visibleWidgets.Find(widgetName) != visibleWidgets.FoundNone;
+			Widget* widget = nullptr;
+			if (hasKeyHealthOrb == true && (widgetName == healthOrbName || widgetName == manaOrbName))
+			{
+				widget = new ModelWidget(meshes[i], { orbTexture }, *guiCamera, isVisible);
+			}
+			else
+			{
+				widget = new ModelWidget(meshes[i], aLoaderScene->myTextures, *guiCamera, isVisible);
+			}
 
-			Widget* widget = new ModelWidget(meshes[i], aLoaderScene->myTextures, *guiCamera);
-
-			if (widget->GetName().find("button") != std::string::npos || widget->GetName().find("Button") != std::string::npos
+			if (widgetName == healthOrbName)
+			{
+				widget = CreateHealthBar(widget);
+			}
+			else if (widgetName == manaOrbName)
+			{
+				widget = CreateManaBar(widget);
+			}
+			else if (buttonNames.Find(widgetName) != buttonNames.FoundNone ||  widget->GetName().find("button") != std::string::npos || widget->GetName().find("Button") != std::string::npos
 				|| widget->GetName() == "Resume" || widget->GetName() == "Return" || widget->GetName().find("Knapp") != std::string::npos
 				|| widget->GetName().find("knapp") != std::string::npos)
 			{
 				widget = CreateButton(widget);
-			}
-			else if (widget->GetName().find("ealth") != std::string::npos)
-			{
-				widget = CreateHealthBar(widget);
-			}
-			else if (widget->GetName().find("ana") != std::string::npos)
-			{
-				widget = CreateManaBar(widget);
 			}
 
 			if (widget != nullptr)
@@ -87,26 +129,7 @@ namespace GUI
 				baseWidgetContainer->AddWidget(widget->GetName(), widget);
 			}
 		}
-
-		//std::string widgetName = "CarlWasHere";
-		//CFBXLoader loader;
-		//CLoaderModel* loaderMOdel = loader.LoadModel("Models/gui/knapp01.fbx");
-		//if (loaderMOdel != nullptr)
-		//{
-		//	Widget* widget = new ModelWidget(loaderMOdel->myMeshes.at(0), aLoaderScene->myTextures, *guiCamera);
-
-		//	CLoaderModel* loaderMOdel2 = loader.LoadModel("Models/gui/guiTooltip.fbx");
-		//	ModelWidget* backgroundModel = new ModelWidget(loaderMOdel2->myMeshes.at(0), aLoaderScene->myTextures, *guiCamera);
-		//	std::string tooltipText = "hey im a tooltip";
-		//	widget = new CToolTipDecorator(widget, backgroundModel, tooltipText);
-
-		//	if (widget != nullptr)
-		//	{
-		//		baseWidgetContainer->AddWidget(widget->GetName(), widget);
-		//	}
-		//}
-
-
+		baseWidgetContainer->MoveToBack("shopWindow");
 		return baseWidgetContainer;
 	}
 
@@ -197,7 +220,7 @@ namespace GUI
 			button->AddWidget("Animation", new ButtonAnimation(aWidget));
 			return button;
 		}
-		else if (widgetName.find("buy") != std::string::npos)
+		else if (widgetName.find("buyK") != std::string::npos)
 		{
 			auto buyHatMessage = [] 
 			{ 
@@ -207,6 +230,74 @@ namespace GUI
 			button->AddWidget("Animation", new ButtonAnimation(aWidget));
 			return button;
 		}
+		else if (widgetName.find("buyHat") != std::string::npos)
+		{
+			if (widgetName.rfind("1") != std::string::npos)
+			{
+				auto SelectItemInShopMessage = []
+				{
+					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(0)));
+				};
+				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
+				button->AddWidget("Animation", new ButtonAnimation(aWidget));
+				return button;
+			}
+
+			else if (widgetName.rfind("2") != std::string::npos)
+			{
+				auto SelectItemInShopMessage = []
+				{
+					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(1)));
+				};
+				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
+				button->AddWidget("Animation", new ButtonAnimation(aWidget));
+				return button;
+			}
+
+			else if (widgetName.rfind("3") != std::string::npos)
+			{
+				auto SelectItemInShopMessage = []
+				{
+					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(2)));
+				};
+				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
+				button->AddWidget("Animation", new ButtonAnimation(aWidget));
+				return button;
+			}
+
+			else if (widgetName.rfind("4") != std::string::npos)
+			{
+				auto SelectItemInShopMessage = []
+				{
+					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(3)));
+				};
+				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
+				button->AddWidget("Animation", new ButtonAnimation(aWidget));
+				return button;
+			}
+
+			else if (widgetName.rfind("5") != std::string::npos)
+			{
+				auto SelectItemInShopMessage = []
+				{
+					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(4)));
+				};
+				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
+				button->AddWidget("Animation", new ButtonAnimation(aWidget));
+				return button;
+			}
+
+			else if (widgetName.rfind("6") != std::string::npos)
+			{
+				auto SelectItemInShopMessage = []
+				{
+					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(5)));
+				};
+				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
+				button->AddWidget("Animation", new ButtonAnimation(aWidget));
+				return button;
+			}
+		}
 		else
 		{
 			DL_PRINT_WARNING("Button created but no suitable callback function was implemented: %s", widgetName.c_str());
@@ -214,6 +305,7 @@ namespace GUI
 			button->AddWidget("Animation", new ButtonAnimation(aWidget));
 			return button;
 		}
+		return nullptr;
 	}
 
 	CU::Camera* WidgetFactory::ParseCamera(const CLoaderCamera* aCamera)
@@ -234,6 +326,7 @@ namespace GUI
 	{
 		CHealthWidget* healthWidget = new CHealthWidget(aWidget->GetWorldPosition(), aWidget->GetSize(), "PlayerHealthWidget");
 		healthWidget->AddWidget("Model", aWidget);
+		healthWidget->Init();
 		return healthWidget;
 	}
 
@@ -241,6 +334,7 @@ namespace GUI
 	{
 		CManaWidget* manaWidget = new CManaWidget(aWidget->GetWorldPosition(), aWidget->GetSize(), "PlayerManaWidget");
 		manaWidget->AddWidget("Model", aWidget);
+		manaWidget->Init();
 		return manaWidget;
 	}
 

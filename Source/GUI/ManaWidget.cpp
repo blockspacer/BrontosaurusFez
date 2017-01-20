@@ -10,17 +10,21 @@ namespace GUI
 		, myManaPercent(1.f)
 	{
 		PostMaster::GetInstance().Subscribe(this, eMessageType::ePlayerManaChanged);
-
-		ModelWidget* model = *FindWidget("Model");
-		if (model != nullptr)
-		{
-			model->GetPixelConstantBufferStruct().myValues[SPixelConstantBuffer::eMember::eIsManaBar] = 1.f;
-		}
 	}
 
 	CManaWidget::~CManaWidget()
 	{
 		PostMaster::GetInstance().UnSubscribe(this, eMessageType::ePlayerManaChanged);
+	}
+
+	void CManaWidget::Init()
+	{
+		ModelWidget* model = *FindWidget("Model");
+		if (model != nullptr)
+		{
+			model->GetPixelConstantBufferStruct().myValues[SPixelConstantBuffer::eMember::eIsManaBar] = 1.f;
+			model->GetPixelConstantBufferStruct().myValues[SPixelConstantBuffer::eMember::eManaPercent] = 1.f;
+		}
 	}
 	
 	void CManaWidget::SetManaPercent(const float aManaPercent)
