@@ -30,6 +30,7 @@ int LoadSeekController(KLoader::SLoadedComponentData someData)
 	seek->SetMaxSpeed(someData.myData.at("MaxSpeed").GetFloat());
 	seek->SetSlowDownRadius(someData.myData.at("SlowDownRadius").GetFloat());
 	seek->SetWeight(someData.myData.at("Weight").GetFloat());
+	seek->SetCallForHelpRange(someData.myData.at("CallAssistanceRadius").GetFloat());
 
 	return seek->GetId();
 }
