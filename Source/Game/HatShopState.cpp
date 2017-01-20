@@ -157,7 +157,7 @@ void HatShopState::ValidatePurchase()
 	short playerWallet = PollingStation::playerData->myGold;
 	if (myCurrentlySelected != nullptr)
 	{
-		if (playerWallet <= myCurrentlySelected->myCost)
+		if (playerWallet >= myCurrentlySelected->myCost)
 		{
 			PostMaster::GetInstance().SendLetter(eMessageType::eHatAdded,HatBought(myCurrentlySelected->HatName));
 			PollingStation::playerData->myGold -= myCurrentlySelected->myCost;

@@ -4,7 +4,7 @@
 #include <fstream>
 
 //#define JSON_ERROR(ERROR_MESSAGE) assert(ERROR_MESSAGE && false)
-#define JSON_ERROR(ERROR_MESSAGE) DL_MESSAGE_BOX(ERROR_MESSAGE)
+#define JSON_ERROR(ERROR_MESSAGE, ...) DL_MESSAGE_BOX(ERROR_MESSAGE, __VA_ARGS__)
 
 namespace CU
 {
