@@ -28,7 +28,7 @@ HatShopState::HatShopState(StateStack & aStateStack) :
 	myGUIManager = new GUI::GUIManager();
 	myGUIManager->Init("models/gui/shopWindow.fbx");
 	CU::CJsonValue value;
-	const std::string& errorString = value.Parse("Json/Hats/HatBluePrints.json");
+	std::string errorString = value.Parse("Json/Hats/HatBluePrints.json");
 
 	CU::CJsonValue hatsArray = value.at("Hats");
 	if (CShopStorage::GetInstance().myStorage.HatStorage.Size() != 0)
@@ -165,7 +165,28 @@ void HatShopState::SetSelected(const char aIndex)
 				{
 					myOptionsText[j]->SetColor(CTextInstance::White);
 				}
+
 				myOptionsText[i]->SetColor(CTextInstance::Red);
+			}
+		}
+	}
+}
+
+void HatShopState::GetTooltipTextFromShopIndex(const int aHatShopIndex, std::string& aTooltipTextOut) const
+{
+	if (mySelections.Size() > 0 && aHatShopIndex < mySelections.Size())
+	{
+		const std::string& hoveredHatName = mySelections[aHatShopIndex]->HatName;
+		static CU::CJsonValue hatBluePrints("Json/Hats/HatBluePrints.json");
+
+		CU::CJsonValue hatArray = hatBluePrints["Hats"];
+		for (int i = 0; i < hatArray.Size(); ++i)
+		{
+			const std::string& hatName = hatArray[i]["HatName"].GetString();
+			if (hoveredHatName == hatName)
+			{
+				aTooltipTextOut = hatArray[i]["ShopTooltip"].GetString();
+				break;
 			}
 		}
 	}

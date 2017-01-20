@@ -73,6 +73,7 @@ namespace CU
 
 		picojson::value* newValue = new picojson::value();
 		std::string errorMessage = picojson::parse(*newValue, jsonFile);
+		jsonFile.close();
 		myValue = newValue;
 
 		return errorMessage;

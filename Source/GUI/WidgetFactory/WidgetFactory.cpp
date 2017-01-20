@@ -30,6 +30,7 @@
 #include "../Game/PollingStation.h"
 #include  "../Components/PlayerData.h"
 #include "CommonUtilities/JsonValue.h"
+#include "../ShopItemButtonHovered.h"
 
 using size_ga = CU::GrowingArray<CLoaderMesh*>::size_type;
 
@@ -233,6 +234,12 @@ namespace GUI
 		}
 		else if (widgetName.find("buyHat") != std::string::npos)
 		{
+			auto getToolTipText = [](int aIndex, std::string& aTooltipTextOut) -> bool
+			{
+				PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, CQueryShopItemButtonHovered(aIndex, &aTooltipTextOut)));
+				return !aTooltipTextOut.empty();
+			};
+
 			if (widgetName.rfind("1") != std::string::npos)
 			{
 				auto SelectItemInShopMessage = []
@@ -241,7 +248,9 @@ namespace GUI
 				};
 				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
 				button->AddWidget("Model", aWidget);
-				return button;
+
+				CToolTipDecorator* toolTip = new CToolTipDecorator(button, nullptr, nullptr, std::bind(getToolTipText, 0, std::placeholders::_1));
+				return toolTip;
 			}
 
 			else if (widgetName.rfind("2") != std::string::npos)
@@ -252,7 +261,9 @@ namespace GUI
 				};
 				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
 				button->AddWidget("Model", aWidget);
-				return button;
+
+				CToolTipDecorator* toolTip = new CToolTipDecorator(button, nullptr, nullptr, std::bind(getToolTipText, 1, std::placeholders::_1));
+				return toolTip;
 			}
 
 			else if (widgetName.rfind("3") != std::string::npos)
@@ -264,7 +275,9 @@ namespace GUI
 				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
 				//button->AddWidget("Animation", new ButtonAnimation(aWidget));
 				button->AddWidget("Model", aWidget);
-				return button;
+
+				CToolTipDecorator* toolTip = new CToolTipDecorator(button, nullptr, nullptr, std::bind(getToolTipText, 2, std::placeholders::_1));
+				return toolTip;
 			}
 
 			else if (widgetName.rfind("4") != std::string::npos)
@@ -275,7 +288,9 @@ namespace GUI
 				};
 				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
 				button->AddWidget("Model", aWidget);
-				return button;
+
+				CToolTipDecorator* toolTip = new CToolTipDecorator(button, nullptr, nullptr, std::bind(getToolTipText, 3, std::placeholders::_1));
+				return toolTip;
 			}
 
 			else if (widgetName.rfind("5") != std::string::npos)
@@ -286,7 +301,9 @@ namespace GUI
 				};
 				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
 				button->AddWidget("Model", aWidget);
-				return button;
+
+				CToolTipDecorator* toolTip = new CToolTipDecorator(button, nullptr, nullptr, std::bind(getToolTipText, 4, std::placeholders::_1));
+				return toolTip;
 			}
 
 			else if (widgetName.rfind("6") != std::string::npos)
@@ -297,7 +314,9 @@ namespace GUI
 				};
 				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
 				button->AddWidget("Model", aWidget);
-				return button;
+
+				CToolTipDecorator* toolTip = new CToolTipDecorator(button, nullptr, nullptr, std::bind(getToolTipText, 5, std::placeholders::_1));
+				return toolTip;
 			}
 		}
 		else

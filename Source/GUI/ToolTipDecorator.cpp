@@ -6,8 +6,9 @@
 
 namespace GUI
 {
-	CToolTipDecorator::CToolTipDecorator(Widget* aDecoratedWidget, ModelWidget* aBackGround, const std::string& aTooltipText)
+	CToolTipDecorator::CToolTipDecorator(Widget* aDecoratedWidget, ModelWidget* aBackGround, const std::string* const aTooltipText, const std::function<bool(std::string&)>& aGetTextFunction)
 		: WidgetDecorator(aDecoratedWidget, CU::Vector2f::Zero, CU::Vector2f::Zero, aDecoratedWidget->GetName() + "_Tooltip", false)
+		, myGetTextFunction(aGetTextFunction)
 		, myOffsetToMouse(0.f, -0.05f)
 		//, myBackGround(aBackGround)
 		, myTextInstance(nullptr)
@@ -16,7 +17,10 @@ namespace GUI
 		myTextInstance = new CTextInstance();
 		myTextInstance->Init();
 		myTextInstance->SetPosition(aDecoratedWidget->GetWorldPosition());
-		myTextInstance->SetText(aTooltipText.c_str());
+		if (aTooltipText != nullptr)
+		{
+			myTextInstance->SetText(aTooltipText->c_str());
+		}
 
 		//myBackGround->SetLocalPosition(aDecoratedWidget->GetWorldPosition());
 	}
@@ -29,6 +33,15 @@ namespace GUI
 
 	void CToolTipDecorator::OnMouseEnter(const CU::Vector2f& aMousePosition)
 	{
+		if (myGetTextFunction != nullptr)
+		{
+			std::string updatedTooltipText("");
+			if (myGetTextFunction(updatedTooltipText))
+			{
+				myTextInstance->SetText(updatedTooltipText.c_str());
+			}
+		}
+
 		myShouldRender = true;
 		//myBackGround->SetLocalPosition(aMousePosition + myOffsetToMouse);
 		myTextInstance->SetPosition(aMousePosition + myOffsetToMouse);
