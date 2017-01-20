@@ -15,6 +15,8 @@ public:
 	void SetTargetRadius(const float aTargetRadius);
 	void SetSlowDownRadius(const float aSlowdownRadius);
 	void SetAggroRange(const float aRange);
+	void SetCallForHelpRange(const float aRange);
+	void CallForHelp();
 
 	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
 
@@ -28,7 +30,9 @@ private:
 	float myTargetRadius;
 	float mySlowdownRadius;
 	float myAggroRange;
+	float myCallForHelpRadius;
 
+	bool myHaveBeenCalledForHelp;
 	// Inherited via IController
 	void Destroy() override;
 };

@@ -84,6 +84,7 @@ enum class eComponentMessageType
 	eActivateBurningBasicAttack,
 	eActivateManaRefund,
 	eActivate,
+	eCalledForHelp,
 };
 
 struct SComponentMessageData

@@ -1,4 +1,5 @@
 #pragma once
+class CGameObject;
 class CMasterAI
 {
 public:
@@ -11,7 +12,7 @@ public:
 
 	const float DetermineHealthDrop();
 	void DetermineAmountOfMinionsToSpawn();
-
+	void CallForHelp(CGameObject* aEnemyObject, float aCallForHelpRadius);
 
 
 

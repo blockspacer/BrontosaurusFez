@@ -2,7 +2,8 @@
 #include "MasterAI.h"
 #include "PollingStation.h"
 #include "../Components/PlayerData.h"
-
+#include "GameObject.h"
+#include "ComponentMessage.h"
 
 CMasterAI* CMasterAI::ourInstance = nullptr;
 
@@ -48,4 +49,16 @@ const float CMasterAI::DetermineHealthDrop()
 void CMasterAI::DetermineAmountOfMinionsToSpawn()
 {
 
+}
+
+void CMasterAI::CallForHelp(CGameObject* aEnemyObject, float aCallForHelpRadius)
+{
+	for(unsigned short i = 0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); i++)
+	{
+		float distance2 = CU::Vector3f(PollingStation::myThingsEnemiesShouldAvoid[i]->GetWorldPosition() - aEnemyObject->GetWorldPosition()).Length2();
+		if(distance2 < aCallForHelpRadius * aCallForHelpRadius)
+		{
+			PollingStation::myThingsEnemiesShouldAvoid[i]->NotifyComponents(eComponentMessageType::eCalledForHelp, SComponentMessageData());
+		}
+	}
 }
