@@ -94,7 +94,7 @@ struct SComponentMessageData
 		CU::Matrix44f myMatrix44;
 		CU::Vector2f myVector2f;
 		CU::Vector3f myVector3f;
-		CU::GrowingArray<CU::Vector3f>* myVector3ListPointer;
+		CU::GrowingArray<CU::Vector3f, unsigned int, false>* myVector3ListPointer;
 		
 		eComponentType myComponentTypeAdded;
 		Stats::STotalStats myStatStruct;
