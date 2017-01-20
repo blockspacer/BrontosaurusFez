@@ -415,78 +415,6 @@ float4 PS_PBL(PixelInput input)
 	return output;
 }
 
-
-//cbuffer UpdateAttributes : register(b2)
-//{
-//	float3 orbColor2
-////	<
-////		string UIName = "orbColor2";
-////		int UIOrder = 4;
-////		string UIWidget = "ColorPicker";
-////> 
-//	= { 0.0, 0.0775376, 0.672 };
-
-//	float3 orbColor1
-//	//<
-//	//	string UIName = "orbColor1";
-//	//	int UIOrder = 3;
-//	//	string UIWidget = "ColorPicker";
-//	//>
-//	 = { 0.0, 1.0, 0.923067 };
-
-//	float stars
-//	//<
-//	//	float UIMin = 0.0;
-//	//	float UISoftMin = 0.0;
-//	//	float UIMax = 1.0;
-//	//	float UISoftMax = 1.0;
-//	//	float UIStep = 0.01;
-//	//	string UIName = "stars";
-//	//	int UIOrder = 10;
-//	//	string UIWidget = "Slider";
-//	//>
-//	 = 1.0;
-
-//	float bubbleTimeFactor
-//	//<
-//	//	float UIMin = 0.0;
-//	//	float UISoftMin = 0.0;
-//	//	float UIMax = 99.0;
-//	//	float UISoftMax = 99.0;
-//	//	float UIStep = 0.01;
-//	//	string UIName = "bubbleTimeFactor";
-//	//	int UIOrder = 2;
-//	//	string UIWidget = "Slider";
-////>
-//	 = 0.15;
-
-//	float waveTimeFactor
-//	//<
-//	//	float UIMin = 0.0;
-//	//	float UISoftMin = 0.0;
-//	//	float UIMax = 99.0;
-//	//	float UISoftMax = 99.0;
-//	//	float UIStep = 0.01;
-//	//	string UIName = "waveTimeFactor";
-//	//	int UIOrder = 1;
-//	//	string UIWidget = "Slider";
-////> 
-//	= 0.1;
-
-//	float orbValue
-//	//<
-//	//	float UIMin = 0.0;
-//	//	float UISoftMin = 0.0;
-//	//	float UIMax = 1.0;
-//	//	float UISoftMax = 1.0;
-//	//	float UIStep = 0.01;
-//	//	string UIName = "orbValue";
-//	//	string UIWidget = "Slider";
-////> 
-//	= 0.780749;
-
-//};
-
 float4 PS_OrbShader(PixelInput input)
 {
 	static const float3 manaColor2 = { 0.0, 0.0775376, 0.672 };
@@ -496,7 +424,7 @@ float4 PS_OrbShader(PixelInput input)
 	static const float3 healthColor1 = { 0.718, 0.042, 0.146 };
 
 	static const float bubbleTimeFactor = 0.15f;
-	static const float waveTimeFactor = 0.1f;
+	static const float waveTimeFactor = -0.1f;
 
 	float stars = isManaBar;
 	float orbValue = manaPercent + healthPercent;
