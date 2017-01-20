@@ -22,7 +22,7 @@ namespace GUI
 
 	private:
 		CU::Vector2f myOffsetToMouse;
-		ModelWidget* myBackGround;
+		//ModelWidget* myBackGround;
 		CTextInstance* myTextInstance;
 		bool myShouldRender;
 	};
