@@ -240,7 +240,7 @@ namespace GUI
 					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(0)));
 				};
 				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
-				button->AddWidget("Animation", new ButtonAnimation(aWidget));
+				button->AddWidget("Model", aWidget);
 				return button;
 			}
 
@@ -251,7 +251,7 @@ namespace GUI
 					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(1)));
 				};
 				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
-				button->AddWidget("Animation", new ButtonAnimation(aWidget));
+				button->AddWidget("Model", aWidget);
 				return button;
 			}
 
@@ -262,7 +262,8 @@ namespace GUI
 					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(2)));
 				};
 				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
-				button->AddWidget("Animation", new ButtonAnimation(aWidget));
+				//button->AddWidget("Animation", new ButtonAnimation(aWidget));
+				button->AddWidget("Model", aWidget);
 				return button;
 			}
 
@@ -273,7 +274,7 @@ namespace GUI
 					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(3)));
 				};
 				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
-				button->AddWidget("Animation", new ButtonAnimation(aWidget));
+				button->AddWidget("Model", aWidget);
 				return button;
 			}
 
@@ -284,7 +285,7 @@ namespace GUI
 					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(4)));
 				};
 				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
-				button->AddWidget("Animation", new ButtonAnimation(aWidget));
+				button->AddWidget("Model", aWidget);
 				return button;
 			}
 
@@ -295,7 +296,7 @@ namespace GUI
 					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(5)));
 				};
 				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
-				button->AddWidget("Animation", new ButtonAnimation(aWidget));
+				button->AddWidget("Model", aWidget);
 				return button;
 			}
 		}

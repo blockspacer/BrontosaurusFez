@@ -69,6 +69,11 @@ namespace GUI
 			{
 				myWasClicked = false;
 			}
+			else if (FindWidget("Animation") == nullptr)
+			{
+				RunCallbackFunction();
+				myWasClicked = false;
+			}
 		}
 	}
 
