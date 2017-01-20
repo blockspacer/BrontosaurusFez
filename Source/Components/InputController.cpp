@@ -12,7 +12,6 @@
 #include "../CommonUtilities/EKeyboardKeys.h"
 #include "SkillData.h"
 
-#include <iostream>
 
 InputController::InputController(const CU::Camera& aPlayerCamera)
 	: myPlayerCamera(aPlayerCamera)
@@ -60,9 +59,9 @@ void InputController::Update(float aDeltaTime)
 				targetPosition3D = myPlayerCamera.GetPosition() + direction * t;
 			}
 		}
-
-		CU::Vector2f targetPosition(targetPosition3D.x, targetPosition3D.z);
 		
+		CU::Vector2f targetPosition(targetPosition3D.x, targetPosition3D.z);
+
 		TakeInputMessage(CU::eInputMessage::LEFTMOUSEBUTTON);
 		eComponentMessageType type = eComponentMessageType::eSetNavigationTarget;
 		SComponentMessageData data;
@@ -119,7 +118,7 @@ void InputController::Receive(const eComponentMessageType aMessageType, const SC
 		}
 		else
 		{
-			std::cout << "Skill not found when adding key binding." << std::endl;
+			DL_PRINT("Skill not found when adding key binding.");
 		}
 	}
 }
