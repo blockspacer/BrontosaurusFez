@@ -32,6 +32,11 @@ void CTextInstance::Init(const CU::DynamicString& aFontPath)
 	myText = new CCoolText(aFontPath);
 }
 
+void CTextInstance::Init(const CU::DynamicString & aFontPath, const int aPixelSize)
+{
+	myText = new CCoolText(aFontPath,aPixelSize);
+}
+
 void CTextInstance::Render()
 {
 	if (myText != nullptr && myString.Empty() == false)

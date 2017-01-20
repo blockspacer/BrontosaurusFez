@@ -25,6 +25,7 @@
 #include "../PostMaster/Pop2States.h"
 #include "../PostMaster/HatBought.h"
 #include "../PostMaster/BuyButtonPressed.h"
+#include "PostMaster/ShopItemButtonPressed.h"
 
 #include "../Game/PollingStation.h"
 #include  "../Components/PlayerData.h"
@@ -72,6 +73,14 @@ namespace GUI
 			visibleWidgets.Add(visibleWidget);
 		}
 
+		CU::CJsonValue buttons = guiScene["Buttons"];
+		CU::GrowingArray<std::string> buttonNames(8u);
+		for (int i = 0; i < buttons.Size(); i++)
+		{
+			buttonNames.Add(buttons[i].GetString());
+		}
+
+
 		bool hasKeyHealthOrb = guiScene.HasKey("healthOrb");
 		std::string healthOrbName("");
 		std::string manaOrbName("");
@@ -108,7 +117,7 @@ namespace GUI
 			{
 				widget = CreateManaBar(widget);
 			}
-			else if (widget->GetName().find("button") != std::string::npos || widget->GetName().find("Button") != std::string::npos
+			else if (buttonNames.Find(widgetName) != buttonNames.FoundNone ||  widget->GetName().find("button") != std::string::npos || widget->GetName().find("Button") != std::string::npos
 				|| widget->GetName() == "Resume" || widget->GetName() == "Return" || widget->GetName().find("Knapp") != std::string::npos
 				|| widget->GetName().find("knapp") != std::string::npos)
 			{
@@ -120,7 +129,7 @@ namespace GUI
 				baseWidgetContainer->AddWidget(widget->GetName(), widget);
 			}
 		}
-
+		baseWidgetContainer->MoveToBack("shopWindow");
 		return baseWidgetContainer;
 	}
 
@@ -211,7 +220,7 @@ namespace GUI
 			button->AddWidget("Animation", new ButtonAnimation(aWidget));
 			return button;
 		}
-		else if (widgetName.find("buy") != std::string::npos)
+		else if (widgetName.find("buyK") != std::string::npos)
 		{
 			auto buyHatMessage = [] 
 			{ 
@@ -221,6 +230,74 @@ namespace GUI
 			button->AddWidget("Animation", new ButtonAnimation(aWidget));
 			return button;
 		}
+		else if (widgetName.find("buyHat") != std::string::npos)
+		{
+			if (widgetName.rfind("1") != std::string::npos)
+			{
+				auto SelectItemInShopMessage = []
+				{
+					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(0)));
+				};
+				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
+				button->AddWidget("Animation", new ButtonAnimation(aWidget));
+				return button;
+			}
+
+			else if (widgetName.rfind("2") != std::string::npos)
+			{
+				auto SelectItemInShopMessage = []
+				{
+					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(1)));
+				};
+				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
+				button->AddWidget("Animation", new ButtonAnimation(aWidget));
+				return button;
+			}
+
+			else if (widgetName.rfind("3") != std::string::npos)
+			{
+				auto SelectItemInShopMessage = []
+				{
+					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(2)));
+				};
+				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
+				button->AddWidget("Animation", new ButtonAnimation(aWidget));
+				return button;
+			}
+
+			else if (widgetName.rfind("4") != std::string::npos)
+			{
+				auto SelectItemInShopMessage = []
+				{
+					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(3)));
+				};
+				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
+				button->AddWidget("Animation", new ButtonAnimation(aWidget));
+				return button;
+			}
+
+			else if (widgetName.rfind("5") != std::string::npos)
+			{
+				auto SelectItemInShopMessage = []
+				{
+					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(4)));
+				};
+				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
+				button->AddWidget("Animation", new ButtonAnimation(aWidget));
+				return button;
+			}
+
+			else if (widgetName.rfind("6") != std::string::npos)
+			{
+				auto SelectItemInShopMessage = []
+				{
+					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(5)));
+				};
+				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
+				button->AddWidget("Animation", new ButtonAnimation(aWidget));
+				return button;
+			}
+		}
 		else
 		{
 			DL_PRINT_WARNING("Button created but no suitable callback function was implemented: %s", widgetName.c_str());
@@ -228,6 +305,7 @@ namespace GUI
 			button->AddWidget("Animation", new ButtonAnimation(aWidget));
 			return button;
 		}
+		return nullptr;
 	}
 
 	CU::Camera* WidgetFactory::ParseCamera(const CLoaderCamera* aCamera)

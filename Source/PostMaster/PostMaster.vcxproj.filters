@@ -79,9 +79,14 @@
     <ClCompile Include="PlayerHealthChanged.cpp">
       <Filter>Events\PlayerHealthChanged</Filter>
     </ClCompile>
-    <ClCompile Include="BuyButtonPressed.cpp" />
     <ClCompile Include="UpdateQuestEvent.cpp">
       <Filter>Events\UpdateQuest</Filter>
+    </ClCompile>
+    <ClCompile Include="ShopItemButtonPressed.cpp">
+      <Filter>Events\ShopSelectButtonPressed</Filter>
+    </ClCompile>
+    <ClCompile Include="BuyButtonPressed.cpp">
+      <Filter>Events\BuyButtonPressed</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -202,7 +207,6 @@
     </ClInclude>
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
-    <ClInclude Include="BuyButtonPressed.h" />
     <ClInclude Include="FocusChange.h">
       <Filter>Events\FocusChanged</Filter>
     </ClInclude>
@@ -221,6 +225,14 @@
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="UpdateQuestEvent.h">
       <Filter>Events\UpdateQuest</Filter>
+    </ClInclude>
+    <ClInclude Include="PopCurrentState.h" />
+    <ClInclude Include="PostMaster.h" />
+    <ClInclude Include="ShopItemButtonPressed.h">
+      <Filter>Events\ShopSelectButtonPressed</Filter>
+    </ClInclude>
+    <ClInclude Include="BuyButtonPressed.h">
+      <Filter>Events\BuyButtonPressed</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -304,6 +316,12 @@
     </Filter>
     <Filter Include="Events\UpdateQuest">
       <UniqueIdentifier>{9a33bdd9-1da4-4bcd-b1c8-710ade999ff6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events\ShopSelectButtonPressed">
+      <UniqueIdentifier>{ecea6e78-fe4b-4001-8895-a14eafdd040f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events\BuyButtonPressed">
+      <UniqueIdentifier>{65e18bfb-0813-45a3-a852-9137308b8ef5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

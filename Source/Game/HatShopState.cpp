@@ -27,9 +27,6 @@ HatShopState::HatShopState(StateStack & aStateStack) :
 	myCurrentlySelected = nullptr;
 	myGUIManager = new GUI::GUIManager();
 	myGUIManager->Init("models/gui/shopWindow.fbx");
-	GUI::GUIManager tempMan;
-	tempMan.Init("models/gui/buyKnapp.fbx");
-	myGUIManager->AddWidget("buyknapp", tempMan.RemoveWidget("buyKnapp") );
 	CU::CJsonValue value;
 	const std::string& errorString = value.Parse("Json/Hats/HatBluePrints.json");
 
@@ -142,6 +139,7 @@ void HatShopState::OnEnter()
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eBuyButtonPressed);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eShopItemSelected);
 	myGUIManager->RestartRenderAndUpdate();
 	myCurrentlySelected = nullptr;
 }
@@ -150,6 +148,7 @@ void HatShopState::OnExit()
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyPressed);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eBuyButtonPressed);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eShopItemSelected);
 	myGUIManager->PauseRenderAndUpdate();
 }
 
@@ -169,18 +168,15 @@ void HatShopState::ValidatePurchase()
 	}
 }
 
-void HatShopState::SetSelected(unsigned int aIndex)
+void HatShopState::SetSelected(const char aIndex)
 {
-	if (aIndex >= mySelections.Size())
-	{
-		aIndex = mySelections.Size() - 1;
-	}
 	myCurrentlySelected = nullptr;
 	if (mySelections.Size() != 0)
 	{
 		myCurrentlySelected = mySelections[aIndex];
 	}
 
+	//Recolor the texts so you know which one is currently selected
 	if (myCurrentlySelected != nullptr)
 	{
 		for (unsigned int i = 0; i < mySelections.Size(); ++i)
@@ -216,23 +212,48 @@ void HatShopState::AdjustText()
 {
 	myOptionsText.DeleteAll();
 	myCostText.DeleteAll();
+	char row = 1;
 	for (unsigned int i = 0; i < mySelections.Size(); i++)
 	{
-		std::string temp;
-		temp += std::to_string(i + 1);
-		temp += ". ";
-		temp += mySelections[i]->HatName.c_str();
-		myOptionsText.Add(new CTextInstance());
-		myOptionsText.GetLast()->Init();
-		myOptionsText.GetLast()->SetText(temp.c_str());
-		myOptionsText.GetLast()->SetPosition(CU::Vector2f(0.02f, 0.2f + 0.1f * i));
 
-		temp = "Cost";
-		temp += ": ";
-		temp += std::to_string(mySelections[i]->myCost);
-		myCostText.Add(new CTextInstance());
-		myCostText.GetLast()->Init();
-		myCostText.GetLast()->SetText(temp.c_str());
-		myCostText.GetLast()->SetPosition(CU::Vector2f(0.02f, 0.235f + 0.1f * i));
+		if (i % 2 != 0)
+		{
+			std::string temp;
+			temp += std::to_string(i + 1);
+			temp += ". ";
+			temp += mySelections[i]->HatName.c_str();
+			myOptionsText.Add(new CTextInstance());
+			myOptionsText.GetLast()->Init("Fonts/comic.ttf",32);
+			myOptionsText.GetLast()->SetText(temp.c_str());
+			myOptionsText.GetLast()->SetPosition(CU::Vector2f(0.114f, 0.075f + 0.185f * row));
+
+			temp = "Cost";
+			temp += ": ";
+			temp += std::to_string(mySelections[i]->myCost);
+			myCostText.Add(new CTextInstance());
+			myCostText.GetLast()->Init("Fonts/comic.ttf",32);
+			myCostText.GetLast()->SetText(temp.c_str());
+			myCostText.GetLast()->SetPosition(CU::Vector2f(0.114f, 0.2f + 0.185f * row));
+			++row;
+		}
+		else
+		{
+			std::string temp;
+			temp += std::to_string(i + 1);
+			temp += ". ";
+			temp += mySelections[i]->HatName.c_str();
+			myOptionsText.Add(new CTextInstance());
+			myOptionsText.GetLast()->Init("Fonts/comic.ttf", 32);
+			myOptionsText.GetLast()->SetText(temp.c_str());
+			myOptionsText.GetLast()->SetPosition(CU::Vector2f(0.027f, 0.075f + 0.185f * row));
+
+			temp = "Cost";
+			temp += ": ";
+			temp += std::to_string(mySelections[i]->myCost);
+			myCostText.Add(new CTextInstance());
+			myCostText.GetLast()->Init("Fonts/comic.ttf", 32);
+			myCostText.GetLast()->SetText(temp.c_str());
+			myCostText.GetLast()->SetPosition(CU::Vector2f(0.027f, 0.2f + 0.185f * row));
+		}
 	}
 }

@@ -11,14 +11,9 @@ CMasterAI::CMasterAI()
 
 }
 
-CMasterAI::~CMasterAI() //Maybe remove from comp project?
+CMasterAI::~CMasterAI()
 {
 }
-
-// How to connect Master AI with the game?
-
-// make all dropcomponents use masterAI ?
-// or maybe i should make it more general, and let them communicate through the global postmaster.
 
 void CMasterAI::Create()
 {
@@ -48,17 +43,9 @@ const float CMasterAI::DetermineHealthDrop()
 		return 0;
 	}
 	return result;
-
-
-	//PollingStation::playerData->myStats->health;  Can't get Health through pollingStation yet.
-
-	//Droprate at 100% health should be 10%
-	//Droprate at 10% health should be 100%
-
-	//Each healthglobe could give you a percentage amount of HP, let's say 30%;
 }
 
-void CMasterAI::DetermineAmmountOfMinionsToSpawn()
+void CMasterAI::DetermineAmountOfMinionsToSpawn()
 {
 
 }
