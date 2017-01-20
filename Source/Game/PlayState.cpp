@@ -336,7 +336,7 @@ void CPlayState::Load()
 
 	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
-#ifdef _DEBUGsdf
+#ifdef _DEBUG
 	const int levelIndex = levelsArray.Size() - 1;
 #else
 	const int levelIndex = 0;
