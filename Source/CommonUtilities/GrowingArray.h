@@ -701,9 +701,9 @@ namespace CU
 	{
 		static void DoMove(ObjectType aArray[], const SizeType aElementsToMove, const SizeType aStartIndex, const SizeType aArraySize)
 		{
-			for (SizeType i = aArraySize; i > aStartIndex; --i)
+			for (SizeType i = aStartIndex; i < aArraySize - aElementsToMove; ++i)
 			{
-				aArray[i] = aArray[i - aElementsToMove];
+				aArray[i] = aArray[i + aElementsToMove];
 			}
 		}
 	};
