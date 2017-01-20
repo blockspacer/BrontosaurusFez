@@ -81,6 +81,12 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 		data.myUChar = myPercentageLeft * 100;
 		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data);
 		break;
+
+	case eComponentMessageType::eRespawned:
+		SetHealth(myMaxHealth);
+		data.myUChar = myPercentageLeft * 100;
+		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data);
+		break;
 	}
 }
 

@@ -595,6 +595,30 @@ namespace CU
 			return LookAt(myPosition, aLookTo);
 		}
 
+		Matrix44& CreateLookAt(const Vector3<TYPE>& aLookTo)
+		{
+			Matrix44<TYPE> matrixToReturn = *this;
+			matrixToReturn.LookAt(aLookTo);
+			return matrixToReturn;
+		}
+
+		Matrix44 Lerp(const Matrix44<TYPE> aInterpolateToMatrix, TYPE aInterpolatingSpeed)
+		{
+			m21 = m21 + aInterpolatingSpeed * (aInterpolateToMatrix.m21 - m21);
+			m22 = m22 + aInterpolatingSpeed * (aInterpolateToMatrix.m22 - m22);
+			m23 = m23 + aInterpolatingSpeed * (aInterpolateToMatrix.m23 - m23);
+
+			m31 = m31 + aInterpolatingSpeed * (aInterpolateToMatrix.m31 - m31);
+			m32 = m32 + aInterpolatingSpeed * (aInterpolateToMatrix.m32 - m32);
+			m33 = m33 + aInterpolatingSpeed * (aInterpolateToMatrix.m33 - m33);
+
+			myForwardVector.Normalize();
+			myRightVector = myUpVector.Cross(myForwardVector).GetNormalized();
+			myUpVector = myForwardVector.Cross(myRightVector).GetNormalized();
+
+			return *this;
+		}
+
 		void InvertMe()
 		{
 			InvertMatrix(&m11);

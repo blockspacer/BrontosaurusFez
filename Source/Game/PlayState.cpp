@@ -17,6 +17,8 @@
 #include "Components/ParticleEmitterComponentManager.h"
 #include "Components/ComponentManager.h"
 #include "Components\PlayerHealthMessenger.h"
+#include "Components\RespawnComponent.h"
+#include "Components\RespawnComponentManager.h"
 
 #include "PostMaster/PopCurrentState.h"
 #include "PostMaster/ChangeLevel.h"
@@ -137,6 +139,7 @@ CPlayState::~CPlayState()
 	CShopStorage::Destroy();
 	CPickupFactory::Destroy();
 	CPickupManager::DestroyInstance();
+	RespawnComponentManager::Destroy();
 	CMasterAI::Destroy();
 
 	SkillFactory::DestroyInstance();
@@ -336,7 +339,7 @@ void CPlayState::Load()
 
 	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
-#ifdef _DEBUGsdf
+#ifdef _DEBUG
 	const int levelIndex = levelsArray.Size() - 1;
 #else
 	const int levelIndex = 0;
@@ -366,8 +369,12 @@ void CPlayState::Load()
 		//Dísclaimer: fult men funkar //lägg till allt spelar specifikt som inte LD behöver störas av här
 		CPlayerHealthMessenger* healthMessenger = new CPlayerHealthMessenger();
 
-		PollingStation::playerObject->AddComponent(healthMessenger);
+		RespawnComponent* respawn = RespawnComponentManager::GetInstance().CreateAndRegisterComponent();
 
+		CComponentManager::GetInstance().RegisterComponent(healthMessenger);
+
+		PollingStation::playerObject->AddComponent(healthMessenger);
+		PollingStation::playerObject->AddComponent(respawn);
 	}
 	//CSeekControllerManager::GetInstance().SetTarget();
 	myGameObjectManager->SendObjectsDoneMessage();
@@ -463,6 +470,7 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	AIControllerManager::GetInstance().Update(aDeltaTime);
 	SkillSystemComponentManager::GetInstance().Update(aDeltaTime);
 	CPickupManager::GetInstance().Update(aDeltaTime);
+	RespawnComponentManager::GetInstance().Update(aDeltaTime);
 	myCollisionComponentManager->Update();
 	myScene->Update(aDeltaTime);
 
@@ -624,6 +632,7 @@ void CPlayState::CreateManagersAndFactories()
 	CPickupFactory::Create(myGameObjectManager, myCollisionComponentManager);
 	CPickupManager::CreateInstance();
 	CMasterAI::Create();
+	RespawnComponentManager::Create();
 }
 
 void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)

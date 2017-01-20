@@ -102,6 +102,7 @@ namespace GUI
 			Widget* widget = nullptr;
 			if (hasKeyHealthOrb == true && (widgetName == healthOrbName || widgetName == manaOrbName))
 			{
+				meshes[i]->myTransformation.Rotate(PI_CONSTANT, CU::Axees::Y);
 				widget = new ModelWidget(meshes[i], { orbTexture }, *guiCamera, isVisible);
 			}
 			else
