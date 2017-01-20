@@ -370,6 +370,8 @@
     <ClInclude Include="PlayerData.h" />
     <ClInclude Include="PlayerHealthMessenger.h" />
     <ClInclude Include="PlayerManaMessenger.h" />
+    <ClInclude Include="RespawnComponent.h" />
+    <ClInclude Include="RespawnComponentManager.h" />
     <ClInclude Include="SeekController.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
@@ -430,6 +432,8 @@
     <ClCompile Include="OpenShopListenerComponent.cpp" />
     <ClCompile Include="PlayerHealthMessenger.cpp" />
     <ClCompile Include="PlayerManaMessenger.cpp" />
+    <ClCompile Include="RespawnComponent.cpp" />
+    <ClCompile Include="RespawnComponentManager.cpp" />
     <ClCompile Include="SeekController.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentManager.cpp" />

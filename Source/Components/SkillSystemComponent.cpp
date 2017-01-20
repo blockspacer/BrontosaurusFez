@@ -121,6 +121,10 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 	{
 		myIsActive = false;
 	}
+	else if (aMessageType == eComponentMessageType::eRespawned)
+	{
+		myIsActive = true;
+	}
 	else if(aMessageType == eComponentMessageType::eStatsUpdated)
 	{
 		for(int i = 0; i < mySkills.Size(); i++)
