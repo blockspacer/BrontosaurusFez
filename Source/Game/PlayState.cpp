@@ -454,6 +454,13 @@ void CPlayState::Load()
 void CPlayState::Init()
 {
 	//skillnad på load, init & konstructor ?
+
+
+	//NAVMESH
+	//myNavmesh.LoadFromFile("Models/navMesh/COOLFIKE.obj");
+	//PollingStation::Navmesh = &myNavmesh;
+
+
 }
 
 State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)

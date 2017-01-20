@@ -11,6 +11,8 @@
 #include "../PostMaster/Event.h"
 #include "QuestManager.h"
 
+#include "../BrontosaurusEngine/Navmesh.h"
+
 namespace CU
 {
 	class Time;
@@ -26,6 +28,7 @@ namespace QM
 	typedef int EventHandle;
 }
 
+class CCollisionComponentManager;
 class CScene;
 class CHatmaker;
 class CGameObject;
@@ -42,7 +45,6 @@ class WeaponSystemComponent;
 class DeathComponentFactory;
 class CParticleEmitterComponent;
 class EnemyAIControllerComponent;
-class CCollisionComponentManager;
 class CHealthBarComponentManager;
 
 class CPlayState : public State, public Subscriber
@@ -104,8 +106,8 @@ private:
 
 	QM::CQuestManager myQuestManager;
 	QM::CQuestDrawer myQuestDrawer;
-
 	//TEMP - BELOW THIS LINE
+	CNavmesh myNavmesh;
 	void TEMP_CREATE_ENEMY(); 
 	CU::GrowingArray<CGameObject*> myEnemies;
 	CHealthBarComponentManager* myHealthBarManager;
