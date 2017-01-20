@@ -159,5 +159,8 @@ private:
 //	IFDEFA BORT
 	CModel* myModel;
 	CModel* myPositionsModel;
+
+	bool myShuldRender;
+
 };
 
