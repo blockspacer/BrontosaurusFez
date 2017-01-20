@@ -9,17 +9,20 @@ CMainStatComponent::CMainStatComponent()
 	myBonusStats = new Stats::SBonusStats;
 	myTotalStats = new Stats::STotalStats;
 
-	myBaseStats->Strength = 0;
-	myBaseStats->Dexterity = 0;
-	myBaseStats->Intelligence = 0;
-	myBaseStats->Vitality = 0;
+	myBaseStats->DamageModifier = 1;
+	myBaseStats->GoldGetModifier = 1;
+	myBaseStats->HealthDropChance = 0;
+	myBaseStats->ManaDropChance = 0;
+	myBaseStats->ManaCostModifier = 1;
 
-	myBonusStats->BonusArmor = 0;
-	myBonusStats->BonusCritChance = 0.0f;
-	myBonusStats->BonusCritDamage = 0.0f;
-	myBonusStats->BonusDamage = 0;
-	myBonusStats->BonusMovementSpeed = 0.0f;
+	myBonusStats->BonusDamageModifier = 0.0f;
+	myBonusStats->BonusGoldGetModifier = 0.0f;
 	myBonusStats->BonusHealth = 0;
+	myBonusStats->BonusHealthDropChance = 0.0f;
+	myBonusStats->BonusMovementSpeed = 0.0f;
+	myBonusStats->BonusMana = 0;
+	myBonusStats->BonusManaDropChance = 0.0f;
+	myBonusStats->BonusManaCostModifier = 0.0f;
 
 	myType = eComponentType::eMainStat;
 }
@@ -30,34 +33,25 @@ CMainStatComponent::~CMainStatComponent()
 
 void CMainStatComponent::CalculateTotalStats()
 {
-	const float strengthScaling = 1 + (myBaseStats->Strength * 0.05f);
-	const float dexterityScaling = 1 + (myBaseStats->Dexterity * 0.05f);
-	const float intelligenceScaling = 1 + (myBaseStats->Intelligence * 0.05f);
-	const float vitalityScaling = 1 + (myBaseStats->Vitality * 0.05f);
-
-	const float dodgeDexScaling = myBaseStats->Dexterity * 0.01f;
-	const float attackspeedDexScaling = myBaseStats->Dexterity * 0.01f;
-
-	myTotalStats->BlockChance = 0.15f;
-	myTotalStats->MaxHealth = 50 * vitalityScaling + myBonusStats->BonusHealth;
-	myTotalStats->Armor = myBonusStats->BonusArmor * strengthScaling;
-	myTotalStats->DamageReduction = myTotalStats->Armor * 0.01f;
-	myTotalStats->DodgeChance = 0 + dodgeDexScaling;
-
-	if (myTotalStats->DamageReduction > 0.8f)
-	{
-		myTotalStats->DamageReduction = 0.8f;
-	}
 
 
-	myTotalStats->AttackSpeed = 1 - attackspeedDexScaling;
-	myTotalStats->CritMultiplier = 2 + myBonusStats->BonusCritDamage;
-	myTotalStats->CritChance = 0.05 * dexterityScaling + myBonusStats->BonusCritChance;
-
+	myTotalStats->MaxDamageModifier = myBaseStats->DamageModifier + myBonusStats->BonusDamageModifier;
+	myTotalStats->MaxGoldGetModifier = myBaseStats->GoldGetModifier + myBonusStats->BonusGoldGetModifier;
+	myTotalStats->MaxHealthDropChance = myBaseStats->HealthDropChance + myBonusStats->BonusHealthDropChance;
+	myTotalStats->MaxManaDropChance = myBaseStats->ManaDropChance + myBonusStats->BonusManaDropChance;
+	myTotalStats->MaxManaConstModifier = myBaseStats->ManaCostModifier + myBonusStats->BonusManaCostModifier;
+	
+	SComponentMessageData newMaxdata;
+	newMaxdata.myInt = myBonusStats->BonusHealth;
+	GetParent()->NotifyComponents(eComponentMessageType::eAddToMaxHealth, newMaxdata);
+	newMaxdata.myInt = myBonusStats->BonusMana;
+	GetParent()->NotifyComponents(eComponentMessageType::eAddToMaxMana, newMaxdata);
+	newMaxdata.myInt = myBonusStats->BonusMovementSpeed;
+	GetParent()->NotifyComponents(eComponentMessageType::eAddToMovementSpeed, newMaxdata);
 
 	SComponentMessageData data;
-	//data.myTotalStats = *myTotalStats;
-	//GetParent()->NotifyComponents(eComponentMessageType::eStatsUpdated,SComponentMessageData());
+	data.myStatStruct = *myTotalStats;
+	GetParent()->NotifyComponents(eComponentMessageType::eStatsUpdated, data);
 }
 
 void CMainStatComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
@@ -67,10 +61,11 @@ void CMainStatComponent::Receive(const eComponentMessageType aMessageType, const
 	case eComponentMessageType::eSetMaxHealthFromStats:
 		static_cast<CHealthComponent*>(aMessageData.myComponent)->SetMaxHealth(myTotalStats->MaxHealth);
 		break;
-	case eComponentMessageType::eCollectStats:
-		CStatComponent* collectedStats = static_cast<CStatComponent*>(aMessageData.myComponent);
+	case eComponentMessageType::eAddStats:
+		/*CStatComponent* collectedStats = static_cast<CStatComponent*>(aMessageData.myComponent);
 		*myBaseStats += *collectedStats->myBaseStats;
-		*myBonusStats += *collectedStats->myBonusStats;
+		*myBonusStats += *collectedStats->myBonusStats;*/
+		*myBonusStats += *aMessageData.myStatsToAdd;
 		CalculateTotalStats();
 		break;
 	}

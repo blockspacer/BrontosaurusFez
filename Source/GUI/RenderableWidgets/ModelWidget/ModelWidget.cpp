@@ -17,16 +17,16 @@ static const CU::Camera* locGUICamera = nullptr;
 
 namespace GUI
 {
-	ModelWidget::ModelWidget(CLoaderMesh* aLoaderMesh, const CU::GrowingArray<std::string>& aTexturePaths, const CU::Camera& aGUICamera)
-		: Widget(CU::Vector2f::Zero, CU::Vector2f::One, aLoaderMesh->myName, true)
+	ModelWidget::ModelWidget(CLoaderMesh* aLoaderMesh, const CU::GrowingArray<std::string>& aTexturePaths, const CU::Camera& aGUICamera, const bool aIsVisible)
+		: Widget(CU::Vector2f::Zero, CU::Vector2f::One, aLoaderMesh->myName, aIsVisible)
 		, myModelInstance(nullptr)
 		, myPixelConstantBufferStruct(nullptr)
 		, myMillisecondsLeftSinceMouseEnter(0.f)
 	{
 		locGUICamera = &aGUICamera;
 
-
-		CModelManager::ModelId model = MODELMGR->LoadGUIModel(aLoaderMesh, aTexturePaths);
+		CModelManager* modelManager = MODELMGR;
+		CModelManager::ModelId model = modelManager->LoadGUIModel(aLoaderMesh, aTexturePaths);
 		myModelInstance = new CModelInstance(model, aLoaderMesh->myTransformation);
 		myPixelConstantBufferStruct = new SPixelConstantBuffer();
 		myOriginalTransformation = aLoaderMesh->myTransformation;
@@ -40,7 +40,7 @@ namespace GUI
 		ConvertPosition3DTo2D(aGUICamera, aLoaderMesh->myMaxPoint, screenMaxPosition);
 
 		SetWorldPosition(CU::Vector2f(screenMinPosition.x, 1.f - screenMaxPosition.y));
-		SetSize(screenMaxPosition - screenMinPosition);
+		SetSize((screenMaxPosition - screenMinPosition));
 		AddDebugLines();
 	}
 

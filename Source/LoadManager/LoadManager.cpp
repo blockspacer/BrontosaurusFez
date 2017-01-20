@@ -16,6 +16,12 @@
 #include "LoadDropComponent.h"
 #include "LoadManaComponent.h"
 #include "LoadSoundComponent.h"
+#include "LoadMainStatComponent.h"
+#include "LoadInventoryComponent.h"
+#include "LoadPickerupperComponent.h"
+#include "LoadObjectives.h"
+#include "LoadActivationComponent.h"
+#include "LoadOpenShopListenerComponent.h"
 
 LoadManager* LoadManager::ourInstance = nullptr;
 
@@ -76,14 +82,20 @@ void LoadManager::RegisterFunctions()
 	loader.RegisterComponentLoadFunction("CircleCollider", LoadCircleCollider);
 	loader.RegisterComponentLoadFunction("AIController", LoadAIController);
 	loader.RegisterComponentLoadFunction("SeekController", LoadSeekController);
-	loader.RegisterComponentLoadFunction("fleeController", LoadFleeController);
+	loader.RegisterComponentLoadFunction("FleeController", LoadFleeController);
 	loader.RegisterComponentLoadFunction("SkillSystemComponent", LoadSkillSystemComponent);
 	loader.RegisterComponentLoadFunction("HealthComponent", LoadHealthComponent);
 	loader.RegisterComponentLoadFunction("HealthBarComponent", LoadHealthBarComponent);
 	loader.RegisterComponentLoadFunction("DropComponent", LoadDropComponent);
 	loader.RegisterComponentLoadFunction("ManaComponent", LoadManaComponent);
 	loader.RegisterComponentLoadFunction("SoundComponent", LoadSoundComponent);
-
+	loader.RegisterComponentLoadFunction("InventoryComponent", LoadInventoryComponet);
+	loader.RegisterComponentLoadFunction("MainStatComponent", LoadMainStatComponent);
+	loader.RegisterComponentLoadFunction("PickupComponent", LoadPickerupperComponent);
+	loader.RegisterComponentLoadFunction("EnemyObjective", LoadEnemyObjective);
+	loader.RegisterComponentLoadFunction("ActivationObjectiveComponent", LoadActivationObjective);
+	loader.RegisterComponentLoadFunction("ActivatorComponent", LoadActivationComponent);
+	loader.RegisterComponentLoadFunction("ActivateShopComponent", LoadOpenShopListenerComponent);
 }
 
 LoadManager::LoadManager()

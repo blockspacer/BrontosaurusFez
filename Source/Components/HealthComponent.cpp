@@ -65,14 +65,26 @@ void CHealthComponent::Init()
 
 void CHealthComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
 {
+	SComponentMessageData data;
 	switch (aMessageType)
 	{
-	case eComponentMessageType::eStatsUpdated:
-		SetMaxHealth(aMessageData.myStatStruct.MaxHealth);
+	case eComponentMessageType::eAddToMaxHealth:
+		SetMaxHealth(myMaxHealth + aMessageData.myInt);
 		break;
 	case eComponentMessageType::eTakeDamage:
 		SetHealth(myHealth - aMessageData.myInt);
-		SComponentMessageData data; data.myUChar = myPercentageLeft * 100;
+		data.myUChar = myPercentageLeft * 100;
+		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data);
+		break;
+	case eComponentMessageType::eHeal:
+		SetHealth(myHealth + aMessageData.myInt);
+		data.myUChar = myPercentageLeft * 100;
+		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data);
+		break;
+
+	case eComponentMessageType::eRespawned:
+		SetHealth(myMaxHealth);
+		data.myUChar = myPercentageLeft * 100;
 		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data);
 		break;
 	}

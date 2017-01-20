@@ -37,6 +37,11 @@
       <Filter>States</Filter>
     </ClCompile>
     <ClCompile Include="HatMaker.cpp" />
+    <ClCompile Include="MasterAI.cpp" />
+    <ClCompile Include="PickerUpperComponent.cpp" />
+    <ClCompile Include="PickupComponent.cpp" />
+    <ClCompile Include="PickupManager.cpp" />
+    <ClCompile Include="PickupFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackgroundLoadingManager.h" />
@@ -79,6 +84,16 @@
       <Filter>States</Filter>
     </ClInclude>
     <ClInclude Include="HatMaker.h" />
+    <ClInclude Include="MasterAI.h" />
+    <ClInclude Include="PickerUpperComponent.h" />
+    <ClInclude Include="PickupComponent.h" />
+    <ClInclude Include="PickupManager.h" />
+    <ClInclude Include="PickupType.h" />
+    <ClInclude Include="PickupFactory.h" />
+    <ClInclude Include="ShopStorage.h" />
+    <ClInclude Include="ShopStructs.h">
+      <Filter>States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="States">

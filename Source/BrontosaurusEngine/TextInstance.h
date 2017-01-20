@@ -20,6 +20,7 @@ public:
 	CTextInstance(const CTextInstance& aTextInstance);
 	~CTextInstance();
 
+	void Init(const CU::DynamicString& aFontPath, const int aPixelSize);
 	void Init(const CU::DynamicString& aFontPath = "Fonts/comic.ttf");
 	void Render();
 

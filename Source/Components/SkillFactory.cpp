@@ -43,7 +43,7 @@ void SkillFactory::DestroyInstance()
 	SAFE_DELETE(ourInstance);
 }
 
-Skill * SkillFactory::CreateSkill(char* aSkillName)
+Skill * SkillFactory::CreateSkill(const char* aSkillName)
 {
 	for(unsigned short i=0; i < mySkillDataList.Size(); i++)
 	{
@@ -81,7 +81,7 @@ void SkillFactory::RegisterSkills()
 	const std::string& errorString = SkillBluePrints.Parse("Json/Skills.json");
 	CU::CJsonValue levelsArray = SkillBluePrints.at("skills");
 
-	for (unsigned int i = 0; i < levelsArray.Size(); ++i)
+	for (int i = 0; i < levelsArray.Size(); ++i)
 	{
 		SkillData* skill = new SkillData;
 		skill->activationRadius = levelsArray[i].at("activationRadius").GetFloat();

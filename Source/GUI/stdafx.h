@@ -17,6 +17,7 @@
 #include "../CommonUtilities/StaticArray.h"
 #include "../CommonUtilities/EMouseButtons.h"
 #include "../CommonUtilities/DynamicString.h"
+#include "../CommonUtilities/StringHelper.h"
 #include "../CommonUtilities/vector2.h"
 #include "../CommonUtilities/CUTime.h"
 

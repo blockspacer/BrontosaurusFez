@@ -75,20 +75,6 @@ eMessageReturn KeyPressed::DoEvent(CPlayState* aPlayState) const
 			break;
 		case CU::eKeys::H:
 			aPlayState->TEMP_ADD_HAT(aPlayState->myPlayerObject);
-		case CU::eKeys::F11:
-			{
-				QM::CQuestManager& questManager = QM::CQuestManager::GetInstance();
-				questManager.UpdateObjective(questManager.GetObjectiveHandle("firstKlick"));
-				questManager.UpdateObjective(questManager.GetObjectiveHandle("secondKlick"));
-				questManager.UpdateObjective(questManager.GetObjectiveHandle("thirdKlick"));
-			}
-			break;
-		case CU::eKeys::RETURN:
-		{
-			QM::CQuestManager& questManager = QM::CQuestManager::GetInstance();
-			questManager.CompleteEvent();
-		}
-			break;
 		default:
 			break;
 		}

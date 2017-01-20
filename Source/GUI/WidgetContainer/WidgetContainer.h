@@ -25,6 +25,7 @@ namespace GUI
 		virtual Widget* MouseIsOver(const CU::Vector2f& aPosition) override;
 
 		void MoveToFront(const std::string& aWidgetName);
+		void MoveToBack(const std::string& aWidgetName);
 
 		inline virtual bool IsEmpty() const;
 

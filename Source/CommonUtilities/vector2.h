@@ -44,7 +44,8 @@ namespace CU
 		 
 		inline bool operator==(const Vector2& aRight) const;
 		inline bool operator!=(const Vector2& aRight) const;
-		 
+		
+		inline Vector2 Abs() const;
 		inline TYPE Length() const;
 		inline TYPE Length2() const;
 		inline TYPE Dot(const Vector2& aRight) const;
@@ -293,6 +294,12 @@ namespace CU
 	bool Vector2<TYPE>::operator!=(const Vector2& aRight) const
 	{
 		return !(self == aRight);
+	}
+
+	template<typename TYPE>
+	inline Vector2<TYPE> Vector2<TYPE>::Abs() const
+	{
+		return Vector2(std::abs(x), std::abs(y));
 	}
 
 	template<typename TYPE>

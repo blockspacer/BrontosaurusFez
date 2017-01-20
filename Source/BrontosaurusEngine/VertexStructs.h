@@ -45,6 +45,44 @@ namespace FBXLoader
 		float myY;
 	};
 
+	struct Vector4ui
+	{
+		Vector4ui()
+		{
+			myX = 0;
+			myY = 0;
+			myZ = 0;
+			myW = 0;
+		}
+		Vector4ui(unsigned int aX, unsigned int aY, unsigned int aZ, unsigned int aW)
+		{
+			myX = aX;
+			myY = aY;
+			myZ = aZ;
+			myW = aW;
+		}
+		unsigned int myX;
+		unsigned int myY;
+		unsigned int myZ;
+		unsigned int myW;
+	};
+
+	struct Vector2ui
+	{
+		Vector2ui()
+		{
+			myX = 0;
+			myY = 0;
+		}
+		Vector2ui(unsigned int aX, unsigned int aY)
+		{
+			myX = aX;
+			myY = aY;
+		}
+		unsigned int myX;
+		unsigned int myY;
+	};
+
 	struct Matrix44f
 	{
 		Matrix44f()
@@ -154,8 +192,10 @@ struct VertexBoneData
 
 	void AddBoneData(unsigned int BoneID, float Weight)
 	{
-		for (unsigned int i = 0; i < ARRAY_SIZE_IN_ELEMENTS(IDs); i++) {
-			if (Weights[i] == 0.0) {
+		for (unsigned int i = 0; i < ARRAY_SIZE_IN_ELEMENTS(IDs); i++)
+		{
+			if (Weights[i] == 0.0)
+			{
 				IDs[i] = BoneID;
 				Weights[i] = Weight;
 				return;
@@ -172,19 +212,29 @@ struct VertexBoneData
 class SVertexCollection
 {
 public:
-	void PushVec4(FBXLoader::Vector4f aPos)
+	void PushVec4(const FBXLoader::Vector4f& aPos)
 	{
 		myData.push_back(aPos.myX);
 		myData.push_back(aPos.myY);
 		myData.push_back(aPos.myZ);
 		myData.push_back(aPos.myW);
 
+		//myRawData.AddChunk(&aPos, sizeof(aPos));
 	}
-	void PushVec2(FBXLoader::Vector2f aPos)
+
+	void PushVec2(const FBXLoader::Vector2f aPos)
 	{
 		myData.push_back(aPos.myX);
 		myData.push_back(aPos.myY);
+
+		//myRawData.AddChunk(&aPos, sizeof(aPos));
+	}
+
+	void PushVec4ui(const FBXLoader::Vector4ui& /*aPos*/)
+	{
+		//myRawData.AddChunk(static_cast<const void*>(&aPos), sizeof(FBXLoader::Vector4ui));
 	}
 
 	std::vector<float> myData;
+	//CU::GrowingArray<char> myRawData;
 };

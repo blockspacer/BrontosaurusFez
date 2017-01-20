@@ -33,6 +33,8 @@ namespace CU
 		eJsoneValueType GetType() const;
 		int Size() const;
 
+		int Count(const std::string& aKey);
+
 		bool IsNull() const;
 		bool IsBool() const;
 		bool IsNumber() const;
@@ -49,6 +51,7 @@ namespace CU
 		unsigned int GetUInt() const;
 
 		const std::string& GetString() const;
+		const std::string& TryGetString() const;
 
 		CJsonValue operator[](const int aIndex) const;
 		CJsonValue operator[](const std::string& aKey) const;

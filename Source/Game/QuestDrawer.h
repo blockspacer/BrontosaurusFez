@@ -1,6 +1,7 @@
 #pragma once
 #include "../BrontosaurusEngine/TextBox.h"
 #include "../PostMaster/Subscriber.h"
+#include "QuestManager.h"
 
 
 namespace QM
@@ -10,7 +11,7 @@ namespace QM
 	class CQuestDrawer: public Subscriber
 	{
 	public:
-		CQuestDrawer();
+		explicit CQuestDrawer(CQuestManager& aQuestManger);
 		~CQuestDrawer();
 
 		void UpdateText();
@@ -21,6 +22,7 @@ namespace QM
 	private:
 		CTextBox myTextBox;
 		CTextInstance* myQuestCompleteText;
+		CQuestManager & myQuestManager;
 	};
 }
 

@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "../Game/PollingStation.h"
 #include "AIControllerComponent.h"
+#include "../Game/MasterAI.h"
 
 #define SCALAR 3
 
@@ -12,6 +13,8 @@ CSeekController::CSeekController()
 	myTarget = CU::Vector2f::Zero;//PollingStation::playerObject->GetWorldPosition();
 	myAcceleration = CU::Vector2f::Zero;
 	myControllerType = eControllerType::eArrive;
+	myHaveBeenCalledForHelp = false;
+	myCallForHelpRadius = 0.0f;
 }
 
 
@@ -32,14 +35,13 @@ const CU::Vector2f CSeekController::Update(const CU::Time& aDeltaTime)
 	targetVelocity = myTarget - position;
 
 
-
 	float distance = targetVelocity.Length();
 
-	if (distance > myAggroRange)
+	if (distance > myAggroRange && myHaveBeenCalledForHelp == false)
 	{
 		return CU::Vector2f::Zero;
 	}
-	else if (distance < myTargetRadius)
+	else if (distance < myTargetRadius && myHaveBeenCalledForHelp == false)
 	{
 		return CU::Vector2f(99999, 99999); // ?
 	}
@@ -49,10 +51,14 @@ const CU::Vector2f CSeekController::Update(const CU::Time& aDeltaTime)
 		speed = myMaxSpeed * distance / mySlowdownRadius;
 		targetVelocity.Normalize() *= speed;
 	}
-	
-	
+	GetParent()->GetLocalTransform().Lerp(GetParent()->GetLocalTransform().CreateLookAt(PollingStation::playerObject->GetLocalTransform().GetPosition() * -1), 0.01f);
+	if(myHaveBeenCalledForHelp == false)
+	{
+		myHaveBeenCalledForHelp = true;
+		CMasterAI::GetInstance().CallForHelp(GetParent(), myCallForHelpRadius);
+	}
 	CU::Vector2f acceleration;
-	acceleration = targetVelocity - myVelocity;
+	acceleration = targetVelocity;
 	if (acceleration.Length() > myMaxAcceleration)
 	{
 		acceleration.Normalize() *= myMaxAcceleration;
@@ -96,6 +102,16 @@ void CSeekController::SetAggroRange(const float aRange)
 	myAggroRange = aRange;
 }
 
+void CSeekController::SetCallForHelpRange(const float aRange)
+{
+	myCallForHelpRadius = aRange;
+}
+
+void CSeekController::CallForHelp()
+{
+	myHaveBeenCalledForHelp = true;
+}
+
 void CSeekController::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
 {
 
@@ -108,6 +124,10 @@ void CSeekController::Receive(const eComponentMessageType aMessageType, const SC
 		NotifyParent(eComponentMessageType::eAddAIBehavior, data);
 	}
 		break;
+	case(eComponentMessageType::eCalledForHelp):
+	{
+		myHaveBeenCalledForHelp = true;
+	}
 	default:
 		break;
 	}

@@ -127,6 +127,19 @@
     <ClCompile Include="PlayerManaMessenger.cpp">
       <Filter>Mana</Filter>
     </ClCompile>
+    <ClCompile Include="HatActivator.cpp" />
+    <ClCompile Include="EnemyObjectiveComponent.cpp">
+      <Filter>ObjectiveComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivationComponent.cpp">
+      <Filter>Activation</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivationObjectiveComponent.cpp">
+      <Filter>ObjectiveComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenShopListenerComponent.cpp" />
+    <ClCompile Include="RespawnComponent.cpp" />
+    <ClCompile Include="RespawnComponentManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -275,6 +288,19 @@
     <ClInclude Include="PlayerManaMessenger.h">
       <Filter>Mana</Filter>
     </ClInclude>
+    <ClInclude Include="HatActivator.h" />
+    <ClInclude Include="EnemyObjectiveComponent.h">
+      <Filter>ObjectiveComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivationComponent.h">
+      <Filter>Activation</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivationObjectiveComponent.h">
+      <Filter>ObjectiveComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenShopListenerComponent.h" />
+    <ClInclude Include="RespawnComponent.h" />
+    <ClInclude Include="RespawnComponentManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -330,6 +356,15 @@
     </Filter>
     <Filter Include="Mana">
       <UniqueIdentifier>{65345747-c528-4ca8-bda9-2540eb0a8cb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ObjectiveComponents">
+      <UniqueIdentifier>{be41f97c-188c-4389-be95-7af68ac28724}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Activation">
+      <UniqueIdentifier>{ce907b3f-4f14-4c78-b389-0defde24c5a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OpenShopListenerComponent">
+      <UniqueIdentifier>{4e77c44b-70f6-43e3-81aa-a5426b6a26c6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

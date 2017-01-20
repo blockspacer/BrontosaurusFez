@@ -449,6 +449,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="StackWalker.h" />
     <ClInclude Include="StaticArray.h" />
+    <ClInclude Include="StaticTypeTraits.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="CUstring.h" />
     <ClInclude Include="StringHelper.h" />

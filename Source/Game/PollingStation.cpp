@@ -10,6 +10,8 @@ ValueObserver<int>* PollingStation::timeObjectiveBar = nullptr;
 CollisionManager* PollingStation::collsionManager = nullptr;
 CNavmesh* PollingStation::Navmesh = nullptr;
 PlayerData* PollingStation::playerData = nullptr;
+CU::GrowingArray<CGameObject*> PollingStation::myThingsEnemiesShouldAvoid(100);
+
 
 void PollingStation::NullifyLevelSpecificData()
 {

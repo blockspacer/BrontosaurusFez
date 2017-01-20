@@ -27,6 +27,7 @@ public:
 	virtual void OnEnter() = 0;
 	virtual void OnExit() = 0;
 	virtual bool GetLetThroughRender() const;
+	virtual bool GetLetThroughUpdate() const;
 
 	void SetStateStatus(const eStatus aStatus);
 

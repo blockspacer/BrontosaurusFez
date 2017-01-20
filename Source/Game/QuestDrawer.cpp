@@ -9,7 +9,7 @@
 #include "TextInstance.h"
 
 
-QM::CQuestDrawer::CQuestDrawer()
+QM::CQuestDrawer::CQuestDrawer(CQuestManager& aQuestManger): myQuestManager(aQuestManger)
 {
 	myTextBox.SetPosition(CU::Vector2f(0.f, 0.2f));
 
@@ -30,14 +30,14 @@ QM::CQuestDrawer::~CQuestDrawer()
 
 void QM::CQuestDrawer::UpdateText()
 {
-	if (QM::CQuestManager::GetInstance().GetIfLoadingSuceeded())
+	if (myQuestManager.GetIfLoadingSuceeded())
 	{
-		const SQuest quest = CQuestManager::GetInstance().GetCurrentQuest();
+		const SQuest quest = myQuestManager.GetCurrentQuest();
 
 		myTextBox.Clear();
 		for (int i = 0; i < quest.myObjectives.Size(); ++i)
 		{
-			const SObjective objective = CQuestManager::GetInstance().GetObjective(quest.myObjectives[i]);
+			const SObjective objective = myQuestManager.GetObjective(quest.myObjectives[i]);
 			CU::DynamicString textLine1;
 			textLine1 += objective.myName.c_str();
 			textLine1 += ": ";
@@ -58,7 +58,7 @@ void QM::CQuestDrawer::UpdateText()
 	else
 	{
 		myTextBox.Clear();
-		CU::DynamicString error = CQuestManager::GetInstance().myError.c_str();
+		CU::DynamicString error = myQuestManager.myError.c_str();
 		myTextBox.AddText(error);
 	}
 }
@@ -67,7 +67,7 @@ void QM::CQuestDrawer::Render()
 {
 	myTextBox.Render();
 
-	if (QM::CQuestManager::GetInstance().CheckIfQuestComplete())
+	if (myQuestManager.CheckIfQuestComplete())
 	{
 		myQuestCompleteText->Render();
 	}

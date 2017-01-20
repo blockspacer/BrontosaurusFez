@@ -16,6 +16,9 @@
 #include "Components/ModelComponent.h"
 #include "Components/ParticleEmitterComponentManager.h"
 #include "Components/ComponentManager.h"
+#include "Components\PlayerHealthMessenger.h"
+#include "Components\RespawnComponent.h"
+#include "Components\RespawnComponentManager.h"
 
 #include "PostMaster/PopCurrentState.h"
 #include "PostMaster/ChangeLevel.h"
@@ -40,6 +43,8 @@
 
 #include "../Audio/AudioInterface.h"
 
+#include "ShopStorage.h"
+
 #include "PlayerData.h"
 
 #include "Components/SkillFactory.h"
@@ -47,6 +52,11 @@
 
 #include "FleeControllerManager.h"
 #include "SeekControllerManager.h"
+
+#include "PickupFactory.h"
+#include "PickupManager.h"
+
+#include "MasterAI.h"
 
 #include <time.h>
 //Kanske Inte ska vara här?
@@ -87,6 +97,8 @@
 #include "MouseComponent.h"
 #include "QuestManager.h"
 #include "NavigationComponent.h"
+#include "PlayerHealthMessenger.h"
+#include "PlayerManaMessenger.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -94,6 +106,8 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 	, myShouldReturnToLevelSelect(aShouldReturnToLevelSelect)
 	, myScene(nullptr)
 	, myMouseComponent(nullptr)
+	, myQuestManager()
+	, myQuestDrawer(myQuestManager)
 {
 	myIsLoaded = false;
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eHatAdded);
@@ -122,6 +136,11 @@ CPlayState::~CPlayState()
 	DropComponentManager::DestroyInstance();
 	PollingStation::NullifyLevelSpecificData();
 	ManaComponentManager::DestroyInstance();
+	CShopStorage::Destroy();
+	CPickupFactory::Destroy();
+	CPickupManager::DestroyInstance();
+	RespawnComponentManager::Destroy();
+	CMasterAI::Destroy();
 
 	SkillFactory::DestroyInstance();
 	CComponentManager::DestroyInstance();
@@ -139,36 +158,9 @@ void CPlayState::Load()
 	CreateManagersAndFactories();
 	LoadManagerGuard loadManagerGuard;
 
-	QM::CQuestManager &questManager = QM::CQuestManager::GetInstance();
 
-	QM::SObjective objective1;
-	objective1.myName = "test 1";
-	objective1.myGoal = 1;
-	objective1.myText = "test by pressing f12(it works if you're lucky)";
-	fristObjective = questManager.AddObjective(objective1);
-	questManager.AddEvent(QM::eEventType::OBJECTIVE, fristObjective);
 
-	QM::SObjective objective2;
-	objective2.myName = "test2";
-	objective2.myGoal = 1;
-	objective2.myText = "part of test quest two objective  one";
-	secondObjective = questManager.AddObjective(objective2);
-
-	QM::SObjective objective3;
-	objective3.myName = "test3";
-	objective3.myGoal = 1;
-	objective3.myText = "blaaaaaaaaaaalalala lif is life";
-	thridObjective = questManager.AddObjective(objective3);
-
-	QM::SQuest quest;
-	quest.myObjectives = { secondObjective, thridObjective };
-	const QM::EventHandle questHandle = questManager.AddQuest(quest);
-	questManager.AddEvent(QM::eEventType::QUEST, questHandle);
-
-	questManager.CompleteEvent();
-
-	
-	
+	CShopStorage::GetInstance().LoadStorage("Json/Hats/HatBluePrints.json");
 
 	MODELCOMP_MGR.SetScene(myScene);
 	myScene->SetSkybox("skybox.dds");
@@ -225,7 +217,7 @@ void CPlayState::Load()
 	//Move Later for modification from unity
 	myScene->AddCamera(CScene::eCameraType::ePlayerOneCamera);
 	CU::Camera& playerCamera = myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera);
-	playerCamera.Init(60, WINDOW_SIZE_F.x, WINDOW_SIZE_F.y, 1.f, 75000.0f);
+	playerCamera.Init(50, WINDOW_SIZE_F.x, WINDOW_SIZE_F.y, 1.f, 75000.0f);
 	
 	////AddBasicAttack
 	//SkillData* basicSkillData = new SkillData;
@@ -357,6 +349,12 @@ void CPlayState::Load()
 	levelPath += levelsArray[levelIndex].GetString();
 	levelPath += "/LevelData.json";
 
+	std::string questPath = "Json/Quests/";
+	questPath += levelsArray[levelIndex].GetString();
+	questPath += ".json";
+
+	myQuestManager.LoadQuestlines(questPath);
+	myQuestManager.CompleteEvent();
 	KLoader::CKevinLoader &loader = KLoader::CKevinLoader::GetInstance();
 
 	const KLoader::eError loadError = loader.LoadFile(levelPath);
@@ -367,6 +365,16 @@ void CPlayState::Load()
 	if (PollingStation::PlayerInput != nullptr)
 	{
 		PollingStation::playerObject = PollingStation::PlayerInput->GetParent();
+
+		//Dísclaimer: fult men funkar //lägg till allt spelar specifikt som inte LD behöver störas av här
+		CPlayerHealthMessenger* healthMessenger = new CPlayerHealthMessenger();
+
+		RespawnComponent* respawn = RespawnComponentManager::GetInstance().CreateAndRegisterComponent();
+
+		CComponentManager::GetInstance().RegisterComponent(healthMessenger);
+
+		PollingStation::playerObject->AddComponent(healthMessenger);
+		PollingStation::playerObject->AddComponent(respawn);
 	}
 	//CSeekControllerManager::GetInstance().SetTarget();
 	myGameObjectManager->SendObjectsDoneMessage();
@@ -403,8 +411,11 @@ void CPlayState::Load()
 	myMouseComponent = new CMouseComponent(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 	mouseObject->AddComponent(myMouseComponent);
 
-
-
+	if (PollingStation::playerObject != nullptr)
+	{
+		PollingStation::playerObject->AddComponent(new CPlayerHealthMessenger());
+		PollingStation::playerObject->AddComponent(new CPlayerManaMessenger());
+	}
 
 	CFireEmitterInstance fireeeeeByCarl;
 	SFireEmitterData fireData;
@@ -458,6 +469,8 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	MovementComponentManager::GetInstance().Update(aDeltaTime);
 	AIControllerManager::GetInstance().Update(aDeltaTime);
 	SkillSystemComponentManager::GetInstance().Update(aDeltaTime);
+	CPickupManager::GetInstance().Update(aDeltaTime);
+	RespawnComponentManager::GetInstance().Update(aDeltaTime);
 	myCollisionComponentManager->Update();
 	myScene->Update(aDeltaTime);
 
@@ -599,6 +612,7 @@ void CPlayState::CreateManagersAndFactories()
 	CModelComponentManager::Create();
 	CParticleEmitterComponentManager::Create();
 	CParticleEmitterComponentManager::GetInstance().SetScene(myScene);
+	CShopStorage::Create();
 	CCameraComponentManager::Create();
 	InputControllerManager::CreateInstance();
 	InputControllerManager::GetInstance().SetScene(myScene);
@@ -615,6 +629,10 @@ void CPlayState::CreateManagersAndFactories()
 	myHealthBarManager = new CHealthBarComponentManager(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 	ManaComponentManager::CreateInstance();
 	myHatMaker = new CHatMaker(myGameObjectManager);
+	CPickupFactory::Create(myGameObjectManager, myCollisionComponentManager);
+	CPickupManager::CreateInstance();
+	CMasterAI::Create();
+	RespawnComponentManager::Create();
 }
 
 void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)
@@ -641,43 +659,43 @@ void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)
 	hatObj->AddComponent(stat3);
 
 	Stats::SBaseStats base1;
-	base1.Dexterity = 1;
+	/*base1.Dexterity = 1;
 	base1.Intelligence = 1;
 	base1.Strength = 1;
-	base1.Vitality = 1;
+	base1.Vitality = 1;*/
 	Stats::SBonusStats bonus1;
-	bonus1.BonusArmor = 1;
+	/*bonus1.BonusArmor = 1;
 	bonus1.BonusCritChance = 1;
 	bonus1.BonusCritDamage = 1;
-	bonus1.BonusDamage = 1;
+	bonus1.BonusDamage = 1;*/
 	bonus1.BonusHealth = 1;
 	bonus1.BonusMovementSpeed = 1;
 	stat1->SetStats(base1, bonus1);
 
 	Stats::SBaseStats base2;
-	base2.Dexterity = 2;
+	/*base2.Dexterity = 2;
 	base2.Intelligence = 2;
 	base2.Strength = 2;
-	base2.Vitality = 2;
+	base2.Vitality = 2;*/
 	Stats::SBonusStats bonus2;
-	bonus2.BonusArmor = 2;
-	bonus2.BonusCritChance = 2;
-	bonus2.BonusCritDamage = 2;
-	bonus2.BonusDamage = 2;
+	//bonus2.BonusArmor = 2;
+	//bonus2.BonusCritChance = 2;
+	//bonus2.BonusCritDamage = 2;
+	//bonus2.BonusDamage = 2;
 	bonus2.BonusHealth = 2;
 	bonus2.BonusMovementSpeed = 2;
 	stat2->SetStats(base2, bonus2);
 
 	Stats::SBaseStats base3;
-	base3.Dexterity = 3;
-	base3.Intelligence = 3;
-	base3.Strength = 3;
-	base3.Vitality = 3;
+	//base3.Dexterity = 3;
+	//base3.Intelligence = 3;
+	//base3.Strength = 3;
+	//base3.Vitality = 3;
 	Stats::SBonusStats bonus3;
-	bonus3.BonusArmor = 3;
+	/*bonus3.BonusArmor = 3;
 	bonus3.BonusCritChance = 3;
 	bonus3.BonusCritDamage = 3;
-	bonus3.BonusDamage = 3;
+	bonus3.BonusDamage = 3;*/
 	bonus3.BonusHealth = 3;
 	bonus3.BonusMovementSpeed = 3;
 	stat3->SetStats(base3, bonus3);
@@ -705,7 +723,7 @@ void CPlayState::TEMP_CREATE_ENEMY()
 	AIController->AddControllerBehaviour(fleeController);
 
 	Stats::SBaseStats baseStats;
-	baseStats.Dexterity = 1337;
+	/*baseStats.Dexterity = 1337;*/
 	Stats::SBonusStats bonusStats;
 
 	seekController->SetMaxAcceleration(400);
@@ -726,7 +744,7 @@ void CPlayState::TEMP_CREATE_ENEMY()
 	collisionComponent->SetColliderType(eColliderType::eColliderType_Enemy);
 	//collisionComponent->GetCollider()->SetGameObject(enemyObj);
 	enemyObj->AddComponent(collisionComponent);
-	enemyObj->AddComponent(DropComponentManager::GetInstance().CreateAndRegisterComponent(50));
+	enemyObj->AddComponent(DropComponentManager::GetInstance().CreateAndRegisterComponent(50,100));
 
 	CHealthBarComponent* healthBar = myHealthBarManager->CreateHealthbar();
 	enemyObj->AddComponent(&*healthBar);

@@ -29,6 +29,7 @@ class CCoolText
 public:
 	CCoolText(const CU::DynamicString& aFontPath);
 	CCoolText(const CCoolText & aCoolText);
+	CCoolText(const CU::DynamicString& aFontPath, const int aPixelSize);
 	~CCoolText();
 
 	void Render(const CU::DynamicString& aString, const CU::Vector2f& aPosition, const CU::Vector4f& aColor/*, const CU::Vector2i& aSize*/);

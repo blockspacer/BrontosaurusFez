@@ -1,36 +1,11 @@
 #pragma once
+#include "ShopStructs.h"
 #include "StateStack/State.h"
 #include "PostMaster/Subscriber.h"
 #include "CommonUtilities/GrowingArray.h"
-#include <string>
+#include "CommonUtilities/vector2.h"
 
-struct SShopSelection
-{
-	typedef unsigned short Cost;
-	std::string HatName;
-	Cost myCost;
-
-	const bool operator == (SShopSelection aRight)
-	{
-		for (unsigned int i = 0; i < HatName.length(); ++i)
-		{
-			if (HatName[i] != aRight.HatName[i])
-			{
-				return false;
-			}
-		}
-		if (myCost != aRight.myCost)
-		{
-			return false;
-		}
-		return true;
-	}
-	void operator = (SShopSelection aRight)
-	{
-		HatName = aRight.HatName;
-		myCost = aRight.myCost;
-	}
-};
+class CTextInstance;
 
 namespace GUI
 {
@@ -52,14 +27,22 @@ public:
 	void OnEnter() override;
 	void OnExit() override;
 	void ValidatePurchase();
-	void SetSelected(unsigned int aIndex);
+	void SetSelected(const char aIndex);
+	void GetTooltipTextFromShopIndex(const int aHatShopIndex, std::string& aTooltipTextOut) const;
 	bool GetLetThroughRender() const override;
+	bool GetLetThroughUpdate() const override;
+
 
 	// Inherited via Subscriber
 	eMessageReturn Recieve(const Message & aMessage) override;
 private:
+	void AdjustText();
 	CU::GrowingArray<SShopSelection*> mySelections;
+	//temp array of texts so that you can see what you wanna buy
+	CU::GrowingArray<CTextInstance*> myOptionsText;
+	CU::GrowingArray<CTextInstance*> myCostText;
 	GUI::GUIManager* myGUIManager;
 	SShopSelection* myCurrentlySelected;
+	CU::Vector2f myWindowPosition;
 	bool myIsInitied;
 };

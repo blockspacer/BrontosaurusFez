@@ -36,6 +36,7 @@ enum eColliderType : unsigned int
 	eColliderType_Mouse = 1 << 2,
 	eColliderType_Skill = 1 << 3,
 	eColliderType_Enemy = 1 << 4,
+	eColliderType_PickUp = 1 << 5,
 };
 
 class ICollider

@@ -344,6 +344,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ActivationComponent.h" />
+    <ClInclude Include="ActivationObjectiveComponent.h" />
     <ClInclude Include="AIControllerComponent.h" />
     <ClInclude Include="AIControllerManager.h" />
     <ClInclude Include="AudioSourceComponent.h" />
@@ -354,17 +356,22 @@
     <ClInclude Include="CollisionComponentManager.h" />
     <ClInclude Include="DropComponent.h" />
     <ClInclude Include="DropComponentManager.h" />
+    <ClInclude Include="EnemyObjectiveComponent.h" />
     <ClInclude Include="FleeController.h" />
     <ClInclude Include="FleeControllerManager.h" />
+    <ClInclude Include="HatActivator.h" />
     <ClInclude Include="HealthBarComponent.h" />
     <ClInclude Include="HealthBarComponentManager.h" />
     <ClInclude Include="HealthPoint.h" />
     <ClInclude Include="ManaComponent.h" />
     <ClInclude Include="ManaComponentManager.h" />
     <ClInclude Include="ManaPoint.h" />
+    <ClInclude Include="OpenShopListenerComponent.h" />
     <ClInclude Include="PlayerData.h" />
     <ClInclude Include="PlayerHealthMessenger.h" />
     <ClInclude Include="PlayerManaMessenger.h" />
+    <ClInclude Include="RespawnComponent.h" />
+    <ClInclude Include="RespawnComponentManager.h" />
     <ClInclude Include="SeekController.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
@@ -402,6 +409,8 @@
     <ClInclude Include="WanderController.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ActivationComponent.cpp" />
+    <ClCompile Include="ActivationObjectiveComponent.cpp" />
     <ClCompile Include="AIControllerComponent.cpp" />
     <ClCompile Include="AIControllerManager.cpp" />
     <ClCompile Include="AudioSourceComponent.cpp" />
@@ -412,14 +421,19 @@
     <ClCompile Include="CollisionComponentManager.cpp" />
     <ClCompile Include="DropComponent.cpp" />
     <ClCompile Include="DropComponentManager.cpp" />
+    <ClCompile Include="EnemyObjectiveComponent.cpp" />
     <ClCompile Include="FleeController.cpp" />
     <ClCompile Include="FleeControllerManager.cpp" />
+    <ClCompile Include="HatActivator.cpp" />
     <ClCompile Include="HealthBarComponent.cpp" />
     <ClCompile Include="HealthBarComponentManager.cpp" />
     <ClCompile Include="ManaComponent.cpp" />
     <ClCompile Include="ManaComponentManager.cpp" />
+    <ClCompile Include="OpenShopListenerComponent.cpp" />
     <ClCompile Include="PlayerHealthMessenger.cpp" />
     <ClCompile Include="PlayerManaMessenger.cpp" />
+    <ClCompile Include="RespawnComponent.cpp" />
+    <ClCompile Include="RespawnComponentManager.cpp" />
     <ClCompile Include="SeekController.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentManager.cpp" />

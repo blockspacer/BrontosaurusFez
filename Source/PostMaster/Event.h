@@ -32,6 +32,7 @@ class HatShopState;
 class CModelViewer;
 class CCollisionComponentManager;
 class CHatMaker;
+class CShopStorage;
 
 //temp
 class CHealthComponent;
@@ -64,6 +65,7 @@ public:
 	virtual eMessageReturn DoEvent(CCollisionComponentManager*) const { return  eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(GUI::CHealthWidget*) const { return  eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(GUI::CManaWidget*) const { return  eMessageReturn::eContinue; }
+	virtual eMessageReturn DoEvent(CShopStorage*) const { return  eMessageReturn::eContinue; }
 	
 	virtual eMessageReturn DoEvent(CHatMaker*) const { return eMessageReturn::eContinue; }
 

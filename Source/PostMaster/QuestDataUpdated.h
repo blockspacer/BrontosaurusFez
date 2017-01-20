@@ -8,5 +8,6 @@ public:
 	~CQuestDataUpdated();
 
 	eMessageReturn DoEvent(QM::CQuestDrawer *) const override;
+
 };
 

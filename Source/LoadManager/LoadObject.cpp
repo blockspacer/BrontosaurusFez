@@ -54,6 +54,7 @@ void LinkObject(const int target, const int anOtherComponent)
 	if (gameObject == nullptr)
 	{
 		DL_ASSERT("ERROR: component is not a game object !!");
+		return;
 	}
 
 	CComponent* const otherComponent = CComponentManager::GetInstance().GetComponent(anOtherComponent);
