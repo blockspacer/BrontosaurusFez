@@ -214,7 +214,7 @@ void CPlayState::Load()
 	//Move Later for modification from unity
 	myScene->AddCamera(CScene::eCameraType::ePlayerOneCamera);
 	CU::Camera& playerCamera = myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera);
-	playerCamera.Init(60, WINDOW_SIZE_F.x, WINDOW_SIZE_F.y, 1.f, 75000.0f);
+	playerCamera.Init(50, WINDOW_SIZE_F.x, WINDOW_SIZE_F.y, 1.f, 75000.0f);
 	
 	////AddBasicAttack
 	//SkillData* basicSkillData = new SkillData;
@@ -336,7 +336,7 @@ void CPlayState::Load()
 
 	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
-#ifdef _DEBUGsdf
+#ifdef _DEBUG
 	const int levelIndex = levelsArray.Size() - 1;
 #else
 	const int levelIndex = 0;
