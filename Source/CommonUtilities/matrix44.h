@@ -597,7 +597,8 @@ namespace CU
 
 		Matrix44& CreateLookAt(const Vector3<TYPE>& aLookTo)
 		{
-			Matrix44<TYPE> matrixToReturn = LookAt(aLookTo);
+			Matrix44<TYPE> matrixToReturn = *this;
+			matrixToReturn.LookAt(aLookTo);
 			return matrixToReturn;
 		}
 
