@@ -35,7 +35,6 @@ const CU::Vector2f CSeekController::Update(const CU::Time& aDeltaTime)
 	targetVelocity = myTarget - position;
 
 
-
 	float distance = targetVelocity.Length();
 
 	if (distance > myAggroRange && myHaveBeenCalledForHelp == false)
@@ -52,14 +51,14 @@ const CU::Vector2f CSeekController::Update(const CU::Time& aDeltaTime)
 		speed = myMaxSpeed * distance / mySlowdownRadius;
 		targetVelocity.Normalize() *= speed;
 	}
-	
+
 	if(myHaveBeenCalledForHelp == false)
 	{
 		myHaveBeenCalledForHelp = true;
 		CMasterAI::GetInstance().CallForHelp(GetParent(), myCallForHelpRadius);
 	}
 	CU::Vector2f acceleration;
-	acceleration = targetVelocity - myVelocity;
+	acceleration = targetVelocity;
 	if (acceleration.Length() > myMaxAcceleration)
 	{
 		acceleration.Normalize() *= myMaxAcceleration;
