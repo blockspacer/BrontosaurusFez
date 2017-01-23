@@ -18,6 +18,7 @@ CHealthComponent::CHealthComponent()
 
 CHealthComponent::~CHealthComponent()
 {
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyPressed);
 }
 
 float CHealthComponent::GetPrecentLeft() const
