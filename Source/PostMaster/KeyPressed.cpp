@@ -15,6 +15,7 @@
 
 #include "../Game/QuestManager.h"
 #include "../Game/QuestDrawer.h"
+#include "..\Game\LevelManager.h"
 
 //temp
 #include "Components\HealthComponent.h"
@@ -67,7 +68,8 @@ eMessageReturn KeyPressed::DoEvent(CPlayState* aPlayState) const
 			aPlayState->BuyHats();
 			break;
 		case CU::eKeys::F7:
-			aPlayState->NextLevel();
+			//aPlayState->NextLevel();
+			CLevelManager::GetInstance()->GoToLevel(2);
 			break;
 		case CU::eKeys::P:
 		case CU::eKeys::ESCAPE:
@@ -75,24 +77,6 @@ eMessageReturn KeyPressed::DoEvent(CPlayState* aPlayState) const
 			break;
 		case CU::eKeys::H:
 			aPlayState->TEMP_ADD_HAT(aPlayState->myPlayerObject);
-		default:
-			break;
-		}
-	}
-
-	return eMessageReturn::eStop;
-}
-
-eMessageReturn KeyPressed::DoEvent(State* aState) const
-{
-	CPlayState* playState = dynamic_cast<CPlayState*>(aState);
-	if (playState != nullptr)
-	{
-		switch (myKey)
-		{
-		case CU::eKeys::F7:
-			playState->NextLevel();
-			break;
 		default:
 			break;
 		}
