@@ -116,6 +116,7 @@ struct SRenderToIntermediate : SRenderMessage
 
 struct SRenderCameraQueueMessage : SRenderMessage
 {
+	~SRenderCameraQueueMessage() override;
 	//mebe put SetCameraMessage in here?
 	SRenderCameraQueueMessage();
 	CU::Camera myCamera;

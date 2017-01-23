@@ -67,6 +67,11 @@ SRenderModelDepthMessage::SRenderModelDepthMessage()
 	myType = eRenderMessageType::eRenderModelDepth;
 }
 
+SRenderCameraQueueMessage::~SRenderCameraQueueMessage()
+{
+	CameraRenderQueue.DeleteAll();
+}
+
 SRenderCameraQueueMessage::SRenderCameraQueueMessage()
 	: SRenderMessage(eRenderMessageType::eRenderCameraQueue)
 {
