@@ -2,6 +2,7 @@
 #include "../CommonUtilities/TimerManager.h"
 #include "Component.h"
 #include "../BrontosaurusEngine/ParticleEmitterInstance.h"
+
 class CParticleEmitterComponent : public CComponent
 {
 public:

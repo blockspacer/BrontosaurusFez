@@ -5,6 +5,7 @@
 
 CEnemyObjectiveComponent::CEnemyObjectiveComponent(const std::string& aQuestName) : myQuestName(aQuestName)
 {
+	myType = eComponentType::eEnemyObjective;
 }
 
 CEnemyObjectiveComponent::~CEnemyObjectiveComponent()

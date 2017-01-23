@@ -7,6 +7,7 @@
 
 COpenShopListenerComponent::COpenShopListenerComponent()
 {
+	myType = eComponentType::eOpenShopListener;
 }
 
 

@@ -22,7 +22,7 @@ CModelComponent::CModelComponent(CModelInstance& aModel)
 CModelComponent::CModelComponent(CModelInstance & aModel, const bool aIsDebugSphere)
 	: CModelComponent(aModel)
 {
-
+	myType = eComponentType::eModelDebug;
 }
 
 CModelComponent::~CModelComponent()

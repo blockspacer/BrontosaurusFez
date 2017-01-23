@@ -11,6 +11,7 @@ DropComponent::DropComponent(const int aAmountOfGoldToDrop, const int aDropPerce
 {
 	myGoldToDrop = aAmountOfGoldToDrop;
 	myHealthGlobeDropRate = aDropPercentChance;
+	myType = eComponentType::eDrop;
 }
 
 

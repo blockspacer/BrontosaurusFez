@@ -5,6 +5,7 @@
 
 CActivationObjectiveComponent::CActivationObjectiveComponent(const std::string anObjectiveName) :myObjectiveName(anObjectiveName)
 {
+	myType = eComponentType::eActivationObjective;
 }
 
 CActivationObjectiveComponent::~CActivationObjectiveComponent()

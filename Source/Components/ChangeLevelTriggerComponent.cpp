@@ -6,6 +6,7 @@
 ChangeLevelTriggerComponent::ChangeLevelTriggerComponent(unsigned char aLevelToGoTo)
 {
 	myLevelToGoTo = aLevelToGoTo;
+	myType = eComponentType::eChangeLevelTrigger;
 }
 
 
