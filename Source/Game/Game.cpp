@@ -39,7 +39,7 @@ void CGame::Init()
 
 	if (CommandLineManager::GetInstance()->HasParameter("-skipMainMenu") == true)
 	{
-		myStateStack.PushState(new CPlayState(myStateStack, -1));
+		myStateStack.PushState(new CPlayState(myStateStack, 0));
 	}
 	else
 	{

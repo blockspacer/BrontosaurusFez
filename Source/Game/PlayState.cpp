@@ -150,6 +150,7 @@ CPlayState::~CPlayState()
 	CComponentManager::DestroyInstance();
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eHatAdded);
 	CLevelManager::DestroyInstance();
+	KLoader::CKevinLoader::GetInstance().ClearLinkObjectList();
 }
 
 void CPlayState::Load()
@@ -351,11 +352,11 @@ void CPlayState::Load()
 #endif
 
 	std::string levelPath = "Json/Levels/";
-	levelPath += levelsArray[levelIndex].GetString();
+	levelPath += levelsArray[myLevelIndex].GetString();
 	levelPath += "/LevelData.json";
 
 	std::string questPath = "Json/Quests/";
-	questPath += levelsArray[levelIndex].GetString();
+	questPath += levelsArray[myLevelIndex].GetString();
 	questPath += ".json";
 
 	myQuestManager.LoadQuestlines(questPath);
