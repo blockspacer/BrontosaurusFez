@@ -28,6 +28,16 @@ void CComponentManager::CreateInstance()
 
 void CComponentManager::DestroyInstance()
 {
+	//DESTROY EVERYTHING.
+	for (int i = 0; i < ourInstance->myComponents.Size(); ++i)
+	{
+		if (ourInstance->myComponents[i] != nullptr)
+		{
+			ourInstance->RemoveComponent(ourInstance->myComponents[i]->GetId());
+		}
+	}
+
+
 	assert(ourInstance != nullptr && "component manager not created (is NULL)");
 	SAFE_DELETE(ourInstance);
 }
@@ -65,6 +75,7 @@ CComponent* CComponentManager::GetComponent(ComponentId anId)
 
 void CComponentManager::RemoveComponent(ComponentId anId)
 {
+	delete myComponents[anId];
 	myComponents[anId] = nullptr;
 	myEmptySpaces.Push(anId);
 }
