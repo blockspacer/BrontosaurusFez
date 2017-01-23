@@ -31,6 +31,8 @@ CRenderer::CRenderer()
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed);
 
+	myIsRunning = true;
+
 	mySettings.HDR = false;
 	mySettings.Bloom = false;
 	mySettings.Motionblur = false;
@@ -80,6 +82,11 @@ CRenderer::~CRenderer()
 	}
 }
 
+void CRenderer::Shutdown()
+{
+	myIsRunning = false;
+}
+
 void CRenderer::AddRenderMessage(SRenderMessage* aRenderMessage)
 {
 	mySynchronizer << aRenderMessage;
@@ -87,6 +94,8 @@ void CRenderer::AddRenderMessage(SRenderMessage* aRenderMessage)
 
 void CRenderer::Render()
 {
+
+
 	myTimers.UpdateTimers();
 	UpdateBuffer();
 
@@ -766,7 +775,7 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 		{
 			HandleRenderMessage(msg->CameraRenderQueue[i], aDrawCallCount);
 		}
-		msg->CameraRenderQueue.DeleteAll();
+		//msg->CameraRenderQueue.DeleteAll();
 		myCamera = previousCam;
 		renderTo->Activate();
 		UpdateBuffer();

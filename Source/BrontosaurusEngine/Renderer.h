@@ -34,11 +34,12 @@ class CRenderer : public Subscriber
 public:
 	CRenderer();
 	~CRenderer();
+	void Shutdown();
 	void AddRenderMessage(SRenderMessage* aRenderMessage);
 	void Render();
 	void SwapWrite();
 	void ClearRenderQueue();
-
+	inline bool GetIsRunning();
 	inline SRendererSettings& GetSettings();
 private:
 	void HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawCallCount);
@@ -105,6 +106,8 @@ private:
 	} myGUIData;
 
 private:
+
+
 	CSynchronizer mySynchronizer;
 
 	CRenderPackage* renderTo;
@@ -128,6 +131,7 @@ private:
 
 	CU::TimerHandle myOncePerFrameBufferTimer;
 	CU::TimerHandle myFireTimer;
+	bool myIsRunning;
 
 	// Inherited via Subscriber
 	eMessageReturn Recieve(const Message& aMessage) override;
@@ -138,3 +142,7 @@ inline SRendererSettings& CRenderer::GetSettings()
 	return mySettings;
 }
 
+inline bool CRenderer::GetIsRunning()
+{
+	return myIsRunning;
+}
