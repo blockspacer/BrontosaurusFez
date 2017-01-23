@@ -50,7 +50,7 @@ void CGameObjectManager::DestroyObject(CGameObject* aGameObject)
 		DL_ASSERT("trying to destroy a nullponter as an gameobject");
 	}
 
-	CComponentManager::GetInstance().RemoveComponent(aGameObject->GetId());
+	CComponentManager::GetInstance().DeleteComponent(aGameObject->GetId());
 
 	myMatrices[aGameObject->myTransformId] = CU::Matrix44f::Identity;
 	myFreeMatrices.Push(aGameObject->myTransformId);
