@@ -61,7 +61,7 @@ public:
 	void BuyHats();
 	void GiveHatToPlayer();
 
-	void NextLevel();
+	void CheckReturnToLevelSelect();
 
 	eMessageReturn Recieve(const Message& aMessage) override;
 
