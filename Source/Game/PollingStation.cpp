@@ -18,4 +18,5 @@ void PollingStation::NullifyLevelSpecificData()
 	playerHealthBar = nullptr;
 	playerBoostBar = nullptr;
 	collsionManager = nullptr;
+	myThingsEnemiesShouldAvoid.RemoveAll();
 }
