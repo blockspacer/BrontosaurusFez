@@ -111,6 +111,9 @@ namespace DL_Debug
 		case DL_Debug::eLogTypes::eThreadedModels:
 			fileName = "LOG_THREADED_MODELS.loggo";
 			break;
+		case DL_Debug::eLogTypes::eThreadPool:
+			fileName = "LOG_THREADPOOL.loggo";
+			break;
 		default:
 			fileName = "LOG_DEFAULT.loggo";
 			break;
@@ -161,6 +164,10 @@ namespace DL_Debug
 			if (commandLineManager->HasArgument("-activatelog", "threadedModels"))
 			{
 				Activate(DL_Debug::eLogTypes::eThreadedModels);
+			}
+			if (commandLineManager->HasArgument("-activatelog", "threadPool"))
+			{
+				Activate(DL_Debug::eLogTypes::eThreadPool);
 			}
 		}
 	}
