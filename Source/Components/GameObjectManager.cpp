@@ -55,7 +55,8 @@ void CGameObjectManager::DestroyObject(CGameObject* aGameObject)
 
 	myObjectsCreated.RemoveCyclic(aGameObject);
 
-	delete aGameObject;
+	SAFE_DELETE(aGameObject);
+	//delete aGameObject;
 }
 
 void CGameObjectManager::AddObjectForDestruction(CGameObject* aGameObject)
