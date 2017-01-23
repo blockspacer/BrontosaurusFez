@@ -19,7 +19,8 @@ void CGameObjectManager::InitGrowingArrays()
 CGameObjectManager::~CGameObjectManager()
 {
 //	ClearAll();
-
+	myFreeMatrices.Clear();
+	myMatrices.RemoveAll();
 }
 
 
