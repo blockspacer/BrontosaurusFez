@@ -12,11 +12,11 @@ AIControllerManager::AIControllerManager()
 
 AIControllerManager::~AIControllerManager()
 {
-	for (unsigned int i = 0; i < myControllers.Size(); ++i)
-	{
-		CComponentManager::GetInstance().RemoveComponent(myControllers[i]->GetId());
-	}
-	myControllers.DeleteAll();
+	//for (unsigned int i = 0; i < myControllers.Size(); ++i)
+	//{
+	//	CComponentManager::GetInstance().RemoveComponent(myControllers[i]->GetId());
+	//}
+	//myControllers.DeleteAll();
 }
 
 void AIControllerManager::Create()

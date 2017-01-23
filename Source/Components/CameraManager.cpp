@@ -12,11 +12,11 @@ CCameraComponentManager::CCameraComponentManager()
 
 CCameraComponentManager::~CCameraComponentManager()
 {
-	for (unsigned int i = 0; i < myCameraComponents.Size(); i++)
-	{
-		CComponentManager::GetInstance().RemoveComponent(myCameraComponents[i]->GetId());
-		SAFE_DELETE(myCameraComponents[i]);
-	}
+	//for (unsigned int i = 0; i < myCameraComponents.Size(); i++)
+	//{
+	//	CComponentManager::GetInstance().RemoveComponent(myCameraComponents[i]->GetId());
+	//	SAFE_DELETE(myCameraComponents[i]);
+	//}
 
 	myCameraComponents.RemoveAll();
 }

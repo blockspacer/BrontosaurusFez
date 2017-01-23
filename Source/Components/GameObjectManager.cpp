@@ -18,7 +18,8 @@ void CGameObjectManager::InitGrowingArrays()
 
 CGameObjectManager::~CGameObjectManager()
 {
-	ClearAll();
+//	ClearAll();
+
 }
 
 

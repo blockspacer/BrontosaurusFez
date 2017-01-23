@@ -116,6 +116,9 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 
 CPlayState::~CPlayState()
 {
+
+	//myGameObjectManager->ClearAll();
+
 	SAFE_DELETE(myMouseComponent);
 	SAFE_DELETE(myScene);
 	SAFE_DELETE(myGameObjectManager);

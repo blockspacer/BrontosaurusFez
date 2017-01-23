@@ -24,7 +24,7 @@ CModelComponentManager::CModelComponentManager()
 
 CModelComponentManager::~CModelComponentManager()
 {
-	myModels.DeleteAll();
+	//myModels.DeleteAll();
 }
 
 void CModelComponentManager::SetScene(CScene * aScene)
