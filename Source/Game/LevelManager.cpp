@@ -27,5 +27,6 @@ CLevelManager* CLevelManager::GetInstance()
 
 void CLevelManager::GoToLevel(unsigned char aIndex)
 {
+	DL_PRINT("LevelIndexChangeTo %u",aIndex);
 	PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, ChangeLevel(aIndex)));
 }
