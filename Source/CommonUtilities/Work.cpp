@@ -10,6 +10,7 @@ namespace CU
 		myWork = aFunction; // 2 spooky
 		myPrio = aPrio;
 		myLogMessage = "";
+		myToWhatLog = DL_Debug::eLogTypes::eThreadPool;
 	}
 
 	Work::Work(std::function<void()> aFunction, DL_Debug::eLogTypes aToWhatLog, const char* aLogMessage, ePriority aPrio)
