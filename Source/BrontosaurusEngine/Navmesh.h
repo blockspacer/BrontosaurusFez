@@ -160,7 +160,7 @@ private:
 	CModel* myModel;
 	CModel* myPositionsModel;
 
-	bool myShuldRender;
+	bool myShouldRender;
 
 };
 

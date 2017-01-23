@@ -28,7 +28,7 @@ CNavmesh::CNavmesh()
 	//myTriangles.Init(128);
 	myModel = nullptr;
 	myPositionsModel = nullptr;
-	myShuldRender = 0;
+	myShouldRender = 1;
 }
 
 
@@ -38,7 +38,7 @@ CNavmesh::~CNavmesh()
 
 void CNavmesh::Render()
 {
-	if (!myShuldRender)
+	if (!myShouldRender)
 		return;
 
 	if (myModel != nullptr)
