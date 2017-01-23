@@ -97,6 +97,7 @@ void CMouseComponent::HandleCollision(CGameObject* aCollidedWith)
 		SComponentMessageData hitThisBastard;
 		hitThisBastard.myGameObject = aCollidedWith;
 		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eSetSkillTargetObject, hitThisBastard);
+
 	}
 }
 
