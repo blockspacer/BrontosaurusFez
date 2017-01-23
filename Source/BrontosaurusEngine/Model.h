@@ -6,6 +6,7 @@
 
 #include "../CommonUtilities/StaticArray.h"
 #include "../CommonUtilities/AABB.h"
+#include "stdafx.h"
 
 class CEffect;
 class CSurface;
@@ -37,6 +38,7 @@ class CPointLightInstance;
 struct SLodData
 {
 	SLodData() { myLodLevel = myIndexCount = myVertexCount = 0; myVertexBuffer = myIndexBuffer = nullptr; }
+	~SLodData() { /*SAFE_RELEASE(myVertexBuffer); SAFE_RELEASE(myIndexBuffer);*/ }
 	SLODDistances myDistances;		  
 	ID3D11Buffer* myVertexBuffer;	  
 	ID3D11Buffer* myIndexBuffer;	  
@@ -44,6 +46,7 @@ struct SLodData
 	int myLodLevel;		
 	unsigned int myVertexCount;		  
 	unsigned int myIndexCount;		  
+
 
 };
 
