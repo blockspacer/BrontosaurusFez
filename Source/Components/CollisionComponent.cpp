@@ -53,6 +53,9 @@ void CCollisionComponent::Receive(const eComponentMessageType aMessageType, cons
 	case eComponentMessageType::eDied:
 		myCollider->Deactivate();
 		break;
+	case eComponentMessageType::eRespawned:
+		myCollider->Activate();
+		break;
 	}
 }
 

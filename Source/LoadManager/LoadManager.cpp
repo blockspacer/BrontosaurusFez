@@ -21,6 +21,7 @@
 #include "LoadPickerupperComponent.h"
 #include "LoadObjectives.h"
 #include "LoadActivationComponent.h"
+#include "LoadOpenShopListenerComponent.h"
 
 LoadManager* LoadManager::ourInstance = nullptr;
 
@@ -94,6 +95,7 @@ void LoadManager::RegisterFunctions()
 	loader.RegisterComponentLoadFunction("EnemyObjective", LoadEnemyObjective);
 	loader.RegisterComponentLoadFunction("ActivationObjectiveComponent", LoadActivationObjective);
 	loader.RegisterComponentLoadFunction("ActivatorComponent", LoadActivationComponent);
+	loader.RegisterComponentLoadFunction("ActivateShopComponent", LoadOpenShopListenerComponent);
 }
 
 LoadManager::LoadManager()

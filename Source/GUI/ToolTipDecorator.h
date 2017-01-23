@@ -10,7 +10,7 @@ namespace GUI
 	class CToolTipDecorator : public WidgetDecorator
 	{
 	public:
-		CToolTipDecorator(Widget* aDecoratedWidget, ModelWidget* aBackGround, const std::string& aTooltipText);
+		CToolTipDecorator(Widget* aDecoratedWidget, ModelWidget* aBackGround, const std::string* const aTooltipText, const std::function<bool(std::string&)>& aGetTextFunction);
 		~CToolTipDecorator();
 
 		void Render() override;
@@ -21,8 +21,10 @@ namespace GUI
 		Widget* MouseIsOver(const CU::Vector2f& aPosition) override;
 
 	private:
+		std::function<bool(std::string&)> myGetTextFunction;
+
 		CU::Vector2f myOffsetToMouse;
-		ModelWidget* myBackGround;
+		//ModelWidget* myBackGround;
 		CTextInstance* myTextInstance;
 		bool myShouldRender;
 	};

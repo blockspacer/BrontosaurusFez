@@ -6,6 +6,8 @@ template <typename ValueType>
 class ValueObserver;
 struct PlayerData;
 class CComponent;
+class CNavmesh;
+
 
 struct PollingStation
 {
@@ -18,4 +20,5 @@ struct PollingStation
 	static ValueObserver<int>* timeObjectiveBar;
 	static CollisionManager* collsionManager;
 	static CU::GrowingArray<CGameObject*> myThingsEnemiesShouldAvoid;
+	static CNavmesh* Navmesh;
 };

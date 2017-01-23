@@ -163,9 +163,10 @@ int CFBXLoader::DetermineAndLoadVerticies(aiMesh* fbxMesh, CLoaderMesh* aLoaderM
 			VertexBoneData& boneData = collectedBoneData[i];
 
 			//TODO: fix so vertexCollexion can haz UINTS too so we don't need to cast float to uint in the sha-ding
+			//TODO: see VertexCollexion, i added code but we have to change in shader too before start using different stuffs mvh carl
 			// UINTS woudl be better
 			aiVector3D bones;
-			vertexCollection.PushVec4(FBXLoader::Vector4f((float)boneData.IDs[0], (float)boneData.IDs[1], (float)boneData.IDs[2], (float)boneData.IDs[3]));
+			vertexCollection.PushVec4(FBXLoader::Vector4f((float)boneData.IDs[0], (float)boneData.IDs[1], (float)boneData.IDs[2], (float)boneData.IDs[3])); //TODO: change to uint, change in shader too
 
 			aiVector3D weights;
 			vertexCollection.PushVec4(FBXLoader::Vector4f(boneData.Weights[0], boneData.Weights[1], boneData.Weights[2], boneData.Weights[3]));
@@ -206,17 +207,17 @@ CLoaderCamera* ParseCamera(const aiCamera* aCameraIn)
 
 	CLoaderCamera* cameraOut = new CLoaderCamera();
 
-	CU::Vector3f upVector = CU::Vector3f(aCameraIn->mUp.x, aCameraIn->mUp.y, aCameraIn->mUp.z).GetNormalized();
-	CU::Vector3f forwardVector = CU::Vector3f(aCameraIn->mLookAt.x, aCameraIn->mLookAt.y, aCameraIn->mLookAt.z).GetNormalized();
-	CU::Vector3f rightVector = (upVector.Cross(forwardVector)).GetNormalized();
+	CU::Vector3f upVector = -CU::Vector3f(aCameraIn->mUp.x, aCameraIn->mUp.y, aCameraIn->mUp.z); //fulhax bc det blev upp och ner (operator-() på vektorn dvs)
+	upVector.Normalize();
+	CU::Vector3f forwardVector = CU::Vector3f(aCameraIn->mLookAt.x, aCameraIn->mLookAt.y, aCameraIn->mLookAt.z);
+	forwardVector.Normalize();
+	CU::Vector3f rightVector = (upVector.Cross(forwardVector));
+	rightVector.Normalize();
 	CU::Vector3f positionVector = CU::Vector3f(aCameraIn->mPosition.x, aCameraIn->mPosition.y, aCameraIn->mPosition.z);
 
 	cameraOut->myTransformation.myUpVector = upVector;
 	cameraOut->myTransformation.myRightVector = rightVector;
 	cameraOut->myTransformation.myForwardVector = forwardVector;
-	
-	cameraOut->myTransformation *= CU::Matrix44f::CreateRotateAroundY(3.14f); //fulhax bc det blev upp och ner //TODO: TODO fix the rotation problem when reading scenes from maya
-	//cameraOut->myTransformation *= 100.f;
 
 	cameraOut->myTransformation.myPosition = positionVector;
 	
@@ -443,6 +444,10 @@ bool CFBXLoader::LoadGUIScene(const char* aFilePath, CLoaderScene& aSceneOut)
 		if (translationNode != nullptr)
 		{
 			mesh->myTransformation = ConvertToCUMatrix44(translationNode->mTransformation).Transpose();
+		}
+		else
+		{
+			mesh->myTransformation = ConvertToCUMatrix44(nodes[i]->mTransformation).Transpose();
 		}
 
 		DetermineAndLoadVerticies(fbxMesh, mesh);

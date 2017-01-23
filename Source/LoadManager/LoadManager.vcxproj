@@ -360,6 +360,7 @@
     <ClInclude Include="LoadObject.h" />
     <ClInclude Include="LoadInputController.h" />
     <ClInclude Include="LoadColliderComponent.h" />
+    <ClInclude Include="LoadOpenShopListenerComponent.h" />
     <ClInclude Include="LoadPickerupperComponent.h" />
     <ClInclude Include="LoadObjectives.h" />
     <ClInclude Include="LoadSkillSystemComponent.h" />
@@ -385,6 +386,7 @@
     <ClCompile Include="LoadObject.cpp" />
     <ClCompile Include="LoadInputController.cpp" />
     <ClCompile Include="LoadColliderComponent.cpp" />
+    <ClCompile Include="LoadOpenShopListenerComponent.cpp" />
     <ClCompile Include="LoadPickerupperComponent.cpp" />
     <ClCompile Include="LoadObjectives.cpp" />
     <ClCompile Include="LoadSkillSystemComponent.cpp" />

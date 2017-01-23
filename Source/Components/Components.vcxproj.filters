@@ -138,6 +138,8 @@
       <Filter>ObjectiveComponents</Filter>
     </ClCompile>
     <ClCompile Include="OpenShopListenerComponent.cpp" />
+    <ClCompile Include="RespawnComponent.cpp" />
+    <ClCompile Include="RespawnComponentManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -297,6 +299,8 @@
       <Filter>ObjectiveComponents</Filter>
     </ClInclude>
     <ClInclude Include="OpenShopListenerComponent.h" />
+    <ClInclude Include="RespawnComponent.h" />
+    <ClInclude Include="RespawnComponentManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

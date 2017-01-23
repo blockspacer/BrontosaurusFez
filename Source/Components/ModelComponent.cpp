@@ -76,6 +76,10 @@ void CModelComponent::Receive(const eComponentMessageType aType, const SComponen
 	case eComponentMessageType::eBasicAttack:
 		ChangeAnimation(aData.myString);
 		break;
+
+	case eComponentMessageType::eRespawned:
+		myModel->SetVisibility(true);
+		break;
 	}
 }
 

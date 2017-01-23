@@ -89,6 +89,13 @@ void MovementComponent::Receive(const eComponentMessageType aMessageType, const 
 	case eComponentMessageType::eAddToMovementSpeed:
 		myMovementSpeed += aMessageData.myInt;
 		break;
+	case eComponentMessageType::eLookAt:
+	{
+		GetParent()->GetLocalTransform().LookAt(aMessageData.myVector3f);
+		GetParent()->GetLocalTransform().Rotate(PI, CU::Axees::Y);
+		GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
+	}
+		break;
 	default:
 		break;
 	}

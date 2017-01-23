@@ -2,9 +2,12 @@
 #include "NavigationComponent.h"
 #include "GameObject.h"
 
+
+#include "PollingStation.h"
+
 NavigationComponent::NavigationComponent()
 {
-	myPath.Init(100);
+	myPath.myWaypoints.Init(64);
 }
 
 
@@ -32,16 +35,51 @@ void NavigationComponent::Destroy()
 {
 }
 
-void NavigationComponent::CalculatePath(CU::Vector2f aTargetPosition)
+void NavigationComponent::CalculatePath(const CU::Vector2f& aTargetPosition)
 {
-	myPath.RemoveAll();
+	myPath.myWaypoints.RemoveAll();
 	
-	//Need to add real calculation here.
-	myPath.Add(CU::Vector3f(aTargetPosition.x, 0.0f, aTargetPosition.y));
+	//CNavmesh* navmesh = PollingStation::Navmesh;
+	CNavmesh* navmesh = nullptr;
+	if (navmesh == nullptr)
+	{
+		myPath.myWaypoints.Add(CU::Vector3f(aTargetPosition.x, 0.0f, aTargetPosition.y));
+	}
+	else
+	{
+		CNavmesh::SNavmeshNode startNode;
+		CNavmesh::SNavmeshNode endNode;
+		CU::Vector3f intersectionpoint;// = { aTargetPosition.x, 0.0f, aTargetPosition.y }; // this thing with y & z is confusing as hell
+		float height;
 
+		bool clickedOnNavmesh = navmesh->IsValid(aTargetPosition, endNode.myTriangle, intersectionpoint);
+		if (clickedOnNavmesh)
+		{
+			endNode.myPosition = intersectionpoint;
+		}
+		else
+		{
+			endNode.myTriangle = &navmesh->GetClosestTriangle({aTargetPosition.x, 0.0f, aTargetPosition.y});
+			endNode.myPosition = endNode.myTriangle->CenterPosition;
+		}
+
+		bool isStandingOnNM = navmesh->IsValid(GetParent()->GetWorldPosition(), startNode.myTriangle, intersectionpoint);
+		if (isStandingOnNM)
+		{
+			startNode.myPosition = intersectionpoint;
+		}
+		else
+		{
+			startNode.myTriangle = &navmesh->GetClosestTriangle(GetParent()->GetWorldPosition());
+			startNode.myPosition = startNode.myTriangle->CenterPosition;
+		}
+
+		myPath = navmesh->CalculatePath(startNode, endNode);
+
+	}
 
 	eComponentMessageType type = eComponentMessageType::eSetPath;
 	SComponentMessageData data;
-	data.myVector3ListPointer = &myPath;
+	data.myVector3ListPointer = &myPath.myWaypoints;
 	GetParent()->NotifyComponents(type, data);
 }

@@ -13,7 +13,7 @@ public:
 	void SetMovementSpeed(const float aMovementspeed);
 private:
 	float myMovementSpeed;
-	CU::GrowingArray<CU::Vector3f>* myPathPointer;
+	CU::GrowingArray<CU::Vector3f, unsigned int, false>* myPathPointer;
 	unsigned short myCurrentPathIndex;
 	bool myShouldMove;
 };

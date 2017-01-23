@@ -2,7 +2,7 @@
 #include <vector4.h>
 #include <StaticArray.h>
 #include "RenderCamera.h"
-class ID3D11ShaderResourceView;
+struct ID3D11ShaderResourceView;
 
 class CPointLight
 {
