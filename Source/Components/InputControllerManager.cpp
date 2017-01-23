@@ -66,11 +66,11 @@ void InputControllerManager::Update(const CU::Time & aDeltaTime)
 
 InputControllerManager::~InputControllerManager()
 {
-	for (InputController* component : myComponents)
-	{
-		CComponentManager::GetInstance().RemoveComponent(component->GetId());
-		SAFE_DELETE(component);
-	}
+	//for (InputController* component : myComponents)
+	//{
+	//	CComponentManager::GetInstance().RemoveComponent(component->GetId());
+	//	SAFE_DELETE(component);
+	//}
 
 	myComponents.RemoveAll();
 }

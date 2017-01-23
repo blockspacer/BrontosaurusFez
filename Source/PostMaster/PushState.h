@@ -17,7 +17,7 @@ public:
 		eHatShop
 	};
 
-	static const int _DONT_ASK_ = -1; //Vad fan e detta? Ja jag vet att jag inte ska fråga men ändå.
+	static const int _DONT_ASK_ = 0; //Vad fan e detta? Ja jag vet att jag inte ska fråga men ändå.
 
 	PushState(const eState aState, const int aLevelIndex);
 	~PushState();

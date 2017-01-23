@@ -238,6 +238,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="HatMaker.cpp" />
     <ClCompile Include="HatShopState.cpp" />
+    <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="LevelSelectState.cpp" />
     <ClCompile Include="LoadingAnimation.cpp" />
     <ClCompile Include="LoadState.cpp" />
@@ -266,6 +267,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="HatMaker.h" />
     <ClInclude Include="HatShopState.h" />
+    <ClInclude Include="LevelManager.h" />
     <ClInclude Include="LevelSelectState.h" />
     <ClInclude Include="LoadingAnimation.h" />
     <ClInclude Include="LoadState.h" />

@@ -94,4 +94,5 @@ CGameObject::CGameObject(CGameObjectManager &aManager) : myTransformId(0), myMan
 
 CGameObject::~CGameObject()
 {
+	
 }

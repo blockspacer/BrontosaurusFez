@@ -59,9 +59,9 @@ void CParticleEmitterComponentManager::RemoveAll()
 
 void CParticleEmitterComponentManager::Remove(CParticleEmitterComponent * aComponentToRemove)
 {
-	CComponentManager::GetInstance().RemoveComponent(aComponentToRemove->GetId());
+	//CComponentManager::GetInstance().RemoveComponent(aComponentToRemove->GetId());
 	myScene->DeleteParticleEmitterInstance(aComponentToRemove->GetEmitter()->GetInstanceID());
-	myComponents.DeleteCyclic(aComponentToRemove);
+	//myComponents.DeleteCyclic(aComponentToRemove);
 }
 
 void CParticleEmitterComponentManager::SetScene(CScene * aScene)

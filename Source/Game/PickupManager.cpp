@@ -140,10 +140,10 @@ CPickupManager::~CPickupManager()
 	
 	myPickupData.clear();
 
-	for (unsigned int i = 0; i < myCreatedPickerUppers.Size(); ++i)
-	{
-		SAFE_DELETE(myCreatedPickerUppers[i]);
-	}
+	//for (unsigned int i = 0; i < myCreatedPickerUppers.Size(); ++i)
+	//{
+	//	SAFE_DELETE(myCreatedPickerUppers[i]);
+	//}
 
 	myCreatedPickerUppers.RemoveAll();
 }

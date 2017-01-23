@@ -12,12 +12,13 @@ CHealthComponent::CHealthComponent()
 	myHealth = myMaxHealth;
 	myPercentageLeft = static_cast<float>(myHealth) / static_cast<float>(myMaxHealth);
 
-	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed);
+	//PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed);
 }
 
 
 CHealthComponent::~CHealthComponent()
 {
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyPressed);
 }
 
 float CHealthComponent::GetPrecentLeft() const
