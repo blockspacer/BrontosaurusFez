@@ -67,7 +67,9 @@ void CFleeController::Receive(const eComponentMessageType aMessageType, const SC
 	{
 		SComponentMessageData data;
 		data.myComponent = this;
-		NotifyParent(eComponentMessageType::eAddAIBehavior, data);
+		GetParent()->NotifyComponents(eComponentMessageType::eAddAIBehavior, data);
+		DL_PRINT("Compo Id flee %u", GetId());
+		DL_PRINT("Compo Id object %u", GetParent()->GetId());
 	}
 		break;
 	default:

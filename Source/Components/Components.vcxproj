@@ -359,6 +359,7 @@
     <ClInclude Include="EnemyObjectiveComponent.h" />
     <ClInclude Include="FleeController.h" />
     <ClInclude Include="FleeControllerManager.h" />
+    <ClInclude Include="FormationController.h" />
     <ClInclude Include="HatActivator.h" />
     <ClInclude Include="HealthBarComponent.h" />
     <ClInclude Include="HealthBarComponentManager.h" />
@@ -424,6 +425,7 @@
     <ClCompile Include="EnemyObjectiveComponent.cpp" />
     <ClCompile Include="FleeController.cpp" />
     <ClCompile Include="FleeControllerManager.cpp" />
+    <ClCompile Include="FormationController.cpp" />
     <ClCompile Include="HatActivator.cpp" />
     <ClCompile Include="HealthBarComponent.cpp" />
     <ClCompile Include="HealthBarComponentManager.cpp" />

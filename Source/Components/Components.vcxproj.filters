@@ -140,6 +140,7 @@
     <ClCompile Include="OpenShopListenerComponent.cpp" />
     <ClCompile Include="RespawnComponent.cpp" />
     <ClCompile Include="RespawnComponentManager.cpp" />
+    <ClCompile Include="FormationController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -301,6 +302,7 @@
     <ClInclude Include="OpenShopListenerComponent.h" />
     <ClInclude Include="RespawnComponent.h" />
     <ClInclude Include="RespawnComponentManager.h" />
+    <ClInclude Include="FormationController.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
