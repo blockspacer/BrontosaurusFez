@@ -2,7 +2,7 @@
 
 
 #include "../CommonUtilities/vector2.h"
-#include <map>
+#include <unordered_map>
 #include <d3d11.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -52,8 +52,8 @@ private:
 	CTextBitmap RenderChar(unsigned  aGlyphIndex);
 	void CreateCharTexture(const FT_UInt aGlyphIndex);
 	void CreateEffect();
-	std::map<unsigned, ID3D11ShaderResourceView*> myRenderedGlyphs;
-	std::map<unsigned, GlyphData> myGlyphData;
+	std::unordered_map<unsigned, ID3D11ShaderResourceView*> myRenderedGlyphs;
+	std::unordered_map<unsigned, GlyphData> myGlyphData;
 
 
 	CEffect* myEffect;

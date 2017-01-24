@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "FT_Font.h"
+#include "../CommonUtilities/CommonUtilities.h"
 #include "../BrontosaurusEngine/TextBitmap.h"
 #include "../CommonUtilities/DL_Debug.h"
 #include "../CommonUtilities/vector2.h"
@@ -14,6 +15,8 @@
 #ifndef ERROR_CHECK
 #define ERROR_CHECK(aError, msg) assert(aError == FT_Err_Ok && msg);
 #endif
+
+#define SAFE_RELEASE(comptr) if (comptr != nullptr) { comptr->Release(); comptr = nullptr; }
 
 
 CFT_Font::CFT_Font()
@@ -31,9 +34,11 @@ CFT_Font::CFT_Font()
 
 CFT_Font::~CFT_Font()
 {
-	if (myEffect != nullptr)
+	SAFE_DELETE(myEffect);
+
+	for (auto it = myRenderedGlyphs.begin(); it != myRenderedGlyphs.end(); it++)
 	{
-		delete myEffect;
+		SAFE_RELEASE(it->second);
 	}
 }
 
@@ -188,10 +193,12 @@ void CFT_Font::CreateCharTexture(const FT_UInt aGlyphIndex)
 
 	CTextBitmap bitmap = RenderChar(aGlyphIndex);
 
-	D3D11_SUBRESOURCE_DATA* subresourceData = new D3D11_SUBRESOURCE_DATA;
-	subresourceData->pSysMem = bitmap.CopyBitmapData();
-	subresourceData->SysMemPitch = bitmap.GetMemPitch();
-	subresourceData->SysMemSlicePitch = bitmap.GetByteSize();
+	D3D11_SUBRESOURCE_DATA subResourceData;
+	ZeroMemory(&subResourceData, sizeof(subResourceData));
+
+	subResourceData.pSysMem = bitmap.CopyBitmapData();
+	subResourceData.SysMemPitch = bitmap.GetMemPitch();
+	subResourceData.SysMemSlicePitch = bitmap.GetByteSize();
 
 	D3D11_TEXTURE2D_DESC texture2DDesc;
 
@@ -210,7 +217,7 @@ void CFT_Font::CreateCharTexture(const FT_UInt aGlyphIndex)
 	ID3D11Texture2D * texture2D = nullptr;
 
 	HRESULT result = S_OK;
-	result = CEngine::GetInstance()->GetFramework()->GetDevice()->CreateTexture2D(&texture2DDesc, subresourceData, &texture2D);
+	result = CEngine::GetInstance()->GetFramework()->GetDevice()->CreateTexture2D(&texture2DDesc, &subResourceData, &texture2D);
 	if (result != S_OK)
 	{
 		DL_ASSERT("Failed creating text texture");
