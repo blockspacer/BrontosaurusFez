@@ -16,6 +16,7 @@ CCollisionComponent::CCollisionComponent(ICollider* aCollider)
 		std::bind(&CCollisionComponent::OnCollisionEnter, this, std::placeholders::_1),
 		std::bind(&CCollisionComponent::OnCollisionExit, this, std::placeholders::_1)
 	);
+	myType = eComponentType::eCollision;
 }
 
 CCollisionComponent::~CCollisionComponent()
@@ -52,6 +53,9 @@ void CCollisionComponent::Receive(const eComponentMessageType aMessageType, cons
 	break;
 	case eComponentMessageType::eDied:
 		myCollider->Deactivate();
+		break;
+	case eComponentMessageType::eRespawned:
+		myCollider->Activate();
 		break;
 	}
 }

@@ -6,7 +6,6 @@ CWanderController::CWanderController()
 {
 }
 
-
 CWanderController::~CWanderController()
 {
 }

@@ -17,6 +17,8 @@
 #include "Components/ParticleEmitterComponentManager.h"
 #include "Components/ComponentManager.h"
 #include "Components\PlayerHealthMessenger.h"
+#include "Components\RespawnComponent.h"
+#include "Components\RespawnComponentManager.h"
 
 #include "PostMaster/PopCurrentState.h"
 #include "PostMaster/ChangeLevel.h"
@@ -87,6 +89,7 @@
 #include "SkillSystemComponent.h"
 #include "ModelInstance.h"
 #include "ManaComponent.h"
+#include "LevelManager.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
 #include "../BrontosaurusEngine/FireEmitterInstance.h"
@@ -113,6 +116,9 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 
 CPlayState::~CPlayState()
 {
+
+	//myGameObjectManager->ClearAll();
+
 	SAFE_DELETE(myMouseComponent);
 	SAFE_DELETE(myScene);
 	SAFE_DELETE(myGameObjectManager);
@@ -137,11 +143,14 @@ CPlayState::~CPlayState()
 	CShopStorage::Destroy();
 	CPickupFactory::Destroy();
 	CPickupManager::DestroyInstance();
+	RespawnComponentManager::Destroy();
 	CMasterAI::Destroy();
 
 	SkillFactory::DestroyInstance();
 	CComponentManager::DestroyInstance();
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eHatAdded);
+	CLevelManager::DestroyInstance();
+	KLoader::CKevinLoader::GetInstance().ClearLinkObjectList();
 }
 
 void CPlayState::Load()
@@ -343,11 +352,11 @@ void CPlayState::Load()
 #endif
 
 	std::string levelPath = "Json/Levels/";
-	levelPath += levelsArray[levelIndex].GetString();
+	levelPath += levelsArray[myLevelIndex].GetString();
 	levelPath += "/LevelData.json";
 
 	std::string questPath = "Json/Quests/";
-	questPath += levelsArray[levelIndex].GetString();
+	questPath += levelsArray[myLevelIndex].GetString();
 	questPath += ".json";
 
 	myQuestManager.LoadQuestlines(questPath);
@@ -366,8 +375,12 @@ void CPlayState::Load()
 		//Dísclaimer: fult men funkar //lägg till allt spelar specifikt som inte LD behöver störas av här
 		CPlayerHealthMessenger* healthMessenger = new CPlayerHealthMessenger();
 
-		PollingStation::playerObject->AddComponent(healthMessenger);
+		RespawnComponent* respawn = RespawnComponentManager::GetInstance().CreateAndRegisterComponent();
 
+		CComponentManager::GetInstance().RegisterComponent(healthMessenger);
+
+		PollingStation::playerObject->AddComponent(healthMessenger);
+		PollingStation::playerObject->AddComponent(respawn);
 	}
 	//CSeekControllerManager::GetInstance().SetTarget();
 	myGameObjectManager->SendObjectsDoneMessage();
@@ -447,6 +460,13 @@ void CPlayState::Load()
 void CPlayState::Init()
 {
 	//skillnad på load, init & konstructor ?
+
+
+	//NAVMESH
+	//myNavmesh.LoadFromFile("Models/navMesh/COOLFIKE.obj");
+	//PollingStation::Navmesh = &myNavmesh;
+
+
 }
 
 State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
@@ -463,6 +483,7 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	AIControllerManager::GetInstance().Update(aDeltaTime);
 	SkillSystemComponentManager::GetInstance().Update(aDeltaTime);
 	CPickupManager::GetInstance().Update(aDeltaTime);
+	RespawnComponentManager::GetInstance().Update(aDeltaTime);
 	myCollisionComponentManager->Update();
 	myScene->Update(aDeltaTime);
 
@@ -518,7 +539,7 @@ void CPlayState::OnEnter()
 {
 	//PostMaster::GetInstance().Subscribe(this, eMessageType::eStateMessage);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
-	PostMaster::GetInstance().Subscribe(this, eMessageType::eNextLevelPlease);
+	//PostMaster::GetInstance().Subscribe(this, eMessageType::eNextLevelPlease);
 	Audio::CAudioInterface::GetInstance()->LoadBank("Audio/playState.bnk");
 	Audio::CAudioInterface::GetInstance()->PostEvent("PlayCoolSong");
 	//Audio::CAudioInterface::GetInstance()->PostEvent("PlayerMoving_Play");
@@ -529,7 +550,7 @@ void CPlayState::OnExit()
 {
 	//PostMaster::GetInstance().UnSubscribe(this, eMessageType::eStateMessage);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
-	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eNextLevelPlease);
+	//PostMaster::GetInstance().UnSubscribe(this, eMessageType::eNextLevelPlease);
 
 	Audio::CAudioInterface* audioInterface = Audio::CAudioInterface::GetInstance();
 	if (audioInterface != nullptr)
@@ -557,17 +578,12 @@ void CPlayState::GiveHatToPlayer()
 	TEMP_ADD_HAT(PollingStation::playerObject);
 }
 
-void CPlayState::NextLevel()
+void CPlayState::CheckReturnToLevelSelect() // Formerly NextLevel -Kyle
 {
 	if (myShouldReturnToLevelSelect == true)
 	{
 		PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PopCurrentState()));
-		//myStatus = eStateStatus::ePop; ??
-	}
-	else
-	{
-		int levelIndex = (myLevelIndex > 0) ? myLevelIndex + 1 : 2; //this is ugly and was just for fun, sorry about that mvh Carl
-		PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, ChangeLevel(levelIndex)));
+		//myStatus = eStateStatus::ePop; ?? //Was this only checked when pressing F7 - for change level ?
 	}
 }
 
@@ -624,6 +640,8 @@ void CPlayState::CreateManagersAndFactories()
 	CPickupFactory::Create(myGameObjectManager, myCollisionComponentManager);
 	CPickupManager::CreateInstance();
 	CMasterAI::Create();
+	RespawnComponentManager::Create();
+	CLevelManager::CreateInstance();
 }
 
 void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)

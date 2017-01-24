@@ -12,12 +12,14 @@ CHealthComponent::CHealthComponent()
 	myHealth = myMaxHealth;
 	myPercentageLeft = static_cast<float>(myHealth) / static_cast<float>(myMaxHealth);
 
-	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed);
+	//PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed);
+	myType = eComponentType::eHealth;
 }
 
 
 CHealthComponent::~CHealthComponent()
 {
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyPressed);
 }
 
 float CHealthComponent::GetPrecentLeft() const
@@ -78,6 +80,12 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 		break;
 	case eComponentMessageType::eHeal:
 		SetHealth(myHealth + aMessageData.myInt);
+		data.myUChar = myPercentageLeft * 100;
+		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data);
+		break;
+
+	case eComponentMessageType::eRespawned:
+		SetHealth(myMaxHealth);
 		data.myUChar = myPercentageLeft * 100;
 		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data);
 		break;

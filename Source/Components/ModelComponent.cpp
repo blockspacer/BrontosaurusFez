@@ -22,7 +22,7 @@ CModelComponent::CModelComponent(CModelInstance& aModel)
 CModelComponent::CModelComponent(CModelInstance & aModel, const bool aIsDebugSphere)
 	: CModelComponent(aModel)
 {
-
+	myType = eComponentType::eModelDebug;
 }
 
 CModelComponent::~CModelComponent()
@@ -75,6 +75,10 @@ void CModelComponent::Receive(const eComponentMessageType aType, const SComponen
 		break;
 	case eComponentMessageType::eBasicAttack:
 		ChangeAnimation(aData.myString);
+		break;
+
+	case eComponentMessageType::eRespawned:
+		myModel->SetVisibility(true);
 		break;
 	}
 }

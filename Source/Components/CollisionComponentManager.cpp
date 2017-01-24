@@ -34,7 +34,7 @@ CCollisionComponentManager::~CCollisionComponentManager()
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
 
-	myCollisionComponents.DeleteAll();
+	//myCollisionComponents.DeleteAll();
 	SAFE_DELETE(myCollisionManager);
 }
 
@@ -88,8 +88,8 @@ void CCollisionComponentManager::DestroyCollisionComponent(CCollisionComponent* 
 	if (index != myCollisionComponents.FoundNone)
 	{
 		myCollisionManager->RemoveCollider(aCollisionComponent->GetCollider());
-		CComponentManager::GetInstance().RemoveComponent(aCollisionComponent->GetId());
-		myCollisionComponents.DeleteCyclicAtIndex(index);
+		//CComponentManager::GetInstance().DeleteComponent(aCollisionComponent->GetId());
+		//myCollisionComponents.DeleteCyclicAtIndex(index);
 	}
 }
 

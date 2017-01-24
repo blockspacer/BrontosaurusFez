@@ -2,11 +2,25 @@
 #include <GrowingArray.h>
 #include "ObjLoader.h"
 #include "Model.h"
+#include "VectorOnStack.h"
+#include <unordered_map>
+
+
+
+
+
+
+
 
 
 class CNavmesh
 {
-	struct SNavmeshTriangle;
+public:
+	struct SPath
+	{
+		CU::GrowingArray<CU::Vector3f, unsigned int, false> myWaypoints;
+	};
+
 	struct SNavmeshTriangle;
 
 	struct SNavmeshPoint
@@ -32,7 +46,6 @@ class CNavmesh
 		CU::Vector3f Position;
 		int Index = -1;
 	};
-
 	struct SNavmeshEdge
 	{
 		SNavmeshEdge()
@@ -70,14 +83,40 @@ class CNavmesh
 		SNavmeshTriangle* Triangles[2];
 		int Index = -1;
 	};
-
-
 	struct SNavmeshTriangle
 	{
 		SNavmeshEdge* Edges[3];
+		SNavmeshPoint* Points[3]; // mebe good?
 
+		CU::Vector3f CenterPosition;
 
 		int Index = -1;
+	};
+	struct SNavmeshNode
+	{
+		SNavmeshNode()
+		{
+			myTriangle = nullptr;
+			myParent = nullptr;
+		}
+
+		SNavmeshNode* myParent;
+		CU::VectorOnStack<SNavmeshNode*, 5, unsigned short, false> myNeighbours;
+		CU::Vector3f myPosition;
+
+		SNavmeshTriangle* myTriangle;
+
+		float myG = 0.0f;
+		float myH = 0.0f;
+	};
+	class NavmeshLesser
+	{
+	public:
+		bool operator()(const SNavmeshNode* aLeft, const SNavmeshNode* aRight)
+		{
+			return (aLeft->myG + aLeft->myH) < (aRight->myG + aRight->myH);
+			//return (aLeft.myG + aLeft.myH) < (aRight.myG + aRight.myH);
+		}
 	};
 
 public:
@@ -85,20 +124,43 @@ public:
 	~CNavmesh();
 	void Render();
 	void LoadFromFile(const char* aFilePath);
+	SPath CalculatePath(const SNavmeshNode & aStartPoint, const SNavmeshNode & aEndPoint);
+
+	SNavmeshTriangle& GetClosestTriangle(const CU::Vector3f & aPosition);
+
+	bool GetPointOnNavmesh(const CU::Vector3f & aOrigin, const CU::Vector3f & aDirection, CNavmesh::SNavmeshTriangle & aIntersectingTriangle, CU::Vector3f & aIntersectionPoint);
+
+	bool IsValid(const CU::Vector3f & aPosition, SNavmeshTriangle *& aIntersectingTriangle, CU::Vector3f & aIntersectingPoint);
+	bool IsValid(const CU::Vector2f & aPosition, SNavmeshTriangle *& aIntersectingTriangle, CU::Vector3f & aIntersectingPoint);
+
 private:
-
+	void CreateNode(CU::GrowingArray<SNavmeshNode>& aNodeList, SNavmeshTriangle & aTriangle, const SNavmeshNode & aEndNode, std::unordered_map<SNavmeshTriangle*, SNavmeshNode*>& triangleNodes);
 	void CreateModel();
-
+	void BuildNodeNetwork(CU::GrowingArray<SNavmeshNode>& aNodeList, std::unordered_map<SNavmeshTriangle*, SNavmeshNode*>& triangleNodes);
 	void BuildNavmeshFromOBJ(const ObjLoader::SObjLoaderModel& aModel);
 	void BuildEdgesFromFace(const ObjLoader::SObjLoaderFace& aFace);
+	float CalculateHeuristics(const CU::Vector3f& aFrom, const CU::Vector3f& aTo);
 
+
+private:
+	CU::Matrix44f myTransformation;
 
 	CU::GrowingArray<SNavmeshEdge> myEdges;
 	CU::GrowingArray<SNavmeshPoint> myPoints;
 	CU::GrowingArray<SNavmeshTriangle> myTriangles;
 
+	CU::GrowingArray<SNavmeshNode> myNodes;
+
+
 	CU::GrowingArray<unsigned int> myIndices;
 	CU::GrowingArray<SVertexDataCube> myModelVertices;
+	CU::GrowingArray<SVertexDataCube> myPositionsModelVertices;
+
+//	IFDEFA BORT
 	CModel* myModel;
+	CModel* myPositionsModel;
+
+	bool myShuldRender;
+
 };
 

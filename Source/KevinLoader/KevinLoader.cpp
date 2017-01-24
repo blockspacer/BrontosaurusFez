@@ -62,6 +62,11 @@ namespace KLoader
 		myObjectLinkFunction = aLinkFunction;
 	}
 
+	void CKevinLoader::ClearLinkObjectList()
+	{
+		myLinkObjects.clear();
+	}
+
 	eError CKevinLoader::LoadFile(const std::string& aFilePath)
 	{
 		CU::CJsonValue wrapper;
@@ -79,7 +84,10 @@ namespace KLoader
 			return linkObjectError;
 		}
 
+		ClearLinkObjectList();
+
 		return eError::NO_LOADER_ERROR;
+		
 	}
 
 	void CKevinLoader::PrintMissingComponents(const std::string& aComponentName)

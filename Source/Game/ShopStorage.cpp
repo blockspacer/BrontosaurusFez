@@ -36,7 +36,7 @@ void CShopStorage::RemoveHat(const std::string & aHatName)
 	{
 		if (myStorage.HatStorage[i].HatName == aHatName)
 		{
-			myStorage.HatStorage.Remove(myStorage.HatStorage[i]);
+			myStorage.HatStorage.RemoveAtIndex(i);
 			break;
 		}
 	}
@@ -46,7 +46,7 @@ void CShopStorage::RemoveHat(const std::string & aHatName)
 		{
 			if (myStorage.StorageWithBuyOrder[i][0].HatName == aHatName)
 			{
-				myStorage.StorageWithBuyOrder[i].Remove(myStorage.StorageWithBuyOrder[i][0]);
+				myStorage.StorageWithBuyOrder[i].RemoveAtIndex(0);
 				break;
 			}
 		}

@@ -13,8 +13,10 @@ CSeekController::CSeekController()
 	myTarget = CU::Vector2f::Zero;//PollingStation::playerObject->GetWorldPosition();
 	myAcceleration = CU::Vector2f::Zero;
 	myControllerType = eControllerType::eArrive;
+	myType = eComponentType::eSeekController;
 	myHaveBeenCalledForHelp = false;
 	myCallForHelpRadius = 0.0f;
+	myFormationIndex = -1;
 }
 
 
@@ -30,6 +32,7 @@ const CU::Vector2f CSeekController::Update(const CU::Time& aDeltaTime)
 	}
 
 	myTarget = CU::Vector2f(PollingStation::playerObject->GetWorldPosition().x, PollingStation::playerObject->GetWorldPosition().z);
+	myTarget = CalculateFormationPosition(myTarget);
 	CU::Vector2f position = CU::Vector2f(myController->GetParent()->GetWorldPosition().x, myController->GetParent()->GetWorldPosition().z);
 	CU::Vector2f targetVelocity = CU::Vector2f::Zero;
 	targetVelocity = myTarget - position;
@@ -51,8 +54,8 @@ const CU::Vector2f CSeekController::Update(const CU::Time& aDeltaTime)
 		speed = myMaxSpeed * distance / mySlowdownRadius;
 		targetVelocity.Normalize() *= speed;
 	}
-
-	if(myHaveBeenCalledForHelp == false)
+	GetParent()->GetLocalTransform().Lerp(GetParent()->GetLocalTransform().CreateLookAt(PollingStation::playerObject->GetLocalTransform().GetPosition() * -1), 0.01f);
+	if (myHaveBeenCalledForHelp == false)
 	{
 		myHaveBeenCalledForHelp = true;
 		CMasterAI::GetInstance().CallForHelp(GetParent(), myCallForHelpRadius);
@@ -112,6 +115,38 @@ void CSeekController::CallForHelp()
 	myHaveBeenCalledForHelp = true;
 }
 
+CU::Vector2f& CSeekController::CalculateFormationPosition(const CU::Vector2f& aTargetPositon)
+{
+	const float formationDistance = 100.0f;
+	CU::Vector2f formationPosition = aTargetPositon;
+	if (myFormationIndex <= 0)
+	{
+		return formationPosition;
+	}
+
+	CU::Vector2f targetPosition(PollingStation::playerObject->GetWorldPosition().x, PollingStation::playerObject->GetWorldPosition().z);
+	CU::Vector2f position = CU::Vector2f(myController->GetParent()->GetWorldPosition().x, myController->GetParent()->GetWorldPosition().z);
+	CU::Vector2f direction = targetPosition - position;
+	direction.Normalize();
+	direction -= direction * formationDistance;
+	direction += direction * formationDistance * static_cast<short>((myFormationIndex - 1) / 2.0f);
+	formationPosition += direction;
+	direction = targetPosition - position;
+	if (myFormationIndex % 2 == 1)
+	{
+		direction = direction * CU::Matrix33f::CreateRotateAroundZ(PI / 2.0f);
+
+	}
+	else
+	{
+		direction = direction * CU::Matrix33f::CreateRotateAroundZ(-PI / 2.0f);
+	}
+	direction.Normalize();
+	direction *= formationDistance;
+	formationPosition += direction;
+	return formationPosition;
+}
+
 void CSeekController::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
 {
 
@@ -121,12 +156,13 @@ void CSeekController::Receive(const eComponentMessageType aMessageType, const SC
 	{
 		SComponentMessageData data;
 		data.myComponent = this;
-		NotifyParent(eComponentMessageType::eAddAIBehavior, data);
+		GetParent()->NotifyComponents(eComponentMessageType::eAddAIBehavior, data);
 	}
-		break;
+	break;
 	case(eComponentMessageType::eCalledForHelp):
 	{
 		myHaveBeenCalledForHelp = true;
+		myFormationIndex = static_cast<short>(aMessageData.myUShort);
 	}
 	default:
 		break;

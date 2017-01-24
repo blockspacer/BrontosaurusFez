@@ -1,5 +1,7 @@
 #pragma once
-class CWanderController
+#include "IController.h"
+
+class CWanderController : public IController
 {
 public:
 	CWanderController();

@@ -7,16 +7,45 @@ class CGameObject;
 struct SComponentMessageData;
 enum class eComponentMessageType;
 
-enum class eComponentType
+enum class eComponentType : unsigned char
 {
 	eGameObject,
 	eModel,
+	eModelDebug,
 	eDebugSphere,
 	eCamera,
 	eInventory,
-	eHealthBar,
-	eMainStat,
 	eStat,
+	eMainStat,
+	eHealthBar,
+	eHealth,
+	eMana,
+	ePlayerHealthMessenger,
+	ePlayerManaMessenger,
+	eStreakEmitter,
+	eParticleEmitter,
+	eSkillSystem,
+	eSkill,
+	eRespawn,
+	eOpenShopListener,
+	eMouse,
+	eDrop,
+	ePickup,
+	ePickerUpper,
+	eChangeLevelTrigger,
+	eEnemyObjective,
+	eActivationObjective,
+	eNavigation,
+	eMovement,
+	eControllerInterface,
+	eInputController,
+	eAIController,
+	eFleeController,
+	eSeekController,
+	eWanderController,
+	eCollision,
+	eAudioSource,
+	eActivationComponent,
 	eNone,
 };
 

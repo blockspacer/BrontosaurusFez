@@ -56,11 +56,11 @@ void MovementComponentManager::Update(const CU::Time & aDeltaTime)
 
 MovementComponentManager::~MovementComponentManager()
 {
-	for (unsigned int i = 0; i < myComponents.Size(); ++i)
-	{
-		CComponentManager::GetInstance().RemoveComponent(myComponents[i]->GetId());
-		SAFE_DELETE(myComponents[i]);
-	}
+	//for (unsigned int i = 0; i < myComponents.Size(); ++i)
+	//{
+	//	CComponentManager::GetInstance().RemoveComponent(myComponents[i]->GetId());
+	//	SAFE_DELETE(myComponents[i]);
+	//}
 
 	myComponents.RemoveAll();
 }

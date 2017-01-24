@@ -41,5 +41,6 @@ private:
 	short mySkillActivatorKeyDown;
 	bool myMouseIsDown;
 	bool myIsShiftDown;
+	bool myIsActive;
 };
 

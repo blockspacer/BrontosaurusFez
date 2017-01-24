@@ -11,6 +11,7 @@ CMouseComponent::CMouseComponent(const CU::Camera& aPlayerCamera)
 	, myMouseIsDown(false)
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage);
+	myType = eComponentType::eMouse;
 }
 
 CMouseComponent::~CMouseComponent()
@@ -97,6 +98,7 @@ void CMouseComponent::HandleCollision(CGameObject* aCollidedWith)
 		SComponentMessageData hitThisBastard;
 		hitThisBastard.myGameObject = aCollidedWith;
 		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eSetSkillTargetObject, hitThisBastard);
+
 	}
 }
 

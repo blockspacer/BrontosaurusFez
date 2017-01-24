@@ -28,6 +28,7 @@ public:
 	void OnExit() override;
 	void ValidatePurchase();
 	void SetSelected(const char aIndex);
+	void GetTooltipTextFromShopIndex(const int aHatShopIndex, std::string& aTooltipTextOut) const;
 	bool GetLetThroughRender() const override;
 	bool GetLetThroughUpdate() const override;
 

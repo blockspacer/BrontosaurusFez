@@ -8,6 +8,7 @@ CAudioSourceComponent::CAudioSourceComponent()
 {
 	myIsActive = true;
 	myAudioInterface = Audio::CAudioInterface::GetInstance();
+	myType = eComponentType::eAudioSource;
 }
 
 
@@ -49,5 +50,5 @@ void CAudioSourceComponent::Destroy()
 {
 	DL_ASSERT("not implemented anymore, mvh carl");
 	//GetParent()->GetComponents().RemoveCyclic(this);
-	CComponentManager::GetInstance().RemoveComponent(myGameObjectID);
+	//CComponentManager::GetInstance().DeleteComponent(myGameObjectID);
 }

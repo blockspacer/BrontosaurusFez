@@ -59,7 +59,10 @@ void CGameObject::NotifyComponents(const eComponentMessageType aMessageType, con
 	else
 		Receive(aMessageType, aMessageData);
 }
-
+void  CGameObject::NotifyOnlyComponents(const eComponentMessageType aMessageType, const SComponentMessageData &aMessageData)
+{
+	ComponentReceive(aMessageType, aMessageData);
+}
 void CGameObject::MarkForDestruction()
 {
 	myManager.AddObjectForDestruction(this);
@@ -86,6 +89,20 @@ void CGameObject::Receive(const eComponentMessageType aMessageType, const SCompo
 	}
 }
 
+void CGameObject::ComponentReceive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
+{
+	CComponent* test = nullptr;
+	for (unsigned int i = 0; i < myComponents.Size(); ++i)
+	{
+		if(dynamic_cast<CGameObject*>(myComponents[i]) != nullptr)
+		{
+			return;
+		}
+		test = myComponents[i];
+		test->Receive(aMessageType, aMessageData);
+	}
+}
+
 CGameObject::CGameObject(CGameObjectManager &aManager) : myTransformId(0), myManager(aManager)
 {
 	myType = eComponentType::eGameObject;
@@ -94,4 +111,5 @@ CGameObject::CGameObject(CGameObjectManager &aManager) : myTransformId(0), myMan
 
 CGameObject::~CGameObject()
 {
+	
 }

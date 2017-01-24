@@ -4,8 +4,8 @@
 
 CActivationComponent::CActivationComponent()
 {
+	myType = eComponentType::eActivationComponent;
 }
-
 
 CActivationComponent::~CActivationComponent()
 {

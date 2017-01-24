@@ -30,7 +30,7 @@ namespace CU
 	class Vector2;
 	using Vector2f = Vector2<float>;
 }
-enum class eComponentType : int;
+enum class eComponentType : unsigned char;
 
 
 enum class eComponentMessageType
@@ -85,6 +85,7 @@ enum class eComponentMessageType
 	eActivateManaRefund,
 	eActivate,
 	eCalledForHelp,
+	eLookAt,
 };
 
 struct SComponentMessageData
@@ -106,7 +107,7 @@ struct SComponentMessageData
 		CU::Matrix44f myMatrix44;
 		CU::Vector2f myVector2f;
 		CU::Vector3f myVector3f;
-		CU::GrowingArray<CU::Vector3f>* myVector3ListPointer;
+		CU::GrowingArray<CU::Vector3f, unsigned int, false>* myVector3ListPointer;
 		
 		eComponentType myComponentTypeAdded;
 		Stats::STotalStats myStatStruct;

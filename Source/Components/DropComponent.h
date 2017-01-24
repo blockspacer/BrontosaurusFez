@@ -1,5 +1,7 @@
 #pragma once
 #include "Component.h"
+
+
 class DropComponent : public CComponent
 {
 public:

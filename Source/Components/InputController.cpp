@@ -18,11 +18,13 @@ InputController::InputController(const CU::Camera& aPlayerCamera)
 	: myPlayerCamera(aPlayerCamera)
 	, myMouseIsDown(false)
 	, myIsShiftDown(false)
+	, myIsActive(true)
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
 	mySkillInputMessageActivators.Init(5);
 	mySkillActivatorKeyDown = -1;
+	myType = eComponentType::eInputController;
 }
 
 
@@ -34,65 +36,68 @@ InputController::~InputController()
 
 void InputController::Update(float aDeltaTime)
 {
-	if (myMouseIsDown == true)
+	if (myIsActive == true)
 	{
-		//convert pixel mouse position to world ground position
-		CU::Vector2f windowSize(WINDOW_SIZE);
-		CU::Vector2f mousePosZeroToOne = myMousePosition / windowSize;
-		CU::Vector2f mousePosNormalizedSpace = mousePosZeroToOne * 2.f - CU::Vector2f::One;
-		mousePosNormalizedSpace.y *= -1;
-		CU::Vector4f mousePosNormalizedHomogeneousSpace(mousePosNormalizedSpace, CU::Vector2f::Zero);
-		CU::Vector4f screenToCameraSpaceRay = mousePosNormalizedHomogeneousSpace * myPlayerCamera.GetProjectionInverse();
-
-		CU::Vector3f direction;
-		direction.x = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m11) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m21) + myPlayerCamera.GetTransformation().m31;
-		direction.y = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m12) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m22) + myPlayerCamera.GetTransformation().m32;
-		direction.z = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m13) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m23) + myPlayerCamera.GetTransformation().m33;
-
-		CU::Vector3f targetPosition3D;
-		const CU::Vector3f groundNormal(0.f, 1.f, 0.f);
-		const float denominator = direction.Dot(groundNormal);
-		if (std::fabs(denominator) > 0.0001f)
+		if (myMouseIsDown == true)
 		{
-			const float t = (GetParent()->GetToWorldTransform().GetPosition() - myPlayerCamera.GetPosition()).Dot(groundNormal) / denominator;
-			if (std::fabs(t) > 0.0001f)
+			//convert pixel mouse position to world ground position
+			CU::Vector2f windowSize(WINDOW_SIZE);
+			CU::Vector2f mousePosZeroToOne = myMousePosition / windowSize;
+			CU::Vector2f mousePosNormalizedSpace = mousePosZeroToOne * 2.f - CU::Vector2f::One;
+			mousePosNormalizedSpace.y *= -1;
+			CU::Vector4f mousePosNormalizedHomogeneousSpace(mousePosNormalizedSpace, CU::Vector2f::Zero);
+			CU::Vector4f screenToCameraSpaceRay = mousePosNormalizedHomogeneousSpace * myPlayerCamera.GetProjectionInverse();
+
+			CU::Vector3f direction;
+			direction.x = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m11) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m21) + myPlayerCamera.GetTransformation().m31;
+			direction.y = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m12) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m22) + myPlayerCamera.GetTransformation().m32;
+			direction.z = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m13) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m23) + myPlayerCamera.GetTransformation().m33;
+
+			CU::Vector3f targetPosition3D;
+			const CU::Vector3f groundNormal(0.f, 1.f, 0.f);
+			const float denominator = direction.Dot(groundNormal);
+			if (std::fabs(denominator) > 0.0001f)
 			{
-				targetPosition3D = myPlayerCamera.GetPosition() + direction * t;
+				const float t = (GetParent()->GetToWorldTransform().GetPosition() - myPlayerCamera.GetPosition()).Dot(groundNormal) / denominator;
+				if (std::fabs(t) > 0.0001f)
+				{
+					targetPosition3D = myPlayerCamera.GetPosition() + direction * t;
+				}
+			}
+
+			CU::Vector2f targetPosition(targetPosition3D.x, targetPosition3D.z);
+
+			TakeInputMessage(CU::eInputMessage::LEFTMOUSEBUTTON);
+			eComponentMessageType type = eComponentMessageType::eSetNavigationTarget;
+			SComponentMessageData data;
+			data.myVector2f = targetPosition;
+			GetParent()->NotifyComponents(type, data);
+
+			if (myIsShiftDown == false)
+			{
+				type = eComponentMessageType::eSetSkillTargetPosition;
+				GetParent()->NotifyComponents(type, data);
+
+			}
+			else
+			{
+				type = eComponentMessageType::eSetSkillTargetPositionWhileHoldingPosition;
+				GetParent()->NotifyComponents(type, data);
 			}
 		}
 
-		CU::Vector2f targetPosition(targetPosition3D.x, targetPosition3D.z);
-		
-		TakeInputMessage(CU::eInputMessage::LEFTMOUSEBUTTON);
-		eComponentMessageType type = eComponentMessageType::eSetNavigationTarget;
-		SComponentMessageData data;
-		data.myVector2f = targetPosition;
-		GetParent()->NotifyComponents(type, data);
-
-		if(myIsShiftDown == false)
+		if (myIsShiftDown == true)
 		{
-			type = eComponentMessageType::eSetSkillTargetPosition;
-			GetParent()->NotifyComponents(type, data);
-		
+			GetParent()->NotifyComponents(eComponentMessageType::eStopMovement, SComponentMessageData());
 		}
-		else
+
+		if (mySkillActivatorKeyDown >= 0)
 		{
-			type = eComponentMessageType::eSetSkillTargetPositionWhileHoldingPosition;
+			eComponentMessageType type = eComponentMessageType::eSelectSkill;
+			SComponentMessageData data;
+			data.myInt = mySkillActivatorKeyDown;
 			GetParent()->NotifyComponents(type, data);
 		}
-	}
-
-	if(myIsShiftDown == true)
-	{
-		GetParent()->NotifyComponents(eComponentMessageType::eStopMovement, SComponentMessageData());
-	}
-
-	if(mySkillActivatorKeyDown >= 0)
-	{
-		eComponentMessageType type = eComponentMessageType::eSelectSkill;
-		SComponentMessageData data;
-		data.myInt = mySkillActivatorKeyDown;
-		GetParent()->NotifyComponents(type, data);
 	}
 }
 
@@ -121,6 +126,14 @@ void InputController::Receive(const eComponentMessageType aMessageType, const SC
 		{
 			std::cout << "Skill not found when adding key binding." << std::endl;
 		}
+	}
+	else if (aMessageType == eComponentMessageType::eDied)
+	{
+		myIsActive = false;
+	}
+	else if (aMessageType == eComponentMessageType::eRespawned)
+	{
+		myIsActive = true;
 	}
 }
 

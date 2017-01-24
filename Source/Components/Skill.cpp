@@ -135,6 +135,9 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 			myColliderObject->GetLocalTransform().SetPosition(myTargetObject->GetWorldPosition());
 			myColliderObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 			myAnimationTimeElapsed += aDeltaTime;
+			SComponentMessageData lookAtData;
+			lookAtData.myVector3f = myTargetObject->GetWorldPosition();
+			myUser->NotifyComponents(eComponentMessageType::eLookAt, lookAtData);
 		}
 	}
 	else
@@ -157,6 +160,9 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 			myColliderObject->GetLocalTransform().SetPosition(myTargetPosition);
 		}
 		myColliderObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
+		SComponentMessageData lookAtData;
+		lookAtData.myVector3f = myTargetPosition;
+		myUser->NotifyComponents(eComponentMessageType::eLookAt, lookAtData);
 		//ActivateCollider(); // Remove this later on and replace it with animation wait time.
 	}
 }
@@ -192,6 +198,9 @@ void Skill::SweepAttackUpdate(float aDeltaTime)
 		myColliderObject->GetLocalTransform().SetPosition(myTargetPosition);
 	}
 	myColliderObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
+	SComponentMessageData lookAtData;
+	lookAtData.myVector3f = myTargetPosition;
+	myUser->NotifyComponents(eComponentMessageType::eLookAt, lookAtData);
 }
 
 void Skill::SetTargetPosition(CU::Vector3f aTargetPosition)

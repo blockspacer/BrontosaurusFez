@@ -352,6 +352,7 @@
     <ClInclude Include="AudioSourceComponentManager.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CameraManager.h" />
+    <ClInclude Include="ChangeLevelTriggerComponent.h" />
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionComponentManager.h" />
     <ClInclude Include="DropComponent.h" />
@@ -359,6 +360,7 @@
     <ClInclude Include="EnemyObjectiveComponent.h" />
     <ClInclude Include="FleeController.h" />
     <ClInclude Include="FleeControllerManager.h" />
+    <ClInclude Include="FormationController.h" />
     <ClInclude Include="HatActivator.h" />
     <ClInclude Include="HealthBarComponent.h" />
     <ClInclude Include="HealthBarComponentManager.h" />
@@ -370,6 +372,8 @@
     <ClInclude Include="PlayerData.h" />
     <ClInclude Include="PlayerHealthMessenger.h" />
     <ClInclude Include="PlayerManaMessenger.h" />
+    <ClInclude Include="RespawnComponent.h" />
+    <ClInclude Include="RespawnComponentManager.h" />
     <ClInclude Include="SeekController.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
@@ -415,6 +419,7 @@
     <ClCompile Include="AudioSourceComponentManager.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="CameraManager.cpp" />
+    <ClCompile Include="ChangeLevelTriggerComponent.cpp" />
     <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="CollisionComponentManager.cpp" />
     <ClCompile Include="DropComponent.cpp" />
@@ -422,6 +427,7 @@
     <ClCompile Include="EnemyObjectiveComponent.cpp" />
     <ClCompile Include="FleeController.cpp" />
     <ClCompile Include="FleeControllerManager.cpp" />
+    <ClCompile Include="FormationController.cpp" />
     <ClCompile Include="HatActivator.cpp" />
     <ClCompile Include="HealthBarComponent.cpp" />
     <ClCompile Include="HealthBarComponentManager.cpp" />
@@ -430,6 +436,8 @@
     <ClCompile Include="OpenShopListenerComponent.cpp" />
     <ClCompile Include="PlayerHealthMessenger.cpp" />
     <ClCompile Include="PlayerManaMessenger.cpp" />
+    <ClCompile Include="RespawnComponent.cpp" />
+    <ClCompile Include="RespawnComponentManager.cpp" />
     <ClCompile Include="SeekController.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentManager.cpp" />

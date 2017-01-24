@@ -163,9 +163,10 @@ int CFBXLoader::DetermineAndLoadVerticies(aiMesh* fbxMesh, CLoaderMesh* aLoaderM
 			VertexBoneData& boneData = collectedBoneData[i];
 
 			//TODO: fix so vertexCollexion can haz UINTS too so we don't need to cast float to uint in the sha-ding
+			//TODO: see VertexCollexion, i added code but we have to change in shader too before start using different stuffs mvh carl
 			// UINTS woudl be better
 			aiVector3D bones;
-			vertexCollection.PushVec4(FBXLoader::Vector4f((float)boneData.IDs[0], (float)boneData.IDs[1], (float)boneData.IDs[2], (float)boneData.IDs[3]));
+			vertexCollection.PushVec4(FBXLoader::Vector4f((float)boneData.IDs[0], (float)boneData.IDs[1], (float)boneData.IDs[2], (float)boneData.IDs[3])); //TODO: change to uint, change in shader too
 
 			aiVector3D weights;
 			vertexCollection.PushVec4(FBXLoader::Vector4f(boneData.Weights[0], boneData.Weights[1], boneData.Weights[2], boneData.Weights[3]));
@@ -206,17 +207,17 @@ CLoaderCamera* ParseCamera(const aiCamera* aCameraIn)
 
 	CLoaderCamera* cameraOut = new CLoaderCamera();
 
-	CU::Vector3f upVector = CU::Vector3f(aCameraIn->mUp.x, aCameraIn->mUp.y, aCameraIn->mUp.z).GetNormalized();
-	CU::Vector3f forwardVector = CU::Vector3f(aCameraIn->mLookAt.x, aCameraIn->mLookAt.y, aCameraIn->mLookAt.z).GetNormalized();
-	CU::Vector3f rightVector = (upVector.Cross(forwardVector)).GetNormalized();
+	CU::Vector3f upVector = -CU::Vector3f(aCameraIn->mUp.x, aCameraIn->mUp.y, aCameraIn->mUp.z); //fulhax bc det blev upp och ner (operator-() på vektorn dvs)
+	upVector.Normalize();
+	CU::Vector3f forwardVector = CU::Vector3f(aCameraIn->mLookAt.x, aCameraIn->mLookAt.y, aCameraIn->mLookAt.z);
+	forwardVector.Normalize();
+	CU::Vector3f rightVector = (upVector.Cross(forwardVector));
+	rightVector.Normalize();
 	CU::Vector3f positionVector = CU::Vector3f(aCameraIn->mPosition.x, aCameraIn->mPosition.y, aCameraIn->mPosition.z);
 
 	cameraOut->myTransformation.myUpVector = upVector;
 	cameraOut->myTransformation.myRightVector = rightVector;
 	cameraOut->myTransformation.myForwardVector = forwardVector;
-	
-	cameraOut->myTransformation *= CU::Matrix44f::CreateRotateAroundY(3.14f); //fulhax bc det blev upp och ner //TODO: TODO fix the rotation problem when reading scenes from maya
-	//cameraOut->myTransformation *= 100.f;
 
 	cameraOut->myTransformation.myPosition = positionVector;
 	
@@ -419,7 +420,7 @@ bool CFBXLoader::LoadGUIScene(const char* aFilePath, CLoaderScene& aSceneOut)
 	for (unsigned int i = 0; i < root->mNumChildren; ++i)
 	{
 		std::string name = root->mChildren[i]->mName.C_Str();
-		if (name.find("Grp") != std::string::npos || name.find("Base") != std::string::npos || name.find("shop") != std::string::npos || name.find("buy") != std::string::npos) //TODO: Solv this hell
+		if (name.find("Grp") != std::string::npos || name.find("Base") != std::string::npos || name.find("shop") != std::string::npos || name.find("Shop") != std::string::npos || name.find("buy") != std::string::npos) //TODO: Solv this hell
 		{
 			modelGroup = root->mChildren[i];
 			break;
@@ -444,6 +445,10 @@ bool CFBXLoader::LoadGUIScene(const char* aFilePath, CLoaderScene& aSceneOut)
 		{
 			mesh->myTransformation = ConvertToCUMatrix44(translationNode->mTransformation).Transpose();
 		}
+		else
+		{
+			mesh->myTransformation = ConvertToCUMatrix44(nodes[i]->mTransformation).Transpose();
+		}
 
 		DetermineAndLoadVerticies(fbxMesh, mesh);
 
@@ -467,9 +472,14 @@ bool CFBXLoader::LoadGUIScene(const char* aFilePath, CLoaderScene& aSceneOut)
 		aiReturn result = scene->mMaterials[0]->GetTexture(aiTextureType_DIFFUSE, 0, &path);
 		if (result != aiReturn_SUCCESS)
 		{
-			DL_ASSERT("Failed to get diffuse/albedo texture from fbx scene: %s", aFilePath);
-
-			return false;
+			//DL_ASSERT("Failed to get diffuse/albedo texture from fbx scene: %s", aFilePath);
+			aiReturn result = scene->mMaterials[1]->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+			if (result != aiReturn_SUCCESS)
+			{
+				int br = 0;
+				br++;
+			}
+			//return false;
 		}
 
 		aSceneOut.myAlbedoTexture = path.C_Str();
@@ -695,7 +705,6 @@ void* CFBXLoader::LoadModelInternal(CLoaderModel* someInput)
 
 void CFBXLoader::LoadMaterials(const struct aiScene *sc, CLoaderModel* aModel)
 {
-
 	for (unsigned int m = 0; m < sc->mNumMaterials; m++)
 	{
 		LoadTexture(aiTextureType_DIFFUSE, aModel->myTextures, sc->mMaterials[m]); // TEXTURE_DEFINITION_ALBEDO
@@ -709,6 +718,23 @@ void CFBXLoader::LoadMaterials(const struct aiScene *sc, CLoaderModel* aModel)
 		LoadTexture(aiTextureType_DISPLACEMENT, aModel->myTextures, sc->mMaterials[m]);
 		LoadTexture(aiTextureType_LIGHTMAP, aModel->myTextures, sc->mMaterials[m]);
 		LoadTexture(aiTextureType_REFLECTION, aModel->myTextures, sc->mMaterials[m]); // TEXTURE_DEFINITION_METALNESS
+
+		if (sc->mNumMaterials > 1)
+		{
+			bool gotNothing = true;
+			for (std::string& path : aModel->myTextures)
+			{
+				if (path.empty() == false)
+				{
+					gotNothing = false;
+				}
+			}
+
+			if (gotNothing == true)
+			{
+				aModel->myTextures.clear();
+			}
+		}
 	}
 }
 
@@ -725,6 +751,7 @@ void CFBXLoader::LoadTexture(int aType, std::vector<std::string>& someTextures, 
 		someTextures.push_back("");
 		return;
 	}
+
 
 	std::string filePath = std::string(path.data);
 

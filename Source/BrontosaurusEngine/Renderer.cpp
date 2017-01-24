@@ -798,7 +798,8 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 	{
 		myGUIData.myInputPackage.Activate();
 		SRenderGUIModelMessage* msg = static_cast<SRenderGUIModelMessage*>(aRenderMesage);
-		CModel* model = CEngine::GetInstance()->GetModelManager()->GetModel(msg->myModelID);
+		CModelManager* modelManager = CEngine::GetInstance()->GetModelManager();
+		CModel* model = modelManager->GetModel(msg->myModelID);
 		if (model == nullptr) break;
 		if (model->HasConstantBuffer(CModel::eShaderStage::ePixel) == true)
 		{
