@@ -122,9 +122,9 @@ void CScene::Render()
 
 		RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
 
-		SRenderSkyboxMessage msg;
-		msg.mySkybox = mySkybox;
-		RENDERER.AddRenderMessage(new SRenderSkyboxMessage(msg));
+		//SRenderSkyboxMessage msg;
+		//msg.mySkybox = mySkybox;
+		//RENDERER.AddRenderMessage(new SRenderSkyboxMessage(msg));
 
 		statemsg.myRasterizerState = eRasterizerState::eDefault;
 		statemsg.myDepthStencilState = eDepthStencilState::eDefault;
