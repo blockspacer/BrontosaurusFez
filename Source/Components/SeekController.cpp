@@ -32,7 +32,7 @@ const CU::Vector2f CSeekController::Update(const CU::Time& aDeltaTime)
 	}
 
 	myTarget = CU::Vector2f(PollingStation::playerObject->GetWorldPosition().x, PollingStation::playerObject->GetWorldPosition().z);
-	//myTarget = CalculateFormationPosition(myTarget);
+	myTarget = CalculateFormationPosition(myTarget);
 	CU::Vector2f position = CU::Vector2f(myController->GetParent()->GetWorldPosition().x, myController->GetParent()->GetWorldPosition().z);
 	CU::Vector2f targetVelocity = CU::Vector2f::Zero;
 	targetVelocity = myTarget - position;
@@ -117,7 +117,7 @@ void CSeekController::CallForHelp()
 
 CU::Vector2f& CSeekController::CalculateFormationPosition(const CU::Vector2f& aTargetPositon)
 {
-	const float formationDistance = 5000.0f;
+	const float formationDistance = 100.0f;
 	CU::Vector2f formationPosition = aTargetPositon;
 	if (myFormationIndex <= 0)
 	{
@@ -144,7 +144,6 @@ CU::Vector2f& CSeekController::CalculateFormationPosition(const CU::Vector2f& aT
 	direction.Normalize();
 	direction *= formationDistance;
 	formationPosition += direction;
-	formationPosition *= -1;
 	return formationPosition;
 }
 
