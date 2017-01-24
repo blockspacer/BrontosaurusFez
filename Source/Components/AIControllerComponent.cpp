@@ -53,7 +53,7 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 		Acceleration += returnValue;
 	}
 
-	myVelocity += Acceleration * aDeltaTime.GetSeconds();
+	myVelocity += Acceleration;
 
 	if (myVelocity.Length() > myMaxVelocity)
 	{
