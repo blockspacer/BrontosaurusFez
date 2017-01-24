@@ -78,6 +78,8 @@ CRenderer::~CRenderer()
 		myBlendStates[i]->Release();
 		myBlendStates[i] = nullptr;
 	}
+
+	mySynchronizer.ClearAll();
 }
 
 void CRenderer::AddRenderMessage(SRenderMessage* aRenderMessage)
