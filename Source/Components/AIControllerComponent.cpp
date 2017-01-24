@@ -82,7 +82,6 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 	GetParent()->NotifyComponents(type, data);
 	GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 
-	GetParent()->GetLocalTransform().SetPosition(GetParent()->GetLocalTransform().GetPosition() + CU::Vector3f(velocity.x, 0, velocity.y));
 }
 
 void CAIControllerComponent::Destroy()
