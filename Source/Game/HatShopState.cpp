@@ -222,7 +222,7 @@ void HatShopState::AdjustText()
 			temp += ". ";
 			temp += mySelections[i]->HatName.c_str();
 			myOptionsText.Add(new CTextInstance());
-			myOptionsText.GetLast()->Init("Fonts/comic.ttf",32);
+			myOptionsText.GetLast()->Init("Default",32);
 			myOptionsText.GetLast()->SetText(temp.c_str());
 			myOptionsText.GetLast()->SetPosition(CU::Vector2f(0.114f, 0.075f + 0.185f * row));
 		
@@ -230,7 +230,7 @@ void HatShopState::AdjustText()
 			temp += ": ";
 			temp += std::to_string(mySelections[i]->myCost);
 			myCostText.Add(new CTextInstance());
-			myCostText.GetLast()->Init("Fonts/comic.ttf",32);
+			myCostText.GetLast()->Init("Default",32);
 			myCostText.GetLast()->SetText(temp.c_str());
 			myCostText.GetLast()->SetPosition(CU::Vector2f(0.114f, 0.2f + 0.185f * row));
 			++row;
@@ -242,7 +242,7 @@ void HatShopState::AdjustText()
 			temp += ". ";
 			temp += mySelections[i]->HatName.c_str();
 			myOptionsText.Add(new CTextInstance());
-			myOptionsText.GetLast()->Init("Fonts/comic.ttf", 32);
+			myOptionsText.GetLast()->Init("Default", 32);
 			myOptionsText.GetLast()->SetText(temp.c_str());
 			myOptionsText.GetLast()->SetPosition(CU::Vector2f(0.027f, 0.075f + 0.185f * row));
 		
@@ -250,7 +250,7 @@ void HatShopState::AdjustText()
 			temp += ": ";
 			temp += std::to_string(mySelections[i]->myCost);
 			myCostText.Add(new CTextInstance());
-			myCostText.GetLast()->Init("Fonts/comic.ttf", 32);
+			myCostText.GetLast()->Init("Default", 32);
 			myCostText.GetLast()->SetText(temp.c_str());
 			myCostText.GetLast()->SetPosition(CU::Vector2f(0.027f, 0.2f + 0.185f * row));
 		}
