@@ -11,6 +11,7 @@ CAIControllerComponent::CAIControllerComponent()
 	myControllers.Init(2);
 	myMaxVelocity = 70;
 	myVelocity = { 0.f,0.f };
+	myType = eComponentType::eAIController;
 }
 
 

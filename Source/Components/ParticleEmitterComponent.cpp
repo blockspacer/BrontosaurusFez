@@ -7,6 +7,7 @@
 CParticleEmitterComponent::CParticleEmitterComponent(CParticleEmitterInstance* aEmitterInstance)
 {
 	myParticleInstance = aEmitterInstance;
+	myType = eComponentType::eParticleEmitter;
 }
 
 

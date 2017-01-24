@@ -65,4 +65,5 @@ void CPickerUpperComponent::Destroy()
 
 CPickerUpperComponent::CPickerUpperComponent(CPickupManager& aManager): myManager(aManager)
 {
+	myType = eComponentType::ePickerUpper;
 }

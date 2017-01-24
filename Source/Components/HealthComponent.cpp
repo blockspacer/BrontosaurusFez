@@ -13,6 +13,7 @@ CHealthComponent::CHealthComponent()
 	myPercentageLeft = static_cast<float>(myHealth) / static_cast<float>(myMaxHealth);
 
 	//PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed);
+	myType = eComponentType::eHealth;
 }
 
 

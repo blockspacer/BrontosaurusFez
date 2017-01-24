@@ -6,6 +6,7 @@
 CFleeController::CFleeController()
 {
 	myControllerType = eControllerType::eFlee;
+	myType = eComponentType::eFleeController;
 }
 
 CFleeController::~CFleeController()

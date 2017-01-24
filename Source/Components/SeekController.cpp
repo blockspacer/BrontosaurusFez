@@ -13,6 +13,7 @@ CSeekController::CSeekController()
 	myTarget = CU::Vector2f::Zero;//PollingStation::playerObject->GetWorldPosition();
 	myAcceleration = CU::Vector2f::Zero;
 	myControllerType = eControllerType::eArrive;
+	myType = eComponentType::eSeekController;
 	myHaveBeenCalledForHelp = false;
 	myCallForHelpRadius = 0.0f;
 	myFormationIndex = -1;

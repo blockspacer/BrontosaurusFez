@@ -33,7 +33,7 @@ void CComponentManager::DestroyInstance()
 	{
 		if (ourInstance->myComponents[i] != nullptr)
 		{
-			ourInstance->RemoveComponent(ourInstance->myComponents[i]->GetId());
+			ourInstance->DeleteComponent(ourInstance->myComponents[i]->GetId());
 		}
 	}
 
@@ -73,7 +73,7 @@ CComponent* CComponentManager::GetComponent(ComponentId anId)
 	return myComponents[anId];
 }
 
-void CComponentManager::RemoveComponent(ComponentId anId)
+void CComponentManager::DeleteComponent(ComponentId anId)
 {
 	delete myComponents[anId];
 	myComponents[anId] = nullptr;

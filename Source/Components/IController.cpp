@@ -6,6 +6,7 @@ IController::IController()
 {
 	myWeight = 1.0f;
 	myControllerType = eControllerType::eDefault;
+	myType = eComponentType::eControllerInterface;
 }
 
 IController::~IController()

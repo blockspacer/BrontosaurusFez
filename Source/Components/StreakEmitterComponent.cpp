@@ -5,6 +5,7 @@
 CStreakEmitterComponent::CStreakEmitterComponent()
 	: myStreakEmitterInstance(nullptr)
 {
+	myType = eComponentType::eStreakEmitter;
 }
 
 

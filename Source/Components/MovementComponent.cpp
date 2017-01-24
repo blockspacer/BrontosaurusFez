@@ -10,6 +10,7 @@ MovementComponent::MovementComponent()
 	myMovementSpeed = 100.0f;
 	myCurrentPathIndex = 0;
 	myShouldMove = true;
+	myType = eComponentType::eMovement;
 }
 
 

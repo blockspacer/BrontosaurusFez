@@ -16,6 +16,7 @@ CCollisionComponent::CCollisionComponent(ICollider* aCollider)
 		std::bind(&CCollisionComponent::OnCollisionEnter, this, std::placeholders::_1),
 		std::bind(&CCollisionComponent::OnCollisionExit, this, std::placeholders::_1)
 	);
+	myType = eComponentType::eCollision;
 }
 
 CCollisionComponent::~CCollisionComponent()
