@@ -346,7 +346,7 @@ void CPlayState::Load()
 	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
 #ifdef _DEBUG
-	const int levelIndex = levelsArray.Size() - 1;
+	myLevelIndex = levelsArray.Size()-1;
 #else
 	const int levelIndex = 0;
 #endif
@@ -476,7 +476,16 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	{
 		CAudioSourceComponentManager::GetInstance().Update();
 	}
-	
+
+	if (PollingStation::playerData->myIsWhirlwinding == true)
+	{
+  		audio->PostEvent("WhirlWind");
+	}
+	else
+	{
+		audio->PostEvent("StopWhirlWind");
+	}
+
 	CParticleEmitterComponentManager::GetInstance().UpdateEmitters(aDeltaTime);
 	InputControllerManager::GetInstance().Update(aDeltaTime);
 	MovementComponentManager::GetInstance().Update(aDeltaTime);
@@ -484,6 +493,9 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	SkillSystemComponentManager::GetInstance().Update(aDeltaTime);
 	CPickupManager::GetInstance().Update(aDeltaTime);
 	RespawnComponentManager::GetInstance().Update(aDeltaTime);
+
+
+
 	myCollisionComponentManager->Update();
 	myScene->Update(aDeltaTime);
 
