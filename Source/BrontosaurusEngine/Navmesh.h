@@ -6,9 +6,26 @@
 #include <unordered_map>
 
 
+class CPath
+{
+	friend class CNavmesh;
+public:
+	struct SWaypoint
+	{
+		CU::Vector3f myPosition;
+		CU::Vector3f myLeftPoint;
+		CU::Vector3f myRightPoint;
+	};
+	CPath() {}
+	CPath(const CU::GrowingArray<SWaypoint, unsigned int, false>& aWaypointList)
+	{
+		myWaypoints = aWaypointList;
+	}
+	void Smooth();
 
-
-
+	CU::GrowingArray<SWaypoint, unsigned int, false> myWaypoints;
+private:
+};
 
 
 
@@ -16,13 +33,8 @@
 class CNavmesh
 {
 public:
-	struct SPath
-	{
-		CU::GrowingArray<CU::Vector3f, unsigned int, false> myWaypoints;
-	};
 
 	struct SNavmeshTriangle;
-
 	struct SNavmeshPoint
 	{
 		SNavmeshPoint()
@@ -102,6 +114,7 @@ public:
 
 		SNavmeshNode* myParent;
 		CU::VectorOnStack<SNavmeshNode*, 5, unsigned short, false> myNeighbours;
+		
 		CU::Vector3f myPosition;
 
 		SNavmeshTriangle* myTriangle;
@@ -124,7 +137,7 @@ public:
 	~CNavmesh();
 	void Render();
 	void LoadFromFile(const char* aFilePath);
-	SPath CalculatePath(const SNavmeshNode & aStartPoint, const SNavmeshNode & aEndPoint);
+	CPath CalculatePath(const SNavmeshNode & aStartPoint, const SNavmeshNode & aEndPoint);
 
 	SNavmeshTriangle& GetClosestTriangle(const CU::Vector3f & aPosition);
 
@@ -132,6 +145,11 @@ public:
 
 	bool IsValid(const CU::Vector3f & aPosition, SNavmeshTriangle *& aIntersectingTriangle, CU::Vector3f & aIntersectingPoint);
 	bool IsValid(const CU::Vector2f & aPosition, SNavmeshTriangle *& aIntersectingTriangle, CU::Vector3f & aIntersectingPoint);
+
+
+
+	static float TriArea2(const CU::Vector2f& a, const CU::Vector2f& b, const CU::Vector2f& c);
+	static bool VEqual(const CU::Vector2f& a, const CU::Vector2f& b);
 
 private:
 	void CreateNode(CU::GrowingArray<SNavmeshNode>& aNodeList, SNavmeshTriangle & aTriangle, const SNavmeshNode & aEndNode, std::unordered_map<SNavmeshTriangle*, SNavmeshNode*>& triangleNodes);
