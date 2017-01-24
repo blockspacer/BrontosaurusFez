@@ -114,3 +114,13 @@ SRenderLineBuffer::SRenderLineBuffer(const CU::GrowingArray<char, unsigned short
 	, myLineBuffer(aLineBuffer)
 {
 }
+
+SClearRenderPackageMessage::SClearRenderPackageMessage()
+	: SRenderMessage(eRenderMessageType::eClearRenderPackage)
+{
+}
+
+SActivateRenderToMessage::SActivateRenderToMessage()
+	: SRenderMessage(SRenderMessage::eRenderMessageType::eActivateRenderTo)
+{
+}

@@ -754,6 +754,17 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 {
 	switch (aRenderMesage->myType)
 	{
+	case SRenderMessage::eRenderMessageType::eActivateRenderTo:
+	{
+		renderTo->Activate();
+		break;
+	}
+	case SRenderMessage::eRenderMessageType::eClearRenderPackage:
+	{
+		SClearRenderPackageMessage* msg = static_cast<SClearRenderPackageMessage*>(aRenderMesage);
+		msg->myRenderPackage.Clear();
+		break;
+	}
 	case SRenderMessage::eRenderMessageType::eRenderNavMesh:
 	{
 		SRenderNavmeshMessage* msg = static_cast<SRenderNavmeshMessage*>(aRenderMesage);

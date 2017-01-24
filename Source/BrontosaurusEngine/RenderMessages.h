@@ -56,6 +56,8 @@ struct SRenderMessage
 		eRenderStreak,
 		eRenderFire,
 		eRenderText,
+		eClearRenderPackage,
+		eActivateRenderTo,
 		eActivateRenderPackage,
 		eRenderFullscreenEffect,
 		eRenderDebugObjs,
@@ -70,6 +72,19 @@ struct SRenderMessage
 
 	eRenderMessageType myType;
 
+};
+
+
+struct SActivateRenderToMessage : SRenderMessage
+{
+	SActivateRenderToMessage();
+};
+
+
+struct SClearRenderPackageMessage : SRenderMessage
+{
+	SClearRenderPackageMessage();
+	CRenderPackage myRenderPackage;
 };
 
 
