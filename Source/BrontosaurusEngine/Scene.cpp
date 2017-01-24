@@ -84,6 +84,7 @@ CScene::~CScene()
 	myModels.DeleteAll();
 	myParticleEmitters.DeleteAll();
 	//myDebugObjects.DeleteAll();
+	myPointLights.DeleteAll();
 }
 
 void CScene::Update(const CU::Time aDeltaTime)

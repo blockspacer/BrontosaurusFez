@@ -233,6 +233,8 @@ CEngine::~CEngine()
 	SAFE_DELETE(myParticleEmitterManager);
 	SAFE_DELETE(myFireEmitterManager);
 	SAFE_DELETE(myTextureManager);
+
+	SAFE_DELETE(myConsole);
 	myFontEngine.DestroyInstance();
 
 	Audio::CAudioInterface::Destroy();

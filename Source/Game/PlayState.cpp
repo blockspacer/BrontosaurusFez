@@ -116,15 +116,19 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 
 CPlayState::~CPlayState()
 {
+	//Don forgetti to deletti
+	SAFE_DELETE(myEmitterComp);
+	SAFE_DELETE(myCollisionComponentManager);
+	SAFE_DELETE(myStatManager);
+	SAFE_DELETE(myGoldText);
+	SAFE_DELETE(myHatMaker);
+	SAFE_DELETE(myHealthBarManager);
 
-	//myGameObjectManager->ClearAll();
 
 	SAFE_DELETE(myMouseComponent);
 	SAFE_DELETE(myScene);
 	SAFE_DELETE(myGameObjectManager);
 	SAFE_DELETE(myGUIManager);
-	
-
 	
 	CModelComponentManager::Destroy();
 	CAudioSourceComponentManager::Destroy();
