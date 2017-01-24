@@ -121,7 +121,7 @@ CPlayState::~CPlayState()
 	SAFE_DELETE(myCollisionComponentManager);
 	SAFE_DELETE(myStatManager);
 	SAFE_DELETE(myGoldText);
-	SAFE_DELETE(myHatMaker);
+	//SAFE_DELETE(myHatMaker);
 	SAFE_DELETE(myHealthBarManager);
 
 
