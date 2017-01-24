@@ -19,9 +19,9 @@ public:
 	void SetWorldPosition(CU::Vector3f);
 
 	void AddComponent(CComponent* aComponent);
-
 	//notifies all 
 	void NotifyComponents(const eComponentMessageType aMessageType, const SComponentMessageData &aMessageData);
+	void NotifyOnlyComponents(const eComponentMessageType aMessageType, const SComponentMessageData &aMessageData);
 
 	void MarkForDestruction();
 
@@ -31,8 +31,12 @@ public:
 private:
 	void Destroy() override;
 	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData &aMessageData) override;
+	void ComponentReceive(const eComponentMessageType aMessageType, const SComponentMessageData &aMessageData);
 	CGameObject(CGameObjectManager& aManager);
+	CGameObject(const CGameObject& anObject) = delete;
 	~CGameObject();
+
+	CGameObject& operator=(const CGameObject& anObject) = delete;
 
 	ComponentId myTransformId;
 	CU::GrowingArray<CComponent*> myComponents;
