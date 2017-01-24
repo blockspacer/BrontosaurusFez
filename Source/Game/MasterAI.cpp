@@ -53,12 +53,16 @@ void CMasterAI::DetermineAmountOfMinionsToSpawn()
 
 void CMasterAI::CallForHelp(CGameObject* aEnemyObject, float aCallForHelpRadius)
 {
+	unsigned short formationIndex = 0;
 	for(unsigned short i = 0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); i++)
 	{
 		float distance2 = CU::Vector3f(PollingStation::myThingsEnemiesShouldAvoid[i]->GetWorldPosition() - aEnemyObject->GetWorldPosition()).Length2();
 		if(distance2 < aCallForHelpRadius * aCallForHelpRadius)
 		{
-			PollingStation::myThingsEnemiesShouldAvoid[i]->NotifyComponents(eComponentMessageType::eCalledForHelp, SComponentMessageData());
+			SComponentMessageData data;
+			data.myUShort = formationIndex;
+			PollingStation::myThingsEnemiesShouldAvoid[i]->NotifyComponents(eComponentMessageType::eCalledForHelp, data);
+			formationIndex++;
 		}
 	}
 }

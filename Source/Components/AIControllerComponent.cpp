@@ -53,7 +53,7 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 		Acceleration += returnValue;
 	}
 
-	myVelocity += Acceleration * aDeltaTime.GetSeconds();
+	myVelocity += Acceleration;
 
 	if (myVelocity.Length() > myMaxVelocity)
 	{
@@ -72,8 +72,16 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 			GetParent()->NotifyComponents(eComponentMessageType::eSetSkillTargetObject, data);
 		}
 	}
-	GetParent()->GetLocalTransform().SetPosition(GetParent()->GetLocalTransform().GetPosition() + CU::Vector3f(velocity.x,0,velocity.y));
+	eComponentMessageType type = eComponentMessageType::eSetNavigationTarget;
+	SComponentMessageData data;
+	CU::Vector3f targetPosition = GetParent()->GetLocalTransform().GetPosition() + CU::Vector3f(velocity.x, 0, velocity.y); //might need to be converted to screen space;
+	CU::Vector2f navigationPosition;
+	navigationPosition.y = targetPosition.z;
+	navigationPosition.x = targetPosition.x;
+	data.myVector2f = navigationPosition;
+	GetParent()->NotifyComponents(type, data);
 	GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
+
 }
 
 void CAIControllerComponent::Destroy()
@@ -89,6 +97,7 @@ void CAIControllerComponent::Receive(const eComponentMessageType aMessageType, c
 		break;
 	case(eComponentMessageType::eObjectDone):
 		PollingStation::myThingsEnemiesShouldAvoid.Add(GetParent());
+		DL_PRINT("Compo Id AI %u", GetId());
 		break;
 	default:
 		break;

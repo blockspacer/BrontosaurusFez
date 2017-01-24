@@ -55,4 +55,64 @@ namespace CU
 	template<typename T> struct IsPointer<T*> : TrueResult {};
 
 	template<typename T> struct IsPod : BoolType<IsPointer<T>::Result || IsIntegral<T>::Result> {};
+
+	template<typename ObjectType, typename ListType>
+	struct Append
+	{
+		using newList = List<ObjectType, ListType>;
+	};
+
+	template<typename ListType>
+	struct Length
+	{
+		static const long long Result = 1 + Length<ListType::ListTail>::Result;
+	};
+
+	template<>
+	struct Length<Nil>
+	{
+		static const long long Result = 0;
+	};
+
+	template<bool assumeFalse, typename if_true, typename if_false>
+	struct IF
+	{
+		using ResultType = if_false;
+	};
+
+	template<typename if_true, typename if_false>
+	struct IF<true, if_true, if_false>
+	{
+		using ResultType = if_true;
+	};
+
+	template<long long VALUE>
+	struct LongLong
+	{
+		static const long long value = VALUE;
+	};
+
+	template<typename T, typename ListType>
+	struct IndexOf
+	{
+		static const bool FoundInHead = IsSame<T, ListType::ListHead>::Result;
+		static const long long headIndex = IF<FoundInHead, LongLong<1>, LongLong<0>>::ResultType::value;
+
+		static const long long index = headIndex + IndexOf<T, ListType::ListTail>::index;
+	};
+
+	template<typename T>
+	struct IndexOf<T, Nil>
+	{
+		static const long long index = 0;
+	};
+
+	template<typename T>
+	long long GetType(const T& aObject)
+	{
+		using MyTailType = Nil;
+		static const bool HasType = Find<T, MyTailType>::Result;
+		using MyTypes = IF<HasType, MyTailType, Append<T, MyTailType>::newList>::ResultType;
+		return IndexOf<T, MyTypes>::index;
+	}
 }
