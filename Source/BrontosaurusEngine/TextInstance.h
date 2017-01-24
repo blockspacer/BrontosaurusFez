@@ -21,7 +21,7 @@ public:
 	~CTextInstance();
 
 	void Init(const CU::DynamicString& aFontPath, const int aPixelSize);
-	void Init(const CU::DynamicString& aFontPath = "Fonts/comic.ttf");
+	void Init(const CU::DynamicString& aFontPath = "Default");
 	void Render();
 
 	inline void SetPosition(const CU::Vector2f& aPosition);

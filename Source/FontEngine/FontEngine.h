@@ -6,6 +6,8 @@
 #include <map>
 #include "FT_FontFacade.h"
 
+#define FONT_PATH "Fonts/Fonts.json"
+
 //#pragma comment(lib, "C:\\Users\\sthahu2\\Documents\\Project\\BrontosaurusFez\\LibDependencies\\FreeType\\freetype27MT.lib")
 
 class CFT_Font;
@@ -16,7 +18,8 @@ public:
 	friend class CFontEngineFacade;
 
 	void Init();
-	CFT_FontFacade GetFace(const char* aFilePath);
+	CFT_FontFacade GetFace(const char* aFontName);
+	void LoadFonts(std::string aFontJsonFile = FONT_PATH);
 
 private:
 	CFT_Font* CreateFace(const char* aFilePath);
@@ -27,5 +30,6 @@ private:
 	static CFontEngine* ourInstance;
 
 	std::map<std::string, CFT_Font*> myFaces;
+
 };
 
