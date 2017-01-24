@@ -22,7 +22,7 @@ public:
 private:
 	void CalculatePath(const CU::Vector2f& aTargetPosition);
 private:
-	CNavmesh::SPath myPath;
+	CPath myPath;
 
 };
 
