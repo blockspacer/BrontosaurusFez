@@ -31,6 +31,7 @@ void CCameraComponent::Destroy()
 
 CCameraComponent::CCameraComponent()
 {
+	myType = eComponentType::eCamera;
 }
 
 CCameraComponent::~CCameraComponent()

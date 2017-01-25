@@ -46,6 +46,9 @@ CCoolText::CCoolText(const CU::DynamicString & aFontPath, const int aPixelSize):
 
 CCoolText::~CCoolText()
 {
+	SAFE_RELEASE(myVertexBuffer);
+	SAFE_RELEASE(myVertexConstantBuffer);
+	SAFE_RELEASE(myPixelConstantBuffer);
 }
 
 void CCoolText::Render(const CU::DynamicString& aString, const CU::Vector2f& aPosition, const CU::Vector4f& aColor/*, const CU::Vector2i& aSize*/)

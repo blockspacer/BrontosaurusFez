@@ -30,7 +30,7 @@ CGameObject* CGameObjectManager::CreateGameObject(const CU::Matrix44f& aMatrix)
 	object = new CGameObject(*this);
 
 	CComponentManager::GetInstance().RegisterComponent(object);
-	
+
 	myObjectsCreated.Add(object);
 	
 	object->myTransformId = CreateMatrix(aMatrix);
@@ -50,7 +50,7 @@ void CGameObjectManager::DestroyObject(CGameObject* aGameObject)
 		DL_ASSERT("trying to destroy a nullponter as an gameobject");
 	}
 
-	CComponentManager::GetInstance().RemoveComponent(aGameObject->GetId());
+	CComponentManager::GetInstance().DeleteComponent(aGameObject->GetId());
 
 	myMatrices[aGameObject->myTransformId] = CU::Matrix44f::Identity;
 	myFreeMatrices.Push(aGameObject->myTransformId);
@@ -96,9 +96,14 @@ void CGameObjectManager::DumpAllAndReInit()
 void CGameObjectManager::SendObjectsDoneMessage()
 {
 	SComponentMessageData data;
+	CU::GrowingArray<ComponentId> searchonIDs;
+	searchonIDs.Init(244);
 	for (unsigned short i = 0; i < myObjectsCreated.Size(); i++)
 	{
-		myObjectsCreated[i]->NotifyComponents(eComponentMessageType::eObjectDone, data);
+		
+		searchonIDs.Add(myObjectsCreated[i]->GetId());
+
+		myObjectsCreated[i]->NotifyOnlyComponents(eComponentMessageType::eObjectDone, data);
 	}
 }
 

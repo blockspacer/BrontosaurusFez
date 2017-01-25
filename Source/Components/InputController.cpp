@@ -24,6 +24,7 @@ InputController::InputController(const CU::Camera& aPlayerCamera)
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
 	mySkillInputMessageActivators.Init(5);
 	mySkillActivatorKeyDown = -1;
+	myType = eComponentType::eInputController;
 }
 
 

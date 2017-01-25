@@ -8,6 +8,7 @@
 NavigationComponent::NavigationComponent()
 {
 	myPath.myWaypoints.Init(64);
+	myType = eComponentType::eNavigation;
 }
 
 

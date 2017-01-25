@@ -51,7 +51,7 @@ void CModelComponentManager::Create()
 	ourInstance = new CModelComponentManager();
 }
 
-CModelComponent * CModelComponentManager::CreateComponent(const char * aModelPath)
+CModelComponent* CModelComponentManager::CreateComponent(const char * aModelPath)
 {
 	CModelInstance* instance = new CModelInstance(aModelPath);
 	InstanceID modelID = myScene->AddModelInstance(instance);
@@ -61,7 +61,7 @@ CModelComponent * CModelComponentManager::CreateComponent(const char * aModelPat
 	return myModels.GetLast();
 }
 
-CModelComponent * CModelComponentManager::CreateComponent(SShape aShape)
+CModelComponent* CModelComponentManager::CreateComponent(SShape aShape)
 {
 	CModelInstance* instance = new CModelInstance(aShape);
 

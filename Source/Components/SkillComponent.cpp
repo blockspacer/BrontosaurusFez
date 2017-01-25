@@ -8,6 +8,7 @@ SkillComponent::SkillComponent(CGameObject* aUserObject, SkillData* aSkillDataPo
 {
 	myUserObject = aUserObject;
 	mySkillData = aSkillDataPointer;
+	myType = eComponentType::eSkill;
 }
 
 

@@ -6,6 +6,7 @@
 CFleeController::CFleeController()
 {
 	myControllerType = eControllerType::eFlee;
+	myType = eComponentType::eFleeController;
 }
 
 CFleeController::~CFleeController()
@@ -67,7 +68,7 @@ void CFleeController::Receive(const eComponentMessageType aMessageType, const SC
 	{
 		SComponentMessageData data;
 		data.myComponent = this;
-		NotifyParent(eComponentMessageType::eAddAIBehavior, data);
+		GetParent()->NotifyOnlyComponents(eComponentMessageType::eAddAIBehavior, data);
 	}
 		break;
 	default:

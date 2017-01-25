@@ -6,6 +6,7 @@
 SkillSystemComponent::SkillSystemComponent()
 {
 	mySkills.Init(4);
+	myType = eComponentType::eSkillSystem;
 	myIsActive = true;
 }
 

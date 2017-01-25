@@ -1,12 +1,11 @@
 #pragma once
 #include "IController.h"
-
-
-class CSeekController : public IController  // Bugg, fiender kan typ gå in i orbit.
+class FormationController : public IController
 {
 public:
-	CSeekController();
-	~CSeekController();
+	FormationController();
+	~FormationController();
+
 	const CU::Vector2f Update(const CU::Time & aDeltaTime) override;
 	void SetWeight(const float aWeight);
 	void SetTarget(const CU::Vector2f& aPosition);
@@ -41,16 +40,16 @@ private:
 	void Destroy() override;
 };
 
-inline short CSeekController::GetFormationIndex()
+inline short FormationController::GetFormationIndex()
 {
 	return myFormationIndex;
 }
-inline void CSeekController::SetFormationindex(short aIndex)
+inline void FormationController::SetFormationindex(short aIndex)
 {
 	myFormationIndex = aIndex;
 }
 
-inline bool CSeekController::IsActivated()
+inline bool FormationController::IsActivated()
 {
 	return myHaveBeenCalledForHelp;
 }

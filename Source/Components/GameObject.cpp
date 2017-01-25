@@ -19,6 +19,7 @@ CU::Matrix44f CGameObject::GetToWorldTransform()
 		return GetLocalTransform();
 	}
 }
+
 CU::Vector3f CGameObject::GetWorldPosition()
 {
 	if (myParent != nullptr)
@@ -60,6 +61,11 @@ void CGameObject::NotifyComponents(const eComponentMessageType aMessageType, con
 		Receive(aMessageType, aMessageData);
 }
 
+void  CGameObject::NotifyOnlyComponents(const eComponentMessageType aMessageType, const SComponentMessageData &aMessageData)
+{
+	ComponentReceive(aMessageType, aMessageData);
+}
+
 void CGameObject::MarkForDestruction()
 {
 	myManager.AddObjectForDestruction(this);
@@ -81,6 +87,20 @@ void CGameObject::Receive(const eComponentMessageType aMessageType, const SCompo
 	CComponent* test = nullptr;
 	for (unsigned int i = 0; i < myComponents.Size(); ++i)
 	{
+		test = myComponents[i];
+		test->Receive(aMessageType, aMessageData);
+	}
+}
+
+void CGameObject::ComponentReceive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
+{
+	CComponent* test = nullptr;
+	for (unsigned int i = 0; i < myComponents.Size(); ++i)
+	{
+		if(dynamic_cast<CGameObject*>(myComponents[i]) != nullptr)
+		{
+			return;
+		}
 		test = myComponents[i];
 		test->Receive(aMessageType, aMessageData);
 	}

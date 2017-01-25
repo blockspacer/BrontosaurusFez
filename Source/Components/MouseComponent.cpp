@@ -11,6 +11,7 @@ CMouseComponent::CMouseComponent(const CU::Camera& aPlayerCamera)
 	, myMouseIsDown(false)
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage);
+	myType = eComponentType::eMouse;
 }
 
 CMouseComponent::~CMouseComponent()

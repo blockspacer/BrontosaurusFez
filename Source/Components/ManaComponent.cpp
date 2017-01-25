@@ -13,6 +13,7 @@ ManaComponent::ManaComponent(ManaPoint aMaxAmountOfMana)
 	myMaxMana = aMaxAmountOfMana;
 	myMana = myMaxMana;
 	myPercentageLeft = static_cast<float>(myMana) / static_cast<float>(myMaxMana);
+	myType = eComponentType::eMana;
 }
 
 

@@ -13,6 +13,7 @@ CAudioSourceComponentManager::CAudioSourceComponentManager()
 
 CAudioSourceComponentManager::~CAudioSourceComponentManager()
 {
+	RemoveAll();
 }
 
 CAudioSourceComponent * CAudioSourceComponentManager::CreateComponent()
@@ -56,10 +57,10 @@ void CAudioSourceComponentManager::Update()
 void CAudioSourceComponentManager::RemoveAll()
 {
 	myIds.clear();
-	for (unsigned int i = 0; i < myComponents.Size(); ++i)
-	{
-		CComponentManager::GetInstance().RemoveComponent(myComponents.GetLast().GetId());
-	}
+	//for (unsigned int i = 0; i < myComponents.Size(); ++i)
+	//{
+	//	CComponentManager::GetInstance().DeleteComponent(myComponents.GetLast().GetId());
+	//}
 
 	myComponents.RemoveAll();
 	Audio::CAudioInterface::GetInstance()->UnregisterAllGameOBjects();
@@ -67,8 +68,8 @@ void CAudioSourceComponentManager::RemoveAll()
 
 void CAudioSourceComponentManager::Remove(CAudioSourceComponent* aComponentToRemove)
 {
-	Audio::CAudioInterface::GetInstance()->UnregisterGameObject(aComponentToRemove->myGameObjectID);
-	CComponentManager::GetInstance().RemoveComponent(aComponentToRemove->GetId());
+	//Audio::CAudioInterface::GetInstance()->UnregisterGameObject(aComponentToRemove->myGameObjectID);
+	//CComponentManager::GetInstance().DeleteComponent(aComponentToRemove->GetId());
 	myComponents.RemoveAtIndex(myIds[aComponentToRemove->myGameObjectID]);
 	myIds.erase(aComponentToRemove->myGameObjectID);
 }

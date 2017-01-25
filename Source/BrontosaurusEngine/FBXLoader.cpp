@@ -420,7 +420,7 @@ bool CFBXLoader::LoadGUIScene(const char* aFilePath, CLoaderScene& aSceneOut)
 	for (unsigned int i = 0; i < root->mNumChildren; ++i)
 	{
 		std::string name = root->mChildren[i]->mName.C_Str();
-		if (name.find("Grp") != std::string::npos || name.find("Base") != std::string::npos || name.find("shop") != std::string::npos || name.find("buy") != std::string::npos) //TODO: Solv this hell
+		if (name.find("Grp") != std::string::npos || name.find("Base") != std::string::npos || name.find("shop") != std::string::npos || name.find("Shop") != std::string::npos || name.find("buy") != std::string::npos) //TODO: Solv this hell
 		{
 			modelGroup = root->mChildren[i];
 			break;
@@ -472,9 +472,14 @@ bool CFBXLoader::LoadGUIScene(const char* aFilePath, CLoaderScene& aSceneOut)
 		aiReturn result = scene->mMaterials[0]->GetTexture(aiTextureType_DIFFUSE, 0, &path);
 		if (result != aiReturn_SUCCESS)
 		{
-			DL_ASSERT("Failed to get diffuse/albedo texture from fbx scene: %s", aFilePath);
-
-			return false;
+			//DL_ASSERT("Failed to get diffuse/albedo texture from fbx scene: %s", aFilePath);
+			aiReturn result = scene->mMaterials[1]->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+			if (result != aiReturn_SUCCESS)
+			{
+				int br = 0;
+				br++;
+			}
+			//return false;
 		}
 
 		aSceneOut.myAlbedoTexture = path.C_Str();
@@ -700,7 +705,6 @@ void* CFBXLoader::LoadModelInternal(CLoaderModel* someInput)
 
 void CFBXLoader::LoadMaterials(const struct aiScene *sc, CLoaderModel* aModel)
 {
-
 	for (unsigned int m = 0; m < sc->mNumMaterials; m++)
 	{
 		LoadTexture(aiTextureType_DIFFUSE, aModel->myTextures, sc->mMaterials[m]); // TEXTURE_DEFINITION_ALBEDO
@@ -714,6 +718,23 @@ void CFBXLoader::LoadMaterials(const struct aiScene *sc, CLoaderModel* aModel)
 		LoadTexture(aiTextureType_DISPLACEMENT, aModel->myTextures, sc->mMaterials[m]);
 		LoadTexture(aiTextureType_LIGHTMAP, aModel->myTextures, sc->mMaterials[m]);
 		LoadTexture(aiTextureType_REFLECTION, aModel->myTextures, sc->mMaterials[m]); // TEXTURE_DEFINITION_METALNESS
+
+		if (sc->mNumMaterials > 1)
+		{
+			bool gotNothing = true;
+			for (std::string& path : aModel->myTextures)
+			{
+				if (path.empty() == false)
+				{
+					gotNothing = false;
+				}
+			}
+
+			if (gotNothing == true)
+			{
+				aModel->myTextures.clear();
+			}
+		}
 	}
 }
 
@@ -730,6 +751,7 @@ void CFBXLoader::LoadTexture(int aType, std::vector<std::string>& someTextures, 
 		someTextures.push_back("");
 		return;
 	}
+
 
 	std::string filePath = std::string(path.data);
 
