@@ -154,7 +154,6 @@ CPlayState::~CPlayState()
 	CComponentManager::DestroyInstance();
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eHatAdded);
 	CLevelManager::DestroyInstance();
-	KLoader::CKevinLoader::GetInstance().ClearLinkObjectList();
 }
 
 void CPlayState::Load()
