@@ -11,6 +11,15 @@
 #include "Renderer.h"
 #include <Heap.h>
 
+
+
+#ifndef PI
+#define PI 3.14159265f
+#endif
+
+
+
+
 namespace 
 {
 	float dist2P2(const CU::Vector3f & p1, const CU::Vector3f & p2)
@@ -28,7 +37,7 @@ CNavmesh::CNavmesh()
 	//myTriangles.Init(128);
 	myModel = nullptr;
 	myPositionsModel = nullptr;
-	myShuldRender = 0;
+	myShouldRender = 1;
 }
 
 
@@ -38,7 +47,7 @@ CNavmesh::~CNavmesh()
 
 void CNavmesh::Render()
 {
-	if (!myShuldRender)
+	if (!myShouldRender)
 		return;
 
 	if (myModel != nullptr)
@@ -81,9 +90,9 @@ void CNavmesh::LoadFromFile(const char * aFilePath)
 
 }
 
-CNavmesh::SPath CNavmesh::CalculatePath(const SNavmeshNode & aStartPoint, const SNavmeshNode & aEndPoint)
+CPath CNavmesh::CalculatePath(const SNavmeshNode & aStartPoint, const SNavmeshNode & aEndPoint)
 {
-	CU::GrowingArray<CU::Vector3f, unsigned int, false> waypoints(16);
+	CU::GrowingArray<CPath::SWaypoint, unsigned int, false> waypoints(16);
 	CU::Heap<SNavmeshNode*, NavmeshLesser> open;
 	CU::GrowingArray<SNavmeshNode*> closed(myTriangles.Size() + 2);
 	CU::GrowingArray<SNavmeshNode> nodes(myTriangles.Size() + 2);
@@ -115,9 +124,79 @@ CNavmesh::SPath CNavmesh::CalculatePath(const SNavmeshNode & aStartPoint, const 
 
 		if (current == end)
 		{
-			while (current != nullptr)
+			CU::GrowingArray<SNavmeshNode*> tempRetrack(16);
+			
+			SNavmeshNode* currentTemp = current;
+			while (currentTemp != nullptr)
 			{
-				waypoints.Insert(0, current->myPosition);
+				tempRetrack.Insert(0, currentTemp);
+
+				currentTemp = currentTemp->myParent;
+			}
+
+			for (unsigned int i = 0; i < tempRetrack.Size(); ++i)
+			{
+				CPath::SWaypoint waypoint;
+
+				SNavmeshNode* current = tempRetrack[i];
+
+				waypoint.myPosition = current->myPosition;
+
+				SNavmeshEdge* portal = nullptr;
+				bool doAdd = true;
+
+				if (i < tempRetrack.Size() - 2 && current != end && current != start)
+				{
+					if (current->myTriangle == tempRetrack[i + 1]->myTriangle)
+					{
+						doAdd = false;
+					}
+
+					if (doAdd == true)
+					{
+						for (int k = 0; k < 3; ++k)
+						{
+							bool found = false;
+							for (int j = 0; j < 3; ++j)
+							{
+								if (current->myTriangle->Edges[k] == tempRetrack[i + 1]->myTriangle->Edges[j])
+								{
+									waypoint.myLeftPoint = current->myTriangle->Edges[k]->FirstVertex->Position;
+									waypoint.myRightPoint = current->myTriangle->Edges[k]->SecondVertex->Position;
+
+									float fl = TriArea2({ waypoint.myPosition.x, waypoint.myPosition.z }, { waypoint.myRightPoint.x, waypoint.myRightPoint.z }, { waypoint.myLeftPoint.x, waypoint.myLeftPoint.z });
+									if (fl >= 0.0f)
+									{
+										CU::Vector3f temp = waypoint.myLeftPoint;
+										waypoint.myLeftPoint = waypoint.myRightPoint;
+										waypoint.myRightPoint = temp;
+									}
+									found = true;
+									break;
+								}
+							}
+							//Maybe break here? idk
+							if (found == true)
+							{
+								break;
+							}
+						}
+					}
+				}
+				else if (i < tempRetrack.Size() - 1 && current != start)
+				{
+					doAdd = false;
+				}
+				else
+				{
+					waypoint.myLeftPoint = current->myPosition;
+					waypoint.myRightPoint = current->myPosition;
+				}
+
+				if (doAdd == true)
+				{
+					waypoints.Add(waypoint);
+				}
 				current = current->myParent;
 			}
 
@@ -152,7 +231,7 @@ CNavmesh::SPath CNavmesh::CalculatePath(const SNavmeshNode & aStartPoint, const 
 		}
 	}
 
-	return SPath{ waypoints };
+	return CPath { waypoints };
 }
 
 CNavmesh::SNavmeshTriangle & CNavmesh::GetClosestTriangle(const CU::Vector3f & aPosition)
@@ -361,6 +440,21 @@ bool CNavmesh::IsValid(const CU::Vector2f & aPosition, SNavmeshTriangle *& aInte
 	return false;
 }
 
+float CNavmesh::TriArea2(const CU::Vector2f& a, const CU::Vector2f& b, const CU::Vector2f& c)
+{
+	const float ax = b.x - a.x;
+	const float ay = b.y - a.y;
+	const float bx = c.x - a.x;
+	const float by = c.y - a.y;
+	return bx*ay - ax*by;
+}
+
+bool CNavmesh::VEqual(const CU::Vector2f& a, const CU::Vector2f& b)
+{
+	static const float eq = 0.001f * 0.001f;
+	return (a - b).Length2() < eq;
+}
+
 void CNavmesh::CreateNode(CU::GrowingArray<SNavmeshNode>& aNodeList, SNavmeshTriangle & aTriangle, const SNavmeshNode & aEndNode, std::unordered_map<SNavmeshTriangle*, SNavmeshNode*>& triangleNodes)
 {
 	SNavmeshNode node;
@@ -515,11 +609,178 @@ void CNavmesh::BuildEdgesFromFace(const ObjLoader::SObjLoaderFace & aFace)
 	myEdges[edgeIndices[0]].AddTriangle(trisp);
 	myEdges[edgeIndices[1]].AddTriangle(trisp);
 	myEdges[edgeIndices[2]].AddTriangle(trisp);
-
-
 }
 
 float CNavmesh::CalculateHeuristics(const CU::Vector3f & aFrom, const CU::Vector3f & aTo)
 {
 	return (aFrom - aTo).Length();
+}
+
+void CPath::Smooth()
+{
+	
+	if (myWaypoints.Size() <= 2)
+	{
+		return;
+	}
+
+	float agentRadius = 1.2f;
+	agentRadius;
+
+	CU::GrowingArray<CU::Vector3f, int> newWaypoints;
+	newWaypoints.Init(myWaypoints.Size());
+
+	CU::Vector2f portalApex = CU::Vector2f(myWaypoints[0].myPosition.x, myWaypoints[0].myPosition.z);
+	CU::Vector2f portalLeft = CU::Vector2f(myWaypoints[0].myLeftPoint.x, myWaypoints[0].myLeftPoint.z);
+	CU::Vector2f portalRight = CU::Vector2f(myWaypoints[0].myRightPoint.x, myWaypoints[0].myRightPoint.z);
+
+	int apexIndex = 0;
+	int leftIndex = 0;
+	int rightIndex = 0;
+
+	newWaypoints.Add(CU::Vector3f(portalApex.x, 1, portalApex.y));
+
+	for (int i = 1; i < myWaypoints.Size(); ++i)
+	{
+		SWaypoint& waypoint = myWaypoints[i];
+
+		CU::Vector2f left = CU::Vector2f(waypoint.myLeftPoint.x, waypoint.myLeftPoint.z);
+		CU::Vector2f right = CU::Vector2f(waypoint.myRightPoint.x, waypoint.myRightPoint.z);
+
+		if (CNavmesh::TriArea2(portalApex, portalRight, right) <= 0.0f)
+		{
+			if (CNavmesh::VEqual(portalApex, portalRight) == true || CNavmesh::TriArea2(portalApex, portalLeft, right) > 0.0f)
+			{
+				portalRight = right;
+
+				rightIndex = i;
+			}
+			else
+			{
+				int next = leftIndex;
+				int prev = leftIndex;
+
+				for (int j = next; j < myWaypoints.Size(); ++j)
+				{
+					if (myWaypoints[j].myLeftPoint != myWaypoints[next].myLeftPoint)
+					{
+						next = j;
+						break;
+					}
+				}
+
+				for (int j = prev; j >= 0; --j)
+				{
+					if (myWaypoints[j].myLeftPoint != myWaypoints[prev].myLeftPoint)
+					{
+						prev = j;
+						break;
+					}
+				}
+
+				if (leftIndex != myWaypoints.Size() - 1)
+				{
+					float nextAngle = atan2f(myWaypoints[next].myLeftPoint.z - myWaypoints[leftIndex].myLeftPoint.z, myWaypoints[next].myLeftPoint.x - myWaypoints[leftIndex].myLeftPoint.x);
+					float prevAngle = atan2f(myWaypoints[leftIndex].myLeftPoint.z - myWaypoints[prev].myLeftPoint.z, myWaypoints[leftIndex].myLeftPoint.x - myWaypoints[prev].myLeftPoint.x);
+
+					float distance = nextAngle - prevAngle;
+
+					if (abs(distance) > PI)
+					{
+						distance -= distance > 0 ? PI * 2.0f : -PI * 2.0f;
+					}
+
+					float angle = prevAngle + (distance / 2.0f) + PI * 0.5f;
+					CU::Vector3f normal(cosf(angle), 0, sinf(angle));
+
+					newWaypoints.Add(myWaypoints[leftIndex].myLeftPoint);
+				}
+
+				portalApex = portalLeft;
+				apexIndex = leftIndex;
+
+				portalLeft = portalApex;
+				portalRight = portalApex;
+
+				leftIndex = apexIndex;
+				rightIndex = apexIndex;
+
+				i = apexIndex;
+				continue;
+			}
+		}
+
+		if (CNavmesh::TriArea2(portalApex, portalLeft, left) >= 0.0f)
+		{
+			if (CNavmesh::VEqual(portalApex, portalLeft) == true || CNavmesh::TriArea2(portalApex, portalRight, left) < 0.0f)
+			{
+				portalLeft = left;
+				leftIndex = i;
+			}
+			else
+			{
+				int next = rightIndex;
+				int prev = rightIndex;
+
+				for (int j = next; j < myWaypoints.Size(); ++j)
+				{
+					if (myWaypoints[j].myRightPoint != myWaypoints[next].myRightPoint)
+					{
+						next = j;
+						break;
+					}
+				}
+
+				for (int j = prev; j >= 0; --j)
+				{
+					if (myWaypoints[j].myRightPoint != myWaypoints[prev].myRightPoint)
+					{
+						prev = j;
+						break;
+					}
+				}
+
+				if (rightIndex != myWaypoints.Size() - 1)
+				{
+
+					float nextAngle = atan2f(myWaypoints[next].myRightPoint.z - myWaypoints[rightIndex].myRightPoint.z, myWaypoints[next].myRightPoint.x - myWaypoints[rightIndex].myRightPoint.x);
+					float prevAngle = atan2f(myWaypoints[rightIndex].myRightPoint.z - myWaypoints[prev].myRightPoint.z, myWaypoints[rightIndex].myRightPoint.x - myWaypoints[prev].myRightPoint.x);
+
+					float distance = nextAngle - prevAngle;
+
+					if (abs(distance) > PI)
+					{
+						distance -= distance > 0 ? PI * 2.0f : -PI * 2.0f;
+					}
+
+					float angle = prevAngle + (distance / 2.0f) + PI * 0.5f;
+					CU::Vector3f normal(cosf(angle), 0, sinf(angle));
+
+					newWaypoints.Add(myWaypoints[rightIndex].myRightPoint);
+				}
+
+				portalApex = portalRight;
+				apexIndex = rightIndex;
+
+				portalLeft = portalApex;
+				portalRight = portalApex;
+
+				leftIndex = apexIndex;
+				rightIndex = apexIndex;
+
+				i = apexIndex;
+				continue;
+			}
+		}
+	}
+
+	newWaypoints.Add(myWaypoints[myWaypoints.Size() - 1].myPosition);
+
+	myWaypoints.RemoveAll();
+	for (int i = 0; i < newWaypoints.Size(); ++i)
+	{
+		SWaypoint waypoint;
+		waypoint.myPosition = newWaypoints[i];
+		myWaypoints.Add(waypoint);
+	}
 }

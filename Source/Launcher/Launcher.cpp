@@ -46,7 +46,7 @@ void Init(int argc, char* argv[])
 		engineParams.myWindowParams.Title = L"Brontosaurus-BassKodd";
 		engineParams.myWindowParams.Fullscreen = false;
 
-		engineParams.myThreadRender = false;
+		engineParams.myThreadRender = true;
 
 		int Iwidth;
 		int Iheight;

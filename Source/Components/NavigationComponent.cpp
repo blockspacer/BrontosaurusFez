@@ -40,11 +40,13 @@ void NavigationComponent::CalculatePath(const CU::Vector2f& aTargetPosition)
 {
 	myPath.myWaypoints.RemoveAll();
 	
-	//CNavmesh* navmesh = PollingStation::Navmesh;
-	CNavmesh* navmesh = nullptr;
+	CNavmesh* navmesh = PollingStation::Navmesh;
+	//CNavmesh* navmesh = nullptr;
 	if (navmesh == nullptr)
 	{
-		myPath.myWaypoints.Add(CU::Vector3f(aTargetPosition.x, 0.0f, aTargetPosition.y));
+		CPath::SWaypoint wayPoint;
+		wayPoint.myPosition = CU::Vector3f(aTargetPosition.x, 0.0f, aTargetPosition.y);
+		myPath.myWaypoints.Add(wayPoint);// this thing with y & z is confusing as hell
 	}
 	else
 	{
@@ -76,11 +78,11 @@ void NavigationComponent::CalculatePath(const CU::Vector2f& aTargetPosition)
 		}
 
 		myPath = navmesh->CalculatePath(startNode, endNode);
-
+		myPath.Smooth();
 	}
 
 	eComponentMessageType type = eComponentMessageType::eSetPath;
 	SComponentMessageData data;
-	data.myVector3ListPointer = &myPath.myWaypoints;
+	data.myPathPointer = &myPath;
 	GetParent()->NotifyComponents(type, data);
 }

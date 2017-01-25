@@ -31,6 +31,8 @@ CRenderer::CRenderer()
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed);
 
+	myIsRunning = true;
+
 	mySettings.HDR = false;
 	mySettings.Bloom = false;
 	mySettings.Motionblur = false;
@@ -82,6 +84,11 @@ CRenderer::~CRenderer()
 	mySynchronizer.ClearAll();
 }
 
+void CRenderer::Shutdown()
+{
+	myIsRunning = false;
+}
+
 void CRenderer::AddRenderMessage(SRenderMessage* aRenderMessage)
 {
 	mySynchronizer << aRenderMessage;
@@ -89,6 +96,8 @@ void CRenderer::AddRenderMessage(SRenderMessage* aRenderMessage)
 
 void CRenderer::Render()
 {
+
+
 	myTimers.UpdateTimers();
 	UpdateBuffer();
 
@@ -704,7 +713,7 @@ void CRenderer::DoRenderQueue()
 	mySynchronizer.SwapRead();
 	int drawCalls = 0;
 
-	for (CSynchronizer::size_type i = 0; i < !mySynchronizer; ++i)
+	for (CSynchronizer<SRenderMessage*>::size_type i = 0; i < !mySynchronizer; ++i)
 	{
 		SRenderMessage* renderMessage = mySynchronizer[i];
 		if (renderMessage == nullptr)
@@ -747,6 +756,17 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 {
 	switch (aRenderMesage->myType)
 	{
+	case SRenderMessage::eRenderMessageType::eActivateRenderTo:
+	{
+		renderTo->Activate();
+		break;
+	}
+	case SRenderMessage::eRenderMessageType::eClearRenderPackage:
+	{
+		SClearRenderPackageMessage* msg = static_cast<SClearRenderPackageMessage*>(aRenderMesage);
+		msg->myRenderPackage.Clear();
+		break;
+	}
 	case SRenderMessage::eRenderMessageType::eRenderNavMesh:
 	{
 		SRenderNavmeshMessage* msg = static_cast<SRenderNavmeshMessage*>(aRenderMesage);
@@ -768,7 +788,7 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 		{
 			HandleRenderMessage(msg->CameraRenderQueue[i], aDrawCallCount);
 		}
-		msg->CameraRenderQueue.DeleteAll();
+		//msg->CameraRenderQueue.DeleteAll();
 		myCamera = previousCam;
 		renderTo->Activate();
 		UpdateBuffer();

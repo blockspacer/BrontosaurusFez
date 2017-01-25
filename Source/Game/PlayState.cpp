@@ -467,8 +467,8 @@ void CPlayState::Init()
 
 
 	//NAVMESH
-	//myNavmesh.LoadFromFile("Models/navMesh/COOLFIKE.obj");
-	//PollingStation::Navmesh = &myNavmesh;
+	//myNavmesh.LoadFromFile("Models/navMesh/HubWorld_navmesh.obj");
+	PollingStation::Navmesh = &myNavmesh;
 
 
 }
@@ -525,11 +525,11 @@ void CPlayState::Render()
 	SChangeStatesMessage msg;
 	msg.myBlendState = eBlendState::eAlphaBlend;
 	msg.myDepthStencilState = eDepthStencilState::eDefault;
-	msg.myRasterizerState = eRasterizerState::eNoCulling;
+	msg.myRasterizerState = eRasterizerState::eWireFrame;
 	msg.mySamplerState = eSamplerState::eClamp;
 	
-	
 	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
+	myNavmesh.Render();
 
 	msg.myBlendState = eBlendState::eAlphaBlend;
 	msg.myDepthStencilState = eDepthStencilState::eDisableDepth;
