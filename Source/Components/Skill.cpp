@@ -124,6 +124,7 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 	{
 		return;
 	}
+
 	if(myTargetObject != nullptr)
 	{
 		if((myUser->GetWorldPosition() - myTargetObject->GetWorldPosition()).Length2() < mySkillData->activationRadius *  mySkillData->activationRadius)
@@ -230,8 +231,10 @@ void Skill::OnActivation()
 {
 	SComponentMessageData data;
 	data.myInt = -mySkillData->manaRefund;
-	
 	myUser->NotifyComponents(eComponentMessageType::eBurnMana, data);
+
+	SComponentMessageData data2;
+	data2.myString = mySkillData->skillName.c_str();
 
 	if (mySkillData->isChannel == true)
 	{
@@ -239,7 +242,7 @@ void Skill::OnActivation()
 	}
 	else
 	{
-		myUser->NotifyComponents(eComponentMessageType::ePlaySound, data);
+		myUser->NotifyComponents(eComponentMessageType::ePlaySound, data2);
 	}
 
 	//DL_PRINT("Animation started");
