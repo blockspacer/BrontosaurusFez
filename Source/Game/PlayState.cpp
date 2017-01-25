@@ -468,7 +468,7 @@ void CPlayState::Init()
 
 	//NAVMESH
 	//myNavmesh.LoadFromFile("Models/navMesh/HubWorld_navmesh.obj");
-	PollingStation::Navmesh = &myNavmesh;
+	//PollingStation::Navmesh = &myNavmesh;
 
 
 }
