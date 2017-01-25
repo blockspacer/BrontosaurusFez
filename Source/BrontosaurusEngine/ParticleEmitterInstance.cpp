@@ -44,6 +44,7 @@ namespace
 		case eLerpCurve::eSmootherStep:
 			return t*t*t * (t * (6.f*t - 15.f) + 10.f);
 		default:
+			return 0.0f;
 			break;
 		}
 	}
@@ -53,10 +54,10 @@ namespace
 
 		CU::Vector4f ret;
 
-		ret.x = fLerp(aStart.x, aEnd.x, aTime);//aEnd.x + aTime * (aStart.x - aEnd.x);
-		ret.y = fLerp(aStart.y, aEnd.y, aTime);//aEnd.y + aTime * (aStart.y - aEnd.y);
-		ret.z = fLerp(aStart.z, aEnd.z, aTime);//aEnd.z + aTime * (aStart.z - aEnd.z);
-		ret.w = fLerp(aStart.w, aEnd.w, aTime);//aEnd.w + aTime * (aStart.w - aEnd.w);
+		ret.x = fLerp(aStart.x, aEnd.x, aTime);
+		ret.y = fLerp(aStart.y, aEnd.y, aTime);
+		ret.z = fLerp(aStart.z, aEnd.z, aTime);
+		ret.w = fLerp(aStart.w, aEnd.w, aTime);
 
 		return ret;
 	}
