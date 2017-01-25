@@ -81,13 +81,20 @@ namespace GUI
 	{
 		if (IsVisible() == true)
 		{
-			for (int i = myOrderedWidgets.Size() - 1; i >= 0; --i)
+			for (Widget* widget : myOrderedWidgets)
 			{
-				if (myOrderedWidgets[i]->IsVisible() == true)
+				if (widget->IsVisible())
 				{
-					myOrderedWidgets[i]->Render();
+					widget->Render();
 				}
 			}
+			//for (int i = myOrderedWidgets.Size() - 1; i >= 0; --i)
+			//{
+			//	if (myOrderedWidgets[i]->IsVisible() == true)
+			//	{
+			//		myOrderedWidgets[i]->Render();
+			//	}
+			//}
 		}
 	}
 
@@ -137,17 +144,18 @@ namespace GUI
 		{
 			Widget* widgetToMove = it->second;
 			myOrderedWidgets.Remove(it->second);
-			myOrderedWidgets.Insert(0,widgetToMove);
+			myOrderedWidgets.Add(widgetToMove);
 		}
 	}
-	void WidgetContainer::MoveToBack(const std::string & aWidgetName)
+
+	void WidgetContainer::MoveToBack(const std::string& aWidgetName)
 	{
 		auto it = myWidgets.find(aWidgetName);
 		if (it != myWidgets.end())
 		{
 			Widget* widgetToMove = it->second;
 			myOrderedWidgets.Remove(it->second);
-			myOrderedWidgets.Add(widgetToMove);
+			myOrderedWidgets.Insert(0, widgetToMove);
 		}
 	}
 }

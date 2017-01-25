@@ -22,6 +22,7 @@
     <ClInclude Include="ToolTipDecorator.h" />
     <ClInclude Include="HealthWidget.h" />
     <ClInclude Include="ManaWidget.h" />
+    <ClInclude Include="MoneyWidget.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -43,5 +44,6 @@
     <ClCompile Include="ToolTipDecorator.cpp" />
     <ClCompile Include="HealthWidget.cpp" />
     <ClCompile Include="ManaWidget.cpp" />
+    <ClCompile Include="MoneyWidget.cpp" />
   </ItemGroup>
 </Project>

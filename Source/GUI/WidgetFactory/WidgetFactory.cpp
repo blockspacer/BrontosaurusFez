@@ -31,6 +31,7 @@
 #include  "../Components/PlayerData.h"
 #include "CommonUtilities/JsonValue.h"
 #include "../ShopItemButtonHovered.h"
+#include "MoneyWidget.h"
 
 using size_ga = CU::GrowingArray<CLoaderMesh*>::size_type;
 
@@ -86,11 +87,15 @@ namespace GUI
 		std::string healthOrbName("");
 		std::string manaOrbName("");
 		std::string orbTexture("");
+		std::string moneyName("");
+		std::string moneyTexture("");
 		if (hasKeyHealthOrb == true)
 		{
 			healthOrbName = guiScene["healthOrb"].GetString();
 			manaOrbName = guiScene["manaOrb"].GetString();
 			orbTexture = guiScene["orbTexture"].GetString();
+			moneyTexture = guiScene["moneyTexture"].GetString();
+			moneyName = guiScene["moneyName"].GetString();
 		}
 
 		WidgetContainer* baseWidgetContainer = new WidgetContainer(CU::Vector2f::Zero, CU::Vector2f(1.f, 1.f), "BaseWidgetContainer", true);
@@ -103,8 +108,11 @@ namespace GUI
 			Widget* widget = nullptr;
 			if (hasKeyHealthOrb == true && (widgetName == healthOrbName || widgetName == manaOrbName))
 			{
-				//meshes[i]->myTransformation.Rotate(PI_CONSTANT, CU::Axees::Y); //we should not do this mvh carl
 				widget = new ModelWidget(meshes[i], { orbTexture }, *guiCamera, isVisible);
+			}
+			else if (hasKeyHealthOrb == true && widgetName == moneyName)
+			{
+				widget = new ModelWidget(meshes[i], { moneyTexture }, *guiCamera, isVisible);
 			}
 			else
 			{
@@ -119,6 +127,10 @@ namespace GUI
 			{
 				widget = CreateManaBar(widget);
 			}
+			else if (widgetName == moneyName)
+			{
+				widget = CreateMoney(widget);
+			}
 			else if (buttonNames.Find(widgetName) != buttonNames.FoundNone ||  widget->GetName().find("button") != std::string::npos || widget->GetName().find("Button") != std::string::npos
 				|| widget->GetName() == "Resume" || widget->GetName() == "Return" || widget->GetName().find("Knapp") != std::string::npos
 				|| widget->GetName().find("knapp") != std::string::npos)
@@ -132,6 +144,8 @@ namespace GUI
 			}
 		}
 		baseWidgetContainer->MoveToBack("shopWindow");
+		baseWidgetContainer->MoveToBack("guiBase");
+		baseWidgetContainer->MoveToFront(moneyName);
 		return baseWidgetContainer;
 	}
 
@@ -359,4 +373,13 @@ namespace GUI
 		return manaWidget;
 	}
 
+	Widget* WidgetFactory::CreateMoney(Widget* aWidget)
+	{
+		CMoneyWidget* moneyWidget = new CMoneyWidget(aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
+		
+		moneyWidget->AddWidget("Model", aWidget);
+		moneyWidget->Init();
+
+		return moneyWidget;
+	}
 }

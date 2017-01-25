@@ -7,8 +7,8 @@ struct SPixelConstantBuffer
 {
 	enum eMember
 	{
-		eIsProgressBar,
-		eProgressBarValue,
+		eIsMoneyBar,
+		eMoneyPercent,
 		eSkipEmissive,
 		eFlashButton,
 		eIsHealthBar,
