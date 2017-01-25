@@ -3,6 +3,7 @@
 #include "../CommonUtilities/matrix44.h"
 #include "StatStructs.h"
 
+class CPath;
 class ICollider;
 class CComponent;
 class CPickupComponent;
@@ -107,7 +108,10 @@ struct SComponentMessageData
 		CU::Matrix44f myMatrix44;
 		CU::Vector2f myVector2f;
 		CU::Vector3f myVector3f;
+
+
 		CU::GrowingArray<CU::Vector3f, unsigned int, false>* myVector3ListPointer;
+		CPath* myPathPointer;
 		
 		eComponentType myComponentTypeAdded;
 		Stats::STotalStats myStatStruct;

@@ -24,7 +24,7 @@ CTextInstance::CTextInstance(const CTextInstance& aTextInstance)
 
 CTextInstance::~CTextInstance()
 {
-	SAFE_DELETE(myText);
+	//SAFE_DELETE(myText);
 }
 
 void CTextInstance::Init(const CU::DynamicString& aFontPath)

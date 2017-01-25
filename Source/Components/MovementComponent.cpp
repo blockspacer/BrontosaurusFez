@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "../BrontosaurusEngine/Engine.h"
 #include "../CommonUtilities/Camera.h"
+#include "Navmesh.h"
 
 MovementComponent::MovementComponent()
 {
@@ -24,10 +25,10 @@ void MovementComponent::Update(float aDeltaTime)
 	{
 		if (myPathPointer != nullptr)
 		{
-			if (myCurrentPathIndex < myPathPointer->Size())
+			if (myCurrentPathIndex < myPathPointer->myWaypoints.Size())
 			{
 				CU::Vector3f position = GetParent()->GetWorldPosition();
-				CU::Vector3f direction = myPathPointer->At(myCurrentPathIndex) - position;
+				CU::Vector3f direction = myPathPointer->myWaypoints.At(myCurrentPathIndex).myPosition - position;
 				CU::Vector3f directionNormalized = direction.GetNormalized();
 				CU::Vector3f movement = directionNormalized * myMovementSpeed * aDeltaTime;
 
@@ -44,7 +45,7 @@ void MovementComponent::Update(float aDeltaTime)
 				}
 				else
 				{
-					localTransform.SetPosition(myPathPointer->At(myCurrentPathIndex));
+					localTransform.SetPosition(myPathPointer->myWaypoints.At(myCurrentPathIndex).myPosition);
 					myCurrentPathIndex++;
 
 					GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
@@ -71,7 +72,7 @@ void MovementComponent::Receive(const eComponentMessageType aMessageType, const 
 	switch (aMessageType)
 	{
 	case eComponentMessageType::eSetPath:
-		myPathPointer = aMessageData.myVector3ListPointer;
+		myPathPointer = aMessageData.myPathPointer;
 		myCurrentPathIndex = 0;
 		{
 			SComponentMessageData directionData;
@@ -82,8 +83,7 @@ void MovementComponent::Receive(const eComponentMessageType aMessageType, const 
 	case eComponentMessageType::eStopMovement:
 		if(myPathPointer != nullptr)
 		{
-			myCurrentPathIndex = myPathPointer->Size();
-			
+			myCurrentPathIndex = myPathPointer->myWaypoints.Size();
 			myShouldMove = false;
 		}
 		break;

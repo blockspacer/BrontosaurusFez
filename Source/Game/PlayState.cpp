@@ -116,15 +116,19 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 
 CPlayState::~CPlayState()
 {
+	//Don forgetti to deletti
+	SAFE_DELETE(myEmitterComp);
+	SAFE_DELETE(myCollisionComponentManager);
+	SAFE_DELETE(myStatManager);
+	SAFE_DELETE(myGoldText);
+	//SAFE_DELETE(myHatMaker);
+	SAFE_DELETE(myHealthBarManager);
 
-	//myGameObjectManager->ClearAll();
 
 	SAFE_DELETE(myMouseComponent);
 	SAFE_DELETE(myScene);
 	SAFE_DELETE(myGameObjectManager);
 	SAFE_DELETE(myGUIManager);
-	
-
 	
 	CModelComponentManager::Destroy();
 	CAudioSourceComponentManager::Destroy();
@@ -346,7 +350,7 @@ void CPlayState::Load()
 	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
 #ifdef _DEBUG
-	const int levelIndex = levelsArray.Size() - 1;
+	myLevelIndex = levelsArray.Size()-1;
 #else
 	const int levelIndex = 0;
 #endif
@@ -463,8 +467,8 @@ void CPlayState::Init()
 
 
 	//NAVMESH
-	//myNavmesh.LoadFromFile("Models/navMesh/COOLFIKE.obj");
-	//PollingStation::Navmesh = &myNavmesh;
+	//myNavmesh.LoadFromFile("Models/navMesh/HubWorld_navmesh.obj");
+	PollingStation::Navmesh = &myNavmesh;
 
 
 }
@@ -476,7 +480,16 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	{
 		CAudioSourceComponentManager::GetInstance().Update();
 	}
-	
+
+	if (PollingStation::playerData->myIsWhirlwinding == true)
+	{
+  		audio->PostEvent("WhirlWind");
+	}
+	else
+	{
+		audio->PostEvent("StopWhirlWind");
+	}
+
 	CParticleEmitterComponentManager::GetInstance().UpdateEmitters(aDeltaTime);
 	InputControllerManager::GetInstance().Update(aDeltaTime);
 	MovementComponentManager::GetInstance().Update(aDeltaTime);
@@ -484,6 +497,9 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	SkillSystemComponentManager::GetInstance().Update(aDeltaTime);
 	CPickupManager::GetInstance().Update(aDeltaTime);
 	RespawnComponentManager::GetInstance().Update(aDeltaTime);
+
+
+
 	myCollisionComponentManager->Update();
 	myScene->Update(aDeltaTime);
 
@@ -509,11 +525,11 @@ void CPlayState::Render()
 	SChangeStatesMessage msg;
 	msg.myBlendState = eBlendState::eAlphaBlend;
 	msg.myDepthStencilState = eDepthStencilState::eDefault;
-	msg.myRasterizerState = eRasterizerState::eNoCulling;
+	msg.myRasterizerState = eRasterizerState::eWireFrame;
 	msg.mySamplerState = eSamplerState::eClamp;
 	
-	
 	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
+	myNavmesh.Render();
 
 	msg.myBlendState = eBlendState::eAlphaBlend;
 	msg.myDepthStencilState = eDepthStencilState::eDisableDepth;

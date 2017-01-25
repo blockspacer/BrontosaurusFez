@@ -67,6 +67,11 @@ SRenderModelDepthMessage::SRenderModelDepthMessage()
 	myType = eRenderMessageType::eRenderModelDepth;
 }
 
+SRenderCameraQueueMessage::~SRenderCameraQueueMessage()
+{
+	CameraRenderQueue.DeleteAll();
+}
+
 SRenderCameraQueueMessage::SRenderCameraQueueMessage()
 	: SRenderMessage(eRenderMessageType::eRenderCameraQueue)
 {
@@ -107,5 +112,15 @@ SRenderNavmeshMessage::SRenderNavmeshMessage()
 SRenderLineBuffer::SRenderLineBuffer(const CU::GrowingArray<char, unsigned short, false>& aLineBuffer)
 	: SRenderMessage(eRenderMessageType::eRenderLineBuffer)
 	, myLineBuffer(aLineBuffer)
+{
+}
+
+SClearRenderPackageMessage::SClearRenderPackageMessage()
+	: SRenderMessage(eRenderMessageType::eClearRenderPackage)
+{
+}
+
+SActivateRenderToMessage::SActivateRenderToMessage()
+	: SRenderMessage(SRenderMessage::eRenderMessageType::eActivateRenderTo)
 {
 }

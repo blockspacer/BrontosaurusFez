@@ -141,7 +141,7 @@ private:
 	static CEngine* myInstance;
 
 	CRenderer* myRenderer;
-	
+	bool myRendererIsRunning;
 	bool myThreadRender;
 };
 

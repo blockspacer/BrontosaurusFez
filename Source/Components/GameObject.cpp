@@ -19,6 +19,7 @@ CU::Matrix44f CGameObject::GetToWorldTransform()
 		return GetLocalTransform();
 	}
 }
+
 CU::Vector3f CGameObject::GetWorldPosition()
 {
 	if (myParent != nullptr)
@@ -59,10 +60,12 @@ void CGameObject::NotifyComponents(const eComponentMessageType aMessageType, con
 	else
 		Receive(aMessageType, aMessageData);
 }
+
 void  CGameObject::NotifyOnlyComponents(const eComponentMessageType aMessageType, const SComponentMessageData &aMessageData)
 {
 	ComponentReceive(aMessageType, aMessageData);
 }
+
 void CGameObject::MarkForDestruction()
 {
 	myManager.AddObjectForDestruction(this);

@@ -65,7 +65,7 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 
 	if(PollingStation::playerObject != nullptr)
 	{
-		if (CU::Vector3f(GetParent()->GetWorldPosition() - PollingStation::playerObject->GetWorldPosition()).Length2() < 2000.0f * 2000.0f)
+		if (CU::Vector3f(GetParent()->GetWorldPosition() - PollingStation::playerObject->GetWorldPosition()).Length2() < 20.0f * 20.0f)
 		{
 			SComponentMessageData data;
 			data.myGameObject = PollingStation::playerObject;

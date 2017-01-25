@@ -134,6 +134,13 @@ void CDebugInfoDrawer::PressedKey(const CU::eKeys& aKey)
 	case CU::eKeys::LCONTROL:
 		myLeftControlIsDown = true;
 		break;
+	case CU::eKeys::SIX:
+		if (myLeftControlIsDown == true)
+		{
+			//myDebugFlags ^= eDebugFlags_FPS;
+			myDebugFlags.Flip(eDebugText_FPS);
+		}
+		break;
 	case CU::eKeys::SEVEN:
 		if (myLeftControlIsDown == true)
 		{

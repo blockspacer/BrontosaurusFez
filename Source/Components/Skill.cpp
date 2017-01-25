@@ -11,6 +11,9 @@
 #include "SkillComponent.h"
 #include "SkillData.h"
 #include "SkillComponentManager.h"
+#include "../Game/PollingStation.h"
+#include "PlayerData.h"
+
 Skill::Skill(SkillData* aSkillDataPointer)
 {
 	if (aSkillDataPointer->skillName == "BasicAttack")
@@ -228,7 +231,18 @@ void Skill::OnActivation()
 {
 	SComponentMessageData data;
 	data.myInt = -mySkillData->manaRefund;
+	data.myString = mySkillData->skillName.c_str();
 	myUser->NotifyComponents(eComponentMessageType::eBurnMana, data);
+
+	if (mySkillData->isChannel == true)
+	{
+		PollingStation::playerData->myIsWhirlwinding = true;
+	}
+	else
+	{
+		myUser->NotifyComponents(eComponentMessageType::ePlaySound, data);
+	}
+
 	//DL_PRINT("Animation started");
 }
 
@@ -238,6 +252,10 @@ void Skill::OnDeActivation()
 	statedAttackingMessage.myString = "idle";
 	myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
 	myTargetObject = nullptr;
+	if (mySkillData->isChannel == true)
+	{
+		PollingStation::playerData->myIsWhirlwinding = false;
+	}
 }
 
 void Skill::Select()
