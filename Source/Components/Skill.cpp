@@ -124,12 +124,10 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 	{
 		return;
 	}
-
 	if(myTargetObject != nullptr)
 	{
 		if((myUser->GetWorldPosition() - myTargetObject->GetWorldPosition()).Length2() < mySkillData->activationRadius *  mySkillData->activationRadius)
 		{
-			DL_PRINT("Attack %f", mySkillData->activationRadius);
 			eComponentMessageType type = eComponentMessageType::eStopMovement;
 			myUser->NotifyComponents(type, SComponentMessageData());
 			SComponentMessageData statedAttackingMessage;
@@ -232,7 +230,7 @@ void Skill::OnActivation()
 {
 	SComponentMessageData data;
 	data.myInt = -mySkillData->manaRefund;
-	data.myString = mySkillData->skillName.c_str();
+	
 	myUser->NotifyComponents(eComponentMessageType::eBurnMana, data);
 
 	if (mySkillData->isChannel == true)
