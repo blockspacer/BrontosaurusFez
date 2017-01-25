@@ -81,20 +81,20 @@ namespace GUI
 	{
 		if (IsVisible() == true)
 		{
-			for (Widget* widget : myOrderedWidgets)
-			{
-				if (widget->IsVisible())
-				{
-					widget->Render();
-				}
-			}
-			//for (int i = myOrderedWidgets.Size() - 1; i >= 0; --i)
+			//for (Widget* widget : myOrderedWidgets)
 			//{
-			//	if (myOrderedWidgets[i]->IsVisible() == true)
+			//	if (widget->IsVisible())
 			//	{
-			//		myOrderedWidgets[i]->Render();
+			//		widget->Render();
 			//	}
 			//}
+			for (int i = myOrderedWidgets.Size() - 1; i >= 0; --i)
+			{
+				if (myOrderedWidgets[i]->IsVisible() == true)
+				{
+					myOrderedWidgets[i]->Render();
+				}
+			}
 		}
 	}
 
@@ -125,8 +125,9 @@ namespace GUI
 		if (container != nullptr)
 		{
 			for (Widget* widget : myOrderedWidgets)
+			//for (int i = myOrderedWidgets.Size() - 1; i >= 0; --i)
 			{
-				Widget* selectedWidget = widget->MouseIsOver(aPosition);
+				Widget* selectedWidget = widget/*myOrderedWidgets[i]*/->MouseIsOver(aPosition);
 				if (selectedWidget != nullptr)
 				{
 					return selectedWidget;
@@ -144,7 +145,7 @@ namespace GUI
 		{
 			Widget* widgetToMove = it->second;
 			myOrderedWidgets.Remove(it->second);
-			myOrderedWidgets.Add(widgetToMove);
+			myOrderedWidgets.Insert(0, widgetToMove);
 		}
 	}
 
@@ -155,7 +156,7 @@ namespace GUI
 		{
 			Widget* widgetToMove = it->second;
 			myOrderedWidgets.Remove(it->second);
-			myOrderedWidgets.Insert(0, widgetToMove);
+			myOrderedWidgets.Add(widgetToMove);
 		}
 	}
 }
