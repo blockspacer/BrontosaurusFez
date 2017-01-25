@@ -15,7 +15,8 @@ public:
 private:
 	float myMovementSpeed;
 	CU::GrowingArray<CU::Vector3f, unsigned int, false>* myPathPointer;
+	float myWaitUntilMoveAgianTimer;
 	unsigned short myCurrentPathIndex;
-	bool myShouldMove;
+	
 };
 

@@ -129,6 +129,7 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 	{
 		if((myUser->GetWorldPosition() - myTargetObject->GetWorldPosition()).Length2() < mySkillData->activationRadius *  mySkillData->activationRadius)
 		{
+			DL_PRINT("Attack %f", mySkillData->activationRadius);
 			eComponentMessageType type = eComponentMessageType::eStopMovement;
 			myUser->NotifyComponents(type, SComponentMessageData());
 			SComponentMessageData statedAttackingMessage;
