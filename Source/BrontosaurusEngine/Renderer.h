@@ -108,7 +108,7 @@ private:
 private:
 
 
-	CSynchronizer mySynchronizer;
+	CSynchronizer<SRenderMessage*> mySynchronizer;
 
 	CRenderPackage* renderTo;
 

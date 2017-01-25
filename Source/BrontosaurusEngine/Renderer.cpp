@@ -713,7 +713,7 @@ void CRenderer::DoRenderQueue()
 	mySynchronizer.SwapRead();
 	int drawCalls = 0;
 
-	for (CSynchronizer::size_type i = 0; i < !mySynchronizer; ++i)
+	for (CSynchronizer<SRenderMessage*>::size_type i = 0; i < !mySynchronizer; ++i)
 	{
 		SRenderMessage* renderMessage = mySynchronizer[i];
 		if (renderMessage == nullptr)
