@@ -231,8 +231,10 @@ void Skill::OnActivation()
 {
 	SComponentMessageData data;
 	data.myInt = -mySkillData->manaRefund;
-	data.myString = mySkillData->skillName.c_str();
 	myUser->NotifyComponents(eComponentMessageType::eBurnMana, data);
+
+	SComponentMessageData data2;
+	data2.myString = mySkillData->skillName.c_str();
 
 	if (mySkillData->isChannel == true)
 	{
@@ -240,7 +242,7 @@ void Skill::OnActivation()
 	}
 	else
 	{
-		myUser->NotifyComponents(eComponentMessageType::ePlaySound, data);
+		myUser->NotifyComponents(eComponentMessageType::ePlaySound, data2);
 	}
 
 	//DL_PRINT("Animation started");

@@ -224,7 +224,7 @@ void HatShopState::AdjustText()
 			myOptionsText.Add(new CTextInstance());
 			myOptionsText.GetLast()->Init("Default",32);
 			myOptionsText.GetLast()->SetText(temp.c_str());
-			myOptionsText.GetLast()->SetPosition(CU::Vector2f(0.114f, 0.075f + 0.185f * row));
+			myOptionsText.GetLast()->SetPosition(CU::Vector2f(0.114f, 0.18f + 0.175f * row));
 		
 			temp = "Cost";
 			temp += ": ";
@@ -232,7 +232,7 @@ void HatShopState::AdjustText()
 			myCostText.Add(new CTextInstance());
 			myCostText.GetLast()->Init("Default",32);
 			myCostText.GetLast()->SetText(temp.c_str());
-			myCostText.GetLast()->SetPosition(CU::Vector2f(0.114f, 0.2f + 0.185f * row));
+			myCostText.GetLast()->SetPosition(CU::Vector2f(0.114f, 0.26f + 0.175f * row));
 			++row;
 		}
 		else
@@ -244,7 +244,7 @@ void HatShopState::AdjustText()
 			myOptionsText.Add(new CTextInstance());
 			myOptionsText.GetLast()->Init("Default", 32);
 			myOptionsText.GetLast()->SetText(temp.c_str());
-			myOptionsText.GetLast()->SetPosition(CU::Vector2f(0.027f, 0.075f + 0.185f * row));
+			myOptionsText.GetLast()->SetPosition(CU::Vector2f(0.027f, 0.18f + 0.175f * row));
 		
 			temp = "Cost";
 			temp += ": ";
@@ -252,7 +252,7 @@ void HatShopState::AdjustText()
 			myCostText.Add(new CTextInstance());
 			myCostText.GetLast()->Init("Default", 32);
 			myCostText.GetLast()->SetText(temp.c_str());
-			myCostText.GetLast()->SetPosition(CU::Vector2f(0.027f, 0.2f + 0.185f * row));
+			myCostText.GetLast()->SetPosition(CU::Vector2f(0.027f, 0.26f + 0.175f * row));
 		}
 	}
 }

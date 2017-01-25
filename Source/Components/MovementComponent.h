@@ -15,7 +15,7 @@ public:
 private:
 	float myMovementSpeed;
 	class CPath* myPathPointer;
+	float myWaitUntilMoveAgianTimer;
 	unsigned short myCurrentPathIndex;
-	bool myShouldMove;
 };
 
