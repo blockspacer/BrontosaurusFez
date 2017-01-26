@@ -392,7 +392,7 @@ void CPlayState::Load()
 		PollingStation::playerObject->AddComponent(new CPlayerHealthMessenger());
 		PollingStation::playerObject->AddComponent(new CPlayerManaMessenger());
 		PollingStation::playerObject->AddComponent(CPickupManager::GetInstance().CreatePickerUpperComp());
-		PollingStation::playerObject->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
+		//PollingStation::playerObject->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
 
 		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eInit, SComponentMessageData());
 	}
@@ -462,7 +462,7 @@ void CPlayState::Load()
 	myScene->AddFireEmitters(fireeeeeByCarl);*/
 	
 	myHatMaker->LoadBluePrints("Json/Hats/HatBluePrints.json");
-	myHatMaker->GiveTheManAHat();
+
 	myIsLoaded = true;
 
 	//get time to load the level:
