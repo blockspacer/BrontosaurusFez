@@ -1,10 +1,9 @@
 #pragma once
 #include "../PostMaster/Subscriber.h"
-#include "../CommonUtilities/stack.h"
-#include "State.h"
 #include <functional>
 
 class State;
+enum class eStateStatus : unsigned char;
 
 namespace CU
 {
@@ -21,7 +20,6 @@ public:
 	~StateStack();
 	void PushState(State *aState);
 	State* GetCurrentState();
-	const State::eStatus UpdateState(const CU::Time& aDeltaTime);
 	bool Update(const CU::Time& aDeltaTime);
 	void Render();
 	void Pop();
@@ -34,7 +32,11 @@ public:
 
 	inline void SetShouldUpdate(bool aShouldUpdate);
 private:
-	CU::Stack <State*, /*unsigned*/ short> myStates;
+	const eStateStatus UpdateState(const CU::Time& aDeltaTime);
+	void UpdateStateAtIndex(const CU::Time& aDeltaTime, const short aIndex);
+	void RenderStateAtIndex(const short aIndex);
+
+	CU::GrowingArray<State*, short> myStates;
 	std::function<void(void)> mySwapStateFunction;
 
 	State* myStateToSwapTo;

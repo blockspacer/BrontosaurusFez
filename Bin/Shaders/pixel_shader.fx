@@ -11,7 +11,7 @@ Texture2D metalnessMap : register(t6);
 
 Texture2D shadowBuffer : register(t7);
 
-SamplerState Sampler;
+SamplerState Sampler : register(s1);
 
 cbuffer ConstantBuffer : register( b0 ) //to vertex
 {

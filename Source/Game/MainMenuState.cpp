@@ -37,7 +37,7 @@ void MainMenuState::Init()
 	//CBackgroundLoadingManager::GetInstance().CreateStateToLoad(myStateStack, -1);
 }
 
-State::eStatus MainMenuState::Update(const CU::Time& aDeltaTime)
+eStateStatus MainMenuState::Update(const CU::Time& aDeltaTime)
 {
 	myGUIManager->Update(aDeltaTime);
 

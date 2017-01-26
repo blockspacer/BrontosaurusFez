@@ -23,7 +23,7 @@ void CreditsState::Init()
 {
 }
 
-State::eStatus CreditsState::Update(const CU::Time & aDeltaTime)
+eStateStatus CreditsState::Update(const CU::Time & aDeltaTime)
 {
 	if (mysprite->GetPosition().y > 0)
 	{

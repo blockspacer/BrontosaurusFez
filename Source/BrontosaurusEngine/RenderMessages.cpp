@@ -54,7 +54,7 @@ SSetCameraMessage::SSetCameraMessage()
 SChangeStatesMessage::SChangeStatesMessage()
 	: SRenderMessage(eRenderMessageType::eChangeStates)
 {
-	mySamplerState = eSamplerState::eSize;
+	//mySamplerState = eSamplerState::eSize;
 }
 
 SRenderTextMessage::SRenderTextMessage()

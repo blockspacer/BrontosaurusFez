@@ -472,7 +472,7 @@ void CPlayState::Init()
 
 }
 
-State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
+eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 {
 	Audio::CAudioInterface* audio = Audio::CAudioInterface::GetInstance();
 	if (audio != nullptr)
