@@ -367,6 +367,25 @@ void CPlayState::Load()
 	questPath += levelsArray[myLevelIndex].GetString();
 	questPath += ".json";
 
+	std::string navmeshPath = "Json/Levels/";
+	navmeshPath += levelsArray[myLevelIndex].GetString();
+	navmeshPath += "/Navmesh.obj";
+
+	//NAVMESH
+	std::ifstream infile(navmeshPath);
+	if (infile.good())
+	{
+		myNavmesh.LoadFromFile(navmeshPath.c_str());
+		PollingStation::Navmesh = &myNavmesh;
+	}
+	else
+	{
+		PollingStation::Navmesh = nullptr;
+	}
+
+
+
+
 	myQuestManager.LoadQuestlines(questPath);
 	myQuestManager.CompleteEvent();
 	KLoader::CKevinLoader &loader = KLoader::CKevinLoader::GetInstance();
@@ -468,9 +487,7 @@ void CPlayState::Init()
 	//skillnad på load, init & konstructor ?
 
 
-	//NAVMESH
-	//myNavmesh.LoadFromFile("Models/navMesh/HubWorld_navmesh.obj");
-	//PollingStation::Navmesh = &myNavmesh;
+
 
 
 }
