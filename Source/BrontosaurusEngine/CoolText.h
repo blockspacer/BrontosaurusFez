@@ -34,6 +34,7 @@ public:
 
 	void Render(const CU::DynamicString& aString, const CU::Vector2f& aPosition, const CU::Vector4f& aColor/*, const CU::Vector2i& aSize*/);
 	float GetlineHeight() const;
+	CU::Vector2i CalculateRectPixelSize(const std::string& aText);
 private:
 	bool InitBuffers();
 

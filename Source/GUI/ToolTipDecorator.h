@@ -3,6 +3,7 @@
 #include "WidgetDecorator.h"
 
 class CTextInstance;
+class CSpriteInstance;
 
 namespace GUI
 {
@@ -24,7 +25,7 @@ namespace GUI
 		std::function<bool(std::string&)> myGetTextFunction;
 
 		CU::Vector2f myOffsetToMouse;
-		//ModelWidget* myBackGround;
+		CSpriteInstance* myBackGround;
 		CTextInstance* myTextInstance;
 		bool myShouldRender;
 	};

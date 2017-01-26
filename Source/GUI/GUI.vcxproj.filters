@@ -46,9 +46,6 @@
     <ClInclude Include="ToolTipDecorator.h">
       <Filter>Widgets\Decorators</Filter>
     </ClInclude>
-    <ClInclude Include="ToolTip.h">
-      <Filter>Widgets\Decorators</Filter>
-    </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>Precompiled</Filter>
     </ClInclude>
@@ -106,9 +103,6 @@
       <Filter>Widgets</Filter>
     </ClCompile>
     <ClCompile Include="WidgetDecorator.cpp">
-      <Filter>Widgets\Decorators</Filter>
-    </ClCompile>
-    <ClCompile Include="ToolTip.cpp">
       <Filter>Widgets\Decorators</Filter>
     </ClCompile>
     <ClCompile Include="ToolTipDecorator.cpp">

@@ -357,7 +357,6 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="ToolTipDecorator.h" />
     <ClInclude Include="TextWidget.h" />
-    <ClInclude Include="ToolTip.h" />
     <ClInclude Include="WidgetFactory.h" />
     <ClInclude Include="Widget.h" />
     <ClInclude Include="WidgetContainer.h" />
@@ -390,7 +389,6 @@
     </ClCompile>
     <ClCompile Include="ToolTipDecorator.cpp" />
     <ClCompile Include="TextWidget.cpp" />
-    <ClCompile Include="ToolTip.cpp" />
     <ClCompile Include="WidgetFactory.cpp" />
     <ClCompile Include="Widget.cpp" />
     <ClCompile Include="WidgetContainer.cpp" />

@@ -403,6 +403,7 @@
     <ClInclude Include="matrix33.h" />
     <ClInclude Include="matrix44.h" />
     <ClInclude Include="MemoryLeekLogger.h" />
+    <ClInclude Include="ReverseGrowingArray.h" />
     <ClInclude Include="StaticMemoryPool.h" />
     <ClInclude Include="MessageKyle.h" />
     <ClInclude Include="picojson.h" />

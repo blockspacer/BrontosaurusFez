@@ -23,7 +23,6 @@ GUI::GUIManager::GUIManager()
 	, myCursor(nullptr)
 	, myShouldUpdate(true)
 	, myShouldRender(true)
-	, myShouldStealInput(true)
 	, myCamera(nullptr)
 	, myShouldRenderMouse(true)
 {
@@ -74,7 +73,7 @@ void GUI::GUIManager::Update(const CU::Time& aDeltaTime)
 void GUI::GUIManager::Render()
 {
 	SChangeStatesMessage* changeStateMessage = new SChangeStatesMessage();
-	changeStateMessage->myDepthStencilState = eDepthStencilState::eDisableDepth; //if mouse is under buttons, this is the problem
+	changeStateMessage->myDepthStencilState = eDepthStencilState::eDisableDepth;
 	changeStateMessage->myRasterizerState = eRasterizerState::eDefault;
 	changeStateMessage->myBlendState = eBlendState::eAlphaBlend;
 	changeStateMessage->mySamplerState = eSamplerState::eWrap;
@@ -88,17 +87,11 @@ void GUI::GUIManager::Render()
 	}
 
 	myWidgetContainer->Render();
+	myWidgetContainer->RenderFrontLayers();
 
-	if (myShouldStealInput == true && myShouldRenderMouse == true)
+	if (myShouldRenderMouse == true)
 	{
 		myCursor->Render();
-	}
-
-	if (myCamera != nullptr)
-	{
-		SSetCameraMessage* setCameraMessage = new SSetCameraMessage();
-		setCameraMessage->myCamera = *myCamera;
-		RENDERER.AddRenderMessage(setCameraMessage);
 	}
 }
 
@@ -146,6 +139,22 @@ GUI::IWidget* GUI::GUIManager::FindWidget(const std::string& aName)
 	return myWidgetContainer->FindWidget(aName);
 }
 
+void GUI::GUIManager::PauseUpdate()
+{
+}
+
+void GUI::GUIManager::PauseRender()
+{
+}
+
+void GUI::GUIManager::RestartUpdate()
+{
+}
+
+void GUI::GUIManager::RestartRender()
+{
+}
+
 eMessageReturn GUI::GUIManager::MouseClicked(const CU::eMouseButtons aMouseButton, const CU::Vector2f& aMousePosition)
 {
 	SUPRESS_UNUSED_WARNING(aMousePosition);
@@ -170,7 +179,7 @@ eMessageReturn GUI::GUIManager::MouseClicked(const CU::eMouseButtons aMouseButto
 		myFocusedWidget->OnGotFocus();
 		myFocusedWidget->OnMousePressed(mousePosition, aMouseButton);
 
-		return (myShouldStealInput == true) ? eMessageReturn::eStop : eMessageReturn::eContinue;
+		return eMessageReturn::eStop;
 	}
 }
 
@@ -193,7 +202,7 @@ eMessageReturn GUI::GUIManager::MouseReleased(const CU::eMouseButtons aMouseButt
 		widget->OnMouseReleased(mousePosition, aMouseButton);
 	}
 
-	return (myShouldStealInput == true && stoleInput == true) ? eMessageReturn::eStop : eMessageReturn::eContinue;
+	return (stoleInput == true) ? eMessageReturn::eStop : eMessageReturn::eContinue;
 }
 
 eMessageReturn GUI::GUIManager::MouseMoved(const CU::Vector2f& aMousePosition)
@@ -236,7 +245,7 @@ eMessageReturn GUI::GUIManager::MouseDragged(const CU::eMouseButtons aMouseButto
 	if (widget != nullptr && widget != myWidgetContainer)
 	{
 		widget->OnMouseDrag(aMousePosition - aLastMousePosition, aMouseButton);
-		return (myShouldStealInput == true) ? eMessageReturn::eStop : eMessageReturn::eContinue;
+		return eMessageReturn::eStop;
 	}
 
 	return eMessageReturn::eContinue;

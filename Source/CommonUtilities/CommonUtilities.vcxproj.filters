@@ -351,6 +351,10 @@
       <Filter>PicoJson</Filter>
     </ClInclude>
     <ClInclude Include="StaticTypeTraits.h" />
+    <ClInclude Include="Line3D.h" />
+    <ClInclude Include="ReverseGrowingArray.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Timer.cpp">

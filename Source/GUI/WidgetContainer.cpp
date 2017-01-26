@@ -4,12 +4,16 @@
 namespace GUI
 {
 	WidgetContainer::WidgetContainer(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const bool aIsVisible)
-		: IWidget(aPosition, aSize, aIsVisible), myOrderedWidgets(4)
+		: IWidget(aPosition, aSize, aIsVisible)
+		, myOrderedWidgets(4)
+		, myFrontLayerWidgets(4)
 	{
 	}
 
 	WidgetContainer::WidgetContainer(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const std::string& aName, const bool aIsVisible)
-		: IWidget(aPosition, aSize, aName, aIsVisible), myOrderedWidgets(4)
+		: IWidget(aPosition, aSize, aName, aIsVisible)
+		, myOrderedWidgets(4)
+		, myFrontLayerWidgets(4)
 	{
 	}
 
@@ -81,18 +85,34 @@ namespace GUI
 	{
 		if (IsVisible() == true)
 		{
-			//for (IWidget* widget : myOrderedWidgets)
+			//int ii = myOrderedWidgets.Size() - 1;
+			//bool succeeded = true;
+			//auto reversed = CU::MakeReversed(myOrderedWidgets);
+			//for (IWidget* widget : reversed)
 			//{
-			//	if (widget->IsVisible())
+			//	widget->Render(myOrderedWidgets);
+			//	IWidget* sameWidget = myOrderedWidgets[ii];
+			//	if (widget != sameWidget)
 			//	{
-			//		widget->Render();
+			//		succeeded = false;
+			//	}
+			//	--ii;
+			//}
+
+
+			//for (CU::GrowingArray<IWidget*>::iterator it = myOrderedWidgets.rbegin(); it != myOrderedWidgets.rend(); --it)
+			//{
+			//	IWidget* widget = *it;
+			//	if (widget->IsVisible() == true)
+			//	{
+			//		widget->Render(myFrontLayerWidgets);
 			//	}
 			//}
 			for (int i = myOrderedWidgets.Size() - 1; i >= 0; --i)
 			{
 				if (myOrderedWidgets[i]->IsVisible() == true)
 				{
-					myOrderedWidgets[i]->Render();
+					myOrderedWidgets[i]->Render(myOrderedWidgets);
 				}
 			}
 		}
@@ -136,6 +156,11 @@ namespace GUI
 		}
 
 		return container;
+	}
+
+	void WidgetContainer::RenderFrontLayers()
+	{
+		//myFrontLayerWidgets->Render();
 	}
 
 	void WidgetContainer::MoveToFront(const std::string& aWidgetName)

@@ -34,6 +34,8 @@ public:
 	inline const CU::DynamicString& GetText() const;
 	float GetlineHeight() const;
 
+	CU::Vector2f GetQuadSizeNormalized() const;
+
 	CTextInstance& operator=(const CTextInstance& aTextInstance);
 private:
 	CU::DynamicString myString;

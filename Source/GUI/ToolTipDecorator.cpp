@@ -3,6 +3,7 @@
 
 #include "../BrontosaurusEngine/TextInstance.h"
 #include "ModelWidget.h"
+#include "BrontosaurusEngine/SpriteInstance.h"
 
 namespace GUI
 {
@@ -10,7 +11,7 @@ namespace GUI
 		: WidgetDecorator(aDecoratedWidget, CU::Vector2f::Zero, CU::Vector2f::Zero, aDecoratedWidget->GetName() + "_Tooltip", false)
 		, myGetTextFunction(aGetTextFunction)
 		, myOffsetToMouse(0.f, -0.05f)
-		//, myBackGround(aBackGround)
+		, myBackGround(nullptr)
 		, myTextInstance(nullptr)
 		, myShouldRender(false)
 	{
@@ -22,12 +23,12 @@ namespace GUI
 			myTextInstance->SetText(aTooltipText->c_str());
 		}
 
-		//myBackGround->SetLocalPosition(aDecoratedWidget->GetWorldPosition());
+		myBackGround = new CSpriteInstance("Sprites/tooltipBackground.dds", myTextInstance->GetQuadSizeNormalized(), aDecoratedWidget->GetWorldPosition());
 	}
 
 	CToolTipDecorator::~CToolTipDecorator()
 	{
-		//SAFE_DELETE(myBackGround);
+		SAFE_DELETE(myBackGround);
 		SAFE_DELETE(myTextInstance);
 	}
 
@@ -39,18 +40,21 @@ namespace GUI
 			if (myGetTextFunction(updatedTooltipText))
 			{
 				myTextInstance->SetText(updatedTooltipText.c_str());
+				CU::Vector2f backGroundSize = myTextInstance->GetQuadSizeNormalized();
+				myBackGround->SetSize(backGroundSize);
+				myBackGround;
 			}
 		}
 
 		myShouldRender = true;
-		//myBackGround->SetLocalPosition(aMousePosition + myOffsetToMouse);
+		myBackGround->SetPosition(aMousePosition + myOffsetToMouse);
 		myTextInstance->SetPosition(aMousePosition + myOffsetToMouse);
 	}
 
 	void CToolTipDecorator::OnMouseExit(const CU::Vector2f& aMousePosition)
 	{
 		myShouldRender = false;
-		//myBackGround->SetLocalPosition(aMousePosition + myOffsetToMouse);
+		myBackGround->SetPosition(aMousePosition + myOffsetToMouse);
 		myTextInstance->SetPosition(aMousePosition + myOffsetToMouse);
 	}
 
@@ -71,14 +75,14 @@ namespace GUI
 
 		if (myShouldRender == true)
 		{
-			//myBackGround->Render();
+			myBackGround->Render();
 			myTextInstance->Render();
 		}
 	}
 
 	void CToolTipDecorator::OnMouseMove(const CU::Vector2f& aMousePosition)
 	{
-		//myBackGround->SetLocalPosition(aMousePosition + myOffsetToMouse);
+		myBackGround->SetPosition(aMousePosition + myOffsetToMouse);
 		myTextInstance->SetPosition(aMousePosition + myOffsetToMouse);
 	}
 }

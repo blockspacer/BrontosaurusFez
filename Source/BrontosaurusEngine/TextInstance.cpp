@@ -72,6 +72,13 @@ float CTextInstance::GetlineHeight() const
 	return myText->GetlineHeight();
 }
 
+CU::Vector2f CTextInstance::GetQuadSizeNormalized() const
+{
+	CU::Vector2f rectPixelSize(myText->CalculateRectPixelSize(myString.c_str()));
+	rectPixelSize /= WINDOW_SIZE_F;
+	return rectPixelSize;
+}
+
 CTextInstance& CTextInstance::operator=(const CTextInstance& aTextInstance)
 {
 	if (myText != nullptr)
