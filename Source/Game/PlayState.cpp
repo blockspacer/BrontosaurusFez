@@ -399,11 +399,6 @@ void CPlayState::Load()
 	//CSeekControllerManager::GetInstance().SetTarget();
 	myGameObjectManager->SendObjectsDoneMessage();
 
-	//cameraComponent->InitOffsetPosition();
-
-	//myPlayerObject->AddComponent(cameraComponent);
-
-	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation()); //
 
 	//----CreateEnemies----
 	//myEnemies.Init(8);
@@ -431,36 +426,8 @@ void CPlayState::Load()
 	myMouseComponent = new CMouseComponent(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 	mouseObject->AddComponent(myMouseComponent);
 
-	if (PollingStation::playerObject != nullptr)
-	{
-		PollingStation::playerObject->AddComponent(new CPlayerHealthMessenger());
-		PollingStation::playerObject->AddComponent(new CPlayerManaMessenger());
-	}
 
-	/*CFireEmitterInstance fireeeeeByCarl;
-	SFireEmitterData fireData;
-	fireData.myScrollSpeeds[0] = 1.3f;
-	fireData.myScrollSpeeds[1] = 2.1f;
-	fireData.myScrollSpeeds[2] = 2.3f;
 
-	fireData.myScales[0] = 1.f;
-	fireData.myScales[1] = 2.f;
-	fireData.myScales[2] = 3.f;
-
-	fireData.myDistortions[0].Set(0.1f, 0.2f);
-	fireData.myDistortions[1].Set(0.1f, 0.3f);
-	fireData.myDistortions[2].Set(0.1f, 0.1f);
-
-	fireData.myDistortionScale = 0.8f;
-	fireData.myDistortionBias = 0.5f;
-
-	fireeeeeByCarl.Init(fireData);
-	fireeeeeByCarl.GetTransformation().Rotate(3.141592f, CU::Axees::Y);
-	fireeeeeByCarl.GetTransformation().m11 *= 2.f;
-	fireeeeeByCarl.GetTransformation().m22 *= 2.f;
-	fireeeeeByCarl.GetTransformation().m33 *= 2.f;
-	myScene->AddFireEmitters(fireeeeeByCarl);*/
-	
 	myHatMaker->LoadBluePrints("Json/Hats/HatBluePrints.json");
 
 	myIsLoaded = true;
@@ -474,13 +441,13 @@ void CPlayState::Load()
 void CPlayState::Init()
 {
 	//skillnad på load, init & konstructor ?
-
+	//	svar:	1. konstruktor ska sätta allt till noll/null
+	//			2. init ska skapa allt som kan bero på ifall motorn är skapad etc
+	//			3. load kallas trådat för init kallas alltid av statestacken när den pushar ett nytt state
 
 	//NAVMESH
 	//myNavmesh.LoadFromFile("Models/navMesh/HubWorld_navmesh.obj");
 	//PollingStation::Navmesh = &myNavmesh;
-
-
 }
 
 eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
