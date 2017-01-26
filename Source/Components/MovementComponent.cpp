@@ -57,7 +57,7 @@ void MovementComponent::Update(float aDeltaTime)
 				stoppedMovingMessage.myString = "idle";
 				GetParent()->NotifyComponents(eComponentMessageType::eStoppedMoving, stoppedMovingMessage);
 				myPathPointer = nullptr;
-				myWaitUntilMoveAgianTimer = 0.01f;
+				myWaitUntilMoveAgianTimer = 0.31f;
 			}
 		}
 	}
@@ -84,7 +84,7 @@ void MovementComponent::Receive(const eComponentMessageType aMessageType, const 
 		if(myPathPointer != nullptr)
 		{
 			myCurrentPathIndex = myPathPointer->Size();
-			myWaitUntilMoveAgianTimer = 0.01f;
+			myWaitUntilMoveAgianTimer = 0.31f;
 		}
 		break;
 	case eComponentMessageType::eAddToMovementSpeed:

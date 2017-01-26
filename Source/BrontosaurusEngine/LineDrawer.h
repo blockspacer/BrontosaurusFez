@@ -27,7 +27,7 @@ public:
 	void AddQuad(const CU::Vector2f& aMinPoint, const CU::Vector2f& aMaxPoint, LineHandle aLineHandlesOut[]);
 	void RemoveLine2D(const LineHandle aLineHandle);
 
-	void RenderLineChunk(const CU::GrowingArray<char, unsigned short, false>& aLineChunk);
+	void RenderLineChunk(const CU::GrowingArray<char, unsigned int, false>& aLineChunk);
 
 private:
 	LineHandle AddLine(const SLine2D& aLine2D);
@@ -35,7 +35,7 @@ private:
 	void CreateVertexBuffers();
 	void RenderLines2D();
 	void UpdateVertexBuffer2D();
-	void UpdateVertexBuffer3D(const CU::GrowingArray<char, unsigned short, false>& aLineChunk, ID3D11DeviceContext& aContext);
+	void UpdateVertexBuffer3D(const CU::GrowingArray<char, unsigned int, false>& aLineChunk, ID3D11DeviceContext& aContext);
 
 	CU::GrowingArray<SLine2D, LineIndex, false> myLines2D;
 	CU::GrowingArray<LineIndex, LineHandle, false> myLineHandles2D;

@@ -22,7 +22,7 @@ public:
 
 	// Inherited via State
 	void Init() override;
-	eStatus Update(const CU::Time & aDeltaTime) override;
+	eStateStatus Update(const CU::Time & aDeltaTime) override;
 	void Render() override;
 	void OnEnter() override;
 	void OnExit() override;

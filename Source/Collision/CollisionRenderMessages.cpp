@@ -28,7 +28,7 @@ Collision::CRenderCircle::~CRenderCircle()
 {
 }
 
-void Collision::CRenderCircle::DoRenderCall(CU::GrowingArray<char, unsigned short, false>& aVertexBuffer)
+void Collision::CRenderCircle::DoRenderCall(CU::GrowingArray<char, unsigned int, false>& aVertexBuffer)
 {
 	const unsigned short NumberOfPoints(16u);
 	const unsigned short NumberOfVertices(NumberOfPoints * 2u);
@@ -67,7 +67,7 @@ Collision::CRenderTriangle::~CRenderTriangle()
 {
 }
 
-void Collision::CRenderTriangle::DoRenderCall(CU::GrowingArray<char, unsigned short, false>& aVertexBuffer)
+void Collision::CRenderTriangle::DoRenderCall(CU::GrowingArray<char, unsigned int, false>& aVertexBuffer)
 {
 	CU::Vector4f triangleVertexBuffer[6u] =
 	{
@@ -88,7 +88,7 @@ Collision::CRenderPoint::~CRenderPoint()
 {
 }
 
-void Collision::CRenderPoint::DoRenderCall(CU::GrowingArray<char, unsigned short, false>& aVertexBuffer)
+void Collision::CRenderPoint::DoRenderCall(CU::GrowingArray<char, unsigned int, false>& aVertexBuffer)
 {
 	static const float CrossRadius = 30.f;
 	CU::Vector4f pointCrossVertexBuffer[4] =

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "HealthWidget.h"
-#include "RenderableWidgets\ModelWidget\ModelWidget.h"
+#include "ModelWidget.h"
 #include "GUIPixelConstantBuffer.h"
 
 namespace GUI

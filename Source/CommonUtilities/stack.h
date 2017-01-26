@@ -15,7 +15,6 @@ namespace CU
 		inline TYPE Pop();
 		
 		inline TYPE& Top();
-		inline TYPE& At(const SIZE_T aIndex);
 		
 		inline SIZE_T Size();
 
@@ -51,22 +50,6 @@ namespace CU
 	{
 		assert(!(myStack.Size() <= 0 && "Stack is empty"));
 		return myStack[myStack.Size() - 1];
-	}
-
-	template<typename TYPE, typename SIZE_T>
-	inline TYPE& Stack<TYPE, SIZE_T>::At(const SIZE_T aIndex)
-	{
-		assert(!(myStack.Size() <= 0 && "Stack is empty"));
-		assert(aIndex < myStack.Size() && "Index out of range");
-
-		if (aIndex >= 0)
-		{
-			return myStack[aIndex];
-		}
-		else
-		{
-			return myStack[myStack.Size() + aIndex];
-		}
 	}
 	
 	template<typename TYPE, typename SIZE_T>

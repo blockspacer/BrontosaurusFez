@@ -16,7 +16,7 @@ public:
 	CSplashScreen(StateStack& aStateStack);
 	~CSplashScreen();
 
-	State::eStatus Update(const CU::Time& aDeltaTime) override;
+	eStateStatus Update(const CU::Time& aDeltaTime) override;
 	void Render() override;
 	void AddPicture(const char * aPath);
 

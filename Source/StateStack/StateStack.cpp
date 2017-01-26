@@ -1,16 +1,12 @@
 #include "stdafx.h"
 #include "StateStack.h"
 
-
-#include "../CommonUtilities/CUTime.h"
-#include "../PostMaster/PostMaster.h"
-#include "../PostMaster/Event.h"
-#include "../PostMaster/Message.h"
-
 StateStack::StateStack()
-	: mySwapStateFunction(nullptr), myStateToSwapTo(nullptr)
+	: myStates(8)
+	, mySwapStateFunction(nullptr)
+	, myStateToSwapTo(nullptr)
+	, myShouldUpdate(true)
 {
-	myShouldUpdate = true;
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eStateStackMessage);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eConsoleCalledUpon);
 }
@@ -28,30 +24,53 @@ void StateStack::PushState(State *aState)
 	{
 		if (myStates.Size() > 0)
 		{
-			myStates.Top()->OnExit();
+			myStates.GetLast()->OnExit();
 		}
-		myStates.Push(aState);
+
+		myStates.Add(aState);
 		aState->Init();
 		aState->OnEnter();
-	
 	}
 }
 
 State* StateStack::GetCurrentState()
 {
-	return myStates.Top();
+	return myStates.GetLast();
 }
 
-const State::eStatus StateStack::UpdateState(const CU::Time & aDeltaTime)
+const eStateStatus StateStack::UpdateState(const CU::Time& aDeltaTime)
 {
-	if (myStates.Top()->GetLetThroughUpdate() == true)
+	if (myStates.GetLast()->GetLetThroughUpdate() == true)
 	{
-		myStates.At(-2)->Update(aDeltaTime);
+		UpdateStateAtIndex(aDeltaTime, myStates.Size() - 2);
 	}
-	return myStates.Top()->Update(aDeltaTime);
+
+	return myStates.GetLast()->Update(aDeltaTime);
 }
 
+void StateStack::UpdateStateAtIndex(const CU::Time& aDeltaTime, const short aIndex)
+{
+	if (aIndex <= 0) return;
 
+	if (myStates[aIndex]->GetLetThroughUpdate() == true && aIndex > 0)
+	{
+		UpdateStateAtIndex(aDeltaTime, aIndex - 1);
+	}
+
+	myStates[aIndex]->Update(aDeltaTime);
+}
+
+void StateStack::RenderStateAtIndex(const short aIndex)
+{
+	if (aIndex <= 0) return;
+
+	if (myStates[aIndex]->GetLetThroughRender() == true && aIndex > 0)
+	{
+		RenderStateAtIndex(aIndex - 1);
+	}
+
+	myStates[aIndex]->Render();
+}
 
 bool StateStack::Update(const CU::Time& aDeltaTime)
 {
@@ -59,7 +78,7 @@ bool StateStack::Update(const CU::Time& aDeltaTime)
 	{
 		if (myShouldUpdate == true)
 		{
-			if (UpdateState(aDeltaTime) == State::eStatus::ePop)
+			if (UpdateState(aDeltaTime) == eStateStatus::ePop)
 			{
 				Pop();
 			}
@@ -89,24 +108,24 @@ void StateStack::Render()
 {
 	if (myStates.Size() > 0)
 	{
-		if (myStates.Top()->GetLetThroughRender() == true)
+		if (myStates.GetLast()->GetLetThroughRender() == true)
 		{
-			myStates.At(-2)->Render();
+			RenderStateAtIndex(myStates.Size() - 2);
 		}
 
-		myStates.Top()->Render();
+		myStates.GetLast()->Render();
 	}
 }
 
 void StateStack::Pop()
 {
-	myStates.Top()->OnExit();
+	myStates.GetLast()->OnExit();
 
 	delete myStates.Pop();
 
 	if (myStates.Size() > 0)
 	{
-		myStates.Top()->OnEnter();
+		myStates.GetLast()->OnEnter();
 	}
 }
 
@@ -114,7 +133,7 @@ void StateStack::Clear()
 {
 	while (myStates.Size() > 0)
 	{
-		myStates.Top()->OnExit();
+		myStates.GetLast()->OnExit();
 		delete myStates.Pop();
 	}
 }

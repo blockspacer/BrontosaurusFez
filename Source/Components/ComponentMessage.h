@@ -40,6 +40,7 @@ enum class eComponentMessageType
 	eCollision,
 	ePlaySound,
 	eMoving,
+	eInit,
 	eDied,
 	eRespawned,
 	eHeal,
