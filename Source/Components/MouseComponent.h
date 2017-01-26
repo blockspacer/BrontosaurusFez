@@ -24,7 +24,7 @@ private:
 	void HandleCollision(CGameObject* aCollidedWith);
 	eMessageReturn Recieve(const Message& aMessage) override;
 
-	CGameObject* myHoveredGameObject;
+	CU::GrowingArray<CGameObject*> myHoveredGameObjects;
 	bool myMouseIsDown;
 
 	const CU::Camera& myPlayerCamera;
