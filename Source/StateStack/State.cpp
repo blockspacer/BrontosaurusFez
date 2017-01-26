@@ -13,7 +13,7 @@ State::State(StateStack & aStateStack)
 
 State::~State()
 {
-	RENDERER.ClearRenderQueue();
+	//RENDERER.ClearRenderQueue();
 }
 
 bool State::GetLetThroughRender() const
