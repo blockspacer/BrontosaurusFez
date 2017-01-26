@@ -14,6 +14,7 @@
 #include "Components/PlayerData.h"
 
 #include "PostMaster/HatBought.h"
+#include "PostMaster/ShopClosed.h"
 
 #include "KevinLoader/KevinLoader.h"
 
@@ -87,14 +88,15 @@ HatShopState::~HatShopState()
 
 void HatShopState::CloseShop()
 {
-	SetStateStatus(eStatus::ePop);
+	SetStateStatus(eStateStatus::ePop);
+	PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopClosed,ShopClosed()));
 }
 
 void HatShopState::Init()
 {
 }
 
-State::eStatus HatShopState::Update(const CU::Time & aDeltaTime)
+eStateStatus HatShopState::Update(const CU::Time & aDeltaTime)
 {
 	myGUIManager->Update(aDeltaTime);
 	return myStatus;
@@ -165,7 +167,6 @@ void HatShopState::SetSelected(const char aIndex)
 				{
 					myOptionsText[j]->SetColor(CTextInstance::White);
 				}
-
 				myOptionsText[i]->SetColor(CTextInstance::Red);
 			}
 		}

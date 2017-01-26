@@ -22,7 +22,7 @@ void LevelSelectState::Init()
 	myGUIManager->Init("Models/mainMenu/levelSelect.fbx");
 }
 
-State::eStatus LevelSelectState::Update(const CU::Time& aDeltaTime)
+eStateStatus LevelSelectState::Update(const CU::Time& aDeltaTime)
 {
 	myGUIManager->Update(aDeltaTime);
 	

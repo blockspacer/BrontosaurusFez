@@ -102,6 +102,7 @@
 #include "NavigationComponent.h"
 #include "PlayerHealthMessenger.h"
 #include "PlayerManaMessenger.h"
+#include "ComponentMessage.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -125,6 +126,7 @@ CPlayState::~CPlayState()
 	SAFE_DELETE(myGoldText);
 	//SAFE_DELETE(myHatMaker);
 	SAFE_DELETE(myHealthBarManager);
+	SAFE_DELETE(myHatMaker);
 
 
 	SAFE_DELETE(myMouseComponent);
@@ -386,6 +388,10 @@ void CPlayState::Load()
 
 		PollingStation::playerObject->AddComponent(healthMessenger);
 		PollingStation::playerObject->AddComponent(respawn);
+		PollingStation::playerObject->AddComponent(new CPlayerHealthMessenger());
+		PollingStation::playerObject->AddComponent(new CPlayerManaMessenger());
+
+		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eInit, SComponentMessageData());
 	}
 	//CSeekControllerManager::GetInstance().SetTarget();
 	myGameObjectManager->SendObjectsDoneMessage();
@@ -474,7 +480,7 @@ void CPlayState::Init()
 
 }
 
-State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
+eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 {
 	Audio::CAudioInterface* audio = Audio::CAudioInterface::GetInstance();
 	if (audio != nullptr)

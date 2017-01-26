@@ -212,7 +212,7 @@ eMessageReturn InputController::MouseReleased(const CU::eMouseButtons aMouseButt
 		myIsRightMouseButtonDown = false;
 		for (unsigned short i = 0; i < mySkillInputMessageActivators.Size(); i++)
 		{
-			if (mySkillInputMessageActivators[i] == static_cast<CU::eInputMessage>(CU::eMouseButtons::RBUTTON))
+			if (mySkillInputMessageActivators[i] == CU::eInputMessage::RIGHTMOUSEBUTTON)
 			{
 				mySkillActivatorKeyDown = -1;
 			}

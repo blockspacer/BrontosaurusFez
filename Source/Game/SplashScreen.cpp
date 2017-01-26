@@ -23,7 +23,7 @@ CSplashScreen::~CSplashScreen()
 	myCurrentSprite = nullptr; //deleted in mySprites
 }
 
-State::eStatus CSplashScreen::Update(const CU::Time& aDeltaTime)
+eStateStatus CSplashScreen::Update(const CU::Time& aDeltaTime)
 {
 	if (myIsDone == true)
 	{
@@ -32,12 +32,12 @@ State::eStatus CSplashScreen::Update(const CU::Time& aDeltaTime)
 		if (CheckIfMorePicsInArray() == true)
 			SetNextPic();
 		else
-			return eStatus::ePop;
+			return eStateStatus::ePop;
 	}
 
 	myFadeState == eFadeState::eFadingIn ? FadeIn(aDeltaTime) : FadeOut(aDeltaTime);
 
-	return State::eStatus::eKeep;
+	return eStateStatus::eKeep;
 }
 
 void CSplashScreen::Render()
