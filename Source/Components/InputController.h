@@ -42,5 +42,6 @@ private:
 	bool myMouseIsDown;
 	bool myIsShiftDown;
 	bool myIsActive;
+	bool myIsRightMouseButtonDown;
 };
 

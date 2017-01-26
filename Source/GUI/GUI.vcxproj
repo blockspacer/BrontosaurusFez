@@ -212,7 +212,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\PostMaster\Includes;$(ProjectDir);$(ProjectDir)Widget\; $(SolutionDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\PostMaster\Includes;$(SolutionDir)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
@@ -227,7 +227,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\PostMaster\Includes;$(ProjectDir);$(ProjectDir)Widget\; $(SolutionDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\PostMaster\Includes;$(SolutionDir)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
@@ -292,7 +292,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\PostMaster\Includes;$(ProjectDir);$(ProjectDir)Widget\; $(SolutionDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\PostMaster\Includes;$(SolutionDir)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
@@ -311,7 +311,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\PostMaster\Includes;$(ProjectDir);$(ProjectDir)Widget\; $(SolutionDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\PostMaster\Includes;$(SolutionDir)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
@@ -330,7 +330,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions); _RETAIL_BUILD</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\PostMaster\Includes;$(ProjectDir);$(ProjectDir)Widget\; $(SolutionDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\PostMaster\Includes;$(SolutionDir)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
@@ -341,39 +341,41 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BarWidget\BarWidget.h" />
-    <ClInclude Include="Button\Button.h" />
-    <ClInclude Include="Button\ButtonAnimation.h" />
-    <ClInclude Include="DraggableArea\DraggableArea.h" />
-    <ClInclude Include="GUICursor\GUICursor.h" />
-    <ClInclude Include="GUIManager\GUIManager.h" />
+    <ClInclude Include="BarWidget.h" />
+    <ClInclude Include="Button.h" />
+    <ClInclude Include="ButtonAnimation.h" />
+    <ClInclude Include="DraggableArea.h" />
+    <ClInclude Include="GUICursor.h" />
+    <ClInclude Include="GUIManager.h" />
     <ClInclude Include="GUIPixelConstantBuffer.h" />
     <ClInclude Include="HealthWidget.h" />
     <ClInclude Include="ManaWidget.h" />
-    <ClInclude Include="RenderableWidgets\ModelWidget\ModelWidget.h" />
-    <ClInclude Include="RenderableWidgets\SpriteWidget\SpriteWidget.h" />
+    <ClInclude Include="MoneyWidget.h" />
+    <ClInclude Include="ModelWidget.h" />
+    <ClInclude Include="SpriteWidget.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="ToolTipDecorator.h" />
-    <ClInclude Include="WidgetDecorator\TextWidget\TextWidget.h" />
-    <ClInclude Include="WidgetDecorator\Tooltip\ToolTip.h" />
-    <ClInclude Include="WidgetFactory\WidgetFactory.h" />
-    <ClInclude Include="Widget\Widget.h" />
-    <ClInclude Include="WidgetContainer\WidgetContainer.h" />
-    <ClInclude Include="WidgetDecorator\WidgetDecorator.h" />
-    <ClInclude Include="WidgetContainer\Window\Window.h" />
+    <ClInclude Include="TextWidget.h" />
+    <ClInclude Include="ToolTip.h" />
+    <ClInclude Include="WidgetFactory.h" />
+    <ClInclude Include="Widget.h" />
+    <ClInclude Include="WidgetContainer.h" />
+    <ClInclude Include="WidgetDecorator.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BarWidget\BarWidget.cpp" />
-    <ClCompile Include="Button\Button.cpp" />
-    <ClCompile Include="Button\ButtonAnimation.cpp" />
-    <ClCompile Include="DraggableArea\DraggableArea.cpp" />
-    <ClCompile Include="GUICursor\GUICursor.cpp" />
-    <ClCompile Include="GUIManager\GUIManager.cpp" />
+    <ClCompile Include="BarWidget.cpp" />
+    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="ButtonAnimation.cpp" />
+    <ClCompile Include="DraggableArea.cpp" />
+    <ClCompile Include="GUICursor.cpp" />
+    <ClCompile Include="GUIManager.cpp" />
     <ClCompile Include="HealthWidget.cpp" />
     <ClCompile Include="ManaWidget.cpp" />
-    <ClCompile Include="RenderableWidgets\ModelWidget\ModelWidget.cpp" />
-    <ClCompile Include="RenderableWidgets\SpriteWidget\SpriteWidget.cpp" />
+    <ClCompile Include="MoneyWidget.cpp" />
+    <ClCompile Include="ModelWidget.cpp" />
+    <ClCompile Include="SpriteWidget.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ModelViewer|Win32'">Create</PrecompiledHeader>
@@ -387,13 +389,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="ToolTipDecorator.cpp" />
-    <ClCompile Include="WidgetDecorator\TextWidget\TextWidget.cpp" />
-    <ClCompile Include="WidgetDecorator\Tooltip\ToolTip.cpp" />
-    <ClCompile Include="WidgetFactory\WidgetFactory.cpp" />
-    <ClCompile Include="Widget\Widget.cpp" />
-    <ClCompile Include="WidgetContainer\WidgetContainer.cpp" />
-    <ClCompile Include="WidgetDecorator\WidgetDecorator.cpp" />
-    <ClCompile Include="WidgetContainer\Window\Window.cpp" />
+    <ClCompile Include="TextWidget.cpp" />
+    <ClCompile Include="ToolTip.cpp" />
+    <ClCompile Include="WidgetFactory.cpp" />
+    <ClCompile Include="Widget.cpp" />
+    <ClCompile Include="WidgetContainer.cpp" />
+    <ClCompile Include="WidgetDecorator.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CommonUtilities\CommonUtilities.vcxproj">

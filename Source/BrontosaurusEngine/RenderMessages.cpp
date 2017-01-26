@@ -54,7 +54,7 @@ SSetCameraMessage::SSetCameraMessage()
 SChangeStatesMessage::SChangeStatesMessage()
 	: SRenderMessage(eRenderMessageType::eChangeStates)
 {
-	mySamplerState = eSamplerState::eSize;
+	//mySamplerState = eSamplerState::eSize;
 }
 
 SRenderTextMessage::SRenderTextMessage()
@@ -65,6 +65,11 @@ SRenderTextMessage::SRenderTextMessage()
 SRenderModelDepthMessage::SRenderModelDepthMessage()
 {
 	myType = eRenderMessageType::eRenderModelDepth;
+}
+
+SRenderCameraQueueMessage::~SRenderCameraQueueMessage()
+{
+	CameraRenderQueue.DeleteAll();
 }
 
 SRenderCameraQueueMessage::SRenderCameraQueueMessage()
@@ -104,8 +109,18 @@ SRenderNavmeshMessage::SRenderNavmeshMessage()
 	myModel = nullptr;
 }
 
-SRenderLineBuffer::SRenderLineBuffer(const CU::GrowingArray<char, unsigned short, false>& aLineBuffer)
+SRenderLineBuffer::SRenderLineBuffer(const CU::GrowingArray<char, unsigned int, false>& aLineBuffer)
 	: SRenderMessage(eRenderMessageType::eRenderLineBuffer)
 	, myLineBuffer(aLineBuffer)
+{
+}
+
+SClearRenderPackageMessage::SClearRenderPackageMessage()
+	: SRenderMessage(eRenderMessageType::eClearRenderPackage)
+{
+}
+
+SActivateRenderToMessage::SActivateRenderToMessage()
+	: SRenderMessage(SRenderMessage::eRenderMessageType::eActivateRenderTo)
 {
 }

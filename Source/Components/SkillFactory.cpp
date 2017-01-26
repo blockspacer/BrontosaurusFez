@@ -92,6 +92,7 @@ void SkillFactory::RegisterSkills()
 		skill->isChannel = levelsArray[i].at("isChannel").GetBool();
 		skill->manaCost = levelsArray[i].at("manaCost").GetUInt();
 		skill->range = levelsArray[i].at("range").GetFloat();
+		skill->numberOfEnemiesToSpawn = levelsArray[i].at("numberOfEnemiesToSpawnPerAttack").GetInt();
 			 
 		skill->skillName = levelsArray[i].at("name").GetString().c_str();
 

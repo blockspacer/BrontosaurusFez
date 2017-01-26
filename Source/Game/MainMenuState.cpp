@@ -1,14 +1,15 @@
 #include "stdafx.h"
 #include "MainMenuState.h"
+
 #include "../PostMaster/PostMaster.h"
 #include "../PostMaster/Message.h"
 #include "../PostMaster/Event.h"
 
-#include "../GUI/GUIManager/GUIManager.h"
+#include "GUI/GUIManager.h"
 #include "BrontosaurusEngine/Skybox.h"
 #include "BrontosaurusEngine/Renderer.h"
 #include "BrontosaurusEngine/Engine.h"
-#include "../Audio/AudioInterface.h"
+#include "Audio/AudioInterface.h"
 #include "BackgroundLoadingManager.h"
 
 MainMenuState::MainMenuState(StateStack& aStateStack)
@@ -36,7 +37,7 @@ void MainMenuState::Init()
 	//CBackgroundLoadingManager::GetInstance().CreateStateToLoad(myStateStack, -1);
 }
 
-State::eStatus MainMenuState::Update(const CU::Time& aDeltaTime)
+eStateStatus MainMenuState::Update(const CU::Time& aDeltaTime)
 {
 	myGUIManager->Update(aDeltaTime);
 

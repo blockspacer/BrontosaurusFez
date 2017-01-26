@@ -37,7 +37,7 @@
 
 #include "../LuaWrapper/SSlua/SSlua.h"
 
-#include "../GUI/GUIManager/GUIManager.h"
+#include "../GUI/GUIManager.h"
 
 #include "LoadManager/LoadManager.h"
 
@@ -55,6 +55,9 @@
 
 #include "PickupFactory.h"
 #include "PickupManager.h"
+#include "PickerUpperComponent.h"
+
+#include "EnemyFactory.h"
 
 #include "MasterAI.h"
 
@@ -100,6 +103,7 @@
 #include "NavigationComponent.h"
 #include "PlayerHealthMessenger.h"
 #include "PlayerManaMessenger.h"
+#include "ComponentMessage.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -116,15 +120,20 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 
 CPlayState::~CPlayState()
 {
+	//Don forgetti to deletti
+	SAFE_DELETE(myEmitterComp);
+	SAFE_DELETE(myCollisionComponentManager);
+	SAFE_DELETE(myStatManager);
+	SAFE_DELETE(myGoldText);
+	//SAFE_DELETE(myHatMaker);
+	SAFE_DELETE(myHealthBarManager);
+	SAFE_DELETE(myHatMaker);
 
-	//myGameObjectManager->ClearAll();
 
 	SAFE_DELETE(myMouseComponent);
 	SAFE_DELETE(myScene);
 	SAFE_DELETE(myGameObjectManager);
 	SAFE_DELETE(myGUIManager);
-	
-
 	
 	CModelComponentManager::Destroy();
 	CAudioSourceComponentManager::Destroy();
@@ -150,7 +159,6 @@ CPlayState::~CPlayState()
 	CComponentManager::DestroyInstance();
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eHatAdded);
 	CLevelManager::DestroyInstance();
-	KLoader::CKevinLoader::GetInstance().ClearLinkObjectList();
 }
 
 void CPlayState::Load()
@@ -195,7 +203,7 @@ void CPlayState::Load()
 	//hue hue dags att fula ner play state - Alex(Absolut inte Marcus); // snälla slå Johan inte mig(Alex);
 
 	//create an npc
-	CGameObject* npcObject1 = myGameObjectManager->CreateGameObject();
+	/*CGameObject* npcObject1 = myGameObjectManager->CreateGameObject();
 	npcObject1->SetName("npcObject1");
 	npcObject1->GetLocalTransform().Move(CU::Vector3f(0.0f, 000.0f, 500.0f));
 	CModelComponent* modelComponent1 = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle2.fbx");
@@ -210,7 +218,7 @@ void CPlayState::Load()
 	collisionComponent->SetColliderType(eColliderType_Enemy);
 	npcObject1->AddComponent(collisionComponent);
 
-	npcObject1->AddComponent(new CHealthComponent());
+	npcObject1->AddComponent(new CHealthComponent());*/
 
 
 	//create another npc
@@ -346,7 +354,7 @@ void CPlayState::Load()
 	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
 #ifdef _DEBUG
-	const int levelIndex = levelsArray.Size() - 1;
+	myLevelIndex = levelsArray.Size()-1;
 #else
 	const int levelIndex = 0;
 #endif
@@ -381,6 +389,12 @@ void CPlayState::Load()
 
 		PollingStation::playerObject->AddComponent(healthMessenger);
 		PollingStation::playerObject->AddComponent(respawn);
+		PollingStation::playerObject->AddComponent(new CPlayerHealthMessenger());
+		PollingStation::playerObject->AddComponent(new CPlayerManaMessenger());
+		PollingStation::playerObject->AddComponent(CPickupManager::GetInstance().CreatePickerUpperComp());
+		PollingStation::playerObject->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
+
+		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eInit, SComponentMessageData());
 	}
 	//CSeekControllerManager::GetInstance().SetTarget();
 	myGameObjectManager->SendObjectsDoneMessage();
@@ -423,7 +437,7 @@ void CPlayState::Load()
 		PollingStation::playerObject->AddComponent(new CPlayerManaMessenger());
 	}
 
-	CFireEmitterInstance fireeeeeByCarl;
+	/*CFireEmitterInstance fireeeeeByCarl;
 	SFireEmitterData fireData;
 	fireData.myScrollSpeeds[0] = 1.3f;
 	fireData.myScrollSpeeds[1] = 2.1f;
@@ -445,7 +459,7 @@ void CPlayState::Load()
 	fireeeeeByCarl.GetTransformation().m11 *= 2.f;
 	fireeeeeByCarl.GetTransformation().m22 *= 2.f;
 	fireeeeeByCarl.GetTransformation().m33 *= 2.f;
-	myScene->AddFireEmitters(fireeeeeByCarl);
+	myScene->AddFireEmitters(fireeeeeByCarl);*/
 	
 	myHatMaker->LoadBluePrints("Json/Hats/HatBluePrints.json");
 
@@ -463,20 +477,29 @@ void CPlayState::Init()
 
 
 	//NAVMESH
-	//myNavmesh.LoadFromFile("Models/navMesh/COOLFIKE.obj");
+	//myNavmesh.LoadFromFile("Models/navMesh/HubWorld_navmesh.obj");
 	//PollingStation::Navmesh = &myNavmesh;
 
 
 }
 
-State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
+eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 {
 	Audio::CAudioInterface* audio = Audio::CAudioInterface::GetInstance();
 	if (audio != nullptr)
 	{
 		CAudioSourceComponentManager::GetInstance().Update();
 	}
-	
+
+	if (PollingStation::playerData->myIsWhirlwinding == true)
+	{
+		audio->PostEvent("WhirlWind");
+	}
+	else
+	{
+		audio->PostEvent("StopWhirlWind");
+	}
+
 	CParticleEmitterComponentManager::GetInstance().UpdateEmitters(aDeltaTime);
 	InputControllerManager::GetInstance().Update(aDeltaTime);
 	MovementComponentManager::GetInstance().Update(aDeltaTime);
@@ -484,6 +507,12 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	SkillSystemComponentManager::GetInstance().Update(aDeltaTime);
 	CPickupManager::GetInstance().Update(aDeltaTime);
 	RespawnComponentManager::GetInstance().Update(aDeltaTime);
+
+	if (myGUIManager)
+	{
+		myGUIManager->Update(aDeltaTime);
+	}
+
 	myCollisionComponentManager->Update();
 	myScene->Update(aDeltaTime);
 
@@ -509,11 +538,11 @@ void CPlayState::Render()
 	SChangeStatesMessage msg;
 	msg.myBlendState = eBlendState::eAlphaBlend;
 	msg.myDepthStencilState = eDepthStencilState::eDefault;
-	msg.myRasterizerState = eRasterizerState::eNoCulling;
+	msg.myRasterizerState = eRasterizerState::eWireFrame;
 	msg.mySamplerState = eSamplerState::eClamp;
 	
-	
 	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
+	myNavmesh.Render();
 
 	msg.myBlendState = eBlendState::eAlphaBlend;
 	msg.myDepthStencilState = eDepthStencilState::eDisableDepth;
@@ -642,6 +671,7 @@ void CPlayState::CreateManagersAndFactories()
 	CMasterAI::Create();
 	RespawnComponentManager::Create();
 	CLevelManager::CreateInstance();
+	CEnemyFactory::Create(*myGameObjectManager,*myCollisionComponentManager,*myHealthBarManager);
 }
 
 void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)

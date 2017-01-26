@@ -71,6 +71,7 @@ namespace DL_Debug
 		eGamePlay,
 		eCrash,
 		eThreadedModels,
+		eThreadPool,
 		eLength
 	};
 

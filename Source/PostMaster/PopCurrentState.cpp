@@ -16,7 +16,7 @@ PopCurrentState::~PopCurrentState()
 //{
 //	if (aCurrentState != nullptr)
 //	{
-//		aCurrentState->SetStateStatus(State::eStatus::ePop);
+//		aCurrentState->SetStateStatus(eStateStatus::ePop);
 //	}
 //
 //	return eMessageReturn::eStop;
@@ -26,7 +26,7 @@ eMessageReturn PopCurrentState::DoEvent(StateStack* aStateStack) const
 {
 	if (aStateStack != nullptr)
 	{
-		aStateStack->GetCurrentState()->SetStateStatus(State::eStatus::ePop);
+		aStateStack->GetCurrentState()->SetStateStatus(eStateStatus::ePop);
 	}
 
 	return eMessageReturn::eStop;

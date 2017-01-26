@@ -6,11 +6,11 @@
 #include "../PostMaster/Event.h"
 #include "../PostMaster/PopCurrentState.h"
 
-#include "../GUI/GUIManager/GUIManager.h"
+#include "GUI/GUIManager.h"
 #include "BrontosaurusEngine/Skybox.h"
 #include "BrontosaurusEngine/Renderer.h"
 #include "BrontosaurusEngine/Engine.h"
-#include "../Audio/AudioInterface.h"
+#include "Audio/AudioInterface.h"
 
 #include "Game.h"
 
@@ -32,7 +32,7 @@ void PauseMenu::Init()
 	myGUIManager->Init("Models/mainMenu/pauseMenu.fbx"); 
 }
 
-State::eStatus PauseMenu::Update(const CU::Time & aDeltaTime)
+eStateStatus PauseMenu::Update(const CU::Time & aDeltaTime)
 {
 	myGUIManager->Update(aDeltaTime);
 

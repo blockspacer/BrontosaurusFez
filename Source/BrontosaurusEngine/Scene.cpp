@@ -84,6 +84,7 @@ CScene::~CScene()
 	myModels.DeleteAll();
 	myParticleEmitters.DeleteAll();
 	//myDebugObjects.DeleteAll();
+	myPointLights.DeleteAll();
 }
 
 void CScene::Update(const CU::Time aDeltaTime)
@@ -122,9 +123,9 @@ void CScene::Render()
 
 		RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
 
-		SRenderSkyboxMessage msg;
-		msg.mySkybox = mySkybox;
-		RENDERER.AddRenderMessage(new SRenderSkyboxMessage(msg));
+		//SRenderSkyboxMessage msg;
+		//msg.mySkybox = mySkybox;
+		//RENDERER.AddRenderMessage(new SRenderSkyboxMessage(msg));
 
 		statemsg.myRasterizerState = eRasterizerState::eDefault;
 		statemsg.myDepthStencilState = eDepthStencilState::eDefault;

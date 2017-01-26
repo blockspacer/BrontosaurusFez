@@ -8,13 +8,13 @@
 
 #define BUFFER_SIZE 512
 
-
-struct SRenderMessage;
-
+template<typename type, typename sizeType = std::uint32_t>
 class CSynchronizer
 {
 public:
-	using size_type = std::uint32_t;
+	using size_type = sizeType;
+
+private:
 	enum eBufferIndex : char
 	{
 		eFirst,
@@ -27,8 +27,8 @@ public:
 	CSynchronizer();
 	~CSynchronizer();
 
-	inline SRenderMessage* operator[](const size_type aIndex);
-	inline void operator <<(SRenderMessage* aObject);
+	inline type operator[](const size_type aIndex);
+	inline void operator <<(type aObject);
 	inline size_type operator!() const;
 	inline void SwapWrite();
 	inline void SwapRead();
@@ -36,7 +36,7 @@ public:
 	inline void ClearAll();
 
 private:
-	CU::StaticArray<CU::GrowingArray<SRenderMessage*, size_type>, eSize> myBuffers; //TODO: Fixa staticArray sizetype?
+	CU::StaticArray<CU::GrowingArray<type, size_type>, eSize> myBuffers; //TODO: Fixa staticArray sizetype?
 
 	std::mutex mySwapMutex;
 
@@ -47,7 +47,8 @@ private:
 	volatile bool myHasFresh;
 };
 
-inline void CSynchronizer::ClearAll()
+template<typename type, typename sizeType>
+inline void CSynchronizer<type, sizeType>::ClearAll()
 {
 	mySwapMutex.lock();
 
@@ -59,7 +60,8 @@ inline void CSynchronizer::ClearAll()
 	mySwapMutex.unlock();
 }
 
-inline CSynchronizer::CSynchronizer()
+template<typename type, typename sizeType>
+inline CSynchronizer<type, sizeType>::CSynchronizer()
 {
 	myBuffers[eFirst].Init(BUFFER_SIZE);
 	myBuffers[eSecond].Init(BUFFER_SIZE);
@@ -72,27 +74,32 @@ inline CSynchronizer::CSynchronizer()
 	myHasFresh = false;
 }
 
-inline CSynchronizer::~CSynchronizer()
+template<typename type, typename sizeType>
+inline CSynchronizer<type, sizeType>::~CSynchronizer()
 {
 	ClearAll();
 }
 
- SRenderMessage* CSynchronizer::operator[](const size_type aIndex)
+template<typename type, typename sizeType>
+type CSynchronizer<type, sizeType>::operator[](const size_type aIndex)
 {
 	return myBuffers[myReadFrom][aIndex];
 }
 
-inline void CSynchronizer::operator<<(SRenderMessage * aObject)
+template<typename type, typename sizeType>
+inline void CSynchronizer<type, sizeType>::operator<<(type aObject)
 {
 	myBuffers[myWriteTo].Add(aObject);
 }
 
-inline CSynchronizer::size_type CSynchronizer::operator!() const
+template<typename type, typename sizeType>
+inline sizeType CSynchronizer<type, sizeType>::operator!() const
 {
 	return myBuffers[myReadFrom].Size();
 }
 
-inline void CSynchronizer::SwapWrite()
+template<typename type, typename sizeType>
+inline void CSynchronizer<type, sizeType>::SwapWrite()
 {
 	mySwapMutex.lock();
 
@@ -108,7 +115,8 @@ inline void CSynchronizer::SwapWrite()
 
 }
 
-inline void CSynchronizer::SwapRead()
+template<typename type, typename sizeType>
+inline void CSynchronizer<type, sizeType>::SwapRead()
 {
 	if (myHasFresh == false)
 	{
@@ -131,7 +139,8 @@ inline void CSynchronizer::SwapRead()
 	mySwapMutex.unlock();
 }
 
-inline void CSynchronizer::ClearWrite()
+template<typename type, typename sizeType>
+inline void CSynchronizer<type, sizeType>::ClearWrite()
 {
 	myBuffers[myWriteTo].DeleteAll();
 }

@@ -37,7 +37,7 @@ namespace CU
 			myPlanes.RemovePlanes();
 		}
 
-		float FovExtens = 15.0f;
+		float FovExtens = 0.0f;//15.0f;
 
 		float AspectRatioY = aHeight / aWidth;
 		float FovX = (aFOV + FovExtens) * (static_cast<float>(3.14159265f) / 180.0f);

@@ -39,8 +39,8 @@ cbuffer ToWorld : register(b1)
 
 cbuffer GUIPixelBuffer : register(b1)
 {
-	float isProgressBar;
-	float progressBarValue;
+	float isMoneyBar;
+	float moneyPercent;
 	float skipEmissive;
 	float flashButton;
 	float isHealthBar;
@@ -59,12 +59,16 @@ Texture2D emissive : register(t4);
 Texture2D normalmap : register(t6);
 Texture2D metallic : register(t11);
 
-SamplerState globalSamplerState;
+SamplerState samplerStateClamp : register(s0);
+SamplerState samplerStateWrap : register(s1);
 
 float4 PS_PBL(PixelInput input);
-float4 PS_HealthBar(PixelInput input);
+float4 PS_Albedo(PixelInput input);
+float3 PS_Emissive(PixelInput input);
+float4 PS_HealthBar(PixelInput input, float aProgressBarValue);
 float4 PS_FlashButton(PixelInput input);
 float4 PS_OrbShader(PixelInput input);
+float4 PS_MoneyShader(PixelInput input);
 
 static const uint CubeMap_MipCount = 11;
 
@@ -96,27 +100,24 @@ PixelInput VS_PosNormBinormTanTex(VertexInput input)
 
 float4 PS_PosNormBinormTanTex(PixelInput input) : SV_TARGET
 {
-	float shouldDoPBL = (1.f - isProgressBar) * (1.f - isManaBar) * (1.f - isHealthBar);
+	float shouldDoPBL = (1.f - isMoneyBar) * (1.f - isManaBar) * (1.f - isHealthBar);
 
 	float4 output = shouldDoPBL * PS_PBL(input);
 
 	output += isManaBar * PS_OrbShader(input);
 	output += isHealthBar * PS_OrbShader(input);
-
-	output += isProgressBar * PS_HealthBar(input);
-
-	output += PS_FlashButton(input) * (1.f - isProgressBar);
-	output += PS_FlashButton(input) * isProgressBar * 3.f;
+	//output += isMoneyBar ;
+	output += isMoneyBar * PS_MoneyShader(input); // * float4(albedo.Sample(globalSamplerState, float2(input.uv.x, input.uv.y)).xyz, 1.f);
 	
 	return output;
 }
 
-float4 PS_HealthBar(PixelInput input)
+float4 PS_HealthBar(PixelInput input, float aProgressBarValue)
 {
-	float Damage = 6.f * progressBarValue;
+	float Damage = 6.f * aProgressBarValue;
 
 	float4 bGColor = float4(0.f, 0.f, 0.f, 1.f);
-	float4 Sampler = albedo.Sample(globalSamplerState, input.uv);
+	float4 Sampler = albedo.Sample(samplerStateWrap, input.uv);
 	float4 VectorConstruct = float4(Sampler.xyz.x, Sampler.xyz.y, Sampler.xyz.z, Sampler.w);
 	float MulOp = (Damage * 0.1667);
 	float MulOp1374 = (input.uv.x * 5.333);
@@ -161,31 +162,31 @@ float GetSpecPowToMip(float fSpecPow, int nMips)
 
 float4 PS_Albedo(PixelInput input)
 {
-	float4 output = albedo.Sample(globalSamplerState, input.uv);
+	float4 output = albedo.Sample(samplerStateWrap, input.uv);
 	return output;
 }
 
 float3 PS_Roughness(PixelInput input)
 {
-	float3 output = roughness.Sample(globalSamplerState, input.uv).xyz;
+	float3 output = roughness.Sample(samplerStateWrap, input.uv).xyz;
 	return output;
 }
 
 float3 PS_AmbientOcclusion(PixelInput input)
 {
-	float3 output = ambientOcclusion.Sample(globalSamplerState, input.uv).xyz;
+	float3 output = ambientOcclusion.Sample(samplerStateWrap, input.uv).xyz;
 	return output;
 }
 
 float3 PS_Emissive(PixelInput input)
 {
-	float3 output = emissive.Sample(globalSamplerState, input.uv).xyz;
+	float3 output = emissive.Sample(samplerStateWrap, input.uv).xyz;
 	return (1.f - skipEmissive) * output;
 }
 
 float3 PS_ObjectNormal(PixelInput input)
 {
-	float3 normal = normalmap.Sample(globalSamplerState, input.uv).xyz;
+	float3 normal = normalmap.Sample(samplerStateWrap, input.uv).xyz;
 	normal = (normal * 2.0f) - float3(1.0f, 1.0f, 1.0f);
 	normal = normalize(normal);
 	float3x3 tangentSpaceMatrix = float3x3(normalize(input.biTangent.xyz), normalize(input.tangent.xyz), normalize(input.normals.xyz));
@@ -196,7 +197,7 @@ float3 PS_ObjectNormal(PixelInput input)
 
 float3 PS_Metalness(PixelInput input)
 {
-	float3 output = metallic.Sample(globalSamplerState, input.uv).xyz;
+	float3 output = metallic.Sample(samplerStateWrap, input.uv).xyz;
 	return output;
 }
 
@@ -300,7 +301,7 @@ float3 PS_AmbientDiffuse(PixelInput input)
 	float3 metalnessAlbedo = PS_MetalnessAlbedo(input);
 	float3 ambientOcclusion = PS_AmbientOcclusion(input);
 
-	float3 ambientLight = cubeMap.SampleLevel(globalSamplerState, normal.xyz, (uint) CubeMap_MipCount.x - 2).xyz; // FIX!
+	float3 ambientLight = cubeMap.SampleLevel(samplerStateWrap, normal.xyz, (uint) CubeMap_MipCount.x - 2).xyz; // FIX!
 	float3 fresnel = PS_ReflectionFresnel(input);
 
 	float3 output = metalnessAlbedo * ambientLight * ambientOcclusion * (float3(1.0f, 1.0f, 1.0f) - fresnel);
@@ -319,7 +320,7 @@ float3 PS_AmbientSpecularity(PixelInput input)
 	float fakeLysSpecularPower = RoughToSPow(roughness);
 	float lysMipMap = GetSpecPowToMip(fakeLysSpecularPower, (uint) CubeMap_MipCount.x);
 
-	float3 ambientLight = cubeMap.SampleLevel(globalSamplerState, reflectionVector.xyz, lysMipMap).xyz;
+	float3 ambientLight = cubeMap.SampleLevel(samplerStateWrap, reflectionVector.xyz, lysMipMap).xyz;
 	float3 fresnel = PS_ReflectionFresnel(input).xyz;
 
 	float3 output = ambientLight * ambientOcclusion * fresnel;
@@ -361,7 +362,7 @@ float4 PS_PBL(PixelInput input)
 	float3 metalness = PS_Metalness(input);
 	float3 metalnessAlbedo = albedo.xyz - (albedo.xyz * metalness);
 	float3 ambientOcclusion = PS_AmbientOcclusion(input);
-	float3 ambientLight = cubeMap.SampleLevel(globalSamplerState, normal.xyz, (uint) CubeMap_MipCount.x - 2).xyz; // FIX!
+	float3 ambientLight = cubeMap.SampleLevel(samplerStateWrap, normal.xyz, (uint) CubeMap_MipCount.x - 2).xyz; // FIX!
 	float roughness = PS_Roughness(input).x;
 	float3 substance = (float3(0.04f, 0.04f, 0.04f) - (float3(0.04f, 0.04f, 0.04f) * metalness)) + albedo.xyz * metalness;
 	float3 toEye = normalize(cameraPosition.xyz - input.worldPosition.xyz);
@@ -380,7 +381,7 @@ float4 PS_PBL(PixelInput input)
 	float3 reflectionVector = -reflect(toEye, normal);
 	float fakeLysSpecularPower = RoughToSPow(roughness);
 	float lysMipMap = GetSpecPowToMip(fakeLysSpecularPower, (uint) CubeMap_MipCount.x);
-	float3 ambientLightSpec = cubeMap.SampleLevel(globalSamplerState, reflectionVector.xyz, lysMipMap).xyz;
+	float3 ambientLightSpec = cubeMap.SampleLevel(samplerStateWrap, reflectionVector.xyz, lysMipMap).xyz;
 	float3 ambientSpecularity = ambientLightSpec * ambientOcclusion * fresnel;
 
 
@@ -437,8 +438,8 @@ float4 PS_OrbShader(PixelInput input)
 	float MulOp = (time * bubbleTimeFactor);
 	float SubOp98 = (input.uv.xy.y - MulOp);
 	float2 VectorConstruct = float2(AddOp, SubOp98);
-	float4 Sampler = albedo.Sample(globalSamplerState, float2(VectorConstruct.xy.x, 1 - VectorConstruct.xy.y));
-	float4 Sampler100 = albedo.Sample(globalSamplerState, float2(input.uv.xy.x, 1 - input.uv.xy.y));
+	float4 Sampler = albedo.Sample(samplerStateWrap, float2(VectorConstruct.xy.x, 1 - VectorConstruct.xy.y));
+	float4 Sampler100 = albedo.Sample(samplerStateWrap, float2(input.uv.xy.x, 1 - input.uv.xy.y));
 	float AddOp137 = ((Sampler.xyz.z * 0.3) + Sampler100.xyz.y);
 	float MulOp64 = (time * waveTimeFactor);
 	float SubOp66 = (MulOp64 - input.uv.xy.x);
@@ -447,11 +448,31 @@ float4 PS_OrbShader(PixelInput input)
 	float MulOp126 = (orbValue * 0.5);
 	float SubOp124 = ((AddOp152 + 0.25) - MulOp126);
 	float2 VectorConstruct63 = float2(SubOp66, SubOp124);
-	float4 Sampler36 = albedo.Sample(globalSamplerState, float2(VectorConstruct63.xy.x, 1 - VectorConstruct63.xy.y));
+	float4 Sampler36 = albedo.Sample(samplerStateWrap, float2(VectorConstruct63.xy.x, 1 - VectorConstruct63.xy.y));
 	float SubOp128 = (Sampler36.xyz.x - (1.0 - Sampler100.w));
 	float SatOp = saturate(SubOp128);
 	float3 MulOp60 = (lerp(orbColor2.xyz, orbColor1.xyz, AddOp137) * SatOp);
 	float4 VectorConstruct61 = float4(MulOp60.x, MulOp60.y, MulOp60.z, SatOp);
 	
 	return VectorConstruct61;
+}
+
+float4 PS_MoneyShader(PixelInput input)
+{
+	float moneyLevel = moneyPercent;
+
+	float2 moneyImage = float2(input.uv.xy.x, ( input.uv.xy.y + 0.25 ) );
+	float4 Sampler = albedo.Sample(samplerStateWrap, moneyImage);
+	
+	float uvShiftTop = (input.uv.xy.x + moneyLevel);
+
+	float2 siluetteImage = float2(uvShiftTop, (input.uv.xy.y + 0.5) + (moneyLevel * 0.25));
+	
+	float4 Sampler68 = albedo.Sample(samplerStateWrap, siluetteImage);
+
+	float3 MulOp = (Sampler.xyz * Sampler68.xyz.z);
+	float4 VectorConstruct59 = float4(MulOp.x, MulOp.y, MulOp.z, Sampler68.xyz.z);
+	
+	float4 output = VectorConstruct59;
+	return output;
 }

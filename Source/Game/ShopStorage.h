@@ -20,6 +20,9 @@ public:
 
 	void RemoveHat(const std::string& aHatName);
 	void LoadStorage(const std::string& aFilePath);
+
+	inline const SStorage& GetStorage() const;
+
 private:
 	struct SMatchReturn
 	{
@@ -43,3 +46,7 @@ private:
 	virtual eMessageReturn Recieve(const Message & aMessage) override;
 };
 
+inline const SStorage& CShopStorage::GetStorage() const
+{
+	return myStorage;
+}
