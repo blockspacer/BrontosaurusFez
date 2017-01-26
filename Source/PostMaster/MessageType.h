@@ -31,6 +31,7 @@ enum class eMessageType
 	ePlayerHealthChanged,
 	ePlayerManaChanged,
 	eShopItemSelected,
+	eShopClosed,
 	eGameObjectDied,
 	eLength,
 };

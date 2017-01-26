@@ -17,6 +17,7 @@ public:
 	void BasicAttackUpdate(float aDeltaTime);
 	void WhirlWindUpdate(float aDeltaTime);
 	void SweepAttackUpdate(float aDeltaTime);
+	void SpawnEnemyAttackUpdate(float aDeltaTime);
 	void SetTargetPosition(CU::Vector3f aTargetPosition);
 	void SetTargetObject(CGameObject* aTargetObject);
 	void ActivateCollider();

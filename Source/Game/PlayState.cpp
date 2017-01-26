@@ -55,6 +55,9 @@
 
 #include "PickupFactory.h"
 #include "PickupManager.h"
+#include "PickerUpperComponent.h"
+
+#include "EnemyFactory.h"
 
 #include "MasterAI.h"
 
@@ -124,6 +127,7 @@ CPlayState::~CPlayState()
 	SAFE_DELETE(myGoldText);
 	//SAFE_DELETE(myHatMaker);
 	SAFE_DELETE(myHealthBarManager);
+	SAFE_DELETE(myHatMaker);
 
 
 	SAFE_DELETE(myMouseComponent);
@@ -199,7 +203,7 @@ void CPlayState::Load()
 	//hue hue dags att fula ner play state - Alex(Absolut inte Marcus); // snälla slå Johan inte mig(Alex);
 
 	//create an npc
-	CGameObject* npcObject1 = myGameObjectManager->CreateGameObject();
+	/*CGameObject* npcObject1 = myGameObjectManager->CreateGameObject();
 	npcObject1->SetName("npcObject1");
 	npcObject1->GetLocalTransform().Move(CU::Vector3f(0.0f, 000.0f, 500.0f));
 	CModelComponent* modelComponent1 = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle2.fbx");
@@ -214,7 +218,7 @@ void CPlayState::Load()
 	collisionComponent->SetColliderType(eColliderType_Enemy);
 	npcObject1->AddComponent(collisionComponent);
 
-	npcObject1->AddComponent(new CHealthComponent());
+	npcObject1->AddComponent(new CHealthComponent());*/
 
 
 	//create another npc
@@ -387,6 +391,8 @@ void CPlayState::Load()
 		PollingStation::playerObject->AddComponent(respawn);
 		PollingStation::playerObject->AddComponent(new CPlayerHealthMessenger());
 		PollingStation::playerObject->AddComponent(new CPlayerManaMessenger());
+		PollingStation::playerObject->AddComponent(CPickupManager::GetInstance().CreatePickerUpperComp());
+		PollingStation::playerObject->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
 
 		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eInit, SComponentMessageData());
 	}
@@ -425,7 +431,13 @@ void CPlayState::Load()
 	myMouseComponent = new CMouseComponent(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 	mouseObject->AddComponent(myMouseComponent);
 
-	CFireEmitterInstance fireeeeeByCarl;
+	if (PollingStation::playerObject != nullptr)
+	{
+		PollingStation::playerObject->AddComponent(new CPlayerHealthMessenger());
+		PollingStation::playerObject->AddComponent(new CPlayerManaMessenger());
+	}
+
+	/*CFireEmitterInstance fireeeeeByCarl;
 	SFireEmitterData fireData;
 	fireData.myScrollSpeeds[0] = 1.3f;
 	fireData.myScrollSpeeds[1] = 2.1f;
@@ -447,7 +459,7 @@ void CPlayState::Load()
 	fireeeeeByCarl.GetTransformation().m11 *= 2.f;
 	fireeeeeByCarl.GetTransformation().m22 *= 2.f;
 	fireeeeeByCarl.GetTransformation().m33 *= 2.f;
-	myScene->AddFireEmitters(fireeeeeByCarl);
+	myScene->AddFireEmitters(fireeeeeByCarl);*/
 	
 	myHatMaker->LoadBluePrints("Json/Hats/HatBluePrints.json");
 
@@ -659,6 +671,7 @@ void CPlayState::CreateManagersAndFactories()
 	CMasterAI::Create();
 	RespawnComponentManager::Create();
 	CLevelManager::CreateInstance();
+	CEnemyFactory::Create(*myGameObjectManager,*myCollisionComponentManager,*myHealthBarManager);
 }
 
 void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)

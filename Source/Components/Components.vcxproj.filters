@@ -137,11 +137,14 @@
     <ClCompile Include="ActivationObjectiveComponent.cpp">
       <Filter>ObjectiveComponents</Filter>
     </ClCompile>
-    <ClCompile Include="OpenShopListenerComponent.cpp" />
     <ClCompile Include="RespawnComponent.cpp" />
     <ClCompile Include="RespawnComponentManager.cpp" />
     <ClCompile Include="ChangeLevelTriggerComponent.cpp" />
     <ClCompile Include="FormationController.cpp" />
+    <ClCompile Include="SpawnEnemyComponent.cpp" />
+    <ClCompile Include="OpenShopListenerComponent.cpp">
+      <Filter>OpenShopListenerComponent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -300,11 +303,14 @@
     <ClInclude Include="ActivationObjectiveComponent.h">
       <Filter>ObjectiveComponents</Filter>
     </ClInclude>
-    <ClInclude Include="OpenShopListenerComponent.h" />
     <ClInclude Include="RespawnComponent.h" />
     <ClInclude Include="RespawnComponentManager.h" />
     <ClInclude Include="ChangeLevelTriggerComponent.h" />
     <ClInclude Include="FormationController.h" />
+    <ClInclude Include="OpenShopListenerComponent.h">
+      <Filter>OpenShopListenerComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnEnemyComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
