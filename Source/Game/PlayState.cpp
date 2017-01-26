@@ -110,9 +110,11 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 	, myMouseComponent(nullptr)
 	, myQuestManager()
 	, myQuestDrawer(myQuestManager)
+	, myShuldRenderNavmesh(false)
 {
 	myIsLoaded = false;
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eHatAdded);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
 }
 
 CPlayState::~CPlayState()
@@ -154,6 +156,8 @@ CPlayState::~CPlayState()
 	SkillFactory::DestroyInstance();
 	CComponentManager::DestroyInstance();
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eHatAdded);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
+
 	CLevelManager::DestroyInstance();
 }
 
@@ -524,13 +528,18 @@ void CPlayState::Render()
 	myCollisionComponentManager->Render();
 
 	SChangeStatesMessage msg;
-	msg.myBlendState = eBlendState::eAlphaBlend;
-	msg.myDepthStencilState = eDepthStencilState::eDefault;
-	msg.myRasterizerState = eRasterizerState::eWireFrame;
-	msg.mySamplerState = eSamplerState::eClamp;
 	
-	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
-	myNavmesh.Render();
+
+	if (myShuldRenderNavmesh == true)
+	{
+		msg.myBlendState = eBlendState::eAlphaBlend;
+		msg.myDepthStencilState = eDepthStencilState::eDisableDepth;
+		msg.myRasterizerState = eRasterizerState::eWireFrame;
+		msg.mySamplerState = eSamplerState::eClamp;
+
+		RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
+		myNavmesh.Render();
+	}
 
 	msg.myBlendState = eBlendState::eAlphaBlend;
 	msg.myDepthStencilState = eDepthStencilState::eDisableDepth;

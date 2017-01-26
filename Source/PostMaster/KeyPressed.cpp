@@ -71,7 +71,9 @@ eMessageReturn KeyPressed::DoEvent(CPlayState* aPlayState) const
 			//aPlayState->NextLevel();
 			CLevelManager::GetInstance()->GoToLevel(2);
 			break;
-		case CU::eKeys::P:
+		case CU::eKeys::N:
+			aPlayState->myShuldRenderNavmesh = !aPlayState->myShuldRenderNavmesh;
+			break;
 		case CU::eKeys::ESCAPE:
 			aPlayState->Pause();
 			break;

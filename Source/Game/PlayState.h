@@ -82,6 +82,7 @@ public:
 	QM::EventHandle fristObjective;
 	QM::EventHandle secondObjective;
 	QM::EventHandle thridObjective;
+	bool myShuldRenderNavmesh;
 
 private:
 	void CreateManagersAndFactories();
