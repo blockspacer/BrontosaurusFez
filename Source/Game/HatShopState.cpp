@@ -88,7 +88,7 @@ HatShopState::~HatShopState()
 
 void HatShopState::CloseShop()
 {
-	SetStateStatus(eStatus::ePop);
+	SetStateStatus(eStateStatus::ePop);
 	PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopClosed,ShopClosed()));
 }
 
