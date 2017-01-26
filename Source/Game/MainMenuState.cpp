@@ -65,8 +65,8 @@ void MainMenuState::Render()
 void MainMenuState::OnEnter()
 {
 	//bool result;
-	//result = Audio::CAudioInterface::GetInstance()->LoadBank("Audio/mainMenu.bnk");
-	//Audio::CAudioInterface::GetInstance()->PostEvent("PlayBasSong");
+	Audio::CAudioInterface::GetInstance()->LoadBank("Audio/mainMenu.bnk");
+	Audio::CAudioInterface::GetInstance()->PostEvent("PlayBasSong");
 	
 	if (myIsGoingToLevelSelect == false)
 	{
@@ -85,9 +85,9 @@ void MainMenuState::OnEnter()
 
 void MainMenuState::OnExit()
 {
-	//Audio::CAudioInterface::GetInstance()->PostEvent("StopBasSong");
-	//Audio::CAudioInterface::GetInstance()->PostEvent("switchBank");
-	//Audio::CAudioInterface::GetInstance()->UnLoadBank("Audio/menMenu.bnk");
+	Audio::CAudioInterface::GetInstance()->PostEvent("StopBasSong");
+	Audio::CAudioInterface::GetInstance()->PostEvent("switchBank");
+	Audio::CAudioInterface::GetInstance()->UnLoadBank("Audio/menMenu.bnk");
 	
 
 	if (myIsGoingToLevelSelect == false)
