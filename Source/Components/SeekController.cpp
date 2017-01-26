@@ -126,7 +126,7 @@ CU::Vector2f& CSeekController::CalculateFormationPosition(const CU::Vector2f& aT
 	{
 		return aTargetPositon + CU::Vector2f::Zero;
 	}
-	const float formationDistance = 100.0f;
+	const float formationDistance = 50.0f;
 	float rotationAmount = PI / 16.0f;
 	if(myFormationIndex % 2 == 0)
 	{
