@@ -13,7 +13,7 @@ namespace Collision
 	public:
 		IRenderCommand();
 		virtual ~IRenderCommand();
-		virtual void DoRenderCall(CU::GrowingArray<char, unsigned short, false>& aVertexBuffer) = 0;
+		virtual void DoRenderCall(CU::GrowingArray<char, unsigned int, false>& aVertexBuffer) = 0;
 	};
 
 	class CRenderCircle : public IRenderCommand
@@ -21,7 +21,7 @@ namespace Collision
 	public:
 		CRenderCircle(const Intersection::SCircle& aCircle);
 		~CRenderCircle();
-		void DoRenderCall(CU::GrowingArray<char, unsigned short, false>& aVertexBuffer) override;
+		void DoRenderCall(CU::GrowingArray<char, unsigned int, false>& aVertexBuffer) override;
 
 	private:
 		const Intersection::SCircle& myCircle;
@@ -32,7 +32,7 @@ namespace Collision
 	public:
 		CRenderTriangle(const Intersection::STriangle* aCircle);
 		~CRenderTriangle();
-		void DoRenderCall(CU::GrowingArray<char, unsigned short, false>& aVertexBuffer) override;
+		void DoRenderCall(CU::GrowingArray<char, unsigned int, false>& aVertexBuffer) override;
 
 	private:
 		const Intersection::STriangle* myTriangle;
@@ -43,7 +43,7 @@ namespace Collision
 	public:
 		CRenderPoint(const Intersection::SPoint& aPoint);
 		~CRenderPoint();
-		void DoRenderCall(CU::GrowingArray<char, unsigned short, false>& aVertexBuffer) override;
+		void DoRenderCall(CU::GrowingArray<char, unsigned int, false>& aVertexBuffer) override;
 
 	private:
 		const Intersection::SPoint& myPoint;

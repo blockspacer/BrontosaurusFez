@@ -109,7 +109,7 @@ SRenderNavmeshMessage::SRenderNavmeshMessage()
 	myModel = nullptr;
 }
 
-SRenderLineBuffer::SRenderLineBuffer(const CU::GrowingArray<char, unsigned short, false>& aLineBuffer)
+SRenderLineBuffer::SRenderLineBuffer(const CU::GrowingArray<char, unsigned int, false>& aLineBuffer)
 	: SRenderMessage(eRenderMessageType::eRenderLineBuffer)
 	, myLineBuffer(aLineBuffer)
 {
