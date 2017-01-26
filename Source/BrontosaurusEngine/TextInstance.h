@@ -3,6 +3,8 @@
 #include "../CommonUtilities/vector4.h"
 #include "../CommonUtilities/vector2.h"
 #include "CoolText.h"
+#include "../CommonUtilities/GrowingArray.h"
+#include "../CommonUtilities/DL_Debug.h"
 
 class CText;
 
@@ -24,22 +26,29 @@ public:
 	void Init(const CU::DynamicString& aFontPath = "Default");
 	void Render();
 
+	void SetLineGap();
+
 	inline void SetPosition(const CU::Vector2f& aPosition);
 	inline const CU::Vector2f& GetPosition() const;
 
 	inline void SetColor(const CU::Vector4f& aColor);
 	inline const CU::Vector4f& GetColor() const;
 
+	void SetTextLines(const CU::GrowingArray<CU::DynamicString>& someLines);
+	const CU::GrowingArray<CU::DynamicString> &GetTextLines();
+
 	inline void SetText(const CU::DynamicString& aString);
-	inline const CU::DynamicString& GetText() const;
+	inline CU::DynamicString GetText() const;
 	float GetlineHeight() const;
 
 	CTextInstance& operator=(const CTextInstance& aTextInstance);
 private:
-	CU::DynamicString myString;
+	//CU::DynamicString myString;
+	CU::GrowingArray<CU::DynamicString> myStrings;
 	CU::Vector4f myColor;
 	CU::Vector2f myPosition;
 	CCoolText* myText;
+	CU::Vector2f myLineGap;
 };
 
 inline void CTextInstance::SetPosition(const CU::Vector2f & aPosition)
@@ -64,10 +73,33 @@ inline const CU::Vector4f& CTextInstance::GetColor() const
 
 inline void CTextInstance::SetText(const CU::DynamicString& aString)
 {
-	myString = aString;
+	DL_PRINT_WARNING("Warning slow consider using different set text method");
+	myStrings.RemoveAll();
+	int lastPosition = 0;
+	for (int i = 0; i < aString.Size(); ++i)
+	{
+		if (aString.at(i) == '/n')
+		{
+			myStrings.Add(aString.SubStr(lastPosition, i - lastPosition));
+			lastPosition = i + 1;
+		}
+	}
+
+	myStrings.Add(aString.SubStr(lastPosition, aString.Size() - lastPosition));
 }
 
-inline const CU::DynamicString& CTextInstance::GetText() const
+inline CU::DynamicString CTextInstance::GetText() const
 {
-	return myString;
+	DL_PRINT_WARNING("Warning slow please consider just getting a separe line");
+	CU::DynamicString string;
+	for (int i = 0; i < myStrings.Size(); ++i)
+	{
+		if (i != 0)
+		{
+			string += '/n';
+		}
+		string += myStrings[i];
+	}
+
+	return string;
 }

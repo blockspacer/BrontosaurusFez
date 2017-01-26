@@ -221,9 +221,10 @@ struct SRenderTextMessage : SRenderMessage
 {
 	SRenderTextMessage();
 	CU::Vector4f myColor;
-	CU::DynamicString myString;
+	CU::GrowingArray<CU::DynamicString> myStrings;
 	CU::Vector2f myPosition;
 	CCoolText *myText;
+	CU::Vector2f myLineHeight;
 };
 
 
