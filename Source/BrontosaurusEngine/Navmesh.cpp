@@ -4,7 +4,6 @@
 #include "Engine.h"
 #include "ShaderManager.h"
 #include "ModelManager.h"
-#include <Plane.h>
 #include <Line3D.h>
 #include <line.h>
 #include <limits>
@@ -231,10 +230,11 @@ CPath CNavmesh::CalculatePath(const SNavmeshNode & aStartPoint, const SNavmeshNo
 		}
 	}
 
-	return CPath { waypoints };
+
+	return CPath(waypoints);
 }
 
-CNavmesh::SNavmeshTriangle & CNavmesh::GetClosestTriangle(const CU::Vector3f & aPosition)
+SNavmeshTriangle & CNavmesh::GetClosestTriangle(const CU::Vector3f & aPosition)
 {
 	float d2 = 99999999999999.f;
 	float temp;
@@ -253,7 +253,7 @@ CNavmesh::SNavmeshTriangle & CNavmesh::GetClosestTriangle(const CU::Vector3f & a
 	return *closestTriangle;
 }
 
-bool CNavmesh::GetPointOnNavmesh(const CU::Vector3f & aOrigin, const CU::Vector3f & aDirection, CNavmesh::SNavmeshTriangle& aIntersectingTriangle, CU::Vector3f& aIntersectionPoint)
+bool CNavmesh::GetPointOnNavmesh(const CU::Vector3f & aOrigin, const CU::Vector3f & aDirection, SNavmeshTriangle& aIntersectingTriangle, CU::Vector3f& aIntersectionPoint)
 {
 	SNavmeshTriangle* triangle = nullptr; 
 	CU::Vector3f v1;
@@ -597,6 +597,10 @@ void CNavmesh::BuildEdgesFromFace(const ObjLoader::SObjLoaderFace & aFace)
 	tris.Edges[0] = &myEdges[edgeIndices[0]];
 	tris.Edges[1] =	&myEdges[edgeIndices[1]];
 	tris.Edges[2] =	&myEdges[edgeIndices[2]];
+
+	tris.Points[0] = &myPoints[aFace.myVerteces[0].VertexIndex];
+	tris.Points[1] = &myPoints[aFace.myVerteces[1].VertexIndex];
+	tris.Points[2] = &myPoints[aFace.myVerteces[2].VertexIndex];
 
 	tris.CenterPosition = first.FirstVertex->Position + second.FirstVertex->Position + third.FirstVertex->Position; // Sets the centre of the triangle with median
 	tris.CenterPosition /= 3.0f;
