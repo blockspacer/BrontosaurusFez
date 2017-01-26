@@ -73,29 +73,33 @@ inline const CU::Vector4f& CTextInstance::GetColor() const
 
 inline void CTextInstance::SetText(const CU::DynamicString& aString)
 {
-	DL_PRINT_WARNING("Warning slow consider using different set text method");
+
 	myStrings.RemoveAll();
 	int lastPosition = 0;
 	for (int i = 0; i < aString.Size(); ++i)
 	{
 		if (aString.at(i) == '/n')
 		{
-			myStrings.Add(aString.SubStr(lastPosition, i - lastPosition));
+			DL_PRINT_WARNING("Warning slow consider using different set text method");
+			const CU::DynamicString explainingString(aString.SubStr(lastPosition, i - lastPosition));
+			myStrings.Add(explainingString);
 			lastPosition = i + 1;
 		}
 	}
 
-	myStrings.Add(aString.SubStr(lastPosition, aString.Size() - lastPosition));
+	const  CU::DynamicString lastExplaingString(aString.SubStr(lastPosition, aString.Size() - lastPosition));
+	myStrings.Add(lastExplaingString);
 }
 
 inline CU::DynamicString CTextInstance::GetText() const
 {
-	DL_PRINT_WARNING("Warning slow please consider just getting a separe line");
+
 	CU::DynamicString string;
 	for (int i = 0; i < myStrings.Size(); ++i)
 	{
 		if (i != 0)
 		{
+			DL_PRINT_WARNING("Warning slow please consider just getting a separete line");
 			string += '/n';
 		}
 		string += myStrings[i];

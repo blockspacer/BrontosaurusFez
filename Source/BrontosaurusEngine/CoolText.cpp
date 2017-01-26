@@ -78,10 +78,13 @@ void CCoolText::Render(const CU::GrowingArray<CU::DynamicString>& someStrings, c
 		for (size_t i = 0; i < wideString.size(); ++i)
 		{
 
-			//if (i > 0 && wideString[i - 1] != L'\n'/*mer fulhax för att ha new line av '\n'*/)
-			const CU::Vector2i pixelAdvance = myFont.GetAdvance(wideString[i], wideString[i - 1], true);
-			const CU::Vector2f screenAdvance(static_cast<float>(pixelAdvance.x) / WINDOW_SIZE_F.x, static_cast<float>(pixelAdvance.y) / WINDOW_SIZE_F.y);
-			penPosition += screenAdvance;
+			if (i > 0)
+			{
+				const CU::Vector2i pixelAdvance = myFont.GetAdvance(wideString[i], wideString[i - 1], true);
+				const CU::Vector2f screenAdvance(static_cast<float>(pixelAdvance.x) / WINDOW_SIZE_F.x, static_cast<float>(pixelAdvance.y) / WINDOW_SIZE_F.y);
+				penPosition += screenAdvance;
+			}
+			
 
 			const CU::Vector2i bearing = myFont.GetBearing(wideString[i]);
 			const CU::Vector2f screenBearing(static_cast<float>(bearing.x) / WINDOW_SIZE_F.x, static_cast<float>(-bearing.y) / WINDOW_SIZE_F.y);

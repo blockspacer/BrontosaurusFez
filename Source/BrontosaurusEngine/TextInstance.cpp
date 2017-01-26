@@ -25,7 +25,7 @@ CTextInstance::CTextInstance(const CTextInstance& aTextInstance)
 
 CTextInstance::~CTextInstance()
 {
-	SAFE_DELETE(myText);
+	//SAFE_DELETE(myText);
 }
 
 void CTextInstance::Init(const CU::DynamicString& aFontPath)
@@ -42,7 +42,7 @@ void CTextInstance::Init(const CU::DynamicString & aFontPath, const int aPixelSi
 
 void CTextInstance::Render()
 {
-	if (myText != nullptr && myStrings.Size() == 0)
+	if (myText != nullptr && myStrings.Size() > 0)
 	{
 		//SChangeStatesMessage* changeStateMessage = new SChangeStatesMessage();
 		//changeStateMessage->myBlendState = eBlendState::eAlphaBlend;
