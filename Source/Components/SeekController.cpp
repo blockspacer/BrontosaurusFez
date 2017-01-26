@@ -58,7 +58,7 @@ const CU::Vector2f CSeekController::Update(const CU::Time& aDeltaTime)
 	if (myHaveBeenCalledForHelp == false)
 	{
 		myHaveBeenCalledForHelp = true;
-		CMasterAI::GetInstance().CallForHelp(GetParent(), myCallForHelpRadius);
+		CMasterAI::GetInstance().CallForHelp(GetParent(), 1800);
 	}
 	CU::Vector2f acceleration;
 	acceleration = targetVelocity;
@@ -110,14 +110,38 @@ void CSeekController::SetCallForHelpRange(const float aRange)
 	myCallForHelpRadius = aRange;
 }
 
-void CSeekController::CallForHelp()
+void CSeekController::CalledUponForHelp()
 {
 	myHaveBeenCalledForHelp = true;
+	CU::Vector2f targetPosition(PollingStation::playerObject->GetWorldPosition().x, PollingStation::playerObject->GetWorldPosition().z);
+	CU::Vector2f position = CU::Vector2f(myController->GetParent()->GetWorldPosition().x, myController->GetParent()->GetWorldPosition().z);
+	myFormationDirection = targetPosition - position;
+	myFormationDirection.Normalize();
+	myFormationDirection *= -1;
 }
 
 CU::Vector2f& CSeekController::CalculateFormationPosition(const CU::Vector2f& aTargetPositon)
 {
+	if(myFormationIndex <= 0)
+	{
+		return aTargetPositon + CU::Vector2f::Zero;
+	}
 	const float formationDistance = 100.0f;
+	float rotationAmount = PI / 16.0f;
+	if(myFormationIndex % 2 == 0)
+	{
+		rotationAmount *= -1;
+	}
+	if(myFormationIndex == 0)
+	{
+		rotationAmount = 0;
+	}
+	short angleMultiplier = static_cast<short>((myFormationIndex - 1) / 2) + 1;
+	CU::Vector2f formationDirectionRotated = myFormationDirection * CU::Matrix33f::CreateRotateAroundZ(rotationAmount * angleMultiplier);
+	formationDirectionRotated *= formationDistance;
+	return aTargetPositon + formationDirectionRotated;
+	//Old Spin to win Formation Code;
+	/*const float formationDistance = 10.0f;
 	CU::Vector2f formationPosition = aTargetPositon;
 	if (myFormationIndex <= 0)
 	{
@@ -144,7 +168,7 @@ CU::Vector2f& CSeekController::CalculateFormationPosition(const CU::Vector2f& aT
 	direction.Normalize();
 	direction *= formationDistance;
 	formationPosition += direction;
-	return formationPosition;
+	return formationPosition;*/
 }
 
 void CSeekController::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
@@ -161,7 +185,7 @@ void CSeekController::Receive(const eComponentMessageType aMessageType, const SC
 	break;
 	case(eComponentMessageType::eCalledForHelp):
 	{
-		myHaveBeenCalledForHelp = true;
+		CalledUponForHelp();
 		myFormationIndex = static_cast<short>(aMessageData.myUShort);
 	}
 	default:
