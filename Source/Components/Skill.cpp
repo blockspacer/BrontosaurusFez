@@ -135,7 +135,9 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 		if((myUser->GetWorldPosition() - myTargetObject->GetWorldPosition()).Length2() < mySkillData->activationRadius *  mySkillData->activationRadius)
 		{
 			eComponentMessageType type = eComponentMessageType::eStopMovement;
-			myUser->NotifyComponents(type, SComponentMessageData());
+			SComponentMessageData stopData;
+			stopData.myFloat = mySkillData->coolDown;
+			myUser->NotifyComponents(type, stopData);
 			SComponentMessageData statedAttackingMessage;
 			statedAttackingMessage.myString = "attack";
 			myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
@@ -156,7 +158,9 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 		myElapsedCoolDownTime = 0.0f;
 		CU::Vector3f direction = myTargetPosition - myUser->GetWorldPosition();
 		myAnimationTimeElapsed += aDeltaTime;
-		myUser->NotifyComponents(eComponentMessageType::eStopMovement, SComponentMessageData());
+		SComponentMessageData stopData;
+		stopData.myFloat = 0.1f;
+		myUser->NotifyComponents(eComponentMessageType::eStopMovement, stopData);
 		if(direction.Length2() > mySkillData->range * mySkillData->range)
 		{
 			direction.Normalize();
@@ -188,7 +192,9 @@ void Skill::WhirlWindUpdate(float aDeltaTime)
 
 void Skill::SweepAttackUpdate(float aDeltaTime)
 {
-	myUser->NotifyComponents(eComponentMessageType::eStopMovement, SComponentMessageData());
+	SComponentMessageData stopData;
+	stopData.myFloat = 0.1f;
+	myUser->NotifyComponents(eComponentMessageType::eStopMovement, stopData);
 	SComponentMessageData startedAttackingMessage;
 	startedAttackingMessage.myString = "turnLeft90";
 	myUser->NotifyComponents(eComponentMessageType::eBasicAttack, startedAttackingMessage);
@@ -213,7 +219,9 @@ void Skill::SweepAttackUpdate(float aDeltaTime)
 
 void Skill::SpawnEnemyAttackUpdate(float aDeltaTime)
 {
-	myUser->NotifyComponents(eComponentMessageType::eStopMovement, SComponentMessageData());
+	SComponentMessageData stopData;
+	stopData.myFloat = 0.1f;
+	myUser->NotifyComponents(eComponentMessageType::eStopMovement, stopData);
 
 	SComponentMessageData startedAttackingMessage;
 	startedAttackingMessage.myString = "turnLeft90";

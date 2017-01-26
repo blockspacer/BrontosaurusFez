@@ -18,6 +18,7 @@
 #include "../CommonUtilities/GrowingArray.h"
 #include "../CommonUtilities/StaticArray.h"
 #include "../CommonUtilities/CUTime.h"
+#include <string>
 
 //#include "../CommonUtilities/MemoryLeekLogger.h"
 
