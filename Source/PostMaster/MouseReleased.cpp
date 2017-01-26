@@ -30,7 +30,7 @@ eMessageReturn MouseReleased::DoEvent(LevelSelectState* aLevelSelectState) const
 {
 	if (aLevelSelectState != nullptr)
 	{
-		aLevelSelectState->SetStateStatus(State::eStatus::ePop);
+		aLevelSelectState->SetStateStatus(eStateStatus::ePop);
 	}
 
 	return eMessageReturn::eContinue;

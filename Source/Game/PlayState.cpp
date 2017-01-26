@@ -100,6 +100,7 @@
 #include "NavigationComponent.h"
 #include "PlayerHealthMessenger.h"
 #include "PlayerManaMessenger.h"
+#include "ComponentMessage.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -384,6 +385,10 @@ void CPlayState::Load()
 
 		PollingStation::playerObject->AddComponent(healthMessenger);
 		PollingStation::playerObject->AddComponent(respawn);
+		PollingStation::playerObject->AddComponent(new CPlayerHealthMessenger());
+		PollingStation::playerObject->AddComponent(new CPlayerManaMessenger());
+
+		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eInit, SComponentMessageData());
 	}
 	//CSeekControllerManager::GetInstance().SetTarget();
 	myGameObjectManager->SendObjectsDoneMessage();
@@ -419,12 +424,6 @@ void CPlayState::Load()
 	mouseObject->AddComponent(mouseCollisionComponent);
 	myMouseComponent = new CMouseComponent(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 	mouseObject->AddComponent(myMouseComponent);
-
-	if (PollingStation::playerObject != nullptr)
-	{
-		PollingStation::playerObject->AddComponent(new CPlayerHealthMessenger());
-		PollingStation::playerObject->AddComponent(new CPlayerManaMessenger());
-	}
 
 	CFireEmitterInstance fireeeeeByCarl;
 	SFireEmitterData fireData;
@@ -472,7 +471,7 @@ void CPlayState::Init()
 
 }
 
-State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
+eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 {
 	Audio::CAudioInterface* audio = Audio::CAudioInterface::GetInstance();
 	if (audio != nullptr)

@@ -32,7 +32,7 @@ void PauseMenu::Init()
 	myGUIManager->Init("Models/mainMenu/pauseMenu.fbx"); 
 }
 
-State::eStatus PauseMenu::Update(const CU::Time & aDeltaTime)
+eStateStatus PauseMenu::Update(const CU::Time & aDeltaTime)
 {
 	myGUIManager->Update(aDeltaTime);
 
