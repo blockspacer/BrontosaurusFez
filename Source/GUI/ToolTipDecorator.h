@@ -1,6 +1,6 @@
 #pragma once
 
-#include "WidgetDecorator/WidgetDecorator.h"
+#include "WidgetDecorator.h"
 
 class CTextInstance;
 
@@ -10,7 +10,7 @@ namespace GUI
 	class CToolTipDecorator : public WidgetDecorator
 	{
 	public:
-		CToolTipDecorator(Widget* aDecoratedWidget, ModelWidget* aBackGround, const std::string* const aTooltipText, const std::function<bool(std::string&)>& aGetTextFunction);
+		CToolTipDecorator(IWidget* aDecoratedWidget, ModelWidget* aBackGround, const std::string* const aTooltipText, const std::function<bool(std::string&)>& aGetTextFunction);
 		~CToolTipDecorator();
 
 		void Render() override;
@@ -18,7 +18,7 @@ namespace GUI
 		void OnMouseEnter(const CU::Vector2f& aMousePosition) override;
 		void OnMouseExit(const CU::Vector2f& aMousePosition) override;
 
-		Widget* MouseIsOver(const CU::Vector2f& aPosition) override;
+		IWidget* MouseIsOver(const CU::Vector2f& aPosition) override;
 
 	private:
 		std::function<bool(std::string&)> myGetTextFunction;

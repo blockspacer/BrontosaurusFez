@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "MouseReleased.h"
 
-#include "../GUI/GUIManager/GUIManager.h"
+#include "../GUI/GUIManager.h"
 #include "Game/LevelSelectState.h"
 #include "Components/InputController.h"
 #include "Components/MouseComponent.h"

@@ -91,6 +91,7 @@ namespace CU
 		__forceinline SizeType ByteSize() const;
 		__forceinline SizeType Size() const;
 		__forceinline SizeType Capacity() const;
+		__forceinline bool Empty() const;
 		__forceinline bool IsInitialized() const;
 
 		static const SizeType FoundNone = static_cast<SizeType>(-1);
@@ -598,6 +599,12 @@ namespace CU
 	__forceinline SizeType GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Capacity() const
 	{
 		return myCapacity;
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	__forceinline bool GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Empty() const
+	{
+		return mySize == 0;
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>

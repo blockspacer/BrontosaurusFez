@@ -37,7 +37,7 @@
 
 #include "../LuaWrapper/SSlua/SSlua.h"
 
-#include "../GUI/GUIManager/GUIManager.h"
+#include "../GUI/GUIManager.h"
 
 #include "LoadManager/LoadManager.h"
 
@@ -484,7 +484,7 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 
 	if (PollingStation::playerData->myIsWhirlwinding == true)
 	{
-  		audio->PostEvent("WhirlWind");
+		audio->PostEvent("WhirlWind");
 	}
 	else
 	{

@@ -91,7 +91,6 @@ void CDebugInfoDrawer::Render(const CU::Vector2ui aTargetWindowSize)
 	int yCount = 1;
 	for (int i = 0; i < myOutputTexts.Size(); ++i)
 	{
-		//if (myDebugFlags & (1 << i))
 		if (myDebugFlags[i] == true)
 		{
 			myOutputTexts[i]->SetPosition({ xStartPos, yStartPos + yOffset * yCount++ });
@@ -118,7 +117,7 @@ void CDebugInfoDrawer::Update()
 #endif // !_RETAIL_BUILD
 }
 
-eMessageReturn CDebugInfoDrawer::Recieve(const Message & aMessage)
+eMessageReturn CDebugInfoDrawer::Recieve(const Message& aMessage)
 {
 	return aMessage.myEvent.DoEvent(this);
 }
@@ -137,28 +136,24 @@ void CDebugInfoDrawer::PressedKey(const CU::eKeys& aKey)
 	case CU::eKeys::SIX:
 		if (myLeftControlIsDown == true)
 		{
-			//myDebugFlags ^= eDebugFlags_FPS;
 			myDebugFlags.Flip(eDebugText_FPS);
 		}
 		break;
 	case CU::eKeys::SEVEN:
 		if (myLeftControlIsDown == true)
 		{
-			//myDebugFlags ^= eDebugFlags_FPS;
 			myDebugFlags.Flip(eDebugText_LogicFPS);
 		}
 		break;
 	case CU::eKeys::EIGHT:
 		if (myLeftControlIsDown == true)
 		{
-			//myDebugFlags ^= eDebugFlags_DrawCalls;
 			myDebugFlags.Flip(eDebugText_DrawCalls);
 		}
 		break;
 	case CU::eKeys::NINE:
 		if (myLeftControlIsDown == true)
 		{
-			//myDebugFlags ^= eDebugFlags_MemoryUsage;
 			myDebugFlags.Flip(eDebugText_MemoryUsage);
 		}
 		break;

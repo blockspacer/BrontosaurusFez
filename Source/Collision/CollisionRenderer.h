@@ -12,9 +12,9 @@ public:
 	~CCollisionRenderer();
 
 	void AddToRender(Collision::IRenderCommand* aRenderMessage);
-	const CU::GrowingArray<char, unsigned short, false>& PrepareBuffer();
+	const CU::GrowingArray<char, unsigned int, false>& PrepareBuffer();
 
 private:
 	CU::GrowingArray<Collision::IRenderCommand*, unsigned short, false> myRenderQueue;
-	CU::GrowingArray<char, unsigned short, false> myVertexBuffer;
+	CU::GrowingArray<char, unsigned int, false> myVertexBuffer;
 };
