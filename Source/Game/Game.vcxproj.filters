@@ -44,6 +44,7 @@
     <ClCompile Include="PickupFactory.cpp" />
     <ClCompile Include="ShopStorage.cpp" />
     <ClCompile Include="LevelManager.cpp" />
+    <ClCompile Include="EnemyFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackgroundLoadingManager.h" />
@@ -97,6 +98,7 @@
       <Filter>States</Filter>
     </ClInclude>
     <ClInclude Include="LevelManager.h" />
+    <ClInclude Include="EnemyFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="States">

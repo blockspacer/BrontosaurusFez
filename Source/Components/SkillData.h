@@ -16,4 +16,5 @@ struct SkillData
 	float manaCostModifier;
 	float damageBonus;
 	float manaRefund;
+	unsigned char numberOfEnemiesToSpawn;
 };

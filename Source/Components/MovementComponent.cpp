@@ -84,7 +84,7 @@ void MovementComponent::Receive(const eComponentMessageType aMessageType, const 
 		if(myPathPointer != nullptr)
 		{
 			myCurrentPathIndex = myPathPointer->Size();
-			myWaitUntilMoveAgianTimer = 0.31f;
+			myWaitUntilMoveAgianTimer = aMessageData.myFloat;
 		}
 		break;
 	case eComponentMessageType::eAddToMovementSpeed:

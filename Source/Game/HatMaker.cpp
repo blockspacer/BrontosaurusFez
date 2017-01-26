@@ -18,11 +18,12 @@ CHatMaker::CHatMaker(CGameObjectManager* aGameObjectManager)
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eHatAdded);
 	myGameObjectManager = aGameObjectManager;
+	myHatsGivenToPlayer = 0;
 }
 
 CHatMaker::~CHatMaker()
 {
-	PostMaster::GetInstance().Subscribe(this, eMessageType::eHatAdded);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eHatAdded);
 	myGameObjectManager = nullptr;
 }
 
@@ -88,11 +89,26 @@ void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName)
 		SHatBluePrint* theBluePrint = myBluePrints.at(aHatName);
 		CGameObject* hatObject = myGameObjectManager->CreateGameObject();
 		CU::Vector3f hatPos = hatObject->GetLocalTransform().GetPosition();
-		hatObject->GetLocalTransform().SetPosition({ hatPos.x, hatPos.y + 175.f, hatPos.z });
-		
+		hatObject->GetLocalTransform().SetPosition({ hatPos.x, hatPos.y + 175.f + 12.5f * myHatsGivenToPlayer, hatPos.z });
+		myHatsGivenToPlayer++;
 		CModelComponent* hatModel = CModelComponentManager::GetInstance().CreateComponent(theBluePrint->HatModel.c_str());
 		hatObject->AddComponent(hatModel);
 		theBluePrint->myHatStruct->gameObject = hatObject;
+
+		bool wasfound = false;
+		for (unsigned int i = 0; i < PollingStation::playerHatList.Size(); ++i)
+		{
+			if (aHatName == PollingStation::playerHatList[i])
+			{
+				wasfound = true;
+				break;
+			}
+		}
+		if (wasfound == false)
+		{
+			std::string temp = aHatName;
+			PollingStation::playerHatList.Add(temp);
+		}
 
 		if (PollingStation::playerObject != nullptr)
 		{
@@ -111,6 +127,20 @@ void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName)
 		}
 	}
 }
+
+void CHatMaker::GiveTheManAHat()
+{
+	for (unsigned int i = 0; i < PollingStation::playerHatList.Size(); ++i)
+	{
+		MakeHatFromBluePrint(PollingStation::playerHatList[i]);
+	}
+}
+
+const bool CHatMaker::CheckIfHatIsMade(const std::string & aHatName)
+{
+	return false;
+}
+
 
 eMessageReturn CHatMaker::Recieve(const Message & aMessage)
 {
