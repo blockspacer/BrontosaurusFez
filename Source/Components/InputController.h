@@ -3,6 +3,7 @@
 #include "../PostMaster/Subscriber.h"
 
 #include "../CommonUtilities/vector2.h"
+#include "../BrontosaurusEngine/Navmesh.h"
 
 namespace CU
 {
@@ -17,6 +18,7 @@ namespace CU
 	enum class eKeys;
 }
 
+
 class InputController : public CComponent , public Subscriber
 {
 public:
@@ -27,6 +29,8 @@ public:
 	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
 	void Destroy() override;
 	
+	void RaycastOnNavmesh();
+
 
 	eMessageReturn MouseClicked(const CU::eMouseButtons aMouseButton, const CU::Vector2f& aMousePosition);
 	eMessageReturn MouseReleased(const CU::eMouseButtons aMouseButton, const CU::Vector2f& aMousePosition);
@@ -37,6 +41,10 @@ public:
 private:
 	CU::GrowingArray<CU::eInputMessage> mySkillInputMessageActivators;
 	CU::Vector2f myMousePosition;
+
+	SNavmeshTriangle* myTriangle;
+	CPath myPath;
+
 	const CU::Camera& myPlayerCamera;
 	short mySkillActivatorKeyDown;
 	bool myMouseIsDown;

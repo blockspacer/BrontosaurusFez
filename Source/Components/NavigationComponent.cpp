@@ -1,14 +1,14 @@
 #include "stdafx.h"
 #include "NavigationComponent.h"
 #include "GameObject.h"
-
+#include "ThreadPool.h"
 
 #include "PollingStation.h"
 
 NavigationComponent::NavigationComponent()
 {
-	myPath.myWaypoints.Init(64);
 	myType = eComponentType::eNavigation;
+	myThreadHasFinished = false;
 }
 
 
@@ -38,7 +38,7 @@ void NavigationComponent::Destroy()
 
 void NavigationComponent::CalculatePath(const CU::Vector2f& aTargetPosition)
 {
-	myPath.myWaypoints.RemoveAll();
+	myPath.RemoveAll();
 	
 	CNavmesh* navmesh = PollingStation::Navmesh;
 	//CNavmesh* navmesh = nullptr;
@@ -46,39 +46,12 @@ void NavigationComponent::CalculatePath(const CU::Vector2f& aTargetPosition)
 	{
 		CPath::SWaypoint wayPoint;
 		wayPoint.myPosition = CU::Vector3f(aTargetPosition.x, 0.0f, aTargetPosition.y);
-		myPath.myWaypoints.Add(wayPoint);// this thing with y & z is confusing as hell
+		myPath.Add(wayPoint);// this thing with y & z is confusing as hell
 	}
 	else
 	{
-		CNavmesh::SNavmeshNode startNode;
-		CNavmesh::SNavmeshNode endNode;
-		CU::Vector3f intersectionpoint;// = { aTargetPosition.x, 0.0f, aTargetPosition.y }; // this thing with y & z is confusing as hell
-		float height;
-
-		bool clickedOnNavmesh = navmesh->IsValid(aTargetPosition, endNode.myTriangle, intersectionpoint);
-		if (clickedOnNavmesh)
-		{
-			endNode.myPosition = intersectionpoint;
-		}
-		else
-		{
-			endNode.myTriangle = &navmesh->GetClosestTriangle({aTargetPosition.x, 0.0f, aTargetPosition.y});
-			endNode.myPosition = endNode.myTriangle->CenterPosition;
-		}
-
-		bool isStandingOnNM = navmesh->IsValid(GetParent()->GetWorldPosition(), startNode.myTriangle, intersectionpoint);
-		if (isStandingOnNM)
-		{
-			startNode.myPosition = intersectionpoint;
-		}
-		else
-		{
-			startNode.myTriangle = &navmesh->GetClosestTriangle(GetParent()->GetWorldPosition());
-			startNode.myPosition = startNode.myTriangle->CenterPosition;
-		}
-
-		myPath = navmesh->CalculatePath(startNode, endNode);
-		myPath.Smooth();
+		myTargetPosition = aTargetPosition;
+		PathfindOnNavmesh();
 	}
 
 	eComponentMessageType type = eComponentMessageType::eSetPath;
@@ -86,3 +59,39 @@ void NavigationComponent::CalculatePath(const CU::Vector2f& aTargetPosition)
 	data.myPathPointer = &myPath;
 	GetParent()->NotifyComponents(type, data);
 }
+
+void NavigationComponent::PathfindOnNavmesh()
+{
+	CNavmesh* navmesh = PollingStation::Navmesh;
+
+	SNavmeshNode startNode;
+	SNavmeshNode endNode;
+	CU::Vector3f intersectionpoint;
+	float height;
+
+	bool clickedOnNavmesh = navmesh->IsValid(myTargetPosition, endNode.myTriangle, intersectionpoint);
+	if (clickedOnNavmesh)
+	{
+		endNode.myPosition = intersectionpoint;
+	}
+	else
+	{
+		endNode.myTriangle = &navmesh->GetClosestTriangle({ myTargetPosition.x, 0.0f, myTargetPosition.y });
+		endNode.myPosition = endNode.myTriangle->CenterPosition;
+	}
+
+	bool isStandingOnNM = navmesh->IsValid(GetParent()->GetWorldPosition(), startNode.myTriangle, intersectionpoint);
+	if (isStandingOnNM)
+	{
+		startNode.myPosition = intersectionpoint;
+	}
+	else
+	{
+		startNode.myTriangle = &navmesh->GetClosestTriangle(GetParent()->GetWorldPosition());
+		startNode.myPosition = startNode.myTriangle->CenterPosition;
+	}
+
+	myPath = navmesh->CalculatePath(startNode, endNode);
+	myPath.Smooth();
+}
+
