@@ -451,7 +451,7 @@ void CPlayState::Load()
 	myScene->AddFireEmitters(fireeeeeByCarl);
 	
 	myHatMaker->LoadBluePrints("Json/Hats/HatBluePrints.json");
-
+	myHatMaker->GiveTheManAHat();
 	myIsLoaded = true;
 
 	//get time to load the level:
