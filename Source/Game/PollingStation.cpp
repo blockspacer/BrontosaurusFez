@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "PollingStation.h"
 
-
 CGameObject* PollingStation::playerObject = nullptr;
 CComponent* PollingStation::PlayerInput = nullptr;
 ValueObserver<int>* PollingStation::playerHealthBar = nullptr;
@@ -11,6 +10,7 @@ CollisionManager* PollingStation::collsionManager = nullptr;
 CNavmesh* PollingStation::Navmesh = nullptr;
 PlayerData* PollingStation::playerData = nullptr;
 CU::GrowingArray<CGameObject*> PollingStation::myThingsEnemiesShouldAvoid(100);
+CU::GrowingArray<std::string> PollingStation::playerHatList(12);
 
 
 void PollingStation::NullifyLevelSpecificData()
