@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "LevelSelectState.h"
-#include "GUI\GUIManager\GUIManager.h"
-#include "../PostMaster/PostMaster.h"
-#include "PostMaster\Message.h"
-#include "PostMaster\Event.h"
+#include "GUI/GUIManager.h"
+#include "PostMaster/PostMaster.h"
+#include "PostMaster/Message.h"
+#include "PostMaster/Event.h"
 
 LevelSelectState::LevelSelectState(StateStack& aStateStack)
 	: State(aStateStack)

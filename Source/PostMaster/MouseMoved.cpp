@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "MouseMoved.h"
 
-#include "../GUI/GUIManager/GUIManager.h"
-#include "../GUI/GUICursor/GUICursor.h"
+#include "../GUI/GUIManager.h"
+#include "../GUI/GUICursor.h"
 
 #include "../BrontosaurusEngine/Engine.h"
 #include "Components/InputController.h"

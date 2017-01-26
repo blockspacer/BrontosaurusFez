@@ -17,8 +17,8 @@
 
 #include "KevinLoader/KevinLoader.h"
 
-#include "GUI/Widget/Widget.h"
-#include "GUI/GUIManager/GUIManager.h"
+#include "GUI/Widget.h"
+#include "GUI/GUIManager.h"
 #include "BrontosaurusEngine/TextInstance.h"
 
 HatShopState::HatShopState(StateStack & aStateStack) :

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "MouseClicked.h"
 
-#include "../GUI/GUIManager/GUIManager.h"
+#include "../GUI/GUIManager.h"
 #include "Components\InputController.h"
 #include "BrontosaurusEngine/Engine.h"
 #include "Components/MouseComponent.h"
