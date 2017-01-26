@@ -77,84 +77,15 @@ bool CModelLoader::LoadModel(const char* aPath, CModel* aNewModel) //TODO: FIX T
 		DL_ASSERT("Could not find meshes in file: %s", aPath);
 		return false;
 	}
-
-
-
 	
 	std::string modelPath = aPath;
+	modelPath = modelPath.substr(0, ((modelPath.find_last_of('/') != std::wstring::npos) ? modelPath.find_last_of('/') : modelPath.find_last_of('\\')) + 1);
 	std::wstring directory = std::wstring(modelPath.begin(), modelPath.end());
-	directory = directory.substr(0, ((directory.find_last_of('/') != std::wstring::npos) ? directory.find_last_of('/') : directory.find_last_of('\\')) + 1);
-
-
-	CU::GrowingArray<const wchar_t*> texturePaths;
-	texturePaths.Init(8);
-
-	//diffuse
-	std::string str = scene.myTextures[0].c_str();
-	std::wstring diffuse = std::wstring(str.begin(), str.end());
-	diffuse = directory + diffuse;
-	const wchar_t* diffusePath = diffuse.c_str();
-
-	//Roughness
-	str = scene.myTextures[1].c_str();
-	std::wstring roughness = std::wstring(str.begin(), str.end());
-	roughness = directory + roughness;
-	const wchar_t* roughnessPath = roughness.c_str();
-
-	//AO
-	str = scene.myTextures[2].c_str();
-	std::wstring ambientOclution = std::wstring(str.begin(), str.end());
-	ambientOclution = directory + ambientOclution;
-	const wchar_t* AOPath = ambientOclution.c_str();
-	
-	//Emissive
-	str = scene.myTextures[3].c_str();
-	std::wstring emissive = std::wstring(str.begin(), str.end());
-	emissive = directory + emissive;
-	const wchar_t* emissivePath = emissive.c_str();
-
-	//normal
-	str = scene.myTextures[5].c_str();
-	std::wstring normal = std::wstring(str.begin(), str.end());
-	normal = directory + normal;
-	const wchar_t* normalPath = normal.c_str();
-
-	//metalness
-	str = scene.myTextures[10].c_str();
-	std::wstring metalness = std::wstring(str.begin(), str.end());
-	metalness = directory + metalness;
-	const wchar_t* metalnessPath = metalness.c_str();
-
-	if (scene.myTextures[0] == "")
-		diffusePath = L"Error.dds";
-	texturePaths.Add(diffusePath);
-
-	if (scene.myTextures[1] == "")
-		roughnessPath = L"";
-	texturePaths.Add(roughnessPath);
-
-	if (scene.myTextures[2] == "")
-		AOPath = L"";
-	texturePaths.Add(AOPath);
-
-	if (scene.myTextures[3] == "")
-		emissivePath = L"";
-	texturePaths.Add(emissivePath);
-
-	if (scene.myTextures[5] == "")
-		normalPath = L"";
-	texturePaths.Add(normalPath);
-
-	if (scene.myTextures[10] == "")
-		metalnessPath = L"";
-	texturePaths.Add(metalnessPath);
-	
 
 	int shaderType = scene.myMeshes[0]->myShaderType;
 	std::string shaderPath = scene.myMeshes[0]->myShaderFile.c_str();
 	std::wstring wShaderPath = std::wstring(shaderPath.begin(), shaderPath.end());
 
-	//wShaderPath = L"";
 	ID3D11VertexShader* vertexShader = SHADERMGR->LoadVertexShader(wShaderPath != L"" ? directory + wShaderPath + L".fx" : L"Shaders/vertex_shader.fx", shaderType);
 	ID3D11PixelShader* pixelShader = SHADERMGR->LoadPixelShader(wShaderPath != L"" ? directory + wShaderPath + L".fx" : L"Shaders/pixel_shader.fx", shaderType);
 
@@ -166,8 +97,9 @@ bool CModelLoader::LoadModel(const char* aPath, CModel* aNewModel) //TODO: FIX T
 	D3D_PRIMITIVE_TOPOLOGY topology			= D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	//Put effects in a manager mebe?
 	CEffect* effect = new CEffect(vertexShader, pixelShader, geometryShader, inputLayout, topology);
-	CSurface* surface = new CSurface(texturePaths);
-	
+	CSurface* surface = new CSurface(modelPath, scene.myTextures);
+	//CSurface* surface = new CSurface(texturePaths);
+
 	if (scene.mySphereColData.radius > 0.0f)
 	{
 		aNewModel->mySphereColData = /*SSphereColData*/(scene.mySphereColData);
