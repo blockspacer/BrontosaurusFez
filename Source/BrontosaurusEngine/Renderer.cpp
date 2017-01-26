@@ -54,7 +54,7 @@ CRenderer::CRenderer()
 	changeStateMessage.myRasterizerState = eRasterizerState::eNoCulling;
 	changeStateMessage.myDepthStencilState = eDepthStencilState::eDisableDepth;
 	changeStateMessage.myBlendState = eBlendState::eNoBlend;
-	changeStateMessage.mySamplerState = eSamplerState::eClamp;
+	changeStateMessage.mySamplerState = eSamplerState::eClamp0Wrap1;
 
 	SetStates(&changeStateMessage);
 }
@@ -739,17 +739,17 @@ void CRenderer::SetStates(const SChangeStatesMessage* aState) //change from peka
 
 
 	assert(aState->mySamplerState != eSamplerState::eSize);
-	if (aState->mySamplerState == eSamplerState::eClamp0Wrap1)
+	//if (aState->mySamplerState == eSamplerState::eClamp0Wrap1)
 	{
 		ID3D11SamplerState* both[2] = { mySamplerStates[static_cast<int>(eSamplerState::eClamp)], mySamplerStates[static_cast<int>(eSamplerState::eWrap)] };
 		DEVICE_CONTEXT->VSSetSamplers(0, 2, both);
 		DEVICE_CONTEXT->PSSetSamplers(0, 2, both);
 	}
-	else
-	{
-		DEVICE_CONTEXT->VSSetSamplers(0, 1, &mySamplerStates[static_cast<int>(aState->mySamplerState)]);
-		DEVICE_CONTEXT->PSSetSamplers(0, 1, &mySamplerStates[static_cast<int>(aState->mySamplerState)]);
-	}
+	//else
+	//{
+	//	DEVICE_CONTEXT->VSSetSamplers(0, 1, &mySamplerStates[static_cast<int>(aState->mySamplerState)]);
+	//	DEVICE_CONTEXT->PSSetSamplers(0, 1, &mySamplerStates[static_cast<int>(aState->mySamplerState)]);
+	//}
 }
 
 void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawCallCount)

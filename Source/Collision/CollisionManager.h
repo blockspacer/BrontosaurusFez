@@ -15,7 +15,7 @@ public:
 	void AddCollider(ICollider* aCollider);
 	void RemoveCollider(ICollider* aCollider);
 
-	const CU::GrowingArray<char, unsigned short, false>& GetLineVertexBuffer();
+	const CU::GrowingArray<char, unsigned int, false>& GetLineVertexBuffer();
 
 private:
 	inline void TestCollision(ICollider* aFirst, ICollider* aSecond);

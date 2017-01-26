@@ -18,8 +18,8 @@
 
 #include "KevinLoader/KevinLoader.h"
 
-#include "GUI/Widget/Widget.h"
-#include "GUI/GUIManager/GUIManager.h"
+#include "GUI/Widget.h"
+#include "GUI/GUIManager.h"
 #include "BrontosaurusEngine/TextInstance.h"
 
 HatShopState::HatShopState(StateStack & aStateStack) :
@@ -96,7 +96,7 @@ void HatShopState::Init()
 {
 }
 
-State::eStatus HatShopState::Update(const CU::Time & aDeltaTime)
+eStateStatus HatShopState::Update(const CU::Time & aDeltaTime)
 {
 	myGUIManager->Update(aDeltaTime);
 	return myStatus;
