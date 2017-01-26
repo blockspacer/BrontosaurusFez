@@ -124,6 +124,7 @@ CPlayState::~CPlayState()
 	SAFE_DELETE(myGoldText);
 	//SAFE_DELETE(myHatMaker);
 	SAFE_DELETE(myHealthBarManager);
+	SAFE_DELETE(myHatMaker);
 
 
 	SAFE_DELETE(myMouseComponent);

@@ -22,7 +22,7 @@ CHatMaker::CHatMaker(CGameObjectManager* aGameObjectManager)
 
 CHatMaker::~CHatMaker()
 {
-	PostMaster::GetInstance().Subscribe(this, eMessageType::eHatAdded);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eHatAdded);
 	myGameObjectManager = nullptr;
 }
 
