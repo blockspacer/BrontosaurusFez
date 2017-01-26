@@ -55,6 +55,7 @@
 
 #include "PickupFactory.h"
 #include "PickupManager.h"
+#include "PickerUpperComponent.h"
 
 #include "EnemyFactory.h"
 
@@ -390,6 +391,8 @@ void CPlayState::Load()
 		PollingStation::playerObject->AddComponent(respawn);
 		PollingStation::playerObject->AddComponent(new CPlayerHealthMessenger());
 		PollingStation::playerObject->AddComponent(new CPlayerManaMessenger());
+		PollingStation::playerObject->AddComponent(CPickupManager::GetInstance().CreatePickerUpperComp());
+		PollingStation::playerObject->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
 
 		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eInit, SComponentMessageData());
 	}
