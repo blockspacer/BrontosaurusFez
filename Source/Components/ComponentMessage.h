@@ -105,6 +105,7 @@ struct SComponentMessageData
 		unsigned char myUChar;
 		bool myBool;
 		const char* myString;
+		float myFloat;
 		CU::Matrix33f myProjectileRotationMatrix;
 		CU::Matrix44f myMatrix44;
 		CU::Vector2f myVector2f;

@@ -89,6 +89,8 @@ void InputController::Update(float aDeltaTime)
 
 		if (myIsShiftDown == true)
 		{
+			SComponentMessageData stopData;
+			stopData.myFloat = 0.1f;
 			GetParent()->NotifyComponents(eComponentMessageType::eStopMovement, SComponentMessageData());
 		}
 
