@@ -33,6 +33,7 @@ class CModelViewer;
 class CCollisionComponentManager;
 class CHatMaker;
 class CShopStorage;
+class COpenShopListenerComponent;
 
 //temp
 class CHealthComponent;
@@ -62,6 +63,7 @@ public:
 	virtual eMessageReturn DoEvent(QM::CQuestManager*) const { return eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(QM::CQuestDrawer*) const { return  eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(CModelViewer*) const { return  eMessageReturn::eContinue; }
+	virtual eMessageReturn DoEvent(COpenShopListenerComponent*) const { return eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(CCollisionComponentManager*) const { return  eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(GUI::CHealthWidget*) const { return  eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(GUI::CManaWidget*) const { return  eMessageReturn::eContinue; }
