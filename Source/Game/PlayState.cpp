@@ -497,7 +497,10 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	CPickupManager::GetInstance().Update(aDeltaTime);
 	RespawnComponentManager::GetInstance().Update(aDeltaTime);
 
-
+	if (myGUIManager)
+	{
+		myGUIManager->Update(aDeltaTime);
+	}
 
 	myCollisionComponentManager->Update();
 	myScene->Update(aDeltaTime);

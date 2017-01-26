@@ -75,8 +75,9 @@ namespace GUI
 			ModelWidget* modelWidget = static_cast<ModelWidget*>(widget);
 			modelWidget->SetFlashTimeToMax();
 
-			modelWidget->GetPixelConstantBufferStruct().myValues[SPixelConstantBuffer::eMember::eIsProgressBar] = 1.f;
-			modelWidget->GetPixelConstantBufferStruct().myValues[SPixelConstantBuffer::eMember::eProgressBarValue] = 0.f;
+			assert(!"this is not supported anymore due to optimized values sent in gui constant buffer");
+			//modelWidget->GetPixelConstantBufferStruct().myValues[SPixelConstantBuffer::eMember::eIsProgressBar] = 1.f;
+			//modelWidget->GetPixelConstantBufferStruct().myValues[SPixelConstantBuffer::eMember::eProgressBarValue] = 0.f;
 		}
 	}
 

@@ -26,5 +26,6 @@ namespace GUI
 		static CU::Camera* ParseCamera(const CLoaderCamera* aCamera);
 		static Widget* CreateHealthBar(Widget* aWidget);
 		static Widget* CreateManaBar(Widget* aWidget);
+		static Widget* CreateMoney(Widget* aWidget);
 	};
 }

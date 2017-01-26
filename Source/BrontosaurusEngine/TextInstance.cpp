@@ -42,13 +42,13 @@ void CTextInstance::Render()
 {
 	if (myText != nullptr && myString.Empty() == false)
 	{
-		SChangeStatesMessage* changeStateMessage = new SChangeStatesMessage();
-		changeStateMessage->myBlendState = eBlendState::eAlphaBlend;
-		changeStateMessage->myDepthStencilState = eDepthStencilState::eDisableDepth;
-		changeStateMessage->myRasterizerState = eRasterizerState::eNoCulling;
-		changeStateMessage->mySamplerState = eSamplerState::eClamp;
+		//SChangeStatesMessage* changeStateMessage = new SChangeStatesMessage();
+		//changeStateMessage->myBlendState = eBlendState::eAlphaBlend;
+		//changeStateMessage->myDepthStencilState = eDepthStencilState::eDisableDepth;
+		//changeStateMessage->myRasterizerState = eRasterizerState::eNoCulling;
+		//changeStateMessage->mySamplerState = eSamplerState::eClamp;
 
-		CEngine::GetInstance()->GetRenderer().AddRenderMessage(changeStateMessage);
+		//CEngine::GetInstance()->GetRenderer().AddRenderMessage(changeStateMessage);
 
 		SRenderTextMessage* renderTextMessage = new SRenderTextMessage();
 		renderTextMessage->myColor = myColor;
@@ -57,13 +57,13 @@ void CTextInstance::Render()
 		renderTextMessage->myText = myText;
 		CEngine::GetInstance()->GetRenderer().AddRenderMessage(renderTextMessage);
 
-		changeStateMessage = new SChangeStatesMessage();
-		changeStateMessage->myBlendState = eBlendState::eNoBlend;
-		changeStateMessage->myDepthStencilState = eDepthStencilState::eDefault;
-		changeStateMessage->myRasterizerState = eRasterizerState::eDefault;
-		changeStateMessage->mySamplerState = eSamplerState::eClamp;
+		//changeStateMessage = new SChangeStatesMessage();
+		//changeStateMessage->myBlendState = eBlendState::eNoBlend;
+		//changeStateMessage->myDepthStencilState = eDepthStencilState::eDefault;
+		//changeStateMessage->myRasterizerState = eRasterizerState::eDefault;
+		//changeStateMessage->mySamplerState = eSamplerState::eClamp;
 
-		CEngine::GetInstance()->GetRenderer().AddRenderMessage(changeStateMessage);
+		//CEngine::GetInstance()->GetRenderer().AddRenderMessage(changeStateMessage);
 	}
 }
 

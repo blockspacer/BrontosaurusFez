@@ -39,8 +39,8 @@ cbuffer ToWorld : register(b1)
 
 cbuffer GUIPixelBuffer : register(b1)
 {
-	float isProgressBar;
-	float progressBarValue;
+	float isMoneyBar;
+	float moneyPercent;
 	float skipEmissive;
 	float flashButton;
 	float isHealthBar;
@@ -62,9 +62,12 @@ Texture2D metallic : register(t11);
 SamplerState globalSamplerState;
 
 float4 PS_PBL(PixelInput input);
-float4 PS_HealthBar(PixelInput input);
+float4 PS_Albedo(PixelInput input);
+float3 PS_Emissive(PixelInput input);
+float4 PS_HealthBar(PixelInput input, float aProgressBarValue);
 float4 PS_FlashButton(PixelInput input);
 float4 PS_OrbShader(PixelInput input);
+float4 PS_MoneyShader(PixelInput input);
 
 static const uint CubeMap_MipCount = 11;
 
@@ -96,24 +99,21 @@ PixelInput VS_PosNormBinormTanTex(VertexInput input)
 
 float4 PS_PosNormBinormTanTex(PixelInput input) : SV_TARGET
 {
-	float shouldDoPBL = (1.f - isProgressBar) * (1.f - isManaBar) * (1.f - isHealthBar);
+	float shouldDoPBL = (1.f - isMoneyBar) * (1.f - isManaBar) * (1.f - isHealthBar);
 
 	float4 output = shouldDoPBL * PS_PBL(input);
 
 	output += isManaBar * PS_OrbShader(input);
 	output += isHealthBar * PS_OrbShader(input);
-
-	output += isProgressBar * PS_HealthBar(input);
-
-	output += PS_FlashButton(input) * (1.f - isProgressBar);
-	output += PS_FlashButton(input) * isProgressBar * 3.f;
+	//output += isMoneyBar ;
+	output += isMoneyBar * PS_MoneyShader(input); // * float4(albedo.Sample(globalSamplerState, float2(input.uv.x, input.uv.y)).xyz, 1.f);
 	
 	return output;
 }
 
-float4 PS_HealthBar(PixelInput input)
+float4 PS_HealthBar(PixelInput input, float aProgressBarValue)
 {
-	float Damage = 6.f * progressBarValue;
+	float Damage = 6.f * aProgressBarValue;
 
 	float4 bGColor = float4(0.f, 0.f, 0.f, 1.f);
 	float4 Sampler = albedo.Sample(globalSamplerState, input.uv);
@@ -454,4 +454,24 @@ float4 PS_OrbShader(PixelInput input)
 	float4 VectorConstruct61 = float4(MulOp60.x, MulOp60.y, MulOp60.z, SatOp);
 	
 	return VectorConstruct61;
+}
+
+float4 PS_MoneyShader(PixelInput input)
+{
+	float moneyLevel = moneyPercent;
+
+	float2 moneyImage = float2(input.uv.xy.x, ( input.uv.xy.y + 0.25 ) );
+	float4 Sampler = albedo.Sample(globalSamplerState, moneyImage);
+	
+	float uvShiftTop = (input.uv.xy.x + moneyLevel);
+
+	float2 siluetteImage = float2(uvShiftTop, (input.uv.xy.y + 0.5) + (moneyLevel * 0.25));
+	
+	float4 Sampler68 = albedo.Sample(globalSamplerState, siluetteImage);
+
+	float3 MulOp = (Sampler.xyz * Sampler68.xyz.z);
+	float4 VectorConstruct59 = float4(MulOp.x, MulOp.y, MulOp.z, Sampler68.xyz.z);
+	
+	float4 output = VectorConstruct59;
+	return output;
 }
