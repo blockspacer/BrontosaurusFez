@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "MoneyWidget.h"
-#include "RenderableWidgets\ModelWidget\ModelWidget.h"
+#include "ModelWidget.h"
 #include "GUIPixelConstantBuffer.h"
 
 #include "../Game/PollingStation.h"

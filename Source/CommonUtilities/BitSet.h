@@ -72,6 +72,8 @@ namespace CU
 		inline bool Any() const;
 		inline bool All() const;
 
+		inline Type GetBits() const;
+
 	private:
 		Type myBits;
 	};
@@ -142,6 +144,12 @@ namespace CU
 	inline bool CBitSet<BIT_COUNT>::All() const
 	{		
 		return AllBitsSet<Type, BIT_COUNT - 1>::AllBits == myBits;
+	}
+
+	template<unsigned int BIT_COUNT>
+	inline typename CBitSet<BIT_COUNT>::Type CBitSet<BIT_COUNT>::GetBits() const
+	{
+		return myBits;
 	}
 
 	template<unsigned int BIT_COUNT>

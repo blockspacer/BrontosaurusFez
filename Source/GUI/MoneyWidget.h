@@ -1,5 +1,5 @@
 #pragma once
-#include "WidgetContainer/WidgetContainer.h"
+#include "WidgetContainer.h"
 #include "../PostMaster/Subscriber.h"
 
 namespace GUI
