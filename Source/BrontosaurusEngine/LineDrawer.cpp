@@ -112,7 +112,7 @@ void CLineDrawer::RemoveLine2D(const LineHandle aLineHandle)
 	}
 }
 
-void CLineDrawer::RenderLineChunk(const CU::GrowingArray<char, unsigned short, false>& aLineChunk)
+void CLineDrawer::RenderLineChunk(const CU::GrowingArray<char, unsigned int, false>& aLineChunk)
 {
 	if (myVertexBuffer3D == nullptr) return;
 	if (aLineChunk.Size() <= 0) return;
@@ -212,7 +212,7 @@ void CLineDrawer::UpdateVertexBuffer2D()
 	}
 }
 
-void CLineDrawer::UpdateVertexBuffer3D(const CU::GrowingArray<char, unsigned short, false>& aLineChunk, ID3D11DeviceContext& aContext)
+void CLineDrawer::UpdateVertexBuffer3D(const CU::GrowingArray<char, unsigned int, false>& aLineChunk, ID3D11DeviceContext& aContext)
 {
 	D3D11_MAPPED_SUBRESOURCE mappedSubresource = {};
 	aContext.Map(myVertexBuffer3D, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);

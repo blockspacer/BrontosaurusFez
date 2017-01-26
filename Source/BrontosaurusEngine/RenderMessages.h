@@ -245,6 +245,6 @@ struct SRenderTextMessage : SRenderMessage
 
 struct SRenderLineBuffer : SRenderMessage
 {
-	SRenderLineBuffer(const CU::GrowingArray<char, unsigned short, false>& aLineBuffer);
-	CU::GrowingArray<char, unsigned short, false> myLineBuffer;
+	SRenderLineBuffer(const CU::GrowingArray<char, unsigned int, false>& aLineBuffer);
+	CU::GrowingArray<char, unsigned int, false> myLineBuffer;
 };
