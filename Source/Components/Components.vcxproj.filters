@@ -142,6 +142,7 @@
     <ClCompile Include="RespawnComponentManager.cpp" />
     <ClCompile Include="ChangeLevelTriggerComponent.cpp" />
     <ClCompile Include="FormationController.cpp" />
+    <ClCompile Include="SpawnEnemyComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -305,6 +306,7 @@
     <ClInclude Include="RespawnComponentManager.h" />
     <ClInclude Include="ChangeLevelTriggerComponent.h" />
     <ClInclude Include="FormationController.h" />
+    <ClInclude Include="SpawnEnemyComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
