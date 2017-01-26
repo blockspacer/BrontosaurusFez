@@ -141,6 +141,7 @@
     <ClCompile Include="RespawnComponentManager.cpp" />
     <ClCompile Include="ChangeLevelTriggerComponent.cpp" />
     <ClCompile Include="FormationController.cpp" />
+    <ClCompile Include="SpawnEnemyComponent.cpp" />
     <ClCompile Include="OpenShopListenerComponent.cpp">
       <Filter>OpenShopListenerComponent</Filter>
     </ClCompile>
@@ -309,6 +310,7 @@
     <ClInclude Include="OpenShopListenerComponent.h">
       <Filter>OpenShopListenerComponent</Filter>
     </ClInclude>
+    <ClInclude Include="SpawnEnemyComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

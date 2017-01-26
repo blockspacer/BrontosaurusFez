@@ -77,7 +77,6 @@ public:
 
 	//TEMP - BELOW THIS LINE
 	void TEMP_ADD_HAT(CGameObject* aPlayerObject);
-	CGameObject* myPlayerObject;
 
 	QM::EventHandle fristObjective;
 	QM::EventHandle secondObjective;
