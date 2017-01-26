@@ -56,6 +56,8 @@
 #include "PickupFactory.h"
 #include "PickupManager.h"
 
+#include "EnemyFactory.h"
+
 #include "MasterAI.h"
 
 #include <time.h>
@@ -660,6 +662,7 @@ void CPlayState::CreateManagersAndFactories()
 	CMasterAI::Create();
 	RespawnComponentManager::Create();
 	CLevelManager::CreateInstance();
+	CEnemyFactory::Create(*myGameObjectManager,*myCollisionComponentManager,*myHealthBarManager);
 }
 
 void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)
