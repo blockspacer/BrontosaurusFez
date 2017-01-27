@@ -87,6 +87,8 @@
 #include "PlayerHealthMessenger.h"
 #include "PlayerManaMessenger.h"
 #include "ComponentMessage.h"
+#include "PlayerHealthMessenger.h"
+#include "PlayerManaMessenger.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
 
@@ -112,7 +114,6 @@ CPlayState::~CPlayState()
 	SAFE_DELETE(myCollisionComponentManager);
 	SAFE_DELETE(myStatManager);
 	SAFE_DELETE(myGoldText);
-	SAFE_DELETE(myHatMaker);
 	SAFE_DELETE(myHealthBarManager);
 	SAFE_DELETE(myHatMaker);
 
@@ -286,7 +287,7 @@ void CPlayState::Load()
 	}
 	
 	myHatMaker->LoadBluePrints("Json/Hats/HatBluePrints.json");
-
+	myHatMaker->GiveTheManAHat();
 	myIsLoaded = true;
 
 	//get time to load the level:
