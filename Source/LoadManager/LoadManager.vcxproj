@@ -346,6 +346,7 @@
   <ItemGroup>
     <ClInclude Include="LoadActivationComponent.h" />
     <ClInclude Include="LoadAIController.h" />
+    <ClInclude Include="LoadBlessingTowerComponent.h" />
     <ClInclude Include="LoadCamera.h" />
     <ClInclude Include="LoadChangeLevelTriggerComponent.h" />
     <ClInclude Include="LoadDropComponent.h" />
@@ -373,6 +374,7 @@
   <ItemGroup>
     <ClCompile Include="LoadActivationComponent.cpp" />
     <ClCompile Include="LoadAIController.cpp" />
+    <ClCompile Include="LoadBlessingTowerComponent.cpp" />
     <ClCompile Include="LoadCamera.cpp" />
     <ClCompile Include="LoadChangeLevelTriggerComponent.cpp" />
     <ClCompile Include="LoadDropComponent.cpp" />
