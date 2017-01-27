@@ -61,7 +61,6 @@ public:
 	void OnExit() override;
 	void Pause();
 	void BuyHats();
-	void GiveHatToPlayer();
 
 	void CheckReturnToLevelSelect();
 
@@ -76,7 +75,6 @@ public:
 	CCollisionComponentManager* GetCollisionManager();
 
 	//TEMP - BELOW THIS LINE
-	void TEMP_ADD_HAT(CGameObject* aPlayerObject);
 
 	QM::EventHandle fristObjective;
 	QM::EventHandle secondObjective;
@@ -108,7 +106,6 @@ private:
 	QM::CQuestDrawer myQuestDrawer;
 	//TEMP - BELOW THIS LINE
 	CNavmesh myNavmesh;
-	void TEMP_CREATE_ENEMY(); 
 	CU::GrowingArray<CGameObject*> myEnemies;
 	CHealthBarComponentManager* myHealthBarManager;
 };
