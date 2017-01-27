@@ -1,41 +1,49 @@
 #pragma once
 
-enum class TweenType
+class CDBTweener;
+
+namespace CU
 {
-	Linear,
-	Sinusoidal,
-	Quadratic,
-	Cubic,
-	Quartic,
-	Quintic,
-	Exponential,
-	Circular,
-	Back,
-	Elastic,
-	Bounce
-};
+	enum class TweenType
+	{
+		Linear,
+		Sinusoidal,
+		Quadratic,
+		Cubic,
+		Quartic,
+		Quintic,
+		Exponential,
+		Circular,
+		Back,
+		Elastic,
+		Bounce
+	};
 
-enum class TweenMod
-{
-	EaseIn,
-	EaseOut,
-	EaseInOut
-};
+	enum class TweenMod
+	{
+		EaseIn,
+		EaseOut,
+		EaseInOut
+	};
 
 
-class Tween
-{
-public:
-	Tween(TweenType aType, TweenMod aMod, float aStart, float aEnd, float aDuration);
-	~Tween();
-	void Update(float aDeltaTime);
-	float GetValue();
-	bool IsFinished();
+	class Tween
+	{
+	public:
+		Tween(TweenType aType, TweenMod aMod, float aStart, float aEnd, float aDuration);
+		Tween(const Tween& aCopy) = delete;
+		~Tween();
 
-private:
-	class CDBTweener* myTweener;
-	float myValue;
-	float myProgress;
-	float myDuration;
-};
+		Tween& operator=(const Tween& aCopy) = delete;
 
+		void Update(float aDeltaSeconds);
+		float GetValue();
+		bool IsFinished();
+
+	private:
+		CDBTweener* myTweener;
+		float myValue;
+		float myProgress;
+		float myDuration;
+	};
+}

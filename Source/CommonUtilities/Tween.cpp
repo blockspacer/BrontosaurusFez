@@ -3,90 +3,84 @@
 
 #include "dbtweener.h"
 
-Tween::Tween(TweenType aType, TweenMod aMod, float aStart, float aEnd, float aDuration)
-	: myValue(aStart)
-	, myProgress(0.f)
-	, myDuration(aDuration)
+#define self (*this)
+
+namespace CU
 {
-	CDBTweener::CEquation *aEquation = nullptr;
-	CDBTweener::EEasing aEasing = CDBTweener::TWEA_IN;
-	
-	switch (aType)
+	Tween::Tween(TweenType aType, TweenMod aMod, float aStart, float aEnd, float aDuration)
+		: myTweener(nullptr)
+		, myValue(aStart)
+		, myProgress(0.f)
+		, myDuration(aDuration)
 	{
-	case TweenType::Linear:
-		aEquation = &CDBTweener::TWEQ_LINEAR;
-		break;
-	case TweenType::Sinusoidal:
-		aEquation = &CDBTweener::TWEQ_SINUSOIDAL;
-		break;
-	case TweenType::Quadratic:
-		aEquation = &CDBTweener::TWEQ_QUADRATIC;
-		break;
-	case TweenType::Cubic:
-		aEquation = &CDBTweener::TWEQ_CUBIC;
-		break;
-	case TweenType::Quartic:
-		aEquation = &CDBTweener::TWEQ_QUARTIC;
-		break;
-	case TweenType::Quintic:
-		aEquation = &CDBTweener::TWEQ_QUINTIC;
-		break;
-	case TweenType::Exponential:
-		aEquation = &CDBTweener::TWEQ_EXPONENTIAL;
-		break;
-	case TweenType::Circular:
-		aEquation = &CDBTweener::TWEQ_CIRCULAR;
-		break;
-	case TweenType::Back:
-		aEquation = &CDBTweener::TWEQ_BACK;
-		break;
-	case TweenType::Elastic:
-		aEquation = &CDBTweener::TWEQ_ELASTIC;
-		break;
-	case TweenType::Bounce:
-		aEquation = &CDBTweener::TWEQ_BOUNCE;
-		break;
-	default:
-		break;
+		CDBTweener::CEquation *equation = nullptr;
+
+		switch (aType)
+		{
+		case TweenType::Linear:
+			equation = &CDBTweener::TWEQ_LINEAR;
+			break;
+		case TweenType::Sinusoidal:
+			equation = &CDBTweener::TWEQ_SINUSOIDAL;
+			break;
+		case TweenType::Quadratic:
+			equation = &CDBTweener::TWEQ_QUADRATIC;
+			break;
+		case TweenType::Cubic:
+			equation = &CDBTweener::TWEQ_CUBIC;
+			break;
+		case TweenType::Quartic:
+			equation = &CDBTweener::TWEQ_QUARTIC;
+			break;
+		case TweenType::Quintic:
+			equation = &CDBTweener::TWEQ_QUINTIC;
+			break;
+		case TweenType::Exponential:
+			equation = &CDBTweener::TWEQ_EXPONENTIAL;
+			break;
+		case TweenType::Circular:
+			equation = &CDBTweener::TWEQ_CIRCULAR;
+			break;
+		case TweenType::Back:
+			equation = &CDBTweener::TWEQ_BACK;
+			break;
+		case TweenType::Elastic:
+			equation = &CDBTweener::TWEQ_ELASTIC;
+			break;
+		case TweenType::Bounce:
+			equation = &CDBTweener::TWEQ_BOUNCE;
+			break;
+		}
+
+		CDBTweener::EEasing easing = static_cast<CDBTweener::EEasing>(aMod);
+
+		myTweener = new CDBTweener();
+		myTweener->addTween(equation, easing, myDuration, &myValue, aEnd);
 	}
 
-	switch (aMod)
+	Tween::~Tween()
 	{
-	case TweenMod::EaseIn:
-		aEasing = CDBTweener::TWEA_IN;
-		break;
-	case TweenMod::EaseOut:
-		aEasing = CDBTweener::TWEA_OUT;
-		break;
-	case TweenMod::EaseInOut:
-		aEasing = CDBTweener::TWEA_INOUT;
-		break;
-	default:
-		break;
-
+		SAFE_DELETE(myTweener);
 	}
-	myTweener->addTween(aEquation, aEasing, myDuration, &myValue, aEnd);
-}
 
-Tween::~Tween()
-{
-}
-
-void Tween::Update(float aDeltaProgress)
-{
-	if (myTweener && !IsFinished())
+	void Tween::Update(float aDeltaSeconds)
 	{
-		myTweener->step(aDeltaProgress);
-		myProgress += aDeltaProgress;
+		if (myTweener && !IsFinished())
+		{
+			myTweener->step(aDeltaSeconds);
+			myProgress += aDeltaSeconds;
+		}
+	}
+
+	float Tween::GetValue()
+	{
+		return myValue;
+	}
+
+	bool Tween::IsFinished()
+	{
+		return myProgress >= myDuration;
 	}
 }
 
-float Tween::GetValue()
-{
-	return myValue;
-}
-
-bool Tween::IsFinished()
-{
-	return myProgress >= myDuration;
-}
+#undef self

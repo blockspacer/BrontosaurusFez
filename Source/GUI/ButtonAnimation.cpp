@@ -5,6 +5,7 @@
 
 #include "..\BrontosaurusEngine\ModelInstance.h"
 #include <CommonUtilities\Camera.h>
+#include "CommonUtilities\Tween.h"
 
 namespace GUI
 {
@@ -15,10 +16,12 @@ namespace GUI
 		, myAnimationState(eAnimationState::eInActive)
 		, myAnimationIsDoneCallback(nullptr)
 		, myAnimationTimer(nullptr)
+		, myTweener(nullptr)
 		, myResetPosition(0.f)
+		, myTurnPosition(6.266f)
+		, myGoDownTime(0.62663f * 0.5f)
+		, myGoUpTime(0.62663f * 0.5f)
 	{
-		myAnimationTimer = new CU::Time(0.f);
-
 		ModelWidget* modelWidget = static_cast<ModelWidget*>(*myDecoratedWidget);
 		if (modelWidget)
 		{
@@ -31,19 +34,25 @@ namespace GUI
 			{
 				myForwardDirection = myOriginalPosition - guiCamera->GetPosition();
 				myForwardDirection.Normalize();
-				DL_PRINT("%f, %f, %f", myForwardDirection.x, myForwardDirection.y, myForwardDirection.z);
-
 			}
 		}
+
+		myAnimationTimer = new CU::Time(0.f);
 	}
 
 	ButtonAnimation::~ButtonAnimation()
 	{
 		SAFE_DELETE(myAnimationTimer);
+		SAFE_DELETE(myTweener);
 	}
 
 	void ButtonAnimation::Update(const CU::Time& aDeltaTime)
 	{
+		if (myTweener)
+		{
+			myTweener->Update(aDeltaTime.GetSeconds());
+		}
+
 		if (myAnimationState == eAnimationState::eStarted)
 		{
 			DoStartedAnimation(aDeltaTime);
@@ -64,6 +73,12 @@ namespace GUI
 		if (aButton == CU::eMouseButtons::LBUTTON)
 		{
 			myAnimationState = eAnimationState::eStarted;
+			if (myTweener)
+			{
+				SAFE_DELETE(myTweener);
+			}
+
+			myTweener = new CU::Tween(CU::TweenType::Sinusoidal, CU::TweenMod::EaseIn, myResetPosition, myTurnPosition, myGoDownTime);
 		}
 	}
 
@@ -73,6 +88,13 @@ namespace GUI
 		if (aButton == CU::eMouseButtons::LBUTTON)
 		{
 			myAnimationState = eAnimationState::eFlipped;
+
+			if (myTweener)
+			{
+				SAFE_DELETE(myTweener);
+			}
+
+			myTweener = new CU::Tween(CU::TweenType::Sinusoidal, CU::TweenMod::EaseOut, myResetPosition, myTurnPosition, myGoUpTime);
 		}
 	}
 
@@ -89,7 +111,7 @@ namespace GUI
 	void ButtonAnimation::DoStartedAnimation(const CU::Time aDeltaTime)
 	{
 		*myAnimationTimer += aDeltaTime;
-
+		static float traveled = 0.f;
 		if (aDeltaTime.GetMilliseconds() < 60.f)
 		{
 			ModelWidget* modelWidget = static_cast<ModelWidget*>(*myDecoratedWidget);
@@ -97,7 +119,15 @@ namespace GUI
 			{
 				CU::Matrix44f transformation = modelWidget->myModelInstance->GetTransformation();
 				CU::Vector3f& pos = transformation.GetPosition();
-				pos += myForwardDirection * aDeltaTime.GetMilliseconds() * 0.1f;
+				if (myTweener)
+				{
+					pos += myForwardDirection * myTweener->GetValue() * 0.1f;
+				}
+				else
+				{
+					pos += myForwardDirection * aDeltaTime.GetMilliseconds() * 0.1f;
+					traveled += myForwardDirection.Length() * aDeltaTime.GetMilliseconds() * 0.1f;
+				}
 
 				//float& posY = transformation.GetPosition().y;
 				//posY += aDeltaTime.GetMilliseconds() * -0.1f;
@@ -119,8 +149,16 @@ namespace GUI
 		ModelWidget* modelWidget = static_cast<ModelWidget*>(myDecoratedWidget);
 		*myAnimationTimer += aDeltaTime;
 		CU::Matrix44f transformation = modelWidget->myModelInstance->GetTransformation();
+
 		CU::Vector3f& pos = transformation.GetPosition();
-		pos += myForwardDirection * aDeltaTime.GetMilliseconds() * -0.1f;
+		if (myTweener)
+		{
+			pos += myForwardDirection * myTweener->GetValue() * -0.1f;
+		}
+		else
+		{
+			pos += myForwardDirection * aDeltaTime.GetMilliseconds() * -0.1f;
+		}
 
 		//float& posY = transformation.GetPosition().y;
 		//posY += aDeltaTime.GetMicroseconds() * 0.001f * 0.1f;

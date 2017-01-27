@@ -89,7 +89,12 @@ float CTextInstance::GetlineHeight() const
 
 CU::Vector2f CTextInstance::GetQuadSizeNormalized() const
 {
-	CU::Vector2f rectPixelSize(myText->CalculateRectPixelSize(myString.c_str()));
+	CU::Vector2f rectPixelSize;
+	for (const CU::DynamicString& str : myStrings)
+	{
+		rectPixelSize += CU::Vector2f(myText->CalculateRectPixelSize(str.c_str()));
+	}
+
 	rectPixelSize /= WINDOW_SIZE_F;
 	return rectPixelSize;
 }

@@ -17,7 +17,8 @@ namespace GUI
 		virtual ~WidgetDecorator();
 
 		virtual void Update(const CU::Time& aDeltaTime) override;
-		virtual void Render();
+		virtual void Render() override;
+		virtual void Render(CU::GrowingArray<IWidget*>& aFrontWidgets) override;
 
 		virtual void OnMouseMove(const CU::Vector2f& aMousePosition) override;
 		virtual void OnMousePressed(const CU::Vector2f& aMousePosition, const CU::eMouseButtons aButton) override;
