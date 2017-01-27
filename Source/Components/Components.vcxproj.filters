@@ -145,6 +145,7 @@
     <ClCompile Include="OpenShopListenerComponent.cpp">
       <Filter>OpenShopListenerComponent</Filter>
     </ClCompile>
+    <ClCompile Include="BlessingTowerComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -311,6 +312,7 @@
       <Filter>OpenShopListenerComponent</Filter>
     </ClInclude>
     <ClInclude Include="SpawnEnemyComponent.h" />
+    <ClInclude Include="BlessingTowerComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
