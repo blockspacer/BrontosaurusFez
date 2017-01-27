@@ -35,6 +35,7 @@
 #include "Components/SkillFactory.h"
 #include "Components/SkillSystemComponentManager.h"
 #include "Components/CollisionComponentManager.h"
+#include "Components\BlessingTowerComponentManager.h"
 
 #include "../GUI/GUIManager.h"
 
@@ -142,6 +143,7 @@ CPlayState::~CPlayState()
 	CPickupManager::DestroyInstance();
 	RespawnComponentManager::Destroy();
 	CMasterAI::Destroy();
+	BlessingTowerComponentManager::DestroyInstance();
 
 	SkillFactory::DestroyInstance();
 	CComponentManager::DestroyInstance();
@@ -347,6 +349,7 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	DropComponentManager::GetInstance().Update(aDeltaTime);
 
 	myHealthBarManager->Update();
+	BlessingTowerComponentManager::GetInstance().Update(aDeltaTime);
 
 	return myStatus;
 }
@@ -488,4 +491,5 @@ void CPlayState::CreateManagersAndFactories()
 	RespawnComponentManager::Create();
 	CLevelManager::CreateInstance();
 	CEnemyFactory::Create(*myGameObjectManager,*myCollisionComponentManager,*myHealthBarManager);
+	BlessingTowerComponentManager::CreateInstance();
 }
