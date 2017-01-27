@@ -8,6 +8,8 @@
 #include "../Components/ComponentMessage.h"
 #include "PollingStation.h"
 #include "PlayerData.h"
+#include "../PostMaster/PostMaster.h"
+#include "../PostMaster/HatBought.h"
 
 CPickerUpperComponent::~CPickerUpperComponent()
 {
@@ -28,7 +30,7 @@ void CPickerUpperComponent::Receive(const eComponentMessageType aMessageType, co
 				messageData.myInt = data.myValue;
 				
 				GetParent()->NotifyComponents(eComponentMessageType::eHeal, messageData);
-				GetParent()->NotifyComponents(eComponentMessageType::eRestoreMana, messageData);
+				//GetParent()->NotifyComponents(eComponentMessageType::eRestoreMana, messageData);
 			}
 			break;
 		case ePickupType::MANA:
@@ -42,9 +44,12 @@ void CPickerUpperComponent::Receive(const eComponentMessageType aMessageType, co
 		{
 
 			PollingStation::playerData->myGold += data.myValue;
-			//messageData.myInt = data.myValue;
-			
-			//GetParent()->NotifyComponents(eComponentMessageType::eActivateBurningBasicAttack, messageData);
+		}
+		break;
+		case ePickupType::HAT:
+		{
+
+			PostMaster::GetInstance().SendLetter(eMessageType::eHatAdded, HatBought(data.myString));
 		}
 		break;
 		default: break;

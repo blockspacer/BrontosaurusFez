@@ -99,7 +99,7 @@ void CEnemyFactory::CreateEnemy(CU::Vector3f aPosition)
 
 	Enemy->AddComponent(AIControl);
 
-	DropComponent* drop = DropComponentManager::GetInstance().CreateAndRegisterComponent(100, 20); // from json
+	DropComponent* drop = DropComponentManager::GetInstance().CreateAndRegisterComponent(100, 20,20,""); // from json
 	Enemy->AddComponent(drop);
 
 	SkillSystemComponent* skillSystem = new SkillSystemComponent();
