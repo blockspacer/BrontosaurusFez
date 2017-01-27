@@ -33,4 +33,6 @@ struct PollingStation
 	static CU::GrowingArray<CGameObject*> myThingsEnemiesShouldAvoid;
 	static CNavmesh* Navmesh;
 	static CU::GrowingArray<std::string> playerHatList;
+	static std::string currentDialog;
+	static CU::GrowingArray<int,char> OpenPortals;
 };

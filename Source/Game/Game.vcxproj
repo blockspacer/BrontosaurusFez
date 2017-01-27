@@ -235,6 +235,7 @@
   <ItemGroup>
     <ClCompile Include="BackgroundLoadingManager.cpp" />
     <ClCompile Include="CreditsState.cpp" />
+    <ClCompile Include="DialogState.cpp" />
     <ClCompile Include="EnemyFactory.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="HatMaker.cpp" />
@@ -264,6 +265,7 @@
   <ItemGroup>
     <ClInclude Include="BackgroundLoadingManager.h" />
     <ClInclude Include="CreditsState.h" />
+    <ClInclude Include="DialogState.h" />
     <ClInclude Include="EnemyFactory.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Game.h" />
