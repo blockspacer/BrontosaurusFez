@@ -106,13 +106,13 @@ void Skill::Update(float aDeltaTime)
 
 	if(myIsActive == true)
 	{
+		myUpdateFunction(aDeltaTime);
 		if (myAnimationTimeElapsed > mySkillData->animationDuration)
 		{
 			ActivateCollider(); // Remove this later on and replace it with animation wait time.
 			myAnimationTimeElapsed = 0.f;
 		}
 
-		myUpdateFunction(aDeltaTime);
 	
 	}
 }
@@ -219,6 +219,7 @@ void Skill::SweepAttackUpdate(float aDeltaTime)
 
 void Skill::SpawnEnemyAttackUpdate(float aDeltaTime)
 {
+
 	SComponentMessageData stopData;
 	stopData.myFloat = 0.1f;
 	myUser->NotifyComponents(eComponentMessageType::eStopMovement, stopData);
@@ -227,17 +228,19 @@ void Skill::SpawnEnemyAttackUpdate(float aDeltaTime)
 	startedAttackingMessage.myString = "turnLeft90";
 	myUser->NotifyComponents(eComponentMessageType::eBasicAttack, startedAttackingMessage);
 
-	//lägg till en offset så dem hamnar framför usern beroende på vart den är riktad
-	//skapa temp matris av userns gör en move på den med vald offset sedan ta ut positionen från den och placera fienderna där?
-	Matrix44f temp = myUser->GetLocalTransform();
-	temp.Move(CU::Vector3f(0, 0, 100));
 
-	for (int i = 0; i < mySkillData->numberOfEnemiesToSpawn; i++)
-	{
-		CEnemyFactory::GetInstance().CreateEnemy(temp.GetPosition());
-	}
-	myElapsedCoolDownTime = 0.0f;
 	myAnimationTimeElapsed += aDeltaTime;
+	if (myAnimationTimeElapsed > mySkillData->animationDuration)
+	{
+		Matrix44f temp = myUser->GetLocalTransform();
+		temp.Move(CU::Vector3f(0, 0, 100));
+
+		for (int i = 0; i < mySkillData->numberOfEnemiesToSpawn; i++)
+		{
+			CEnemyFactory::GetInstance().CreateEnemy(temp.GetPosition());
+		}
+		myElapsedCoolDownTime = 0.0f;
+	}
 }
 
 void Skill::SetTargetPosition(CU::Vector3f aTargetPosition)
