@@ -117,7 +117,6 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 {
 	myIsLoaded = false;
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eHatAdded);
-	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
 }
 
 CPlayState::~CPlayState()
@@ -160,7 +159,6 @@ CPlayState::~CPlayState()
 	SkillFactory::DestroyInstance();
 	CComponentManager::DestroyInstance();
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eHatAdded);
-	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
 
 	CLevelManager::DestroyInstance();
 }
