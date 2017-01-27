@@ -5,4 +5,5 @@ enum class ePickupType
 	GOLD,
 	HEALTH,
 	MANA,
+	HAT,
 };

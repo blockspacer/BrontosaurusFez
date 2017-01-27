@@ -350,6 +350,8 @@
     <ClInclude Include="AIControllerManager.h" />
     <ClInclude Include="AudioSourceComponent.h" />
     <ClInclude Include="AudioSourceComponentManager.h" />
+    <ClInclude Include="BlessingTowerComponent.h" />
+    <ClInclude Include="BlessingTowerComponentManager.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="ChangeLevelTriggerComponent.h" />
@@ -420,6 +422,8 @@
     <ClCompile Include="AIControllerManager.cpp" />
     <ClCompile Include="AudioSourceComponent.cpp" />
     <ClCompile Include="AudioSourceComponentManager.cpp" />
+    <ClCompile Include="BlessingTowerComponent.cpp" />
+    <ClCompile Include="BlessingTowerComponentManager.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="ChangeLevelTriggerComponent.cpp" />

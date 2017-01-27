@@ -149,6 +149,8 @@
       <Filter>ScriptComponent</Filter>
     </ClCompile>
     <ClCompile Include="ScriptComponentManager.cpp" />
+    <ClCompile Include="BlessingTowerComponent.cpp" />
+    <ClCompile Include="BlessingTowerComponentManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -315,6 +317,8 @@
       <Filter>OpenShopListenerComponent</Filter>
     </ClInclude>
     <ClInclude Include="SpawnEnemyComponent.h" />
+    <ClInclude Include="BlessingTowerComponent.h" />
+    <ClInclude Include="BlessingTowerComponentManager.h" />
     <ClInclude Include="ScriptComponent.h">
       <Filter>ScriptComponent</Filter>
     </ClInclude>

@@ -35,6 +35,8 @@
 #include "Components/SkillFactory.h"
 #include "Components/SkillSystemComponentManager.h"
 #include "Components/CollisionComponentManager.h"
+#include "Components\BlessingTowerComponentManager.h"
+#include "MainStatComponent.h"
 
 #include "../GUI/GUIManager.h"
 
@@ -87,6 +89,8 @@
 #include "PlayerHealthMessenger.h"
 #include "PlayerManaMessenger.h"
 #include "ComponentMessage.h"
+#include "PlayerHealthMessenger.h"
+#include "PlayerManaMessenger.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
 
@@ -112,7 +116,6 @@ CPlayState::~CPlayState()
 	SAFE_DELETE(myCollisionComponentManager);
 	SAFE_DELETE(myStatManager);
 	SAFE_DELETE(myGoldText);
-	SAFE_DELETE(myHatMaker);
 	SAFE_DELETE(myHealthBarManager);
 	SAFE_DELETE(myHatMaker);
 
@@ -141,6 +144,7 @@ CPlayState::~CPlayState()
 	CPickupManager::DestroyInstance();
 	RespawnComponentManager::Destroy();
 	CMasterAI::Destroy();
+	BlessingTowerComponentManager::DestroyInstance();
 
 	SkillFactory::DestroyInstance();
 	CComponentManager::DestroyInstance();
@@ -200,7 +204,7 @@ void CPlayState::Load()
 	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
 #ifdef _DEBUG
-	//myLevelIndex = levelsArray.Size()-1;
+	myLevelIndex = levelsArray.Size()-1;
 #else
 	const int levelIndex = 0;
 #endif
@@ -258,6 +262,7 @@ void CPlayState::Load()
 		PollingStation::playerObject->AddComponent(new CPlayerManaMessenger());
 		PollingStation::playerObject->AddComponent(CPickupManager::GetInstance().CreatePickerUpperComp());
 		PollingStation::playerObject->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
+		PollingStation::playerObject->AddComponent(new CMainStatComponent());
 
 		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eInit, SComponentMessageData());
 	}
@@ -282,7 +287,7 @@ void CPlayState::Load()
 
 
 	myHatMaker->LoadBluePrints("Json/Hats/HatBluePrints.json");
-
+	myHatMaker->GiveTheManAHat();
 	myIsLoaded = true;
 
 	//get time to load the level:
@@ -346,6 +351,7 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	DropComponentManager::GetInstance().Update(aDeltaTime);
 
 	myHealthBarManager->Update();
+	BlessingTowerComponentManager::GetInstance().Update(aDeltaTime);
 
 	return myStatus;
 }
@@ -487,4 +493,5 @@ void CPlayState::CreateManagersAndFactories()
 	RespawnComponentManager::Create();
 	CLevelManager::CreateInstance();
 	CEnemyFactory::Create(*myGameObjectManager,*myCollisionComponentManager,*myHealthBarManager);
+	BlessingTowerComponentManager::CreateInstance();
 }

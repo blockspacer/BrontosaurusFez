@@ -23,6 +23,7 @@
 #include "LoadActivationComponent.h"
 #include "LoadOpenShopListenerComponent.h"
 #include "LoadChangeLevelTriggerComponent.h"
+#include "LoadBlessingTowerComponent.h"
 
 LoadManager* LoadManager::ourInstance = nullptr;
 
@@ -98,6 +99,7 @@ void LoadManager::RegisterFunctions()
 	loader.RegisterComponentLoadFunction("ActivatorComponent", LoadActivationComponent);
 	loader.RegisterComponentLoadFunction("ActivateShopComponent", LoadOpenShopListenerComponent);
 	loader.RegisterComponentLoadFunction("ChangeLevelComponent", LoadChangeLevelTriggerComponent);
+	loader.RegisterComponentLoadFunction("BlessingTowerComponent", LoadBlessingTowerComponent);
 }
 
 LoadManager::LoadManager()
