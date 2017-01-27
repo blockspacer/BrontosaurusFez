@@ -121,6 +121,51 @@ namespace SSlua
 		CheckError(lua_pcall(myState, 0, LUA_MULTRET, 0));
 	}
 
+	bool LuaWrapper::LoadLuaString(const std::string& aLuaScript)
+	{
+		int error = luaL_loadstring(myState, aLuaScript.c_str());
+		//CheckError(error);
+		return error != LUA_OK;
+	}
+
+	void LuaWrapper::GetGlobal(const std::string& aVariableName, int* const aType)
+	{
+		int type = lua_getglobal(myState, aVariableName.c_str());
+		if (aType)
+		{
+			*aType = type;
+		}
+	}
+
+	void LuaWrapper::AssignePairToTableAt(const int aTableIndex)
+	{
+		lua_settable(myState, aTableIndex);
+	}
+
+	void LuaWrapper::GetValueInTableAt(const int aTableIndex)
+	{
+		lua_gettable(myState, aTableIndex);
+	}
+
+	void LuaWrapper::GetValueFromTable(const std::string& aTableName, const std::string& aKeyName)
+	{
+		int type = -1;
+		GetGlobal("GlobalFunctionTable", &type);
+		if (type != LUA_TTABLE) return;
+
+		//Push<std::string>(aKeyName);
+		GetValueInTableAt(-2);
+	}
+
+	void LuaWrapper::GetLastError(std::string& aErrorMessageOut) const
+	{
+		if (lua_isstring(myState, -1))
+		{
+			aErrorMessageOut = lua_tostring(myState, -1);
+			lua_pop(myState, 1);
+		}
+	}
+
 	bool LuaWrapper::ParseLuaTable(const std::string& aScriptPath, const std::string& aTableName, std::map<std::string, SSArgument>& aTableMapOut)
 	{
 		LoadCode(aScriptPath);
@@ -172,6 +217,24 @@ namespace SSlua
 		lua_pop(myState, 1);
 
 		return result;
+	}
+
+	template<>
+	void LuaWrapper::Push<int>(const int& aVariable)
+	{
+		lua_pushinteger(myState, aVariable);
+	}
+
+	//template<>
+	//void LuaWrapper::Push<std::string>(const std::string& aVariable)
+	//{
+	//	lua_pushstring(myState, aVariable.c_str());
+	//}
+
+	template<>
+	void LuaWrapper::Pop<void>()
+	{
+		lua_pop(myState, 1);
 	}
 
 	SSArgument LuaWrapper::CallLuaFunction(const std::string& aFunctionName, const ArgumentList& someArguments, const bool aShouldReturnFlag)

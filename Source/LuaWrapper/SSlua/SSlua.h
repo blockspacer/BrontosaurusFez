@@ -33,8 +33,21 @@ namespace SSlua
 
 		void LoadCode(const std::string& aFileName);
 		void RunLoadedCode();
+		bool LoadLuaString(const std::string& aLuaScript);
+		void GetGlobal(const std::string& aVariableName, int* const aType = nullptr);
+		void AssignePairToTableAt(const int aTableIndex);
+		void GetValueInTableAt(const int aTableIndex);
+		void GetValueFromTable(const std::string& aTableName, const std::string& aKeyName);
+		void GetLastError(std::string& aErrorMessageOut) const;
+
 
 		bool ParseLuaTable(const std::string& aScriptPath, const std::string& aTableName, std::map<std::string, SSArgument>& aTableMapOut);
+		
+		template<typename T>
+		void Push(const T& aVariable);
+
+		template<typename T>
+		T Pop();
 
 		SSArgument CallLuaFunction(const std::string& aFunctionName, const ArgumentList& someArguments, const bool aShouldReturnFlag = false);
 

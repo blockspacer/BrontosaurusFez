@@ -145,6 +145,10 @@
     <ClCompile Include="OpenShopListenerComponent.cpp">
       <Filter>OpenShopListenerComponent</Filter>
     </ClCompile>
+    <ClCompile Include="ScriptComponent.cpp">
+      <Filter>ScriptComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptComponentManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -311,6 +315,10 @@
       <Filter>OpenShopListenerComponent</Filter>
     </ClInclude>
     <ClInclude Include="SpawnEnemyComponent.h" />
+    <ClInclude Include="ScriptComponent.h">
+      <Filter>ScriptComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptComponentManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -375,6 +383,9 @@
     </Filter>
     <Filter Include="OpenShopListenerComponent">
       <UniqueIdentifier>{4e77c44b-70f6-43e3-81aa-a5426b6a26c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptComponent">
+      <UniqueIdentifier>{693bd916-9e55-4c29-a108-69508fb4d6b5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
