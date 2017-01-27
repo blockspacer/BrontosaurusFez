@@ -823,13 +823,21 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 		CModelManager* modelManager = CEngine::GetInstance()->GetModelManager();
 		CModel* model = modelManager->GetModel(msg->myModelID);
 		if (model == nullptr) break;
+
 		if (model->HasConstantBuffer(CModel::eShaderStage::ePixel) == true)
 		{
 			msg->myPixelConstantBufferStruct.myCameraPosition = myCamera.GetPosition();
 			model->UpdateConstantBuffer(CModel::eShaderStage::ePixel, &msg->myPixelConstantBufferStruct, sizeof(msg->myPixelConstantBufferStruct));
+		
+			model->Render(msg->myToWorld, msg->myToWorld, nullptr, nullptr); //don't blur  GUI, atm fullösning deluxe.
 		}
-
-		model->Render(msg->myToWorld, msg->myToWorld, nullptr, nullptr); //don't blur  GUI, atm fullösning deluxe.
+		else
+		{
+			Lights::SDirectionalLight light;
+			light.direction.Set(-0.2f, -0.9f, 0.f, 1.f);
+			light.direction.Normalize();
+			model->Render(msg->myToWorld, msg->myToWorld, &light, nullptr, "idle", myFireTimer);
+		}
 
 		++aDrawCallCount;
 

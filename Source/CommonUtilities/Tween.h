@@ -1,5 +1,4 @@
 #pragma once
-#include "External/dbtweener.h"
 
 enum class TweenType
 {
@@ -34,9 +33,9 @@ public:
 	bool IsFinished();
 
 private:
+	class CDBTweener* myTweener;
 	float myValue;
-	float myProgress = 0;
+	float myProgress;
 	float myDuration;
-	CDBTweener myTweener;
 };
 

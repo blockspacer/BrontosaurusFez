@@ -112,7 +112,7 @@ namespace GUI
 			{
 				if (myOrderedWidgets[i]->IsVisible() == true)
 				{
-					myOrderedWidgets[i]->Render(myOrderedWidgets);
+					myOrderedWidgets[i]->Render(myFrontLayerWidgets);
 				}
 			}
 		}
@@ -160,7 +160,12 @@ namespace GUI
 
 	void WidgetContainer::RenderFrontLayers()
 	{
-		//myFrontLayerWidgets->Render();
+		for (IWidget* widget : myFrontLayerWidgets)
+		{
+			widget->Render();
+		}
+
+		myFrontLayerWidgets.RemoveAll();
 	}
 
 	void WidgetContainer::MoveToFront(const std::string& aWidgetName)

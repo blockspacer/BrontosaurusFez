@@ -44,6 +44,30 @@ namespace GUI
 		AddDebugLines();
 	}
 
+	ModelWidget::ModelWidget(CModelInstance* aModelInstance, const CU::Camera& aGUICamera, const std::string& aName, const bool aIsVisible)
+		: IWidget(CU::Vector2f::Zero, CU::Vector2f::One, aName, aIsVisible)
+		, myModelInstance(aModelInstance)
+		, myPixelConstantBufferStruct(nullptr)
+		, myMillisecondsLeftSinceMouseEnter(0.f)
+	{
+		assert(myModelInstance != nullptr && "got model instance that was null");
+
+		myPixelConstantBufferStruct = new SPixelConstantBuffer();
+		myOriginalTransformation = myModelInstance->GetTransformation();
+		myMinPoint = myModelInstance->GetModelBoundingBox().myMinPos;
+		myMaxPoint = myModelInstance->GetModelBoundingBox().myMaxPos;
+
+		CU::Vector2f screenMinPosition;
+		ConvertPosition3DTo2D(aGUICamera, myMinPoint, screenMinPosition);
+
+		CU::Vector2f screenMaxPosition;
+		ConvertPosition3DTo2D(aGUICamera, myMaxPoint, screenMaxPosition);
+
+		SetWorldPosition(CU::Vector2f(screenMinPosition.x, 1.f - screenMaxPosition.y));
+		SetSize((screenMaxPosition - screenMinPosition));
+		AddDebugLines();
+	}
+
 	ModelWidget::~ModelWidget()
 	{
 		SAFE_DELETE(myModelInstance);

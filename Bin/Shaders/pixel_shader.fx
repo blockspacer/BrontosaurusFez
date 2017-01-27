@@ -460,10 +460,9 @@ PixelOutput PS_PBL(PosNormBinormTanTex_InputPixel input)
 	texCord.y = shadowCamPosition.y * -0.5f + 0.5f;
 
 
-
 	float shadowCamDepth = shadowBuffer.SampleLevel(Sampler, texCord, 0).x;
 
-	if(shadowCamDepth < shadowCamPosition.z - 0.001f)
+	if(shadowCamDepth < shadowCamPosition.z - 0.001f && shadowCamDepth != 0.f)
 	{
 		directionDiffuse.rgb = 0.0f;
 		directionSpecularity.rgb = 0.0f;

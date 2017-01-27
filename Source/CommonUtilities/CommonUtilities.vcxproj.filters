@@ -82,6 +82,9 @@
     <Filter Include="PicoJson">
       <UniqueIdentifier>{45412c79-6444-4e53-b508-abe0a9c9403f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tweener">
+      <UniqueIdentifier>{89ab4aff-5c42-4730-aa80-030ddaeeffdf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Timer.h">
@@ -355,6 +358,12 @@
     <ClInclude Include="ReverseGrowingArray.h">
       <Filter>Containers</Filter>
     </ClInclude>
+    <ClInclude Include="Tween.h">
+      <Filter>Tweener</Filter>
+    </ClInclude>
+    <ClInclude Include="dbtweener.h">
+      <Filter>Tweener</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Timer.cpp">
@@ -431,6 +440,12 @@
     </ClCompile>
     <ClCompile Include="JsonValue.cpp">
       <Filter>PicoJson</Filter>
+    </ClCompile>
+    <ClCompile Include="Tween.cpp">
+      <Filter>Tweener</Filter>
+    </ClCompile>
+    <ClCompile Include="dbtweener.cpp">
+      <Filter>Tweener</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

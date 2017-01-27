@@ -54,8 +54,6 @@ void GUI::GUIManager::Init(const char* aGUIScenePath)
 {
 	myWidgetContainer = WidgetFactory::CreateGUIScene(aGUIScenePath, myCamera);
 
-	myWidgetContainer->MoveToFront("");
-
 	myCursor = new GUICursor();
 	PostMaster::GetInstance().Subscribe(myCursor, eMessageType::eMouseMessage, 6);
 }
@@ -99,12 +97,12 @@ void GUI::GUIManager::AddWidget(const std::string& aName, IWidget* aWidget)
 {
 	if (aName.empty() == true)
 	{
-		DL_ASSERT("Tried to add widget without a name to GUI manager");
+		assert(!"Tried to add widget without a name to GUI manager");
 		return;
 	}
 	if (aWidget == nullptr)
 	{
-		DL_ASSERT("Tried to add null-widget to GUI manager");
+		assert(!"Tried to add null-widget to GUI manager");
 		return;
 	}
 
@@ -121,7 +119,7 @@ GUI::IWidget* GUI::GUIManager::RemoveWidget(const std::string& aName)
 {
 	if (aName.empty() == true)
 	{
-		DL_ASSERT("Tried to remove widget with empty name in GUI manager");
+		assert(!"Tried to remove widget with empty name in GUI manager");
 		return nullptr;
 	}
 
@@ -132,7 +130,7 @@ GUI::IWidget* GUI::GUIManager::FindWidget(const std::string& aName)
 {
 	if (aName.empty() == true)
 	{
-		DL_ASSERT("Tried to remove widget with empty name in GUI manager");
+		assert(!"Tried to remove widget with empty name in GUI manager");
 		return nullptr;
 	}
 

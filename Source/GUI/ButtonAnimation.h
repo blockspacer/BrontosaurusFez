@@ -38,6 +38,8 @@ namespace GUI
 
 		} myAnimationState;
 
+		CU::Vector3f myOriginalPosition;
+		CU::Vector3f myForwardDirection;
 		std::function<void(void)> myAnimationIsDoneCallback;
 		CU::Time* myAnimationTimer;
 		float myResetPosition;

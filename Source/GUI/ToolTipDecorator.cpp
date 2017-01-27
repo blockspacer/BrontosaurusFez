@@ -72,13 +72,19 @@ namespace GUI
 
 	void CToolTipDecorator::Render()
 	{
-		WidgetDecorator::Render();
+		//WidgetDecorator::Render();
 
 		if (myShouldRender == true)
 		{
 			myBackGround->Render();
 			myTextInstance->Render();
 		}
+	}
+
+	void CToolTipDecorator::Render(CU::GrowingArray<IWidget*>& aWidgets)
+	{
+		WidgetDecorator::Render();
+		aWidgets.Add(this);
 	}
 
 	void CToolTipDecorator::OnMouseMove(const CU::Vector2f& aMousePosition)

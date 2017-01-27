@@ -1,8 +1,12 @@
 #include "stdafx.h"
 #include "Tween.h"
 
+#include "dbtweener.h"
 
-Tween::Tween(TweenType aType, TweenMod aMod, float aStart, float aEnd, float aDuration) : myValue(aStart), myDuration(aDuration)
+Tween::Tween(TweenType aType, TweenMod aMod, float aStart, float aEnd, float aDuration)
+	: myValue(aStart)
+	, myProgress(0.f)
+	, myDuration(aDuration)
 {
 	CDBTweener::CEquation *aEquation = nullptr;
 	CDBTweener::EEasing aEasing = CDBTweener::TWEA_IN;
@@ -61,7 +65,7 @@ Tween::Tween(TweenType aType, TweenMod aMod, float aStart, float aEnd, float aDu
 		break;
 
 	}
-	myTweener.addTween(aEquation, aEasing, myDuration, &myValue, aEnd);
+	myTweener->addTween(aEquation, aEasing, myDuration, &myValue, aEnd);
 }
 
 Tween::~Tween()
@@ -70,9 +74,9 @@ Tween::~Tween()
 
 void Tween::Update(float aDeltaProgress)
 {
-	if (!IsFinished())
+	if (myTweener && !IsFinished())
 	{
-		myTweener.step(aDeltaProgress);
+		myTweener->step(aDeltaProgress);
 		myProgress += aDeltaProgress;
 	}
 }

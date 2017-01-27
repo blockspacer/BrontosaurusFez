@@ -1,8 +1,10 @@
 #include "stdafx.h"
 #include "ButtonAnimation.h"
 #include "ModelWidget.h"
+#include "WidgetFactory.h"
 
 #include "..\BrontosaurusEngine\ModelInstance.h"
+#include <CommonUtilities\Camera.h>
 
 namespace GUI
 {
@@ -18,10 +20,20 @@ namespace GUI
 		myAnimationTimer = new CU::Time(0.f);
 
 		ModelWidget* modelWidget = static_cast<ModelWidget*>(*myDecoratedWidget);
-		if (modelWidget != nullptr)
+		if (modelWidget)
 		{
 			const CU::Matrix44f& transformation = modelWidget->myModelInstance->GetTransformation();
-			myResetPosition = transformation.GetPosition().y;
+			myOriginalPosition = transformation.GetPosition();
+			myResetPosition = myOriginalPosition.y;
+
+			const CU::Camera* guiCamera = WidgetFactory::GetCurrentGUICamera();
+			if (guiCamera)
+			{
+				myForwardDirection = myOriginalPosition - guiCamera->GetPosition();
+				myForwardDirection.Normalize();
+				DL_PRINT("%f, %f, %f", myForwardDirection.x, myForwardDirection.y, myForwardDirection.z);
+
+			}
 		}
 	}
 
@@ -83,9 +95,12 @@ namespace GUI
 			ModelWidget* modelWidget = static_cast<ModelWidget*>(*myDecoratedWidget);
 			if (modelWidget != nullptr)
 			{
-				CU::Matrix44f transformation = static_cast<GUI::ModelWidget*>(myDecoratedWidget)->myModelInstance->GetTransformation();
-				float& posY = transformation.GetPosition().y;
-				posY += aDeltaTime.GetMicroseconds() * -0.001f * 0.1f;
+				CU::Matrix44f transformation = modelWidget->myModelInstance->GetTransformation();
+				CU::Vector3f& pos = transformation.GetPosition();
+				pos += myForwardDirection * aDeltaTime.GetMilliseconds() * 0.1f;
+
+				//float& posY = transformation.GetPosition().y;
+				//posY += aDeltaTime.GetMilliseconds() * -0.1f;
 
 				modelWidget->myModelInstance->SetTransformation(transformation);
 			}
@@ -101,16 +116,20 @@ namespace GUI
 
 	void ButtonAnimation::DoFlippedAnimation(const CU::Time aDeltaTime)
 	{
+		ModelWidget* modelWidget = static_cast<ModelWidget*>(myDecoratedWidget);
 		*myAnimationTimer += aDeltaTime;
-		CU::Matrix44f transformation = static_cast<ModelWidget*>(myDecoratedWidget)->myModelInstance->GetTransformation();
+		CU::Matrix44f transformation = modelWidget->myModelInstance->GetTransformation();
+		CU::Vector3f& pos = transformation.GetPosition();
+		pos += myForwardDirection * aDeltaTime.GetMilliseconds() * -0.1f;
 
-		float& posY = transformation.GetPosition().y;
-		posY += aDeltaTime.GetMicroseconds() * 0.001f * 0.1f;
-		static_cast<ModelWidget*>(myDecoratedWidget)->myModelInstance->SetTransformation(transformation);
+		//float& posY = transformation.GetPosition().y;
+		//posY += aDeltaTime.GetMicroseconds() * 0.001f * 0.1f;
 
-		if (posY >= myResetPosition)
+		modelWidget->myModelInstance->SetTransformation(transformation);
+
+		if (pos.y >= myResetPosition)
 		{
-			posY = myResetPosition;
+			pos.y = myResetPosition;
 			myAnimationState = eAnimationState::eDone;
 			myAnimationTimer->Reset();
 		}

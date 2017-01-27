@@ -357,7 +357,7 @@ void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix4
 
 
 	//ANIMATION BUFFER
-	if (mySceneAnimator != nullptr && (aAnimationState != nullptr || aAnimationState != ""))
+	if (mySceneAnimator != nullptr && (aAnimationState != nullptr && aAnimationState != ""))
 	{
 
 		std::vector<mat4>& bones = GetBones(aAnimationTime, aAnimationState);
@@ -371,11 +371,10 @@ void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix4
 		DEVICE_CONTEXT->VSSetConstantBuffers(3, 1, &myBoneBuffer);
 	}
 
-	if (aLight != nullptr && aPointLightList != nullptr)
+	if (aLight != nullptr)
 	{
 		//LIGHT
 
-		const CU::GrowingArray<CPointLightInstance*>& pointlightList = *aPointLightList;
 		ZeroMemory(&mappedSubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
 
 		Lights::SLightsBuffer updatedLights;
@@ -385,7 +384,7 @@ void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix4
 
 		for (unsigned int i = 0; i < NUMBER_OF_POINTLIGHTS; ++i)
 		{
-			if (i >= pointlightList.Size())
+			if (aPointLightList == nullptr || i >= aPointLightList->Size())
 			{
 				updatedLights.myPointLights[i].color = { 0.0f, 0.0f, 0.0f, 0.0f };
 				updatedLights.myPointLights[i].position = { 0.0f, 0.0f, 0.0f };
@@ -394,10 +393,10 @@ void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix4
 			}
 			else
 			{
-				updatedLights.myPointLights[i].color = pointlightList[i]->GetColor();
-				updatedLights.myPointLights[i].position = pointlightList[i]->GetPosition();
-				updatedLights.myPointLights[i].intensity = pointlightList[i]->GetInstensity();
-				updatedLights.myPointLights[i].range = pointlightList[i]->GetRange();
+				updatedLights.myPointLights[i].color = aPointLightList->At(i)->GetColor();
+				updatedLights.myPointLights[i].position = aPointLightList->At(i)->GetPosition();
+				updatedLights.myPointLights[i].intensity = aPointLightList->At(i)->GetInstensity();
+				updatedLights.myPointLights[i].range = aPointLightList->At(i)->GetRange();
 			}
 		}
 

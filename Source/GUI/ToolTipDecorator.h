@@ -15,6 +15,7 @@ namespace GUI
 		~CToolTipDecorator();
 
 		void Render() override;
+		void Render(CU::GrowingArray<IWidget*>& aWidgets) override;
 		void OnMouseMove(const CU::Vector2f& aMousePosition) override;
 		void OnMouseEnter(const CU::Vector2f& aMousePosition) override;
 		void OnMouseExit(const CU::Vector2f& aMousePosition) override;
