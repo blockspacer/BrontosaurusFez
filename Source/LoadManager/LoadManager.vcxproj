@@ -367,6 +367,7 @@
     <ClInclude Include="LoadObjectives.h" />
     <ClInclude Include="LoadSkillSystemComponent.h" />
     <ClInclude Include="LoadSoundComponent.h" />
+    <ClInclude Include="LoadSpawnEnemyOnDeathComponent.h" />
     <ClInclude Include="LuaFunctions.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -395,6 +396,7 @@
     <ClCompile Include="LoadObjectives.cpp" />
     <ClCompile Include="LoadSkillSystemComponent.cpp" />
     <ClCompile Include="LoadSoundComponent.cpp" />
+    <ClCompile Include="LoadSpawnEnemyOnDeathComponent.cpp" />
     <ClCompile Include="LuaFunctions.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
