@@ -21,7 +21,7 @@ private:
 	static CAudioSourceComponentManager* myInstance;
 
 	std::unordered_map < Audio::GameObjectID, unsigned int> myIds;
-	CU::GrowingArray<CAudioSourceComponent, unsigned int> myComponents;
+	CU::GrowingArray<CAudioSourceComponent*, unsigned int> myComponents;
 		
 };
 
