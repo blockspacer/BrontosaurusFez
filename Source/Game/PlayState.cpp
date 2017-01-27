@@ -102,7 +102,7 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 {
 	myIsLoaded = false;
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eHatAdded);
-	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
+	
 }
 
 CPlayState::~CPlayState()
