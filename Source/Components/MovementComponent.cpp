@@ -25,10 +25,10 @@ void MovementComponent::Update(float aDeltaTime)
 	{
 		if (myPathPointer != nullptr)
 		{
-			if (myCurrentPathIndex < myPathPointer->myWaypoints.Size())
+			if (myCurrentPathIndex < myPathPointer->Size())
 			{
 				CU::Vector3f position = GetParent()->GetWorldPosition();
-				CU::Vector3f direction = myPathPointer->myWaypoints.At(myCurrentPathIndex).myPosition - position;
+				CU::Vector3f direction = myPathPointer->At(myCurrentPathIndex).myPosition - position;
 				CU::Vector3f directionNormalized = direction.GetNormalized();
 				CU::Vector3f movement = directionNormalized * myMovementSpeed * aDeltaTime;
 
@@ -45,7 +45,7 @@ void MovementComponent::Update(float aDeltaTime)
 				}
 				else
 				{
-					localTransform.SetPosition(myPathPointer->myWaypoints.At(myCurrentPathIndex).myPosition);
+					localTransform.SetPosition(myPathPointer->At(myCurrentPathIndex).myPosition);
 					myCurrentPathIndex++;
 
 					GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
@@ -83,7 +83,7 @@ void MovementComponent::Receive(const eComponentMessageType aMessageType, const 
 	case eComponentMessageType::eStopMovement:
 		if(myPathPointer != nullptr)
 		{
-			myCurrentPathIndex = myPathPointer->myWaypoints.Size();
+			myCurrentPathIndex = myPathPointer->Size();
 			myWaitUntilMoveAgianTimer = aMessageData.myFloat;
 		}
 		break;

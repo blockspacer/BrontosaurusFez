@@ -3,12 +3,18 @@
 #include "GameObject.h"
 #include "../Game/PollingStation.h"
 
+
+#include "Navmesh.h"
+#include <line.h>
+
+
 const CU::Vector2f StopVector = CU::Vector2f(99999, 99999);
 #define SCALAR 10 // due to being our game being so large.
 
 CAIControllerComponent::CAIControllerComponent()
 {
 	myControllers.Init(2);
+	myTriangle = nullptr;
 	myMaxVelocity = 70;
 	myVelocity = { 0.f,0.f };
 	myType = eComponentType::eAIController;
@@ -40,6 +46,19 @@ const CU::Vector2f & CAIControllerComponent::GetVelocity()
 
 void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 {
+	if (myTriangle == nullptr)
+	{
+		CNavmesh* navmesh = PollingStation::Navmesh;
+		if (navmesh != nullptr)
+		{
+			CU::Vector3f intersectingPoint;
+			if (navmesh->IsValid(GetParent()->GetWorldPosition(), myTriangle, intersectingPoint) == false )
+			{
+				DL_PRINT("AI not placed on Navmesh.");
+			}
+		}
+	}
+
 	CU::Vector2f Acceleration = CU::Vector2f::Zero;
 	myVelocity = CU::Vector2f::Zero;
 	for (unsigned int i = 0; i < myControllers.Size(); ++i)
@@ -51,6 +70,11 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 			break;
 		}
 		Acceleration += returnValue;
+	}
+
+	if (Acceleration == CU::Vector2f::Zero)
+	{
+		return;
 	}
 
 	myVelocity += Acceleration;
@@ -72,15 +96,88 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 			GetParent()->NotifyComponents(eComponentMessageType::eSetSkillTargetObject, data);
 		}
 	}
-	eComponentMessageType type = eComponentMessageType::eSetNavigationTarget;
-	SComponentMessageData data;
-	CU::Vector3f targetPosition = GetParent()->GetLocalTransform().GetPosition() + CU::Vector3f(velocity.x, 0, velocity.y); //might need to be converted to screen space;
-	CU::Vector2f navigationPosition;
-	navigationPosition.y = targetPosition.z;
-	navigationPosition.x = targetPosition.x;
-	data.myVector2f = navigationPosition;
-	GetParent()->NotifyComponents(type, data);
-	GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
+
+
+
+	float tempX1 = 0.0f;
+	float tempZ1 = 0.0f;
+	float tempX2 = 0.0f;
+	float tempZ2 = 0.0f;
+	CU::Vector3f newPosition = GetParent()->GetWorldPosition() + CU::Vector3f(velocity.x, 0, velocity.y);
+	CU::Line<float> line;
+	bool isOnNavmesh = true;
+	for (int i = 0; i < 3; ++i)
+	{
+		tempX1 = myTriangle->Edges[i]->FirstVertex->Position.x;
+		tempZ1 = myTriangle->Edges[i]->FirstVertex->Position.z;
+		tempX2 = myTriangle->Edges[i]->SecondVertex->Position.x;
+		tempZ2 = myTriangle->Edges[i]->SecondVertex->Position.z;
+
+		line.SetWith2Points({ tempX1 , tempZ1 }, { tempX2, tempZ2 });
+		if (line.IsInside({ newPosition.x, newPosition.z }) != line.IsInside({ myTriangle->CenterPosition.x, myTriangle->CenterPosition.z }))
+		{
+			if (myTriangle != myTriangle->Edges[i]->Triangles[0])
+			{
+				if (myTriangle->Edges[i]->Triangles[0] == nullptr)
+				{
+					isOnNavmesh = false;
+					break;
+				}
+				myTriangle = myTriangle->Edges[i]->Triangles[0];
+				DL_PRINT("Changing triangle!");
+			}
+			else if (myTriangle != myTriangle->Edges[i]->Triangles[1])
+			{
+				if (myTriangle->Edges[i]->Triangles[1] == nullptr)
+				{
+					isOnNavmesh = false;
+					break;
+
+				}
+				myTriangle = myTriangle->Edges[i]->Triangles[1];
+				DL_PRINT("Changing triangle!");
+
+			}
+			else
+			{
+				CNavmesh* navmesh = PollingStation::Navmesh;
+				if (navmesh != nullptr)
+				{
+					CU::Vector3f intersectingPoint;
+					if (navmesh->IsValid(GetParent()->GetWorldPosition(), myTriangle, intersectingPoint) == false)
+					{
+						isOnNavmesh = false;
+						break;
+
+					}
+				}
+			}
+			break;
+		}
+	}
+
+	if (isOnNavmesh == true)
+	{
+		float height = myTriangle->GetHeight({newPosition.x, newPosition.z});
+		myPath.RemoveAll();
+
+
+		CPath::SWaypoint wayPoint;
+		wayPoint.myPosition = { newPosition.x, height,newPosition.z };
+		myPath.Add(wayPoint);
+
+
+		eComponentMessageType type = eComponentMessageType::eSetPath;
+		SComponentMessageData data;
+		data.myPathPointer = &myPath;
+		GetParent()->NotifyComponents(type, data);
+		GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
+	}
+	else
+	{
+		int br = 0;
+		br++;
+	}
 
 }
 
