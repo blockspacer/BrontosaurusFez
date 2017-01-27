@@ -19,27 +19,16 @@ const CU::Vector2f CFleeController::Update(const CU::Time & aDeltaTime)
 	const CU::Vector2f hostPos = GetControllerComponent()->GetParent()->GetWorldPosition();
 	const CU::Vector2f hostVelocity = GetControllerComponent()->GetVelocity();
 
-	for (int i = 0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); ++i)
-	{
-		const CU::Vector2f objectPos = PollingStation::myThingsEnemiesShouldAvoid[i]->GetWorldPosition();
-
-		if (objectPos == hostPos)
-		{
-			continue;
-		
-		}
-
-		CU::Vector2f desiredVelocity = (hostPos - objectPos);
+		CU::Vector2f desiredVelocity = (hostPos - PollingStation::playerObject->GetWorldPosition());
 		float distance = desiredVelocity.Length();
 
 		if (distance > myFleeRadius)
 		{
-			continue;
-		
+			return CU::Vector2f::Zero;
+			
 		}
 
 		steering += desiredVelocity - hostVelocity;
-	}
 
 	return steering * myWeight;
 }
