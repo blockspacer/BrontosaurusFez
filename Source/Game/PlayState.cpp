@@ -36,6 +36,7 @@
 #include "Components/SkillSystemComponentManager.h"
 #include "Components/CollisionComponentManager.h"
 #include "Components\BlessingTowerComponentManager.h"
+#include "MainStatComponent.h"
 
 #include "../GUI/GUIManager.h"
 
@@ -261,6 +262,7 @@ void CPlayState::Load()
 		PollingStation::playerObject->AddComponent(new CPlayerManaMessenger());
 		PollingStation::playerObject->AddComponent(CPickupManager::GetInstance().CreatePickerUpperComp());
 		PollingStation::playerObject->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
+		PollingStation::playerObject->AddComponent(new CMainStatComponent());
 
 		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eInit, SComponentMessageData());
 	}
