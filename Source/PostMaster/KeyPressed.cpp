@@ -66,6 +66,7 @@ eMessageReturn KeyPressed::DoEvent(CPlayState* aPlayState) const
 		{
 		case CU::eKeys::S:
 			aPlayState->BuyHats();
+			return eMessageReturn::eStop;
 			break;
 		case CU::eKeys::F7:
 			//aPlayState->NextLevel();
@@ -76,6 +77,7 @@ eMessageReturn KeyPressed::DoEvent(CPlayState* aPlayState) const
 			break;
 		case CU::eKeys::ESCAPE:
 			aPlayState->Pause();
+			return eMessageReturn::eStop;
 			break;
 		case CU::eKeys::H:
 //			aPlayState->TEMP_ADD_HAT(aPlayState->myPlayerObject);
@@ -84,7 +86,7 @@ eMessageReturn KeyPressed::DoEvent(CPlayState* aPlayState) const
 		}
 	}
 
-	return eMessageReturn::eStop;
+	return eMessageReturn::eContinue;
 }
 
 eMessageReturn KeyPressed::DoEvent(PauseMenu *aPauseMenu) const
