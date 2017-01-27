@@ -23,7 +23,6 @@ GUI::GUIManager::GUIManager()
 	, myCursor(nullptr)
 	, myShouldUpdate(true)
 	, myShouldRender(true)
-	, myShouldStealInput(true)
 	, myCamera(nullptr)
 	, myShouldRenderMouse(true)
 {
@@ -55,8 +54,6 @@ void GUI::GUIManager::Init(const char* aGUIScenePath)
 {
 	myWidgetContainer = WidgetFactory::CreateGUIScene(aGUIScenePath, myCamera);
 
-	myWidgetContainer->MoveToFront("");
-
 	myCursor = new GUICursor();
 	PostMaster::GetInstance().Subscribe(myCursor, eMessageType::eMouseMessage, 6);
 }
@@ -74,7 +71,7 @@ void GUI::GUIManager::Update(const CU::Time& aDeltaTime)
 void GUI::GUIManager::Render()
 {
 	SChangeStatesMessage* changeStateMessage = new SChangeStatesMessage();
-	changeStateMessage->myDepthStencilState = eDepthStencilState::eDisableDepth; //if mouse is under buttons, this is the problem
+	changeStateMessage->myDepthStencilState = eDepthStencilState::eDisableDepth;
 	changeStateMessage->myRasterizerState = eRasterizerState::eDefault;
 	changeStateMessage->myBlendState = eBlendState::eAlphaBlend;
 	changeStateMessage->mySamplerState = eSamplerState::eWrap;
@@ -88,17 +85,11 @@ void GUI::GUIManager::Render()
 	}
 
 	myWidgetContainer->Render();
+	myWidgetContainer->RenderFrontLayers();
 
-	if (myShouldStealInput == true && myShouldRenderMouse == true)
+	if (myShouldRenderMouse == true)
 	{
 		myCursor->Render();
-	}
-
-	if (myCamera != nullptr)
-	{
-		SSetCameraMessage* setCameraMessage = new SSetCameraMessage();
-		setCameraMessage->myCamera = *myCamera;
-		RENDERER.AddRenderMessage(setCameraMessage);
 	}
 }
 
@@ -106,12 +97,12 @@ void GUI::GUIManager::AddWidget(const std::string& aName, IWidget* aWidget)
 {
 	if (aName.empty() == true)
 	{
-		DL_ASSERT("Tried to add widget without a name to GUI manager");
+		assert(!"Tried to add widget without a name to GUI manager");
 		return;
 	}
 	if (aWidget == nullptr)
 	{
-		DL_ASSERT("Tried to add null-widget to GUI manager");
+		assert(!"Tried to add null-widget to GUI manager");
 		return;
 	}
 
@@ -128,7 +119,7 @@ GUI::IWidget* GUI::GUIManager::RemoveWidget(const std::string& aName)
 {
 	if (aName.empty() == true)
 	{
-		DL_ASSERT("Tried to remove widget with empty name in GUI manager");
+		assert(!"Tried to remove widget with empty name in GUI manager");
 		return nullptr;
 	}
 
@@ -139,11 +130,27 @@ GUI::IWidget* GUI::GUIManager::FindWidget(const std::string& aName)
 {
 	if (aName.empty() == true)
 	{
-		DL_ASSERT("Tried to remove widget with empty name in GUI manager");
+		assert(!"Tried to remove widget with empty name in GUI manager");
 		return nullptr;
 	}
 
 	return myWidgetContainer->FindWidget(aName);
+}
+
+void GUI::GUIManager::PauseUpdate()
+{
+}
+
+void GUI::GUIManager::PauseRender()
+{
+}
+
+void GUI::GUIManager::RestartUpdate()
+{
+}
+
+void GUI::GUIManager::RestartRender()
+{
 }
 
 eMessageReturn GUI::GUIManager::MouseClicked(const CU::eMouseButtons aMouseButton, const CU::Vector2f& aMousePosition)
@@ -170,7 +177,7 @@ eMessageReturn GUI::GUIManager::MouseClicked(const CU::eMouseButtons aMouseButto
 		myFocusedWidget->OnGotFocus();
 		myFocusedWidget->OnMousePressed(mousePosition, aMouseButton);
 
-		return (myShouldStealInput == true) ? eMessageReturn::eStop : eMessageReturn::eContinue;
+		return eMessageReturn::eStop;
 	}
 }
 
@@ -193,7 +200,7 @@ eMessageReturn GUI::GUIManager::MouseReleased(const CU::eMouseButtons aMouseButt
 		widget->OnMouseReleased(mousePosition, aMouseButton);
 	}
 
-	return (myShouldStealInput == true && stoleInput == true) ? eMessageReturn::eStop : eMessageReturn::eContinue;
+	return (stoleInput == true) ? eMessageReturn::eStop : eMessageReturn::eContinue;
 }
 
 eMessageReturn GUI::GUIManager::MouseMoved(const CU::Vector2f& aMousePosition)
@@ -236,7 +243,7 @@ eMessageReturn GUI::GUIManager::MouseDragged(const CU::eMouseButtons aMouseButto
 	if (widget != nullptr && widget != myWidgetContainer)
 	{
 		widget->OnMouseDrag(aMousePosition - aLastMousePosition, aMouseButton);
-		return (myShouldStealInput == true) ? eMessageReturn::eStop : eMessageReturn::eContinue;
+		return eMessageReturn::eStop;
 	}
 
 	return eMessageReturn::eContinue;

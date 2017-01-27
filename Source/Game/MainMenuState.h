@@ -20,6 +20,7 @@ public:
 	void Render() override;
 	void OnEnter() override;
 	void OnExit() override;
+	bool GetLetThroughRender() const override;
 
 	inline void SetIsGoingToLevelSelect(const bool aIsGoingToLevelSelect);
 

@@ -20,6 +20,7 @@ namespace GUI
 		friend class ButtonAnimation;
 
 		ModelWidget(CLoaderMesh* aLoaderMesh, const CU::GrowingArray<std::string>& aTexturePaths, const CU::Camera& aGUICamera, const bool aIsVisible = true);
+		ModelWidget(CModelInstance* aModelInstance, const CU::Camera& aGUICamera, const std::string& aName, const bool aIsVisible = true);
 		~ModelWidget();
 
 		void Update(const CU::Time& aDeltaTime) override;

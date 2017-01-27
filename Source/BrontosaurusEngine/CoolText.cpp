@@ -99,6 +99,31 @@ float CCoolText::GetlineHeight() const
 	return myFont.GetlineHeight() / WINDOW_SIZE_F.y;
 }
 
+CU::Vector2i CCoolText::CalculateRectPixelSize(const std::string& aText)
+{
+	CU::Vector2i rectSize;
+	std::wstring wText(aText.begin(), aText.end());
+	for (size_t i = 0; i < wText.size(); ++i)
+	{
+		if (wText[i] == L'w') //sorry mvh carl
+		{
+			wText[i] = L'm';
+		}
+		if (wText[i] == L' ') //sorry mvh carl
+		{
+			wText[i] = L'm';
+		}
+		CU::Vector2i charSize = myFont.GetCharSize(wText[i]);
+		rectSize.x += charSize.x;
+		if (charSize.y > rectSize.y)
+		{
+			rectSize.y = charSize.y;
+		}
+	}
+
+	return rectSize;
+}
+
 bool CCoolText::InitBuffers()
 {
 	/*CU::Vector4f topLeft  = { 0.0f	, 1.0f  , 0.5f, 1.0f };

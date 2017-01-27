@@ -54,6 +54,24 @@ CPickupComponent* CPickupManager::CreatePickupComponent(const ePickupType& aPick
 	return newComponent;
 }
 
+CPickupComponent * CPickupManager::CreatePickupComponent(const ePickupType & aPickupType, const char * aString, const float aSuckUpSpeed, const float aSuckUpRadius)
+{
+	CPickupComponent* newComponent = new CPickupComponent(*this);
+
+	SPickupData someData;
+	someData.myString = aString;
+	someData.myType = aPickupType;
+
+	newComponent->mySuckUpRadius = aSuckUpRadius;
+	newComponent->mySpeed = aSuckUpSpeed;
+
+	myPickupData[newComponent] = someData;
+
+	CComponentManager::GetInstance().RegisterComponent(newComponent);
+	myPickUpComponents.Add(newComponent);
+	return newComponent;
+}
+
 CPickupComponent* CPickupManager::CreatePickupComponent(const CU::DynamicString& aString, const int aValue, const float aSuckUpSpeed, const float aSuckUpRadius)
 {
 	ePickupType type = ePickupType::HEALTH;

@@ -379,6 +379,7 @@
     <ClInclude Include="CommandLineManager.h" />
     <ClInclude Include="CommonUtilities.h" />
     <ClInclude Include="CountDown.h" />
+    <ClInclude Include="dbtweener.h" />
     <ClInclude Include="DL_Assert.h" />
     <ClInclude Include="DL_Debug.h" />
     <ClInclude Include="DL_StackWalker.h" />
@@ -403,6 +404,7 @@
     <ClInclude Include="matrix33.h" />
     <ClInclude Include="matrix44.h" />
     <ClInclude Include="MemoryLeekLogger.h" />
+    <ClInclude Include="ReverseGrowingArray.h" />
     <ClInclude Include="StaticMemoryPool.h" />
     <ClInclude Include="MessageKyle.h" />
     <ClInclude Include="picojson.h" />
@@ -460,6 +462,7 @@
     <ClInclude Include="CUTime.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TimerManager.h" />
+    <ClInclude Include="Tween.h" />
     <ClInclude Include="vector2.h" />
     <ClInclude Include="vector3.h" />
     <ClInclude Include="vector4.h" />
@@ -472,6 +475,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CommandLineManager.cpp" />
     <ClCompile Include="CountDown.cpp" />
+    <ClCompile Include="dbtweener.cpp" />
     <ClCompile Include="DL_Debug.cpp" />
     <ClCompile Include="DL_StackWalker.cpp" />
     <ClCompile Include="DynamicString.cpp" />
@@ -504,6 +508,7 @@
     <ClCompile Include="CUTime.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TimerManager.cpp" />
+    <ClCompile Include="Tween.cpp" />
     <ClCompile Include="Work.cpp" />
     <ClCompile Include="Worker.cpp" />
     <ClCompile Include="XInputWrapper.cpp" />

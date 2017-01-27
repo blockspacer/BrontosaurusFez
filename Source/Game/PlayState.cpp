@@ -87,6 +87,8 @@
 #include "PlayerHealthMessenger.h"
 #include "PlayerManaMessenger.h"
 #include "ComponentMessage.h"
+#include "PlayerHealthMessenger.h"
+#include "PlayerManaMessenger.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
 
@@ -112,7 +114,6 @@ CPlayState::~CPlayState()
 	SAFE_DELETE(myCollisionComponentManager);
 	SAFE_DELETE(myStatManager);
 	SAFE_DELETE(myGoldText);
-	SAFE_DELETE(myHatMaker);
 	SAFE_DELETE(myHealthBarManager);
 	SAFE_DELETE(myHatMaker);
 
@@ -279,14 +280,10 @@ void CPlayState::Load()
 	myMouseComponent = new CMouseComponent(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 	mouseObject->AddComponent(myMouseComponent);
 
-	if (PollingStation::playerObject != nullptr)
-	{
-		PollingStation::playerObject->AddComponent(new CPlayerHealthMessenger());
-		PollingStation::playerObject->AddComponent(new CPlayerManaMessenger());
-	}
-	
-	myHatMaker->LoadBluePrints("Json/Hats/HatBluePrints.json");
 
+
+	myHatMaker->LoadBluePrints("Json/Hats/HatBluePrints.json");
+	myHatMaker->GiveTheManAHat();
 	myIsLoaded = true;
 
 	//get time to load the level:
@@ -298,6 +295,14 @@ void CPlayState::Load()
 void CPlayState::Init()
 {
 	//skillnad på load, init & konstructor ?
+	//	svar:	1. konstruktor ska sätta allt till noll/null
+	//			2. init ska skapa allt som kan bero på ifall motorn är skapad etc
+	//			3. load kallas trådat för init kallas alltid av statestacken när den pushar ett nytt state
+
+
+
+
+
 }
 
 eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)

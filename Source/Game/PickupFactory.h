@@ -17,6 +17,8 @@ public:
 
 	void CreateHealthGlobe(CU::Vector3f aPosition);
 	void CreateGoldPickup(CU::Vector3f aPosition, const unsigned int aAmountToDrop);
+	void CreateManaGlobe(CU::Vector3f aPosition);
+	void CreateHatDrop(CU::Vector3f aPosition, const char* aHatName);
 
 private:
 	void Init();

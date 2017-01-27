@@ -26,6 +26,7 @@ void TransformMatrix(mat4& out,const aiMatrix4x4& in){// there is some type of a
 // ------------------------------------------------------------------------------------------------
 // Constructor on a given animation. 
 CAnimEvaluator::CAnimEvaluator( const aiAnimation* pAnim) {
+	PlayAnimationForward = true;
 	mLastTime = 0.0;
 	TicksPerSecond = static_cast<float>(pAnim->mTicksPerSecond != 0.0f ? pAnim->mTicksPerSecond : 100.0f);
 	Duration = static_cast<float>(pAnim->mDuration);

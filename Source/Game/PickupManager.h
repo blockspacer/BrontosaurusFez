@@ -9,6 +9,7 @@ class CPickerUpperComponent;
 struct SPickupData
 {
 	int myValue;
+	const char* myString;
 	ePickupType myType;
 };
 
@@ -25,6 +26,7 @@ public:
 	static void DestroyInstance();
 
 	CPickupComponent* CreatePickupComponent(const ePickupType& aPickupType, const int aValue, const float aSuckUpSpeed, const float aSuckUpRadius);
+	CPickupComponent* CreatePickupComponent(const ePickupType& aPickupType, const char* aString, const float aSuckUpSpeed, const float aSuckUpRadius);
 	CPickupComponent* CreatePickupComponent(const CU::DynamicString& aString, const int aValue, const float aSuckUpSpeed, const float aSuckUpRadius);
 
 	void DestroyPickupComp(CPickupComponent* aPickupComponent);

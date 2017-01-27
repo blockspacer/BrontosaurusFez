@@ -23,6 +23,7 @@ namespace GUI
 
 		virtual IWidget* MouseIsOver(const CU::Vector2f& aPosition) override;
 
+		void RenderFrontLayers();
 		void MoveToFront(const std::string& aWidgetName);
 		void MoveToBack(const std::string& aWidgetName);
 
@@ -31,6 +32,7 @@ namespace GUI
 	protected:
 		std::unordered_map<std::string, IWidget*> myWidgets;
 		CU::GrowingArray<IWidget*> myOrderedWidgets;
+		CU::GrowingArray<IWidget*> myFrontLayerWidgets;
 	};
 
 	inline bool WidgetContainer::IsEmpty() const

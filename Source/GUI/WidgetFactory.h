@@ -19,6 +19,8 @@ namespace GUI
 	public:
 		static WidgetContainer* CreateGUIScene(const char* aFilePathFBX, CU::Camera*& aGUIManagerCameraOut);
 
+		static const CU::Camera* GetCurrentGUICamera();
+
 	private:
 		static WidgetContainer* CreateGUIScene(const CLoaderScene* aLoaderScene, CU::Camera*& aGUIManagerCameraOut, const std::string& aJsonPath);
 		static IWidget* CreateButton(IWidget* aWidget);		
@@ -27,5 +29,7 @@ namespace GUI
 		static IWidget* CreateHealthBar(IWidget* aWidget);
 		static IWidget* CreateManaBar(IWidget* aWidget);
 		static IWidget* CreateMoney(IWidget* aWidget);
+
+		static const CU::Camera* ourCurrentGUICamera;
 	};
 }
