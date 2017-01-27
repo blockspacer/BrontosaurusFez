@@ -21,7 +21,7 @@ CLoadState::~CLoadState()
 
 void CLoadState::Init()
 {
-	RENDERER.ClearRenderQueue();
+	//RENDERER.ClearRenderQueue();
 	CBackgroundLoadingManager &bLM = CBackgroundLoadingManager::GetInstance();
 
 	if (bLM.GetIfActive() == true)

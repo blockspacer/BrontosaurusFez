@@ -7,7 +7,7 @@
 
 CMouseComponent::CMouseComponent(const CU::Camera& aPlayerCamera)
 	: myPlayerCamera(aPlayerCamera)
-	, myHoveredGameObject(nullptr)
+	, myHoveredGameObjects(10)
 	, myMouseIsDown(false)
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage);
@@ -29,7 +29,14 @@ void CMouseComponent::Receive(const eComponentMessageType aMessageType, const SC
 		HandleCollision(aMessageData.myCollider->GetGameObject());
 		break;
 	case eComponentMessageType::eOnCollisionExit:
-		myHoveredGameObject = nullptr;
+		for(unsigned short i = 0; i < myHoveredGameObjects.Size(); i++)
+		{
+			if(myHoveredGameObjects[i] == aMessageData.myCollider->GetGameObject())
+			{
+				myHoveredGameObjects.RemoveAtIndex(i);
+				DL_PRINT("Ezited COll");
+			}
+		}
 		break;
 	}
 }
@@ -93,8 +100,20 @@ void CMouseComponent::HandleCollision(CGameObject* aCollidedWith)
 	{
 		return;
 	}
-
-	myHoveredGameObject = aCollidedWith;
+	DL_PRINT("Xoll Enter");
+	bool newGameObject = true;
+	for (unsigned short i = 0; i < myHoveredGameObjects.Size(); i++)
+	{
+		if (myHoveredGameObjects[i] == aCollidedWith)
+		{
+			newGameObject = false;
+		}
+	}
+	if(newGameObject == true)
+	{
+		myHoveredGameObjects.Add(aCollidedWith);
+	
+	}
 
 	if (myMouseIsDown == true)
 	{
@@ -113,7 +132,11 @@ void CMouseComponent::SetMouseIsDown(const bool aIsDown)
 
 	if (myMouseIsDown == true)
 	{
-		HandleCollision(myHoveredGameObject);
+		if(myHoveredGameObjects.Size() > 0)
+		{
+			HandleCollision(myHoveredGameObjects[0]);
+			DL_PRINT("COll Died");
+		}
 	}
 	else
 	{
@@ -123,8 +146,11 @@ void CMouseComponent::SetMouseIsDown(const bool aIsDown)
 
 void CMouseComponent::CheckIfHoveredGameObjectDied(CGameObject * aGameobjectThatDied)
 {
-	if(myHoveredGameObject == aGameobjectThatDied)
+	for (unsigned short i = 0; i < myHoveredGameObjects.Size(); i++)
 	{
-		myHoveredGameObject = nullptr;
+		if (myHoveredGameObjects[i] == aGameobjectThatDied)
+		{
+			myHoveredGameObjects.RemoveAtIndex(i);
+		}
 	}
 }
