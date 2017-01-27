@@ -5,6 +5,7 @@
 #include <initializer_list>
 #include "QuickSort.h"
 #include "StaticTypeTraits.h"
+#include "ReverseGrowingArray.h"
 
 #define self (*this)
 
@@ -22,6 +23,8 @@ namespace CU
 	public:
 		using iterator = ObjectType*;
 		using const_iterator = const ObjectType*;
+		using object_type = ObjectType;
+		using size_type = SizeType;
 
 		GrowingArray();
 		GrowingArray(const SizeType aStartCapacity);
@@ -49,6 +52,11 @@ namespace CU
 		const_iterator begin() const;
 		iterator end();
 		const_iterator end() const;
+
+		iterator rbegin();
+		const_iterator rbegin() const;
+		iterator rend();
+		const_iterator rend() const;
 
 		inline void Add(const ObjectType& aObject);
 		inline void Add(ObjectType&& aObject);
@@ -95,8 +103,6 @@ namespace CU
 		__forceinline bool IsInitialized() const;
 
 		static const SizeType FoundNone = static_cast<SizeType>(-1);
-
-		typedef SizeType size_type;
 
 	private:
 		inline void Reallocate(const SizeType aNewSize);
@@ -290,6 +296,34 @@ namespace CU
 	{
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
 		return (myArray + mySize);
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline typename GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::iterator GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::rbegin()
+	{
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		return myArray + mySize - 1;
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline typename GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::const_iterator GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::rbegin() const
+	{
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		return myArray + mySize - 1;
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline typename GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::iterator GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::rend()
+	{
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		return (myArray - 1);
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline typename GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::const_iterator GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::rend() const
+	{
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		return (myArray - 1);
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>

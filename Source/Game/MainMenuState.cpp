@@ -30,9 +30,9 @@ void MainMenuState::Init()
 {
 	myGUIManager = new GUI::GUIManager();
 	myGUIManager->Init("Models/mainMenu/mainMenu.fbx");
-	//
-	//mySkyBox = new CSkybox();
-	//mySkyBox->Init();
+	
+	mySkyBox = new CSkybox();
+	mySkyBox->Init("skybox.dds");
 
 	//CBackgroundLoadingManager::GetInstance().CreateStateToLoad(myStateStack, -1);
 }
@@ -46,19 +46,19 @@ eStateStatus MainMenuState::Update(const CU::Time& aDeltaTime)
 
 void MainMenuState::Render()
 {
-	//SChangeStatesMessage statemsg;
-	//statemsg.myBlendState = eBlendState::eNoBlend;
-	//statemsg.myRasterizerState = eRasterizerState::eNoCullingClockwise;
-	//statemsg.myDepthStencilState = eDepthStencilState::eDisableDepth;
-	//statemsg.mySamplerState = eSamplerState::eClamp;
-	//
-	//RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
-	//
-	//SRenderSkyboxMessage msg;
-	//msg.mySkybox = mySkyBox;
-	//
-	//RENDERER.AddRenderMessage(new SRenderSkyboxMessage(msg));
-	//
+	SChangeStatesMessage statemsg;
+	statemsg.myBlendState = eBlendState::eNoBlend;
+	statemsg.myRasterizerState = eRasterizerState::eNoCullingClockwise;
+	statemsg.myDepthStencilState = eDepthStencilState::eDisableDepth;
+	statemsg.mySamplerState = eSamplerState::eClamp;
+	
+	RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
+	
+	SRenderSkyboxMessage msg;
+	msg.mySkybox = mySkyBox;
+	
+	RENDERER.AddRenderMessage(new SRenderSkyboxMessage(msg));
+	
 	myGUIManager->Render();
 }
 
@@ -101,4 +101,9 @@ void MainMenuState::OnExit()
 	}
 	
 	myGUIManager->SetRenderMouse(false);
+}
+
+bool MainMenuState::GetLetThroughRender() const
+{
+	return true;
 }

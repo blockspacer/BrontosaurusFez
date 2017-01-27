@@ -16,6 +16,7 @@
 
 #include "../BrontosaurusEngine/FBXLoader.h"
 #include "../BrontosaurusEngine/Engine.h"
+#include "../BrontosaurusEngine/ModelInstance.h"
 
 #include "../CommonUtilities/Camera.h"
 
@@ -39,6 +40,8 @@ const float PI_CONSTANT = 3.141592f;
 
 namespace GUI
 {
+	const CU::Camera* WidgetFactory::ourCurrentGUICamera = nullptr;
+
 	WidgetContainer* WidgetFactory::CreateGUIScene(const char* aFilePathFBX, CU::Camera*& aGUIManagerCameraOut)
 	{
 		CFBXLoader loader;
@@ -54,6 +57,11 @@ namespace GUI
 		return CreateGUIScene(&guiScene, aGUIManagerCameraOut, jsonPath);
 	}
 
+	const CU::Camera* WidgetFactory::GetCurrentGUICamera()
+	{
+		return ourCurrentGUICamera;
+	}
+
 	WidgetContainer* WidgetFactory::CreateGUIScene(const CLoaderScene* aLoaderScene, CU::Camera*& aGUIManagerCameraOut, const std::string& aJsonPath)
 	{
 		if (aLoaderScene == nullptr)
@@ -64,7 +72,7 @@ namespace GUI
 
 		CU::Camera* guiCamera = ParseCamera(aLoaderScene->myCamera);
 		aGUIManagerCameraOut = guiCamera;
-
+		ourCurrentGUICamera = guiCamera;
 
 		CU::CJsonValue guiScene(aJsonPath);
 		CU::CJsonValue visibleFromStartArray = guiScene["VisibleFromStart"];
@@ -135,7 +143,10 @@ namespace GUI
 				|| widget->GetName() == "Resume" || widget->GetName() == "Return" || widget->GetName().find("Knapp") != std::string::npos
 				|| widget->GetName().find("knapp") != std::string::npos)
 			{
-				widget = CreateButton(widget);
+				if (isVisible)
+				{
+					widget = CreateButton(widget);
+				}
 			}
 
 			if (widget != nullptr)
@@ -143,9 +154,32 @@ namespace GUI
 				baseWidgetContainer->AddWidget(widget->GetName(), widget);
 			}
 		}
+
 		baseWidgetContainer->MoveToBack("shopWindow");
 		baseWidgetContainer->MoveToBack("guiBase");
 		baseWidgetContainer->MoveToFront(moneyName);
+		if (guiScene.HasKey("remove"))
+		{
+			if (guiScene["remove"].IsString())
+			{
+				delete baseWidgetContainer->RemoveWidget(guiScene["remove"].GetString());
+			}
+		}
+
+		if (guiScene.HasKey("sampleAnim"))
+		{
+			CModelInstance* modelInstance = new CModelInstance(guiScene["sampleAnim"].GetString().c_str());
+			CU::Matrix44f newTransformation = modelInstance->GetTransformation();
+
+			newTransformation.Rotate(-PI_CONSTANT * 0.5f, CU::Axees::X);
+			newTransformation.SetPosition(guiCamera->GetPosition() + CU::Vector3f(50.f, -1000.f, 0.f));
+
+			modelInstance->SetTransformation(newTransformation);
+			ModelWidget* sampleAnimWidget = new ModelWidget(modelInstance, *guiCamera, "sampleAnim");
+			
+			baseWidgetContainer->AddWidget("sampleAnim", sampleAnimWidget);
+		}
+
 		return baseWidgetContainer;
 	}
 
@@ -210,28 +244,28 @@ namespace GUI
 		}
 		else if (widgetName.find("Level1") != std::string::npos)
 		{
-			auto pushLevelMessage = [] { PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PushState(PushState::eState::ePlayState, 11))); };
+			auto pushLevelMessage = [] { PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PushState(PushState::eState::ePlayState, 10))); };
 			Button* button = new Button(pushLevelMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
 			button->AddWidget("Animation", new ButtonAnimation(aWidget));
 			return button;
 		}
 		else if (widgetName.find("Level2") != std::string::npos)
 		{
-			auto pushLevelMessage = [] { PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PushState(PushState::eState::ePlayState, 12))); };
+			auto pushLevelMessage = [] { PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PushState(PushState::eState::ePlayState, 11))); };
 			Button* button = new Button(pushLevelMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
 			button->AddWidget("Animation", new ButtonAnimation(aWidget));
 			return button;
 		}
 		else if (widgetName.find("Level3") != std::string::npos)
 		{
-			auto pushLevelMessage = [] { PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PushState(PushState::eState::ePlayState, 13))); };
+			auto pushLevelMessage = [] { PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PushState(PushState::eState::ePlayState, 12))); };
 			Button* button = new Button(pushLevelMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
 			button->AddWidget("Animation", new ButtonAnimation(aWidget));
 			return button;
 		}
 		else if (widgetName.find("Level4") != std::string::npos)
 		{
-			auto pushLevelMessage = [] { PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PushState(PushState::eState::ePlayState, 14))); };
+			auto pushLevelMessage = [] { PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PushState(PushState::eState::ePlayState, 13))); };
 			Button* button = new Button(pushLevelMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
 			button->AddWidget("Animation", new ButtonAnimation(aWidget));
 			return button;
@@ -253,85 +287,99 @@ namespace GUI
 				PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, CQueryShopItemButtonHovered(aIndex, &aTooltipTextOut)));
 				return !aTooltipTextOut.empty();
 			};
-
-			if (widgetName.rfind("1") != std::string::npos)
+			auto selectItemInShopMessage = [](const char aIndex)
 			{
-				auto SelectItemInShopMessage = []
-				{
-					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(0)));
-				};
-				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
+				PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(aIndex)));
+			};
+			for (char i = 0; i < 6; ++i)
+			{
+				if (widgetName.rfind(std::to_string(static_cast<int>(i + 1))) == std::string::npos) continue;
+
+				Button* button = new Button(std::bind(selectItemInShopMessage, i), aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
 				button->AddWidget("Model", aWidget);
 
 				CToolTipDecorator* toolTip = new CToolTipDecorator(button, nullptr, nullptr, std::bind(getToolTipText, 0, std::placeholders::_1));
 				return toolTip;
 			}
 
-			else if (widgetName.rfind("2") != std::string::npos)
-			{
-				auto SelectItemInShopMessage = []
-				{
-					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(1)));
-				};
-				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
-				button->AddWidget("Model", aWidget);
+			//if (widgetName.rfind("1") != std::string::npos)
+			//{
+			//	auto SelectItemInShopMessage = []
+			//	{
+			//		PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(0)));
+			//	};
+			//	Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
+			//	button->AddWidget("Model", aWidget);
 
-				CToolTipDecorator* toolTip = new CToolTipDecorator(button, nullptr, nullptr, std::bind(getToolTipText, 1, std::placeholders::_1));
-				return toolTip;
-			}
+			//	CToolTipDecorator* toolTip = new CToolTipDecorator(button, nullptr, nullptr, std::bind(getToolTipText, 0, std::placeholders::_1));
+			//	return toolTip;
+			//}
 
-			else if (widgetName.rfind("3") != std::string::npos)
-			{
-				auto SelectItemInShopMessage = []
-				{
-					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(2)));
-				};
-				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
-				//button->AddWidget("Animation", new ButtonAnimation(aWidget));
-				button->AddWidget("Model", aWidget);
+			//else if (widgetName.rfind("2") != std::string::npos)
+			//{
+			//	auto SelectItemInShopMessage = []
+			//	{
+			//		PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(1)));
+			//	};
+			//	Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
+			//	button->AddWidget("Model", aWidget);
 
-				CToolTipDecorator* toolTip = new CToolTipDecorator(button, nullptr, nullptr, std::bind(getToolTipText, 2, std::placeholders::_1));
-				return toolTip;
-			}
+			//	CToolTipDecorator* toolTip = new CToolTipDecorator(button, nullptr, nullptr, std::bind(getToolTipText, 1, std::placeholders::_1));
+			//	return toolTip;
+			//}
 
-			else if (widgetName.rfind("4") != std::string::npos)
-			{
-				auto SelectItemInShopMessage = []
-				{
-					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(3)));
-				};
-				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
-				button->AddWidget("Model", aWidget);
+			//else if (widgetName.rfind("3") != std::string::npos)
+			//{
+			//	auto SelectItemInShopMessage = []
+			//	{
+			//		PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(2)));
+			//	};
+			//	Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
+			//	//button->AddWidget("Animation", new ButtonAnimation(aWidget));
+			//	button->AddWidget("Model", aWidget);
 
-				CToolTipDecorator* toolTip = new CToolTipDecorator(button, nullptr, nullptr, std::bind(getToolTipText, 3, std::placeholders::_1));
-				return toolTip;
-			}
+			//	CToolTipDecorator* toolTip = new CToolTipDecorator(button, nullptr, nullptr, std::bind(getToolTipText, 2, std::placeholders::_1));
+			//	return toolTip;
+			//}
 
-			else if (widgetName.rfind("5") != std::string::npos)
-			{
-				auto SelectItemInShopMessage = []
-				{
-					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(4)));
-				};
-				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
-				button->AddWidget("Model", aWidget);
+			//else if (widgetName.rfind("4") != std::string::npos)
+			//{
+			//	auto SelectItemInShopMessage = []
+			//	{
+			//		PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(3)));
+			//	};
+			//	Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
+			//	button->AddWidget("Model", aWidget);
 
-				CToolTipDecorator* toolTip = new CToolTipDecorator(button, nullptr, nullptr, std::bind(getToolTipText, 4, std::placeholders::_1));
-				return toolTip;
-			}
+			//	CToolTipDecorator* toolTip = new CToolTipDecorator(button, nullptr, nullptr, std::bind(getToolTipText, 3, std::placeholders::_1));
+			//	return toolTip;
+			//}
 
-			else if (widgetName.rfind("6") != std::string::npos)
-			{
-				auto SelectItemInShopMessage = []
-				{
-					PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(5)));
-				};
-				Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
-				button->AddWidget("Model", aWidget);
+			//else if (widgetName.rfind("5") != std::string::npos)
+			//{
+			//	auto SelectItemInShopMessage = []
+			//	{
+			//		PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(4)));
+			//	};
+			//	Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
+			//	button->AddWidget("Model", aWidget);
 
-				CToolTipDecorator* toolTip = new CToolTipDecorator(button, nullptr, nullptr, std::bind(getToolTipText, 5, std::placeholders::_1));
-				return toolTip;
-			}
+			//	CToolTipDecorator* toolTip = new CToolTipDecorator(button, nullptr, nullptr, std::bind(getToolTipText, 4, std::placeholders::_1));
+			//	return toolTip;
+			//}
+
+			//else if (widgetName.rfind("6") != std::string::npos)
+			//{
+			//	auto SelectItemInShopMessage = []
+			//	{
+			//		PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopItemSelected, ShopItemButtonPressed(5)));
+			//	};
+			//	Button* button = new Button(SelectItemInShopMessage, aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
+			//	button->AddWidget("Model", aWidget);
+
+			//	CToolTipDecorator* toolTip = new CToolTipDecorator(button, nullptr, nullptr, std::bind(getToolTipText, 5, std::placeholders::_1));
+			//	return toolTip;
+			//}
 		}
 		else
 		{

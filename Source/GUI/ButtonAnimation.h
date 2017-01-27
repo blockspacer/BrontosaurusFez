@@ -2,6 +2,11 @@
 #include "WidgetDecorator.h"
 #include <functional>
 
+namespace CU
+{
+	class Tween;
+}
+
 namespace GUI
 {
 	class ButtonAnimation : public WidgetDecorator
@@ -38,9 +43,15 @@ namespace GUI
 
 		} myAnimationState;
 
+		CU::Vector3f myOriginalPosition;
+		CU::Vector3f myForwardDirection;
 		std::function<void(void)> myAnimationIsDoneCallback;
 		CU::Time* myAnimationTimer;
+		CU::Tween* myTweener;
 		float myResetPosition;
+		float myTurnPosition;
+		float myGoDownTime;
+		float myGoUpTime;
 	};
 
 	inline void ButtonAnimation::SetCallbackFunction(const std::function<void(void)>& aCallbackFunction)

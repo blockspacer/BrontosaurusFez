@@ -23,6 +23,11 @@ namespace GUI
 		myDecoratedWidget->Render();
 	}
 
+	void WidgetDecorator::Render(CU::GrowingArray<IWidget*>& aFrontWidgets)
+	{
+		myDecoratedWidget->Render(aFrontWidgets);
+	}
+
 	void WidgetDecorator::OnMouseMove(const CU::Vector2f& aPosition)
 	{
 		myDecoratedWidget->OnMouseMove(aPosition);

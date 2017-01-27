@@ -32,6 +32,7 @@ namespace GUI
 
 		virtual void Update(const CU::Time& aDeltaTime) { SUPRESS_UNUSED_WARNING(aDeltaTime); }
 		virtual void Render() {}
+		virtual void Render(CU::GrowingArray<IWidget*>& aWidgets) { SUPRESS_UNUSED_WARNING(aWidgets); Render(); }
 
 		virtual void OnMouseMove(const CU::Vector2f& aMousePosition) { SUPRESS_UNUSED_WARNING(aMousePosition); }
 		virtual void OnMouseDrag(const CU::Vector2f& aDisplacement, const CU::eMouseButtons aButton) { SUPRESS_UNUSED_WARNING(aDisplacement); SUPRESS_UNUSED_WARNING(aButton); }

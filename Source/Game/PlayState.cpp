@@ -104,7 +104,7 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 {
 	myIsLoaded = false;
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eHatAdded);
-	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
+	
 }
 
 CPlayState::~CPlayState()
@@ -201,7 +201,7 @@ void CPlayState::Load()
 	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
 #ifdef _DEBUG
-	myLevelIndex = levelsArray.Size()-1;
+	//myLevelIndex = levelsArray.Size()-1;
 #else
 	const int levelIndex = 0;
 #endif
@@ -280,12 +280,8 @@ void CPlayState::Load()
 	myMouseComponent = new CMouseComponent(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 	mouseObject->AddComponent(myMouseComponent);
 
-	if (PollingStation::playerObject != nullptr)
-	{
-		PollingStation::playerObject->AddComponent(new CPlayerHealthMessenger());
-		PollingStation::playerObject->AddComponent(new CPlayerManaMessenger());
-	}
-	
+
+
 	myHatMaker->LoadBluePrints("Json/Hats/HatBluePrints.json");
 	myHatMaker->GiveTheManAHat();
 	myIsLoaded = true;
@@ -299,6 +295,14 @@ void CPlayState::Load()
 void CPlayState::Init()
 {
 	//skillnad på load, init & konstructor ?
+	//	svar:	1. konstruktor ska sätta allt till noll/null
+	//			2. init ska skapa allt som kan bero på ifall motorn är skapad etc
+	//			3. load kallas trådat för init kallas alltid av statestacken när den pushar ett nytt state
+
+
+
+
+
 }
 
 eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)

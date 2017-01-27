@@ -41,6 +41,10 @@ namespace GUI
 		IWidget* RemoveWidget(const std::string& aName);
 		IWidget* FindWidget(const std::string& aName);
 
+		void PauseUpdate();
+		void PauseRender();
+		void RestartUpdate();
+		void RestartRender();
 		void PauseRenderAndUpdate();
 		void RestartRenderAndUpdate();
 
@@ -63,7 +67,6 @@ namespace GUI
 
 		bool myShouldUpdate;
 		bool myShouldRender;
-		bool myShouldStealInput;
 		bool myShouldRenderMouse;
 	};
 }

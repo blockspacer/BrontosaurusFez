@@ -3,6 +3,7 @@
 #include "WidgetDecorator.h"
 
 class CTextInstance;
+class CSpriteInstance;
 
 namespace GUI
 {
@@ -14,6 +15,7 @@ namespace GUI
 		~CToolTipDecorator();
 
 		void Render() override;
+		void Render(CU::GrowingArray<IWidget*>& aWidgets) override;
 		void OnMouseMove(const CU::Vector2f& aMousePosition) override;
 		void OnMouseEnter(const CU::Vector2f& aMousePosition) override;
 		void OnMouseExit(const CU::Vector2f& aMousePosition) override;
@@ -24,7 +26,7 @@ namespace GUI
 		std::function<bool(std::string&)> myGetTextFunction;
 
 		CU::Vector2f myOffsetToMouse;
-		//ModelWidget* myBackGround;
+		CSpriteInstance* myBackGround;
 		CTextInstance* myTextInstance;
 		bool myShouldRender;
 	};
