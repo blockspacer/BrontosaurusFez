@@ -35,7 +35,7 @@ inline void BlessingTowerComponent::SetGiveManaAmount(ManaPoint aManaAmount)
 
 inline void BlessingTowerComponent::SetDamageModifier(float aDamageModifier)
 {
-	myDamageBonusStats->BonusDamageModifier = aDamageModifier;
+	myDamageBonusStats->BonusDamageModifier = aDamageModifier / 100.0f;
 }
 
 inline void BlessingTowerComponent::SetDuration(float aDuration)
