@@ -117,7 +117,7 @@ void HatShopState::Render()
 
 void HatShopState::OnEnter()
 {
-	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eBuyButtonPressed);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eShopItemSelected);
 	myGUIManager->RestartRenderAndUpdate();
@@ -126,7 +126,7 @@ void HatShopState::OnEnter()
 
 void HatShopState::OnExit()
 {
-	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyPressed);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eBuyButtonPressed);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eShopItemSelected);
 	myGUIManager->PauseRenderAndUpdate();

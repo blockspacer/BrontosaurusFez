@@ -83,10 +83,12 @@ void InputController::Update(float aDeltaTime)
 
 			TakeInputMessage(CU::eInputMessage::LEFTMOUSEBUTTON);
 			eComponentMessageType type = eComponentMessageType::eSetPath;
+			SComponentMessageData pathdata;
+			pathdata.myPathPointer = &myPath;
+			
+			GetParent()->NotifyComponents(type, pathdata);
 			SComponentMessageData data;
-			data.myPathPointer = &myPath;
-			GetParent()->NotifyComponents(type, data);
-
+			data.myVector2f = targetPosition;
 			if (myIsShiftDown == false)
 			{
 				type = eComponentMessageType::eSetSkillTargetPosition;
