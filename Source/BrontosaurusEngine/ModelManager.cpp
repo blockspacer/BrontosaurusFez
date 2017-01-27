@@ -26,8 +26,13 @@ CModelManager::~CModelManager()
 }
 
 
-const CModelManager::ModelId CModelManager::LoadModel(const CU::DynamicString& aModelPath)
+const CModelManager::ModelId CModelManager::LoadModel(const CU::DynamicString& aModelPath, const bool aShouldLoadAnimations)
 {
+	if (aModelPath.Find("player_idle2") != aModelPath.FoundNone && aShouldLoadAnimations) //TEMP CODE UNTIL THE MESH IN UNITY IS CHANGED TO ONLY player.fbx
+	{
+		const_cast<CU::DynamicString&>(aModelPath) = aModelPath.SubStr(0, aModelPath.Size() - 10) + ".fbx";
+	}
+	
 	if (myModelList.Size() >= ourMaxNumberOfModels)
 	{
 		DL_MESSAGE_BOX("Too many unique models created! Current max is: %i.\nTalk to a programmer if we need more, it is probably possible.\n", ourMaxNumberOfModels);
@@ -59,8 +64,10 @@ const CModelManager::ModelId CModelManager::LoadModel(const CU::DynamicString& a
 			return NULL_MODEL;
 		}
 
-		LoadAnimations(aModelPath.c_str(), newModelID);
-
+		if (aShouldLoadAnimations)
+		{
+			LoadAnimations(aModelPath.c_str(), newModelID);
+		}
 	}
 
 	myModelList[myModels[aModelPath.c_str()]].AddRef();
@@ -211,9 +218,11 @@ void CModelManager::RemoveModel(const ModelId aModelID)
 void CModelManager::LoadAnimations(const char* aPath, const ModelId aModelId)
 {
 	std::string modelName = aPath;
-	modelName -= std::string("idle2.fbx");
-	const ModelId animationCount = 6;
-	std::string animationNames[animationCount] = { ("idle"), ("walk"), ("pickup"), ("turnRight90"), ("turnLeft90"), ("attack") };
+	modelName -= std::string(".fbx");
+	modelName += std::string("_");
+
+	const ModelId animationCount = 7;
+	std::string animationNames[animationCount] = { ("idle"), ("idle2"), ("walk"), ("pickup"), ("turnRight90"), ("turnLeft90"), ("attack") };
 
 	CModel* mdl = GetModel(aModelId);
 	const aiScene* scene = mdl->GetScene();
@@ -223,8 +232,8 @@ void CModelManager::LoadAnimations(const char* aPath, const ModelId aModelId)
 		for (int i = 0; i < animationCount; ++i)
 		{
 			const std::string& animationName = animationNames[i];
-
-			ModelId tempAnimationModel = LoadModel((modelName + animationName + ".fbx").c_str());
+			//TODO: just import the scene for the model here, no need to parse the vertices
+			ModelId tempAnimationModel = LoadModel((modelName + animationName + ".fbx").c_str(), false); //TODO: when above TODO is fixed, the bool can be removed
 			if (tempAnimationModel == NULL_MODEL)
 			{
 				continue;

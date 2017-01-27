@@ -29,7 +29,7 @@ public:
 	CModelManager();
 	~CModelManager();
 
-	const ModelId LoadModel(const CU::DynamicString& aModelPath);
+	const ModelId LoadModel(const CU::DynamicString& aModelPath, const bool aShouldLoadAnimations = true);
 	const ModelId LoadModel(const SShape aModelShape);
 	const ModelId LoadGUIModel(const CLoaderMesh* aLoaderMesh, const char* aTexturePath);
 	const ModelId LoadGUIModel(const CLoaderMesh* aLoaderMesh, const CU::GrowingArray<std::string>& aTexturePaths);
