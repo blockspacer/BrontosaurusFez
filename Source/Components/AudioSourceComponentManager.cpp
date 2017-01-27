@@ -20,12 +20,12 @@ CAudioSourceComponent * CAudioSourceComponentManager::CreateComponent()
 {
 	Audio::GameObjectID AudioObjectID = Audio::CAudioInterface::GetInstance()->RegisterGameObject();
 	myIds[AudioObjectID] = myComponents.Size();
-	myComponents.Add(CAudioSourceComponent());
-	myComponents.GetLast().myGameObjectID = AudioObjectID;
+	myComponents.Add(new CAudioSourceComponent());
+	myComponents.GetLast()->myGameObjectID = AudioObjectID;
 	
-	CComponentManager::GetInstance().RegisterComponent(&myComponents.GetLast());
+	CComponentManager::GetInstance().RegisterComponent(myComponents.GetLast());
 
-	return &myComponents.GetLast();
+	return myComponents.GetLast();
 }
 
 CAudioSourceComponentManager& CAudioSourceComponentManager::GetInstance()
@@ -50,7 +50,7 @@ void CAudioSourceComponentManager::Update()
 {
 	for (unsigned int i = 0; i < myComponents.Size(); ++i)
 	{
-		myComponents[i].Update();
+		myComponents[i]->Update();
 	}
 }
 

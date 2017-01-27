@@ -81,12 +81,15 @@ void CEnemyFactory::CreateEnemy(CU::Vector3f aPosition)
 	Enemy->AddComponent(mana);
 
 	CSeekController* seek = CSeekControllerManager::GetInstance().CreateAndRegister();
+	//from json
+	//{
 	seek->SetAggroRange(1300);
 	seek->SetWeight(3);
 	seek->SetMaxSpeed(30);
 	seek->SetMaxAcceleration(50);
 	seek->SetSlowDownRadius(100);
 	seek->SetTargetRadius(150);
+	//}
 	Enemy->AddComponent(seek);
 
 	CAIControllerComponent* AIControl = new CAIControllerComponent();
@@ -96,7 +99,7 @@ void CEnemyFactory::CreateEnemy(CU::Vector3f aPosition)
 
 	Enemy->AddComponent(AIControl);
 
-	DropComponent* drop = DropComponentManager::GetInstance().CreateAndRegisterComponent(100, 20);
+	DropComponent* drop = DropComponentManager::GetInstance().CreateAndRegisterComponent(100, 20); // from json
 	Enemy->AddComponent(drop);
 
 	SkillSystemComponent* skillSystem = new SkillSystemComponent();
@@ -128,9 +131,9 @@ void CEnemyFactory::CreateEnemy(CU::Vector3f aPosition)
 
 	Enemy->AddComponent(navigation);
 
-	//CAudioSourceComponent* audio = CAudioSourceComponentManager::GetInstance().CreateComponent();
+	CAudioSourceComponent* audio = CAudioSourceComponentManager::GetInstance().CreateComponent();
 
-	//Enemy->AddComponent(audio);
+	Enemy->AddComponent(audio);
 
 
 }
