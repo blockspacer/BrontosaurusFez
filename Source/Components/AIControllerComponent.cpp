@@ -52,7 +52,7 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 		if (navmesh != nullptr)
 		{
 			CU::Vector3f intersectingPoint;
-			if (navmesh->IsValid(GetParent()->GetWorldPosition(), myTriangle, intersectingPoint) == false )
+			if (navmesh->IsValid(GetParent()->GetWorldPosition(), myTriangle, intersectingPoint) == false)
 			{
 				DL_PRINT("AI not placed on Navmesh.");
 			}
@@ -85,9 +85,9 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 		myVelocity *= myMaxVelocity;
 	}
 
-	CU::Vector2f velocity = (myVelocity * SCALAR) * aDeltaTime.GetSeconds() ;
+	CU::Vector2f velocity = (myVelocity * SCALAR) * aDeltaTime.GetSeconds();
 
-	if(PollingStation::playerObject != nullptr)
+	if (PollingStation::playerObject != nullptr)
 	{
 		if (CU::Vector3f(GetParent()->GetWorldPosition() - PollingStation::playerObject->GetWorldPosition()).Length2() < 2000.0f * 2000.0f)
 		{
@@ -98,7 +98,6 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 	}
 
 
-
 	float tempX1 = 0.0f;
 	float tempZ1 = 0.0f;
 	float tempX2 = 0.0f;
@@ -106,59 +105,67 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 	CU::Vector3f newPosition = GetParent()->GetWorldPosition() + CU::Vector3f(velocity.x, 0, velocity.y);
 	CU::Line<float> line;
 	bool isOnNavmesh = true;
-	for (int i = 0; i < 3; ++i)
+	if (myTriangle != nullptr)
 	{
-		tempX1 = myTriangle->Edges[i]->FirstVertex->Position.x;
-		tempZ1 = myTriangle->Edges[i]->FirstVertex->Position.z;
-		tempX2 = myTriangle->Edges[i]->SecondVertex->Position.x;
-		tempZ2 = myTriangle->Edges[i]->SecondVertex->Position.z;
-
-		line.SetWith2Points({ tempX1 , tempZ1 }, { tempX2, tempZ2 });
-		if (line.IsInside({ newPosition.x, newPosition.z }) != line.IsInside({ myTriangle->CenterPosition.x, myTriangle->CenterPosition.z }))
+		for (int i = 0; i < 3; ++i)
 		{
-			if (myTriangle != myTriangle->Edges[i]->Triangles[0])
-			{
-				if (myTriangle->Edges[i]->Triangles[0] == nullptr)
-				{
-					isOnNavmesh = false;
-					break;
-				}
-				myTriangle = myTriangle->Edges[i]->Triangles[0];
-				DL_PRINT("Changing triangle!");
-			}
-			else if (myTriangle != myTriangle->Edges[i]->Triangles[1])
-			{
-				if (myTriangle->Edges[i]->Triangles[1] == nullptr)
-				{
-					isOnNavmesh = false;
-					break;
+			tempX1 = myTriangle->Edges[i]->FirstVertex->Position.x;
+			tempZ1 = myTriangle->Edges[i]->FirstVertex->Position.z;
+			tempX2 = myTriangle->Edges[i]->SecondVertex->Position.x;
+			tempZ2 = myTriangle->Edges[i]->SecondVertex->Position.z;
 
-				}
-				myTriangle = myTriangle->Edges[i]->Triangles[1];
-				DL_PRINT("Changing triangle!");
-
-			}
-			else
+			line.SetWith2Points({ tempX1 , tempZ1 }, { tempX2, tempZ2 });
+			if (line.IsInside({ newPosition.x, newPosition.z }) != line.IsInside({ myTriangle->CenterPosition.x, myTriangle->CenterPosition.z }))
 			{
-				CNavmesh* navmesh = PollingStation::Navmesh;
-				if (navmesh != nullptr)
+				if (myTriangle != myTriangle->Edges[i]->Triangles[0])
 				{
-					CU::Vector3f intersectingPoint;
-					if (navmesh->IsValid(GetParent()->GetWorldPosition(), myTriangle, intersectingPoint) == false)
+					if (myTriangle->Edges[i]->Triangles[0] == nullptr)
+					{
+						isOnNavmesh = false;
+						break;
+					}
+					myTriangle = myTriangle->Edges[i]->Triangles[0];
+					DL_PRINT("Changing triangle!");
+				}
+				else if (myTriangle != myTriangle->Edges[i]->Triangles[1])
+				{
+					if (myTriangle->Edges[i]->Triangles[1] == nullptr)
 					{
 						isOnNavmesh = false;
 						break;
 
 					}
+					myTriangle = myTriangle->Edges[i]->Triangles[1];
+					DL_PRINT("Changing triangle!");
+
 				}
+				else
+				{
+					CNavmesh* navmesh = PollingStation::Navmesh;
+					if (navmesh != nullptr)
+					{
+						CU::Vector3f intersectingPoint;
+						if (navmesh->IsValid(GetParent()->GetWorldPosition(), myTriangle, intersectingPoint) == false)
+						{
+							isOnNavmesh = false;
+							break;
+
+						}
+					}
+				}
+				break;
 			}
-			break;
 		}
 	}
 
-	if (isOnNavmesh == true)
+	if (isOnNavmesh == true || myTriangle == nullptr)
 	{
-		float height = myTriangle->GetHeight({newPosition.x, newPosition.z});
+		float height = 0.0f;
+		if (myTriangle != nullptr)
+		{
+			height = myTriangle->GetHeight({ newPosition.x, newPosition.z });
+
+		}
 		myPath.RemoveAll();
 
 
@@ -173,13 +180,8 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 		GetParent()->NotifyComponents(type, data);
 		GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 	}
-	else
-	{
-		int br = 0;
-		br++;
-	}
-
 }
+
 
 void CAIControllerComponent::Destroy()
 {
