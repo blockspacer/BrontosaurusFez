@@ -24,3 +24,4 @@ namespace CU
 }
 
 std::string& operator-=(std::string& aLeft, const std::string& aRight);
+std::wstring& operator-=(std::wstring& aLeft, const std::wstring& aRight);

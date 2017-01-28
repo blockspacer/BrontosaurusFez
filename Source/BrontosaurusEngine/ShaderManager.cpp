@@ -54,7 +54,7 @@ ID3D11VertexShader * CShaderManager::LoadVertexShader(std::wstring aShaderPath, 
 
 	if (myVertexShaders[aShaderPath].find(aShaderBlueprint) == myVertexShaders[aShaderPath].end())
 	{
-		ID3D11VertexShader* newShader = CompileVertexShader(aShaderPath, aShaderBlueprint);
+		ID3D11VertexShader* newShader = CreateVertexShader(aShaderPath, aShaderBlueprint);
 		myVertexShaders[aShaderPath][aShaderBlueprint] = newShader;
 	}
 
@@ -71,7 +71,7 @@ ID3D11PixelShader* CShaderManager::LoadPixelShader(std::wstring aShaderPath, uns
 
 	if (myPixelShaders[aShaderPath].find(aShaderBlueprint) == myPixelShaders[aShaderPath].end())
 	{
-		ID3D11PixelShader* newShader = CompilePixelShader(aShaderPath, aShaderBlueprint);
+		ID3D11PixelShader* newShader = CreatePixelShader(aShaderPath, aShaderBlueprint);
 		myPixelShaders[aShaderPath][aShaderBlueprint] = newShader;
 	}
 
@@ -88,7 +88,7 @@ ID3D11GeometryShader * CShaderManager::LoadGeometryShader(std::wstring aShaderPa
 
 	if (myGeometryShaders[aShaderPath].find(aShaderBlueprint) == myGeometryShaders[aShaderPath].end())
 	{
-		ID3D11GeometryShader* newShader = CompileGeometryShader(aShaderPath, aShaderBlueprint);
+		ID3D11GeometryShader* newShader = CreateGeometryShader(aShaderPath, aShaderBlueprint);
 		myGeometryShaders[aShaderPath][aShaderBlueprint] = newShader;
 	}
 
@@ -106,6 +106,69 @@ ID3D11InputLayout * CShaderManager::LoadInputLayout(std::wstring aShaderPath, un
 	return myInputLayouts.at(aShaderBlueprint);
 }
 
+ID3D11VertexShader * CShaderManager::CreateVertexShader(const std::wstring& aString, unsigned int aDataFlags)
+{
+//#define USE_PRECOMPILED_SHADERS
+#ifdef USE_PRECOMPILED_SHADERS
+
+	ID3D11Device* device = DEVICE;
+	if (device == nullptr) return nullptr;
+
+	std::wstring compiledShaderPath(aString);
+	compiledShaderPath -= L".fx";
+	compiledShaderPath += std::to_wstring(aDataFlags) += L".fxc";
+	std::ifstream shaderByteCode(compiledShaderPath, std::ios::binary);
+	bool precompiledIsNewerThanSourceCode = false;
+	bool usePreCompiledShader = shaderByteCode.good() && precompiledIsNewerThanSourceCode == true;
+
+	if (usePreCompiledShader == true)
+	{
+		std::vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc;
+#ifdef _DEBUG
+		std::string shaderFunction = "VS_";
+		shaderFunction +=
+#else
+		(void)
+#endif // _DEBUG
+				GetInputLayoutType(aDataFlags, inputLayoutDesc);
+
+		shaderByteCode.seekg(0, shaderByteCode.end);
+		long long bytesOfFile = shaderByteCode.tellg();
+		
+		CU::GrowingArray<char> vertexBlob(bytesOfFile + 1); //include room for null terminator '\0' ??
+		vertexBlob.Resize(bytesOfFile);
+		shaderByteCode.seekg(0, shaderByteCode.beg);
+		shaderByteCode.read(vertexBlob.AsPointer(), bytesOfFile);
+		vertexBlob.Add('\0');
+
+		ID3D11VertexShader* vertexShader = nullptr;
+		HRESULT result = device->CreateVertexShader(vertexBlob.AsVoidPointer(), vertexBlob.ByteSize(), nullptr, &vertexShader);
+		CHECK_RESULT(result, "Failed to create Vertex Shader.");
+		
+		ID3D11InputLayout* inputLayout = nullptr;
+		inputLayout = CreateInputLayout(inputLayout, vertexBlob.AsVoidPointer(), vertexBlob.ByteSize(), inputLayoutDesc);
+		myInputLayouts[aDataFlags] = inputLayout;
+
+		return vertexShader;
+	}
+
+	shaderByteCode.close();
+
+#endif // USE_PRECOMPILED_SHADERS
+
+	return CompileVertexShader(aString, aDataFlags);
+}
+
+ID3D11PixelShader * CShaderManager::CreatePixelShader(const std::wstring& aString, unsigned int aDataFlags)
+{
+	return CompilePixelShader(aString, aDataFlags);
+}
+
+ID3D11GeometryShader * CShaderManager::CreateGeometryShader(const std::wstring& aString, unsigned int aDataFlags)
+{
+	return CompileGeometryShader(aString, aDataFlags);
+}
+
 ID3D11VertexShader* CShaderManager::CompileVertexShader(std::wstring aString, unsigned int aDataFlags)
 {
 	ID3D11InputLayout* inputLayout = nullptr;
@@ -121,7 +184,18 @@ ID3D11VertexShader* CShaderManager::CompileVertexShader(std::wstring aString, un
 	HRESULT result;
 
 	bresult = EffectHelper::CompileShader(aString.c_str(), shaderFunction.c_str() , "vs_5_0", vertexBlob, errorMsg);
-	CHECK_BOOL_RESULT(bresult, errorMsg.c_str()); // TODO: DL_FATAL_ERROR that crashes everytime, be kihnd to folks gpu
+	CHECK_BOOL_RESULT(bresult, errorMsg.c_str());
+	if (bresult == false)
+	{
+		DL_FATAL_ERROR("Failed to compile shader %s with file path %S", shaderFunction.c_str(), aString.c_str());
+	}
+
+	std::wstring compiledShaderPath(aString);
+	compiledShaderPath -= L".fx";
+	compiledShaderPath += std::to_wstring(aDataFlags) += L".fxc";
+	std::ofstream compiledShader(compiledShaderPath, std::ios::binary);
+	compiledShader.seekp(0);
+	compiledShader.write(static_cast<char*>(vertexBlob->GetBufferPointer()), vertexBlob->GetBufferSize());
 
 	result = CEngine::GetInstance()->GetFramework()->GetDevice()->CreateVertexShader(vertexBlob->GetBufferPointer(), vertexBlob->GetBufferSize(), NULL, &vertexShader);
 	CHECK_RESULT(result, "Failed to create Vertex Shader.");
@@ -257,8 +331,13 @@ std::string CShaderManager::GetInputLayoutType(unsigned int aShaderBlueprint, st
 
 ID3D11InputLayout* CShaderManager::CreateInputLayout(ID3D11InputLayout* aLayout, ID3D10Blob* aVertexBlob, std::vector<D3D11_INPUT_ELEMENT_DESC>& aInputLayout)
 {
+	return CreateInputLayout(aLayout, aVertexBlob->GetBufferPointer(), aVertexBlob->GetBufferSize(), aInputLayout);
+}
+
+ID3D11InputLayout * CShaderManager::CreateInputLayout(ID3D11InputLayout * aLayout, const void * aVertexBlobPointer, const unsigned int aVertexBufferSize, std::vector<D3D11_INPUT_ELEMENT_DESC>& aInputLayout)
+{
 	HRESULT result;
-	result = CEngine::GetInstance()->GetFramework()->GetDevice()->CreateInputLayout(&aInputLayout[0], static_cast<UINT>(aInputLayout.size()), aVertexBlob->GetBufferPointer(), aVertexBlob->GetBufferSize(), &aLayout);
+	result = CEngine::GetInstance()->GetFramework()->GetDevice()->CreateInputLayout(&aInputLayout[0], static_cast<UINT>(aInputLayout.size()), aVertexBlobPointer, aVertexBufferSize, &aLayout);
 	CHECK_RESULT(result, "Failed to create inputlayout.");
 	return aLayout;
 }

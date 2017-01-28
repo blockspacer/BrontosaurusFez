@@ -59,7 +59,7 @@ namespace CU
 	{
 		if (myValue != nullptr && myIsBorrowed == false)
 		{
-			delete myValue;
+			SAFE_DELETE(myValue);
 		}
 
 		myIsBorrowed = false;

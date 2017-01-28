@@ -37,3 +37,14 @@ std::string& operator-=(std::string& aLeft, const std::string& aRight)
 
 	return aLeft;
 }
+
+std::wstring& operator-=(std::wstring& aLeft, const std::wstring& aRight)
+{
+	size_t pos = aLeft.rfind(aRight);
+	if (pos != std::wstring::npos)
+	{
+		aLeft.erase(aLeft.end() - aRight.length(), aLeft.end());
+	}
+
+	return aLeft;
+}
