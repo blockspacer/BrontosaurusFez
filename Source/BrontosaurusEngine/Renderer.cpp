@@ -31,6 +31,8 @@ CRenderer::CRenderer()
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed);
 
+	myIsRunning = true;
+
 	mySettings.HDR = false;
 	mySettings.Bloom = false;
 	mySettings.Motionblur = false;
@@ -52,7 +54,7 @@ CRenderer::CRenderer()
 	changeStateMessage.myRasterizerState = eRasterizerState::eNoCulling;
 	changeStateMessage.myDepthStencilState = eDepthStencilState::eDisableDepth;
 	changeStateMessage.myBlendState = eBlendState::eNoBlend;
-	changeStateMessage.mySamplerState = eSamplerState::eClamp;
+	changeStateMessage.mySamplerState = eSamplerState::eClamp0Wrap1;
 
 	SetStates(&changeStateMessage);
 }
@@ -78,6 +80,13 @@ CRenderer::~CRenderer()
 		myBlendStates[i]->Release();
 		myBlendStates[i] = nullptr;
 	}
+
+	mySynchronizer.ClearAll();
+}
+
+void CRenderer::Shutdown()
+{
+	myIsRunning = false;
 }
 
 void CRenderer::AddRenderMessage(SRenderMessage* aRenderMessage)
@@ -87,6 +96,8 @@ void CRenderer::AddRenderMessage(SRenderMessage* aRenderMessage)
 
 void CRenderer::Render()
 {
+
+
 	myTimers.UpdateTimers();
 	UpdateBuffer();
 
@@ -702,7 +713,7 @@ void CRenderer::DoRenderQueue()
 	mySynchronizer.SwapRead();
 	int drawCalls = 0;
 
-	for (CSynchronizer::size_type i = 0; i < !mySynchronizer; ++i)
+	for (CSynchronizer<SRenderMessage*>::size_type i = 0; i < !mySynchronizer; ++i)
 	{
 		SRenderMessage* renderMessage = mySynchronizer[i];
 		if (renderMessage == nullptr)
@@ -728,23 +739,34 @@ void CRenderer::SetStates(const SChangeStatesMessage* aState) //change from peka
 
 
 	assert(aState->mySamplerState != eSamplerState::eSize);
-	if (aState->mySamplerState == eSamplerState::eClamp0Wrap1)
+	//if (aState->mySamplerState == eSamplerState::eClamp0Wrap1)
 	{
 		ID3D11SamplerState* both[2] = { mySamplerStates[static_cast<int>(eSamplerState::eClamp)], mySamplerStates[static_cast<int>(eSamplerState::eWrap)] };
 		DEVICE_CONTEXT->VSSetSamplers(0, 2, both);
 		DEVICE_CONTEXT->PSSetSamplers(0, 2, both);
 	}
-	else
-	{
-		DEVICE_CONTEXT->VSSetSamplers(0, 1, &mySamplerStates[static_cast<int>(aState->mySamplerState)]);
-		DEVICE_CONTEXT->PSSetSamplers(0, 1, &mySamplerStates[static_cast<int>(aState->mySamplerState)]);
-	}
+	//else
+	//{
+	//	DEVICE_CONTEXT->VSSetSamplers(0, 1, &mySamplerStates[static_cast<int>(aState->mySamplerState)]);
+	//	DEVICE_CONTEXT->PSSetSamplers(0, 1, &mySamplerStates[static_cast<int>(aState->mySamplerState)]);
+	//}
 }
 
 void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawCallCount)
 {
 	switch (aRenderMesage->myType)
 	{
+	case SRenderMessage::eRenderMessageType::eActivateRenderTo:
+	{
+		renderTo->Activate();
+		break;
+	}
+	case SRenderMessage::eRenderMessageType::eClearRenderPackage:
+	{
+		SClearRenderPackageMessage* msg = static_cast<SClearRenderPackageMessage*>(aRenderMesage);
+		msg->myRenderPackage.Clear();
+		break;
+	}
 	case SRenderMessage::eRenderMessageType::eRenderNavMesh:
 	{
 		SRenderNavmeshMessage* msg = static_cast<SRenderNavmeshMessage*>(aRenderMesage);
@@ -766,7 +788,7 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 		{
 			HandleRenderMessage(msg->CameraRenderQueue[i], aDrawCallCount);
 		}
-		msg->CameraRenderQueue.DeleteAll();
+		//msg->CameraRenderQueue.DeleteAll();
 		myCamera = previousCam;
 		renderTo->Activate();
 		UpdateBuffer();
@@ -798,15 +820,24 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 	{
 		myGUIData.myInputPackage.Activate();
 		SRenderGUIModelMessage* msg = static_cast<SRenderGUIModelMessage*>(aRenderMesage);
-		CModel* model = CEngine::GetInstance()->GetModelManager()->GetModel(msg->myModelID);
+		CModelManager* modelManager = CEngine::GetInstance()->GetModelManager();
+		CModel* model = modelManager->GetModel(msg->myModelID);
 		if (model == nullptr) break;
+
 		if (model->HasConstantBuffer(CModel::eShaderStage::ePixel) == true)
 		{
 			msg->myPixelConstantBufferStruct.myCameraPosition = myCamera.GetPosition();
 			model->UpdateConstantBuffer(CModel::eShaderStage::ePixel, &msg->myPixelConstantBufferStruct, sizeof(msg->myPixelConstantBufferStruct));
+		
+			model->Render(msg->myToWorld, msg->myToWorld, nullptr, nullptr); //don't blur  GUI, atm fullösning deluxe.
 		}
-
-		model->Render(msg->myToWorld, msg->myToWorld, nullptr, nullptr); //don't blur  GUI, atm fullösning deluxe.
+		else
+		{
+			Lights::SDirectionalLight light;
+			light.direction.Set(-0.2f, -0.9f, 0.f, 1.f);
+			light.direction.Normalize();
+			model->Render(msg->myToWorld, msg->myToWorld, &light, nullptr, "idle", myFireTimer);
+		}
 
 		++aDrawCallCount;
 
@@ -830,8 +861,8 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 	{
 		myGUIData.myInputPackage.Activate();
 		SRenderTextMessage* msg = static_cast<SRenderTextMessage*>(aRenderMesage);
-		msg->myText->Render(msg->myString, msg->myPosition, msg->myColor);
-		aDrawCallCount += msg->myString.Size();
+		msg->myText->Render(msg->myStrings, msg->myPosition, msg->myColor);
+		aDrawCallCount += msg->myStrings.Size();
 
 		if (mySettings.Motionblur == true) renderTo->Activate(myMotionBlurData.velocityPackage);
 		else renderTo->Activate();

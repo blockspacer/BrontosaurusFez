@@ -49,6 +49,7 @@
     <ClCompile Include="DrawCallsCount.cpp" />
     <ClCompile Include="DroppedFile.cpp" />
     <ClCompile Include="FocusChange.cpp" />
+    <ClCompile Include="GameObjectDiedEvent.cpp" />
     <ClCompile Include="HatBought.cpp" />
     <ClCompile Include="InputMessagePressed.cpp" />
     <ClCompile Include="KeyCharPressed.cpp" />
@@ -65,6 +66,7 @@
     <ClCompile Include="PostMaster.cpp" />
     <ClCompile Include="PushState.cpp" />
     <ClCompile Include="QuestDataUpdated.cpp" />
+    <ClCompile Include="ShopClosed.cpp" />
     <ClCompile Include="ShopItemButtonHovered.cpp" />
     <ClCompile Include="ShopItemButtonPressed.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -87,6 +89,7 @@
     <ClInclude Include="EMessageReturn.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="FocusChange.h" />
+    <ClInclude Include="GameObjectDiedEvent.h" />
     <ClInclude Include="HatBought.h" />
     <ClInclude Include="InputMessagePressed.h" />
     <ClInclude Include="KeyCharPressed.h" />
@@ -107,6 +110,7 @@
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="PushState.h" />
     <ClInclude Include="QuestDataUpdated.h" />
+    <ClInclude Include="ShopClosed.h" />
     <ClInclude Include="ShopItemButtonHovered.h" />
     <ClInclude Include="ShopItemButtonPressed.h" />
     <ClInclude Include="stdafx.h" />

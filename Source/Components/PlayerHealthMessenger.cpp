@@ -6,6 +6,7 @@
 
 CPlayerHealthMessenger::CPlayerHealthMessenger()
 {
+	myType = eComponentType::ePlayerHealthMessenger;
 }
 
 CPlayerHealthMessenger::~CPlayerHealthMessenger()

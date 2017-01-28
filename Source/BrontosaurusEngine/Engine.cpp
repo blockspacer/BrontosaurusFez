@@ -110,11 +110,17 @@ void CEngine::Render()
 
 void CEngine::ThreadedRender()
 {
+	myRendererIsRunning = true;
 	CU::SetThreadName("Render thread");
-	while (CEngine::GetInstance()->GetIsRunning())
+	while (myRenderer->GetIsRunning() == true)
 	{
 		Render();
 	}
+
+
+	myRendererIsRunning = false;
+	CU::SetThreadName("ThreadPool Worker");
+
 }
 
 void CEngine::OnResize(const unsigned int aWidth, const unsigned int aHeight)
@@ -122,16 +128,39 @@ void CEngine::OnResize(const unsigned int aWidth, const unsigned int aHeight)
 	myWindowSize.x = aWidth;
 	myWindowSize.y = aHeight;
 
+	myRenderer->Shutdown();
+	if (myThreadRender == true)
+	{
+		while (myRendererIsRunning == true)
+		{
+			Sleep(1);
+		}
+	}
 	delete myRenderer;
+
 	myDXFramework->Resize(aWidth, aHeight);
 	myDXFramework->SetViewPort(aWidth, aHeight, 0.f, 1.f, 0.f, 0.f);
 
-	//myCamera->ReInit(60, static_cast<float>(aWidth), static_cast<float>(aHeight), 1.f, 75000.0f); //TODO: remove near and far, use the same derp (maybe add new func specifically for that)
 	myRenderer = new CRenderer();
+	if (myThreadRender == true)
+	{
+		auto renderThread = [this]()
+		{
+			ThreadedRender();
+		};
+		myThreadPool->AddWork(CU::Work(renderThread, CU::ePriority::eHigh));
+	}
+
 }
 
 void CEngine::Start()
 {
+#ifdef _WIN32
+	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
+#elif defined __linux__
+	//http ://stackoverflow.com/questions/10876342/equivalent-of-setthreadpriority-on-linux-pthreads
+#endif
+
 	myInitCallbackFunction();
 
 	if (myThreadRender == true)
@@ -213,11 +242,20 @@ CEngine::CEngine()
 	, myThreadPool(nullptr)
 	, myParticleEmitterManager(nullptr)
 	, myFireEmitterManager(nullptr)
+	,myRendererIsRunning(true)
 {
 }
 
 CEngine::~CEngine()
 {
+	if (myThreadRender == true)
+	{
+		myRenderer->Shutdown();
+		while (myRendererIsRunning == true)
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(2));
+		}
+	}
 	SAFE_DELETE(myRenderer);
 	SAFE_DELETE(myModelManager);
 	SAFE_DELETE(mySpriteManager);
@@ -233,6 +271,9 @@ CEngine::~CEngine()
 	SAFE_DELETE(myParticleEmitterManager);
 	SAFE_DELETE(myFireEmitterManager);
 	SAFE_DELETE(myTextureManager);
+
+	SAFE_DELETE(myConsole);
+	myFontEngine.DestroyInstance();
 
 	Audio::CAudioInterface::Destroy();
 }

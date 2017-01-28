@@ -9,6 +9,19 @@
 #include "Skybox.h"
 #include <Scene.h>
 
+//Managers
+#include "QuestManager.h"
+#include "CameraManager.h"
+#include "InputControllerManager.h"
+#include "MovementComponentManager.h"
+#include "FleeControllerManager.h"
+#include "SeekControllerManager.h"
+#include "PickupFactory.h"
+#include "PickupManager.h"
+#include "PickerUpperComponent.h"
+#include "EnemyFactory.h"
+#include "AIControllerManager.h"
+
 #include "Components/GameObjectManager.h"
 #include "Components/AudioSourceComponentManager.h"
 #include "Components/ModelComponentManager.h"
@@ -16,10 +29,19 @@
 #include "Components/ModelComponent.h"
 #include "Components/ParticleEmitterComponentManager.h"
 #include "Components/ComponentManager.h"
-#include "Components\PlayerHealthMessenger.h"
-#include "Components\RespawnComponent.h"
-#include "Components\RespawnComponentManager.h"
+#include "Components/PlayerHealthMessenger.h"
+#include "Components/RespawnComponent.h"
+#include "Components/RespawnComponentManager.h"
+#include "Components/SkillFactory.h"
+#include "Components/SkillSystemComponentManager.h"
+#include "Components/CollisionComponentManager.h"
+#include "Components\BlessingTowerComponentManager.h"
+#include "MainStatComponent.h"
 
+#include "../GUI/GUIManager.h"
+
+#include "LoadManager/LoadManager.h"
+//--------
 #include "PostMaster/PopCurrentState.h"
 #include "PostMaster/ChangeLevel.h"
 #include "PostMaster/PostMaster.h"
@@ -28,18 +50,13 @@
 #include "PostMaster/Event.h"
 
 #include "PollingStation.h"
-#include "CameraManager.h"
-#include "InputControllerManager.h"
-#include "MovementComponentManager.h"
 
 #include "BrontosaurusEngine/LineDrawer.h"
 #include "BrontosaurusEngine/TextInstance.h"
 
 #include "../LuaWrapper/SSlua/SSlua.h"
 
-#include "../GUI/GUIManager/GUIManager.h"
 
-#include "LoadManager/LoadManager.h"
 
 #include "../Audio/AudioInterface.h"
 
@@ -47,58 +64,35 @@
 
 #include "PlayerData.h"
 
-#include "Components/SkillFactory.h"
-#include "Components/SkillSystemComponentManager.h"
-
-#include "FleeControllerManager.h"
-#include "SeekControllerManager.h"
-
-#include "PickupFactory.h"
-#include "PickupManager.h"
-
 #include "MasterAI.h"
 
 #include <time.h>
 //Kanske Inte ska vara här?
 #include "../BrontosaurusEngine/Console.h"
-#include "AIControllerManager.h"
 #include "ManaComponentManager.h"
 //
 
 //Temp Includes
 #include "HatMaker.h"
-#include "Components/HealthComponent.h"
-#include "MainStatComponent.h"
-#include "StatComponent.h"
-#include "Components/AIControllerComponent.h"
-#include "Components/SeekController.h"
-#include "Components/FleeController.h"
 #include "KevinLoader/KevinLoader.h"
-#include "Components/CollisionComponentManager.h"
 #include "SkillComponentManager.h"
 #include "DropComponentManager.h"
 #include "../Collision/Intersection.h"
 #include "Components/CollisionComponent.h"
-#include "Components/InputController.h"
-#include "Components/MovementComponent.h"
 #include "Collision/ICollider.h"
-#include "Components/DropComponent.h"
 #include "SkillData.h"
 
 #include "Components/HealthBarComponentManager.h"
-#include "SkillSystemComponent.h"
-#include "ModelInstance.h"
 #include "ManaComponent.h"
-
-//ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
-#include "../BrontosaurusEngine/FireEmitterInstance.h"
-#include "../BrontosaurusEngine/FireEmitterData.h"
-
+#include "LevelManager.h"
 #include "MouseComponent.h"
-#include "QuestManager.h"
-#include "NavigationComponent.h"
 #include "PlayerHealthMessenger.h"
 #include "PlayerManaMessenger.h"
+#include "ComponentMessage.h"
+#include "PlayerHealthMessenger.h"
+#include "PlayerManaMessenger.h"
+
+//ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -108,19 +102,28 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 	, myMouseComponent(nullptr)
 	, myQuestManager()
 	, myQuestDrawer(myQuestManager)
+	, myShuldRenderNavmesh(false)
 {
 	myIsLoaded = false;
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eHatAdded);
+	
 }
 
 CPlayState::~CPlayState()
 {
+	//Don forgetti to deletti
+	SAFE_DELETE(myEmitterComp);
+	SAFE_DELETE(myCollisionComponentManager);
+	SAFE_DELETE(myStatManager);
+	SAFE_DELETE(myGoldText);
+	SAFE_DELETE(myHealthBarManager);
+	SAFE_DELETE(myHatMaker);
+
+
 	SAFE_DELETE(myMouseComponent);
 	SAFE_DELETE(myScene);
 	SAFE_DELETE(myGameObjectManager);
 	SAFE_DELETE(myGUIManager);
-	
-
 	
 	CModelComponentManager::Destroy();
 	CAudioSourceComponentManager::Destroy();
@@ -141,10 +144,14 @@ CPlayState::~CPlayState()
 	CPickupManager::DestroyInstance();
 	RespawnComponentManager::Destroy();
 	CMasterAI::Destroy();
+	BlessingTowerComponentManager::DestroyInstance();
 
 	SkillFactory::DestroyInstance();
 	CComponentManager::DestroyInstance();
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eHatAdded);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
+
+	CLevelManager::DestroyInstance();
 }
 
 void CPlayState::Load()
@@ -173,158 +180,16 @@ void CPlayState::Load()
 	dirLight.direction = { 0.0f, 0.0f, 1.0f, 1.0f };
 	myScene->AddDirectionalLight(dirLight);
 
-	//LOAD_MGR.SetCurrentScene(&myScene);
-	//LOAD_MGR.SetCurrentPlayState(this);
-
-	//SSlua::ArgumentList levelIndex(1);
-	//levelIndex.Add(SSArgument(ssLuaNumber(myLevelIndex)));
-	//LUA_WRAPPER.CallLuaFunction("GameLoad", levelIndex);
-
-	//kanske inte ska ske så här?
-	//LUA_WRAPPER.RegisterFunction(SSlua::LuaCallbackFunction(&CPlayState::LuaFunction), "Func", "loll", true);
 	CONSOLE->GetLuaFunctions();
-	//
 
-
-	//hue hue dags att fula ner play state - Alex(Absolut inte Marcus); // snälla slå Johan inte mig(Alex);
-
-	//create an npc
-	CGameObject* npcObject1 = myGameObjectManager->CreateGameObject();
-	npcObject1->SetName("npcObject1");
-	npcObject1->GetLocalTransform().Move(CU::Vector3f(0.0f, 000.0f, 500.0f));
-	CModelComponent* modelComponent1 = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle2.fbx");
-	npcObject1->AddComponent(modelComponent1);
-
-	Intersection::CollisionData collisionData;
-	collisionData.myCircleData = new Intersection::SCircle();
-	collisionData.myCircleData->myCenterPosition.Set(npcObject1->GetWorldPosition().x, npcObject1->GetWorldPosition().z);
-	collisionData.myCircleData->myRadius = sqrtf(modelComponent1->GetModelInst()->GetModelBoundingBox().myRadius);
-	CCollisionComponent* collisionComponent = myCollisionComponentManager->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, collisionData);
-	collisionComponent->AddCollidsWith(eColliderType_Mouse | eColliderType_Player);
-	collisionComponent->SetColliderType(eColliderType_Enemy);
-	npcObject1->AddComponent(collisionComponent);
-
-	npcObject1->AddComponent(new CHealthComponent());
-
-
-	//create another npc
-	//CGameObject* npcObject2 = myGameObjectManager->CreateGameObject();
-	//npcObject2->GetLocalTransform().Move(CU::Vector3f(500.0f, 0.0f, 0.0f));
-
-	//CModelComponent* modelComponent2= CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
-	//npcObject2->AddComponent(modelComponent2);
-
-	//Move Later for modification from unity
 	myScene->AddCamera(CScene::eCameraType::ePlayerOneCamera);
 	CU::Camera& playerCamera = myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera);
 	playerCamera.Init(50, WINDOW_SIZE_F.x, WINDOW_SIZE_F.y, 1.f, 75000.0f);
-	
-	////AddBasicAttack
-	//SkillData* basicSkillData = new SkillData;
-	//basicSkillData->activationRadius = 160.0f;
-	//basicSkillData->range = 300.0f;
-	//basicSkillData->animationDuration = 0.5f;
-	//basicSkillData->coolDown = 0.5f;
-	//basicSkillData->isAOE = false;
-	//basicSkillData->isChannel = false;
-	//basicSkillData->damage = 34;
-	//basicSkillData->manaCost = 0;
-	//basicSkillData->skillName = SkillData::SkillName::BasicAttack;
-	//SkillFactory::GetInstance().RegisterSkillData(basicSkillData);
-
-	////AddSpinyToWhiny
-	//SkillData* whirlWindSkillData = new SkillData;
-	//whirlWindSkillData->activationRadius = 0.0f;
-	//whirlWindSkillData->range = 300.0f;
-	//whirlWindSkillData->animationDuration = 0.1f;
-	//whirlWindSkillData->coolDown = 0.1f;
-	//whirlWindSkillData->isAOE = true;
-	//whirlWindSkillData->isChannel = true;
-	//whirlWindSkillData->damage = 10;
-	//whirlWindSkillData->manaCost = 1;
-	//whirlWindSkillData->skillName = SkillData::SkillName::WhirlWind;
-	//SkillFactory::GetInstance().RegisterSkillData(whirlWindSkillData);
-
-
-	////AddSweepAndWeepy
-	//SkillData* SweepAttack = new SkillData;
-	//SweepAttack->activationRadius = 0.0f;
-	//SweepAttack->range = 300.0f;
-	//SweepAttack->animationDuration = 0.5f;
-	//SweepAttack->coolDown = 0.5f;
-	//SweepAttack->isAOE = true;
-	//SweepAttack->isChannel = true;
-	//SweepAttack->damage = 30;
-	//SweepAttack->manaCost = 10;
-	//SweepAttack->skillName = SkillData::SkillName::SweepAttack;
-	//SkillFactory::GetInstance().RegisterSkillData(SweepAttack);
 
 	SkillFactory::GetInstance().RegisterSkills();
 
-	////create player:
-
-	/*myPlayerObject = myGameObjectManager->CreateGameObject();
-	myPlayerObject->SetName("Player");
-	PollingStation::playerObject = myPlayerObject;
-
-	InputController* tempInputController = InputControllerManager::GetInstance().CreateAndRegisterComponent();
-	myPlayerObject->AddComponent(tempInputController);
-	PollingStation::PlayerInput = tempInputController;
-
-	MovementComponent* tempMovementController = MovementComponentManager::GetInstance().CreateAndRegisterComponent();
-	myPlayerObject->AddComponent(tempMovementController);
-
-	myPlayerObject->AddComponent(new NavigationComponent());
-
-	CModelComponent* playerModelComponent = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
-	myPlayerObject->AddComponent(playerModelComponent);
-
-	myPlayerObject->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
-	SkillSystemComponent* tempSkillSystemComponent = new SkillSystemComponent;
-	SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
-	myPlayerObject->AddComponent(tempSkillSystemComponent);
-	tempSkillSystemComponent->AddSkill(SkillData::SkillName::BasicAttack);
-	tempSkillSystemComponent->AddSkill(SkillData::SkillName::WhirlWind);
-	tempSkillSystemComponent->AddSkill(SkillData::SkillName::SweepAttack);
-
-	CHealthComponent* tempHealthCompoennt = new CHealthComponent();
-	tempHealthCompoennt->SetMaxHealth(1000);
-	myPlayerObject->AddComponent(tempHealthCompoennt);
-
-	Intersection::CollisionData playerCollisionData;
-	playerCollisionData.myCircleData = new Intersection::SCircle();
-	playerCollisionData.myCircleData->myCenterPosition.Set(myPlayerObject->GetWorldPosition().x, myPlayerObject->GetWorldPosition().z);
-	playerCollisionData.myCircleData->myRadius = sqrtf(playerModelComponent->GetModelInst()->GetModelBoundingBox().myRadius);
-	CCollisionComponent* playerCollisionComponent = myCollisionComponentManager->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, playerCollisionData);
-	playerCollisionComponent->AddCollidsWith(eColliderType_Mouse | eColliderType_Enemy | eColliderType_Skill);
-	playerCollisionComponent->SetColliderType(eColliderType_Player);
-	myPlayerObject->AddComponent(playerCollisionComponent);
-	CHealthBarComponent* healthBar = myHealthBarManager->CreateHealthbar();
-	myPlayerObject->AddComponent(healthBar);
-	myPlayerObject->AddComponent(ManaComponentManager::GetInstance().CreateAndRegisterComponent(200));
-
-
-*/
-
 	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
 	cameraComponent->SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
-
-	
-
-	//set camera position and rotation
-	/*CU::Matrix44f cameraTransformation = playerCamera.GetTransformation();
-	CU::Matrix44f newRotation;
-
-	newRotation.Rotate(PI / 4 * 4 , CU::Axees::Y);
-	newRotation.Rotate(PI / 4, CU::Axees::X);*/
-
-	//newRotation.Rotate(PI / 1, CU::Axees::Z);
-
-	/*cameraTransformation.SetRotation(newRotation);
-	cameraTransformation.SetPosition(CU::Vector3f(0.0f, 0.0f, 0.0f));
-	cameraTransformation.Move(CU::Vector3f(0.0f, 0.0f, -1100.0f));
-
-	playerCamera.SetTransformation(cameraTransformation);*/
 
 	myGoldText = new CTextInstance;
 	myGoldText->SetColor(CTextInstance::Yellow);
@@ -332,26 +197,44 @@ void CPlayState::Load()
 	myGoldText->SetText("");
 	myGoldText->Init();
 
-	//Loadingu like pingu
-
+	//Loading
 	CU::CJsonValue levelsFile;
 	const std::string& errorString = levelsFile.Parse("Json/LevelList.json");
 
 	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
 #ifdef _DEBUG
-	const int levelIndex = levelsArray.Size() - 1;
+	myLevelIndex = levelsArray.Size()-1;
 #else
 	const int levelIndex = 0;
 #endif
 
 	std::string levelPath = "Json/Levels/";
-	levelPath += levelsArray[levelIndex].GetString();
+	levelPath += levelsArray[myLevelIndex].GetString();
 	levelPath += "/LevelData.json";
 
 	std::string questPath = "Json/Quests/";
-	questPath += levelsArray[levelIndex].GetString();
+	questPath += levelsArray[myLevelIndex].GetString();
 	questPath += ".json";
+
+	std::string navmeshPath = "Json/Levels/";
+	navmeshPath += levelsArray[myLevelIndex].GetString();
+	navmeshPath += "/Navmesh.obj";
+
+	//NAVMESH
+	std::ifstream infile(navmeshPath);
+	if (infile.good())
+	{
+		myNavmesh.LoadFromFile(navmeshPath.c_str());
+		PollingStation::Navmesh = &myNavmesh;
+	}
+	else
+	{
+		PollingStation::Navmesh = nullptr;
+	}
+
+
+
 
 	myQuestManager.LoadQuestlines(questPath);
 	myQuestManager.CompleteEvent();
@@ -375,26 +258,16 @@ void CPlayState::Load()
 
 		PollingStation::playerObject->AddComponent(healthMessenger);
 		PollingStation::playerObject->AddComponent(respawn);
+		PollingStation::playerObject->AddComponent(new CPlayerHealthMessenger());
+		PollingStation::playerObject->AddComponent(new CPlayerManaMessenger());
+		PollingStation::playerObject->AddComponent(CPickupManager::GetInstance().CreatePickerUpperComp());
+		PollingStation::playerObject->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
+		PollingStation::playerObject->AddComponent(new CMainStatComponent());
+
+		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eInit, SComponentMessageData());
 	}
-	//CSeekControllerManager::GetInstance().SetTarget();
 	myGameObjectManager->SendObjectsDoneMessage();
 
-	//cameraComponent->InitOffsetPosition();
-
-	//myPlayerObject->AddComponent(cameraComponent);
-
-	//CAMERA->SetTransformation(CCameraComponentManager::GetInstance().GetActiveCamera().GetTransformation()); //
-
-	//----CreateEnemies----
-	//myEnemies.Init(8);
-	//TEMP_CREATE_ENEMY();
-	//myEnemies[0]->SetWorldPosition({ -300.f, 0.f, -400.f });
-	//TEMP_CREATE_ENEMY();
-	//myEnemies[1]->SetWorldPosition({ 300.f, 0.f, 0.f });
-	//TEMP_CREATE_ENEMY();
-	//myEnemies[2]->SetWorldPosition({ 0.f, 0.f, 800.f });
-
-	//---------------------
 
 
 
@@ -411,38 +284,10 @@ void CPlayState::Load()
 	myMouseComponent = new CMouseComponent(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 	mouseObject->AddComponent(myMouseComponent);
 
-	if (PollingStation::playerObject != nullptr)
-	{
-		PollingStation::playerObject->AddComponent(new CPlayerHealthMessenger());
-		PollingStation::playerObject->AddComponent(new CPlayerManaMessenger());
-	}
 
-	CFireEmitterInstance fireeeeeByCarl;
-	SFireEmitterData fireData;
-	fireData.myScrollSpeeds[0] = 1.3f;
-	fireData.myScrollSpeeds[1] = 2.1f;
-	fireData.myScrollSpeeds[2] = 2.3f;
 
-	fireData.myScales[0] = 1.f;
-	fireData.myScales[1] = 2.f;
-	fireData.myScales[2] = 3.f;
-
-	fireData.myDistortions[0].Set(0.1f, 0.2f);
-	fireData.myDistortions[1].Set(0.1f, 0.3f);
-	fireData.myDistortions[2].Set(0.1f, 0.1f);
-
-	fireData.myDistortionScale = 0.8f;
-	fireData.myDistortionBias = 0.5f;
-
-	fireeeeeByCarl.Init(fireData);
-	fireeeeeByCarl.GetTransformation().Rotate(3.141592f, CU::Axees::Y);
-	fireeeeeByCarl.GetTransformation().m11 *= 2.f;
-	fireeeeeByCarl.GetTransformation().m22 *= 2.f;
-	fireeeeeByCarl.GetTransformation().m33 *= 2.f;
-	myScene->AddFireEmitters(fireeeeeByCarl);
-	
 	myHatMaker->LoadBluePrints("Json/Hats/HatBluePrints.json");
-
+	myHatMaker->GiveTheManAHat();
 	myIsLoaded = true;
 
 	//get time to load the level:
@@ -454,16 +299,33 @@ void CPlayState::Load()
 void CPlayState::Init()
 {
 	//skillnad på load, init & konstructor ?
+	//	svar:	1. konstruktor ska sätta allt till noll/null
+	//			2. init ska skapa allt som kan bero på ifall motorn är skapad etc
+	//			3. load kallas trådat för init kallas alltid av statestacken när den pushar ett nytt state
+
+
+
+
+
 }
 
-State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
+eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 {
 	Audio::CAudioInterface* audio = Audio::CAudioInterface::GetInstance();
 	if (audio != nullptr)
 	{
 		CAudioSourceComponentManager::GetInstance().Update();
 	}
-	
+
+	if (PollingStation::playerData->myIsWhirlwinding == true)
+	{
+		audio->PostEvent("WhirlWind");
+	}
+	else
+	{
+		audio->PostEvent("StopWhirlWind");
+	}
+
 	CParticleEmitterComponentManager::GetInstance().UpdateEmitters(aDeltaTime);
 	InputControllerManager::GetInstance().Update(aDeltaTime);
 	MovementComponentManager::GetInstance().Update(aDeltaTime);
@@ -471,6 +333,12 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	SkillSystemComponentManager::GetInstance().Update(aDeltaTime);
 	CPickupManager::GetInstance().Update(aDeltaTime);
 	RespawnComponentManager::GetInstance().Update(aDeltaTime);
+
+	if (myGUIManager)
+	{
+		myGUIManager->Update(aDeltaTime);
+	}
+
 	myCollisionComponentManager->Update();
 	myScene->Update(aDeltaTime);
 
@@ -483,6 +351,7 @@ State::eStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	DropComponentManager::GetInstance().Update(aDeltaTime);
 
 	myHealthBarManager->Update();
+	BlessingTowerComponentManager::GetInstance().Update(aDeltaTime);
 
 	return myStatus;
 }
@@ -494,13 +363,18 @@ void CPlayState::Render()
 	myCollisionComponentManager->Render();
 
 	SChangeStatesMessage msg;
-	msg.myBlendState = eBlendState::eAlphaBlend;
-	msg.myDepthStencilState = eDepthStencilState::eDefault;
-	msg.myRasterizerState = eRasterizerState::eNoCulling;
-	msg.mySamplerState = eSamplerState::eClamp;
 	
-	
-	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
+
+	if (myShuldRenderNavmesh == true)
+	{
+		msg.myBlendState = eBlendState::eAlphaBlend;
+		msg.myDepthStencilState = eDepthStencilState::eDisableDepth;
+		msg.myRasterizerState = eRasterizerState::eWireFrame;
+		msg.mySamplerState = eSamplerState::eClamp;
+
+		RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
+		myNavmesh.Render();
+	}
 
 	msg.myBlendState = eBlendState::eAlphaBlend;
 	msg.myDepthStencilState = eDepthStencilState::eDisableDepth;
@@ -524,27 +398,21 @@ void CPlayState::Render()
 
 void CPlayState::OnEnter()
 {
-	//PostMaster::GetInstance().Subscribe(this, eMessageType::eStateMessage);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
-	PostMaster::GetInstance().Subscribe(this, eMessageType::eNextLevelPlease);
 	Audio::CAudioInterface::GetInstance()->LoadBank("Audio/playState.bnk");
 	Audio::CAudioInterface::GetInstance()->PostEvent("PlayCoolSong");
-	//Audio::CAudioInterface::GetInstance()->PostEvent("PlayerMoving_Play");
 	myGUIManager->RestartRenderAndUpdate();
 }
 
 void CPlayState::OnExit()
 {
-	//PostMaster::GetInstance().UnSubscribe(this, eMessageType::eStateMessage);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
-	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eNextLevelPlease);
 
 	Audio::CAudioInterface* audioInterface = Audio::CAudioInterface::GetInstance();
 	if (audioInterface != nullptr)
 	{
 		audioInterface->PostEvent("switchBank");
 		audioInterface->PostEvent("StopCoolSong");
-		//audioInterface->PostEvent("PlayerMoving_Stop");
 		audioInterface->UnLoadBank("Audio/playState.bnk");
 	}
 	myGUIManager->PauseRenderAndUpdate();
@@ -560,22 +428,12 @@ void CPlayState::BuyHats()
 	PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PushState(PushState::eState::eHatShop, -1)));
 }
 
-void CPlayState::GiveHatToPlayer()
-{
-	TEMP_ADD_HAT(PollingStation::playerObject);
-}
-
-void CPlayState::NextLevel()
+void CPlayState::CheckReturnToLevelSelect() // Formerly NextLevel -Kyle
 {
 	if (myShouldReturnToLevelSelect == true)
 	{
 		PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PopCurrentState()));
-		//myStatus = eStateStatus::ePop; ??
-	}
-	else
-	{
-		int levelIndex = (myLevelIndex > 0) ? myLevelIndex + 1 : 2; //this is ugly and was just for fun, sorry about that mvh Carl
-		PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, ChangeLevel(levelIndex)));
+		//myStatus = eStateStatus::ePop; ?? //Was this only checked when pressing F7 - for change level ?
 	}
 }
 
@@ -633,129 +491,7 @@ void CPlayState::CreateManagersAndFactories()
 	CPickupManager::CreateInstance();
 	CMasterAI::Create();
 	RespawnComponentManager::Create();
-}
-
-void CPlayState::TEMP_ADD_HAT(CGameObject * aPlayerObject)
-{
-	//__TEMP____CREATES_AND_ADDS_HAT_TO_PLAYER_OBJ_____
-
-	CGameObject* hatObj = myGameObjectManager->CreateGameObject();
-	CModelComponent* hatModel = MODELCOMP_MGR.CreateComponent("Models/Player/hat_basic.fbx");
-	hatObj->AddComponent(hatModel);
-	CU::Vector3f hatPos = hatObj->GetLocalTransform().GetPosition();
-	hatObj->GetLocalTransform().SetPosition({ hatPos.x, hatPos.y + 175.f, hatPos.z });
-	aPlayerObject->AddComponent(hatObj);
-
-	CMainStatComponent* mainStat = new CMainStatComponent;
-	aPlayerObject->AddComponent(mainStat);
-
-	CStatComponent* stat1 = new CStatComponent;
-	CStatComponent* stat2 = new CStatComponent;
-	CStatComponent* stat3 = new CStatComponent;
-
-
-	hatObj->AddComponent(stat1);
-	aPlayerObject->AddComponent(stat2);
-	hatObj->AddComponent(stat3);
-
-	Stats::SBaseStats base1;
-	/*base1.Dexterity = 1;
-	base1.Intelligence = 1;
-	base1.Strength = 1;
-	base1.Vitality = 1;*/
-	Stats::SBonusStats bonus1;
-	/*bonus1.BonusArmor = 1;
-	bonus1.BonusCritChance = 1;
-	bonus1.BonusCritDamage = 1;
-	bonus1.BonusDamage = 1;*/
-	bonus1.BonusHealth = 1;
-	bonus1.BonusMovementSpeed = 1;
-	stat1->SetStats(base1, bonus1);
-
-	Stats::SBaseStats base2;
-	/*base2.Dexterity = 2;
-	base2.Intelligence = 2;
-	base2.Strength = 2;
-	base2.Vitality = 2;*/
-	Stats::SBonusStats bonus2;
-	//bonus2.BonusArmor = 2;
-	//bonus2.BonusCritChance = 2;
-	//bonus2.BonusCritDamage = 2;
-	//bonus2.BonusDamage = 2;
-	bonus2.BonusHealth = 2;
-	bonus2.BonusMovementSpeed = 2;
-	stat2->SetStats(base2, bonus2);
-
-	Stats::SBaseStats base3;
-	//base3.Dexterity = 3;
-	//base3.Intelligence = 3;
-	//base3.Strength = 3;
-	//base3.Vitality = 3;
-	Stats::SBonusStats bonus3;
-	/*bonus3.BonusArmor = 3;
-	bonus3.BonusCritChance = 3;
-	bonus3.BonusCritDamage = 3;
-	bonus3.BonusDamage = 3;*/
-	bonus3.BonusHealth = 3;
-	bonus3.BonusMovementSpeed = 3;
-	stat3->SetStats(base3, bonus3);
-}
-
-
-void CPlayState::TEMP_CREATE_ENEMY()
-{
-	CGameObject* enemyObj = myGameObjectManager->CreateGameObject();
-	enemyObj->SetName("EnemyWithComponents");
-
-	CModelComponent* tempEnemyModel = CModelComponentManager::GetInstance().CreateComponent("Models/Player/player_idle.fbx");
-	CStatComponent* tempEnemyStatComponent = new CStatComponent();
-	CAIControllerComponent* AIController = new CAIControllerComponent();
-	CHealthComponent* tempEnemyHealthComponent = new CHealthComponent();
-	CSeekController* seekController = new CSeekController();
-	CFleeController* fleeController = new CFleeController();
-
-	enemyObj->AddComponent(tempEnemyModel);
-	enemyObj->AddComponent(AIController);
-	enemyObj->AddComponent(tempEnemyStatComponent);
-	enemyObj->AddComponent(tempEnemyHealthComponent);
-
-	AIController->AddControllerBehaviour(seekController);
-	AIController->AddControllerBehaviour(fleeController);
-
-	Stats::SBaseStats baseStats;
-	/*baseStats.Dexterity = 1337;*/
-	Stats::SBonusStats bonusStats;
-
-	seekController->SetMaxAcceleration(400);
-	seekController->SetMaxSpeed(30);
-	seekController->SetSlowDownRadius(100);
-	seekController->SetTargetRadius(70);
-
-	fleeController->SetTargetsToAvoid(&myEnemies);
-
-	AIControllerManager::GetInstance().AddController(AIController);
-
-	Intersection::CollisionData circleCollisionData = Intersection::CollisionData();
-	circleCollisionData.myCircleData = new Intersection::SCircle;
-	circleCollisionData.myCircleData->myCenterPosition = enemyObj->GetWorldPosition();
-	circleCollisionData.myCircleData->myRadius = sqrtf(tempEnemyModel->GetModelInst()->GetModelBoundingBox().myRadius);
-	CCollisionComponent* collisionComponent = SkillSystemComponentManager::GetInstance().GetCollisionComponentManager()->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, circleCollisionData);
-	collisionComponent->AddCollidsWith(eColliderType::eColliderType_Skill);
-	collisionComponent->SetColliderType(eColliderType::eColliderType_Enemy);
-	//collisionComponent->GetCollider()->SetGameObject(enemyObj);
-	enemyObj->AddComponent(collisionComponent);
-	enemyObj->AddComponent(DropComponentManager::GetInstance().CreateAndRegisterComponent(50,100));
-
-	CHealthBarComponent* healthBar = myHealthBarManager->CreateHealthbar();
-	enemyObj->AddComponent(&*healthBar);
-
-	SkillSystemComponent* tempSkillSystemComponent = new SkillSystemComponent;
-	SkillSystemComponentManager::GetInstance().RegisterComponent(tempSkillSystemComponent);
-	enemyObj->AddComponent(tempSkillSystemComponent);
-	tempSkillSystemComponent->AddSkill("BasicAttack");
-	enemyObj->AddComponent(ManaComponentManager::GetInstance().CreateAndRegisterComponent(200));
-
-	tempEnemyStatComponent->SetStats(baseStats, bonusStats);
-	tempEnemyHealthComponent->Init();
-	myEnemies.Add(enemyObj);
+	CLevelManager::CreateInstance();
+	CEnemyFactory::Create(*myGameObjectManager,*myCollisionComponentManager,*myHealthBarManager);
+	BlessingTowerComponentManager::CreateInstance();
 }

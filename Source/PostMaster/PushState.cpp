@@ -27,7 +27,7 @@ eMessageReturn PushState::DoEvent(StateStack* aStateStack) const
 		switch (myState)
 		{
 		case eState::ePlayState:
-			if (myLevelIndex > 10)
+			if (myLevelIndex >= 10)
 			{
 				aStateStack->PushState(new CLoadState(*aStateStack, myLevelIndex % 10, true));
 				break;

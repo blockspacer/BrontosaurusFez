@@ -6,6 +6,7 @@ RespawnComponent::RespawnComponent()
 {
 	myRespawnTime = 1;
 	myElapsedTime = 0;
+	myType = eComponentType::eRespawn;
 }
 
 

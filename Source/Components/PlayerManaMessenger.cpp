@@ -4,6 +4,7 @@
 
 CPlayerManaMessenger::CPlayerManaMessenger()
 {
+	myType = eComponentType::ePlayerManaMessenger;
 }
 
 CPlayerManaMessenger::~CPlayerManaMessenger()

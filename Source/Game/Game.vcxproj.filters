@@ -42,6 +42,12 @@
     <ClCompile Include="PickupComponent.cpp" />
     <ClCompile Include="PickupManager.cpp" />
     <ClCompile Include="PickupFactory.cpp" />
+    <ClCompile Include="ShopStorage.cpp" />
+    <ClCompile Include="LevelManager.cpp" />
+    <ClCompile Include="EnemyFactory.cpp" />
+    <ClCompile Include="DialogState.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackgroundLoadingManager.h" />
@@ -92,6 +98,11 @@
     <ClInclude Include="PickupFactory.h" />
     <ClInclude Include="ShopStorage.h" />
     <ClInclude Include="ShopStructs.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelManager.h" />
+    <ClInclude Include="EnemyFactory.h" />
+    <ClInclude Include="DialogState.h">
       <Filter>States</Filter>
     </ClInclude>
   </ItemGroup>

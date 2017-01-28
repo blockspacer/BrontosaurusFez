@@ -124,7 +124,7 @@ void CInputManager::UpdateKeyboard()
 		for (unsigned int i = 0; i < myKeyDowns.Size(); ++i)
 		{
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eKeyboardMessage, KeyPressed(myKeyDowns[i])));
-			PostMaster::GetInstance().SendLetter(Message(eMessageType::eKeyPressed, KeyPressed(myKeyDowns[i]))); // Kyle
+			PostMaster::GetInstance().SendLetter(Message(eMessageType::eKeyPressed, KeyPressed(myKeyDowns[i])));
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eInputMessagePressed, InputMessagePressed(static_cast<CU::eInputMessage>(myKeyDowns[i]))));
 		}
 	}

@@ -6,6 +6,7 @@
 SkillSystemComponent::SkillSystemComponent()
 {
 	mySkills.Init(4);
+	myType = eComponentType::eSkillSystem;
 	myIsActive = true;
 }
 
@@ -64,10 +65,13 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 		myTargetPosition.y = GetParent()->GetWorldPosition().y;
 		for(unsigned short i = 0; i < mySkills.Size(); i++)
 		{
-			mySkills[i]->SetTargetPosition(myTargetPosition);
-			if(mySkills[i]->GetIsSelected() == true)
+			if(mySkills[i]->GetIsActive() == false)
 			{
-				mySkills[i]->TryToActivate();
+				mySkills[i]->SetTargetPosition(myTargetPosition);
+				if (mySkills[i]->GetIsSelected() == true)
+				{
+					mySkills[i]->TryToActivate();
+				}
 			}
 		}
 	}
@@ -85,6 +89,7 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 		}
 		if(isAnythingSelected == false)
 		{
+
 			mySkills[0]->TryToActivate();
 		}
 	}

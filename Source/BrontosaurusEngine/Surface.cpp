@@ -4,10 +4,45 @@
 #include "DXFramework.h"
 #include "TextureManager.h"
 #include <StaticArray.h>
-
+#include "StringHelper.h"
 #include <D3D11.h>
 
 #define NUM_TEXTURES 16
+
+
+CSurface::CSurface(const std::string& aDirectory, const CU::GrowingArray<std::string>& aTextureNameList)
+	: myFramework(nullptr)
+	, myTextures(8)
+{
+	myFramework = CEngine::GetInstance()->GetFramework();
+
+	for (unsigned int i = 0; i < aTextureNameList.Size(); ++i)
+	{
+		if (i != (eDiffuse)				&&
+			i != (eRoughness)			&&
+			i != (eAmbientOcclusion)	&&
+			i != (eEmissive)			&&
+			i != (eNormal)				&&
+			i != (eMetalness))
+		{
+			continue;
+
+		}
+
+
+
+		if (aTextureNameList[i] == "")
+		{
+			myTextures.Add(nullptr);
+		}
+		else
+		{
+			std::wstring texturePath = CU::StringToWString(aDirectory + aTextureNameList[i]);
+			CTexture& texture = CEngine::GetInstance()->GetTextureManager().LoadTexture(texturePath.c_str());
+			myTextures.Add(&texture);
+		}
+	}
+}
 
 CSurface::CSurface(const CU::GrowingArray<const wchar_t*>& aTexturePathList)
 	: myFramework(nullptr)

@@ -15,6 +15,7 @@ CTextInstance::CTextInstance()
 	: myText(nullptr)
 	, myColor(1, 1, 1, 1)
 {
+	myStrings.Init(2);
 }
 
 CTextInstance::CTextInstance(const CTextInstance& aTextInstance)
@@ -24,12 +25,14 @@ CTextInstance::CTextInstance(const CTextInstance& aTextInstance)
 
 CTextInstance::~CTextInstance()
 {
+	//SAFE_DELETE(myText);
 }
 
 void CTextInstance::Init(const CU::DynamicString& aFontPath)
 {
 	//maybe shouldn't be pointer
 	myText = new CCoolText(aFontPath);
+	myLineGap.y = GetlineHeight();
 }
 
 void CTextInstance::Init(const CU::DynamicString & aFontPath, const int aPixelSize)
@@ -39,36 +42,61 @@ void CTextInstance::Init(const CU::DynamicString & aFontPath, const int aPixelSi
 
 void CTextInstance::Render()
 {
-	if (myText != nullptr && myString.Empty() == false)
+	if (myText != nullptr && myStrings.Size() > 0)
 	{
-		SChangeStatesMessage* changeStateMessage = new SChangeStatesMessage();
-		changeStateMessage->myBlendState = eBlendState::eAlphaBlend;
-		changeStateMessage->myDepthStencilState = eDepthStencilState::eDisableDepth;
-		changeStateMessage->myRasterizerState = eRasterizerState::eNoCulling;
-		changeStateMessage->mySamplerState = eSamplerState::eClamp;
+		//SChangeStatesMessage* changeStateMessage = new SChangeStatesMessage();
+		//changeStateMessage->myBlendState = eBlendState::eAlphaBlend;
+		//changeStateMessage->myDepthStencilState = eDepthStencilState::eDisableDepth;
+		//changeStateMessage->myRasterizerState = eRasterizerState::eNoCulling;
+		//changeStateMessage->mySamplerState = eSamplerState::eClamp;
 
-		CEngine::GetInstance()->GetRenderer().AddRenderMessage(changeStateMessage);
+		//CEngine::GetInstance()->GetRenderer().AddRenderMessage(changeStateMessage);
+
 
 		SRenderTextMessage* renderTextMessage = new SRenderTextMessage();
 		renderTextMessage->myColor = myColor;
 		renderTextMessage->myPosition = myPosition;
-		renderTextMessage->myString = myString;
+		renderTextMessage->myLineHeight = myLineGap + CU::Vector2f(0,GetlineHeight());
+		renderTextMessage->myStrings = myStrings;
 		renderTextMessage->myText = myText;
 		CEngine::GetInstance()->GetRenderer().AddRenderMessage(renderTextMessage);
 
-		changeStateMessage = new SChangeStatesMessage();
-		changeStateMessage->myBlendState = eBlendState::eNoBlend;
-		changeStateMessage->myDepthStencilState = eDepthStencilState::eDefault;
-		changeStateMessage->myRasterizerState = eRasterizerState::eDefault;
-		changeStateMessage->mySamplerState = eSamplerState::eClamp;
+		//changeStateMessage = new SChangeStatesMessage();
+		//changeStateMessage->myBlendState = eBlendState::eNoBlend;
+		//changeStateMessage->myDepthStencilState = eDepthStencilState::eDefault;
+		//changeStateMessage->myRasterizerState = eRasterizerState::eDefault;
+		//changeStateMessage->mySamplerState = eSamplerState::eClamp;
 
-		CEngine::GetInstance()->GetRenderer().AddRenderMessage(changeStateMessage);
+		//CEngine::GetInstance()->GetRenderer().AddRenderMessage(changeStateMessage);
 	}
+}
+
+void CTextInstance::SetTextLines(const CU::GrowingArray<CU::DynamicString>& someLines)
+{
+	myStrings = someLines;
+}
+
+
+const CU::GrowingArray<CU::DynamicString>& CTextInstance::GetTextLines()
+{
+	return myStrings;
 }
 
 float CTextInstance::GetlineHeight() const
 {
 	return myText->GetlineHeight();
+}
+
+CU::Vector2f CTextInstance::GetQuadSizeNormalized() const
+{
+	CU::Vector2f rectPixelSize;
+	for (const CU::DynamicString& str : myStrings)
+	{
+		rectPixelSize += CU::Vector2f(myText->CalculateRectPixelSize(str.c_str()));
+	}
+
+	rectPixelSize /= WINDOW_SIZE_F;
+	return rectPixelSize;
 }
 
 CTextInstance& CTextInstance::operator=(const CTextInstance& aTextInstance)
@@ -86,7 +114,7 @@ CTextInstance& CTextInstance::operator=(const CTextInstance& aTextInstance)
 
 	myColor = aTextInstance.myColor;
 	myPosition = aTextInstance.myPosition;
-	myString = aTextInstance.myString;
+	myStrings = aTextInstance.myStrings;
 
 	return *this;
 }

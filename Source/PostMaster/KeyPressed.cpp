@@ -15,6 +15,7 @@
 
 #include "../Game/QuestManager.h"
 #include "../Game/QuestDrawer.h"
+#include "..\Game\LevelManager.h"
 
 //temp
 #include "Components\HealthComponent.h"
@@ -65,40 +66,27 @@ eMessageReturn KeyPressed::DoEvent(CPlayState* aPlayState) const
 		{
 		case CU::eKeys::S:
 			aPlayState->BuyHats();
+			return eMessageReturn::eContinue;
 			break;
 		case CU::eKeys::F7:
-			aPlayState->NextLevel();
+			//aPlayState->NextLevel();
+			CLevelManager::GetInstance()->GoToLevel(2);
 			break;
-		case CU::eKeys::P:
+		case CU::eKeys::N:
+			aPlayState->myShuldRenderNavmesh = !aPlayState->myShuldRenderNavmesh;
+			break;
 		case CU::eKeys::ESCAPE:
 			aPlayState->Pause();
+			return eMessageReturn::eStop;
 			break;
 		case CU::eKeys::H:
-			aPlayState->TEMP_ADD_HAT(aPlayState->myPlayerObject);
+//			aPlayState->TEMP_ADD_HAT(aPlayState->myPlayerObject);
 		default:
 			break;
 		}
 	}
 
-	return eMessageReturn::eStop;
-}
-
-eMessageReturn KeyPressed::DoEvent(State* aState) const
-{
-	CPlayState* playState = dynamic_cast<CPlayState*>(aState);
-	if (playState != nullptr)
-	{
-		switch (myKey)
-		{
-		case CU::eKeys::F7:
-			playState->NextLevel();
-			break;
-		default:
-			break;
-		}
-	}
-
-	return eMessageReturn::eStop;
+	return eMessageReturn::eContinue;
 }
 
 eMessageReturn KeyPressed::DoEvent(PauseMenu *aPauseMenu) const

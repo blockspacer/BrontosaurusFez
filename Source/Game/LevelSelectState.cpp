@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "LevelSelectState.h"
-#include "GUI\GUIManager\GUIManager.h"
-#include "../PostMaster/PostMaster.h"
-#include "PostMaster\Message.h"
-#include "PostMaster\Event.h"
+#include "GUI/GUIManager.h"
+#include "PostMaster/PostMaster.h"
+#include "PostMaster/Message.h"
+#include "PostMaster/Event.h"
 
 LevelSelectState::LevelSelectState(StateStack& aStateStack)
 	: State(aStateStack)
@@ -22,7 +22,7 @@ void LevelSelectState::Init()
 	myGUIManager->Init("Models/mainMenu/levelSelect.fbx");
 }
 
-State::eStatus LevelSelectState::Update(const CU::Time& aDeltaTime)
+eStateStatus LevelSelectState::Update(const CU::Time& aDeltaTime)
 {
 	myGUIManager->Update(aDeltaTime);
 	

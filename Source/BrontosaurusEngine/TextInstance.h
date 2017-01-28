@@ -3,6 +3,8 @@
 #include "../CommonUtilities/vector4.h"
 #include "../CommonUtilities/vector2.h"
 #include "CoolText.h"
+#include "../CommonUtilities/GrowingArray.h"
+#include "../CommonUtilities/DL_Debug.h"
 
 class CText;
 
@@ -21,8 +23,10 @@ public:
 	~CTextInstance();
 
 	void Init(const CU::DynamicString& aFontPath, const int aPixelSize);
-	void Init(const CU::DynamicString& aFontPath = "Fonts/comic.ttf");
+	void Init(const CU::DynamicString& aFontPath = "Default");
 	void Render();
+
+	void SetLineGap();
 
 	inline void SetPosition(const CU::Vector2f& aPosition);
 	inline const CU::Vector2f& GetPosition() const;
@@ -30,16 +34,23 @@ public:
 	inline void SetColor(const CU::Vector4f& aColor);
 	inline const CU::Vector4f& GetColor() const;
 
+	void SetTextLines(const CU::GrowingArray<CU::DynamicString>& someLines);
+	const CU::GrowingArray<CU::DynamicString> &GetTextLines();
+
 	inline void SetText(const CU::DynamicString& aString);
-	inline const CU::DynamicString& GetText() const;
+	inline CU::DynamicString GetText() const;
 	float GetlineHeight() const;
+
+	CU::Vector2f GetQuadSizeNormalized() const;
 
 	CTextInstance& operator=(const CTextInstance& aTextInstance);
 private:
-	CU::DynamicString myString;
+	//CU::DynamicString myString;
+	CU::GrowingArray<CU::DynamicString> myStrings;
 	CU::Vector4f myColor;
 	CU::Vector2f myPosition;
 	CCoolText* myText;
+	CU::Vector2f myLineGap;
 };
 
 inline void CTextInstance::SetPosition(const CU::Vector2f & aPosition)
@@ -64,10 +75,37 @@ inline const CU::Vector4f& CTextInstance::GetColor() const
 
 inline void CTextInstance::SetText(const CU::DynamicString& aString)
 {
-	myString = aString;
+
+	myStrings.RemoveAll();
+	int lastPosition = 0;
+	for (int i = 0; i < aString.Size(); ++i)
+	{
+		if (aString.at(i) == '/n')
+		{
+			DL_PRINT_WARNING("Warning slow consider using different set text method");
+			const CU::DynamicString explainingString(aString.SubStr(lastPosition, i - lastPosition));
+			myStrings.Add(explainingString);
+			lastPosition = i + 1;
+		}
+	}
+
+	const  CU::DynamicString lastExplaingString(aString.SubStr(lastPosition, aString.Size() - lastPosition));
+	myStrings.Add(lastExplaingString);
 }
 
-inline const CU::DynamicString& CTextInstance::GetText() const
+inline CU::DynamicString CTextInstance::GetText() const
 {
-	return myString;
+
+	CU::DynamicString string;
+	for (int i = 0; i < myStrings.Size(); ++i)
+	{
+		if (i != 0)
+		{
+			DL_PRINT_WARNING("Warning slow please consider just getting a separete line");
+			string += '/n';
+		}
+		string += myStrings[i];
+	}
+
+	return string;
 }

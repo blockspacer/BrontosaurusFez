@@ -1,14 +1,15 @@
 #include "stdafx.h"
 #include "MainMenuState.h"
+
 #include "../PostMaster/PostMaster.h"
 #include "../PostMaster/Message.h"
 #include "../PostMaster/Event.h"
 
-#include "../GUI/GUIManager/GUIManager.h"
+#include "GUI/GUIManager.h"
 #include "BrontosaurusEngine/Skybox.h"
 #include "BrontosaurusEngine/Renderer.h"
 #include "BrontosaurusEngine/Engine.h"
-#include "../Audio/AudioInterface.h"
+#include "Audio/AudioInterface.h"
 #include "BackgroundLoadingManager.h"
 
 MainMenuState::MainMenuState(StateStack& aStateStack)
@@ -29,14 +30,14 @@ void MainMenuState::Init()
 {
 	myGUIManager = new GUI::GUIManager();
 	myGUIManager->Init("Models/mainMenu/mainMenu.fbx");
-	//
-	//mySkyBox = new CSkybox();
-	//mySkyBox->Init();
+	
+	mySkyBox = new CSkybox();
+	mySkyBox->Init("skybox.dds");
 
 	//CBackgroundLoadingManager::GetInstance().CreateStateToLoad(myStateStack, -1);
 }
 
-State::eStatus MainMenuState::Update(const CU::Time& aDeltaTime)
+eStateStatus MainMenuState::Update(const CU::Time& aDeltaTime)
 {
 	myGUIManager->Update(aDeltaTime);
 
@@ -45,27 +46,27 @@ State::eStatus MainMenuState::Update(const CU::Time& aDeltaTime)
 
 void MainMenuState::Render()
 {
-	//SChangeStatesMessage statemsg;
-	//statemsg.myBlendState = eBlendState::eNoBlend;
-	//statemsg.myRasterizerState = eRasterizerState::eNoCullingClockwise;
-	//statemsg.myDepthStencilState = eDepthStencilState::eDisableDepth;
-	//statemsg.mySamplerState = eSamplerState::eClamp;
-	//
-	//RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
-	//
-	//SRenderSkyboxMessage msg;
-	//msg.mySkybox = mySkyBox;
-	//
-	//RENDERER.AddRenderMessage(new SRenderSkyboxMessage(msg));
-	//
+	SChangeStatesMessage statemsg;
+	statemsg.myBlendState = eBlendState::eNoBlend;
+	statemsg.myRasterizerState = eRasterizerState::eNoCullingClockwise;
+	statemsg.myDepthStencilState = eDepthStencilState::eDisableDepth;
+	statemsg.mySamplerState = eSamplerState::eClamp;
+	
+	RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
+	
+	SRenderSkyboxMessage msg;
+	msg.mySkybox = mySkyBox;
+	
+	RENDERER.AddRenderMessage(new SRenderSkyboxMessage(msg));
+	
 	myGUIManager->Render();
 }
 
 void MainMenuState::OnEnter()
 {
 	//bool result;
-	//result = Audio::CAudioInterface::GetInstance()->LoadBank("Audio/mainMenu.bnk");
-	//Audio::CAudioInterface::GetInstance()->PostEvent("PlayBasSong");
+	Audio::CAudioInterface::GetInstance()->LoadBank("Audio/mainMenu.bnk");
+	Audio::CAudioInterface::GetInstance()->PostEvent("PlayBasSong");
 	
 	if (myIsGoingToLevelSelect == false)
 	{
@@ -84,9 +85,9 @@ void MainMenuState::OnEnter()
 
 void MainMenuState::OnExit()
 {
-	//Audio::CAudioInterface::GetInstance()->PostEvent("StopBasSong");
-	//Audio::CAudioInterface::GetInstance()->PostEvent("switchBank");
-	//Audio::CAudioInterface::GetInstance()->UnLoadBank("Audio/menMenu.bnk");
+	Audio::CAudioInterface::GetInstance()->PostEvent("StopBasSong");
+	Audio::CAudioInterface::GetInstance()->PostEvent("switchBank");
+	Audio::CAudioInterface::GetInstance()->UnLoadBank("Audio/menMenu.bnk");
 	
 
 	if (myIsGoingToLevelSelect == false)
@@ -100,4 +101,9 @@ void MainMenuState::OnExit()
 	}
 	
 	myGUIManager->SetRenderMouse(false);
+}
+
+bool MainMenuState::GetLetThroughRender() const
+{
+	return true;
 }

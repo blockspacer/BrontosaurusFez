@@ -21,7 +21,7 @@ void CCollisionRenderer::AddToRender(Collision::IRenderCommand* aRenderMessage)
 	}
 }
 
-const CU::GrowingArray<char, unsigned short, false>& CCollisionRenderer::PrepareBuffer()
+const CU::GrowingArray<char, unsigned int, false>& CCollisionRenderer::PrepareBuffer()
 {
 	myVertexBuffer.RemoveAll();
 

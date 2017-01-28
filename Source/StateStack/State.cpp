@@ -7,13 +7,13 @@
 
 State::State(StateStack & aStateStack)
 	: myStateStack(aStateStack)
-	, myStatus(eStatus::eKeep)
+	, myStatus(eStateStatus::eKeep)
 {
 }
 
 State::~State()
 {
-	RENDERER.ClearRenderQueue();
+	//RENDERER.ClearRenderQueue();
 }
 
 bool State::GetLetThroughRender() const
@@ -26,7 +26,7 @@ bool State::GetLetThroughUpdate() const
 	return false;
 }
 
-void State::SetStateStatus(const eStatus aStatus)
+void State::SetStateStatus(const eStateStatus aStatus)
 {
 	myStatus = aStatus;
 }

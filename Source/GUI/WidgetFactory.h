@@ -1,0 +1,35 @@
+#pragma once
+
+class CLoaderScene;
+class CLoaderCamera;
+
+namespace CU
+{
+	class Camera;
+	class DynamicString;
+}
+
+namespace GUI
+{
+	class IWidget;
+	class WidgetContainer;
+
+	class WidgetFactory
+	{
+	public:
+		static WidgetContainer* CreateGUIScene(const char* aFilePathFBX, CU::Camera*& aGUIManagerCameraOut);
+
+		static const CU::Camera* GetCurrentGUICamera();
+
+	private:
+		static WidgetContainer* CreateGUIScene(const CLoaderScene* aLoaderScene, CU::Camera*& aGUIManagerCameraOut, const std::string& aJsonPath);
+		static IWidget* CreateButton(IWidget* aWidget);		
+
+		static CU::Camera* ParseCamera(const CLoaderCamera* aCamera);
+		static IWidget* CreateHealthBar(IWidget* aWidget);
+		static IWidget* CreateManaBar(IWidget* aWidget);
+		static IWidget* CreateMoney(IWidget* aWidget);
+
+		static const CU::Camera* ourCurrentGUICamera;
+	};
+}

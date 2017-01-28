@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "FontEngine.h"
 #include "FT_Font.h"
+#include "../CommonUtilities/JsonValue.h"
+#include "../CommonUtilities/DL_Debug.h"
+
 
 #ifndef ERROR_CHECK
 #define ERROR_CHECK(aError, msg) assert(aError == FT_Err_Ok && msg);
@@ -29,16 +32,46 @@ void CFontEngine::Init()
 	FT_Error error;
 	error = FT_Init_FreeType(&myFreetypeAPI);
 	ERROR_CHECK(error, "failed to create FREETYPE2 API");
+
+	LoadFonts();
 }
 
-CFT_FontFacade CFontEngine::GetFace(const char* aFilePath)
+CFT_FontFacade CFontEngine::GetFace(const char* aFontName)
 {
-	if (myFaces.count(aFilePath)  == 0)
+	if (myFaces.count(aFontName) < 1)
 	{
-		myFaces[aFilePath] = CreateFace(aFilePath);
+		std::string errorString = "No font loaded with the name ";
+		errorString += aFontName;
+		DL_ASSERT(errorString.c_str());
 	}
-	
-	return CFT_FontFacade(myFaces[aFilePath]);
+
+	return CFT_FontFacade(myFaces[aFontName]);
+}
+
+void CFontEngine::LoadFonts(std::string aFontJsonFile)
+{
+	CU::CJsonValue fontJsonFile;
+	const std::string error = fontJsonFile.Parse(aFontJsonFile);
+	if (error != "")
+	{
+		DL_ASSERT(error.c_str());
+		return;
+	}
+
+	const CU::CJsonValue fontsArray = fontJsonFile.at("fonts");
+	for (unsigned i = 0; i < fontsArray.Size(); ++i)
+	{
+		const CU::CJsonValue fontValue = fontsArray[i];
+
+		const std::string fontName = fontValue.at("name").GetString();
+		const std::string fontFile = fontValue.at("file").GetString();
+		const int fontSize = fontValue.at("size").GetInt();
+
+		CFT_Font* font = CreateFace(fontFile.c_str());
+		font->SetSize(fontSize, 0, 0);
+
+		myFaces[fontName] = font;
+	}
 }
 
 CFT_Font* CFontEngine::CreateFace(const char* aFilePath)

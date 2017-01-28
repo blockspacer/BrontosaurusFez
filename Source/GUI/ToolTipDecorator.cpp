@@ -2,15 +2,16 @@
 #include "ToolTipDecorator.h"
 
 #include "../BrontosaurusEngine/TextInstance.h"
-#include "RenderableWidgets/ModelWidget/ModelWidget.h"
+#include "ModelWidget.h"
+#include "BrontosaurusEngine/SpriteInstance.h"
 
 namespace GUI
 {
-	CToolTipDecorator::CToolTipDecorator(Widget* aDecoratedWidget, ModelWidget* aBackGround, const std::string* const aTooltipText, const std::function<bool(std::string&)>& aGetTextFunction)
+	CToolTipDecorator::CToolTipDecorator(IWidget* aDecoratedWidget, ModelWidget* /*aBackGround*/, const std::string* const aTooltipText, const std::function<bool(std::string&)>& aGetTextFunction)
 		: WidgetDecorator(aDecoratedWidget, CU::Vector2f::Zero, CU::Vector2f::Zero, aDecoratedWidget->GetName() + "_Tooltip", false)
 		, myGetTextFunction(aGetTextFunction)
 		, myOffsetToMouse(0.f, -0.05f)
-		//, myBackGround(aBackGround)
+		, myBackGround(nullptr)
 		, myTextInstance(nullptr)
 		, myShouldRender(false)
 	{
@@ -22,12 +23,12 @@ namespace GUI
 			myTextInstance->SetText(aTooltipText->c_str());
 		}
 
-		//myBackGround->SetLocalPosition(aDecoratedWidget->GetWorldPosition());
+		myBackGround = new CSpriteInstance("Sprites/tooltipBackground.dds", myTextInstance->GetQuadSizeNormalized(), aDecoratedWidget->GetWorldPosition());
 	}
 
 	CToolTipDecorator::~CToolTipDecorator()
 	{
-		//SAFE_DELETE(myBackGround);
+		SAFE_DELETE(myBackGround);
 		SAFE_DELETE(myTextInstance);
 	}
 
@@ -43,20 +44,24 @@ namespace GUI
 		}
 
 		myShouldRender = true;
-		//myBackGround->SetLocalPosition(aMousePosition + myOffsetToMouse);
-		myTextInstance->SetPosition(aMousePosition + myOffsetToMouse);
+		CU::Vector2f backGroundSize = myTextInstance->GetQuadSizeNormalized();
+		myBackGround->SetSize(backGroundSize);
+
+		CU::Vector2f newPosition(aMousePosition + myOffsetToMouse);
+		myTextInstance->SetPosition(newPosition);
+		myBackGround->SetPosition({ newPosition.x, newPosition.y /*- backGroundSize.y*/ });
 	}
 
 	void CToolTipDecorator::OnMouseExit(const CU::Vector2f& aMousePosition)
 	{
 		myShouldRender = false;
-		//myBackGround->SetLocalPosition(aMousePosition + myOffsetToMouse);
+		myBackGround->SetPosition(aMousePosition + myOffsetToMouse);
 		myTextInstance->SetPosition(aMousePosition + myOffsetToMouse);
 	}
 
-	GUI::Widget* CToolTipDecorator::MouseIsOver(const CU::Vector2f& aPosition)
+	GUI::IWidget* CToolTipDecorator::MouseIsOver(const CU::Vector2f& aPosition)
 	{
-		Widget* mouseIsOver = WidgetDecorator::MouseIsOver(aPosition);
+		IWidget* mouseIsOver = WidgetDecorator::MouseIsOver(aPosition);
 		if (mouseIsOver == myDecoratedWidget)
 		{
 			return this;
@@ -67,18 +72,28 @@ namespace GUI
 
 	void CToolTipDecorator::Render()
 	{
-		WidgetDecorator::Render();
+		//WidgetDecorator::Render();
 
 		if (myShouldRender == true)
 		{
-			//myBackGround->Render();
+			myBackGround->Render();
 			myTextInstance->Render();
 		}
 	}
 
+	void CToolTipDecorator::Render(CU::GrowingArray<IWidget*>& aWidgets)
+	{
+		WidgetDecorator::Render(aWidgets);
+		aWidgets.Add(this);
+	}
+
 	void CToolTipDecorator::OnMouseMove(const CU::Vector2f& aMousePosition)
 	{
-		//myBackGround->SetLocalPosition(aMousePosition + myOffsetToMouse);
-		myTextInstance->SetPosition(aMousePosition + myOffsetToMouse);
+		CU::Vector2f newPosition(aMousePosition + myOffsetToMouse);
+		myBackGround->SetPosition(newPosition);
+
+		CU::Vector2f backGroundSize = myTextInstance->GetQuadSizeNormalized();
+		myBackGround->SetPosition({ newPosition.x, newPosition.y /*- backGroundSize.y*/ });
+		myTextInstance->SetPosition(newPosition);
 	}
 }

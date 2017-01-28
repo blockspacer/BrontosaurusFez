@@ -1,5 +1,7 @@
 #pragma once
 #include "Component.h"
+#include "../BrontosaurusEngine/Navmesh.h"
+#include "Synchronizer.h"
 
 namespace CU
 {
@@ -18,7 +20,15 @@ public:
 	void Destroy() override;
 
 private:
-	void CalculatePath(CU::Vector2f aTargetPosition);
-	CU::GrowingArray<CU::Vector3f> myPath;
+	void CalculatePath(const CU::Vector2f& aTargetPosition);
+	void PathfindOnNavmesh();
+	void ThreadedPathfind();
+
+private:
+	CPath myPath;
+	CPath mySecondPath;
+	
+	CU::Vector2f myTargetPosition;
+	bool myThreadHasFinished;
 };
 

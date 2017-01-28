@@ -89,6 +89,10 @@
       <Filter>Events\BuyButtonPressed</Filter>
     </ClCompile>
     <ClCompile Include="ShopItemButtonHovered.cpp" />
+    <ClCompile Include="GameObjectDiedEvent.cpp">
+      <Filter>Events\GameObjectDied</Filter>
+    </ClCompile>
+    <ClCompile Include="ShopClosed.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Subscriber.h">
@@ -238,6 +242,14 @@
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="ShopItemButtonHovered.h" />
+    <ClInclude Include="PopCurrentState.h" />
+    <ClInclude Include="PostMaster.h" />
+    <ClInclude Include="GameObjectDiedEvent.h">
+      <Filter>Events\GameObjectDied</Filter>
+    </ClInclude>
+    <ClInclude Include="PopCurrentState.h" />
+    <ClInclude Include="PostMaster.h" />
+    <ClInclude Include="ShopClosed.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Events">
@@ -326,6 +338,12 @@
     </Filter>
     <Filter Include="Events\BuyButtonPressed">
       <UniqueIdentifier>{65e18bfb-0813-45a3-a852-9137308b8ef5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events\GameObjectDied">
+      <UniqueIdentifier>{23253a40-22fa-4ea1-b547-9775dd5713e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events\ShopClosed">
+      <UniqueIdentifier>{91c0a917-7452-4023-802a-da89ce235515}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

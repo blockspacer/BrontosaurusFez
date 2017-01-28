@@ -16,14 +16,18 @@ public:
 	void SetSlowDownRadius(const float aSlowdownRadius);
 	void SetAggroRange(const float aRange);
 	void SetCallForHelpRange(const float aRange);
-	void CallForHelp();
+	void CalledUponForHelp();
+	CU::Vector2f& CalculateFormationPosition(const CU::Vector2f& aTargetPositon);
 
 	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
-
+	inline short GetFormationIndex();
+	inline void SetFormationindex(short aIndex);
+	inline bool IsActivated();
 private:
 	CU::Vector2f myVelocity;
 	CU::Vector2f myTarget;
 	CU::Vector2f myAcceleration;
+	CU::Vector2f myFormationDirection;
 
 	float myMaxSpeed;
 	float myMaxAcceleration;
@@ -32,8 +36,22 @@ private:
 	float myAggroRange;
 	float myCallForHelpRadius;
 
+	short myFormationIndex;
 	bool myHaveBeenCalledForHelp;
 	// Inherited via IController
 	void Destroy() override;
 };
 
+inline short CSeekController::GetFormationIndex()
+{
+	return myFormationIndex;
+}
+inline void CSeekController::SetFormationindex(short aIndex)
+{
+	myFormationIndex = aIndex;
+}
+
+inline bool CSeekController::IsActivated()
+{
+	return myHaveBeenCalledForHelp;
+}

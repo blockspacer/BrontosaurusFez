@@ -5,6 +5,7 @@
 #include "../FontEngine/FontEngineFacade.h"
 #include "ConstBufferTemplate.h"
 #include "Effect.h"
+#include <minwinbase.h>
 
 struct SVertexConstantBufferType
 {
@@ -19,6 +20,14 @@ struct TextVertexConstantBuffer
 	CU::Vector2f worldPosition;
 	float size;
 	float garbage;
+};
+
+struct TextInstanceBufferType
+{
+	CU::Vector2f position;
+	CU::Vector2f size;
+	CU::Vector4f rect;
+	CU::Vector4f color;
 };
 
 
@@ -46,43 +55,73 @@ CCoolText::CCoolText(const CU::DynamicString & aFontPath, const int aPixelSize):
 
 CCoolText::~CCoolText()
 {
+	SAFE_RELEASE(myVertexBuffer);
+	SAFE_RELEASE(myVertexConstantBuffer);
+	SAFE_RELEASE(myPixelConstantBuffer);
 }
 
-void CCoolText::Render(const CU::DynamicString& aString, const CU::Vector2f& aPosition, const CU::Vector4f& aColor/*, const CU::Vector2i& aSize*/)
+void CCoolText::Render(const CU::GrowingArray<CU::DynamicString>& someStrings, const CU::Vector2f& aPosition, const CU::Vector4f& aColor/*, const CU::Vector2i& aSize*/)
 {
 	CU::Vector2f penPosition = aPosition;
 
 	ActivateEffect();
 
-	const std::string tempString = aString.c_str();
-	std::wstring wideString(tempString.begin(), tempString.end());
-
-	for (size_t i = 0; i < wideString.size(); ++i)
+	for (int j = 0; j < someStrings.Size(); ++j)
 	{
-		if (wideString[i] == L'\n') // fulhax för att ha new line av '\n'
+
+		penPosition.x = aPosition.x;
+		penPosition.y += GetlineHeight();
+
+		const std::string tempString = someStrings[j].c_str();
+		std::wstring wideString(tempString.begin(), tempString.end());
+
+		for (size_t i = 0; i < wideString.size(); ++i)
 		{
-			penPosition.x = aPosition.x;
-			penPosition.y += GetlineHeight();
-			continue;
+
+			if (i > 0)
+			{
+				const CU::Vector2i pixelAdvance = myFont.GetAdvance(wideString[i], wideString[i - 1], true);
+				const CU::Vector2f screenAdvance(static_cast<float>(pixelAdvance.x) / WINDOW_SIZE_F.x, static_cast<float>(pixelAdvance.y) / WINDOW_SIZE_F.y);
+				penPosition += screenAdvance;
+			}
+			
+
+			const CU::Vector2i bearing = myFont.GetBearing(wideString[i]);
+			const CU::Vector2f screenBearing(static_cast<float>(bearing.x) / WINDOW_SIZE_F.x, static_cast<float>(-bearing.y) / WINDOW_SIZE_F.y);
+
+			RenderCharacter(wideString[i], penPosition + screenBearing, aColor);
 		}
-
-		if (i > 0 && wideString[i - 1] != L'\n'/*mer fulhax för att ha new line av '\n'*/)
-		{
-			const CU::Vector2i pixelAdvance = myFont.GetAdvance(wideString[i], wideString[i - 1], true);
-			const CU::Vector2f screenAdvance(static_cast<float>(pixelAdvance.x) / WINDOW_SIZE_F.x, static_cast<float>(pixelAdvance.y) / WINDOW_SIZE_F.y);
-			penPosition += screenAdvance;
-		}
-
-		const CU::Vector2i bearing = myFont.GetBearing(wideString[i]);
-		const CU::Vector2f screenBearing(static_cast<float>(bearing.x) / WINDOW_SIZE_F.x, static_cast<float>(-bearing.y) / WINDOW_SIZE_F.y);
-
-		RenderCharacter(wideString[i], penPosition + screenBearing, aColor);
 	}
 }
 
 float CCoolText::GetlineHeight() const
 {
 	return myFont.GetlineHeight() / WINDOW_SIZE_F.y;
+}
+
+CU::Vector2i CCoolText::CalculateRectPixelSize(const std::string& aText)
+{
+	CU::Vector2i rectSize;
+	std::wstring wText(aText.begin(), aText.end());
+	for (size_t i = 0; i < wText.size(); ++i)
+	{
+		if (wText[i] == L'w') //sorry mvh carl
+		{
+			wText[i] = L'm';
+		}
+		if (wText[i] == L' ') //sorry mvh carl
+		{
+			wText[i] = L'm';
+		}
+		CU::Vector2i charSize = myFont.GetCharSize(wText[i]);
+		rectSize.x += charSize.x;
+		if (charSize.y > rectSize.y)
+		{
+			rectSize.y = charSize.y;
+		}
+	}
+
+	return rectSize;
 }
 
 bool CCoolText::InitBuffers()
@@ -125,6 +164,7 @@ bool CCoolText::InitBuffers()
 
 void CCoolText::RenderCharacter(const wchar_t aCharacter, const CU::Vector2f& aPosition, const CU::Vector4f& aColor)
 {
+
 	const CU::Vector2i glyphSize = myFont.GetCharSize(aCharacter);
 	UpdateAndSetVertexConstantBuffer(aPosition, {static_cast<float>(glyphSize.x) / WINDOW_SIZE.x, static_cast<float>(glyphSize.y) / WINDOW_SIZE.y}, { 0.f,0.f,1.f,1.f }, aColor);
 
@@ -161,4 +201,3 @@ void CCoolText::UpdateAndSetVertexConstantBuffer(const CU::Vector2f& aPosition, 
 
 	context.VSSetConstantBuffers(1, 1, &myVertexConstantBuffer);
 }
-

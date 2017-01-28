@@ -13,18 +13,19 @@ CAudioSourceComponentManager::CAudioSourceComponentManager()
 
 CAudioSourceComponentManager::~CAudioSourceComponentManager()
 {
+	RemoveAll();
 }
 
 CAudioSourceComponent * CAudioSourceComponentManager::CreateComponent()
 {
 	Audio::GameObjectID AudioObjectID = Audio::CAudioInterface::GetInstance()->RegisterGameObject();
 	myIds[AudioObjectID] = myComponents.Size();
-	myComponents.Add(CAudioSourceComponent());
-	myComponents.GetLast().myGameObjectID = AudioObjectID;
+	myComponents.Add(new CAudioSourceComponent());
+	myComponents.GetLast()->myGameObjectID = AudioObjectID;
 	
-	CComponentManager::GetInstance().RegisterComponent(&myComponents.GetLast());
+	CComponentManager::GetInstance().RegisterComponent(myComponents.GetLast());
 
-	return &myComponents.GetLast();
+	return myComponents.GetLast();
 }
 
 CAudioSourceComponentManager& CAudioSourceComponentManager::GetInstance()
@@ -49,17 +50,17 @@ void CAudioSourceComponentManager::Update()
 {
 	for (unsigned int i = 0; i < myComponents.Size(); ++i)
 	{
-		myComponents[i].Update();
+		myComponents[i]->Update();
 	}
 }
 
 void CAudioSourceComponentManager::RemoveAll()
 {
 	myIds.clear();
-	for (unsigned int i = 0; i < myComponents.Size(); ++i)
-	{
-		CComponentManager::GetInstance().RemoveComponent(myComponents.GetLast().GetId());
-	}
+	//for (unsigned int i = 0; i < myComponents.Size(); ++i)
+	//{
+	//	CComponentManager::GetInstance().DeleteComponent(myComponents.GetLast().GetId());
+	//}
 
 	myComponents.RemoveAll();
 	Audio::CAudioInterface::GetInstance()->UnregisterAllGameOBjects();
@@ -67,8 +68,8 @@ void CAudioSourceComponentManager::RemoveAll()
 
 void CAudioSourceComponentManager::Remove(CAudioSourceComponent* aComponentToRemove)
 {
-	Audio::CAudioInterface::GetInstance()->UnregisterGameObject(aComponentToRemove->myGameObjectID);
-	CComponentManager::GetInstance().RemoveComponent(aComponentToRemove->GetId());
+	//Audio::CAudioInterface::GetInstance()->UnregisterGameObject(aComponentToRemove->myGameObjectID);
+	//CComponentManager::GetInstance().DeleteComponent(aComponentToRemove->GetId());
 	myComponents.RemoveAtIndex(myIds[aComponentToRemove->myGameObjectID]);
 	myIds.erase(aComponentToRemove->myGameObjectID);
 }

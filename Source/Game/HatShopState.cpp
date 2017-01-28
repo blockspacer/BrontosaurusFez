@@ -14,11 +14,12 @@
 #include "Components/PlayerData.h"
 
 #include "PostMaster/HatBought.h"
+#include "PostMaster/ShopClosed.h"
 
 #include "KevinLoader/KevinLoader.h"
 
-#include "GUI/Widget/Widget.h"
-#include "GUI/GUIManager/GUIManager.h"
+#include "GUI/Widget.h"
+#include "GUI/GUIManager.h"
 #include "BrontosaurusEngine/TextInstance.h"
 
 HatShopState::HatShopState(StateStack & aStateStack) :
@@ -87,14 +88,15 @@ HatShopState::~HatShopState()
 
 void HatShopState::CloseShop()
 {
-	SetStateStatus(eStatus::ePop);
+	SetStateStatus(eStateStatus::ePop);
+	PostMaster::GetInstance().SendLetter(Message(eMessageType::eShopClosed,ShopClosed()));
 }
 
 void HatShopState::Init()
 {
 }
 
-State::eStatus HatShopState::Update(const CU::Time & aDeltaTime)
+eStateStatus HatShopState::Update(const CU::Time & aDeltaTime)
 {
 	myGUIManager->Update(aDeltaTime);
 	return myStatus;
@@ -115,7 +117,7 @@ void HatShopState::Render()
 
 void HatShopState::OnEnter()
 {
-	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eBuyButtonPressed);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eShopItemSelected);
 	myGUIManager->RestartRenderAndUpdate();
@@ -124,7 +126,7 @@ void HatShopState::OnEnter()
 
 void HatShopState::OnExit()
 {
-	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyPressed);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eBuyButtonPressed);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eShopItemSelected);
 	myGUIManager->PauseRenderAndUpdate();
@@ -165,7 +167,6 @@ void HatShopState::SetSelected(const char aIndex)
 				{
 					myOptionsText[j]->SetColor(CTextInstance::White);
 				}
-
 				myOptionsText[i]->SetColor(CTextInstance::Red);
 			}
 		}
@@ -222,17 +223,17 @@ void HatShopState::AdjustText()
 			temp += ". ";
 			temp += mySelections[i]->HatName.c_str();
 			myOptionsText.Add(new CTextInstance());
-			myOptionsText.GetLast()->Init("Fonts/comic.ttf",32);
+			myOptionsText.GetLast()->Init("Default",32);
 			myOptionsText.GetLast()->SetText(temp.c_str());
-			myOptionsText.GetLast()->SetPosition(CU::Vector2f(0.114f, 0.075f + 0.185f * row));
+			myOptionsText.GetLast()->SetPosition(CU::Vector2f(0.114f, 0.18f + 0.175f * row));
 		
 			temp = "Cost";
 			temp += ": ";
 			temp += std::to_string(mySelections[i]->myCost);
 			myCostText.Add(new CTextInstance());
-			myCostText.GetLast()->Init("Fonts/comic.ttf",32);
+			myCostText.GetLast()->Init("Default",32);
 			myCostText.GetLast()->SetText(temp.c_str());
-			myCostText.GetLast()->SetPosition(CU::Vector2f(0.114f, 0.2f + 0.185f * row));
+			myCostText.GetLast()->SetPosition(CU::Vector2f(0.114f, 0.26f + 0.175f * row));
 			++row;
 		}
 		else
@@ -242,17 +243,17 @@ void HatShopState::AdjustText()
 			temp += ". ";
 			temp += mySelections[i]->HatName.c_str();
 			myOptionsText.Add(new CTextInstance());
-			myOptionsText.GetLast()->Init("Fonts/comic.ttf", 32);
+			myOptionsText.GetLast()->Init("Default", 32);
 			myOptionsText.GetLast()->SetText(temp.c_str());
-			myOptionsText.GetLast()->SetPosition(CU::Vector2f(0.027f, 0.075f + 0.185f * row));
+			myOptionsText.GetLast()->SetPosition(CU::Vector2f(0.027f, 0.18f + 0.175f * row));
 		
 			temp = "Cost";
 			temp += ": ";
 			temp += std::to_string(mySelections[i]->myCost);
 			myCostText.Add(new CTextInstance());
-			myCostText.GetLast()->Init("Fonts/comic.ttf", 32);
+			myCostText.GetLast()->Init("Default", 32);
 			myCostText.GetLast()->SetText(temp.c_str());
-			myCostText.GetLast()->SetPosition(CU::Vector2f(0.027f, 0.2f + 0.185f * row));
+			myCostText.GetLast()->SetPosition(CU::Vector2f(0.027f, 0.26f + 0.175f * row));
 		}
 	}
 }

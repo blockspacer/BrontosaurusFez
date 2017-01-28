@@ -14,16 +14,25 @@
 
 #include <iostream>
 
+
+// The Legacy of Kevin!
+//HELLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+//#define true rand() % 100
+//CHECK THIS OUTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+
 InputController::InputController(const CU::Camera& aPlayerCamera)
 	: myPlayerCamera(aPlayerCamera)
 	, myMouseIsDown(false)
 	, myIsShiftDown(false)
 	, myIsActive(true)
+	, myIsRightMouseButtonDown(false)
+	, myTriangle(nullptr)
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
 	mySkillInputMessageActivators.Init(5);
 	mySkillActivatorKeyDown = -1;
+	myType = eComponentType::eInputController;
 }
 
 
@@ -39,7 +48,77 @@ void InputController::Update(float aDeltaTime)
 	{
 		if (myMouseIsDown == true)
 		{
+			myPath.RemoveAll();
+
 			//convert pixel mouse position to world ground position
+			CU::Vector2f windowSize(WINDOW_SIZE);
+			CU::Vector2f mousePosZeroToOne = myMousePosition / windowSize;
+			CU::Vector2f mousePosNormalizedSpace = mousePosZeroToOne * 2.f - CU::Vector2f::One;
+			mousePosNormalizedSpace.y *= -1;
+			CU::Vector4f mousePosNormalizedHomogeneousSpace(mousePosNormalizedSpace, CU::Vector2f::Zero);
+			CU::Vector4f screenToCameraSpaceRay = mousePosNormalizedHomogeneousSpace * myPlayerCamera.GetProjectionInverse();
+			
+			CU::Vector3f direction;
+			direction.x = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m11) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m21) + myPlayerCamera.GetTransformation().m31;
+			direction.y = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m12) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m22) + myPlayerCamera.GetTransformation().m32;
+			direction.z = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m13) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m23) + myPlayerCamera.GetTransformation().m33;
+			
+			CU::Vector3f targetPosition3D;
+			const CU::Vector3f groundNormal(0.f, 1.f, 0.f);
+			const float denominator = direction.Dot(groundNormal);
+			if (std::fabs(denominator) > 0.0001f)
+			{
+				const float t = (GetParent()->GetToWorldTransform().GetPosition() - myPlayerCamera.GetPosition()).Dot(groundNormal) / denominator;
+				if (std::fabs(t) > 0.0001f)
+				{
+					targetPosition3D = myPlayerCamera.GetPosition() + direction * t;
+				}
+			}
+			CPath::SWaypoint point;
+			point.myPosition = targetPosition3D;
+			myPath.Add(point);
+
+			
+			CU::Vector2f targetPosition(targetPosition3D.x, targetPosition3D.z);
+
+			TakeInputMessage(CU::eInputMessage::LEFTMOUSEBUTTON);
+			eComponentMessageType type = eComponentMessageType::eSetPath;
+			SComponentMessageData pathdata;
+			pathdata.myPathPointer = &myPath;
+			
+			GetParent()->NotifyComponents(type, pathdata);
+			SComponentMessageData data;
+			data.myVector2f = targetPosition;
+			if (myIsShiftDown == false)
+			{
+				type = eComponentMessageType::eSetSkillTargetPosition;
+				GetParent()->NotifyComponents(type, data);
+
+			}
+			else
+			{
+				type = eComponentMessageType::eSetSkillTargetPositionWhileHoldingPosition;
+				GetParent()->NotifyComponents(type, data);
+			}
+		}
+
+		if (myIsShiftDown == true)
+		{
+			SComponentMessageData stopData;
+			stopData.myFloat = 0.1f;
+			GetParent()->NotifyComponents(eComponentMessageType::eStopMovement, SComponentMessageData());
+		}
+
+		if (mySkillActivatorKeyDown >= 0)
+		{
+			eComponentMessageType type = eComponentMessageType::eSelectSkill;
+			SComponentMessageData data;
+			data.myInt = mySkillActivatorKeyDown;
+			GetParent()->NotifyComponents(type, data);
+		}
+
+		if (myIsRightMouseButtonDown == true)
+		{
 			CU::Vector2f windowSize(WINDOW_SIZE);
 			CU::Vector2f mousePosZeroToOne = myMousePosition / windowSize;
 			CU::Vector2f mousePosNormalizedSpace = mousePosZeroToOne * 2.f - CU::Vector2f::One;
@@ -67,35 +146,13 @@ void InputController::Update(float aDeltaTime)
 			CU::Vector2f targetPosition(targetPosition3D.x, targetPosition3D.z);
 
 			TakeInputMessage(CU::eInputMessage::LEFTMOUSEBUTTON);
-			eComponentMessageType type = eComponentMessageType::eSetNavigationTarget;
+			eComponentMessageType type;
 			SComponentMessageData data;
 			data.myVector2f = targetPosition;
+
+			type = eComponentMessageType::eSetSkillTargetPosition;
 			GetParent()->NotifyComponents(type, data);
 
-			if (myIsShiftDown == false)
-			{
-				type = eComponentMessageType::eSetSkillTargetPosition;
-				GetParent()->NotifyComponents(type, data);
-
-			}
-			else
-			{
-				type = eComponentMessageType::eSetSkillTargetPositionWhileHoldingPosition;
-				GetParent()->NotifyComponents(type, data);
-			}
-		}
-
-		if (myIsShiftDown == true)
-		{
-			GetParent()->NotifyComponents(eComponentMessageType::eStopMovement, SComponentMessageData());
-		}
-
-		if (mySkillActivatorKeyDown >= 0)
-		{
-			eComponentMessageType type = eComponentMessageType::eSelectSkill;
-			SComponentMessageData data;
-			data.myInt = mySkillActivatorKeyDown;
-			GetParent()->NotifyComponents(type, data);
 		}
 	}
 }
@@ -140,6 +197,42 @@ void InputController::Destroy()
 {
 }
 
+void InputController::RaycastOnNavmesh()
+{
+	//convert pixel mouse position to world ground position
+	CU::Vector2f windowSize(WINDOW_SIZE);
+	CU::Vector2f mousePosZeroToOne = myMousePosition / windowSize;
+	CU::Vector2f mousePosNormalizedSpace = mousePosZeroToOne * 2.f - CU::Vector2f::One;
+	mousePosNormalizedSpace.y *= -1;
+	CU::Vector4f mousePosNormalizedHomogeneousSpace(mousePosNormalizedSpace, CU::Vector2f::Zero);
+	CU::Vector4f screenToCameraSpaceRay = mousePosNormalizedHomogeneousSpace * myPlayerCamera.GetProjectionInverse();
+
+	CU::Vector3f direction;
+	direction.x = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m11) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m21) + myPlayerCamera.GetTransformation().m31;
+	direction.y = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m12) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m22) + myPlayerCamera.GetTransformation().m32;
+	direction.z = (screenToCameraSpaceRay.x * myPlayerCamera.GetTransformation().m13) + (screenToCameraSpaceRay.y * myPlayerCamera.GetTransformation().m23) + myPlayerCamera.GetTransformation().m33;
+
+	CU::Vector3f targetPosition3D;
+	const CU::Vector3f groundNormal(0.f, 1.f, 0.f);
+	const float denominator = direction.Dot(groundNormal);
+	if (std::fabs(denominator) > 0.0001f)
+	{
+		const float t = (GetParent()->GetToWorldTransform().GetPosition() - myPlayerCamera.GetPosition()).Dot(groundNormal) / denominator;
+		if (std::fabs(t) > 0.0001f)
+		{
+			targetPosition3D = myPlayerCamera.GetPosition() + direction * t;
+		}
+	}
+
+	CU::Vector2f targetPosition(targetPosition3D.x, targetPosition3D.z);
+
+	TakeInputMessage(CU::eInputMessage::LEFTMOUSEBUTTON);
+	eComponentMessageType type = eComponentMessageType::eSetNavigationTarget;
+	SComponentMessageData data;
+	data.myVector2f = targetPosition;
+	GetParent()->NotifyComponents(type, data);
+}
+
 eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButton, const CU::Vector2f& aMousePosition)
 {
 	if(aMouseButton == CU::eMouseButtons::LBUTTON)
@@ -151,6 +244,8 @@ eMessageReturn InputController::MouseClicked(const CU::eMouseButtons aMouseButto
 	{
 		myMousePosition = aMousePosition;
 		TakeInputMessage(CU::eInputMessage::RIGHTMOUSEBUTTON);
+		myIsRightMouseButtonDown = true;
+		
 	}
 	else if (aMouseButton == CU::eMouseButtons::MIDBUTTON)
 	{
@@ -164,12 +259,14 @@ eMessageReturn InputController::MouseReleased(const CU::eMouseButtons aMouseButt
 	if (aMouseButton == CU::eMouseButtons::LBUTTON)
 	{
 		myMouseIsDown = false;
+		RaycastOnNavmesh();
 	}
 	if (aMouseButton == CU::eMouseButtons::RBUTTON)
 	{
+		myIsRightMouseButtonDown = false;
 		for (unsigned short i = 0; i < mySkillInputMessageActivators.Size(); i++)
 		{
-			if (mySkillInputMessageActivators[i] == static_cast<CU::eInputMessage>(CU::eMouseButtons::RBUTTON))
+			if (mySkillInputMessageActivators[i] == CU::eInputMessage::RIGHTMOUSEBUTTON)
 			{
 				mySkillActivatorKeyDown = -1;
 			}

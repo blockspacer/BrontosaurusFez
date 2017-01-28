@@ -5,23 +5,23 @@ class StateStack;
 namespace CU
 {
 	class Time;
-} 
+}
+
+enum class eStateStatus : unsigned char
+{
+	eKeep,
+	ePop
+};
 
 class State
 {
 public:
-	enum class eStatus : unsigned char
-	{
-		eKeep,
-		ePop
-	};
-
 	State(StateStack& aStateStack);
 
 	virtual ~State();
 
 	virtual void Init() = 0;
-	virtual eStatus Update(const CU::Time& aDeltaTime) = 0;
+	virtual eStateStatus Update(const CU::Time& aDeltaTime) = 0;
 	virtual void Render() = 0;
 
 	virtual void OnEnter() = 0;
@@ -29,9 +29,9 @@ public:
 	virtual bool GetLetThroughRender() const;
 	virtual bool GetLetThroughUpdate() const;
 
-	void SetStateStatus(const eStatus aStatus);
+	void SetStateStatus(const eStateStatus aStatus);
 
 protected:
 	StateStack& myStateStack;
-	eStatus myStatus;
+	eStateStatus myStatus;
 };

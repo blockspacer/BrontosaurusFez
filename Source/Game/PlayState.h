@@ -11,6 +11,8 @@
 #include "../PostMaster/Event.h"
 #include "QuestManager.h"
 
+#include "../BrontosaurusEngine/Navmesh.h"
+
 namespace CU
 {
 	class Time;
@@ -26,6 +28,7 @@ namespace QM
 	typedef int EventHandle;
 }
 
+class CCollisionComponentManager;
 class CScene;
 class CHatmaker;
 class CGameObject;
@@ -42,7 +45,6 @@ class WeaponSystemComponent;
 class DeathComponentFactory;
 class CParticleEmitterComponent;
 class EnemyAIControllerComponent;
-class CCollisionComponentManager;
 class CHealthBarComponentManager;
 
 class CPlayState : public State, public Subscriber
@@ -53,15 +55,14 @@ public:
 	void Load();
 
 	void Init() override;
-	eStatus Update(const CU::Time& aDeltaTime) override;
+	eStateStatus Update(const CU::Time& aDeltaTime) override;
 	void Render() override;
 	void OnEnter() override;
 	void OnExit() override;
 	void Pause();
 	void BuyHats();
-	void GiveHatToPlayer();
 
-	void NextLevel();
+	void CheckReturnToLevelSelect();
 
 	eMessageReturn Recieve(const Message& aMessage) override;
 
@@ -74,12 +75,11 @@ public:
 	CCollisionComponentManager* GetCollisionManager();
 
 	//TEMP - BELOW THIS LINE
-	void TEMP_ADD_HAT(CGameObject* aPlayerObject);
-	CGameObject* myPlayerObject;
 
 	QM::EventHandle fristObjective;
 	QM::EventHandle secondObjective;
 	QM::EventHandle thridObjective;
+	bool myShuldRenderNavmesh;
 
 private:
 	void CreateManagersAndFactories();
@@ -104,9 +104,8 @@ private:
 
 	QM::CQuestManager myQuestManager;
 	QM::CQuestDrawer myQuestDrawer;
-
 	//TEMP - BELOW THIS LINE
-	void TEMP_CREATE_ENEMY(); 
+	CNavmesh myNavmesh;
 	CU::GrowingArray<CGameObject*> myEnemies;
 	CHealthBarComponentManager* myHealthBarManager;
 };

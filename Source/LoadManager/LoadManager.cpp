@@ -22,6 +22,9 @@
 #include "LoadObjectives.h"
 #include "LoadActivationComponent.h"
 #include "LoadOpenShopListenerComponent.h"
+#include "LoadChangeLevelTriggerComponent.h"
+#include "LoadBlessingTowerComponent.h"
+#include "LoadSpawnEnemyOnDeathComponent.h"
 
 LoadManager* LoadManager::ourInstance = nullptr;
 
@@ -96,6 +99,9 @@ void LoadManager::RegisterFunctions()
 	loader.RegisterComponentLoadFunction("ActivationObjectiveComponent", LoadActivationObjective);
 	loader.RegisterComponentLoadFunction("ActivatorComponent", LoadActivationComponent);
 	loader.RegisterComponentLoadFunction("ActivateShopComponent", LoadOpenShopListenerComponent);
+	loader.RegisterComponentLoadFunction("ChangeLevelComponent", LoadChangeLevelTriggerComponent);
+	loader.RegisterComponentLoadFunction("BlessingTowerComponent", LoadBlessingTowerComponent);
+	loader.RegisterComponentLoadFunction("SpawnEnemiesOnDeathComponent", LoadSpawnEnemiesOnDeathComponent);
 }
 
 LoadManager::LoadManager()

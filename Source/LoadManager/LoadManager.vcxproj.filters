@@ -47,6 +47,9 @@
       <Filter>LoadThings\LoadActivationComponent</Filter>
     </ClInclude>
     <ClInclude Include="LoadOpenShopListenerComponent.h" />
+    <ClInclude Include="LoadChangeLevelTriggerComponent.h" />
+    <ClInclude Include="LoadBlessingTowerComponent.h" />
+    <ClInclude Include="LoadSpawnEnemyOnDeathComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -92,6 +95,9 @@
       <Filter>LoadThings\LoadActivationComponent</Filter>
     </ClCompile>
     <ClCompile Include="LoadOpenShopListenerComponent.cpp" />
+    <ClCompile Include="LoadChangeLevelTriggerComponent.cpp" />
+    <ClCompile Include="LoadBlessingTowerComponent.cpp" />
+    <ClCompile Include="LoadSpawnEnemyOnDeathComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="VS">

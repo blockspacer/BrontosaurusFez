@@ -11,6 +11,10 @@
 #include "SkillComponent.h"
 #include "SkillData.h"
 #include "SkillComponentManager.h"
+#include "../Game/PollingStation.h"
+#include "PlayerData.h"
+#include "../Game/EnemyFactory.h"
+
 Skill::Skill(SkillData* aSkillDataPointer)
 {
 	if (aSkillDataPointer->skillName == "BasicAttack")
@@ -29,6 +33,10 @@ Skill::Skill(SkillData* aSkillDataPointer)
 	{
 		myUpdateFunction = std::bind(&Skill::BasicAttackUpdate, this, std::placeholders::_1);
 	}
+	if (aSkillDataPointer->skillName == "SpawnEnemyAttack")
+	{
+		myUpdateFunction = std::bind(&Skill::SpawnEnemyAttackUpdate, this, std::placeholders::_1);
+	}
 	else
 	{
 		DL_PRINT("Wow Skill couldn't find what skill to use as updatefunction. Check spelling and/or yell at Marcus.");
@@ -42,6 +50,10 @@ Skill::Skill(SkillData* aSkillDataPointer)
 	circleCollisionData.myCircleData = new Intersection::SCircle;
 	circleCollisionData.myCircleData->myCenterPosition = myColliderObject->GetWorldPosition();
 	circleCollisionData.myCircleData->myRadius = 200.0f;
+	if (aSkillDataPointer->skillName == "BasicAttack")
+	{
+		circleCollisionData.myCircleData->myRadius = 20.0f;
+	}
 	CCollisionComponent* collisionComponent = SkillSystemComponentManager::GetInstance().GetCollisionComponentManager()->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, circleCollisionData);
 	collisionComponent->AddCollidsWith(eColliderType::eColliderType_Enemy | eColliderType::eColliderType_Player);
 	collisionComponent->SetColliderType(eColliderType::eColliderType_Skill);
@@ -98,13 +110,13 @@ void Skill::Update(float aDeltaTime)
 
 	if(myIsActive == true)
 	{
+		myUpdateFunction(aDeltaTime);
 		if (myAnimationTimeElapsed > mySkillData->animationDuration)
 		{
 			ActivateCollider(); // Remove this later on and replace it with animation wait time.
 			myAnimationTimeElapsed = 0.f;
 		}
 
-		myUpdateFunction(aDeltaTime);
 	
 	}
 }
@@ -127,7 +139,9 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 		if((myUser->GetWorldPosition() - myTargetObject->GetWorldPosition()).Length2() < mySkillData->activationRadius *  mySkillData->activationRadius)
 		{
 			eComponentMessageType type = eComponentMessageType::eStopMovement;
-			myUser->NotifyComponents(type, SComponentMessageData());
+			SComponentMessageData stopData;
+			stopData.myFloat = mySkillData->coolDown;
+			myUser->NotifyComponents(type, stopData);
 			SComponentMessageData statedAttackingMessage;
 			statedAttackingMessage.myString = "attack";
 			myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
@@ -148,7 +162,9 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 		myElapsedCoolDownTime = 0.0f;
 		CU::Vector3f direction = myTargetPosition - myUser->GetWorldPosition();
 		myAnimationTimeElapsed += aDeltaTime;
-		myUser->NotifyComponents(eComponentMessageType::eStopMovement, SComponentMessageData());
+		SComponentMessageData stopData;
+		stopData.myFloat = 0.1f;
+		myUser->NotifyComponents(eComponentMessageType::eStopMovement, stopData);
 		if(direction.Length2() > mySkillData->range * mySkillData->range)
 		{
 			direction.Normalize();
@@ -180,7 +196,9 @@ void Skill::WhirlWindUpdate(float aDeltaTime)
 
 void Skill::SweepAttackUpdate(float aDeltaTime)
 {
-	myUser->NotifyComponents(eComponentMessageType::eStopMovement, SComponentMessageData());
+	SComponentMessageData stopData;
+	stopData.myFloat = 0.1f;
+	myUser->NotifyComponents(eComponentMessageType::eStopMovement, stopData);
 	SComponentMessageData startedAttackingMessage;
 	startedAttackingMessage.myString = "turnLeft90";
 	myUser->NotifyComponents(eComponentMessageType::eBasicAttack, startedAttackingMessage);
@@ -201,6 +219,32 @@ void Skill::SweepAttackUpdate(float aDeltaTime)
 	SComponentMessageData lookAtData;
 	lookAtData.myVector3f = myTargetPosition;
 	myUser->NotifyComponents(eComponentMessageType::eLookAt, lookAtData);
+}
+
+void Skill::SpawnEnemyAttackUpdate(float aDeltaTime)
+{
+
+	SComponentMessageData stopData;
+	stopData.myFloat = 0.1f;
+	myUser->NotifyComponents(eComponentMessageType::eStopMovement, stopData);
+
+	SComponentMessageData startedAttackingMessage;
+	startedAttackingMessage.myString = "turnLeft90";
+	myUser->NotifyComponents(eComponentMessageType::eBasicAttack, startedAttackingMessage);
+
+
+	myAnimationTimeElapsed += aDeltaTime;
+	if (myAnimationTimeElapsed > mySkillData->animationDuration)
+	{
+		Matrix44f temp = myUser->GetLocalTransform();
+		temp.Move(CU::Vector3f(0, 0, 100));
+
+		for (int i = 0; i < mySkillData->numberOfEnemiesToSpawn; i++)
+		{
+			CEnemyFactory::GetInstance().CreateEnemy(temp.GetPosition());
+		}
+		myElapsedCoolDownTime = 0.0f;
+	}
 }
 
 void Skill::SetTargetPosition(CU::Vector3f aTargetPosition)
@@ -229,6 +273,19 @@ void Skill::OnActivation()
 	SComponentMessageData data;
 	data.myInt = -mySkillData->manaRefund;
 	myUser->NotifyComponents(eComponentMessageType::eBurnMana, data);
+
+	SComponentMessageData data2;
+
+	if (mySkillData->isChannel == true)
+	{
+		PollingStation::playerData->myIsWhirlwinding = true;
+	}
+	else
+	{
+		data2.myString = mySkillData->skillName.c_str();
+		myUser->NotifyComponents(eComponentMessageType::ePlaySound, data2);
+	}
+
 	//DL_PRINT("Animation started");
 }
 
@@ -238,6 +295,10 @@ void Skill::OnDeActivation()
 	statedAttackingMessage.myString = "idle";
 	myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
 	myTargetObject = nullptr;
+	if (mySkillData->isChannel == true)
+	{
+		PollingStation::playerData->myIsWhirlwinding = false;
+	}
 }
 
 void Skill::Select()

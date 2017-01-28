@@ -7,10 +7,13 @@
 
 
 
-DropComponent::DropComponent(const int aAmountOfGoldToDrop, const int aDropPercentChance)
+DropComponent::DropComponent(const int aAmountOfGoldToDrop, const int aHealthDropPercentChance, const int aManaDropPercentChance, const char* aHatToDrop)
 {
 	myGoldToDrop = aAmountOfGoldToDrop;
-	myHealthGlobeDropRate = aDropPercentChance;
+	myHealthGlobeDropRate = aHealthDropPercentChance;
+	myManaGlobeDropRate = aManaDropPercentChance;
+	myHatToDrop = aHatToDrop;
+	myType = eComponentType::eDrop;
 }
 
 
@@ -26,11 +29,20 @@ void DropComponent::Receive(const eComponentMessageType aMessageType, const SCom
 {
 	if (aMessageType == eComponentMessageType::eDied)
 	{
-		//PollingStation::playerData->myGold += myGoldToDrop * PollingStation::playerData->myGoldGetModifier;
 		CPickupFactory::GetInstance().CreateGoldPickup(GetParent()->GetWorldPosition(),myGoldToDrop * PollingStation::playerData->myGoldGetModifier);
 		if (CalculateDropHealthGlobe() == true)
 		{
 			CPickupFactory::GetInstance().CreateHealthGlobe(GetParent()->GetWorldPosition());
+		}
+
+		if (CalculateDropManaGlobe() == true)
+		{
+			CPickupFactory::GetInstance().CreateManaGlobe(GetParent()->GetWorldPosition());
+		}
+
+		if (myHatToDrop != "")
+		{
+			CPickupFactory::GetInstance().CreateHatDrop(GetParent()->GetWorldPosition(), myHatToDrop.c_str());
 		}
 	}
 }
@@ -52,6 +64,18 @@ bool DropComponent::CalculateDropHealthGlobe()
 		return true;
 	}
 
+
+	return false;
+}
+
+bool DropComponent::CalculateDropManaGlobe()
+{
+	int result = (rand() % 100) + 1;
+
+	if (result <= myManaGlobeDropRate)
+	{
+		return true;
+	}
 
 	return false;
 }

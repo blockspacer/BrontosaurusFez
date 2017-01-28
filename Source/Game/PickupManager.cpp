@@ -54,6 +54,24 @@ CPickupComponent* CPickupManager::CreatePickupComponent(const ePickupType& aPick
 	return newComponent;
 }
 
+CPickupComponent * CPickupManager::CreatePickupComponent(const ePickupType & aPickupType, const char * aString, const float aSuckUpSpeed, const float aSuckUpRadius)
+{
+	CPickupComponent* newComponent = new CPickupComponent(*this);
+
+	SPickupData someData;
+	someData.myString = aString;
+	someData.myType = aPickupType;
+
+	newComponent->mySuckUpRadius = aSuckUpRadius;
+	newComponent->mySpeed = aSuckUpSpeed;
+
+	myPickupData[newComponent] = someData;
+
+	CComponentManager::GetInstance().RegisterComponent(newComponent);
+	myPickUpComponents.Add(newComponent);
+	return newComponent;
+}
+
 CPickupComponent* CPickupManager::CreatePickupComponent(const CU::DynamicString& aString, const int aValue, const float aSuckUpSpeed, const float aSuckUpRadius)
 {
 	ePickupType type = ePickupType::HEALTH;
@@ -82,9 +100,9 @@ void CPickupManager::DestroyPickupComp(CPickupComponent* aPickupComponent)
 {
 	myPickupData.erase(aPickupComponent);
 
-	CComponentManager::GetInstance().RemoveComponent(aPickupComponent->GetId());
+	//CComponentManager::GetInstance().RemoveComponent(aPickupComponent->GetId());
 
-	delete aPickupComponent;
+	//delete aPickupComponent;
 }
 
 SPickupData CPickupManager::GetPickupData(CPickupComponent* aPickupComponent)
@@ -109,11 +127,11 @@ CPickerUpperComponent* CPickupManager::CreatePickerUpperComp()
 
 void CPickupManager::DestroyPickerUpperComp(CPickerUpperComponent* aPickerUpperComponent)
 {
-	CComponentManager::GetInstance().RemoveComponent(aPickerUpperComponent->GetId());
+	//CComponentManager::GetInstance().DeleteComponent(aPickerUpperComponent->GetId());
 
 	myCreatedPickerUppers.RemoveCyclic(aPickerUpperComponent);
 
-	delete aPickerUpperComponent;
+	//delete aPickerUpperComponent;
 }
 
 void CPickupManager::Update(const CU::Time& aDeltaTime)
@@ -133,17 +151,17 @@ CPickupManager::CPickupManager()
 
 CPickupManager::~CPickupManager()
 {
-	for (auto it = myPickupData.begin(); it != myPickupData.end(); ++it)
-	{
-		delete it->first;
-	}
+	//for (auto it = myPickupData.begin(); it != myPickupData.end(); ++it)
+	//{
+	//	delete it->first;
+	//}
 	
 	myPickupData.clear();
 
-	for (unsigned int i = 0; i < myCreatedPickerUppers.Size(); ++i)
-	{
-		SAFE_DELETE(myCreatedPickerUppers[i]);
-	}
+	//for (unsigned int i = 0; i < myCreatedPickerUppers.Size(); ++i)
+	//{
+	//	SAFE_DELETE(myCreatedPickerUppers[i]);
+	//}
 
 	myCreatedPickerUppers.RemoveAll();
 }

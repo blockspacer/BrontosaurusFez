@@ -21,7 +21,7 @@ CLoadState::~CLoadState()
 
 void CLoadState::Init()
 {
-	RENDERER.ClearRenderQueue();
+	//RENDERER.ClearRenderQueue();
 	CBackgroundLoadingManager &bLM = CBackgroundLoadingManager::GetInstance();
 
 	if (bLM.GetIfActive() == true)
@@ -44,7 +44,7 @@ void CLoadState::Init()
 	myLoadingAnimation.Init(new CSpriteInstance("Sprites/LoadingScreen/Loading.dds", { 256.f / WINDOW_SIZE.x, 64.f / WINDOW_SIZE.y }));
 }
 
-State::eStatus CLoadState::Update(const CU::Time& aDeltaTime)
+eStateStatus CLoadState::Update(const CU::Time& aDeltaTime)
 {
 	myLoadingAnimation.Update(aDeltaTime);
 
@@ -54,7 +54,7 @@ State::eStatus CLoadState::Update(const CU::Time& aDeltaTime)
 		CBackgroundLoadingManager::GetInstance().Clear();
 	}
 
-	return eStatus::eKeep;
+	return eStateStatus::eKeep;
 }
 
 void CLoadState::Render()

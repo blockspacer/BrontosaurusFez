@@ -34,7 +34,7 @@ CCollisionComponentManager::~CCollisionComponentManager()
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
 
-	myCollisionComponents.DeleteAll();
+	//myCollisionComponents.DeleteAll();
 	SAFE_DELETE(myCollisionManager);
 }
 
@@ -50,11 +50,14 @@ void CCollisionComponentManager::Update()
 
 void CCollisionComponentManager::Render()
 {
-	const CU::GrowingArray<char, unsigned short, false>& lineVertexBuffer = myCollisionManager->GetLineVertexBuffer();
-	CRenderer& renderer = RENDERER;
+	if (myShouldRender == true)
+	{
+		const CU::GrowingArray<char, unsigned int, false>& lineVertexBuffer = myCollisionManager->GetLineVertexBuffer();
+		CRenderer& renderer = RENDERER;
 
-	SRenderLineBuffer* renderCollisionMessage = new SRenderLineBuffer(lineVertexBuffer);
-	renderer.AddRenderMessage(renderCollisionMessage);
+		SRenderLineBuffer* renderCollisionMessage = new SRenderLineBuffer(lineVertexBuffer);
+		renderer.AddRenderMessage(renderCollisionMessage);
+	}
 }
 
 CCollisionComponent* CCollisionComponentManager::CreateCollisionComponent(const eColliderType aColliderType, Intersection::CollisionData& aCollisionData)
@@ -88,8 +91,8 @@ void CCollisionComponentManager::DestroyCollisionComponent(CCollisionComponent* 
 	if (index != myCollisionComponents.FoundNone)
 	{
 		myCollisionManager->RemoveCollider(aCollisionComponent->GetCollider());
-		CComponentManager::GetInstance().RemoveComponent(aCollisionComponent->GetId());
-		myCollisionComponents.DeleteCyclicAtIndex(index);
+		//CComponentManager::GetInstance().DeleteComponent(aCollisionComponent->GetId());
+		//myCollisionComponents.DeleteCyclicAtIndex(index);
 	}
 }
 

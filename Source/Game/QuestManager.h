@@ -42,6 +42,8 @@ namespace QM
 		CU::Queue<SEvent, unsigned short> myEvents;
 		CU::GrowingArray<SObjective, EventHandle> myObjectives;
 		CU::GrowingArray<SQuest, EventHandle> myQuests;
+		CU::GrowingArray<int, EventHandle> myPortalIndexes;
+		CU::GrowingArray<std::string, EventHandle> myDialogs;
 
 		SQuest myCurrentObjectives;
 

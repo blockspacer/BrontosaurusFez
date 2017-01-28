@@ -6,6 +6,7 @@
 CFleeController::CFleeController()
 {
 	myControllerType = eControllerType::eFlee;
+	myType = eComponentType::eFleeController;
 }
 
 CFleeController::~CFleeController()
@@ -18,27 +19,16 @@ const CU::Vector2f CFleeController::Update(const CU::Time & aDeltaTime)
 	const CU::Vector2f hostPos = GetControllerComponent()->GetParent()->GetWorldPosition();
 	const CU::Vector2f hostVelocity = GetControllerComponent()->GetVelocity();
 
-	for (int i = 0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); ++i)
+	CU::Vector2f desiredVelocity = (hostPos - PollingStation::playerObject->GetWorldPosition());
+	float distance = desiredVelocity.Length();
+
+	if (distance > myFleeRadius)
 	{
-		const CU::Vector2f objectPos = PollingStation::myThingsEnemiesShouldAvoid[i]->GetWorldPosition();
+		return CU::Vector2f::Zero;
 
-		if (objectPos == hostPos)
-		{
-			continue;
-		
-		}
-
-		CU::Vector2f desiredVelocity = (hostPos - objectPos);
-		float distance = desiredVelocity.Length();
-
-		if (distance > myFleeRadius)
-		{
-			continue;
-		
-		}
-
-		steering += desiredVelocity - hostVelocity;
 	}
+
+	steering += desiredVelocity - hostVelocity;
 
 	return steering * myWeight;
 }
@@ -54,7 +44,7 @@ void CFleeController::SetFleeRadius(float aRadius)
 }
 
 //flytta till pollingstation istället?
-void CFleeController::SetTargetsToAvoid( CU::GrowingArray<CGameObject*>* aTargetList)
+void CFleeController::SetTargetsToAvoid(CU::GrowingArray<CGameObject*>* aTargetList)
 {
 	myObjectsToAvoid = aTargetList;
 }
@@ -67,9 +57,9 @@ void CFleeController::Receive(const eComponentMessageType aMessageType, const SC
 	{
 		SComponentMessageData data;
 		data.myComponent = this;
-		NotifyParent(eComponentMessageType::eAddAIBehavior, data);
+		GetParent()->NotifyOnlyComponents(eComponentMessageType::eAddAIBehavior, data);
 	}
-		break;
+	break;
 	default:
 		break;
 	}

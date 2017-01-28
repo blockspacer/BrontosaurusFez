@@ -1,10 +1,11 @@
 #include "stdafx.h"
 #include "HealthComponent.h"
 #include "GameObject.h"
-#include "..\PostMaster\PostMaster.h"
-#include "..\PostMaster\EMessageReturn.h"
-#include "..\PostMaster\Event.h"
-#include "..\PostMaster\Message.h"
+#include "../PostMaster/PostMaster.h"
+#include "../PostMaster/EMessageReturn.h"
+#include "../PostMaster/Event.h"
+#include "../PostMaster/Message.h"
+#include "../PostMaster/GameObjectDiedEvent.h"
 
 CHealthComponent::CHealthComponent()
 {
@@ -12,12 +13,14 @@ CHealthComponent::CHealthComponent()
 	myHealth = myMaxHealth;
 	myPercentageLeft = static_cast<float>(myHealth) / static_cast<float>(myMaxHealth);
 
-	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed);
+	//PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed);
+	myType = eComponentType::eHealth;
 }
 
 
 CHealthComponent::~CHealthComponent()
 {
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyPressed);
 }
 
 float CHealthComponent::GetPrecentLeft() const
@@ -46,6 +49,7 @@ void CHealthComponent::SetHealth(const HealthPoint aValue)
 			SComponentMessageData data;
 			data.myBool = false;
 			GetParent()->NotifyComponents(eComponentMessageType::eSetVisibility, data);
+			PostMaster::GetInstance().SendLetter(Message(eMessageType::eGameObjectDied, GameObjectDiedEvent(GetParent())));
 		}
 	}
 }

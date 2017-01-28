@@ -73,7 +73,7 @@ void CCollisionManager::RemoveCollider(ICollider* aCollider)
 	}
 }
 
-const CU::GrowingArray<char, unsigned short, false>& CCollisionManager::GetLineVertexBuffer()
+const CU::GrowingArray<char, unsigned int, false>& CCollisionManager::GetLineVertexBuffer()
 {
 	return myCollisionRenderer->PrepareBuffer();
 }

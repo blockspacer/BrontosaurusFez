@@ -127,6 +127,12 @@ namespace CU
 			}*/
 		}
 
+		bool Find(const T& aSomeData)
+		{
+			return myArray.Find(aSomeData) != myArray.FoundNone;
+		}
+
+
 	private:
 		CU::GrowingArray<T> myArray;
 		COMP myComparer;

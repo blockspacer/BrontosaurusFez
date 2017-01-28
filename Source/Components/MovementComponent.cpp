@@ -3,13 +3,15 @@
 #include "GameObject.h"
 #include "../BrontosaurusEngine/Engine.h"
 #include "../CommonUtilities/Camera.h"
+#include "Navmesh.h"
 
 MovementComponent::MovementComponent()
 {
 	myPathPointer = nullptr;
 	myMovementSpeed = 100.0f;
 	myCurrentPathIndex = 0;
-	myShouldMove = true;
+	myWaitUntilMoveAgianTimer = 0.0f;
+	myType = eComponentType::eMovement;
 }
 
 
@@ -19,14 +21,14 @@ MovementComponent::~MovementComponent()
 
 void MovementComponent::Update(float aDeltaTime)
 {
-	if(myShouldMove == true)
+	if(myWaitUntilMoveAgianTimer < 0.0f)
 	{
 		if (myPathPointer != nullptr)
 		{
 			if (myCurrentPathIndex < myPathPointer->Size())
 			{
 				CU::Vector3f position = GetParent()->GetWorldPosition();
-				CU::Vector3f direction = myPathPointer->At(myCurrentPathIndex) - position;
+				CU::Vector3f direction = myPathPointer->At(myCurrentPathIndex).myPosition - position;
 				CU::Vector3f directionNormalized = direction.GetNormalized();
 				CU::Vector3f movement = directionNormalized * myMovementSpeed * aDeltaTime;
 
@@ -43,7 +45,7 @@ void MovementComponent::Update(float aDeltaTime)
 				}
 				else
 				{
-					localTransform.SetPosition(myPathPointer->At(myCurrentPathIndex));
+					localTransform.SetPosition(myPathPointer->At(myCurrentPathIndex).myPosition);
 					myCurrentPathIndex++;
 
 					GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
@@ -55,13 +57,13 @@ void MovementComponent::Update(float aDeltaTime)
 				stoppedMovingMessage.myString = "idle";
 				GetParent()->NotifyComponents(eComponentMessageType::eStoppedMoving, stoppedMovingMessage);
 				myPathPointer = nullptr;
-				myShouldMove = false;
+				myWaitUntilMoveAgianTimer = 0.31f;
 			}
 		}
 	}
 	else
 	{
-		myShouldMove = true;
+		myWaitUntilMoveAgianTimer -= aDeltaTime;
 	}
 }
 
@@ -70,7 +72,7 @@ void MovementComponent::Receive(const eComponentMessageType aMessageType, const 
 	switch (aMessageType)
 	{
 	case eComponentMessageType::eSetPath:
-		myPathPointer = aMessageData.myVector3ListPointer;
+		myPathPointer = aMessageData.myPathPointer;
 		myCurrentPathIndex = 0;
 		{
 			SComponentMessageData directionData;
@@ -82,8 +84,7 @@ void MovementComponent::Receive(const eComponentMessageType aMessageType, const 
 		if(myPathPointer != nullptr)
 		{
 			myCurrentPathIndex = myPathPointer->Size();
-			
-			myShouldMove = false;
+			myWaitUntilMoveAgianTimer = aMessageData.myFloat;
 		}
 		break;
 	case eComponentMessageType::eAddToMovementSpeed:

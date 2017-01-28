@@ -19,6 +19,7 @@
 #include "../CommonUtilities/DynamicString.h"
 #include "../CommonUtilities/StringHelper.h"
 #include "../CommonUtilities/vector2.h"
+#include "../CommonUtilities/vector3.h"
 #include "../CommonUtilities/CUTime.h"
 
 #include "../PostMaster/PostMaster.h"

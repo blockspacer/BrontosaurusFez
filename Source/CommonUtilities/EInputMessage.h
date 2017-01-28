@@ -147,7 +147,7 @@ namespace CU
 		MYCOMPUTER = 0xEB /* My Computer */,
 		MAIL = 0xEC /* Mail */,
 		MEDIASELECT = 0xED /* Media Select */,
-		LEFTMOUSEBUTTON = 0,
+		LEFTMOUSEBUTTON,
 		RIGHTMOUSEBUTTON,
 		MIDDLEMOUSEBUTTON
 	};

@@ -56,6 +56,8 @@ struct SRenderMessage
 		eRenderStreak,
 		eRenderFire,
 		eRenderText,
+		eClearRenderPackage,
+		eActivateRenderTo,
 		eActivateRenderPackage,
 		eRenderFullscreenEffect,
 		eRenderDebugObjs,
@@ -70,6 +72,19 @@ struct SRenderMessage
 
 	eRenderMessageType myType;
 
+};
+
+
+struct SActivateRenderToMessage : SRenderMessage
+{
+	SActivateRenderToMessage();
+};
+
+
+struct SClearRenderPackageMessage : SRenderMessage
+{
+	SClearRenderPackageMessage();
+	CRenderPackage myRenderPackage;
 };
 
 
@@ -116,6 +131,7 @@ struct SRenderToIntermediate : SRenderMessage
 
 struct SRenderCameraQueueMessage : SRenderMessage
 {
+	~SRenderCameraQueueMessage() override;
 	//mebe put SetCameraMessage in here?
 	SRenderCameraQueueMessage();
 	CU::Camera myCamera;
@@ -221,14 +237,15 @@ struct SRenderTextMessage : SRenderMessage
 {
 	SRenderTextMessage();
 	CU::Vector4f myColor;
-	CU::DynamicString myString;
+	CU::GrowingArray<CU::DynamicString> myStrings;
 	CU::Vector2f myPosition;
 	CCoolText *myText;
+	CU::Vector2f myLineHeight;
 };
 
 
 struct SRenderLineBuffer : SRenderMessage
 {
-	SRenderLineBuffer(const CU::GrowingArray<char, unsigned short, false>& aLineBuffer);
-	CU::GrowingArray<char, unsigned short, false> myLineBuffer;
+	SRenderLineBuffer(const CU::GrowingArray<char, unsigned int, false>& aLineBuffer);
+	CU::GrowingArray<char, unsigned int, false> myLineBuffer;
 };

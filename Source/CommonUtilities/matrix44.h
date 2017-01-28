@@ -460,6 +460,13 @@ namespace CU
 			return transposed;
 		}
 
+		void SetPosition(const TYPE aX, const TYPE aY, const TYPE aZ)
+		{
+			m41 = aX;
+			m42 = aY;
+			m43 = aZ;
+		}
+
 		void SetPosition(const Vector3<TYPE>& aPosition)
 		{
 			m41 = aPosition.x;

@@ -44,6 +44,7 @@ namespace KLoader
 		void RegisterObjectLoadFunction(const LoadFunction& aFunction);
 		void RegisterObjectLinkFunction(const LinkFunction& aLinkFunction);
 
+		void ClearLinkObjectList();
 
 		eError LoadFile(const std::string& aFilePath);
 
