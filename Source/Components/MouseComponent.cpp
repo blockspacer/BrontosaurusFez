@@ -34,7 +34,6 @@ void CMouseComponent::Receive(const eComponentMessageType aMessageType, const SC
 			if(myHoveredGameObjects[i] == aMessageData.myCollider->GetGameObject())
 			{
 				myHoveredGameObjects.RemoveAtIndex(i);
-				DL_PRINT("Ezited COll");
 			}
 		}
 		break;
@@ -100,7 +99,6 @@ void CMouseComponent::HandleCollision(CGameObject* aCollidedWith)
 	{
 		return;
 	}
-	DL_PRINT("Xoll Enter");
 	bool newGameObject = true;
 	for (unsigned short i = 0; i < myHoveredGameObjects.Size(); i++)
 	{
