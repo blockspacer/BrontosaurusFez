@@ -271,7 +271,7 @@ namespace DL_Debug
 		log->Write(buffer);
 	}
 
-	void Debug::ShowMessageBox(const char* aMessage, ...)
+	void Debug::ShowMessageBox(const char* aMessage, const char* aFileName, const int aLineNumber, ...)
 	{
 #ifdef _WIN32
 		char buffer[MAX_STRING_BUFFER_SIZE] = {};
@@ -284,6 +284,12 @@ namespace DL_Debug
 		wchar_t wBuffer[MAX_STRING_BUFFER_SIZE] = {};
 		CU::CharToWChar(wBuffer, buffer);
 
+		std::wstring errorMsg = wBuffer;
+		errorMsg += L"\nFile and line: ";
+		std::string temp(aFileName);
+		std::wstring temp2(temp.begin(), temp.end());
+		temp2 += std::to_wstring(aLineNumber);
+		errorMsg += temp2;
 		int returnValue = MessageBox(nullptr, wBuffer, L"Friendly error, press cancel to exit, retry if you think you can continue :)", MB_RETRYCANCEL);
 
 		if (returnValue == IDCANCEL)
@@ -296,7 +302,7 @@ namespace DL_Debug
 #endif
 	}
 
-	void Debug::ShowMessageBox(const wchar_t* aMessage, ...)
+	void Debug::ShowMessageBox(const wchar_t* aMessage, const char* aFileName, const int aLineNumber, ...)
 	{
 #ifdef _WIN32
 		wchar_t buffer[MAX_STRING_BUFFER_SIZE] = {};
@@ -306,7 +312,14 @@ namespace DL_Debug
 		wvsprintf(buffer, aMessage, args);
 		va_end(args);
 
-		MessageBox(GetFocus(), buffer, L"MessageBox :)", MB_HELP);
+		std::wstring errorMsg = L"Friendly error, press cancel to exit, retry if you think you can continue :)\nFile and line: ";
+		std::string temp(aFileName);
+		std::wstring temp2(temp.begin(), temp.end());
+		temp2 += std::to_wstring(aLineNumber);
+		errorMsg += temp2;
+		int returnValue = MessageBox(nullptr, buffer, errorMsg.c_str(), MB_RETRYCANCEL);
+
+		//MessageBox(GetFocus(), buffer, L"MessageBox :)", MB_HELP);
 #else
 		aMessage;
 		//implement mbx for unix

@@ -7,6 +7,7 @@
 #include "PostMaster/Event.h"
 #include "PostMaster/QuestDataUpdated.h"
 #include "PJWrapper.h"
+#include "PollingStation.h"
 
 QM::CQuestManager::CQuestManager()
 {
@@ -82,6 +83,10 @@ void QM::CQuestManager::CompleteEvent()
 		break;
 	case eEventType::QUEST:
 		myCurrentObjectives = myQuests[nextEvent.myHandle];
+		break;
+	case eEventType::OPEN_PORTAL:
+		PollingStation::OpenPortals.Add(myPortalIndexes[nextEvent.myHandle]);
+		CompleteEvent();
 		break;
 	case eEventType::QUEST_LINE:
 	default: 
@@ -285,6 +290,22 @@ bool QM::CQuestManager::LoadQuestlines(std::string aQuestlinesFile)
 			{
 				return false;
 			}
+		}
+		if (currentType == "OpenPortal")
+		{
+			const EventHandle newOpenPortal = myPortalIndexes.Size();
+
+			if (currentEvent.count("portalId") < 1 && !currentEvent.at("portalId").IsNumber())
+			{
+				myError = "open portal missing portal id";
+				myError += aQuestlinesFile;
+				myLoadSuccess = false;
+				return false;
+			}
+
+			myPortalIndexes.Add(currentEvent.at("portalId").GetNumber());
+			AddEvent(eEventType::OPEN_PORTAL, newOpenPortal);
+			continue;
 		}
 	}
 	myLoadSuccess = true;

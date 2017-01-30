@@ -8,6 +8,8 @@ namespace QM
 		OBJECTIVE,
 		QUEST,
 		QUEST_LINE,
+		OPEN_PORTAL,
+		DIALOG
 	};
 
 	typedef int EventHandle;
