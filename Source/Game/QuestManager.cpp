@@ -9,6 +9,7 @@
 #include "PJWrapper.h"
 #include "PollingStation.h"
 #include "PostMaster/PushState.h"
+#include "PostMaster/PopCurrentState.h"
 
 QM::CQuestManager::CQuestManager()
 {
@@ -90,7 +91,7 @@ void QM::CQuestManager::CompleteEvent()
 		CompleteEvent();
 		break;
 	case eEventType::CREDITS:
-		PostMaster::GetInstance().SendLetter(eMessageType::eStateStackMessage, PushState(PushState::eState::eCreditScreen, 0));
+		PostMaster::GetInstance().SendLetter(eMessageType::eStateStackMessage, PushState(PushState::eState::eCreditScreen, 1));
 		break;
 	case eEventType::QUEST_LINE:
 	default: 

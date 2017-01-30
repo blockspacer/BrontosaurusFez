@@ -384,20 +384,20 @@ void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix4
 
 		for (unsigned int i = 0; i < NUMBER_OF_POINTLIGHTS; ++i)
 		{
-			if (aPointLightList == nullptr || i >= aPointLightList->Size())
+			//if (aPointLightList == nullptr || i >= aPointLightList->Size())
 			{
 				updatedLights.myPointLights[i].color = { 0.0f, 0.0f, 0.0f, 0.0f };
 				updatedLights.myPointLights[i].position = { 0.0f, 0.0f, 0.0f };
 				updatedLights.myPointLights[i].intensity = 0.0f;
 				updatedLights.myPointLights[i].range = 0.0f;
 			}
-			else
+			/*else
 			{
 				updatedLights.myPointLights[i].color = aPointLightList->At(i)->GetColor();
 				updatedLights.myPointLights[i].position = aPointLightList->At(i)->GetPosition();
 				updatedLights.myPointLights[i].intensity = aPointLightList->At(i)->GetInstensity();
 				updatedLights.myPointLights[i].range = aPointLightList->At(i)->GetRange();
-			}
+			}*/
 		}
 
 		updatedLights.cubeMap_mipCount = 11; // TODO FIX WTH?!

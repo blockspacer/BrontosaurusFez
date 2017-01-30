@@ -39,7 +39,7 @@ eMessageReturn PushState::DoEvent(StateStack* aStateStack) const
 			//aStateStack->PushState(new CDeathScreenState(*aStateStack));
 			break;
 		case eState::eCreditScreen:
-			aStateStack->PushState(new CreditsState(*aStateStack));
+			aStateStack->PushState(new CreditsState(*aStateStack, static_cast<bool>(myLevelIndex)));
 			break;
 		case eState::ePauseScreen:
 			aStateStack->PushState(new PauseMenu(*aStateStack));
@@ -51,6 +51,7 @@ eMessageReturn PushState::DoEvent(StateStack* aStateStack) const
 			static_cast<MainMenuState*>(aStateStack->GetCurrentState())->SetIsGoingToLevelSelect(true);
 			aStateStack->PushState(new LevelSelectState(*aStateStack));
 			break;
+		default: break;
 		}
 	}
 

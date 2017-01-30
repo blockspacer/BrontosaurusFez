@@ -9,8 +9,9 @@
 #include "../PostMaster/Message.h"
 #include "PostMaster/Pop2States.h"
 
-CreditsState::CreditsState(StateStack& aStateStack)
-	: State(aStateStack)
+CreditsState::CreditsState(StateStack& aStateStack, const bool aInGame) 
+: State(aStateStack),
+myInGame(aInGame)
 {
 }
 
@@ -58,7 +59,14 @@ void CreditsState::OnExit()
 
 void CreditsState::GoToMainMenu()
 {
-	PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, Pop2States()));
+	if (myInGame)
+	{
+		PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, Pop2States()));
+	}
+	else
+	{
+		PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PopCurrentState()));
+	}
 }
 
 eMessageReturn CreditsState::Recieve(const Message & aMessage)
