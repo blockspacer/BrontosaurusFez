@@ -14,7 +14,8 @@ public:
 		ePauseScreen,
 		eLevelSelect,
 		eSplashScreen,
-		eHatShop
+		eHatShop,
+		eInGameCredits
 	};
 
 	static const int _DONT_ASK_ = 0; //Vad fan e detta? Ja jag vet att jag inte ska fråga men ändå.

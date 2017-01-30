@@ -29,7 +29,7 @@ void CPickerUpperComponent::Receive(const eComponentMessageType aMessageType, co
 				
 				messageData.myInt = data.myValue;
 				
-				GetParent()->NotifyComponents(eComponentMessageType::eHeal, messageData);
+				GetParent()->NotifyComponents(eComponentMessageType::eHealPercent, messageData);
 				//GetParent()->NotifyComponents(eComponentMessageType::eRestoreMana, messageData);
 			}
 			break;
@@ -37,7 +37,7 @@ void CPickerUpperComponent::Receive(const eComponentMessageType aMessageType, co
 			{
 				messageData.myInt = data.myValue;
 
-				GetParent()->NotifyComponents(eComponentMessageType::eRestoreMana, messageData);
+				GetParent()->NotifyComponents(eComponentMessageType::eRestorePercentMana, messageData);
 			}
 			break;
 		case ePickupType::GOLD:

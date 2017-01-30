@@ -252,12 +252,12 @@ void CPlayState::Load()
 		//Dísclaimer: fult men funkar //lägg till allt spelar specifikt som inte LD behöver störas av här
 		CPlayerHealthMessenger* healthMessenger = new CPlayerHealthMessenger();
 
-		RespawnComponent* respawn = RespawnComponentManager::GetInstance().CreateAndRegisterComponent();
+		//RespawnComponent* respawn = RespawnComponentManager::GetInstance().CreateAndRegisterComponent();
 
 		CComponentManager::GetInstance().RegisterComponent(healthMessenger);
 
 		PollingStation::playerObject->AddComponent(healthMessenger);
-		PollingStation::playerObject->AddComponent(respawn);
+		//PollingStation::playerObject->AddComponent(respawn);
 		PollingStation::playerObject->AddComponent(new CPlayerHealthMessenger());
 		PollingStation::playerObject->AddComponent(new CPlayerManaMessenger());
 		PollingStation::playerObject->AddComponent(CPickupManager::GetInstance().CreatePickerUpperComp());

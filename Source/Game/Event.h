@@ -9,7 +9,8 @@ namespace QM
 		QUEST,
 		QUEST_LINE,
 		OPEN_PORTAL,
-		DIALOG
+		DIALOG,
+		CREDITS
 	};
 
 	typedef int EventHandle;
