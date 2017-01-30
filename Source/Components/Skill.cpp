@@ -141,6 +141,10 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 			eComponentMessageType type = eComponentMessageType::eStopMovement;
 			SComponentMessageData stopData;
 			stopData.myFloat = mySkillData->coolDown;
+			if(myUser == PollingStation::playerObject)
+			{
+				stopData.myFloat *= 3.5f;
+			}
 			myUser->NotifyComponents(type, stopData);
 			SComponentMessageData statedAttackingMessage;
 			statedAttackingMessage.myString = "attack";
@@ -285,7 +289,6 @@ void Skill::OnActivation()
 		data2.myString = mySkillData->skillName.c_str();
 		myUser->NotifyComponents(eComponentMessageType::ePlaySound, data2);
 	}
-
 	//DL_PRINT("Animation started");
 }
 
