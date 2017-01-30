@@ -25,6 +25,7 @@
 #include "LoadChangeLevelTriggerComponent.h"
 #include "LoadBlessingTowerComponent.h"
 #include "LoadSpawnEnemyOnDeathComponent.h"
+#include "LoadRespawnComponent.h"
 
 LoadManager* LoadManager::ourInstance = nullptr;
 
@@ -102,6 +103,7 @@ void LoadManager::RegisterFunctions()
 	loader.RegisterComponentLoadFunction("ChangeLevelComponent", LoadChangeLevelTriggerComponent);
 	loader.RegisterComponentLoadFunction("BlessingTowerComponent", LoadBlessingTowerComponent);
 	loader.RegisterComponentLoadFunction("SpawnEnemiesOnDeathComponent", LoadSpawnEnemiesOnDeathComponent);
+	loader.RegisterComponentLoadFunction("RespawnComponent", LoadRespawnComponent);
 }
 
 LoadManager::LoadManager()

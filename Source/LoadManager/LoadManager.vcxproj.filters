@@ -50,6 +50,7 @@
     <ClInclude Include="LoadChangeLevelTriggerComponent.h" />
     <ClInclude Include="LoadBlessingTowerComponent.h" />
     <ClInclude Include="LoadSpawnEnemyOnDeathComponent.h" />
+    <ClInclude Include="LoadRespawnComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -98,6 +99,7 @@
     <ClCompile Include="LoadChangeLevelTriggerComponent.cpp" />
     <ClCompile Include="LoadBlessingTowerComponent.cpp" />
     <ClCompile Include="LoadSpawnEnemyOnDeathComponent.cpp" />
+    <ClCompile Include="LoadRespawnComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="VS">
