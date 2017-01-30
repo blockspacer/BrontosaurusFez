@@ -88,6 +88,11 @@ void ManaComponent::Receive(const eComponentMessageType aMessageType, const SCom
 		data.myUChar = myPercentageLeft * 100;
 		GetParent()->NotifyComponents(eComponentMessageType::ePercentMPLeft, data);
 		break;
+	case eComponentMessageType::eRespawned:
+		SetMana(myMaxMana);
+		data.myUChar = myPercentageLeft * 100;
+		GetParent()->NotifyComponents(eComponentMessageType::ePercentMPLeft, data);
+		break;
 	}
 }
 
