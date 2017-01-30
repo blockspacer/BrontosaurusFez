@@ -84,6 +84,14 @@ void CMouseComponent::MouseMoved(const CU::Vector2f& aMousePosition)
 	GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 }
 
+void CMouseComponent::Update()
+{
+	if (myHoveredGameObjects.Size() > 0)
+	{
+		HandleCollision(myHoveredGameObjects[0]);
+	}
+}
+
 eMessageReturn CMouseComponent::Recieve(const Message& aMessage)
 {
 	return aMessage.myEvent.DoEvent(this);
@@ -133,12 +141,10 @@ void CMouseComponent::SetMouseIsDown(const bool aIsDown)
 		if(myHoveredGameObjects.Size() > 0)
 		{
 			HandleCollision(myHoveredGameObjects[0]);
-			DL_PRINT("COll Died");
 		}
 	}
 	else
 	{
-		
 	}
 }
 

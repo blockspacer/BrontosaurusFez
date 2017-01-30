@@ -333,7 +333,7 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	SkillSystemComponentManager::GetInstance().Update(aDeltaTime);
 	CPickupManager::GetInstance().Update(aDeltaTime);
 	RespawnComponentManager::GetInstance().Update(aDeltaTime);
-
+	myMouseComponent->Update();
 	if (myGUIManager)
 	{
 		myGUIManager->Update(aDeltaTime);
