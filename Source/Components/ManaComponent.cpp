@@ -83,11 +83,13 @@ void ManaComponent::Receive(const eComponentMessageType aMessageType, const SCom
 		GetParent()->NotifyComponents(eComponentMessageType::ePercentMPLeft, data);
 		break;
 	case eComponentMessageType::eRestorePercentMana:
+	{
 		float temp = myMaxMana * (aMessageData.myInt / 100);
 		SetMana(myMana + temp);
 		data.myUChar = myPercentageLeft * 100;
 		GetParent()->NotifyComponents(eComponentMessageType::ePercentMPLeft, data);
 		break;
+	}
 	case eComponentMessageType::eRespawned:
 		SetMana(myMaxMana);
 		data.myUChar = myPercentageLeft * 100;
