@@ -23,4 +23,12 @@ void CDialogState::Init()
 		DL_ASSERT("Dialog is missing main array");
 	}
 
+	for (unsigned i = 0; i < dialogArray.Size(); ++i)
+	{
+		CU::CJsonValue currentDialogPiece = dialogArray[i];
+		if (currentDialogPiece.GetType() == CU::eJsoneValueType::ARRAY)
+		{
+			
+		}
+	}
 }
