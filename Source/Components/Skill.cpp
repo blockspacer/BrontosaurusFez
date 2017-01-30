@@ -50,6 +50,10 @@ Skill::Skill(SkillData* aSkillDataPointer)
 	circleCollisionData.myCircleData = new Intersection::SCircle;
 	circleCollisionData.myCircleData->myCenterPosition = myColliderObject->GetWorldPosition();
 	circleCollisionData.myCircleData->myRadius = 200.0f;
+	if (aSkillDataPointer->skillName == "BasicAttack")
+	{
+		circleCollisionData.myCircleData->myRadius = 20.0f;
+	}
 	CCollisionComponent* collisionComponent = SkillSystemComponentManager::GetInstance().GetCollisionComponentManager()->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, circleCollisionData);
 	collisionComponent->AddCollidsWith(eColliderType::eColliderType_Enemy | eColliderType::eColliderType_Player);
 	collisionComponent->SetColliderType(eColliderType::eColliderType_Skill);

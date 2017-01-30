@@ -49,6 +49,7 @@
     <ClInclude Include="LoadOpenShopListenerComponent.h" />
     <ClInclude Include="LoadChangeLevelTriggerComponent.h" />
     <ClInclude Include="LoadBlessingTowerComponent.h" />
+    <ClInclude Include="LoadSpawnEnemyOnDeathComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -96,6 +97,7 @@
     <ClCompile Include="LoadOpenShopListenerComponent.cpp" />
     <ClCompile Include="LoadChangeLevelTriggerComponent.cpp" />
     <ClCompile Include="LoadBlessingTowerComponent.cpp" />
+    <ClCompile Include="LoadSpawnEnemyOnDeathComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="VS">
