@@ -34,8 +34,6 @@ eStateStatus CreditsState::Update(const CU::Time & aDeltaTime)
 		mysprite->SetPosition(CU::Vector2f::Zero);
 	}
 
-
-
 	return myStatus;
 }
 

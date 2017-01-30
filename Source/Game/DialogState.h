@@ -1,6 +1,7 @@
 #pragma once
 #include "StateStack/State.h"
 #include "DynamicString.h"
+#include "GrowingArray.h"
 
 struct SDialogPiece
 {
