@@ -7,6 +7,7 @@
 #include "CommonUtilities\CUTime.h"
 #include "BrontosaurusEngine\ParticleEmitterInstance.h"
 #include "../PostMaster/Message.h"
+#include "PostMaster/Pop2States.h"
 
 CreditsState::CreditsState(StateStack& aStateStack)
 	: State(aStateStack)
@@ -57,7 +58,7 @@ void CreditsState::OnExit()
 
 void CreditsState::GoToMainMenu()
 {
-	PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PopCurrentState()));
+	PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, Pop2States()));
 }
 
 eMessageReturn CreditsState::Recieve(const Message & aMessage)
