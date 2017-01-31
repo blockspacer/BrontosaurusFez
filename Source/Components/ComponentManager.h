@@ -15,6 +15,7 @@ public:
 
 	ComponentId RegisterComponent(CComponent* aComponent);
 	CComponent* GetComponent(ComponentId anId);
+	CComponent* RemoveComponent(ComponentId anId);
 	void DeleteComponent(ComponentId anId);
 
 private:

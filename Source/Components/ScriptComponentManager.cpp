@@ -1,13 +1,11 @@
 #include "stdafx.h"
 #include "ScriptComponentManager.h"
 #include "ScriptComponent.h"
-#include "ComponentManager.h"
 
 CScriptComponentManager* CScriptComponentManager::ourInstance = nullptr;
 
 CScriptComponentManager::CScriptComponentManager()
-	: myComponents(32)
-	, myFunctionTableIndex(0)
+	: myComponents(32u)
 {
 	assert(ourInstance == nullptr && "There already exists a script component manager");
 	ourInstance = this;
@@ -21,21 +19,32 @@ CScriptComponentManager::~CScriptComponentManager()
 	myComponents.DeleteAll();
 }
 
-CScriptComponent* CScriptComponentManager::CreateComponent(const std::string& aScriptPath, const std::string& aInitFunction)
+CScriptComponent* CScriptComponentManager::CreateComponent(const std::string& aScriptPath/*, const std::string& aInitFunction*/)
 {
 	CScriptComponent* newComponent = new CScriptComponent();
 	ComponentId componentID = CComponentManager::GetInstance().RegisterComponent(newComponent);
 
-	CScriptComponent::eInitSuccess error = newComponent->Init(aScriptPath, aInitFunction);
+	std::string initFunction = aScriptPath;
+	initFunction -= ".lua";
+	initFunction += "_init";
+	
+	initFunction ^= /*"Script/"*/initFunction.substr(0u, aScriptPath.find('/') + 1u);
+
+	CScriptComponent::eInitSuccess error = newComponent->Init(aScriptPath, initFunction/*aInitFunction*/);
 	if (!CScriptComponent::HandleError(error))
 	{
 		CComponentManager::GetInstance().DeleteComponent(componentID);
 		return nullptr;
 	}
 
-
-
+	myComponents.Add(newComponent);
 	return newComponent;
+}
+
+void CScriptComponentManager::DestroyComponent(CScriptComponent* aScriptComponent)
+{
+	myComponents.RemoveCyclic(aScriptComponent);
+	CComponentManager::GetInstance().DeleteComponent(aScriptComponent->GetId());
 }
 
 CScriptComponentManager* CScriptComponentManager::GetInstance()

@@ -360,12 +360,13 @@ namespace SSlua
 
 	void LuaWrapper::PrintDocumentation()
 	{
-		std::ofstream outPutFile("Scripts/ExposedFunctions.txt");
+		std::ofstream outPutFile("Script/Documentation/ExposedFunctions.txt");
 
+		int index = 1;
 		std::map<std::string, std::string>::iterator it;
 		for (it = myExposedFunctions.begin(); it != myExposedFunctions.end(); it++)
 		{
-			outPutFile << it->first << ": " << it->second << std::endl;
+			outPutFile << index++ << ". " << it->first << ":\n" << it->second << std::endl << std::endl;
 		}
 
 		outPutFile.close();

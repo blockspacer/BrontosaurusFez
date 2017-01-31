@@ -18,6 +18,7 @@ struct SSArgument;
 namespace SSlua
 {
 	typedef CU::GrowingArray<SSArgument> ArgumentList;
+	typedef CU::GrowingArray<eSSType> TypeList;
 	typedef std::function<ArgumentList(const ArgumentList&)> LuaCallbackFunction;
 
 	class LuaWrapper

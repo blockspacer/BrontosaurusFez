@@ -76,9 +76,24 @@ CComponent* CComponentManager::GetComponent(ComponentId anId)
 	return myComponents[anId];
 }
 
+CComponent* CComponentManager::RemoveComponent(ComponentId anId)
+{
+	CComponent* removed = myComponents[anId];
+	if (anId != NULL_COMPONENT)
+	{
+		myComponents[anId] = nullptr;
+		myEmptySpaces.Push(anId);
+	}
+
+	return removed;
+}
+
 void CComponentManager::DeleteComponent(ComponentId anId)
 {
-	delete myComponents[anId];
-	myComponents[anId] = nullptr;
-	myEmptySpaces.Push(anId);
+	if (anId != NULL_COMPONENT)
+	{
+		delete myComponents[anId];
+		myComponents[anId] = nullptr;
+		myEmptySpaces.Push(anId);
+	}
 }

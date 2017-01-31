@@ -46,6 +46,12 @@ void CGameObject::SetWorldPosition(CU::Vector3f aPosition)
 
 void CGameObject::AddComponent(CComponent* aComponent)
 {
+	if (aComponent == nullptr)
+	{
+		DL_MESSAGE_BOX("trying to add null component to game object with id %u", GetId());
+		return;
+	}
+
 	aComponent->myParent = this;
 	myComponents.Add(aComponent);
 	SComponentMessageData data;

@@ -322,7 +322,7 @@ void Skill::Deselect()
 	myIsSelected = false;
 }
 
-void Skill::UpdateStats(Stats::STotalStats someStats)
+void Skill::UpdateStats(const Stats::STotalStats& someStats)
 {
 	mySkillData->manaCostModifier = someStats.MaxManaConstModifier;
 	mySkillData->damageModifier = someStats.MaxDamageModifier;

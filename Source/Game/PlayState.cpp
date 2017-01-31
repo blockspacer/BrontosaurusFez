@@ -170,8 +170,9 @@ void CPlayState::Load()
 	//TEMP CARL BEGIN
 
 	CGameObject* gotemp = myGameObjectManager->CreateGameObject();
+	gotemp->SetName("calle");
 	CScriptComponentManager compMan;
-	CScriptComponent* scriptComp = compMan.CreateComponent("Script/test_script.lua", "test_script_init");
+	CScriptComponent* scriptComp = compMan.CreateComponent("Script/test_script.lua"/*, "test_script_init"*/);
 	gotemp->AddComponent(scriptComp);
 	SComponentMessageData numberData;
 	numberData.myInt = 234;

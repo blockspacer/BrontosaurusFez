@@ -394,3 +394,6 @@ Bin/ModelViewer_ModelViewerRelease.lib
 Bin/Models/Error/error.e[0
 Bin/ModelViewer_Release.lib
 Unity/
+Bin/Script/Documentation/ComponentMessageTypes.txt
+Bin/Script/Documentation/ExposedFunctions.txt
+Bin/Script/ExposedFunctions.txt

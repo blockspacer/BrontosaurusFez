@@ -24,6 +24,20 @@ int ComponentMessage::GetType(const std::string& aTypeName)
 	return -1;
 }
 
+bool ComponentMessage::GetTypeName(const eComponentMessageType aType, std::string& aNameOut)
+{
+	for (auto it = locComponentTypeNames.begin(); it != locComponentTypeNames.end(); ++it)
+	{
+		if (it->second == aType)
+		{
+			aNameOut = it->first;
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void InitComponentTypes()
 {
 	locComponentTypeNames[TO_STRING(eAddComponent)]	= eComponentMessageType::eAddComponent;
@@ -79,4 +93,14 @@ void InitComponentTypes()
 		//eComponentMessageType::eLookAt:
 		//eComponentMessageType::eAddMessageSubscription:
 		//eComponentMessageType::eLength:
+}
+
+void ComponentMessage::PrintComponentsToFile(const std::string& aFilePath)
+{
+	std::ofstream file(aFilePath);
+	int index = 1;
+	for (auto it = locComponentTypeNames.begin(); it != locComponentTypeNames.end(); ++it)
+	{
+		file << index++ << ". " << it->first << ": " << static_cast<int>(it->second) << std::endl;
+	}
 }

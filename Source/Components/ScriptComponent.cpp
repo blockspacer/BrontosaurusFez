@@ -100,13 +100,13 @@ bool CScriptComponent::HandleError(const eInitSuccess aErrorCode)
 		DL_MESSAGE_BOX("Script component not registered so it cannot initialize 'self'");
 		break;
 	case CScriptComponent::eInitSuccess::eInvalidPath:
-		DL_MESSAGE_BOX("Script component got a non existing file path: %s", ourLastErrorMessage);
+		DL_MESSAGE_BOX("Script component got a non existing file path: %s", ourLastErrorMessage.c_str());
 		break;
 	case CScriptComponent::eInitSuccess::eFailedToReadFile:
 		DL_MESSAGE_BOX("Script component could not read the content of the file in to the buffer, weird error :/");
 		break;
 	case CScriptComponent::eInitSuccess::eBadLuaCode:
-		DL_MESSAGE_BOX("Lua code in script component could not run, last error: %s", ourLastErrorMessage);
+		DL_MESSAGE_BOX("Lua code in script component could not run, last error: %s", ourLastErrorMessage.c_str());
 		break;
 	}
 

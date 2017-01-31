@@ -21,6 +21,7 @@
 #include "../CommonUtilities/MemoryLeekLogger.h"
 #include "../CommonUtilities/vector2.h"
 #include "../CommonUtilities/vector3.h"
+#include "../CommonUtilities/StringHelper.h"
 
 #include "../PostMaster/PostMaster.h"
 #include "../PostMaster/Message.h"
@@ -28,5 +29,6 @@
 
 #include "GameObject.h"
 #include "ComponentMessage.h"
+#include "ComponentManager.h"
 
 // TODO: reference additional headers your program requires here

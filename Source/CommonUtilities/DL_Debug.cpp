@@ -21,7 +21,7 @@
 #elif defined _WIN32 || defined _WIN64
 #define VSPRINTF vsprintf_s
 #else
-static_assert(false, "Is this debian?");
+#error "Is this debian?"
 #endif
 
 #define SUPRESS_UNUSED_WARNING(variable) variable
@@ -271,7 +271,7 @@ namespace DL_Debug
 		log->Write(buffer);
 	}
 
-	void Debug::ShowMessageBox(const char* aMessage, /*const char* aFileName, const int aLineNumber,*/ ...)
+	void Debug::ShowMessageBox(const char* aMessage, ...)
 	{
 #ifdef _WIN32
 		char buffer[MAX_STRING_BUFFER_SIZE] = {};
@@ -281,20 +281,12 @@ namespace DL_Debug
 		VSPRINTF(buffer, aMessage, args);
 		va_end(args);
 
-		wchar_t wBuffer[MAX_STRING_BUFFER_SIZE] = {};
-		CU::CharToWChar(wBuffer, buffer);
-
-		//std::wstring errorMsg = wBuffer;
-		//errorMsg += L"\nFile and line: ";
-		//std::string temp(aFileName);
-		//std::wstring temp2(temp.begin(), temp.end());
-		//temp2 += std::to_wstring(aLineNumber);
-		//errorMsg += temp2;
-		int returnValue = MessageBox(nullptr, wBuffer, L"Friendly error, press cancel to exit, retry if you think you can continue :)", MB_RETRYCANCEL);
+		int returnValue = MessageBoxA(nullptr, buffer, "Error (press cancel to quit, press retry to try to continue", MB_RETRYCANCEL);
 
 		if (returnValue == IDCANCEL)
 		{
-			DL_ASSERT(wBuffer); // TODO: FIX MINIDUMP AND SHIT
+			assert(false); // TODO: FIX MINIDUMP AND SHIT
+			exit(1);
 		}
 #else
 		aMessage;
@@ -302,7 +294,7 @@ namespace DL_Debug
 #endif
 	}
 
-	void Debug::ShowMessageBox(const wchar_t* aMessage, /*const char* aFileName, const int aLineNumber,*/ ...)
+	void Debug::ShowMessageBox(const wchar_t* aMessage, ...)
 	{
 #ifdef _WIN32
 		wchar_t buffer[MAX_STRING_BUFFER_SIZE] = {};
@@ -312,14 +304,12 @@ namespace DL_Debug
 		wvsprintf(buffer, aMessage, args);
 		va_end(args);
 
-		std::wstring errorMsg = L"Friendly error, press cancel to exit, retry if you think you can continue :)"; //\nFile and line:
-		//std::string temp(aFileName);
-		//std::wstring temp2(temp.begin(), temp.end());
-		//temp2 += std::to_wstring(aLineNumber);
-		//errorMsg += temp2;
-		int returnValue = MessageBox(nullptr, buffer, errorMsg.c_str(), MB_RETRYCANCEL);
-
-		//MessageBox(GetFocus(), buffer, L"MessageBox :)", MB_HELP);
+		int returnValue = MessageBoxW(nullptr, buffer, L"Error (press cancel to quit, press retry to try to continue", MB_RETRYCANCEL);
+		if (returnValue == IDCANCEL)
+		{
+			assert(false); // TODO: FIX MINIDUMP AND SHIT
+			exit(1);
+		}
 #else
 		aMessage;
 		//implement mbx for unix

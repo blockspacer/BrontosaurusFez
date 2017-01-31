@@ -12,6 +12,9 @@
 
 #define GLOBAL_LUA_FUNCTION_ERROR DL_MESSAGE_BOX
 
+bool AssertArgumentCount(const std::string& aFunctionName, const unsigned int aPreferred, const unsigned int aActual, const bool aForceEquality);
+bool AssertArgumentList(const std::string& aFunctionName, const SSlua::TypeList& aPreferred, const SSlua::ArgumentList& aRecieved, const bool aForceEquality);
+
 SSlua::ArgumentList ComponentGetParent(const SSlua::ArgumentList& aArgumentList)
 {
 	SSlua::ArgumentList returnValues(1);
@@ -24,16 +27,8 @@ SSlua::ArgumentList ComponentGetParent(const SSlua::ArgumentList& aArgumentList)
 		return returnValues;
 	}
 
-	if (aArgumentList.Size() != 1)
+	if (!AssertArgumentList("GetParent", { eSSType::NUMBER }, aArgumentList, true))
 	{
-		GLOBAL_LUA_FUNCTION_ERROR("Error in GetParent, expected 1 argument, got %d", (int)aArgumentList.Size());
-		returnValues.Add(ssLuaNumber(0.0));
-		return returnValues;
-	}
-
-	if (aArgumentList[0].GetType() != eSSType::NUMBER)
-	{
-		GLOBAL_LUA_FUNCTION_ERROR("Error in GetParent, expected number, got %s", aArgumentList[0].GetTypeName());
 		returnValues.Add(ssLuaNumber(0.0));
 		return returnValues;
 	}
@@ -43,7 +38,7 @@ SSlua::ArgumentList ComponentGetParent(const SSlua::ArgumentList& aArgumentList)
 	CComponent* component = componentManager->GetComponent(componentID);
 	if (!component)
 	{
-		GLOBAL_LUA_FUNCTION_ERROR("Error in GetParent, component id %d represented NULL", componentID);
+		GLOBAL_LUA_FUNCTION_ERROR("Error in GetParent, component id %u represented NULL", componentID);
 		returnValues.Add(ssLuaNumber(0.0));
 		return returnValues;
 	}
@@ -51,7 +46,7 @@ SSlua::ArgumentList ComponentGetParent(const SSlua::ArgumentList& aArgumentList)
 	CGameObject* parent = component->GetParent();
 	if (!parent)
 	{
-		GLOBAL_LUA_FUNCTION_ERROR("Error in GetParent, parent of component with id %d was NULL", componentID);
+		GLOBAL_LUA_FUNCTION_ERROR("Error in GetParent, parent of component with id %u was NULL", componentID);
 		returnValues.Add(ssLuaNumber(0.0));
 		return returnValues;
 	}
@@ -59,7 +54,7 @@ SSlua::ArgumentList ComponentGetParent(const SSlua::ArgumentList& aArgumentList)
 	ComponentId parentID = parent->GetId();
 	if (parentID == NULL_COMPONENT)
 	{
-		GLOBAL_LUA_FUNCTION_ERROR("Error in GetParent, parent of component with id %d was not registered", componentID);
+		GLOBAL_LUA_FUNCTION_ERROR("Error in GetParent, parent of component with id %u was not registered", componentID);
 		returnValues.Add(ssLuaNumber(0.0));
 		return returnValues;
 	}
@@ -68,36 +63,74 @@ SSlua::ArgumentList ComponentGetParent(const SSlua::ArgumentList& aArgumentList)
 	return returnValues;
 }
 
+SSlua::ArgumentList ComponentNotifyParent(const SSlua::ArgumentList& aArgumentList)
+{
+	"Third argument (optional): the data you want to send (number, string, vector2/3 whatever)";
+
+	CComponentManager* componentManager = CComponentManager::GetInstancePtr();
+	if (!componentManager)
+	{
+		GLOBAL_LUA_FUNCTION_ERROR("Error in GetParent, component manager not created");
+		return SSlua::ArgumentList();		
+	}
+	
+	if (!AssertArgumentList("NotifyParent", { eSSType::NUMBER, eSSType::NUMBER }, aArgumentList, false))
+	{
+		return SSlua::ArgumentList();
+	}
+
+	ComponentId id = aArgumentList[0].GetUInt();
+
+	CComponent* component = componentManager->GetComponent(id);
+	if (!component)
+	{
+		GLOBAL_LUA_FUNCTION_ERROR("Error in NotifyParent, component id %u represented NULL", id);
+		return SSlua::ArgumentList();
+	}
+
+	int messageType = aArgumentList[1].GetInt();
+	if (messageType >= static_cast<int>(eComponentMessageType::eLength))
+	{
+		GLOBAL_LUA_FUNCTION_ERROR("Error in NotifyParent, invalid message type %d", messageType);
+		return SSlua::ArgumentList();
+	}
+
+	eComponentMessageType messageTypeE = static_cast<eComponentMessageType>(messageType);
+	SComponentMessageData messageData;
+
+	if (aArgumentList.Size() > 2u)
+	{
+		const SSArgument& thirdArgument = aArgumentList[2u];
+
+		if (messageTypeE == eComponentMessageType::eOnCollisionEnter && thirdArgument.GetType() == eSSType::NUMBER)
+		{
+			messageData.myComponent = componentManager->GetComponent(thirdArgument.GetUInt());
+			messageData.myGameObject->GetName();
+		}
+		else
+		{
+			std::string typeName("unknown");
+			ComponentMessage::GetTypeName(messageTypeE, typeName);
+			DL_MESSAGE_BOX("Third argument is not implemented for %s and %s. This is fine but you may not get the results you expect mvh carl", typeName.c_str(), thirdArgument.GetTypeName());
+		}
+	}
+
+	component->NotifyParent(messageTypeE, messageData);
+
+	return SSlua::ArgumentList();
+}
+
 SSlua::ArgumentList ComponentSubscribeToMessage(const SSlua::ArgumentList& aArgumentList)
 {
 	CComponentManager* componentManager = CComponentManager::GetInstancePtr();
 	if (!componentManager)
 	{
-		GLOBAL_LUA_FUNCTION_ERROR("Error in ComponentSubscribe, component manager not created");
+		GLOBAL_LUA_FUNCTION_ERROR("Error in SubscribeToMessage, component manager not created");
 		return SSlua::ArgumentList();
 	}
 
-	if (aArgumentList.Size() != 3)
+	if (!AssertArgumentList("SubscribeToMessage", { eSSType::NUMBER, eSSType::NUMBER , eSSType::STRING }, aArgumentList, true))
 	{
-		GLOBAL_LUA_FUNCTION_ERROR("Error in ComponentSubscribe, expected 2 argument, got %d", static_cast<int>(aArgumentList.Size()));
-		return SSlua::ArgumentList();
-	}
-
-	if (aArgumentList[0].GetType() != eSSType::NUMBER)
-	{
-		GLOBAL_LUA_FUNCTION_ERROR("Error in ComponentSubscribe, expected number, got %s", aArgumentList[0].GetTypeName());
-		return SSlua::ArgumentList();
-	}
-
-	if (aArgumentList[1].GetType() != eSSType::NUMBER)
-	{
-		GLOBAL_LUA_FUNCTION_ERROR("Error in ComponentSubscribe, expected number, got %s", aArgumentList[0].GetTypeName());
-		return SSlua::ArgumentList();
-	}
-
-	if (aArgumentList[2].GetType() != eSSType::STRING)
-	{
-		GLOBAL_LUA_FUNCTION_ERROR("Error in ComponentSubscribe, expected string, got %s", aArgumentList[0].GetTypeName());
 		return SSlua::ArgumentList();
 	}
 
@@ -105,7 +138,7 @@ SSlua::ArgumentList ComponentSubscribeToMessage(const SSlua::ArgumentList& aArgu
 	CComponent* component = componentManager->GetComponent(componentID);
 	if (!component)
 	{
-		GLOBAL_LUA_FUNCTION_ERROR("Error in ComponentSubscribe, component with id %d was NULL", (int)componentID);
+		GLOBAL_LUA_FUNCTION_ERROR("Error in SubscribeToMessage, component with id %u was NULL", componentID);
 		return SSlua::ArgumentList();
 	}
 
@@ -123,33 +156,39 @@ SSlua::ArgumentList ComponentSubscribeToMessage(const SSlua::ArgumentList& aArgu
 SSlua::ArgumentList ComponentGetMessageData(const SSlua::ArgumentList& aArgumentList)
 {
 	SSlua::ArgumentList messageData(1);
-	if (aArgumentList.Size() != 2)
-	{
-		GLOBAL_LUA_FUNCTION_ERROR("Error in GetMessageType, expected 2 argument, got %d", static_cast<int>(aArgumentList.Size()));
-		messageData.Add(SSArgument());
-		return messageData;
-	}
 
-	if (aArgumentList[0].GetType() != eSSType::LIGHTUSERDATA)
+	if (!AssertArgumentList("GetMessageData", { eSSType::LIGHTUSERDATA, eSSType::STRING }, aArgumentList, true))
 	{
-		GLOBAL_LUA_FUNCTION_ERROR("Error in GetMessageType, expected pointer, got %s", aArgumentList[0].GetTypeName());
-		messageData.Add(SSArgument());
-		return messageData;
-	}
-
-	if (aArgumentList[1].GetType() != eSSType::STRING)
-	{
-		GLOBAL_LUA_FUNCTION_ERROR("Error in GetMessageType, expected string, got %s", aArgumentList[1].GetTypeName());
 		messageData.Add(SSArgument());
 		return messageData;
 	}
 
 	void* rawData = aArgumentList[0].GetUserData();
 	SComponentMessageData* realData = static_cast<SComponentMessageData*>(rawData);
+	if (!realData || !realData->myVoidPointer)
+	{
+		messageData.Add(SSArgument());
+		return messageData;
+	}
+
 	const std::string stringArg = aArgumentList[1].GetString();
 	if (stringArg == "number")
 	{
 		messageData.Add(ssLuaNumber(realData->myInt));
+		return messageData;
+	}
+	if (stringArg == "string")
+	{
+		const char* str = realData->myString;
+		if (strlen(str) < 100u) // if it is to large, it is probably an error
+		{
+			messageData.Add(ssLuaString(realData->myString));
+			return messageData;
+		}
+	}
+	if (stringArg == "gameobject")
+	{
+		messageData.Add(ssLuaNumber(realData->myGameObject->GetId()));
 		return messageData;
 	}
 
@@ -160,29 +199,54 @@ SSlua::ArgumentList ComponentGetMessageData(const SSlua::ArgumentList& aArgument
 SSlua::ArgumentList GetMessageType(const SSlua::ArgumentList& aArgumentList)
 {
 	SSlua::ArgumentList messageType(1);
-	if (aArgumentList.Size() != 1)
+
+	if (!AssertArgumentList("GetMessageType", { eSSType::STRING }, aArgumentList, true))
 	{
-		GLOBAL_LUA_FUNCTION_ERROR("Error in GetMessageType, expected 1 argument, got %d", static_cast<int>(aArgumentList.Size()));
 		messageType.Add(ssLuaNumber(-1.0));
 		return messageType;
 	}
 
-	if (aArgumentList[0].GetType() != eSSType::STRING)
-	{
-		GLOBAL_LUA_FUNCTION_ERROR("Error in ComponentSubscribe, expected string, got %s", aArgumentList[0].GetTypeName());
-		messageType.Add(ssLuaNumber(-1.0));
-		return messageType;
-	}
-
-	std::string typeName = aArgumentList[0].GetString();
+	const std::string typeName = aArgumentList[0].GetString();
 	int typeInt = ComponentMessage::GetType(typeName);
 	if (typeInt == -1)
 	{
-		GLOBAL_LUA_FUNCTION_ERROR("Error in ComponentSubscribe, message type name %s could not match any message type", typeName.c_str());
+		GLOBAL_LUA_FUNCTION_ERROR("Error in GetMessageType, message type name %s could not match any message type", typeName.c_str());
 		messageType.Add(ssLuaNumber(-1.0));
 		return messageType;
 	}
 
 	messageType.Add(ssLuaNumber(typeInt));
 	return messageType;
+}
+
+bool AssertArgumentCount(const std::string& aFunctionName, const unsigned int aPreferred, const unsigned int aRecieved, const bool aForceEquality)
+{
+	if (aRecieved < aPreferred || (aRecieved != aPreferred && aForceEquality))
+	{
+		GLOBAL_LUA_FUNCTION_ERROR("Error in %s, expected %u argument, got %u", aFunctionName.c_str(), aPreferred, aRecieved);
+		return false;
+	}
+
+	return true;
+}
+
+bool AssertArgumentList(const std::string& aFunctionName, const SSlua::TypeList& aPreferred, const SSlua::ArgumentList& aRecieved, const bool aForceEquality)
+{
+	if (!AssertArgumentCount(aFunctionName, aPreferred.Size(), aRecieved.Size(), aForceEquality))
+	{
+		return false;
+	}
+
+	bool success = true;
+
+	for (unsigned int i = 0; i < aPreferred.Size(); ++i)
+	{
+		if (aPreferred[i] != aRecieved[i].GetType())
+		{
+			GLOBAL_LUA_FUNCTION_ERROR("Argument error in %s: expected %s, got %s", aFunctionName, SSArgument::GetTypeName(aPreferred[i]), aRecieved[i].GetTypeName());
+			success = false;
+		}
+	}
+
+	return success;
 }

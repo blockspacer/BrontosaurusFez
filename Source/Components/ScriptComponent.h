@@ -20,9 +20,8 @@ public:
 	~CScriptComponent();
 
 	eInitSuccess Init(const std::string& aScriptPath, const std::string& aInitFunction);
-	bool Call(const std::string& aFunctionName, void* aOptionalUserData = nullptr);
-	
 	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
+	bool Call(const std::string& aFunctionName, void* aOptionalUserData = nullptr);
 
 	static bool HandleError(const eInitSuccess aErrorCode);
 
