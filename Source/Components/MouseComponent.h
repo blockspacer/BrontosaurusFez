@@ -17,9 +17,10 @@ public:
 	void Destroy() override;
 
 	void MouseMoved(const CU::Vector2f& aMousePosition);
-
+	void Update();
 	void SetMouseIsDown(const bool aIsDown);
 	void CheckIfHoveredGameObjectDied(CGameObject* aGameobjectThatDied);
+	void RemoveHoveredObjects();
 private:
 	void HandleCollision(CGameObject* aCollidedWith);
 	eMessageReturn Recieve(const Message& aMessage) override;

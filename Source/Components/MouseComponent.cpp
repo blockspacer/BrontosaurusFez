@@ -12,6 +12,7 @@ CMouseComponent::CMouseComponent(const CU::Camera& aPlayerCamera)
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eGameObjectDied);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eShopClosed);
 	myType = eComponentType::eMouse;
 }
 
@@ -19,6 +20,7 @@ CMouseComponent::~CMouseComponent()
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eGameObjectDied);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eShopClosed);
 }
 
 void CMouseComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
@@ -84,6 +86,14 @@ void CMouseComponent::MouseMoved(const CU::Vector2f& aMousePosition)
 	GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 }
 
+void CMouseComponent::Update()
+{
+	if (myHoveredGameObjects.Size() > 0)
+	{
+		HandleCollision(myHoveredGameObjects[0]);
+	}
+}
+
 eMessageReturn CMouseComponent::Recieve(const Message& aMessage)
 {
 	return aMessage.myEvent.DoEvent(this);
@@ -133,12 +143,10 @@ void CMouseComponent::SetMouseIsDown(const bool aIsDown)
 		if(myHoveredGameObjects.Size() > 0)
 		{
 			HandleCollision(myHoveredGameObjects[0]);
-			DL_PRINT("COll Died");
 		}
 	}
 	else
 	{
-		
 	}
 }
 
@@ -151,4 +159,9 @@ void CMouseComponent::CheckIfHoveredGameObjectDied(CGameObject * aGameobjectThat
 			myHoveredGameObjects.RemoveAtIndex(i);
 		}
 	}
+}
+
+void CMouseComponent::RemoveHoveredObjects()
+{
+	myHoveredGameObjects.RemoveAll();
 }
