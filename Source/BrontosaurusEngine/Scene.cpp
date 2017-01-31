@@ -291,6 +291,12 @@ CModelInstance& CScene::GetModelAt(InstanceID aModelID)
 
 CFireEmitterInstance& CScene::GetFireEmitter(const InstanceID aFireEmitterID)
 {
+	if (aFireEmitterID >= myFireEmitters.Size() || aFireEmitterID < 0)
+	{
+		static CFireEmitterInstance nullFireEmitter;
+		return nullFireEmitter;
+	}
+
 	return myFireEmitters[aFireEmitterID];
 }
 

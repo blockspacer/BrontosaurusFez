@@ -12,6 +12,7 @@ CMouseComponent::CMouseComponent(const CU::Camera& aPlayerCamera)
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eGameObjectDied);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eShopClosed);
 	myType = eComponentType::eMouse;
 }
 
@@ -19,6 +20,7 @@ CMouseComponent::~CMouseComponent()
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eGameObjectDied);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eShopClosed);
 }
 
 void CMouseComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
@@ -157,4 +159,9 @@ void CMouseComponent::CheckIfHoveredGameObjectDied(CGameObject * aGameobjectThat
 			myHoveredGameObjects.RemoveAtIndex(i);
 		}
 	}
+}
+
+void CMouseComponent::RemoveHoveredObjects()
+{
+	myHoveredGameObjects.RemoveAll();
 }

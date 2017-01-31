@@ -36,7 +36,7 @@ void CModelViewer::Init(const char aStartModelPath[])
 	directionalLight.direction.Set(0.f, 0.f, 1.f, 1.f);
 	myScene->AddDirectionalLight(directionalLight);
 
-	if (aStartModelPath != nullptr)
+	if (aStartModelPath)
 	{
 		LoadModel(aStartModelPath);
 	}
