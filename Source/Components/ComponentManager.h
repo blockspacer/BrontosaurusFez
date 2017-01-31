@@ -9,6 +9,7 @@ class CComponentManager
 {
 public:
 	static CComponentManager& GetInstance();
+	static CComponentManager* GetInstancePtr();
 	static void CreateInstance();
 	static void DestroyInstance();
 

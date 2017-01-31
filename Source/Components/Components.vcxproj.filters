@@ -148,9 +148,14 @@
     <ClCompile Include="ScriptComponent.cpp">
       <Filter>ScriptComponent</Filter>
     </ClCompile>
-    <ClCompile Include="ScriptComponentManager.cpp" />
     <ClCompile Include="BlessingTowerComponent.cpp" />
     <ClCompile Include="BlessingTowerComponentManager.cpp" />
+    <ClCompile Include="ScriptComponentManager.cpp">
+      <Filter>ScriptComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentMessageTypeToLua.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -322,7 +327,15 @@
     <ClInclude Include="ScriptComponent.h">
       <Filter>ScriptComponent</Filter>
     </ClInclude>
-    <ClInclude Include="ScriptComponentManager.h" />
+    <ClInclude Include="ScriptComponentManager.h">
+      <Filter>ScriptComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentMessageCallback.h">
+      <Filter>ScriptComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentMessageTypeToLua.h">
+      <Filter>Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

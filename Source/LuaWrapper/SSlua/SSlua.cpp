@@ -30,6 +30,24 @@ namespace SSlua
 {
 	LuaWrapper* LuaWrapper::ourInstance = nullptr;
 
+	template<>
+	void LuaWrapper::Push<int>(const int& aVariable)
+	{
+		lua_pushinteger(myState, aVariable);
+	}
+
+	template<>
+	void LuaWrapper::Push<std::string>(const std::string& aVariable)
+	{
+		lua_pushstring(myState, aVariable.c_str());
+	}
+
+	template<>
+	void LuaWrapper::Push<void*>(void* const& aVariable)
+	{
+		lua_pushlightuserdata(myState, aVariable);
+	}
+
 	void LuaWrapper::CheckAndCreate()
 	{
 		if (CheckCreated() == false)
@@ -60,6 +78,14 @@ namespace SSlua
 	{
 		CheckAndCreate();
 		return *ourInstance;
+	}
+	
+	void LuaWrapper::RegisterFunctions(const std::function<void(LuaWrapper&)>& aRegisterFunctionsFunction)
+	{
+		if (aRegisterFunctionsFunction != nullptr)
+		{
+			aRegisterFunctionsFunction(*this);
+		}
 	}
 
 	void LuaWrapper::RegisterFunction(const LuaCallbackFunction &aFunction,const std::string& aName,const std::string& aHelpText, const bool aShouldBeExposedToConsole)
@@ -106,7 +132,7 @@ namespace SSlua
 		lua_pop(myState, 1);
 	}
 
-	void LuaWrapper::LoadCode(const std::string & aFileName)
+	void LuaWrapper::LoadCode(const std::string& aFileName)
 	{
 		CheckError(luaL_loadfile(myState, aFileName.c_str()));
 
@@ -119,6 +145,12 @@ namespace SSlua
 	void LuaWrapper::RunLoadedCode()
 	{
 		CheckError(lua_pcall(myState, 0, LUA_MULTRET, 0));
+	}
+
+	bool LuaWrapper::DoFile(const std::string& aFileName)
+	{
+		int error = luaL_dofile(myState, aFileName.c_str());
+		return error == LUA_OK;
 	}
 
 	bool LuaWrapper::LoadLuaString(const std::string& aLuaScript)
@@ -150,10 +182,10 @@ namespace SSlua
 	void LuaWrapper::GetValueFromTable(const std::string& aTableName, const std::string& aKeyName)
 	{
 		int type = -1;
-		GetGlobal("GlobalFunctionTable", &type);
+		GetGlobal(aTableName, &type);
 		if (type != LUA_TTABLE) return;
 
-		//Push<std::string>(aKeyName);
+		Push<std::string>(aKeyName);
 		GetValueInTableAt(-2);
 	}
 
@@ -220,21 +252,15 @@ namespace SSlua
 	}
 
 	template<>
-	void LuaWrapper::Push<int>(const int& aVariable)
-	{
-		lua_pushinteger(myState, aVariable);
-	}
-
-	//template<>
-	//void LuaWrapper::Push<std::string>(const std::string& aVariable)
-	//{
-	//	lua_pushstring(myState, aVariable.c_str());
-	//}
-
-	template<>
 	void LuaWrapper::Pop<void>()
 	{
 		lua_pop(myState, 1);
+	}
+
+	bool LuaWrapper::DoCall(const int aArgumentCount, const int aReturnCount)
+	{
+		int result = lua_pcall(myState, aArgumentCount, aReturnCount, 0);
+		return result == 0;
 	}
 
 	SSArgument LuaWrapper::CallLuaFunction(const std::string& aFunctionName, const ArgumentList& someArguments, const bool aShouldReturnFlag)
@@ -266,7 +292,7 @@ namespace SSlua
 			numberOfreturnValues = 1;
 		}
 
-		const int result = lua_pcall(myState, someArguments.Size(), numberOfreturnValues,0);
+		const int result = lua_pcall(myState, someArguments.Size(), numberOfreturnValues, 0);
 
 		if (result != NULL)
 		{
@@ -290,8 +316,8 @@ namespace SSlua
 		case LUA_TNIL:
 			break;
 		default:
-			DL_ASSERT("Lua type is at the moment incompatible with Engine or at least this method");
-			return  SSArgument();
+			DL_ASSERT("Lua type %s is at the moment incompatible with Engine or at least this method", lua_typename(myState, -1));
+			break;
 		}
 
 		return SSArgument();
@@ -334,8 +360,7 @@ namespace SSlua
 
 	void LuaWrapper::PrintDocumentation()
 	{
-		std::ofstream outPutFile;
-		outPutFile.open("ExposedFunctions.txt");
+		std::ofstream outPutFile("Scripts/ExposedFunctions.txt");
 
 		std::map<std::string, std::string>::iterator it;
 		for (it = myExposedFunctions.begin(); it != myExposedFunctions.end(); it++)
@@ -479,6 +504,9 @@ namespace SSlua
 			case eSSType::BOOL:
 				lua_pushboolean(aState, returnArguments[i].GetBool());
 				break;
+			case eSSType::LIGHTUSERDATA:
+				lua_pushlightuserdata(aState, returnArguments[i].GetUserData());
+				break;
 			case eSSType::NIL:
 				lua_pushnil(aState);
 				break;
@@ -596,7 +624,7 @@ namespace SSlua
 
 		if (nArgs == 0)
 		{
-			return arguments;
+			return std::move(arguments);
 		}
 
 		for (int i = 1; i < nArgs + 1; i++)
@@ -612,6 +640,9 @@ namespace SSlua
 				break;
 			case LUA_TBOOLEAN:
 				tempArgument = SSArgument(lua_toboolean(aState, i) != 0);
+				break;
+			case LUA_TLIGHTUSERDATA:
+				tempArgument = SSArgument(lua_touserdata(aState, i));
 				break;
 			case LUA_TNIL:
 				break;

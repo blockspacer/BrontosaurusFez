@@ -26,6 +26,7 @@ namespace SSlua
 		static void DestroyIfCreated();
 		static LuaWrapper& GetInstance();
 
+		void RegisterFunctions(const std::function<void(LuaWrapper&)>& aRegisterFunctionsFunction);
 		void RegisterFunction(const LuaCallbackFunction &aFunction, const std::string &aName,const std::string& aHelpText, const bool aShouldBeExposedToConsole);
 		void RegisterEngineFunction(const LuaCallbackFunction &aFunction, const std::string &aName);
 
@@ -33,6 +34,7 @@ namespace SSlua
 
 		void LoadCode(const std::string& aFileName);
 		void RunLoadedCode();
+		bool DoFile(const std::string& aFileName);
 		bool LoadLuaString(const std::string& aLuaScript);
 		void GetGlobal(const std::string& aVariableName, int* const aType = nullptr);
 		void AssignePairToTableAt(const int aTableIndex);
@@ -48,6 +50,8 @@ namespace SSlua
 
 		template<typename T>
 		T Pop();
+
+		bool DoCall(const int aArgumentCount, const int aReturnCount);
 
 		SSArgument CallLuaFunction(const std::string& aFunctionName, const ArgumentList& someArguments, const bool aShouldReturnFlag = false);
 

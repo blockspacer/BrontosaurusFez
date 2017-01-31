@@ -238,6 +238,7 @@
     <ClCompile Include="DialogState.cpp" />
     <ClCompile Include="EnemyFactory.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GlobalLuaFunctions.cpp" />
     <ClCompile Include="HatMaker.cpp" />
     <ClCompile Include="HatShopState.cpp" />
     <ClCompile Include="LevelManager.cpp" />
@@ -255,6 +256,7 @@
     <ClCompile Include="PollingStation.cpp" />
     <ClCompile Include="QuestDrawer.cpp" />
     <ClCompile Include="QuestManager.cpp" />
+    <ClCompile Include="ScriptLoader.cpp" />
     <ClCompile Include="ShopStorage.cpp" />
     <ClCompile Include="SplashScreen.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -269,6 +271,7 @@
     <ClInclude Include="EnemyFactory.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GlobalLuaFunctions.h" />
     <ClInclude Include="HatMaker.h" />
     <ClInclude Include="HatShopState.h" />
     <ClInclude Include="LevelManager.h" />
@@ -287,6 +290,7 @@
     <ClInclude Include="PollingStation.h" />
     <ClInclude Include="QuestDrawer.h" />
     <ClInclude Include="QuestManager.h" />
+    <ClInclude Include="ScriptLoader.h" />
     <ClInclude Include="ShopStorage.h" />
     <ClInclude Include="ShopStructs.h" />
     <ClInclude Include="SplashScreen.h" />

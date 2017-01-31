@@ -8,7 +8,7 @@ public:
 	CScriptComponentManager();
 	~CScriptComponentManager();
 
-	CScriptComponent* CreateComponent(const std::string& aScriptPath);
+	CScriptComponent* CreateComponent(const std::string& aScriptPath, const std::string& aInitFunction);
 
 	static CScriptComponentManager* GetInstance();
 

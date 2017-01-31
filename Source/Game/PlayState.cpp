@@ -93,6 +93,8 @@
 #include "PlayerManaMessenger.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
+#include "../Components/ScriptComponent.h"
+#include "../Components/ScriptComponentManager.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -106,7 +108,6 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 {
 	myIsLoaded = false;
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eHatAdded);
-	
 }
 
 CPlayState::~CPlayState()
@@ -164,6 +165,21 @@ void CPlayState::Load()
 
 	CreateManagersAndFactories();
 	LoadManagerGuard loadManagerGuard;
+
+
+	//TEMP CARL BEGIN
+
+	CGameObject* gotemp = myGameObjectManager->CreateGameObject();
+	CScriptComponentManager compMan;
+	CScriptComponent* scriptComp = compMan.CreateComponent("Script/test_script.lua", "test_script_init");
+	gotemp->AddComponent(scriptComp);
+	SComponentMessageData numberData;
+	numberData.myInt = 234;
+	scriptComp->Receive(eComponentMessageType::eDied, numberData);
+
+	myGameObjectManager->DestroyObject(gotemp);
+
+	//TEMP CARL END
 
 
 

@@ -21,15 +21,15 @@ CScriptComponentManager::~CScriptComponentManager()
 	myComponents.DeleteAll();
 }
 
-CScriptComponent* CScriptComponentManager::CreateComponent(const std::string& aScriptPath)
+CScriptComponent* CScriptComponentManager::CreateComponent(const std::string& aScriptPath, const std::string& aInitFunction)
 {
 	CScriptComponent* newComponent = new CScriptComponent();
 	ComponentId componentID = CComponentManager::GetInstance().RegisterComponent(newComponent);
 
-	CScriptComponent::eInitSuccess error = newComponent->Init(aScriptPath, myFunctionTableIndex++);
+	CScriptComponent::eInitSuccess error = newComponent->Init(aScriptPath, aInitFunction);
 	if (!CScriptComponent::HandleError(error))
 	{
-		delete newComponent;
+		CComponentManager::GetInstance().DeleteComponent(componentID);
 		return nullptr;
 	}
 

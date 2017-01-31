@@ -1,6 +1,8 @@
 #pragma once
 #include "Component.h"
 
+struct SComponentMessageCallback;
+
 class CScriptComponent : public CComponent
 {
 public:
@@ -14,27 +16,21 @@ public:
 		eNoFunctionTable
 	};
 
-	union ScriptErrorData
-	{
-		std::string* myString;
-
-	};
-
 	CScriptComponent();
 	~CScriptComponent();
 
-	eInitSuccess Init(const std::string& aScriptPath, const int aFunctionTableIndex);
-	void Call();
+	eInitSuccess Init(const std::string& aScriptPath, const std::string& aInitFunction);
+	bool Call(const std::string& aFunctionName, void* aOptionalUserData = nullptr);
 	
 	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
 
 	static bool HandleError(const eInitSuccess aErrorCode);
 
 private:
+	void AddSubscription(const SComponentMessageCallback& aCallbackInfo);
 	void Destroy() override;
 
-	CU::GrowingArray<eComponentMessageType> mySubscribedComponentMessages;
-	int myFunctionTableIndex;
+	std::map<eComponentMessageType, std::string> mySubscribedComponentMessages;
 
 	static std::string ourLastErrorMessage;
 };

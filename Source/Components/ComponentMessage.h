@@ -37,7 +37,6 @@ enum class eComponentType : unsigned char;
 enum class eComponentMessageType
 {
 	eAddComponent,
-	eCollision,
 	ePlaySound,
 	eMoving,
 	eInit,
@@ -88,7 +87,11 @@ enum class eComponentMessageType
 	eActivate,
 	eCalledForHelp,
 	eLookAt,
+	eAddMessageSubscription,
+	eLength
 };
+
+#define STATIC_SIZEOF(x) {char STATIC_SIZEOF_TEMP[(x)]; STATIC_SIZEOF_TEMP = 1;}
 
 struct SComponentMessageData
 {
@@ -100,6 +103,7 @@ struct SComponentMessageData
 		CComponent* myComponents[2];
 		CPickupComponent* myPickupComponent;
 		CGameObject* myGameObject;
+		struct SComponentMessageCallback* myComponentMessageCallback;
 		int myInt;
 		unsigned short myUShort;
 		unsigned char myUChar;
@@ -114,7 +118,6 @@ struct SComponentMessageData
 
 		CU::GrowingArray<CU::Vector3f, unsigned int, false>* myVector3ListPointer;
 		CPath* myPathPointer;
-		
 		eComponentType myComponentTypeAdded;
 		Stats::STotalStats myStatStruct;
 		Stats::SBonusStats* myStatsToAdd;

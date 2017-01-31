@@ -357,6 +357,8 @@
     <ClInclude Include="ChangeLevelTriggerComponent.h" />
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionComponentManager.h" />
+    <ClInclude Include="ComponentMessageCallback.h" />
+    <ClInclude Include="ComponentMessageTypeToLua.h" />
     <ClInclude Include="DropComponent.h" />
     <ClInclude Include="DropComponentManager.h" />
     <ClInclude Include="EnemyObjectiveComponent.h" />
@@ -429,6 +431,7 @@
     <ClCompile Include="ChangeLevelTriggerComponent.cpp" />
     <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="CollisionComponentManager.cpp" />
+    <ClCompile Include="ComponentMessageTypeToLua.cpp" />
     <ClCompile Include="DropComponent.cpp" />
     <ClCompile Include="DropComponentManager.cpp" />
     <ClCompile Include="EnemyObjectiveComponent.cpp" />
