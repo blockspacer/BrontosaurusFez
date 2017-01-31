@@ -7,6 +7,7 @@ public:
 	~ShopClosed();
 
 	eMessageReturn DoEvent(COpenShopListenerComponent*) const override;
+	eMessageReturn DoEvent(CMouseComponent*) const override;
 private:
 };
 
