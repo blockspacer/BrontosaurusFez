@@ -140,10 +140,16 @@ void CEnemyFactory::CreateEnemy(CU::Vector3f aPosition)
 
 }
 
-void CEnemyFactory::Init(const std::string & aKey)
+void CEnemyFactory::Init(const std::string& aKey)
 {
 	CU::CJsonValue levelsFile;
 	const std::string& errorString = levelsFile.Parse("Json/SpawnEnemies.json");
+
+	if (!levelsFile.HasKey(aKey))
+	{
+		DL_MESSAGE_BOX("Level key '%s' not found in Json/SpawnEnemies.json", aKey.c_str());
+		return;
+	}
 
 	CU::CJsonValue levelsArray = levelsFile.at(aKey);
 

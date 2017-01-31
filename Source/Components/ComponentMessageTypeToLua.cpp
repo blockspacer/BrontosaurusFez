@@ -5,14 +5,17 @@
 #define TO_STRING(something) #something
 
 static std::map<std::string, eComponentMessageType> locComponentTypeNames;
+static std::string locFilePath;
 
 void InitComponentTypes();
+void InternalPrintComponentInfo();
 
 int ComponentMessage::GetType(const std::string& aTypeName)
 {
 	if (locComponentTypeNames.begin() == locComponentTypeNames.end())
 	{
 		InitComponentTypes();
+		InternalPrintComponentInfo();
 	}
 
 	auto it = locComponentTypeNames.find(aTypeName);
@@ -95,12 +98,17 @@ void InitComponentTypes()
 		//eComponentMessageType::eLength:
 }
 
-void ComponentMessage::PrintComponentsToFile(const std::string& aFilePath)
+void InternalPrintComponentInfo()
 {
-	std::ofstream file(aFilePath);
+	std::ofstream file(locFilePath);
 	int index = 1;
 	for (auto it = locComponentTypeNames.begin(); it != locComponentTypeNames.end(); ++it)
 	{
 		file << index++ << ". " << it->first << ": " << static_cast<int>(it->second) << std::endl;
 	}
+}
+
+void ComponentMessage::PrintComponentsToFile(const std::string& aFilePath)
+{
+	locFilePath = aFilePath;
 }

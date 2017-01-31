@@ -167,20 +167,20 @@ void CPlayState::Load()
 	LoadManagerGuard loadManagerGuard;
 
 
-	//TEMP CARL BEGIN
+	////TEMP CARL BEGIN
 
-	CGameObject* gotemp = myGameObjectManager->CreateGameObject();
-	gotemp->SetName("calle");
-	CScriptComponentManager compMan;
-	CScriptComponent* scriptComp = compMan.CreateComponent("Script/test_script.lua"/*, "test_script_init"*/);
-	gotemp->AddComponent(scriptComp);
-	SComponentMessageData numberData;
-	numberData.myInt = 234;
-	scriptComp->Receive(eComponentMessageType::eDied, numberData);
+	//CGameObject* gotemp = myGameObjectManager->CreateGameObject();
+	//gotemp->SetName("calle");
+	//CScriptComponentManager compMan;
+	//CScriptComponent* scriptComp = compMan.CreateComponent("Script/test_script.lua"/*, "test_script_init"*/);
+	//gotemp->AddComponent(scriptComp);
+	//SComponentMessageData numberData;
+	//numberData.myInt = 234;
+	//scriptComp->Receive(eComponentMessageType::eDied, numberData);
 
-	myGameObjectManager->DestroyObject(gotemp);
+	//myGameObjectManager->DestroyObject(gotemp);
 
-	//TEMP CARL END
+	////TEMP CARL END
 
 
 
