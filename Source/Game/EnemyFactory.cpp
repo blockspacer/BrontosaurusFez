@@ -41,6 +41,8 @@
 #include "ManaComponent.h"
 #include "ManaComponentManager.h"
 
+#include "../CommonUtilities/JsonValue.h"
+
 CEnemyFactory* CEnemyFactory::ourInstance = nullptr;
 
 void CEnemyFactory::Create(CGameObjectManager& aGameObjectManager, CCollisionComponentManager& aCollisionComponentManager, CHealthBarComponentManager& aHealthbarManager)
@@ -136,6 +138,28 @@ void CEnemyFactory::CreateEnemy(CU::Vector3f aPosition)
 	Enemy->AddComponent(audio);
 
 
+}
+
+void CEnemyFactory::Init(const std::string & aKey)
+{
+	CU::CJsonValue levelsFile;
+	const std::string& errorString = levelsFile.Parse("Json/SpawnEnemies.json");
+
+	CU::CJsonValue levelsArray = levelsFile.at(aKey);
+
+	myEnemiesAttack = levelsArray.at("attack").GetString();
+	myEnemiesHealth = levelsArray.at("health").GetUInt();
+	myEnemiesMana = levelsArray.at("mana").GetUInt();
+	myEnemiesAmountOfGoldToDrop = levelsArray.at("goldDrop").GetUInt();
+	myEnemiesAggroRange = levelsArray.at("aggroRange").GetFloat();
+	myEnemiesSeekBeheviourWeight = levelsArray.at("seekBeheviourWeight").GetFloat();
+	myEnemiesMaxSpeed = levelsArray.at("maxSpeed").GetFloat();
+	myEnemiesMaxAcceleration = levelsArray.at("maxAcceleration").GetFloat();
+	myEnemiesSlowDownRadius = levelsArray.at("slowDownRadius").GetFloat();
+	myEnemiesTargetRadius = levelsArray.at("targetRadius").GetFloat();
+	myEnemiesCollisionRadius = levelsArray.at("collisionRadius").GetFloat();
+	myEnemiesHealthDropChance = levelsArray.at("healthDropChance").GetUInt();
+	myEnemiesManaDropChance = levelsArray.at("manaDropChance").GetUInt();
 }
 
 CEnemyFactory::CEnemyFactory(CGameObjectManager& aGameObjectManager, CCollisionComponentManager& aCollisionComponentManager, CHealthBarComponentManager& aHealthbarManager)
