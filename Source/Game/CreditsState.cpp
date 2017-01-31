@@ -7,9 +7,11 @@
 #include "CommonUtilities\CUTime.h"
 #include "BrontosaurusEngine\ParticleEmitterInstance.h"
 #include "../PostMaster/Message.h"
+#include "PostMaster/Pop2States.h"
 
-CreditsState::CreditsState(StateStack& aStateStack)
-	: State(aStateStack)
+CreditsState::CreditsState(StateStack& aStateStack, const bool aInGame) 
+: State(aStateStack),
+myInGame(aInGame)
 {
 }
 
@@ -34,8 +36,6 @@ eStateStatus CreditsState::Update(const CU::Time & aDeltaTime)
 		mysprite->SetPosition(CU::Vector2f::Zero);
 	}
 
-
-
 	return myStatus;
 }
 
@@ -59,7 +59,14 @@ void CreditsState::OnExit()
 
 void CreditsState::GoToMainMenu()
 {
-	PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PopCurrentState()));
+	if (myInGame)
+	{
+		PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, Pop2States()));
+	}
+	else
+	{
+		PostMaster::GetInstance().SendLetter(Message(eMessageType::eStateStackMessage, PopCurrentState()));
+	}
 }
 
 eMessageReturn CreditsState::Recieve(const Message & aMessage)

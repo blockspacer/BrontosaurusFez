@@ -8,7 +8,7 @@ class CSpriteInstance;
 class CreditsState : public State, public Subscriber
 {
 public:
-	CreditsState(StateStack& aStateStack);
+	CreditsState(StateStack& aStateStack,const bool aInGame = false);
 	~CreditsState();
 
 	// Inherited via State
@@ -23,6 +23,6 @@ public:
 	eMessageReturn Recieve(const Message& aMessage) override;
 private:
 	CSpriteInstance* mysprite;
-
+	const bool myInGame;
 };
 

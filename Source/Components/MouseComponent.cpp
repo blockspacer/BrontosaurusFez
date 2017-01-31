@@ -34,7 +34,6 @@ void CMouseComponent::Receive(const eComponentMessageType aMessageType, const SC
 			if(myHoveredGameObjects[i] == aMessageData.myCollider->GetGameObject())
 			{
 				myHoveredGameObjects.RemoveAtIndex(i);
-				DL_PRINT("Ezited COll");
 			}
 		}
 		break;
@@ -85,6 +84,14 @@ void CMouseComponent::MouseMoved(const CU::Vector2f& aMousePosition)
 	GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 }
 
+void CMouseComponent::Update()
+{
+	if (myHoveredGameObjects.Size() > 0)
+	{
+		HandleCollision(myHoveredGameObjects[0]);
+	}
+}
+
 eMessageReturn CMouseComponent::Recieve(const Message& aMessage)
 {
 	return aMessage.myEvent.DoEvent(this);
@@ -100,7 +107,6 @@ void CMouseComponent::HandleCollision(CGameObject* aCollidedWith)
 	{
 		return;
 	}
-	DL_PRINT("Xoll Enter");
 	bool newGameObject = true;
 	for (unsigned short i = 0; i < myHoveredGameObjects.Size(); i++)
 	{
@@ -135,12 +141,10 @@ void CMouseComponent::SetMouseIsDown(const bool aIsDown)
 		if(myHoveredGameObjects.Size() > 0)
 		{
 			HandleCollision(myHoveredGameObjects[0]);
-			DL_PRINT("COll Died");
 		}
 	}
 	else
 	{
-		
 	}
 }
 
