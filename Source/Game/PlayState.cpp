@@ -194,7 +194,7 @@ void CPlayState::Load()
 
 	Lights::SDirectionalLight dirLight;
 	dirLight.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	dirLight.direction = { 0.0f, 0.0f, 1.0f, 1.0f };
+	dirLight.direction = { 0.0f, -1.0f, 1.0f, 1.0f };
 	myScene->AddDirectionalLight(dirLight);
 
 	CONSOLE->GetLuaFunctions();
