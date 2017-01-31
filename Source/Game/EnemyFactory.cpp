@@ -41,6 +41,8 @@
 #include "ManaComponent.h"
 #include "ManaComponentManager.h"
 
+#include "../CommonUtilities/JsonValue.h"
+
 CEnemyFactory* CEnemyFactory::ourInstance = nullptr;
 
 void CEnemyFactory::Create(CGameObjectManager& aGameObjectManager, CCollisionComponentManager& aCollisionComponentManager, CHealthBarComponentManager& aHealthbarManager)
@@ -70,25 +72,25 @@ void CEnemyFactory::CreateEnemy(CU::Vector3f aPosition)
 	Enemy->AddComponent(model);
 
 	CHealthComponent* health = new CHealthComponent();
-	health->SetMaxHealth(100); //json
+	health->SetMaxHealth(myEnemiesHealth); //json
 	CComponentManager::GetInstance().RegisterComponent(health);
 	Enemy->AddComponent(health);
 
 	CHealthBarComponent* healthBar = myHealthBarManager->CreateHealthbar();
 	Enemy->AddComponent(healthBar);
 
-	ManaComponent* mana = ManaComponentManager::GetInstance().CreateAndRegisterComponent(100); // json
+	ManaComponent* mana = ManaComponentManager::GetInstance().CreateAndRegisterComponent(myEnemiesMana); // json
 	Enemy->AddComponent(mana);
 
 	CSeekController* seek = CSeekControllerManager::GetInstance().CreateAndRegister();
 	//from json
 	//{
-	seek->SetAggroRange(1300);
-	seek->SetWeight(3);
-	seek->SetMaxSpeed(30);
-	seek->SetMaxAcceleration(50);
-	seek->SetSlowDownRadius(100);
-	seek->SetTargetRadius(150);
+	seek->SetAggroRange(myEnemiesAggroRange);
+	seek->SetWeight(myEnemiesSeekBeheviourWeight);
+	seek->SetMaxSpeed(myEnemiesMaxSpeed);
+	seek->SetMaxAcceleration(myEnemiesMaxAcceleration);
+	seek->SetSlowDownRadius(myEnemiesSlowDownRadius);
+	seek->SetTargetRadius(myEnemiesTargetRadius);
 	//}
 	Enemy->AddComponent(seek);
 
@@ -99,12 +101,12 @@ void CEnemyFactory::CreateEnemy(CU::Vector3f aPosition)
 
 	Enemy->AddComponent(AIControl);
 
-	DropComponent* drop = DropComponentManager::GetInstance().CreateAndRegisterComponent(100, 20,20,""); // from json
+	DropComponent* drop = DropComponentManager::GetInstance().CreateAndRegisterComponent(myEnemiesAmountOfGoldToDrop, myEnemiesHealthDropChance,myEnemiesManaDropChance,""); // from json
 	Enemy->AddComponent(drop);
 
 	SkillSystemComponent* skillSystem = new SkillSystemComponent();
 	//for skill in json
-	skillSystem->AddSkill("EnemyAttack");
+	skillSystem->AddSkill(myEnemiesAttack.c_str());
 
 	SkillSystemComponentManager::GetInstance().RegisterComponent(skillSystem);
 	CComponentManager::GetInstance().RegisterComponent(skillSystem);
@@ -112,7 +114,7 @@ void CEnemyFactory::CreateEnemy(CU::Vector3f aPosition)
 
 	Intersection::CollisionData collisionData;
 	collisionData.myCircleData = new Intersection::SCircle;
-	collisionData.myCircleData->myRadius = 200; //set from json
+	collisionData.myCircleData->myRadius = myEnemiesCollisionRadius; //set from json
 	CCollisionComponent* collider = myCollisionComponentManager->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, collisionData);
 	collider->SetColliderType(eColliderType::eColliderType_Enemy);
 	collider->AddCollidsWith(eColliderType::eColliderType_Mouse);
@@ -136,6 +138,28 @@ void CEnemyFactory::CreateEnemy(CU::Vector3f aPosition)
 	Enemy->AddComponent(audio);
 
 
+}
+
+void CEnemyFactory::Init(const std::string & aKey)
+{
+	CU::CJsonValue levelsFile;
+	const std::string& errorString = levelsFile.Parse("Json/SpawnEnemies.json");
+
+	CU::CJsonValue levelsArray = levelsFile.at(aKey);
+
+	myEnemiesAttack = levelsArray.at("attack").GetString();
+	myEnemiesHealth = levelsArray.at("health").GetUInt();
+	myEnemiesMana = levelsArray.at("mana").GetUInt();
+	myEnemiesAmountOfGoldToDrop = levelsArray.at("goldDrop").GetUInt();
+	myEnemiesAggroRange = levelsArray.at("aggroRange").GetFloat();
+	myEnemiesSeekBeheviourWeight = levelsArray.at("seekBeheviourWeight").GetFloat();
+	myEnemiesMaxSpeed = levelsArray.at("maxSpeed").GetFloat();
+	myEnemiesMaxAcceleration = levelsArray.at("maxAcceleration").GetFloat();
+	myEnemiesSlowDownRadius = levelsArray.at("slowDownRadius").GetFloat();
+	myEnemiesTargetRadius = levelsArray.at("targetRadius").GetFloat();
+	myEnemiesCollisionRadius = levelsArray.at("collisionRadius").GetFloat();
+	myEnemiesHealthDropChance = levelsArray.at("healthDropChance").GetUInt();
+	myEnemiesManaDropChance = levelsArray.at("manaDropChance").GetUInt();
 }
 
 CEnemyFactory::CEnemyFactory(CGameObjectManager& aGameObjectManager, CCollisionComponentManager& aCollisionComponentManager, CHealthBarComponentManager& aHealthbarManager)

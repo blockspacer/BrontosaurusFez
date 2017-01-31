@@ -262,6 +262,9 @@ void CPlayState::Load()
 	{
 		DL_ASSERT("Loading Failed");
 	}
+
+	CEnemyFactory::GetInstance().Init(levelsArray[myLevelIndex].GetString());
+
 	if (PollingStation::PlayerInput != nullptr)
 	{
 		PollingStation::playerObject = PollingStation::PlayerInput->GetParent();
