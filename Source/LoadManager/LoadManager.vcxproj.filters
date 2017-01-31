@@ -51,6 +51,12 @@
     <ClInclude Include="LoadBlessingTowerComponent.h" />
     <ClInclude Include="LoadSpawnEnemyOnDeathComponent.h" />
     <ClInclude Include="LoadRespawnComponent.h" />
+    <ClInclude Include="LoadScriptComponent.h">
+      <Filter>LoadThings\LoadScriptComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadFireComponent.h">
+      <Filter>LoadThings\LoadFireComponent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -100,6 +106,12 @@
     <ClCompile Include="LoadBlessingTowerComponent.cpp" />
     <ClCompile Include="LoadSpawnEnemyOnDeathComponent.cpp" />
     <ClCompile Include="LoadRespawnComponent.cpp" />
+    <ClCompile Include="LoadScriptComponent.cpp">
+      <Filter>LoadThings\LoadScriptComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadFireComponent.cpp">
+      <Filter>LoadThings\LoadFireComponent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="VS">
@@ -134,6 +146,12 @@
     </Filter>
     <Filter Include="LoadThings\LoadActivationComponent">
       <UniqueIdentifier>{b0f93608-e747-461d-92ab-9f4ee3238b0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoadThings\LoadScriptComponent">
+      <UniqueIdentifier>{17024182-1998-45ac-a4d3-c73267c647e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoadThings\LoadFireComponent">
+      <UniqueIdentifier>{bb50d118-6b63-4aee-9b9e-0e031cdf0ca8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

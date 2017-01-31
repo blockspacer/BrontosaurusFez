@@ -93,12 +93,12 @@ void CGameObjectManager::DumpAllAndReInit()
 void CGameObjectManager::SendObjectsDoneMessage()
 {
 	SComponentMessageData data;
-	CU::GrowingArray<ComponentId> searchonIDs;
-	searchonIDs.Init(244);
+	//CU::GrowingArray<ComponentId> searchonIDs;
+	//searchonIDs.Init(244);
+	
 	for (unsigned short i = 0; i < myObjectsCreated.Size(); i++)
 	{
-		
-		searchonIDs.Add(myObjectsCreated[i]->GetId());
+		//searchonIDs.Add(myObjectsCreated[i]->GetId());
 
 		myObjectsCreated[i]->NotifyOnlyComponents(eComponentMessageType::eObjectDone, data);
 	}

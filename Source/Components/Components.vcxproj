@@ -362,6 +362,7 @@
     <ClInclude Include="DropComponent.h" />
     <ClInclude Include="DropComponentManager.h" />
     <ClInclude Include="EnemyObjectiveComponent.h" />
+    <ClInclude Include="FireComponent.h" />
     <ClInclude Include="FleeController.h" />
     <ClInclude Include="FleeControllerManager.h" />
     <ClInclude Include="FormationController.h" />
@@ -435,6 +436,7 @@
     <ClCompile Include="DropComponent.cpp" />
     <ClCompile Include="DropComponentManager.cpp" />
     <ClCompile Include="EnemyObjectiveComponent.cpp" />
+    <ClCompile Include="FireComponent.cpp" />
     <ClCompile Include="FleeController.cpp" />
     <ClCompile Include="FleeControllerManager.cpp" />
     <ClCompile Include="FormationController.cpp" />

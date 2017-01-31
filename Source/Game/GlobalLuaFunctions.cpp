@@ -17,7 +17,7 @@ bool AssertArgumentList(const std::string& aFunctionName, const SSlua::TypeList&
 
 SSlua::ArgumentList ComponentGetParent(const SSlua::ArgumentList& aArgumentList)
 {
-	SSlua::ArgumentList returnValues(1);
+	SSlua::ArgumentList returnValues(1u);
 
 	CComponentManager* componentManager = CComponentManager::GetInstancePtr();
 	if (!componentManager)

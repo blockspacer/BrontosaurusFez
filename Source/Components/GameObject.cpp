@@ -62,9 +62,13 @@ void CGameObject::AddComponent(CComponent* aComponent)
 void CGameObject::NotifyComponents(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
 {
 	if (myParent != nullptr)
+	{
 		myParent->NotifyComponents(aMessageType, aMessageData);
+	}
 	else
+	{
 		Receive(aMessageType, aMessageData);
+	}
 }
 
 void  CGameObject::NotifyOnlyComponents(const eComponentMessageType aMessageType, const SComponentMessageData &aMessageData)
@@ -75,6 +79,11 @@ void  CGameObject::NotifyOnlyComponents(const eComponentMessageType aMessageType
 void CGameObject::MarkForDestruction()
 {
 	myManager.AddObjectForDestruction(this);
+}
+
+bool CGameObject::IsGameObject()
+{
+	return true;
 }
 
 void CGameObject::Destroy()
@@ -90,26 +99,32 @@ void CGameObject::Destroy()
 
 void CGameObject::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
 {
-	CComponent* test = nullptr;
-	for (unsigned int i = 0; i < myComponents.Size(); ++i)
+	for (CComponent* component : myComponents)
 	{
-		test = myComponents[i];
-		test->Receive(aMessageType, aMessageData);
+		component->Receive(aMessageType, aMessageData);
 	}
 }
 
 void CGameObject::ComponentReceive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
 {
-	CComponent* test = nullptr;
-	for (unsigned int i = 0; i < myComponents.Size(); ++i)
+	for (CComponent* component : myComponents)
 	{
-		if(dynamic_cast<CGameObject*>(myComponents[i]) != nullptr)
+		if (!component->IsGameObject())
 		{
-			return;
+			component->Receive(aMessageType, aMessageData);
 		}
-		test = myComponents[i];
-		test->Receive(aMessageType, aMessageData);
 	}
+
+	//CComponent* test = nullptr;
+	//for (unsigned int i = 0; i < myComponents.Size(); ++i)
+	//{
+	//	if(dynamic_cast<CGameObject*>(myComponents[i]) != nullptr)
+	//	{
+	//		return;
+	//	}
+	//	test = myComponents[i];
+	//	test->Receive(aMessageType, aMessageData);
+	//}
 }
 
 CGameObject::CGameObject(CGameObjectManager &aManager) : myTransformId(0), myManager(aManager)
@@ -120,5 +135,4 @@ CGameObject::CGameObject(CGameObjectManager &aManager) : myTransformId(0), myMan
 
 CGameObject::~CGameObject()
 {
-	
 }

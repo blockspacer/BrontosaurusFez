@@ -283,9 +283,8 @@ void CPlayState::Load()
 		PollingStation::playerObject->AddComponent(CPickupManager::GetInstance().CreatePickerUpperComp());
 		PollingStation::playerObject->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
 		PollingStation::playerObject->AddComponent(new CMainStatComponent());
-
-		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eInit, SComponentMessageData());
 	}
+
 	myGameObjectManager->SendObjectsDoneMessage();
 
 

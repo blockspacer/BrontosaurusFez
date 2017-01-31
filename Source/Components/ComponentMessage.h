@@ -39,7 +39,6 @@ enum class eComponentMessageType
 	eAddComponent,
 	ePlaySound,
 	eMoving,
-	eInit,
 	eDied,
 	eRespawned,
 	eHeal,

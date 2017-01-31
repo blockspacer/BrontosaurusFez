@@ -46,7 +46,6 @@ void InitComponentTypes()
 	locComponentTypeNames[TO_STRING(eAddComponent)]	= eComponentMessageType::eAddComponent;
 	locComponentTypeNames[TO_STRING(ePlaySound)] = eComponentMessageType::ePlaySound;
 	locComponentTypeNames[TO_STRING(eMoving)] = eComponentMessageType::eMoving;
-	locComponentTypeNames[TO_STRING(eInit)] = eComponentMessageType::eInit;
 	locComponentTypeNames[TO_STRING(eDied)] = eComponentMessageType::eDied;
 	locComponentTypeNames[TO_STRING(eRespawned)] = eComponentMessageType::eRespawned;
 	locComponentTypeNames[TO_STRING(eHeal)] = eComponentMessageType::eHeal;
