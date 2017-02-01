@@ -46,16 +46,20 @@ void CCollisionComponent::Receive(const eComponentMessageType aMessageType, cons
 		{
 			ActivateCollider();
 		}
-		else
+		else if (aMessageData.myBool == false)
 		{
 			DeactivateCollider();
 		}
+		else
+		{
+			GAMEPLAY_LOG("Collision component got bool that was not a bool, int value is %d", aMessageData.myInt);
+		}
 	break;
 	case eComponentMessageType::eDied:
-		myCollider->Deactivate();
+		DeactivateCollider();
 		break;
 	case eComponentMessageType::eRespawned:
-		myCollider->Activate();
+		ActivateCollider();
 		break;
 	}
 }
@@ -80,7 +84,7 @@ void CCollisionComponent::OnCollisionEnter(ICollider* aCollider)
 {
 	//DL_PRINT("%s collided with %s", GetParent()->GetName().c_str(), aCollider->GetGameObject()->GetName().c_str());
 	SComponentMessageData data;
-	data.myCollider = aCollider;
+	data.myGameObject = aCollider->GetGameObject();
 	GetParent()->NotifyComponents(eComponentMessageType::eOnCollisionEnter, data);
 }
 
@@ -88,7 +92,7 @@ void CCollisionComponent::OnCollisionExit(ICollider* aCollider)
 {
 	//DL_PRINT("%s stopped colliding with %s", GetParent()->GetName().c_str(), aCollider->GetGameObject()->GetName().c_str());
 	SComponentMessageData data;
-	data.myCollider = aCollider;
+	data.myGameObject = aCollider->GetGameObject();
 	GetParent()->NotifyComponents(eComponentMessageType::eOnCollisionExit, data);
 }
 

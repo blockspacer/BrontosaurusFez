@@ -12,12 +12,25 @@ CComponentManager::CComponentManager()
 
 CComponentManager::~CComponentManager()
 {
+	//DESTROY EVERYTHING.
+	for (int i = 0; i < myComponents.Size(); ++i)
+	{
+		if (myComponents[i] != nullptr)
+		{
+			DeleteComponent(myComponents[i]->GetId());
+		}
+	}
 }
 
 CComponentManager& CComponentManager::GetInstance()
 {
 	assert(ourInstance != nullptr && "component manager not created (is NULL)");
 	return *ourInstance;
+}
+
+CComponentManager* CComponentManager::GetInstancePtr()
+{
+	return ourInstance;
 }
 
 void CComponentManager::CreateInstance()
@@ -28,16 +41,6 @@ void CComponentManager::CreateInstance()
 
 void CComponentManager::DestroyInstance()
 {
-	//DESTROY EVERYTHING.
-	for (int i = 0; i < ourInstance->myComponents.Size(); ++i)
-	{
-		if (ourInstance->myComponents[i] != nullptr)
-		{
-			ourInstance->DeleteComponent(ourInstance->myComponents[i]->GetId());
-		}
-	}
-
-
 	assert(ourInstance != nullptr && "component manager not created (is NULL)");
 	SAFE_DELETE(ourInstance);
 }
@@ -73,9 +76,24 @@ CComponent* CComponentManager::GetComponent(ComponentId anId)
 	return myComponents[anId];
 }
 
+CComponent* CComponentManager::RemoveComponent(ComponentId anId)
+{
+	CComponent* removed = myComponents[anId];
+	if (anId != NULL_COMPONENT)
+	{
+		myComponents[anId] = nullptr;
+		myEmptySpaces.Push(anId);
+	}
+
+	return removed;
+}
+
 void CComponentManager::DeleteComponent(ComponentId anId)
 {
-	delete myComponents[anId];
-	myComponents[anId] = nullptr;
-	myEmptySpaces.Push(anId);
+	if (anId != NULL_COMPONENT)
+	{
+		delete myComponents[anId];
+		myComponents[anId] = nullptr;
+		myEmptySpaces.Push(anId);
+	}
 }

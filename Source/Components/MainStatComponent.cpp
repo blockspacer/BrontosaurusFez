@@ -50,7 +50,7 @@ void CMainStatComponent::CalculateTotalStats()
 	GetParent()->NotifyComponents(eComponentMessageType::eAddToMovementSpeed, newMaxdata);
 
 	SComponentMessageData data;
-	data.myStatStruct = *myTotalStats;
+	data.myStatStruct = myTotalStats;
 	GetParent()->NotifyComponents(eComponentMessageType::eStatsUpdated, data);
 }
 

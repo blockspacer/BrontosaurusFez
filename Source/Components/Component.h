@@ -63,6 +63,7 @@ public:
 	//override this if you will need to get notified from other components
 	virtual void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData);
 	virtual void Destroy() = 0;
+	virtual bool IsGameObject();
 
 	__forceinline CGameObject* GetParent();
 

@@ -7,6 +7,7 @@
 
 #include "LoadManager/LuaFunctions.h"
 #include "LuaWrapper/SSlua/SSlua.h"
+#include "ScriptLoader.h"
 #include "CommonUtilities/CommandLineManager.h"
 
 #include "Engine.h"
@@ -16,6 +17,7 @@
 
 #include "PollingStation.h"
 #include "PlayerData.h"
+
 CGame::CGame()
 {
 }
@@ -33,6 +35,9 @@ void CGame::Init()
 	 CBackgroundLoadingManager::CreateInstance();
 
 	 KLoader::CKevinLoader::CreateInstance();
+
+	 SSlua::LuaWrapper& luaWrapper = SSlua::LuaWrapper::GetInstance();
+	 luaWrapper.RegisterFunctions(&ScriptLoader::RegisterLuaFunctions);
 	 
 	 PollingStation::playerData = new PlayerData;
 	 PollingStation::playerData->myGold = 0;
