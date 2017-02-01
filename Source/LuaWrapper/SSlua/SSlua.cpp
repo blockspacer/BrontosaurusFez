@@ -6,13 +6,6 @@
 #include <iostream>
 #include <fstream>
 
-//extern "C"
-//{
-//#include "../../LuaSource/lua-5.3.3/src/lua.h"
-//#include "../../LuaSource/lua-5.3.3/src/lauxlib.h"
-//#include "../../LuaSource/lua-5.3.3/src/lualib.h"
-//}
-
 
 #define ERROR_MESSAGE(message) MessageBeep(MB_ICONERROR); MessageBox(nullptr, message, L"ERROR", MB_OK | MB_ICONERROR);
 
