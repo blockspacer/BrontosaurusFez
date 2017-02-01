@@ -140,6 +140,9 @@ void CAIControllerComponent::Receive(const eComponentMessageType aMessageType, c
 	case(eComponentMessageType::eDied):
 		myIsActive = false;
 		break;
+	case eComponentMessageType::eRespawned:
+		myIsActive = true;
+		break;
 	default:
 		break;
 	}

@@ -194,6 +194,9 @@ void MovementComponent::Receive(const eComponentMessageType aMessageType, const 
 	case eComponentMessageType::eDied:
 		myIsActive = false;
 		break;
+	case eComponentMessageType::eRespawned:
+		myIsActive = true;
+		break;
 	default:
 		break;
 	}
