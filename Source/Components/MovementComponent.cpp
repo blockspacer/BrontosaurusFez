@@ -82,7 +82,11 @@ void MovementComponent::Update(float aDeltaTime)
 					
 					movement.y = 0.0f;
 					direction.y = 0.0f;
-					CU::Vector3f dest = myTriangle->CenterPosition;
+					if(myTriangle != nullptr)
+					{
+						CU::Vector3f dest = myTriangle->CenterPosition;
+					
+					}
 
 					//DL_PRINT("triC: X %f Y %f Z%f", dest.x, dest.y, dest.z);
 
@@ -108,7 +112,11 @@ void MovementComponent::Update(float aDeltaTime)
 
 						float height = 0.0f;
 						//height = myTriangle->GetHeight({ localTransform.GetPosition().x,localTransform.GetPosition().z });
-						height = myTriangle->CenterPosition.y;
+
+						if (myTriangle != nullptr)
+						{
+							height = myTriangle->CenterPosition.y;
+						}
 						
 					
 						CU::Vector3f newPosition = CU::Vector3f(localTransform.GetPosition().x, height, localTransform.GetPosition().z);
@@ -117,8 +125,12 @@ void MovementComponent::Update(float aDeltaTime)
 					else
 					{
 						float height = 0.0f;
-						height = myTriangle->GetHeight({ myPathPointer->At(myCurrentPathIndex).myPosition.x, myPathPointer->At(myCurrentPathIndex).myPosition.z });
-						height = myTriangle->CenterPosition.y;
+
+						if (myTriangle != nullptr)
+						{
+							height = myTriangle->GetHeight({ myPathPointer->At(myCurrentPathIndex).myPosition.x, myPathPointer->At(myCurrentPathIndex).myPosition.z });
+							height = myTriangle->CenterPosition.y;
+						}
 
 						CU::Vector3f newPosition = CU::Vector3f(myPathPointer->At(myCurrentPathIndex).myPosition.x, height, myPathPointer->At(myCurrentPathIndex).myPosition.z);
 						localTransform.SetPosition(newPosition);

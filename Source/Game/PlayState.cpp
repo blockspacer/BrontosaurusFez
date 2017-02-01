@@ -221,7 +221,7 @@ void CPlayState::Load()
 	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
 #ifdef _DEBUG
-	//myLevelIndex = levelsArray.Size()-1;
+	myLevelIndex = levelsArray.Size()-1;
 #else
 	const int levelIndex = 0;
 #endif
@@ -264,6 +264,7 @@ void CPlayState::Load()
 	}
 
 	CEnemyFactory::GetInstance().Init(levelsArray[myLevelIndex].GetString());
+	CPickupFactory::GetInstance().Init(levelsArray[myLevelIndex].GetString());
 
 	if (PollingStation::PlayerInput != nullptr)
 	{
