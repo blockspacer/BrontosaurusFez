@@ -33,7 +33,7 @@ void CMouseComponent::Receive(const eComponentMessageType aMessageType, const SC
 	case eComponentMessageType::eOnCollisionExit:
 		for(unsigned short i = 0; i < myHoveredGameObjects.Size(); i++)
 		{
-			if(myHoveredGameObjects[i] == aMessageData.myCollider->GetGameObject())
+			if(myHoveredGameObjects[i] == aMessageData.myGameObject)
 			{
 				myHoveredGameObjects.RemoveAtIndex(i);
 			}

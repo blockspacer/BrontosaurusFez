@@ -92,7 +92,7 @@ void CCollisionComponent::OnCollisionExit(ICollider* aCollider)
 {
 	//DL_PRINT("%s stopped colliding with %s", GetParent()->GetName().c_str(), aCollider->GetGameObject()->GetName().c_str());
 	SComponentMessageData data;
-	data.myCollider = aCollider;
+	data.myGameObject = aCollider->GetGameObject();
 	GetParent()->NotifyComponents(eComponentMessageType::eOnCollisionExit, data);
 }
 
