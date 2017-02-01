@@ -28,12 +28,12 @@ void CMouseComponent::Receive(const eComponentMessageType aMessageType, const SC
 	switch (aMessageType)
 	{
 	case eComponentMessageType::eOnCollisionEnter:
-		HandleCollision(aMessageData.myCollider->GetGameObject());
+		HandleCollision(aMessageData.myGameObject);
 		break;
 	case eComponentMessageType::eOnCollisionExit:
 		for(unsigned short i = 0; i < myHoveredGameObjects.Size(); i++)
 		{
-			if(myHoveredGameObjects[i] == aMessageData.myCollider->GetGameObject())
+			if(myHoveredGameObjects[i] == aMessageData.myGameObject)
 			{
 				myHoveredGameObjects.RemoveAtIndex(i);
 			}
@@ -49,7 +49,6 @@ void CMouseComponent::Destroy()
 
 void CMouseComponent::MouseMoved(const CU::Vector2f& aMousePosition)
 {
-	//NO ONE OWNS THIS SO IF PARENT IS NULL WE UNSUBSCRIBE FROM MOUSE MESSAGE..... mvh carl
 	if (GetParent() == nullptr)
 	{
 		PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);

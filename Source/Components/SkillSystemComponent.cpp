@@ -132,9 +132,12 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 	}
 	else if(aMessageType == eComponentMessageType::eStatsUpdated)
 	{
-		for(int i = 0; i < mySkills.Size(); i++)
+		if (aMessageData.myStatStruct != nullptr)
 		{
-			mySkills[i]->UpdateStats(aMessageData.myStatStruct);
+			for (int i = 0; i < mySkills.Size(); i++)
+			{
+				mySkills[i]->UpdateStats(*aMessageData.myStatStruct);
+			}
 		}
 	}
 	else if (aMessageType == eComponentMessageType::eActivateBurningBasicAttack)

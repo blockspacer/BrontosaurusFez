@@ -93,6 +93,8 @@
 #include "PlayerManaMessenger.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
+#include "../Components/ScriptComponent.h"
+#include "../Components/ScriptComponentManager.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -106,7 +108,6 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 {
 	myIsLoaded = false;
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eHatAdded);
-	
 }
 
 CPlayState::~CPlayState()
@@ -166,6 +167,22 @@ void CPlayState::Load()
 	LoadManagerGuard loadManagerGuard;
 
 
+	////TEMP CARL BEGIN
+
+	//CGameObject* gotemp = myGameObjectManager->CreateGameObject();
+	//gotemp->SetName("calle");
+	//CScriptComponentManager compMan;
+	//CScriptComponent* scriptComp = compMan.CreateComponent("Script/test_script.lua"/*, "test_script_init"*/);
+	//gotemp->AddComponent(scriptComp);
+	//SComponentMessageData numberData;
+	//numberData.myInt = 234;
+	//scriptComp->Receive(eComponentMessageType::eDied, numberData);
+
+	//myGameObjectManager->DestroyObject(gotemp);
+
+	////TEMP CARL END
+
+
 
 	CShopStorage::GetInstance().LoadStorage("Json/Hats/HatBluePrints.json");
 
@@ -177,7 +194,7 @@ void CPlayState::Load()
 
 	Lights::SDirectionalLight dirLight;
 	dirLight.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	dirLight.direction = { 0.0f, 0.0f, 1.0f, 1.0f };
+	dirLight.direction = { 0.0f, -1.0f, 1.0f, 1.0f };
 	myScene->AddDirectionalLight(dirLight);
 
 	CONSOLE->GetLuaFunctions();
@@ -204,7 +221,7 @@ void CPlayState::Load()
 	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
 #ifdef _DEBUG
-	myLevelIndex = levelsArray.Size()-1;
+	//myLevelIndex = levelsArray.Size()-1;
 #else
 	const int levelIndex = 0;
 #endif
@@ -266,9 +283,8 @@ void CPlayState::Load()
 		PollingStation::playerObject->AddComponent(CPickupManager::GetInstance().CreatePickerUpperComp());
 		PollingStation::playerObject->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
 		PollingStation::playerObject->AddComponent(new CMainStatComponent());
-
-		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eInit, SComponentMessageData());
 	}
+
 	myGameObjectManager->SendObjectsDoneMessage();
 
 

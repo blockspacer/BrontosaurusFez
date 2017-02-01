@@ -26,6 +26,8 @@
 #include "LoadBlessingTowerComponent.h"
 #include "LoadSpawnEnemyOnDeathComponent.h"
 #include "LoadRespawnComponent.h"
+#include "LoadScriptComponent.h"
+#include "LoadFireComponent.h"
 
 LoadManager* LoadManager::ourInstance = nullptr;
 
@@ -104,6 +106,8 @@ void LoadManager::RegisterFunctions()
 	loader.RegisterComponentLoadFunction("BlessingTowerComponent", LoadBlessingTowerComponent);
 	loader.RegisterComponentLoadFunction("SpawnEnemiesOnDeathComponent", LoadSpawnEnemiesOnDeathComponent);
 	loader.RegisterComponentLoadFunction("RespawnComponent", LoadRespawnComponent);
+	loader.RegisterComponentLoadFunction("LuaScriptComponent", LoadScriptComponent);
+	loader.RegisterComponentLoadFunction("FireComponent", LoadFireComponent);
 }
 
 LoadManager::LoadManager()

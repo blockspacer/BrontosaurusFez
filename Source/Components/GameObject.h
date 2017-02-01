@@ -24,6 +24,7 @@ public:
 	void NotifyOnlyComponents(const eComponentMessageType aMessageType, const SComponentMessageData &aMessageData);
 
 	void MarkForDestruction();
+	bool IsGameObject() override;
 
 	inline void SetName(const CU::DynamicString& aName);
 	inline const CU::DynamicString& GetName() const;

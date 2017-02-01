@@ -357,9 +357,12 @@
     <ClInclude Include="ChangeLevelTriggerComponent.h" />
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionComponentManager.h" />
+    <ClInclude Include="ComponentMessageCallback.h" />
+    <ClInclude Include="ComponentMessageTypeToLua.h" />
     <ClInclude Include="DropComponent.h" />
     <ClInclude Include="DropComponentManager.h" />
     <ClInclude Include="EnemyObjectiveComponent.h" />
+    <ClInclude Include="FireComponent.h" />
     <ClInclude Include="FleeController.h" />
     <ClInclude Include="FleeControllerManager.h" />
     <ClInclude Include="FormationController.h" />
@@ -376,6 +379,8 @@
     <ClInclude Include="PlayerManaMessenger.h" />
     <ClInclude Include="RespawnComponent.h" />
     <ClInclude Include="RespawnComponentManager.h" />
+    <ClInclude Include="ScriptComponent.h" />
+    <ClInclude Include="ScriptComponentManager.h" />
     <ClInclude Include="SeekController.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
@@ -427,9 +432,11 @@
     <ClCompile Include="ChangeLevelTriggerComponent.cpp" />
     <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="CollisionComponentManager.cpp" />
+    <ClCompile Include="ComponentMessageTypeToLua.cpp" />
     <ClCompile Include="DropComponent.cpp" />
     <ClCompile Include="DropComponentManager.cpp" />
     <ClCompile Include="EnemyObjectiveComponent.cpp" />
+    <ClCompile Include="FireComponent.cpp" />
     <ClCompile Include="FleeController.cpp" />
     <ClCompile Include="FleeControllerManager.cpp" />
     <ClCompile Include="FormationController.cpp" />
@@ -443,6 +450,8 @@
     <ClCompile Include="PlayerManaMessenger.cpp" />
     <ClCompile Include="RespawnComponent.cpp" />
     <ClCompile Include="RespawnComponentManager.cpp" />
+    <ClCompile Include="ScriptComponent.cpp" />
+    <ClCompile Include="ScriptComponentManager.cpp" />
     <ClCompile Include="SeekController.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentManager.cpp" />

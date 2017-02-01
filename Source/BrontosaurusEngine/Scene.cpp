@@ -75,7 +75,7 @@ CScene::CScene()
 	myFireEmitters.Init(8);
 	mySkybox = nullptr;
 
-	myShadowCamera.InitOrthographic(7500, 7500, 4000.f, 0.1f, 4096, 4096);
+	myShadowCamera.InitOrthographic(5500, 5500, 5000.f, 0.01f, 2048, 2048);
 }
 
 CScene::~CScene()
@@ -101,40 +101,19 @@ void CScene::Render()
 	cameraMsg.myCamera = myCameras[Intify(eCameraType::ePlayerOneCamera)];
 	RENDERER.AddRenderMessage(new SSetCameraMessage(cameraMsg));
 
-	//myShadowCamera.GetCamera().SetTransformation(myCameras[Intify(eCameraType::ePlayerOneCamera)].GetTransformation());
-
-
-	//CU::Matrix44f cam;
-	//cam.Rotate(0.f, 3.14f / 2.0f, - 3.14f / 4.0f);
-	//cam.myPosition = myCameras[Intify(eCameraType::ePlayerOneCamera)].GetPosition() + cam.myForwardVector * -100.f;
-	//cam.InvertMe();
-
-	myShadowCamera.GetCamera().SetTransformation(myCameras[Intify(eCameraType::ePlayerOneCamera)].GetTransformation());
-	//myShadowCamera.GetCamera().SetTransformation(cam);
-	myDirectionalLight.direction = myShadowCamera.GetCamera().GetTransformation().myForwardVector;
+	CU::Vector3f shadowCamDirection = { myDirectionalLight.direction.x, myDirectionalLight.direction.y, myDirectionalLight.direction.z };
+	CU::Vector3f shadowCameraPosition = myCameras[Intify(eCameraType::ePlayerOneCamera)].GetPosition() + (-shadowCamDirection * 1250.f);
+	myShadowCamera.GetCamera().SetPosition(shadowCameraPosition);
+	myShadowCamera.GetCamera().LookAt(myCameras[Intify(eCameraType::ePlayerOneCamera)].GetPosition());
 
 	SChangeStatesMessage statemsg;
-	if (mySkybox != nullptr)
-	{
-		statemsg.myBlendState = eBlendState::eNoBlend;
-		statemsg.myRasterizerState = eRasterizerState::eNoCulling;
-		statemsg.myDepthStencilState = eDepthStencilState::eDisableDepth;
-		statemsg.mySamplerState = eSamplerState::eWrap;
+	statemsg.myRasterizerState = eRasterizerState::eDefault;
+	statemsg.myDepthStencilState = eDepthStencilState::eDefault;
+	statemsg.myBlendState = eBlendState::eNoBlend;
+	statemsg.mySamplerState = eSamplerState::eClamp;
 
-		RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
-
-		//SRenderSkyboxMessage msg;
-		//msg.mySkybox = mySkybox;
-		//RENDERER.AddRenderMessage(new SRenderSkyboxMessage(msg));
-
-		statemsg.myRasterizerState = eRasterizerState::eDefault;
-		statemsg.myDepthStencilState = eDepthStencilState::eDefault;
-		statemsg.myBlendState = eBlendState::eNoBlend;
-		statemsg.mySamplerState = eSamplerState::eClamp;
-
-		RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
-		myShadowCamera.AddRenderMessage(new SChangeStatesMessage(statemsg));
-	}
+	RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
+	myShadowCamera.AddRenderMessage(new SChangeStatesMessage(statemsg));
 
 	for (unsigned int i = 0; i < myModels.Size(); ++i)
 	{
@@ -281,6 +260,28 @@ void CScene::SetSkybox(const char* aPath)
 
 	mySkybox = new CSkybox();
 	mySkybox->Init(aPath);
+
+	SChangeStatesMessage statemsg;
+
+	statemsg.myBlendState = eBlendState::eNoBlend;
+	statemsg.myRasterizerState = eRasterizerState::eNoCulling;
+	statemsg.myDepthStencilState = eDepthStencilState::eDisableDepth;
+	statemsg.mySamplerState = eSamplerState::eWrap;
+
+	RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
+
+	SRenderSkyboxMessage msg;
+	msg.mySkybox = mySkybox;
+	RENDERER.AddRenderMessage(new SRenderSkyboxMessage(msg));
+
+	statemsg.myRasterizerState = eRasterizerState::eDefault;
+	statemsg.myDepthStencilState = eDepthStencilState::eDefault;
+	statemsg.myBlendState = eBlendState::eNoBlend;
+	statemsg.mySamplerState = eSamplerState::eClamp;
+
+	RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
+
+
 }
 
 CModelInstance& CScene::GetModelAt(InstanceID aModelID)
@@ -290,6 +291,12 @@ CModelInstance& CScene::GetModelAt(InstanceID aModelID)
 
 CFireEmitterInstance& CScene::GetFireEmitter(const InstanceID aFireEmitterID)
 {
+	if (aFireEmitterID >= myFireEmitters.Size() || aFireEmitterID < 0)
+	{
+		static CFireEmitterInstance nullFireEmitter;
+		return nullFireEmitter;
+	}
+
 	return myFireEmitters[aFireEmitterID];
 }
 

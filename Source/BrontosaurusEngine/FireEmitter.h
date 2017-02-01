@@ -29,7 +29,7 @@ public:
 private:
 	bool InitInputBuffers();
 	bool InitConstantBuffers();
-	bool InitTextures();
+	bool InitTextures(const SFireEmitterData& aData);
 	void UpdateBuffers(const CU::Time aFrameTime, const CU::Matrix44f& aToWorldMatrix);
 	void SetTextures();
 

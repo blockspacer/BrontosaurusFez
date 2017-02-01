@@ -542,7 +542,8 @@ bool CFBXLoader::LoadModelScene(const char* aFilePath, CLoaderScene& aSceneOut)
 	LoadMeshChildren(root, nodes);
 	for (unsigned int i = 0; i < nodes.Size(); ++i)
 	{
-		unsigned int meshIndex = nodes[i]->mMeshes[0];
+		unsigned int last = (nodes[i]->mNumMeshes > 0) ? nodes[i]->mNumMeshes - 1 : 0;
+		unsigned int meshIndex = nodes[i]->mMeshes[last];
 		aiMesh* fbxMesh = scene->mMeshes[meshIndex];
 
 		CLoaderMesh* mesh = new CLoaderMesh();
@@ -625,6 +626,16 @@ bool CFBXLoader::LoadModelScene(const char* aFilePath, CLoaderScene& aSceneOut)
 	return true;
 }
 
+const aiScene* CFBXLoader::GetScene(const std::string& aFBXPath)
+{
+	if (!does_file_exist(aFBXPath.c_str()))
+	{
+		return nullptr;
+	}
+
+	return aiImportFile(aFBXPath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_ConvertToLeftHanded);
+}
+
 
 void CFBXLoader::LoadMeshChildren(aiNode* aNode, CU::GrowingArray<aiNode*>& aNodesOut)
 {
@@ -641,7 +652,11 @@ void CFBXLoader::LoadMeshChildren(aiNode* aNode, CU::GrowingArray<aiNode*>& aNod
 	for (unsigned int i = 0; i < aNode->mNumChildren; ++i)
 	{
 		aiNode* child = aNode->mChildren[i];
-		if (strcmp(child->mName.C_Str(), "SKEL") == 0) continue;
+		static const std::string animationIdentifier = "SKEL";
+		static const std::string animationIdentifier2 = "SKIN";
+		std::string nodeName = aNode->mName.C_Str();
+		if (nodeName.find(animationIdentifier) != std::string::npos) continue;
+		if (nodeName.find(animationIdentifier2) != std::string::npos) continue;
 		LoadMeshChildren(child, aNodesOut);
 	}
 }
