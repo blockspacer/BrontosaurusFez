@@ -12,6 +12,11 @@ int LoadFireComponent(KLoader::SLoadedComponentData someData)
 
 	CFireEmitterInstance fireEmitter;
 	SFireEmitterData fireData;
+
+	fireData.myNoiseTexturePath = someData.myData["NoiseTexturePath"].GetString();
+	fireData.myColorTexturePath = someData.myData["ColorTexturePath"].GetString();
+	fireData.myAlphaTexturePath = someData.myData["AlphaTexturePath"].GetString();
+
 	fireData.myScrollSpeeds[0] = /*1.3f;*/someData.myData["ScrollSpeeds"][0].GetFloat();
 	fireData.myScrollSpeeds[1] = /*2.1f;*/ someData.myData["ScrollSpeeds"][1].GetFloat();
 	fireData.myScrollSpeeds[2] = /*2.3f;*/ someData.myData["ScrollSpeeds"][2].GetFloat();
