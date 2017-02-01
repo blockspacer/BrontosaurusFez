@@ -85,12 +85,12 @@ void CEnemyFactory::CreateEnemy(CU::Vector3f aPosition)
 	CSeekController* seek = CSeekControllerManager::GetInstance().CreateAndRegister();
 	//from json
 	//{
-	seek->SetAggroRange(myEnemiesAggroRange);
-	seek->SetWeight(myEnemiesSeekBeheviourWeight);
 	seek->SetMaxSpeed(myEnemiesMaxSpeed);
+	seek->SetAggroRange(myEnemiesAggroRange);
+	seek->SetTargetRadius(myEnemiesTargetRadius);
+	seek->SetWeight(myEnemiesSeekBeheviourWeight);
 	seek->SetMaxAcceleration(myEnemiesMaxAcceleration);
 	seek->SetSlowDownRadius(myEnemiesSlowDownRadius);
-	seek->SetTargetRadius(myEnemiesTargetRadius);
 	//}
 	Enemy->AddComponent(seek);
 
@@ -124,6 +124,7 @@ void CEnemyFactory::CreateEnemy(CU::Vector3f aPosition)
 	Enemy->AddComponent(collider);
 
 	MovementComponent* movement = MovementComponentManager::GetInstance().CreateAndRegisterComponent();
+	movement->SetMovementSpeed(myEnemiesMaxSpeed);
 
 	Enemy->AddComponent(movement);
 
