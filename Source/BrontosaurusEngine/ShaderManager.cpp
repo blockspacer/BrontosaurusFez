@@ -190,12 +190,16 @@ ID3D11VertexShader* CShaderManager::CompileVertexShader(std::wstring aString, un
 		DL_FATAL_ERROR("Failed to compile shader %s with file path %S", shaderFunction.c_str(), aString.c_str());
 	}
 
+#ifdef USE_PRECOMPILED_SHADERS
+
 	std::wstring compiledShaderPath(aString);
 	compiledShaderPath -= L".fx";
 	compiledShaderPath += std::to_wstring(aDataFlags) += L".fxc";
 	std::ofstream compiledShader(compiledShaderPath, std::ios::binary);
 	compiledShader.seekp(0);
 	compiledShader.write(static_cast<char*>(vertexBlob->GetBufferPointer()), vertexBlob->GetBufferSize());
+
+#endif // USE_PRECOMPILED_SHADERS
 
 	result = CEngine::GetInstance()->GetFramework()->GetDevice()->CreateVertexShader(vertexBlob->GetBufferPointer(), vertexBlob->GetBufferSize(), NULL, &vertexShader);
 	CHECK_RESULT(result, "Failed to create Vertex Shader.");
