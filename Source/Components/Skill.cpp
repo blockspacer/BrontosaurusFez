@@ -84,7 +84,7 @@ void Skill::TryToActivate()
 		SComponentMessageData data;
 		data.mySkill = this;
 		myUser->NotifyComponents(eComponentMessageType::eCheckIfCanUseSkill, data);
-
+		myIsSelected = false;
 	}
 }
 
