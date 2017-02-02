@@ -74,7 +74,7 @@ PixelOutput PS_ObjectNormal(PosNormBinormTanTex_InputPixel input);
 
 float4 PS_FresnelHighlight(PosNormBinormTanTex_InputPixel input, float4 aColorInput);
 
-PixelOutput PS_PosNormBinormTanTex(PosNormBinormTanTex_InputPixel input)                                         // <-------------
+PixelOutput PS_PosNormBinormTanTex(PosNormBinormTanTex_InputPixel input)
 {
 	PixelOutput output;
 
@@ -110,13 +110,13 @@ float4 PS_FresnelHighlight(PosNormBinormTanTex_InputPixel input, float4 aColorIn
 	
 	float power = 0.5f;// 0.182219
 
-	float PowOp = pow(AddOp75, power);
+	float PowOp = (pow(AddOp75, power));
 	float Contrastmulstiplier = ((PowOp - 0.5) * 200.0);
 	float ContrastAdd = (Contrastmulstiplier + 0.5);
 	float SatOp = saturate(ContrastAdd);
-	float AddOp92 = (dot(CamVecNorm, NormOp) + -0.4);
-	
-	float PowOp90 = pow(AddOp92, 0.144385);
+	float AddOp92 = max(0, (dot(CamVecNorm, NormOp) + -0.4));
+
+	float PowOp90 = (pow(AddOp92, 0.144385));
 	float Contrastmulstiplier98 = ((PowOp90 - 0.5) * 5.0);
 	float ContrastAdd97 = (Contrastmulstiplier98 + 0.5);
 	float SatOp104 = saturate(ContrastAdd97);
