@@ -1,6 +1,12 @@
 #pragma once
 #include "ICollider.h"
 
+namespace CU
+{
+	template<typename ObjectType, int ObjectCapacity>
+	class CStaticMemoryPool;
+}
+
 namespace Intersection
 {
 	struct SCircle;
@@ -18,6 +24,9 @@ public:
 
 	CCircleCollider& operator=(const CCircleCollider& aCopy);
 	CCircleCollider& operator=(CCircleCollider&& aTemporary);
+
+	void* operator new(size_t aBytes);
+	void operator delete(void* aObject);
 	
 	void RenderDebugLines(CCollisionRenderer& aCollisionRenderer) override;
 
@@ -37,4 +46,5 @@ private:
 	Intersection::SCircle* myCircleData;
 
 	const static Intersection::SCircle ourNullCircle;
+	static CU::CStaticMemoryPool<CCircleCollider, 1024> ourMemoryPool;
 };

@@ -87,7 +87,7 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data);
 		break;
 	case eComponentMessageType::eHealPercent:
-		temp = myMaxHealth * (aMessageData.myInt / 100);
+		temp = static_cast<float>(myMaxHealth * (static_cast<float>(aMessageData.myInt / 100.0f)));
 		SetHealth(myHealth + temp);
 		data.myUChar = myPercentageLeft * 100;
 		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data);
