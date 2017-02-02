@@ -9,7 +9,9 @@ class CComponent;
 class CPickupComponent;
 class CGameObject;
 class Skill;
+struct SNavmeshTriangle;
 struct SHat;
+
 namespace CU
 {
 	template<typename ObjectType, typename SizeType = unsigned int, bool USE_SAFE_MODE = true>
@@ -37,10 +39,8 @@ enum class eComponentType : unsigned char;
 enum class eComponentMessageType
 {
 	eAddComponent,
-	eCollision,
 	ePlaySound,
 	eMoving,
-	eInit,
 	eDied,
 	eRespawned,
 	eHeal,
@@ -90,39 +90,44 @@ enum class eComponentMessageType
 	eActivate,
 	eCalledForHelp,
 	eLookAt,
+	eAddMessageSubscription,
+	eEnterNewTriangle,
+	eNotOnNavmesh,
+	eSetPathPosition,
+	eLength
 };
+
+#define STATIC_SIZEOF(x) { char STATIC_SIZEOF_TEMP[(x)]; STATIC_SIZEOF_TEMP = 1; }
 
 struct SComponentMessageData
 {
-	SComponentMessageData() : myComponent(nullptr) {}
+	SComponentMessageData() : myVoidPointer(nullptr) {}
 
 	union
 	{
+		void* myVoidPointer;
 		CComponent* myComponent;
-		CComponent* myComponents[2];
 		CPickupComponent* myPickupComponent;
 		CGameObject* myGameObject;
+		struct SComponentMessageCallback* myComponentMessageCallback;
 		int myInt;
 		unsigned short myUShort;
 		unsigned char myUChar;
 		bool myBool;
 		const char* myString;
 		float myFloat;
-		CU::Matrix33f myProjectileRotationMatrix;
-		CU::Matrix44f myMatrix44;
 		CU::Vector2f myVector2f;
 		CU::Vector3f myVector3f;
 
 
-		CU::GrowingArray<CU::Vector3f, unsigned int, false>* myVector3ListPointer;
 		CPath* myPathPointer;
-		
 		eComponentType myComponentTypeAdded;
-		Stats::STotalStats myStatStruct;
+		Stats::STotalStats* myStatStruct;
 		Stats::SBonusStats* myStatsToAdd;
 		ICollider* myCollider;
 		Skill* mySkill;
 		SHat* myHat;
+		SNavmeshTriangle* myTrianglePointer;
 	};
 };
 

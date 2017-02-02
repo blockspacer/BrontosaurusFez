@@ -18,7 +18,7 @@ void CCameraComponent::Receive(const eComponentMessageType aMessageType, const S
 
 	switch (aMessageType)
 	{
-	case eComponentMessageType::eInit:
+	case eComponentMessageType::eObjectDone:
 	case eComponentMessageType::eMoving:
 		myCamera->SetPosition(myOffsetPosition + GetParent()->GetWorldPosition());
 		break;

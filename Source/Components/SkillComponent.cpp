@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "SkillComponent.h"
-#include "../Collision/ICollider.h"
+//#include "../Collision/ICollider.h"
 #include "../Game/PollingStation.h"
 #include "SkillData.h"
 
@@ -41,16 +41,16 @@ void SkillComponent::Receive(const eComponentMessageType aMessageType, const SCo
 	case eComponentMessageType::eOnCollisionEnter:
 		if(myUserObject == PollingStation::playerObject)
 		{
-			if(aMessageData.myCollider->GetGameObject() != myUserObject)
+			if(aMessageData.myGameObject != myUserObject)
 			{
-				DoDamage(aMessageData.myCollider->GetGameObject());
+				DoDamage(aMessageData.myGameObject);
 			}
 		}
 		else
 		{
-			if(aMessageData.myCollider->GetGameObject() == PollingStation::playerObject)
+			if(aMessageData.myGameObject == PollingStation::playerObject)
 			{
-				DoDamage(aMessageData.myCollider->GetGameObject());
+				DoDamage(aMessageData.myGameObject);
 			}
 		}
 		

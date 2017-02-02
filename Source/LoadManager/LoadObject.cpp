@@ -8,6 +8,7 @@
 #include "DL_Debug.h"
 #include "GameObjectManager.h"
 #include "CommonUtilities.h"
+#include "ComponentMessage.h"
 
 int LoadObject(KLoader::SLoadedComponentData someData)
 {
@@ -49,7 +50,7 @@ int LoadObject(KLoader::SLoadedComponentData someData)
 void LinkObject(const int target, const int anOtherComponent)
 {
 	CComponent* const objectComponent = CComponentManager::GetInstance().GetComponent(target);
-	CGameObject* const gameObject = dynamic_cast<CGameObject* const>(objectComponent);
+	CGameObject* const gameObject = (objectComponent->IsGameObject()) ? static_cast<CGameObject*>(objectComponent) : nullptr;
 
 	if (gameObject == nullptr)
 	{

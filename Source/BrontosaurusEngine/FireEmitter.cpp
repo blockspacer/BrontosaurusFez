@@ -135,7 +135,7 @@ void CFireEmitter::Init(const SFireEmitterData& aData)
 		return;
 	}
 
-	if (InitTextures() == false)
+	if (InitTextures(aData) == false)
 	{
 		return;
 	}
@@ -334,13 +334,13 @@ bool CFireEmitter::InitConstantBuffers()
 	return true;
 }
 
-bool CFireEmitter::InitTextures()
+bool CFireEmitter::InitTextures(const SFireEmitterData& aData)
 {
 	CTextureManager& textureMan = TEXTUREMGR;
 
-	myFireTexture = &textureMan.LoadTexture("Sprites/Fire/fire.dds");
-	myNoiseTexture = &textureMan.LoadTexture("Sprites/Fire/noise.dds");
-	myAlphaTexture = &textureMan.LoadTexture("Sprites/Fire/alpha.dds");
+	myFireTexture = &textureMan.LoadTexture(aData.myColorTexturePath.c_str());
+	myNoiseTexture = &textureMan.LoadTexture(aData.myNoiseTexturePath.c_str());
+	myAlphaTexture = &textureMan.LoadTexture(aData.myAlphaTexturePath.c_str());
 	
 	return true;
 }

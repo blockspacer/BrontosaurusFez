@@ -145,8 +145,20 @@
     <ClCompile Include="OpenShopListenerComponent.cpp">
       <Filter>OpenShopListenerComponent</Filter>
     </ClCompile>
+    <ClCompile Include="ScriptComponent.cpp">
+      <Filter>ScriptComponent</Filter>
+    </ClCompile>
     <ClCompile Include="BlessingTowerComponent.cpp" />
     <ClCompile Include="BlessingTowerComponentManager.cpp" />
+    <ClCompile Include="ScriptComponentManager.cpp">
+      <Filter>ScriptComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentMessageTypeToLua.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="FireComponent.cpp">
+      <Filter>FireComponent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -315,6 +327,21 @@
     <ClInclude Include="SpawnEnemyComponent.h" />
     <ClInclude Include="BlessingTowerComponent.h" />
     <ClInclude Include="BlessingTowerComponentManager.h" />
+    <ClInclude Include="ScriptComponent.h">
+      <Filter>ScriptComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptComponentManager.h">
+      <Filter>ScriptComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentMessageCallback.h">
+      <Filter>ScriptComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentMessageTypeToLua.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="FireComponent.h">
+      <Filter>FireComponent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -379,6 +406,12 @@
     </Filter>
     <Filter Include="OpenShopListenerComponent">
       <UniqueIdentifier>{4e77c44b-70f6-43e3-81aa-a5426b6a26c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptComponent">
+      <UniqueIdentifier>{693bd916-9e55-4c29-a108-69508fb4d6b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FireComponent">
+      <UniqueIdentifier>{d2dac69b-b1c5-47ec-b1cb-9af2c78bedf8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

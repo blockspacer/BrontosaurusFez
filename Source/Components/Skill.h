@@ -27,7 +27,7 @@ public:
 	inline bool IsInited();
 	void Select();
 	void Deselect();
-	void UpdateStats(Stats::STotalStats someStats);
+	void UpdateStats(const Stats::STotalStats& someStats);
 protected:
 	virtual void OnActivation();
 	virtual void OnDeActivation();

@@ -16,5 +16,12 @@
 #include "../CommonUtilities/GrowingArray.h"
 #include "../CommonUtilities/DL_Debug.h"
 
+#include "../BrontosaurusEngine/Scene.h"
+#include "../Game/PlayState.h"
+
+#include "KevinLoader/KevinLoader.h"
+
+#include "LoadManager.h"
+
 //#include "../CommonUtilities/MemoryLeekLogger.h"
 // TODO: reference additional headers your program requires here

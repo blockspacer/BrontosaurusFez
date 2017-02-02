@@ -16,7 +16,8 @@ enum class eSSType
 	NUMBER,
 	STRING,
 	BOOL,
-	TABLE
+	TABLE,
+	LIGHTUSERDATA
 };
 
 struct SSArgument
@@ -30,6 +31,7 @@ struct SSArgument
 	SSArgument(const ssLuaNumber aNumber);
 	SSArgument(const ssLuaString aString);
 	SSArgument(const bool aBool);
+	SSArgument(void* aLightUserData);
 	SSArgument(const ssLuaTable aTable);
 
 	~SSArgument();
@@ -39,6 +41,7 @@ struct SSArgument
 	SSArgument& operator=(const ssLuaNumber aNumber);
 	SSArgument& operator=(const ssLuaString aString);
 	SSArgument& operator=(const bool aBool);
+	SSArgument& operator=(void* aLightUserData);
 	SSArgument& operator=(const ssLuaTable& aTable);
 
 	const short GetShort() const;
@@ -51,6 +54,7 @@ struct SSArgument
 	ssLuaString GetString() const;
 	const ssLuaTable& GetTable() const;
 	const bool GetBool() const;
+	void* GetUserData() const;
 
 
 	

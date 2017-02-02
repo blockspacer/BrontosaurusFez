@@ -25,12 +25,17 @@ public:
 	void Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData) override;
 
 private:
+	void CreatePathToPlayer();
+
+private:
 	CU::GrowingArray<IController*> myControllers;
 	CU::Vector2f myVelocity;
 	CPath myPath;
 
-	SNavmeshTriangle* myTriangle;
+	SNavmeshTriangle* myTrianglePointer;
 
 	float myMaxVelocity;
+	float myElapsedPathFindingCountdown;
+	bool myIsActive;
 };
 

@@ -58,6 +58,12 @@ SSArgument::SSArgument(const bool aBool)
 	myData = new bool(aBool);
 }
 
+SSArgument::SSArgument(void* aLightUserData)
+{
+	myType = eSSType::LIGHTUSERDATA;
+	myData = new void*(aLightUserData);
+}
+
 SSArgument::SSArgument(const ssLuaTable aTable)
 {
 	myType = eSSType::TABLE;
@@ -78,6 +84,9 @@ SSArgument& SSArgument::operator=(const SSArgument& anArgument)
 			break;
 		case eSSType::BOOL: 
 			SetData(anArgument.GetData<bool>());
+			break;
+		case eSSType::LIGHTUSERDATA:
+			SetData(anArgument.GetData<void*>());
 			break;
 		case eSSType::TABLE:
 			SetData(anArgument.GetData<ssLuaTable>());
@@ -104,6 +113,10 @@ SSArgument& SSArgument::operator=(const SSArgument& anArgument)
 		case eSSType::BOOL: 
 			SetData(anArgument.GetData<bool>());
 			myType = eSSType::BOOL;
+			break;
+		case eSSType::LIGHTUSERDATA:
+			SetData(anArgument.GetData<void*>());
+			myType = eSSType::LIGHTUSERDATA;
 			break;
 		case eSSType::TABLE:
 			SetData(anArgument.GetData<ssLuaTable>());
@@ -174,6 +187,21 @@ SSArgument& SSArgument::operator=(const bool anArgument)
 	{
 		DL_ASSERT(L"Trying to assign something that isn't a bool to an argument that is set to hold a bool");
 	}
+	return *this;
+}
+
+SSArgument& SSArgument::operator=(void* aLightUserData)
+{
+	if (myType == eSSType::LIGHTUSERDATA || myType == eSSType::NIL)
+	{
+		SetData(aLightUserData);
+		myType = eSSType::LIGHTUSERDATA;
+	}
+	else
+	{
+		DL_ASSERT(L"Trying to assign something that isn't light user data to an argument that is set to hold light user data");
+	}
+
 	return *this;
 }
 
@@ -281,6 +309,17 @@ const bool SSArgument::GetBool() const
 	return GetData<bool>();
 }
 
+void* SSArgument::GetUserData() const
+{
+	if (myType != eSSType::LIGHTUSERDATA)
+	{
+		DL_ASSERT("trying to get light user data from %s", GetTypeName());
+		return nullptr;
+	}
+
+	return *static_cast<void**>(myData);
+}
+
 void SSArgument::SetToNil()
 {
 	if (myData != nullptr)
@@ -298,14 +337,21 @@ const char* SSArgument::GetTypeName() const
 
 const char* SSArgument::GetTypeName(const eSSType aType)
 {
+	static const char* nilStr = "nil";
+	static const char* numberStr = "number";
+	static const char* stringStr = "string";
+	static const char* boolStr = "bool";
+	static const char* tableStr = "table";
+	static const char* undefinedStr = "undefined";
+
 	switch (aType) //TODO: this is unsafe, returning a pointer to a local variable
 	{
-	case eSSType::NIL: return "nil";
-	case eSSType::NUMBER: return "number";
-	case eSSType::STRING: return "string";
-	case eSSType::BOOL: return "bool";
-	case eSSType::TABLE: return "table";
-	default: return "undefined";
+	case eSSType::NIL: return nilStr;
+	case eSSType::NUMBER: return numberStr;
+	case eSSType::STRING: return stringStr;
+	case eSSType::BOOL: return boolStr;
+	case eSSType::TABLE: return tableStr;
+	default: return undefinedStr;
 	}
 }
 
