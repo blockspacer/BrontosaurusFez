@@ -220,7 +220,7 @@ void CPlayState::Load()
 
 	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
-#ifdef _DEBUG
+#ifdef _DEBUGq
 	myLevelIndex = levelsArray.Size()-1;
 #else
 	const int levelIndex = 0;
@@ -281,7 +281,7 @@ void CPlayState::Load()
 		//PollingStation::playerObject->AddComponent(respawn);
 		PollingStation::playerObject->AddComponent(new CPlayerHealthMessenger());
 		PollingStation::playerObject->AddComponent(new CPlayerManaMessenger());
-		PollingStation::playerObject->AddComponent(CPickupManager::GetInstance().CreatePickerUpperComp());
+		//PollingStation::playerObject->AddComponent(CPickupManager::GetInstance().CreatePickerUpperComp());
 		PollingStation::playerObject->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
 		PollingStation::playerObject->AddComponent(new CMainStatComponent());
 	}
