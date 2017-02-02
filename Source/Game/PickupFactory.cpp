@@ -42,7 +42,7 @@ void CPickupFactory::CreateHealthGlobe(CU::Vector3f aPosition)
 	CGameObject* healthGlobe = myGameObjectManager->CreateGameObject();
 	CU::Vector3f direction = aPosition - PollingStation::playerObject->GetWorldPosition();
 	direction.Normalize();
-	CU::Vector3f newPosition = aPosition + direction * 200.0f;
+	CU::Vector3f newPosition = aPosition + direction * 50.0f;
 	healthGlobe->SetWorldPosition(newPosition);
 
 	CPickupComponent* pickup = CPickupManager::GetInstance().CreatePickupComponent(ePickupType::HEALTH, myHealthDropHealValue, 0, 100);
@@ -76,7 +76,7 @@ void CPickupFactory::CreateGoldPickup(CU::Vector3f aPosition, const unsigned int
 	CGameObject* manaGlobe = myGameObjectManager->CreateGameObject();
 	CU::Vector3f direction = aPosition - PollingStation::playerObject->GetWorldPosition();
 	direction.Normalize();
-	CU::Vector3f newPosition = aPosition + direction * 200.0f;
+	CU::Vector3f newPosition = aPosition + direction * 50.0f;
 	manaGlobe->SetWorldPosition(newPosition);
 
 	CPickupComponent* pickup = CPickupManager::GetInstance().CreatePickupComponent(ePickupType::GOLD, aAmountToDrop, 0, 100);
@@ -110,7 +110,7 @@ void CPickupFactory::CreateManaGlobe(CU::Vector3f aPosition)
 	CGameObject* healthGlobe = myGameObjectManager->CreateGameObject();
 	CU::Vector3f direction = aPosition - PollingStation::playerObject->GetWorldPosition();
 	direction.Normalize();
-	CU::Vector3f newPosition = aPosition + direction * 200.0f;
+	CU::Vector3f newPosition = aPosition + direction * 50.0f;
 	healthGlobe->SetWorldPosition(newPosition);
 
 	CPickupComponent* pickup = CPickupManager::GetInstance().CreatePickupComponent(ePickupType::MANA, myManaDropRestoreValue, 0, 100);
@@ -144,7 +144,7 @@ void CPickupFactory::CreateHatDrop(CU::Vector3f aPosition, const char* aHatName)
 	CGameObject* hat = myGameObjectManager->CreateGameObject();
 	CU::Vector3f direction = aPosition - PollingStation::playerObject->GetWorldPosition();
 	direction.Normalize();
-	CU::Vector3f newPosition = aPosition + direction * 200.0f;
+	CU::Vector3f newPosition = aPosition + direction * 50.0f;
 	hat->SetWorldPosition(newPosition);
 
 	CPickupComponent* pickup = CPickupManager::GetInstance().CreatePickupComponent(ePickupType::HAT, aHatName, 0, 100);
