@@ -56,6 +56,36 @@ unsigned int CAnimEvaluator::GetFrameIndexAt(float ptime){
 	return static_cast<unsigned int>(( static_cast<float>(Transforms.size()) * percent));
 }
 
+unsigned int CAnimEvaluator::GetFrameIndexAt(float ptime, bool loop)
+{
+	// get a [0.f ... 1.f) value by allowing the percent to wrap around 1
+	ptime *= TicksPerSecond;
+
+	float time = 0.0f;
+
+	if (loop)
+	{
+		if (Duration > 0.0)
+			time = fmod(ptime, Duration);
+	}
+	else
+	{
+		time = ptime;
+	}
+
+
+	float percent = time / Duration;
+	if (loop == false)
+	{
+		if (percent > 0.99999f)
+			percent = 0.99999f;
+	}
+	
+
+	if (!PlayAnimationForward) percent = (percent - 1.0f)*-1.0f;// this will invert the percent so the animation plays backwards
+	return static_cast<unsigned int>((static_cast<float>(Transforms.size()) * percent));
+}
+
 // ------------------------------------------------------------------------------------------------
 // Evaluates the animation tracks for a given time stamp. 
 void CAnimEvaluator::Evaluate( float pTime, std::map<std::string, CBone*>& bones) 
