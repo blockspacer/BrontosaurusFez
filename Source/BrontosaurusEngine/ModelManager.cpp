@@ -213,8 +213,8 @@ void CModelManager::LoadAnimations(const char* aPath, const ModelId aModelId)
 	modelName -= std::string(".fbx");
 	modelName += std::string("_");
 
-	const ModelId animationCount = 7;
-	const std::string animationNames[animationCount] = { ("idle"), ("idle2"), ("walk"), ("pickup"), ("turnRight90"), ("turnLeft90"), ("attack") };
+	const ModelId animationCount = 9;
+	const std::string animationNames[animationCount] = { ("idle"), ("idle2"), ("walk"), ("pickup"), ("turnRight90"), ("turnLeft90"), ("attack") , ("summon"), ("died") };
 
 	CModel* mdl = GetModel(aModelId);
 	const aiScene* scene = mdl->GetScene();
