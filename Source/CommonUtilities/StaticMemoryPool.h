@@ -35,6 +35,8 @@ namespace CU
 	template<typename ObjectType, int ObjectCapacity>
 	inline CStaticMemoryPool<ObjectType, ObjectCapacity>::~CStaticMemoryPool()
 	{
+		int br = 0;
+		br++;
 	}
 
 	template<typename ObjectType, int ObjectCapacity>
@@ -52,11 +54,13 @@ namespace CU
 	template<typename ObjectType, int ObjectCapacity>
 	inline bool CStaticMemoryPool<ObjectType, ObjectCapacity>::Recycle(ObjectType* aObject)
 	{
-		if (aObject == nullptr)
+		if (!aObject)
 		{
 			assert(!"Trying to recycle nullptr!");
 			return false;
 		}
+
+		assert(myFreeData.Find(aObject) == myFreeData.FoundNone && "recycling twice in memory pool :(");
 
 		myFreeData.Add(aObject);
 		return true;
