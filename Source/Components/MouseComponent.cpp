@@ -28,8 +28,12 @@ void CMouseComponent::Receive(const eComponentMessageType aMessageType, const SC
 	switch (aMessageType)
 	{
 	case eComponentMessageType::eOnCollisionEnter:
+		{
 		HandleCollision(aMessageData.myGameObject);
+		SComponentMessageData data; data.myFloat = 0.5f;
+		aMessageData.myGameObject->NotifyComponents(eComponentMessageType::eSetHighLight, data);
 		break;
+		}
 	case eComponentMessageType::eOnCollisionExit:
 		for(unsigned short i = 0; i < myHoveredGameObjects.Size(); i++)
 		{
@@ -38,6 +42,8 @@ void CMouseComponent::Receive(const eComponentMessageType aMessageType, const SC
 				myHoveredGameObjects.RemoveAtIndex(i);
 			}
 		}
+		SComponentMessageData data; data.myFloat = 0.f;
+		aMessageData.myGameObject->NotifyComponents(eComponentMessageType::eSetHighLight, data);
 		break;
 	}
 }

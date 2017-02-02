@@ -80,6 +80,9 @@ void CModelComponent::Receive(const eComponentMessageType aType, const SComponen
 	case eComponentMessageType::eRespawned:
 		myModel->SetVisibility(true);
 		break;
+	case eComponentMessageType::eSetHighLight:
+		myModel->SetHighlightIntencity(aData.myFloat);
+		break;
 	}
 }
 
