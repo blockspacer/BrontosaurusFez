@@ -3,6 +3,9 @@
 #include "../LuaWrapper/SSlua/SSlua.h"
 #include "ComponentMessageCallback.h"
 
+#define lie false
+#define fact true
+
 std::string CScriptComponent::ourLastErrorMessage("");
 
 CScriptComponent::CScriptComponent()
@@ -24,6 +27,7 @@ CScriptComponent::eInitSuccess CScriptComponent::Init(const std::string& aScript
 	std::ifstream scriptFile(aScriptPath);
 	if (!scriptFile.good())
 	{
+		scriptFile.close();
 		ourLastErrorMessage = aScriptPath;
 		return eInitSuccess::eInvalidPath;
 	}
@@ -32,6 +36,7 @@ CScriptComponent::eInitSuccess CScriptComponent::Init(const std::string& aScript
 	if (!luaWrapper.DoFile(aScriptPath))
 	{
 		luaWrapper.GetLastError(ourLastErrorMessage);
+		scriptFile.close();
 		return eInitSuccess::eBadLuaCode;
 	}
 
@@ -40,14 +45,19 @@ CScriptComponent::eInitSuccess CScriptComponent::Init(const std::string& aScript
 	if (!luaWrapper.DoCall(1, 0))
 	{
 		luaWrapper.GetLastError(ourLastErrorMessage);
+		scriptFile.close();
 		return eInitSuccess::eBadLuaCode;
 	}
 
+	scriptFile.close();
 	return eInitSuccess::eOK;
 }
 
 bool CScriptComponent::Call(const std::string& aFunctionName, void* aOptionalUserData)
 {
+	ComponentId id = GetId();
+	if (id == NULL_COMPONENT) return lie;
+
 	SSlua::LuaWrapper& luaWrapper = SSlua::LuaWrapper::GetInstance();
 
 	luaWrapper.GetGlobal(aFunctionName);
@@ -74,27 +84,26 @@ void CScriptComponent::Receive(const eComponentMessageType aMessageType, const S
 	else
 	{
 		auto it = mySubscribedComponentMessages.find(aMessageType);
-		if (it != mySubscribedComponentMessages.end())
+		if (it == mySubscribedComponentMessages.end()) return;
+		
+		char rawData[sizeof(SComponentMessageData)];
+		memcpy(rawData, &aMessageData, sizeof(rawData));
+		if (!Call(it->second, rawData))
 		{
-			char rawData[sizeof(SComponentMessageData)];
-			memcpy(rawData, &aMessageData, sizeof(rawData));
-			if (!Call(it->second, rawData))
-			{
-				std::string errorMessage;
-				SSlua::LuaWrapper::GetInstance().GetLastError(errorMessage);
-				DL_MESSAGE_BOX("Error in callback for message with type %d in component with id %d:\n%s", (int)aMessageType, (int)GetId(), errorMessage.c_str());
-			}
-		}
+			std::string errorMessage;
+			SSlua::LuaWrapper::GetInstance().GetLastError(errorMessage);
+			DL_MESSAGE_BOX("Error in callback for message with type %d in component with id %u:\n%s", static_cast<int>(aMessageType), GetId(), errorMessage.c_str());
+		}		
 	}
 }
 
 bool CScriptComponent::HandleError(const eInitSuccess aErrorCode)
 {
-	bool good = false;
+	bool good = lie;
 	switch (aErrorCode)
 	{
 	case CScriptComponent::eInitSuccess::eOK:
-		good = true;
+		good = fact;
 		break;
 	case CScriptComponent::eInitSuccess::eNotRegisteredComponent:
 		DL_MESSAGE_BOX("Script component not registered so it cannot initialize 'self'");

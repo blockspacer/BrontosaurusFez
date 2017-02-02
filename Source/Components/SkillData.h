@@ -4,10 +4,12 @@ struct SkillData
 {
 
 	std::string skillName;
+	std::string animationPlayedName;
 	float range;
 	float coolDown;
 	float activationRadius;
 	float animationDuration;
+	float animationWindDown;
 	float manaCost;
 	HealthPoint damage;
 	bool isAOE;

@@ -23,12 +23,22 @@ void CDialogState::Init()
 		DL_ASSERT("Dialog is missing main array");
 	}
 
+	CU::DynamicString currentActor = "";
+
 	for (unsigned i = 0; i < dialogArray.Size(); ++i)
 	{
-		CU::CJsonValue currentDialogPiece = dialogArray[i];
-		if (currentDialogPiece.GetType() == CU::eJsoneValueType::ARRAY)
+		CU::CJsonValue currentDilogJsonPiece = dialogArray[i];
+		if (currentDilogJsonPiece.GetType() == CU::eJsoneValueType::ARRAY)
 		{
-			
+			SDialogPiece newDialogPiece;
+			newDialogPiece.myCurrentActor = currentActor;
+
+			for (int j = 0; j < currentDilogJsonPiece.Size(); ++j)
+			{
+				//CU::DynamicString dialogLine;
+				//dialogLine = currentDilogJsonPiece[i].GetString();
+				//newDialogPiece.myDialogTexts.Add(dialogLine);
+			}
 		}
 	}
 }

@@ -150,7 +150,7 @@ struct SRenderModelMessage : SRenderMessage
 
 	const char* myCurrentAnimation;
 	float myAnimationTime;
-
+	float myHighlightIntencity;
 	int myModelID;
 };
 
@@ -213,6 +213,8 @@ struct SRenderSpriteMessage : SRenderMessage
 struct SRenderSkyboxMessage : SRenderMessage
 {
 	SRenderSkyboxMessage();
+	SRenderSkyboxMessage(const SRenderSkyboxMessage& aCopy) = delete;
+	~SRenderSkyboxMessage();
 	CSkybox* mySkybox;
 };
 

@@ -4,7 +4,7 @@
 #include <fstream>
 
 //#define JSON_ERROR(ERROR_MESSAGE) assert(ERROR_MESSAGE && false)
-#define JSON_ERROR(ERROR_MESSAGE, ...) DL_MESSAGE_BOX(ERROR_MESSAGE, __VA_ARGS__)
+#define JSON_ERROR DL_MESSAGE_BOX
 
 namespace CU
 {
@@ -57,19 +57,19 @@ namespace CU
 
 	std::string CJsonValue::Parse(const std::string& aFilePath)
 	{
-		if (myValue != nullptr && myIsBorrowed == false)
-		{
-			delete myValue;
-		}
-
-		myIsBorrowed = false;
-
 		std::ifstream jsonFile(aFilePath);
 		if (jsonFile.good() == false)
 		{
 			JSON_ERROR("Could not find json file %s", aFilePath.c_str());
 			return "Error loading filePath " + aFilePath;
 		}
+
+		if (myValue != nullptr && myIsBorrowed == false)
+		{
+			delete myValue;
+		}
+
+		myIsBorrowed = false;
 
 		picojson::value* newValue = new picojson::value();
 		std::string errorMessage = picojson::parse(*newValue, jsonFile);
@@ -111,7 +111,7 @@ namespace CU
 
 	int CJsonValue::Size() const
 	{
-		if (myValue == nullptr)
+		if (IsNull() == true)
 		{
 			JSON_ERROR("json value is null");
 			return 0;
@@ -217,6 +217,11 @@ namespace CU
 			JSON_ERROR("json value is null");
 			return false;
 		}
+		if (IsBool() == false)
+		{
+			JSON_ERROR("json value is not bool");
+			return false;
+		}
 
 		return myValue->get<bool>();
 	}
@@ -226,6 +231,11 @@ namespace CU
 		if (myValue == nullptr)
 		{
 			JSON_ERROR("json value is null");
+			return 0.0;
+		}
+		if (IsNumber() == false)
+		{
+			JSON_ERROR("json value is not number");
 			return 0.0;
 		}
 
@@ -278,7 +288,7 @@ namespace CU
 
 	CJsonValue CJsonValue::operator[](const int anIndex) const
 	{
-		if (myValue == nullptr)
+		if (IsNull() == true)
 		{
 			JSON_ERROR("json value is null");
 			return CJsonValue();
@@ -287,6 +297,7 @@ namespace CU
 		{
 			eJsoneValueType type = GetType();
 			JSON_ERROR("json value is not an array");
+			type = eJsoneValueType::JSON_NULL; //remove warning
 			return CJsonValue();
 		}
 
@@ -304,7 +315,7 @@ namespace CU
 
 	CJsonValue CJsonValue::operator[](const std::string& aKey) const
 	{
-		if (myValue == nullptr)
+		if (IsNull() == true)
 		{
 			JSON_ERROR("json value is null");
 			return CJsonValue();

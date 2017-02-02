@@ -4,7 +4,7 @@
 #include "../Components/GameObject.h"
 #include "PollingStation.h"
 #include "../Components/ComponentMessage.h"
-#include "../Collision/ICollider.h"
+//#include "../Collision/ICollider.h"
 //#include <iostream>
 
 void CPickupComponent::Destroy()
@@ -18,8 +18,8 @@ void CPickupComponent::Receive(const eComponentMessageType aMessageType, const S
 	{
 		//GetParent()->NotifyComponents(eComponentMessageType::eObjectiveCompleted, SComponentMessageData());
 		SComponentMessageData data;
-		data.myPickupComponent = this;
-		aMessageData.myCollider->GetGameObject()->NotifyComponents(eComponentMessageType::ePickUp, data);
+  		data.myPickupComponent = this;
+		aMessageData.myGameObject->NotifyComponents(eComponentMessageType::ePickUp, data);
 		return;
 	}
 }
@@ -37,6 +37,7 @@ CPickupComponent::~CPickupComponent()
 
 void CPickupComponent::Update(float aDeltaTime)
 {
+
 	float distance2 = CU::Vector3f(PollingStation::playerObject->GetToWorldTransform().GetPosition() - GetParent()->GetToWorldTransform().GetPosition()).Length2();
 	if(distance2 < mySuckUpRadius * mySuckUpRadius)
 	{

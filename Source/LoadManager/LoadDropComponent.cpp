@@ -9,8 +9,10 @@
 
 int LoadDropComponent(KLoader::SLoadedComponentData someData)
 {
+	int temp1 = someData.myData.at("MaxGoldToDropOnDeath").GetUInt();
+	int temp2 = someData.myData.at("MinGoldToDropOnDeath").GetUInt();
 
-	int temp = (rand() % someData.myData.at("MaxGoldToDropOnDeath").GetUInt()) + someData.myData.at("MinGoldToDropOnDeath").GetUInt();
+	int temp = (rand() % temp1) + temp2;
 
 	short healthChance = 0;
 	short manaChance = 0;

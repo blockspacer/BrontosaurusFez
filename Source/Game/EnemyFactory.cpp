@@ -47,10 +47,8 @@ CEnemyFactory* CEnemyFactory::ourInstance = nullptr;
 
 void CEnemyFactory::Create(CGameObjectManager& aGameObjectManager, CCollisionComponentManager& aCollisionComponentManager, CHealthBarComponentManager& aHealthbarManager)
 {
-	if (ourInstance == nullptr)
-	{
-		ourInstance = new CEnemyFactory(aGameObjectManager,aCollisionComponentManager, aHealthbarManager);
-	}
+	assert(ourInstance == nullptr && "enemy factory not created");
+	ourInstance = new CEnemyFactory(aGameObjectManager,aCollisionComponentManager, aHealthbarManager);
 }
 
 void CEnemyFactory::Destroy()
@@ -85,12 +83,12 @@ void CEnemyFactory::CreateEnemy(CU::Vector3f aPosition)
 	CSeekController* seek = CSeekControllerManager::GetInstance().CreateAndRegister();
 	//from json
 	//{
-	seek->SetAggroRange(myEnemiesAggroRange);
-	seek->SetWeight(myEnemiesSeekBeheviourWeight);
 	seek->SetMaxSpeed(myEnemiesMaxSpeed);
+	seek->SetAggroRange(myEnemiesAggroRange);
+	seek->SetTargetRadius(myEnemiesTargetRadius);
+	seek->SetWeight(myEnemiesSeekBeheviourWeight);
 	seek->SetMaxAcceleration(myEnemiesMaxAcceleration);
 	seek->SetSlowDownRadius(myEnemiesSlowDownRadius);
-	seek->SetTargetRadius(myEnemiesTargetRadius);
 	//}
 	Enemy->AddComponent(seek);
 
@@ -124,6 +122,7 @@ void CEnemyFactory::CreateEnemy(CU::Vector3f aPosition)
 	Enemy->AddComponent(collider);
 
 	MovementComponent* movement = MovementComponentManager::GetInstance().CreateAndRegisterComponent();
+	movement->SetMovementSpeed(myEnemiesMaxSpeed);
 
 	Enemy->AddComponent(movement);
 

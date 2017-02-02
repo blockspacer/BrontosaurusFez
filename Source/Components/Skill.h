@@ -28,6 +28,7 @@ public:
 	void Select();
 	void Deselect();
 	void UpdateStats(const Stats::STotalStats& someStats);
+	void PlayAnimation();
 protected:
 	virtual void OnActivation();
 	virtual void OnDeActivation();
@@ -42,6 +43,8 @@ protected:
 	float myAnimationTimeElapsed;
 	bool myIsActive;
 	bool myIsSelected;
+	bool myHaveActivatedCollider;
+	bool myShouldPlayAnimation;
 };
 
 

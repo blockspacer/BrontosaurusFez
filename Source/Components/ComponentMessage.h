@@ -9,7 +9,9 @@ class CComponent;
 class CPickupComponent;
 class CGameObject;
 class Skill;
+struct SNavmeshTriangle;
 struct SHat;
+
 namespace CU
 {
 	template<typename ObjectType, typename SizeType = unsigned int, bool USE_SAFE_MODE = true>
@@ -89,7 +91,11 @@ enum class eComponentMessageType
 	eCalledForHelp,
 	eLookAt,
 	eAddMessageSubscription,
-	eLength
+	eEnterNewTriangle,
+	eNotOnNavmesh,
+	eSetPathPosition,
+	eLength,
+	eSetHighLight,
 };
 
 #define STATIC_SIZEOF(x) { char STATIC_SIZEOF_TEMP[(x)]; STATIC_SIZEOF_TEMP = 1; }
@@ -122,6 +128,7 @@ struct SComponentMessageData
 		ICollider* myCollider;
 		Skill* mySkill;
 		SHat* myHat;
+		SNavmeshTriangle* myTrianglePointer;
 	};
 };
 
