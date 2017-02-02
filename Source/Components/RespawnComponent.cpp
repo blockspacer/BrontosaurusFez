@@ -23,7 +23,7 @@ void RespawnComponent::Receive(const eComponentMessageType aMessageType, const S
 	{
 	case eComponentMessageType::eDied:
 		
-		PollingStation::playerData->myGold -= PollingStation::playerData->myGold * myGoldLossPercentage;
+		PollingStation::playerData->myGold -= PollingStation::playerData->myGold * (myGoldLossPercentage * 0.01f);
 		myHasDied = true;
 
 		break;

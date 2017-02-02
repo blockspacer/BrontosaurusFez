@@ -19,11 +19,13 @@ CSkybox::CSkybox()
 	, myVertexBuffer(nullptr)
 	, myIndexBuffer(nullptr)
 	, mySkyboxTexture(nullptr)
+	, myRefCount(1)
 {
 }
 
 CSkybox::~CSkybox()
 {
+	SAFE_RELEASE(myIndexBuffer);
 	SAFE_RELEASE(myVertexBuffer);
 	SAFE_RELEASE(myVSBuffer);
 	SAFE_RELEASE(myPSBuffer);
@@ -53,6 +55,8 @@ void CSkybox::Init(const char* aPath)
 
 void CSkybox::Render(const CU::Camera& aCamera)
 {
+	if (!myEffect) return;
+
 	myEffect->Activate();
 	UpdateCbuffer(aCamera);
 	DEVICE_CONTEXT->PSSetShaderResources(0, 1, mySkyboxTexture->GetShaderResourceViewPointer());

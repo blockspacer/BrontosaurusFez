@@ -7,7 +7,15 @@
 
 int LoadChangeLevelTriggerComponent(KLoader::SLoadedComponentData someData)
 {
-	ChangeLevelTriggerComponent* levelChange = new ChangeLevelTriggerComponent(someData.myData.at("LevelToGoTo").GetUInt());
+
+	unsigned short id = 0;
+
+	if (someData.myData.HasKey("ID") == true)
+	{
+		id = someData.myData.at("ID").GetUInt();
+	}
+
+	ChangeLevelTriggerComponent* levelChange = new ChangeLevelTriggerComponent(someData.myData.at("LevelToGoTo").GetUInt(), id);
 
 	CComponentManager::GetInstance().RegisterComponent(levelChange);
 

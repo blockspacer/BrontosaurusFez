@@ -213,6 +213,8 @@ struct SRenderSpriteMessage : SRenderMessage
 struct SRenderSkyboxMessage : SRenderMessage
 {
 	SRenderSkyboxMessage();
+	SRenderSkyboxMessage(const SRenderSkyboxMessage& aCopy) = delete;
+	~SRenderSkyboxMessage();
 	CSkybox* mySkybox;
 };
 

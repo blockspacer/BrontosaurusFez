@@ -146,7 +146,7 @@ CPlayState::~CPlayState()
 	RespawnComponentManager::Destroy();
 	CMasterAI::Destroy();
 	BlessingTowerComponentManager::DestroyInstance();
-
+	CEnemyFactory::Destroy();
 	SkillFactory::DestroyInstance();
 	CComponentManager::DestroyInstance();
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eHatAdded);
@@ -220,7 +220,11 @@ void CPlayState::Load()
 
 	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
-	myLevelIndex = 0;
+#ifdef _DEBUGq
+	myLevelIndex = levelsArray.Size()-1;
+#else
+	const int levelIndex = 0;
+#endif
 
 	std::string levelPath = "Json/Levels/";
 	levelPath += levelsArray[myLevelIndex].GetString();

@@ -4,7 +4,7 @@
 class ChangeLevelTriggerComponent : public CComponent
 {
 public:
-	ChangeLevelTriggerComponent(unsigned char aLevelToGoTo);
+	ChangeLevelTriggerComponent(const unsigned char aLevelToGoTo,const unsigned short aPortalID);
 	~ChangeLevelTriggerComponent();
 
 private:
@@ -13,5 +13,6 @@ private:
 
 private:
 	unsigned char myLevelToGoTo;
+	unsigned short myPortalID;
 };
 

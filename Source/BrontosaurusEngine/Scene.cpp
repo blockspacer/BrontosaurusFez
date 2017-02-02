@@ -80,7 +80,10 @@ CScene::CScene()
 
 CScene::~CScene()
 {
-	SAFE_DELETE(mySkybox);
+	if (mySkybox && mySkybox->DecRef() <= 0)
+	{
+		SAFE_DELETE(mySkybox);
+	}
 	myModels.DeleteAll();
 	myParticleEmitters.DeleteAll();
 	//myDebugObjects.DeleteAll();
@@ -270,9 +273,10 @@ void CScene::SetSkybox(const char* aPath)
 
 	RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
 
-	SRenderSkyboxMessage msg;
-	msg.mySkybox = mySkybox;
-	RENDERER.AddRenderMessage(new SRenderSkyboxMessage(msg));
+	SRenderSkyboxMessage* msg = new SRenderSkyboxMessage();
+	mySkybox->AddRef();
+	msg->mySkybox = mySkybox;
+	RENDERER.AddRenderMessage(msg);
 
 	statemsg.myRasterizerState = eRasterizerState::eDefault;
 	statemsg.myDepthStencilState = eDepthStencilState::eDefault;

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "RenderMessages.h"
 #include "Renderer.h"
+#include "Skybox.h"
 
 SRenderMessage::SRenderMessage(const eRenderMessageType aRenderMessageType)
 	: myType(aRenderMessageType)
@@ -43,7 +44,19 @@ SRenderSpriteMessage::SRenderSpriteMessage()
 
 SRenderSkyboxMessage::SRenderSkyboxMessage()
 	: SRenderMessage(eRenderMessageType::eRenderSkybox)
+	, mySkybox(nullptr)
 {
+}
+
+SRenderSkyboxMessage::~SRenderSkyboxMessage()
+{
+	if (mySkybox)
+	{
+		if (mySkybox->DecRef() <= 0)
+		{
+			SAFE_DELETE(mySkybox);
+		}
+	}
 }
 
 SSetCameraMessage::SSetCameraMessage()

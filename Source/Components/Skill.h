@@ -44,6 +44,7 @@ protected:
 	bool myIsActive;
 	bool myIsSelected;
 	bool myHaveActivatedCollider;
+	bool myShouldPlayAnimation;
 };
 
 
