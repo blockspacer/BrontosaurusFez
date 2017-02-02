@@ -30,6 +30,11 @@ void DropComponent::Receive(const eComponentMessageType aMessageType, const SCom
 	if (aMessageType == eComponentMessageType::eDied)
 	{
 		CPickupFactory::GetInstance().CreateGoldPickup(GetParent()->GetWorldPosition(),myGoldToDrop * PollingStation::playerData->myGoldGetModifier);
+
+		SComponentMessageData data;
+		data.myString = "GoldDrop";
+		GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
+
 		if (CalculateDropHealthGlobe() == true)
 		{
 			CPickupFactory::GetInstance().CreateHealthGlobe(GetParent()->GetWorldPosition());

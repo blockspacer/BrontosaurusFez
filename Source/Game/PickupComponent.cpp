@@ -28,6 +28,8 @@ CPickupComponent::CPickupComponent(CPickupManager& aManager) : myManager(aManage
 {
 	mySuckUpRadius = 10000.0f;
 	mySpeed = 1000.0f;
+	myElapsedTime = 0.0f;
+	myTimeBeforeAbleToPickup = 1.0f;
 	myType = eComponentType::ePickup;
 }
 
@@ -37,13 +39,18 @@ CPickupComponent::~CPickupComponent()
 
 void CPickupComponent::Update(float aDeltaTime)
 {
+	myElapsedTime += aDeltaTime;
 
-	float distance2 = CU::Vector3f(PollingStation::playerObject->GetToWorldTransform().GetPosition() - GetParent()->GetToWorldTransform().GetPosition()).Length2();
-	if(distance2 < mySuckUpRadius * mySuckUpRadius)
+	if (myElapsedTime >= myTimeBeforeAbleToPickup)
 	{
-		CU::Matrix33f rotationMatrix = GetParent()->GetLocalTransform().GetRotation();
-		rotationMatrix.LookAt(GetParent()->GetToWorldTransform().GetPosition(), PollingStation::playerObject->GetToWorldTransform().GetPosition());
-		GetParent()->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, mySpeed * aDeltaTime) * rotationMatrix + GetParent()->GetToWorldTransform().GetPosition());
-		GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
+		float distance2 = CU::Vector3f(PollingStation::playerObject->GetToWorldTransform().GetPosition() - GetParent()->GetToWorldTransform().GetPosition()).Length2();
+		if (distance2 < mySuckUpRadius * mySuckUpRadius)
+		{
+			CU::Matrix33f rotationMatrix = GetParent()->GetLocalTransform().GetRotation();
+			rotationMatrix.LookAt(GetParent()->GetToWorldTransform().GetPosition(), PollingStation::playerObject->GetToWorldTransform().GetPosition());
+			GetParent()->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, mySpeed * aDeltaTime) * rotationMatrix + GetParent()->GetToWorldTransform().GetPosition());
+			GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
+		}
 	}
+
 }

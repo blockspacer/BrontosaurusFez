@@ -14,7 +14,6 @@ public:
 	static void Destroy();
 	static CPickupFactory& GetInstance();
 
-
 	void CreateHealthGlobe(CU::Vector3f aPosition);
 	void CreateGoldPickup(CU::Vector3f aPosition, const unsigned int aAmountToDrop);
 	void CreateManaGlobe(CU::Vector3f aPosition);
@@ -26,7 +25,7 @@ private:
 	CPickupFactory(CGameObjectManager* aCGameObjectManager, CCollisionComponentManager* aManager);
 	~CPickupFactory();
 
-
+	CU::Vector3f CalculateOffsetSpawnPosition();
 
 private:
 

@@ -188,3 +188,10 @@ CPickupFactory::CPickupFactory(CGameObjectManager* aCGameObjectManager, CCollisi
 CPickupFactory::~CPickupFactory()
 {
 }
+
+CU::Vector3f CPickupFactory::CalculateOffsetSpawnPosition()
+{
+
+
+	return CU::Vector3f();
+}
