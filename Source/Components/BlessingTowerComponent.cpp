@@ -43,6 +43,10 @@ void BlessingTowerComponent::Receive(const eComponentMessageType aMessageType, c
 		if (myIsActivated == false)
 		{
 			myIsActivated = true;
+
+			SComponentMessageData soundData;
+			soundData.myString = "Blessing";
+			PollingStation::playerObject->NotifyComponents(eComponentMessageType::ePlaySound, soundData);
 			
 			SComponentMessageData manaData;
 			manaData.myInt = myGiveManaAmount;
