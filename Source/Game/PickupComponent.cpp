@@ -29,7 +29,7 @@ CPickupComponent::CPickupComponent(CPickupManager& aManager) : myManager(aManage
 	mySuckUpRadius = 10000.0f;
 	mySpeed = 1000.0f;
 	myElapsedTime = 0.0f;
-	myTimeBeforeAbleToPickup = 1.0f;
+	myTimeBeforeAbleToPickup = 100.0f;
 	myType = eComponentType::ePickup;
 }
 
@@ -49,8 +49,8 @@ void CPickupComponent::Update(float aDeltaTime)
 			CU::Matrix33f rotationMatrix = GetParent()->GetLocalTransform().GetRotation();
 			rotationMatrix.LookAt(GetParent()->GetToWorldTransform().GetPosition(), PollingStation::playerObject->GetToWorldTransform().GetPosition());
 			GetParent()->GetLocalTransform().SetPosition(CU::Vector3f(0.0f, 0.0f, mySpeed * aDeltaTime) * rotationMatrix + GetParent()->GetToWorldTransform().GetPosition());
-			GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 		}
 	}
+			GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 
 }

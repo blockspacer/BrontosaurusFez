@@ -37,6 +37,10 @@ Skill::Skill(SkillData* aSkillDataPointer)
 	{
 		myUpdateFunction = std::bind(&Skill::SpawnEnemyAttackUpdate, this, std::placeholders::_1);
 	}
+	if (aSkillDataPointer->skillName == "BlobAttack")
+	{
+		myUpdateFunction = std::bind(&Skill::BasicAttackUpdate, this, std::placeholders::_1);
+	}
 	else
 	{
 		DL_PRINT("Wow Skill couldn't find what skill to use as updatefunction. Check spelling and/or yell at Marcus.");
