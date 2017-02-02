@@ -13,6 +13,8 @@
 
 QM::CQuestManager::CQuestManager()
 {
+	myPortalIndexes.Init(1);
+	myDialogs.Init(1);
 	myProgression = 0;
 	myObjectives.Init(4);
 	myQuests.Init(4);
@@ -93,8 +95,12 @@ void QM::CQuestManager::CompleteEvent()
 	case eEventType::CREDITS:
 		PostMaster::GetInstance().SendLetter(eMessageType::eStateStackMessage, PushState(PushState::eState::eCreditScreen, 1));
 		break;
+	case eEventType::DIALOG:
+		PollingStation::currentDialog = myDialogs[nextEvent.myHandle];
+		PostMaster::GetInstance().SendLetter(eMessageType::eStateStackMessage, PushState(PushState::eState::eDialog, 1));
+		break;
 	case eEventType::QUEST_LINE:
-	default: 
+	default:
 		DL_ASSERT("not implemented yet");
 		break;
 	}
@@ -186,7 +192,7 @@ QM::EventHandle QM::CQuestManager::LoadObjective(const CU::CPJWrapper& anEvent, 
 		myLoadSuccess = false;
 		return false;
 	}
-	
+
 	SObjective objective;
 	objective.myName = anEvent.at("name").GetString();
 	objective.myText = anEvent.at("text").GetString();
@@ -269,7 +275,7 @@ bool QM::CQuestManager::LoadQuestlines(std::string aQuestlinesFile)
 		}
 
 		const std::string currentType = currentEvent.at("type").GetString();
-		
+
 		if (currentType == "Objective")
 		{
 			const EventHandle newObjective = LoadObjective(currentEvent, aQuestlinesFile);
@@ -316,6 +322,14 @@ bool QM::CQuestManager::LoadQuestlines(std::string aQuestlinesFile)
 		{
 			AddEvent(eEventType::CREDITS, 0);
 			continue;
+		}
+		if (currentType == "Dialog")
+		{
+			const EventHandle newDialogIndex = myDialogs.Size();
+
+			myDialogs.Add(currentEvent["dialogFile"].GetString());
+
+			AddEvent(eEventType::DIALOG, newDialogIndex);
 		}
 	}
 	myLoadSuccess = true;
