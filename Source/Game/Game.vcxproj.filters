@@ -48,6 +48,12 @@
     <ClCompile Include="DialogState.cpp">
       <Filter>States</Filter>
     </ClCompile>
+    <ClCompile Include="ScriptLoader.cpp">
+      <Filter>QuestManager\ScriptLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalLuaFunctions.cpp">
+      <Filter>QuestManager\ScriptLoader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackgroundLoadingManager.h" />
@@ -105,6 +111,12 @@
     <ClInclude Include="DialogState.h">
       <Filter>States</Filter>
     </ClInclude>
+    <ClInclude Include="ScriptLoader.h">
+      <Filter>QuestManager\ScriptLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalLuaFunctions.h">
+      <Filter>QuestManager\ScriptLoader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="States">
@@ -115,6 +127,9 @@
     </Filter>
     <Filter Include="QuestManager\QuestDrawer">
       <UniqueIdentifier>{9a07a5b7-1f30-4254-a41d-51f10733cc67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="QuestManager\ScriptLoader">
+      <UniqueIdentifier>{45fcaf0e-06d6-4dc1-a35e-d4ea40dfcbb4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

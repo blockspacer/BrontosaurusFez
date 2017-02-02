@@ -93,6 +93,8 @@
 #include "PlayerManaMessenger.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
+#include "../Components/ScriptComponent.h"
+#include "../Components/ScriptComponentManager.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -106,7 +108,6 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 {
 	myIsLoaded = false;
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eHatAdded);
-	
 }
 
 CPlayState::~CPlayState()
@@ -145,7 +146,7 @@ CPlayState::~CPlayState()
 	RespawnComponentManager::Destroy();
 	CMasterAI::Destroy();
 	BlessingTowerComponentManager::DestroyInstance();
-
+	CEnemyFactory::Destroy();
 	SkillFactory::DestroyInstance();
 	CComponentManager::DestroyInstance();
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eHatAdded);
@@ -166,6 +167,22 @@ void CPlayState::Load()
 	LoadManagerGuard loadManagerGuard;
 
 
+	////TEMP CARL BEGIN
+
+	//CGameObject* gotemp = myGameObjectManager->CreateGameObject();
+	//gotemp->SetName("calle");
+	//CScriptComponentManager compMan;
+	//CScriptComponent* scriptComp = compMan.CreateComponent("Script/test_script.lua"/*, "test_script_init"*/);
+	//gotemp->AddComponent(scriptComp);
+	//SComponentMessageData numberData;
+	//numberData.myInt = 234;
+	//scriptComp->Receive(eComponentMessageType::eDied, numberData);
+
+	//myGameObjectManager->DestroyObject(gotemp);
+
+	////TEMP CARL END
+
+
 
 	CShopStorage::GetInstance().LoadStorage("Json/Hats/HatBluePrints.json");
 
@@ -177,7 +194,7 @@ void CPlayState::Load()
 
 	Lights::SDirectionalLight dirLight;
 	dirLight.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	dirLight.direction = { 0.0f, 0.0f, 1.0f, 1.0f };
+	dirLight.direction = { 0.0f, -1.0f, 1.0f, 1.0f };
 	myScene->AddDirectionalLight(dirLight);
 
 	CONSOLE->GetLuaFunctions();
@@ -203,7 +220,7 @@ void CPlayState::Load()
 
 	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
-#ifdef _DEBUG
+#ifdef _DEBUGq
 	myLevelIndex = levelsArray.Size()-1;
 #else
 	const int levelIndex = 0;
@@ -245,6 +262,10 @@ void CPlayState::Load()
 	{
 		DL_ASSERT("Loading Failed");
 	}
+
+	CEnemyFactory::GetInstance().Init(levelsArray[myLevelIndex].GetString());
+	CPickupFactory::GetInstance().Init(levelsArray[myLevelIndex].GetString());
+
 	if (PollingStation::PlayerInput != nullptr)
 	{
 		PollingStation::playerObject = PollingStation::PlayerInput->GetParent();
@@ -252,20 +273,19 @@ void CPlayState::Load()
 		//Dísclaimer: fult men funkar //lägg till allt spelar specifikt som inte LD behöver störas av här
 		CPlayerHealthMessenger* healthMessenger = new CPlayerHealthMessenger();
 
-		RespawnComponent* respawn = RespawnComponentManager::GetInstance().CreateAndRegisterComponent();
+		//RespawnComponent* respawn = RespawnComponentManager::GetInstance().CreateAndRegisterComponent();
 
 		CComponentManager::GetInstance().RegisterComponent(healthMessenger);
 
 		PollingStation::playerObject->AddComponent(healthMessenger);
-		PollingStation::playerObject->AddComponent(respawn);
+		//PollingStation::playerObject->AddComponent(respawn);
 		PollingStation::playerObject->AddComponent(new CPlayerHealthMessenger());
 		PollingStation::playerObject->AddComponent(new CPlayerManaMessenger());
 		PollingStation::playerObject->AddComponent(CPickupManager::GetInstance().CreatePickerUpperComp());
 		PollingStation::playerObject->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
 		PollingStation::playerObject->AddComponent(new CMainStatComponent());
-
-		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eInit, SComponentMessageData());
 	}
+
 	myGameObjectManager->SendObjectsDoneMessage();
 
 
@@ -333,7 +353,7 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	SkillSystemComponentManager::GetInstance().Update(aDeltaTime);
 	CPickupManager::GetInstance().Update(aDeltaTime);
 	RespawnComponentManager::GetInstance().Update(aDeltaTime);
-
+	myMouseComponent->Update();
 	if (myGUIManager)
 	{
 		myGUIManager->Update(aDeltaTime);

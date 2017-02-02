@@ -8,12 +8,15 @@
 #include "PostMaster/QuestDataUpdated.h"
 #include "PJWrapper.h"
 #include "PollingStation.h"
+#include "PostMaster/PushState.h"
+#include "PostMaster/PopCurrentState.h"
 
 QM::CQuestManager::CQuestManager()
 {
 	myProgression = 0;
 	myObjectives.Init(4);
 	myQuests.Init(4);
+	myPortalIndexes.Init(4);
 	myError = "";
 	myLoadSuccess = true;
 	POSTMASTER.Subscribe(this, eMessageType::QuestRelated);
@@ -87,6 +90,9 @@ void QM::CQuestManager::CompleteEvent()
 	case eEventType::OPEN_PORTAL:
 		PollingStation::OpenPortals.Add(myPortalIndexes[nextEvent.myHandle]);
 		CompleteEvent();
+		break;
+	case eEventType::CREDITS:
+		PostMaster::GetInstance().SendLetter(eMessageType::eStateStackMessage, PushState(PushState::eState::eCreditScreen, 1));
 		break;
 	case eEventType::QUEST_LINE:
 	default: 
@@ -305,6 +311,11 @@ bool QM::CQuestManager::LoadQuestlines(std::string aQuestlinesFile)
 
 			myPortalIndexes.Add(currentEvent.at("portalId").GetNumber());
 			AddEvent(eEventType::OPEN_PORTAL, newOpenPortal);
+			continue;
+		}
+		if (currentType == "Credits")
+		{
+			AddEvent(eEventType::CREDITS, 0);
 			continue;
 		}
 	}

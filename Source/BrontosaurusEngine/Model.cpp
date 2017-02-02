@@ -17,7 +17,7 @@
 #include "../Collision/Intersection.h"
 #include <CUTime.h>
 #include <StringHelper.h>
-
+#include "Renderer.h"
 
 CModel::CModel()
 	: myConstantBuffers(nullptr)
@@ -273,7 +273,7 @@ bool CModel::InitBuffers(CU::GrowingArray<SVertexDataCube>& aVertexList)
 	return true;
 }
 
-void CModel::Render(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aAnimationState, const float aAnimationTime)
+void CModel::Render(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aAnimationState, const float aAnimationTime, const float aHighlightIntencity)
 {
 	myEffect->Activate();
 
@@ -282,7 +282,7 @@ void CModel::Render(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLa
 		mySurface->Activate();
 	}
 	
-	UpdateCBuffer(aToWorldSpace, aLastFrameTransformation, aLight, aPointLightList, aAnimationState, aAnimationTime);
+	UpdateCBuffer(aToWorldSpace, aLastFrameTransformation, aLight, aPointLightList, aAnimationState, aAnimationTime, aHighlightIntencity);
 
 	UINT stride = myVertexSize;
 	UINT offset = 0;
@@ -302,7 +302,7 @@ void CModel::Render(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLa
 	}
 }
 
-void CModel::Render(const CU::Matrix44f & aToWorldSpace, const char* aAnimationState, const float aAnimationTime)
+void CModel::Render(const CU::Matrix44f & aToWorldSpace, const char* aAnimationState, const float aAnimationTime, const float aHighlightIntencity)
 {
 	myEffect->ActivateForDepth();
 
@@ -326,7 +326,7 @@ void CModel::Render(const CU::Matrix44f & aToWorldSpace, const char* aAnimationS
 	}
 }
 
-void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aAnimationState, const float aAnimationTime) // TODO: Do not update some of the cbuffers	
+void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aAnimationState, const float aAnimationTime, const float aHighlightIntencity) // TODO: Do not update some of the cbuffers	
 {
 	// WorldSpace thingy
 	D3D11_MAPPED_SUBRESOURCE mappedSubResource;
@@ -378,29 +378,31 @@ void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix4
 		ZeroMemory(&mappedSubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
 
 		Lights::SLightsBuffer updatedLights;
-		updatedLights.myCameraPos/* = CAMERA->GetPosition()*/;
+		updatedLights.myCameraPos = RENDERER.GetCamera().GetPosition();
 		updatedLights.myDirectionalLight.direction = aLight->direction;
 		updatedLights.myDirectionalLight.color = aLight->color;
 
 		for (unsigned int i = 0; i < NUMBER_OF_POINTLIGHTS; ++i)
 		{
-			if (aPointLightList == nullptr || i >= aPointLightList->Size())
+			//if (aPointLightList == nullptr || i >= aPointLightList->Size())
 			{
 				updatedLights.myPointLights[i].color = { 0.0f, 0.0f, 0.0f, 0.0f };
 				updatedLights.myPointLights[i].position = { 0.0f, 0.0f, 0.0f };
 				updatedLights.myPointLights[i].intensity = 0.0f;
 				updatedLights.myPointLights[i].range = 0.0f;
 			}
-			else
+			/*else
 			{
 				updatedLights.myPointLights[i].color = aPointLightList->At(i)->GetColor();
 				updatedLights.myPointLights[i].position = aPointLightList->At(i)->GetPosition();
 				updatedLights.myPointLights[i].intensity = aPointLightList->At(i)->GetInstensity();
 				updatedLights.myPointLights[i].range = aPointLightList->At(i)->GetRange();
-			}
+			}*/
 		}
 
 		updatedLights.cubeMap_mipCount = 11; // TODO FIX WTH?!
+
+		updatedLights.highlightColor = { 0.f, 1.f, 0.f, aHighlightIntencity };
 
 		DEVICE_CONTEXT->Map(myLightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubResource);
 		memcpy(mappedSubResource.pData, &updatedLights, sizeof(Lights::SLightsBuffer));

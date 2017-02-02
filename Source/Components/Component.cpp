@@ -25,3 +25,8 @@ void CComponent::Receive(const eComponentMessageType aMessageType, const SCompon
 	aMessageType;
 	aMessageData;
 }
+
+bool CComponent::IsGameObject()
+{
+	return false;
+}

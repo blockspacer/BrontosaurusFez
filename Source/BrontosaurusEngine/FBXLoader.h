@@ -127,6 +127,7 @@ public:
 	CLoaderModel *LoadModel(const char* aModel);
 	bool LoadGUIScene(const char * aFilePath, CLoaderScene & aSceneOut);
 	bool LoadModelScene(const char * aFilePath, CLoaderScene & aSceneOut);
+	const struct aiScene* GetScene(const std::string& aFBXPath);
 
 
 private:

@@ -350,6 +350,7 @@
     <ClInclude Include="LoadCamera.h" />
     <ClInclude Include="LoadChangeLevelTriggerComponent.h" />
     <ClInclude Include="LoadDropComponent.h" />
+    <ClInclude Include="LoadFireComponent.h" />
     <ClInclude Include="LoadHealthBarComponent.h" />
     <ClInclude Include="LoadHealthComponent.h" />
     <ClInclude Include="LoadInventoryComponent.h" />
@@ -365,6 +366,8 @@
     <ClInclude Include="LoadOpenShopListenerComponent.h" />
     <ClInclude Include="LoadPickerupperComponent.h" />
     <ClInclude Include="LoadObjectives.h" />
+    <ClInclude Include="LoadRespawnComponent.h" />
+    <ClInclude Include="LoadScriptComponent.h" />
     <ClInclude Include="LoadSkillSystemComponent.h" />
     <ClInclude Include="LoadSoundComponent.h" />
     <ClInclude Include="LoadSpawnEnemyOnDeathComponent.h" />
@@ -379,6 +382,7 @@
     <ClCompile Include="LoadCamera.cpp" />
     <ClCompile Include="LoadChangeLevelTriggerComponent.cpp" />
     <ClCompile Include="LoadDropComponent.cpp" />
+    <ClCompile Include="LoadFireComponent.cpp" />
     <ClCompile Include="LoadHealthBarComponent.cpp" />
     <ClCompile Include="LoadHealthComponent.cpp" />
     <ClCompile Include="LoadInventoryComponent.cpp" />
@@ -394,6 +398,8 @@
     <ClCompile Include="LoadOpenShopListenerComponent.cpp" />
     <ClCompile Include="LoadPickerupperComponent.cpp" />
     <ClCompile Include="LoadObjectives.cpp" />
+    <ClCompile Include="LoadRespawnComponent.cpp" />
+    <ClCompile Include="LoadScriptComponent.cpp" />
     <ClCompile Include="LoadSkillSystemComponent.cpp" />
     <ClCompile Include="LoadSoundComponent.cpp" />
     <ClCompile Include="LoadSpawnEnemyOnDeathComponent.cpp" />

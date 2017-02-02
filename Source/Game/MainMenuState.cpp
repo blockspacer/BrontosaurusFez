@@ -23,7 +23,11 @@ MainMenuState::MainMenuState(StateStack& aStateStack)
 MainMenuState::~MainMenuState()
 {
 	SAFE_DELETE(myGUIManager);
-	SAFE_DELETE(mySkyBox);
+	
+	if (mySkyBox && mySkyBox->DecRef() <= 0)
+	{
+		SAFE_DELETE(mySkyBox);
+	}
 }
 
 void MainMenuState::Init()
@@ -54,10 +58,11 @@ void MainMenuState::Render()
 	
 	RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
 	
-	SRenderSkyboxMessage msg;
-	msg.mySkybox = mySkyBox;
+	SRenderSkyboxMessage* msg = new SRenderSkyboxMessage();
+	mySkyBox->AddRef();
+	msg->mySkybox = mySkyBox;
 	
-	RENDERER.AddRenderMessage(new SRenderSkyboxMessage(msg));
+	RENDERER.AddRenderMessage(msg);
 	
 	myGUIManager->Render();
 }

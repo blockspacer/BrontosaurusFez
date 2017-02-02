@@ -14,19 +14,18 @@ public:
 	static void Destroy();
 	static CPickupFactory& GetInstance();
 
-
 	void CreateHealthGlobe(CU::Vector3f aPosition);
 	void CreateGoldPickup(CU::Vector3f aPosition, const unsigned int aAmountToDrop);
 	void CreateManaGlobe(CU::Vector3f aPosition);
 	void CreateHatDrop(CU::Vector3f aPosition, const char* aHatName);
+	void Init(const std::string& aKey);
 
 private:
-	void Init();
 
 	CPickupFactory(CGameObjectManager* aCGameObjectManager, CCollisionComponentManager* aManager);
 	~CPickupFactory();
 
-
+	CU::Vector3f CalculateOffsetSpawnPosition();
 
 private:
 
@@ -37,6 +36,10 @@ private:
 	CGameObjectManager* myGameObjectManager;
 	CCollisionComponentManager* myCollisionComponentManager;
 	std::string myModelPath;
+
+	unsigned short myHealthDropHealValue;
+	unsigned short myManaDropRestoreValue;
+	unsigned short myPickupRadius;
 
 };
 

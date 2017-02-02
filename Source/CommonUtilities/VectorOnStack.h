@@ -47,6 +47,7 @@ namespace CU
 		inline void Clear();
 		inline void RemoveAll();
 		inline void DeleteAll();
+		inline ObjectType Pop();
 
 		inline ObjectType& GetLast();
 		inline const ObjectType& GetLast() const;
@@ -184,10 +185,7 @@ namespace CU
 	inline void VectorOnStack<ObjectType, Capacity, SizeType, UseSafeModeFlag>::Add(const ObjectType& aObject)
 	{
 		assert((mySize < Capacity) && "VectorOnStack is full!");
-		if (mySize < Capacity)
-		{
-			myVectorOnStack[mySize++] = aObject;
-		}
+		SafeAdd(aObject);
 	}
 
 	template<typename ObjectType, int Capacity, typename SizeType, bool UseSafeModeFlag>
@@ -344,6 +342,13 @@ namespace CU
 		mySize = 0;
 	}
 
+	template<typename ObjectType, int Capacity, typename SizeType, bool UseSafeModeFlag>
+	inline ObjectType VectorOnStack<ObjectType, Capacity, SizeType, UseSafeModeFlag>::Pop()
+	{
+		assert(mySize > 0 && "Cannot pop from empty vector on stack");
+		return myVectorOnStack[--mySize];
+	}
+
 	template <typename ObjectType, int Capacity, typename SizeType, bool UseSafeModeFlag>
 	inline SizeType VectorOnStack<ObjectType, Capacity, SizeType, UseSafeModeFlag>::Size() const
 	{
@@ -351,8 +356,16 @@ namespace CU
 	}
 
 	template <typename ObjectType, int Capacity, typename SizeType, bool UseSafeModeFlag>
+	inline ObjectType& VectorOnStack<ObjectType, Capacity, SizeType, UseSafeModeFlag>::GetLast()
+	{
+		assert(mySize > 0 && "Cannot GetLast from empty vector on stack");
+		return myVectorOnStack[mySize - 1];
+	}
+
+	template <typename ObjectType, int Capacity, typename SizeType, bool UseSafeModeFlag>
 	inline const ObjectType& VectorOnStack<ObjectType, Capacity, SizeType, UseSafeModeFlag>::GetLast() const
 	{
+		assert(mySize > 0 && "Cannot GetLast from empty vector on stack");
 		return myVectorOnStack[mySize - 1];
 	}
 } 

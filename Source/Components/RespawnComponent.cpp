@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "RespawnComponent.h"
+#include "../Game/PollingStation.h"
+#include "PlayerData.h"
+
 
 
 RespawnComponent::RespawnComponent()
@@ -20,6 +23,7 @@ void RespawnComponent::Receive(const eComponentMessageType aMessageType, const S
 	{
 	case eComponentMessageType::eDied:
 		
+		PollingStation::playerData->myGold -= PollingStation::playerData->myGold * (myGoldLossPercentage * 0.01f);
 		myHasDied = true;
 
 		break;
@@ -29,6 +33,16 @@ void RespawnComponent::Receive(const eComponentMessageType aMessageType, const S
 
 void RespawnComponent::Destroy()
 {
+}
+
+void RespawnComponent::SetGoldLossPercentage(const float aPercentage)
+{
+	myGoldLossPercentage = aPercentage;
+}
+
+void RespawnComponent::SetRespawnTime(const float aNumberOfSeconds)
+{
+	myRespawnTime = aNumberOfSeconds;
 }
 
 void RespawnComponent::Update(const float aDeltaTime)

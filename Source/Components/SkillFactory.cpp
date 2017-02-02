@@ -93,8 +93,9 @@ void SkillFactory::RegisterSkills()
 		skill->manaCost = levelsArray[i].at("manaCost").GetUInt();
 		skill->range = levelsArray[i].at("range").GetFloat();
 		skill->numberOfEnemiesToSpawn = levelsArray[i].at("numberOfEnemiesToSpawnPerAttack").GetInt();
-			 
+		skill->animationWindDown = levelsArray[i].at("animationWindDown").GetFloat();
 		skill->skillName = levelsArray[i].at("name").GetString().c_str();
+		skill->animationPlayedName = levelsArray[i].at("animationPlayedName").GetString().c_str();
 
 		mySkillDataList.Add(skill);
 	}

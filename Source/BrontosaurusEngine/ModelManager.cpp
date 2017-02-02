@@ -60,7 +60,6 @@ const CModelManager::ModelId CModelManager::LoadModel(const CU::DynamicString& a
 		}
 
 		LoadAnimations(aModelPath.c_str(), newModelID);
-
 	}
 
 	myModelList[myModels[aModelPath.c_str()]].AddRef();
@@ -211,21 +210,28 @@ void CModelManager::RemoveModel(const ModelId aModelID)
 void CModelManager::LoadAnimations(const char* aPath, const ModelId aModelId)
 {
 	std::string modelName = aPath;
-	modelName -= std::string("idle2.fbx");
-	const ModelId animationCount = 6;
-	std::string animationNames[animationCount] = { ("idle"), ("walk"), ("pickup"), ("turnRight90"), ("turnLeft90"), ("attack") };
+	modelName -= std::string(".fbx");
+	modelName += std::string("_");
+
+	const ModelId animationCount = 12;
+	const std::string animationNames[animationCount] = { ("idle"), ("idle2"), ("walk"), ("pickup"), ("turnRight90"), ("turnLeft90"), ("attack") , ("summon"), ("die"), ("sweep"), ("whirlwind"), ("hurt") };
 
 	CModel* mdl = GetModel(aModelId);
 	const aiScene* scene = mdl->GetScene();
+
 	if (mdl != nullptr && scene->HasAnimations())
 	{
+		CFBXLoader loader;
 		bool foundSpecial = false;
 		for (int i = 0; i < animationCount; ++i)
 		{
 			const std::string& animationName = animationNames[i];
+			//TODO: just import the scene for the model here, no need to parse the vertices
 
-			ModelId tempAnimationModel = LoadModel((modelName + animationName + ".fbx").c_str());
-			if (tempAnimationModel == NULL_MODEL)
+			const aiScene* animationScene = loader.GetScene(modelName + animationName + ".fbx");
+			
+			//ModelId tempAnimationModel = LoadModel((modelName + animationName + ".fbx").c_str(), false); //TODO: when above TODO is fixed, the bool can be removed
+			if (!animationScene/*tempAnimationModel == NULL_MODEL*/)
 			{
 				continue;
 			}
@@ -233,9 +239,7 @@ void CModelManager::LoadAnimations(const char* aPath, const ModelId aModelId)
 			foundSpecial = true;
 
 			mdl->mySceneAnimators[animationName] = CSceneAnimator();
-			mdl->mySceneAnimators[animationName].Init(GetModel(tempAnimationModel)->GetScene());
-
-			//RemoveModel(tempAnimationModel);
+			mdl->mySceneAnimators[animationName].Init(animationScene/*GetModel(tempAnimationModel)->GetScene()*/);
 		}
 
 		if (foundSpecial == false)

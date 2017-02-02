@@ -25,6 +25,16 @@ namespace CU
 	{
 		return std::wstring(aString.begin(), aString.end());
 	}
+	std::string& FindAndErase(std::string& aStringToClean, const std::string& aSubStringToErase)
+	{
+		size_t pos = aStringToClean.find(aSubStringToErase);
+		if (pos != std::string::npos)
+		{
+			aStringToClean.erase(pos, aSubStringToErase.size());
+		}
+
+		return aStringToClean;
+	}
 }
 
 std::string& operator-=(std::string& aLeft, const std::string& aRight)
@@ -38,13 +48,7 @@ std::string& operator-=(std::string& aLeft, const std::string& aRight)
 	return aLeft;
 }
 
-std::wstring& operator-=(std::wstring& aLeft, const std::wstring& aRight)
+std::string& operator^=(std::string& aLeft, const std::string& aRight)
 {
-	size_t pos = aLeft.rfind(aRight);
-	if (pos != std::wstring::npos)
-	{
-		aLeft.erase(aLeft.end() - aRight.length(), aLeft.end());
-	}
-
-	return aLeft;
+	return CU::FindAndErase(aLeft, aRight);
 }

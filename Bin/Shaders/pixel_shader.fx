@@ -3,16 +3,18 @@
 TextureCube cubeMap : register(t0);
 
 Texture2D diffuseTexture : register(t1);
-Texture2D roughnessMap : register(t2);
-Texture2D AOMap : register(t3);
+//Texture2D roughnessMap : register(t2);
+//Texture2D AOMap : register(t3);
+Texture2D roughnessMetalnessAO : register(t3);
 Texture2D emissiveMap : register(t4);
 Texture2D normalMap : register(t5);
-Texture2D metalnessMap : register(t6);
+//Texture2D metalnessMap : register(t6);
 
 Texture2D shadowBuffer : register(t7);
 
-SamplerState samplerWrap : register(s0);
-SamplerState Sampler : register(s1);
+
+SamplerState SamplerClamp : register(s0);
+SamplerState samplerWrap : register(s1);
 
 cbuffer ConstantBuffer : register( b0 ) //to vertex
 {
@@ -46,6 +48,8 @@ cbuffer PixelShaderBuffer : register(b1) //to pixel
 
 	uint CubeMap_MipCount;
 
+	float4 highlightColor;
+
 	float trash[3];
 }
 
@@ -54,6 +58,7 @@ struct PixelOutput
 	float4 color : SV_TARGET0;
 	float3 velocity : SV_TARGET1;
 };
+
 
 	// PIXEL SHADER
 float4 PS_Pos(Pos_InputPixel input) : SV_TARGET
@@ -64,23 +69,68 @@ float4 PS_Pos(Pos_InputPixel input) : SV_TARGET
 
 PixelOutput PS_PBL(PosNormBinormTanTex_InputPixel input);
 PixelOutput DistanceFog(PosNormBinormTanTex_InputPixel aInput, float4 aColorInput);
+PixelOutput PS_ReflectionFresnel(PosNormBinormTanTex_InputPixel input);
+PixelOutput PS_ObjectNormal(PosNormBinormTanTex_InputPixel input);
 
-
-
-
+float4 PS_FresnelHighlight(PosNormBinormTanTex_InputPixel input, float4 aColorInput);
 
 PixelOutput PS_PosNormBinormTanTex(PosNormBinormTanTex_InputPixel input)
 {
 	PixelOutput output;
 
 	float4 pblColor = PS_PBL(input).color;
+	float4 highlightColor = PS_FresnelHighlight(input, pblColor);
+	//DistanceFog(input, pblColor).color;
 
-
-	float4 fogColor = DistanceFog(input, pblColor).color;
-
-	output.color = fogColor;
+	output.color = highlightColor;
 	output.velocity = (input.viewPosition.xyz - input.worldPosLastFrame.xyz) * 100.f;
 	return output;
+}
+
+
+float4 PS_FresnelHighlight(PosNormBinormTanTex_InputPixel input, float4 aColorInput)
+{
+	float3 normal = PS_ObjectNormal(input).color.xyz;
+
+
+	float4 TextureIn = aColorInput;
+	float4 RimlightColor = highlightColor;
+
+	float4x4 viewI = cameraSpaceInversed;
+
+	float3 CameraPosition = cameraPos.xyz;
+	float3 CamVec = (CameraPosition - input.worldPosition.xyz);
+	float3 CamVecNorm = normalize(CamVec);
+
+	float AddOp = (-0.4 + CamVecNorm.y);
+	float3 VectorConstruct = float3(CamVecNorm.x, AddOp, CamVecNorm.z);
+	float3 NormOp = normalize(normal);
+	
+	float AddOp75 = (dot(VectorConstruct.xyz, NormOp) + -0.4);
+	
+	float power = 0.5f;// 0.182219
+
+	float PowOp = (pow(AddOp75, power));
+	float Contrastmulstiplier = ((PowOp - 0.5) * 200.0);
+	float ContrastAdd = (Contrastmulstiplier + 0.5);
+	float SatOp = saturate(ContrastAdd);
+	float AddOp92 = max(0, (dot(CamVecNorm, NormOp) + -0.4));
+
+	float PowOp90 = (pow(AddOp92, 0.144385));
+	float Contrastmulstiplier98 = ((PowOp90 - 0.5) * 5.0);
+	float ContrastAdd97 = (Contrastmulstiplier98 + 0.5);
+	float SatOp104 = saturate(ContrastAdd97);
+	//float OneMinusOp = (1.0 - (SatOp * SatOp104));
+	float OneMinusOp = (1.0 - SatOp104);
+	float4 AddOp84 = (TextureIn + (RimlightColor * OneMinusOp));
+	float4 SatOp85 = saturate(AddOp84);
+	float4 VectorConstruct102 = float4(SatOp85.xyz.x, SatOp85.xyz.y, SatOp85.xyz.z, 1.0);
+	
+	//float4 testColor = ((float4(CameraPosition.xyz, 1.0f)));
+	//return testColor;
+	//return aColorInput * RimlightColor;
+	return VectorConstruct102;
+
 }
 
 
@@ -115,7 +165,7 @@ PixelOutput DistanceFog(PosNormBinormTanTex_InputPixel aInput, float4 aColorInpu
 	float SatOp = saturate((SubOp / SubOp41));
 	float PowOp = pow((1.0 - SatOp), 2.0);
 	int mipLevel = lerp(0, 5, PowOp);
-	float4 CubeMapColor = cubeMap.SampleLevel(Sampler, CamToObj.xyz, mipLevel); // color from CubeMap
+	float4 CubeMapColor = cubeMap.SampleLevel(samplerWrap, CamToObj.xyz, mipLevel); // color from CubeMap
 
 
 	float4 LerpOp = lerp(CubeMapColor, inputColor, PowOp);
@@ -125,10 +175,6 @@ PixelOutput DistanceFog(PosNormBinormTanTex_InputPixel aInput, float4 aColorInpu
 	output.color = VectorConstruct;
 	return output;
 }
-
-
-
-
 
 
 
@@ -166,14 +212,14 @@ float GetSpecPowToMip(float fSpecPow, int nMips)
 PixelOutput PS_Albedo(PosNormBinormTanTex_InputPixel input)
 {
 	PixelOutput output;
-	output.color.xyz = diffuseTexture.Sample(Sampler, input.uv).xyz;
+	output.color.xyz = diffuseTexture.Sample(samplerWrap, input.uv).xyz;
 	output.color.a = 1.0f;
 	return output;
 }
 PixelOutput PS_Roughness(PosNormBinormTanTex_InputPixel input)
 {
 	PixelOutput output;
-	float3 roughness = roughnessMap.Sample(Sampler, input.uv.xy).xyz;
+	float3 roughness = roughnessMetalnessAO.Sample(samplerWrap, input.uv.xy).xxx;
 	output.color = float4(roughness.xyz, 1.0f);
 	return output;
 }
@@ -181,21 +227,21 @@ PixelOutput PS_Roughness(PosNormBinormTanTex_InputPixel input)
 PixelOutput PS_AmbientOcclusion(PosNormBinormTanTex_InputPixel input)
 {
 	PixelOutput output;
-	output.color.xyz = AOMap.Sample(Sampler, input.uv).xyz; //UV på allt ELLEH ?
+	output.color.xyz = roughnessMetalnessAO.Sample(samplerWrap, input.uv).zzz; //UV på allt ELLEH ?
 	output.color.a = 1.0f;
 	return output;
 }
 PixelOutput PS_Emissive(PosNormBinormTanTex_InputPixel input)
 {
 	PixelOutput output;
-	float3 roughness = emissiveMap.Sample(Sampler, input.uv.xy).xyz;
+	float3 roughness = emissiveMap.Sample(samplerWrap, input.uv.xy).xyz;
 	output.color = float4(roughness.xyz, 1.0f);
 	return output;
 }
 
 PixelOutput PS_ObjectNormal(PosNormBinormTanTex_InputPixel input)
 {
-	float3 normal = normalMap.Sample(Sampler, input.uv.xy).xyz;
+	float3 normal = normalMap.Sample(samplerWrap, input.uv.xy).xyz;
 	normal = (normal * 2.0f) - float3(1.0f, 1.f, 1.f);
 	normal = normalize(normal);
 	float3x3 tangentSpaceMatrix = float3x3(normalize(input.biTangent.xyz), normalize(input.tangent.xyz), normalize(input.normals.xyz)); // om fel, kanske här? Vem vet
@@ -210,7 +256,7 @@ PixelOutput PS_ObjectNormal(PosNormBinormTanTex_InputPixel input)
 PixelOutput PS_Metalness(PosNormBinormTanTex_InputPixel input)
 {
 	PixelOutput output;
-	output.color.xyz = metalnessMap.Sample(Sampler, input.uv).xyz;
+	output.color.xyz = roughnessMetalnessAO.Sample(samplerWrap, input.uv).xxx;
 	output.color.a = 1.0f;
 	return output;
 }
@@ -332,7 +378,7 @@ PixelOutput PS_AmbientDiffuse(PosNormBinormTanTex_InputPixel input)
 	float3 metalnessAlbedo = PS_MetalnessAlbedo(input).color.xyz;
 	float3 ambientOcclusion = PS_AmbientOcclusion(input).color.xyz;
 
-	float3 ambientLight = cubeMap.SampleLevel(Sampler, normal.xyz, (uint) CubeMap_MipCount.x - 2).xyz; // FIX!
+	float3 ambientLight = cubeMap.SampleLevel(samplerWrap, normal.xyz, (uint) CubeMap_MipCount.x - 2).xyz; // FIX!
 	float3 fresnel = PS_ReflectionFresnel(input).color.xyz;
 
 	PixelOutput output;
@@ -352,7 +398,7 @@ PixelOutput PS_AmbientSpecularity(PosNormBinormTanTex_InputPixel input)
 	float fakeLysSpecularPower = RoughToSPow(roughness);
 	float lysMipMap = GetSpecPowToMip(fakeLysSpecularPower, (uint) CubeMap_MipCount.x);
 
-	float3 ambientLight = cubeMap.SampleLevel(Sampler, reflectionVector.xyz, lysMipMap).xyz;
+	float3 ambientLight = cubeMap.SampleLevel(samplerWrap, reflectionVector.xyz, lysMipMap).xyz;
 	float3 fresnel = PS_ReflectionFresnel(input).color.xyz;
 
 	PixelOutput output;
@@ -395,11 +441,16 @@ PixelOutput PS_PBL(PosNormBinormTanTex_InputPixel input)
 	float3 normal = PS_ObjectNormal(input).color.xyz;
 	float3 emissive = PS_Emissive(input).color.xyz;
 	float3 albedo = PS_Albedo(input).color.xyz;
-	float3 metalness = PS_Metalness(input).color.xyz;
+	float4 RoughnessMetalnessAO = roughnessMetalnessAO.Sample(samplerWrap, input.uv.xy);
+
+	float3 metalness = RoughnessMetalnessAO.yyy;
+
+
+
 	float3 metalnessAlbedo = albedo - (albedo * metalness);
-	float3 ambientOcclusion = PS_AmbientOcclusion(input).color.xyz;
-	float3 ambientLight = cubeMap.SampleLevel(Sampler, normal.xyz, (uint) CubeMap_MipCount.x - 2).xyz; // FIX!
-	float roughness = PS_Roughness(input).color.x;
+	float3 ambientOcclusion = RoughnessMetalnessAO.zzz;
+	float3 ambientLight = cubeMap.SampleLevel(samplerWrap, normal.xyz, (uint) CubeMap_MipCount.x - 2).xyz; // FIX!
+	float roughness = RoughnessMetalnessAO.x;
 	float3 substance = (float3(0.04f, 0.04f, 0.04f) - (float3(0.04f, 0.04f, 0.04f) * metalness)) + albedo * metalness;
 	float3 toEye = normalize(cameraPos.xyz - input.worldPosition.xyz);
 	float VdotN = dot(toEye.xyz, normal);
@@ -415,7 +466,7 @@ PixelOutput PS_PBL(PosNormBinormTanTex_InputPixel input)
 	float3 reflectionVector = -reflect(toEye, normal);
 	float fakeLysSpecularPower = RoughToSPow(roughness);
 	float lysMipMap = GetSpecPowToMip(fakeLysSpecularPower, (uint) CubeMap_MipCount.x);
-	float3 ambientLightSpec = cubeMap.SampleLevel(Sampler, reflectionVector.xyz, lysMipMap).xyz;
+	float3 ambientLightSpec = cubeMap.SampleLevel(samplerWrap, reflectionVector.xyz, lysMipMap).xyz;
 	float3 ambientSpecularity = ambientLightSpec * ambientOcclusion * fresnel;
 
 	//DIRR DIFF
@@ -459,14 +510,35 @@ PixelOutput PS_PBL(PosNormBinormTanTex_InputPixel input)
 	texCord.x = shadowCamPosition.x * 0.5f + 0.5f;
 	texCord.y = shadowCamPosition.y * -0.5f + 0.5f;
 
-
-	float shadowCamDepth = shadowBuffer.SampleLevel(Sampler, texCord, 0).x;
-
-	if(shadowCamDepth < shadowCamPosition.z - 0.001f && shadowCamDepth != 0.f)
+	float fluff = 0.0005f;
+	float exposure = 0.0f;
+	[unroll]for(int y = -1; y < 2; ++y)
 	{
-		directionDiffuse.rgb = 0.0f;
-		directionSpecularity.rgb = 0.0f;
+		[unroll]for(int x = -1; x < 2; ++x)
+		{
+			float2 offset;
+			offset.x = x * fluff;
+			offset.y = y * fluff;
+			float depth = shadowBuffer.SampleLevel(samplerWrap, texCord + offset, 0).x + 0.0001f;
+
+			if(shadowCamPosition.z < depth)
+			{
+				exposure += (1.0f / 9.0f);
+			}
+		}
 	}
+
+	directionDiffuse.rgb *= exposure;
+	directionSpecularity.rgb *= exposure;
+
+
+	//float shadowCamDepth = shadowBuffer.SampleLevel(Sampler, texCord, 0).x;
+
+	//if(shadowCamDepth < shadowCamPosition.z - 0.001f && shadowCamDepth != 0.f)
+	//{
+	//	directionDiffuse.rgb = 0.0f;
+	//	directionSpecularity.rgb = 0.0f;
+	//}
 
 // PointLight
 
@@ -508,6 +580,9 @@ PixelOutput PS_PBL(PosNormBinormTanTex_InputPixel input)
 
 
 	PixelOutput output;
+
+	//output.color.xyz = normal.xyz;
+	//output.color.a = 1.0f;
 	output.color = float4(ambientDiffuse + ambientSpecularity + directionDiffuse + directionSpecularity + emissive, 1.0f);
 	//output.color.rgb = shadowCamPosition.xyz;
 	return output;
@@ -554,7 +629,7 @@ PixelOutput PS_PBL(PosNormBinormTanTex_InputPixel input)
 PixelOutput PS_SkyBox(PosNormBinormTanTex_InputPixel input)
 {
 	float3 toPixel = normalize(input.worldPosition.xyz - cameraPos.xyz);
-	float3 ambientLight = cubeMap.SampleLevel(Sampler, toPixel.xyz, 0).xyz;
+	float3 ambientLight = cubeMap.SampleLevel(samplerWrap, toPixel.xyz, 0).xyz;
 
 	PixelOutput output;
 	output.color.xyz = ambientLight;

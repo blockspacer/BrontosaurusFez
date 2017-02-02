@@ -40,7 +40,6 @@
     <ClCompile Include="PushState.cpp" />
     <ClCompile Include="PushState.cpp" />
     <ClCompile Include="PushState.cpp" />
-    <ClCompile Include="PushState.cpp" />
     <ClCompile Include="ChangeLevel.cpp">
       <Filter>Events\ChangeLevel</Filter>
     </ClCompile>
@@ -93,6 +92,9 @@
       <Filter>Events\GameObjectDied</Filter>
     </ClCompile>
     <ClCompile Include="ShopClosed.cpp" />
+    <ClCompile Include="PushState.cpp">
+      <Filter>Events\PushState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Subscriber.h">
@@ -145,7 +147,6 @@
     </ClInclude>
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
-    <ClInclude Include="PushState.h" />
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="PushState.h" />
@@ -250,6 +251,11 @@
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="ShopClosed.h" />
+    <ClInclude Include="PopCurrentState.h" />
+    <ClInclude Include="PostMaster.h" />
+    <ClInclude Include="PushState.h">
+      <Filter>Events\PushState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Events">

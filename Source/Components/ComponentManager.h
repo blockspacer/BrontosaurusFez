@@ -9,11 +9,13 @@ class CComponentManager
 {
 public:
 	static CComponentManager& GetInstance();
+	static CComponentManager* GetInstancePtr();
 	static void CreateInstance();
 	static void DestroyInstance();
 
 	ComponentId RegisterComponent(CComponent* aComponent);
 	CComponent* GetComponent(ComponentId anId);
+	CComponent* RemoveComponent(ComponentId anId);
 	void DeleteComponent(ComponentId anId);
 
 private:
