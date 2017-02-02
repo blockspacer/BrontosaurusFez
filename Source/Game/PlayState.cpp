@@ -220,11 +220,7 @@ void CPlayState::Load()
 
 	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
-#ifdef _DEBUG
-	myLevelIndex = levelsArray.Size()-1;
-#else
-	const int levelIndex = 0;
-#endif
+	myLevelIndex = 0;
 
 	std::string levelPath = "Json/Levels/";
 	levelPath += levelsArray[myLevelIndex].GetString();
