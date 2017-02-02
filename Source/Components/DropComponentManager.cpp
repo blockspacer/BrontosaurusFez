@@ -30,7 +30,6 @@ void DropComponentManager::CreateInstance()
 
 void DropComponentManager::DestroyInstance()
 {
-
 	assert(ourInstance != nullptr && "SkillComponentManager not created (is NULL)");
 	ourInstance->myComponents.Destroy();
 	SAFE_DELETE(ourInstance);

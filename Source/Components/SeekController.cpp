@@ -58,7 +58,7 @@ const CU::Vector2f CSeekController::Update(const CU::Time& aDeltaTime)
 	if (myHaveBeenCalledForHelp == false)
 	{
 		myHaveBeenCalledForHelp = true;
-		CMasterAI::GetInstance().CallForHelp(GetParent(), 1800);
+		CMasterAI::GetInstance().CallForHelp(GetParent(), myCallForHelpRadius);
 	}
 	CU::Vector2f acceleration;
 	acceleration = targetVelocity;

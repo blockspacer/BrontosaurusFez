@@ -9,7 +9,9 @@ class CComponent;
 class CPickupComponent;
 class CGameObject;
 class Skill;
+struct SNavmeshTriangle;
 struct SHat;
+
 namespace CU
 {
 	template<typename ObjectType, typename SizeType = unsigned int, bool USE_SAFE_MODE = true>
@@ -89,6 +91,9 @@ enum class eComponentMessageType
 	eCalledForHelp,
 	eLookAt,
 	eAddMessageSubscription,
+	eEnterNewTriangle,
+	eNotOnNavmesh,
+	eSetPathPosition,
 	eLength
 };
 
@@ -122,6 +127,7 @@ struct SComponentMessageData
 		ICollider* myCollider;
 		Skill* mySkill;
 		SHat* myHat;
+		SNavmeshTriangle* myTrianglePointer;
 	};
 };
 

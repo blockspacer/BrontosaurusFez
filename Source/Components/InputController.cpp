@@ -82,7 +82,7 @@ void InputController::Update(float aDeltaTime)
 			CU::Vector2f targetPosition(targetPosition3D.x, targetPosition3D.z);
 
 			TakeInputMessage(CU::eInputMessage::LEFTMOUSEBUTTON);
-			eComponentMessageType type = eComponentMessageType::eSetPath;
+			eComponentMessageType type = eComponentMessageType::eSetPathPosition;
 			SComponentMessageData pathdata;
 			pathdata.myPathPointer = &myPath;
 			
