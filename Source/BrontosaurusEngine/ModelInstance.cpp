@@ -10,6 +10,7 @@
 CModelInstance::CModelInstance(const char* aModelPath)
 {
 	myIsVisible = true;
+	myHighlightIntencity = 0.f;
 	myAnimationCounter = 0.f;
 	myModel = MODELMGR->LoadModel(aModelPath);
 	CModel* model = MODELMGR->GetModel(myModel);
@@ -75,6 +76,7 @@ void CModelInstance::Render(Lights::SDirectionalLight* aLight, CU::GrowingArray<
 		msg->myModelID = myModel;
 		msg->myTransformation =	myTransformation;
 		msg->myLastFrameTransformation = myLastFrame;
+		msg->myHighlightIntencity = myHighlightIntencity;
 		
 		if (myHasAnimations != false)
 		{
@@ -169,4 +171,9 @@ void CModelInstance::ChangeAnimation(const char* aAnimationKey)
 			mySceneAnimator = &it->second;
 		}
 	}*/
+}
+
+void CModelInstance::SetHighlightIntencity(const float aHighlightIntencity)
+{
+	myHighlightIntencity = aHighlightIntencity;
 }

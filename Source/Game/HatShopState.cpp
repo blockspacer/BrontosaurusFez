@@ -76,6 +76,7 @@ HatShopState::HatShopState(StateStack & aStateStack) :
 		}
 	}
 	AdjustText();
+	myShopPosition = PollingStation::playerObject->GetWorldPosition();
 }
 
 HatShopState::~HatShopState()
@@ -101,6 +102,19 @@ void HatShopState::Init()
 eStateStatus HatShopState::Update(const CU::Time & aDeltaTime)
 {
 	myGUIManager->Update(aDeltaTime);
+
+	const float MaxDistance = 1000;
+
+	CU::Vector2f distance;
+	CU::Vector2f playerPosition = PollingStation::playerObject->GetWorldPosition();
+
+	distance.x = abs(myShopPosition.x - playerPosition.x);
+	distance.y = abs(myShopPosition.y - playerPosition.y);
+
+	if (distance.Length2() > MaxDistance)
+	{
+		CloseShop();
+	}
 	return myStatus;
 }
 

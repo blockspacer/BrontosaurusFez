@@ -150,7 +150,7 @@ struct SRenderModelMessage : SRenderMessage
 
 	const char* myCurrentAnimation;
 	float myAnimationTime;
-
+	float myHighlightIntencity;
 	int myModelID;
 };
 
