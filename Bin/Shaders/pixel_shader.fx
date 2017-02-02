@@ -13,11 +13,6 @@ Texture2D normalMap : register(t5);
 Texture2D shadowBuffer : register(t7);
 
 
-
-
-
-
-
 SamplerState SamplerClamp : register(s0);
 SamplerState samplerWrap : register(s1);
 
@@ -53,6 +48,8 @@ cbuffer PixelShaderBuffer : register(b1) //to pixel
 
 	uint CubeMap_MipCount;
 
+	float4 highlightColor;
+
 	float trash[3];
 }
 
@@ -61,6 +58,7 @@ struct PixelOutput
 	float4 color : SV_TARGET0;
 	float3 velocity : SV_TARGET1;
 };
+
 
 	// PIXEL SHADER
 float4 PS_Pos(Pos_InputPixel input) : SV_TARGET
@@ -71,23 +69,68 @@ float4 PS_Pos(Pos_InputPixel input) : SV_TARGET
 
 PixelOutput PS_PBL(PosNormBinormTanTex_InputPixel input);
 PixelOutput DistanceFog(PosNormBinormTanTex_InputPixel aInput, float4 aColorInput);
+PixelOutput PS_ReflectionFresnel(PosNormBinormTanTex_InputPixel input);
+PixelOutput PS_ObjectNormal(PosNormBinormTanTex_InputPixel input);
 
+float4 PS_FresnelHighlight(PosNormBinormTanTex_InputPixel input, float4 aColorInput);
 
-
-
-
-PixelOutput PS_PosNormBinormTanTex(PosNormBinormTanTex_InputPixel input)
+PixelOutput PS_PosNormBinormTanTex(PosNormBinormTanTex_InputPixel input)                                         // <-------------
 {
 	PixelOutput output;
 
 	float4 pblColor = PS_PBL(input).color;
+	float4 highlightColor = PS_FresnelHighlight(input, pblColor);
+	//DistanceFog(input, pblColor).color;
 
-
-	float4 fogColor = DistanceFog(input, pblColor).color;
-
-	output.color = fogColor;
+	output.color = highlightColor;
 	output.velocity = (input.viewPosition.xyz - input.worldPosLastFrame.xyz) * 100.f;
 	return output;
+}
+
+
+float4 PS_FresnelHighlight(PosNormBinormTanTex_InputPixel input, float4 aColorInput)
+{
+	float3 normal = PS_ObjectNormal(input).color.xyz;
+
+
+	float4 TextureIn = aColorInput;
+	float4 RimlightColor = highlightColor;
+
+	float4x4 viewI = cameraSpaceInversed;
+
+	float3 CameraPosition = cameraPos.xyz;
+	float3 CamVec = (CameraPosition - input.worldPosition.xyz);
+	float3 CamVecNorm = normalize(CamVec);
+
+	float AddOp = (-0.4 + CamVecNorm.y);
+	float3 VectorConstruct = float3(CamVecNorm.x, AddOp, CamVecNorm.z);
+	float3 NormOp = normalize(normal);
+	
+	float AddOp75 = (dot(VectorConstruct.xyz, NormOp) + -0.4);
+	
+	float power = 0.5f;// 0.182219
+
+	float PowOp = pow(AddOp75, power);
+	float Contrastmulstiplier = ((PowOp - 0.5) * 200.0);
+	float ContrastAdd = (Contrastmulstiplier + 0.5);
+	float SatOp = saturate(ContrastAdd);
+	float AddOp92 = (dot(CamVecNorm, NormOp) + -0.4);
+	
+	float PowOp90 = pow(AddOp92, 0.144385);
+	float Contrastmulstiplier98 = ((PowOp90 - 0.5) * 5.0);
+	float ContrastAdd97 = (Contrastmulstiplier98 + 0.5);
+	float SatOp104 = saturate(ContrastAdd97);
+	//float OneMinusOp = (1.0 - (SatOp * SatOp104));
+	float OneMinusOp = (1.0 - SatOp104);
+	float4 AddOp84 = (TextureIn + (RimlightColor * OneMinusOp));
+	float4 SatOp85 = saturate(AddOp84);
+	float4 VectorConstruct102 = float4(SatOp85.xyz.x, SatOp85.xyz.y, SatOp85.xyz.z, 1.0);
+	
+	//float4 testColor = ((float4(CameraPosition.xyz, 1.0f)));
+	//return testColor;
+	//return aColorInput * RimlightColor;
+	return VectorConstruct102;
+
 }
 
 
@@ -132,10 +175,6 @@ PixelOutput DistanceFog(PosNormBinormTanTex_InputPixel aInput, float4 aColorInpu
 	output.color = VectorConstruct;
 	return output;
 }
-
-
-
-
 
 
 
