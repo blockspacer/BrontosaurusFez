@@ -61,6 +61,7 @@ public:
 	void SetPosition(CU::Vector3f aPosition);
 
 	void ChangeAnimation(const char* aAnimationKey);
+	void SetHighlightIntencity(const float aHighlightIntencity);
 	
 	//LAT!
 	inline CModel* GetModel();
@@ -77,6 +78,7 @@ private:
 	const char* myCurrentAnimation;
 
 	float myAnimationCounter;
+	float myHighlightIntencity;
 	bool myIsVisible;
 	bool myHasAnimations;
 };

@@ -44,6 +44,7 @@ void CPickerUpperComponent::Receive(const eComponentMessageType aMessageType, co
 		{
 
 			PollingStation::playerData->myGold += data.myValue;
+			DL_PRINT("Found Gold: %i", data.myValue);
 		}
 		break;
 		case ePickupType::HAT:
