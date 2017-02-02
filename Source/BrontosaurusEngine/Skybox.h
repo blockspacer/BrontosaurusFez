@@ -23,10 +23,15 @@ public:
 
 public:
 	CSkybox();
+	CSkybox(const CSkybox& aCopy) = delete;
 	~CSkybox();
+
 	void Init(const char* aPath);
 	void Render(const CU::Camera & aCamera);
 	inline CTexture* GetTexture();
+	inline short AddRef();
+	inline short DecRef();
+
 private:
 	void CreateVertexIndexBuffer();
 	void UpdateCbuffer(const CU::Camera& aCamera);
@@ -39,9 +44,21 @@ private:
 	ID3D11Buffer* myIndexBuffer;
 
 	CTexture* mySkyboxTexture;
+
+	short myRefCount;
 };
 
 inline CTexture * CSkybox::GetTexture()
 {
 	return mySkyboxTexture;
+}
+
+inline short CSkybox::AddRef()
+{
+	return ++myRefCount;
+}
+
+inline short CSkybox::DecRef()
+{
+	return --myRefCount;
 }

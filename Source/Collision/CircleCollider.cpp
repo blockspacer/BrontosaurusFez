@@ -1,13 +1,12 @@
 #include "stdafx.h"
 
-#include "CircleCollider.h"
-#include "CollisionRenderMessages.h"
-
 const Intersection::SCircle CCircleCollider::ourNullCircle = {};
+CU::CStaticMemoryPool<CCircleCollider, 1024> CCircleCollider::ourMemoryPool;
 
 CCircleCollider::CCircleCollider()
+	: myCircleData(nullptr)
 {
-	myCircleData = new Intersection::SCircle();
+	//myCircleData = new Intersection::SCircle();
 }
 
 CCircleCollider::CCircleCollider(Intersection::SCircle* someCircleData)
@@ -40,7 +39,11 @@ CCircleCollider::~CCircleCollider()
 CCircleCollider& CCircleCollider::operator=(const CCircleCollider& aCopy)
 {
 	SAFE_DELETE(myCircleData);
-	myCircleData = new Intersection::SCircle(*aCopy.myCircleData);
+	if (aCopy.myCircleData)
+	{
+		myCircleData = new Intersection::SCircle(*aCopy.myCircleData);
+	}
+
 	return self;
 }
 
@@ -51,6 +54,21 @@ CCircleCollider& CCircleCollider::operator=(CCircleCollider&& aTemporary)
 	aTemporary.myCircleData = nullptr;
 
 	return self;
+}
+
+void* CCircleCollider::operator new(size_t /*aBytes*/)
+{
+	CCircleCollider* newCollider = ourMemoryPool.Require();
+	assert(newCollider && "maybe should add dynamic memory pool too");
+
+	return newCollider;
+	//return malloc(aBytes);
+}
+
+void CCircleCollider::operator delete(void* aObject)
+{
+	(void)ourMemoryPool.Recycle(static_cast<CCircleCollider*>(aObject));
+	//free(aObject);
 }
 
 void CCircleCollider::RenderDebugLines(CCollisionRenderer& aCollisionRenderer)

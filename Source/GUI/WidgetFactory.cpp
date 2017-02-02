@@ -298,7 +298,7 @@ namespace GUI
 				Button* button = new Button(std::bind(selectItemInShopMessage, i), aWidget->GetWorldPosition(), aWidget->GetSize(), aWidget->GetName());
 				button->AddWidget("Model", aWidget);
 
-				CToolTipDecorator* toolTip = new CToolTipDecorator(button, nullptr, nullptr, std::bind(getToolTipText, 0, std::placeholders::_1));
+				CToolTipDecorator* toolTip = new CToolTipDecorator(button, nullptr, nullptr, std::bind(getToolTipText, i, std::placeholders::_1));
 				return toolTip;
 			}
 
