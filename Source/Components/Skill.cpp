@@ -44,6 +44,8 @@ Skill::Skill(SkillData* aSkillDataPointer)
 	mySkillData = aSkillDataPointer;
 	myIsActive = false;
 	myIsSelected = false;
+	myShouldPlayAnimation = false;
+	myHaveActivatedCollider = false;
 	myUser = nullptr;
 	myColliderObject = SkillSystemComponentManager::GetInstance().GetGameObjectManager()->CreateGameObject();
 	Intersection::CollisionData circleCollisionData = Intersection::CollisionData();
@@ -82,7 +84,7 @@ void Skill::TryToActivate()
 		SComponentMessageData data;
 		data.mySkill = this;
 		myUser->NotifyComponents(eComponentMessageType::eCheckIfCanUseSkill, data);
-
+		myIsSelected = false;
 	}
 }
 
@@ -111,7 +113,11 @@ void Skill::Update(float aDeltaTime)
 	if(myIsActive == true)
 	{
 		myUpdateFunction(aDeltaTime);
-		PlayAnimation();
+		if(myShouldPlayAnimation == true)
+		{
+			PlayAnimation();
+		
+		}
 		if (myAnimationTimeElapsed > mySkillData->animationDuration - mySkillData->animationWindDown && myHaveActivatedCollider == false)
 		{
 			ActivateCollider(); // Remove this later on and replace it with animation wait time.
@@ -156,6 +162,7 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 			SComponentMessageData lookAtData;
 			lookAtData.myVector3f = myTargetObject->GetWorldPosition();
 			myUser->NotifyComponents(eComponentMessageType::eLookAt, lookAtData);
+			myShouldPlayAnimation = true;
 		}
 	}
 	else
@@ -180,6 +187,7 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 		SComponentMessageData lookAtData;
 		lookAtData.myVector3f = myTargetPosition;
 		myUser->NotifyComponents(eComponentMessageType::eLookAt, lookAtData);
+		myShouldPlayAnimation = true;
 		//ActivateCollider(); // Remove this later on and replace it with animation wait time.
 	}
 }
@@ -193,6 +201,7 @@ void Skill::WhirlWindUpdate(float aDeltaTime)
 	myAnimationTimeElapsed += aDeltaTime;
 	myColliderObject->GetLocalTransform().SetPosition(myUser->GetWorldPosition());
 	myColliderObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
+	myShouldPlayAnimation = true;
 }
 
 void Skill::SweepAttackUpdate(float aDeltaTime)
@@ -219,6 +228,7 @@ void Skill::SweepAttackUpdate(float aDeltaTime)
 	SComponentMessageData lookAtData;
 	lookAtData.myVector3f = myTargetPosition;
 	myUser->NotifyComponents(eComponentMessageType::eLookAt, lookAtData);
+	myShouldPlayAnimation = true;
 }
 
 void Skill::SpawnEnemyAttackUpdate(float aDeltaTime)
@@ -242,6 +252,7 @@ void Skill::SpawnEnemyAttackUpdate(float aDeltaTime)
 		}
 		myElapsedCoolDownTime = 0.0f;
 	}
+	myShouldPlayAnimation = true;
 }
 
 void Skill::SetTargetPosition(CU::Vector3f aTargetPosition)
@@ -280,6 +291,7 @@ void Skill::OnActivation()
 		myUser->NotifyComponents(eComponentMessageType::ePlaySound, data2);
 	}
 	myHaveActivatedCollider = false;
+	myShouldPlayAnimation = false;
 	//DL_PRINT("Animation started");
 }
 
@@ -290,6 +302,7 @@ void Skill::OnDeActivation()
 	myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
 	myTargetObject = nullptr;
 	myAnimationTimeElapsed = 0.0f;
+	myShouldPlayAnimation = false;
 	if (mySkillData->isChannel == true)
 	{
 		PollingStation::playerData->myIsWhirlwinding = false;

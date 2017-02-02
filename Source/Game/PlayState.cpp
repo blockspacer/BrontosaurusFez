@@ -146,7 +146,7 @@ CPlayState::~CPlayState()
 	RespawnComponentManager::Destroy();
 	CMasterAI::Destroy();
 	BlessingTowerComponentManager::DestroyInstance();
-
+	CEnemyFactory::Destroy();
 	SkillFactory::DestroyInstance();
 	CComponentManager::DestroyInstance();
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eHatAdded);
