@@ -281,7 +281,12 @@ void Skill::SpawnEnemyAttackUpdate(float aDeltaTime)
 
 		for (int i = 0; i < mySkillData->numberOfEnemiesToSpawn; i++)
 		{
-			CEnemyFactory::GetInstance().CreateEnemy(temp.GetPosition());
+			CU::Vector3f temp(temp.GetPosition());
+
+			temp.x += i * 50;
+			temp.z += i * 50;
+
+			CEnemyFactory::GetInstance().CreateEnemy(temp);
 		}
 		myElapsedCoolDownTime = 0.0f;
 	}
