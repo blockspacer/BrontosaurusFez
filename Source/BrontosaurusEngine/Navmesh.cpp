@@ -506,6 +506,7 @@ void CNavmesh::CreateModel()
 
 void CNavmesh::BuildNodeNetwork(CU::GrowingArray<SNavmeshNode>& aNodeList, std::unordered_map<SNavmeshTriangle*, SNavmeshNode*>& triangleNodes)
 {
+
 	for (int i = 0; i < aNodeList.Size(); ++i)
 	{
 		SNavmeshTriangle* nodeTriangle = aNodeList[i].myTriangle;
