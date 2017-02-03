@@ -367,6 +367,7 @@
     <ClInclude Include="LoadOpenShopListenerComponent.h" />
     <ClInclude Include="LoadPickerupperComponent.h" />
     <ClInclude Include="LoadObjectives.h" />
+    <ClInclude Include="LoadPointLightComponent.h" />
     <ClInclude Include="LoadRespawnComponent.h" />
     <ClInclude Include="LoadScriptComponent.h" />
     <ClInclude Include="LoadSkillSystemComponent.h" />
@@ -400,6 +401,7 @@
     <ClCompile Include="LoadOpenShopListenerComponent.cpp" />
     <ClCompile Include="LoadPickerupperComponent.cpp" />
     <ClCompile Include="LoadObjectives.cpp" />
+    <ClCompile Include="LoadPointLightComponent.cpp" />
     <ClCompile Include="LoadRespawnComponent.cpp" />
     <ClCompile Include="LoadScriptComponent.cpp" />
     <ClCompile Include="LoadSkillSystemComponent.cpp" />
