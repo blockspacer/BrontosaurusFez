@@ -4,7 +4,6 @@
 #include "..\CommonUtilities\Camera.h"
 #include "..\Collision\ICollider.h"
 #include "..\Game\PollingStation.h"
-#include "..\Game\PollingStation.h"
 
 CMouseComponent::CMouseComponent(const CU::Camera& aPlayerCamera)
 	: myPlayerCamera(aPlayerCamera)
@@ -89,6 +88,7 @@ void CMouseComponent::MouseMoved(const CU::Vector2f& aMousePosition)
 		if (std::fabs(t) > 0.0001f)
 		{
 			targetPosition3D = myPlayerCamera.GetPosition() + direction * t;
+			targetPosition3D.y = PollingStation::playerObject->GetWorldPosition().y;
 		}
 	}
 	//for evaluating distance to things
