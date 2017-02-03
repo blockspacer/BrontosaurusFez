@@ -29,6 +29,7 @@
 #include "LoadScriptComponent.h"
 #include "LoadFireComponent.h"
 #include "LoadHealthWellComponent.h"
+#include "LoadPointLightComponent.h"
 
 LoadManager* LoadManager::ourInstance = nullptr;
 
@@ -110,6 +111,7 @@ void LoadManager::RegisterFunctions()
 	loader.RegisterComponentLoadFunction("LuaScriptComponent", LoadScriptComponent);
 	loader.RegisterComponentLoadFunction("FireComponent", LoadFireComponent);
 	loader.RegisterComponentLoadFunction("HealthWellComponent", LoadHealthWellComponent);
+	loader.RegisterComponentLoadFunction("PointLightComponent", LoadPointLightComponent);
 }
 
 LoadManager::LoadManager()
