@@ -379,6 +379,8 @@
     <ClInclude Include="PlayerData.h" />
     <ClInclude Include="PlayerHealthMessenger.h" />
     <ClInclude Include="PlayerManaMessenger.h" />
+    <ClInclude Include="PointLightComponent.h" />
+    <ClInclude Include="PointLightComponentManager.h" />
     <ClInclude Include="RespawnComponent.h" />
     <ClInclude Include="RespawnComponentManager.h" />
     <ClInclude Include="ScriptComponent.h" />
@@ -452,6 +454,8 @@
     <ClCompile Include="OpenShopListenerComponent.cpp" />
     <ClCompile Include="PlayerHealthMessenger.cpp" />
     <ClCompile Include="PlayerManaMessenger.cpp" />
+    <ClCompile Include="PointLightComponent.cpp" />
+    <ClCompile Include="PointLightComponentManager.cpp" />
     <ClCompile Include="RespawnComponent.cpp" />
     <ClCompile Include="RespawnComponentManager.cpp" />
     <ClCompile Include="ScriptComponent.cpp" />

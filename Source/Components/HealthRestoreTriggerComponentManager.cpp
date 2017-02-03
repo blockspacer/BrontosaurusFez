@@ -7,6 +7,7 @@ CHealthRestoreTriggerComponentManager* CHealthRestoreTriggerComponentManager::ou
 
 void CHealthRestoreTriggerComponentManager::Destroy()
 {
+	SAFE_DELETE(ourInstance);
 }
 
 void CHealthRestoreTriggerComponentManager::Create()
