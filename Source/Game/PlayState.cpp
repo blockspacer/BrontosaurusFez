@@ -149,7 +149,7 @@ CPlayState::~CPlayState()
 	RespawnComponentManager::Destroy();
 	CMasterAI::Destroy();
 	BlessingTowerComponentManager::DestroyInstance();
-
+	CEnemyFactory::Destroy();
 	SkillFactory::DestroyInstance();
 	CComponentManager::DestroyInstance();
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eHatAdded);
@@ -205,7 +205,7 @@ void CPlayState::Load()
 
 	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
-#ifdef _DEBUG
+#ifdef _DEBUGq
 	myLevelIndex = levelsArray.Size()-1;
 #else
 	const int levelIndex = 0;

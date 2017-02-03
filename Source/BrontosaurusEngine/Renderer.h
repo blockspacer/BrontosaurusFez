@@ -41,6 +41,9 @@ public:
 	void ClearRenderQueue();
 	inline bool GetIsRunning();
 	inline SRendererSettings& GetSettings();
+
+	inline const CU::Camera& GetCamera();
+
 private:
 	void HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawCallCount);
 	
@@ -146,3 +149,9 @@ inline bool CRenderer::GetIsRunning()
 {
 	return myIsRunning;
 }
+
+inline const CU::Camera & CRenderer::GetCamera()
+{
+	return myCamera;
+}
+

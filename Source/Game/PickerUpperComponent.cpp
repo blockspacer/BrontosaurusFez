@@ -30,6 +30,10 @@ void CPickerUpperComponent::Receive(const eComponentMessageType aMessageType, co
 				messageData.myInt = data.myValue;
 				
 				GetParent()->NotifyComponents(eComponentMessageType::eHealPercent, messageData);
+
+				SComponentMessageData messageData2;
+				messageData2.myString = "HealthGlobe";
+				GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, messageData2);
 				//GetParent()->NotifyComponents(eComponentMessageType::eRestoreMana, messageData);
 			}
 			break;
@@ -44,11 +48,18 @@ void CPickerUpperComponent::Receive(const eComponentMessageType aMessageType, co
 		{
 
 			PollingStation::playerData->myGold += data.myValue;
+
+			SComponentMessageData messageData2;
+			messageData2.myString = "PickupGold";
+			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, messageData2);
 		}
 		break;
 		case ePickupType::HAT:
 		{
 
+			SComponentMessageData messageData2;
+			messageData2.myString = "AddedHat";
+			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, messageData2);
 			PostMaster::GetInstance().SendLetter(eMessageType::eHatAdded, HatBought(data.myString));
 		}
 		break;

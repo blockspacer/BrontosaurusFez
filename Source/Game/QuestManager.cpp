@@ -16,6 +16,7 @@ QM::CQuestManager::CQuestManager()
 	myProgression = 0;
 	myObjectives.Init(4);
 	myQuests.Init(4);
+	myPortalIndexes.Init(4);
 	myError = "";
 	myLoadSuccess = true;
 	POSTMASTER.Subscribe(this, eMessageType::QuestRelated);

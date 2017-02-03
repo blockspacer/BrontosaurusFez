@@ -20,10 +20,15 @@ public:
 	ID3D11InputLayout * LoadInputLayout(std::wstring aString, unsigned int aShaderBlueprint);
 
 private:
+	ID3D11VertexShader * CreateVertexShader(const std::wstring& aString, unsigned int aDataFlags);
+	ID3D11PixelShader * CreatePixelShader(const std::wstring& aString, unsigned int aDataFlags);
+	ID3D11GeometryShader* CreateGeometryShader(const std::wstring& aString, unsigned int aDataFlags);
+
 	ID3D11VertexShader * CompileVertexShader(std::wstring aString, unsigned int aDataFlags);
 	ID3D11PixelShader * CompilePixelShader(std::wstring aString, unsigned int aDataFlags);
 	ID3D11GeometryShader* CompileGeometryShader(std::wstring aString, unsigned int aDataFlags);
 	ID3D11InputLayout* CreateInputLayout(ID3D11InputLayout * aLayout, ID3D10Blob * aVertexBlob, std::vector<D3D11_INPUT_ELEMENT_DESC>& aInputLayout);
+	ID3D11InputLayout* CreateInputLayout(ID3D11InputLayout * aLayout, const void* aVertexBlobPointer, const unsigned int aVertexBufferSize, std::vector<D3D11_INPUT_ELEMENT_DESC>& aInputLayout);
 	std::string GetInputLayoutType(unsigned int aShaderBlueprint, std::vector<D3D11_INPUT_ELEMENT_DESC>& aInputLayout);
 
 private:
