@@ -15,6 +15,7 @@
 #include "ModelManager.h"
 #include "ConstBufferTemplate.h"
 #include "Text.h"
+#include "WindowsWindow.h"
 #include <Camera.h>
 
 #include "ModelInstance.h"
@@ -278,7 +279,9 @@ void CRenderer::Downsample(CRenderPackage & aRenderPackage)
 
 void CRenderer::InitPackages()
 {
-	CU::Vector2ui windowSize = ENGINE->GetWindowSize();
+	//CU::Vector2ui windowSize = ENGINE->GetWindowSize();
+	CU::Vector2ui windowSize = ENGINE->GetWindow()->GetWindowSize();
+
 	myIntermediatePackage.Init(windowSize);
 
 
