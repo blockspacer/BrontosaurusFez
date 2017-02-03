@@ -57,6 +57,8 @@
     <ClInclude Include="LoadFireComponent.h">
       <Filter>LoadThings\LoadFireComponent</Filter>
     </ClInclude>
+    <ClInclude Include="LoadHealthWellComponent.h" />
+    <ClInclude Include="LoadPointLightComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -112,6 +114,8 @@
     <ClCompile Include="LoadFireComponent.cpp">
       <Filter>LoadThings\LoadFireComponent</Filter>
     </ClCompile>
+    <ClCompile Include="LoadHealthWellComponent.cpp" />
+    <ClCompile Include="LoadPointLightComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="VS">

@@ -1,5 +1,6 @@
 #pragma once
 
+class CComponent;
 class CScriptComponent;
 
 class CScriptComponentManager
@@ -8,7 +9,8 @@ public:
 	CScriptComponentManager();
 	~CScriptComponentManager();
 
-	CScriptComponent* CreateComponent(const std::string& aScriptPath/*, const std::string& aInitFunction*/);
+	CComponent* CreateAbstractComponent(const std::string& aScriptPath);
+	CScriptComponent* CreateComponent(const std::string& aScriptPath);
 	void DestroyComponent(CScriptComponent* aScriptComponent);
 
 	static CScriptComponentManager* GetInstance();

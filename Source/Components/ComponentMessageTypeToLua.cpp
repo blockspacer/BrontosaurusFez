@@ -52,6 +52,7 @@ void InitComponentTypes()
 	locComponentTypeNames[TO_STRING(eOnCollisionEnter)] = eComponentMessageType::eOnCollisionEnter;
 	locComponentTypeNames[TO_STRING(eOnCollisionExit)] = eComponentMessageType::eOnCollisionExit;
 	locComponentTypeNames[TO_STRING(ePercentHPLeft)] = eComponentMessageType::ePercentHPLeft;
+	locComponentTypeNames[TO_STRING(eActivate)] = eComponentMessageType::eActivate;
 
 		//eComponentMessageType::ePercentHPLeft:
 		//eComponentMessageType::eLootDropped:
@@ -91,7 +92,6 @@ void InitComponentTypes()
 		//eComponentMessageType::eRestoreMana:
 		//eComponentMessageType::eActivateBurningBasicAttack:
 		//eComponentMessageType::eActivateManaRefund:
-		//eComponentMessageType::eActivate:
 		//eComponentMessageType::eCalledForHelp:
 		//eComponentMessageType::eLookAt:
 		//eComponentMessageType::eAddMessageSubscription:

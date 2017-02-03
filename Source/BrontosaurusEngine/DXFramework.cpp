@@ -16,6 +16,153 @@ CDXFramework::~CDXFramework()
 	Shutdown();
 }
 
+#define INFO_PRINT
+#define ENABLE_VSYNC true
+
+bool CDXFramework::CollectAdapters(CU::Vector2<unsigned int> aWindowSize, CU::Vector2<int>& aNumDenumerator, IDXGIAdapter*& outAdapter)
+{
+	HRESULT result = S_OK;
+	IDXGIFactory* factory;
+
+	DXGI_MODE_DESC* displayModeList = nullptr;
+	unsigned int numModes = 0;
+	//unsigned int i = 0;
+	unsigned int denominator = 0;
+	unsigned int numerator = 0;
+	result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
+	if (FAILED(result))
+	{
+		return false;
+	}
+	// Use the factory to create an adapter for the primary graphics interface (video card).
+	IDXGIAdapter* usingAdapter = nullptr;
+	int adapterIndex = 0;
+	std::vector<DXGI_ADAPTER_DESC> myAdapterDescs;
+	std::vector<IDXGIAdapter*> myAdapters;
+	while (factory->EnumAdapters(adapterIndex, &usingAdapter) != DXGI_ERROR_NOT_FOUND)
+	{
+		DXGI_ADAPTER_DESC adapterDesc;
+		usingAdapter->GetDesc(&adapterDesc);
+		myAdapterDescs.push_back(adapterDesc);
+		myAdapters.push_back(usingAdapter);
+		++adapterIndex;
+	}
+
+	if (adapterIndex == 0)
+	{
+		return false;
+	}
+
+	INFO_PRINT("%s", "Video card(s) detected: ");
+	for (DXGI_ADAPTER_DESC desc : myAdapterDescs)
+	{
+		int memory = (int)(desc.DedicatedVideoMemory / 1024 / 1024);
+		INFO_PRINT("	%ls%s%i%s", desc.Description, " Mem: ", memory, "Mb");
+	}
+
+	DXGI_ADAPTER_DESC usingAdapterDesc = myAdapterDescs[0];
+	usingAdapter = myAdapters[0];
+
+	INFO_PRINT("%s", "Detecting best card...");
+
+
+	const std::wstring nvidia = L"NVIDIA";
+	const std::wstring ati = L"ATI";
+
+	int memory = (int)(usingAdapterDesc.DedicatedVideoMemory / 1024 / 1024);
+	int mostMem = 0;
+
+	for (unsigned int i = 0; i < myAdapterDescs.size(); i++)
+	{
+		DXGI_ADAPTER_DESC desc = myAdapterDescs[i];
+		memory = (int)(desc.DedicatedVideoMemory / 1024 / 1024);
+		std::wstring name = desc.Description;
+		if (name.find(nvidia) != std::wstring::npos || name.find(ati) != std::wstring::npos)
+		{
+			if (memory > mostMem)
+			{
+				mostMem = memory;
+				usingAdapterDesc = desc;
+				usingAdapter = myAdapters[i];
+			}
+		}
+	}
+
+	INFO_PRINT("%s%ls%s%i", "Using graphic card: ", usingAdapterDesc.Description, " Dedicated Mem: ", mostMem);
+
+	// Enumerate the primary adapter output (monitor).
+	IDXGIOutput* pOutput = nullptr;
+	if (usingAdapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND)
+	{
+		// Get the number of modes that fit the DXGI_FORMAT_R8G8B8A8_UNORM display format for the adapter output (monitor).
+		result = pOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
+		if (!FAILED(result))
+		{
+			// Create a list to hold all the possible display modes for this monitor/video card combination.
+			displayModeList = new DXGI_MODE_DESC[numModes];
+			if (displayModeList)
+			{
+				// Now fill the display mode list structures.
+				result = pOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
+				if (!FAILED(result))
+				{
+					// Now go through all the display modes and find the one that matches the screen width and height.
+					// When a match is found store the numerator and denominator of the refresh rate for that monitor.
+					for (unsigned int i = 0; i < numModes; i++)
+					{
+						if (displayModeList[i].Width == (unsigned int)aWindowSize.x)
+						{
+							if (displayModeList[i].Height == (unsigned int)aWindowSize.y)
+							{
+								numerator = displayModeList[i].RefreshRate.Numerator;
+								denominator = displayModeList[i].RefreshRate.Denominator;
+							}
+						}
+					}
+				}
+			}
+		}
+		// Release the adapter output.
+		pOutput->Release();
+		pOutput = 0;
+	}
+
+
+	// Get the adapter (video card) description.
+	result = usingAdapter->GetDesc(&usingAdapterDesc);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Store the dedicated video card memory in megabytes.
+	int myVideoCardMemory = (int)(usingAdapterDesc.DedicatedVideoMemory / 1024 / 1024);
+
+	// Release the display mode list.
+	delete[] displayModeList;
+	displayModeList = 0;
+
+
+
+	// Release the factory.
+	factory->Release();
+	factory = 0;
+
+	if (ENABLE_VSYNC)
+	{
+		aNumDenumerator.x = numerator;
+		aNumDenumerator.y = denominator;
+	}
+	else
+	{
+		aNumDenumerator.x = 0;
+		aNumDenumerator.y = 1;
+	}
+
+	outAdapter = usingAdapter;
+	return true;
+}
+
 bool CDXFramework::Initialize(const int aWidth, const int aHeight, const bool aIsFullScreen, HWND aHWND)
 {
 	HRESULT result;
@@ -26,9 +173,18 @@ bool CDXFramework::Initialize(const int aWidth, const int aHeight, const bool aI
 	swapChainDesc.BufferCount = 1;
 	swapChainDesc.BufferDesc.Width = aWidth;
 	swapChainDesc.BufferDesc.Height = aHeight;
+
+	IDXGIAdapter* adapter = nullptr;
+	CU::Vector2<int> numDenum;
+	CU::Vector2<unsigned int> windowSize(aWidth, aHeight);
+	if (CollectAdapters(windowSize, numDenum, adapter))
+	{
+		//INFO_PRINT("%s%s", "VSYNC Compatible: Yes, Enabled: ", myEnableVSync ? "Yes" : "No");
+	}
+
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
-	swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+	swapChainDesc.BufferDesc.RefreshRate.Numerator = numDenum.x;
+	swapChainDesc.BufferDesc.RefreshRate.Denominator = numDenum.y;
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDesc.OutputWindow = aHWND;
 	swapChainDesc.SampleDesc.Count = 1; // MSAA * 4 asball?
@@ -144,7 +300,16 @@ void CDXFramework::SetViewPort(const unsigned int aWidth, const unsigned int aHe
 
 void CDXFramework::Render()
 {
-	mySwapchain->Present(0, 0);
+	if (ENABLE_VSYNC)
+	{
+		mySwapchain->Present(1, 0);
+	}
+	else
+	{
+		mySwapchain->Present(0, 0);
+	}
+
+
 }
 
 void CDXFramework::Shutdown()

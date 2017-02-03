@@ -37,6 +37,8 @@
 #include "Components/CollisionComponentManager.h"
 #include "Components\BlessingTowerComponentManager.h"
 #include "MainStatComponent.h"
+#include "Components/HealthRestoreTriggerComponentManager.h"
+#include "Components/PointLightComponentManager.h"
 
 #include "../GUI/GUIManager.h"
 
@@ -151,6 +153,8 @@ CPlayState::~CPlayState()
 	BlessingTowerComponentManager::DestroyInstance();
 	CEnemyFactory::Destroy();
 	SkillFactory::DestroyInstance();
+	CHealthRestoreTriggerComponentManager::Destroy();
+	CPointLightComponentManager::Destroy();
 	CComponentManager::DestroyInstance();
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eHatAdded);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
@@ -272,12 +276,8 @@ void CPlayState::Load()
 
 		////TEMP CARL BEGIN
 
-		CScriptComponent* scriptComp = myScriptComponentManager->CreateComponent("Script/exempel_script.lua");
-		PollingStation::playerObject->AddComponent(scriptComp);
-		//SComponentMessageData numberData;
-		//numberData.myInt = 234;
-		//scriptComp->Receive(eComponentMessageType::eDied, numberData);
-
+		//CScriptComponent* scriptComp = myScriptComponentManager->CreateComponent("Script/exempel_script.lua");
+		//PollingStation::playerObject->AddComponent(scriptComp);
 
 		////TEMP CARL END
 	}
@@ -513,4 +513,6 @@ void CPlayState::CreateManagersAndFactories()
 	CLevelManager::CreateInstance();
 	CEnemyFactory::Create(*myGameObjectManager,*myCollisionComponentManager,*myHealthBarManager);
 	BlessingTowerComponentManager::CreateInstance();
+	CHealthRestoreTriggerComponentManager::Create();
+	CPointLightComponentManager::Create(*myScene);
 }

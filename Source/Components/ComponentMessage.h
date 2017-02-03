@@ -98,6 +98,7 @@ enum class eComponentMessageType
 	eStopWhirlwind,
 	eTryToSelectSkill,
 	eCheckIfCanSelect,
+	eActivate2,
 	eLength
 };
 

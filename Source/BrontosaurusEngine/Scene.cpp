@@ -75,7 +75,7 @@ CScene::CScene()
 	myFireEmitters.Init(8);
 	mySkybox = nullptr;
 
-	myShadowCamera.InitOrthographic(5500, 5500, 5000.f, 0.01f, 2048, 2048);
+	myShadowCamera.InitOrthographic(6000, 6000, 5000.f, 0.01f, 4096, 4096);
 }
 
 CScene::~CScene()

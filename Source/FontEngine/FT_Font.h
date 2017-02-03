@@ -26,6 +26,7 @@ public:
 	~CFT_Font();
 
 	void SetSize(const int pt, const int aDeviceWidth, const unsigned int aDeviceHeight);
+	void SetLineHeight(const int aLineHeight);
 
 	ID3D11ShaderResourceView* GetCharResourceView(wchar_t aChar);
 
@@ -55,6 +56,7 @@ private:
 	std::unordered_map<unsigned, ID3D11ShaderResourceView*> myRenderedGlyphs;
 	std::unordered_map<unsigned, GlyphData> myGlyphData;
 
+	int myLineHeight;
 
 	CEffect* myEffect;
 

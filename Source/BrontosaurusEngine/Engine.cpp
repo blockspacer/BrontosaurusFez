@@ -63,7 +63,10 @@ void CEngine::Init(SInitEngineParams& aInitEngineParams)
 	myRenderCallbackFunction = aInitEngineParams.myRenderCallbackFunction;
 
 	myDXFramework = new CDXFramework();
-	myDXFramework->Initialize(aInitEngineParams.myWindowParams.Width, aInitEngineParams.myWindowParams.Height, aInitEngineParams.myWindowParams.Fullscreen ,myWindowsWindow->GetHWND());
+	CU::Vector2ui actualDrawSize = myWindowsWindow->GetWindowSize();
+
+
+	myDXFramework->Initialize(actualDrawSize.x, actualDrawSize.y, aInitEngineParams.myWindowParams.Fullscreen ,myWindowsWindow->GetHWND());
 	myInputManager = new CInputManager();
 	myModelManager = new CModelManager();
 	mySpriteManager = new CSpriteManager();
@@ -81,8 +84,6 @@ void CEngine::Init(SInitEngineParams& aInitEngineParams)
 	myConsole = new CConsole();
 	myConsole->Init();
 	myDebugInfoDrawer = new CDebugInfoDrawer(aInitEngineParams.myDebugFlags);
-
-	ShowCursor(TRUE);
 
 	bool result;
 	Audio::CAudioInterface::CreateInstance();

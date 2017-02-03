@@ -12,13 +12,14 @@ public:
 	KeyPressed(const CU::eKeys& aKey);
 	~KeyPressed();
 
-	eMessageReturn DoEvent(CDebugInfoDrawer* aDebugInfoDrawer) const;
+	eMessageReturn DoEvent(CDebugInfoDrawer* aDebugInfoDrawer) const override;
 	eMessageReturn DoEvent(CreditsState*) const override;
 	eMessageReturn DoEvent(CPlayState*) const override;
 	eMessageReturn DoEvent(PauseMenu*) const override;
 	eMessageReturn DoEvent(CConsole* aConsole) const override;
 	eMessageReturn DoEvent(InputController* aConsole) const override;
 	eMessageReturn DoEvent(CCollisionComponentManager* aHatShop) const override;
+	eMessageReturn DoEvent(CDialogState* aDialogState)const override;
 
 	//temp
 	eMessageReturn DoEvent(CHealthComponent* aHealthComponent) const override;
