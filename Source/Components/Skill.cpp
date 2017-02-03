@@ -327,10 +327,13 @@ void Skill::ActivateCollider()
 	{
 		//Johan added this
 		//-------------------------------------------------------------------------------------------------------------------
-		SComponentMessageData damageData;
-		damageData.myInt = static_cast<int>((mySkillData->damage + mySkillData->damageBonus) * mySkillData->damageModifier);
-		myTargetObject->NotifyComponents(eComponentMessageType::eTakeDamage, damageData);
 		//-------------------------------------------------------------------------------------------------------------------
+		if(myTargetObject != nullptr)
+		{
+			SComponentMessageData damageData;
+			damageData.myInt = static_cast<int>((mySkillData->damage + mySkillData->damageBonus) * mySkillData->damageModifier);
+			myTargetObject->NotifyComponents(eComponentMessageType::eTakeDamage, damageData);
+		}
 	}
 }
 void Skill::OnActivation()
