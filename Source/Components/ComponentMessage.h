@@ -96,6 +96,8 @@ enum class eComponentMessageType
 	eSetPathPosition,
 	eSetHighLight,
 	eStopWhirlwind,
+	eTryToSelectSkill,
+	eCheckIfCanSelect,
 	eLength
 };
 
