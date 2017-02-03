@@ -208,10 +208,10 @@ CU::Vector3f CPickupFactory::GenerateNewPosition(CU::Vector3f& aPosition)
 	CU::Vector3f newPosition;
 	direction.Normalize();
 	float angle = rand() % 180;
-	angle /= PI;
-	angle -= PI / 2.0f;
+	angle - 90.0f;
+	angle *= PI / 180.0f;
 	direction = direction * CU::Matrix33f::CreateRotateAroundZ(angle);
 	newPosition = aPosition + direction * 50.0f;
-
+	DL_PRINT("Drop angle %f", angle * 180.0f / PI);
 	return newPosition;
 }
