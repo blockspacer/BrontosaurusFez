@@ -4,8 +4,10 @@
 namespace CU
 {
 	CStopWatch::CStopWatch()
-		: myLifeTime(0.f)
+		: myLastTimePoint(Clock::now())
+		, myLifeTime(0.f)
 		, myDeltaTime(0.f)
+		, myIsPaused(true)
 	{
 	}
 
@@ -13,15 +15,48 @@ namespace CU
 	{
 	}
 
+	void CStopWatch::Init()
+	{
+		Restart();
+	}
+
+	void CStopWatch::Start()
+	{
+		myIsPaused = false;
+	}
+
+	void CStopWatch::Restart()
+	{
+		myLastTimePoint = Clock::now();
+		myLifeTime.Reset();
+		myDeltaTime.Reset();
+		myIsPaused = false;
+	}
+
+	void CStopWatch::Pause()
+	{
+		myIsPaused = true;
+	}
+
+	void CStopWatch::Stop()
+	{
+		Pause();
+		myLifeTime.Reset();
+		myDeltaTime.Reset();
+	}
+
 	void CStopWatch::Update()
 	{
-		TimePoint newTimePoint = Clock::now();
-		FloatDuration rawDeltaTime = myLastTimePoint - newTimePoint;
-		MicroSeconds deltaTime = std::chrono::duration_cast<MicroSeconds>(rawDeltaTime);
+		if (!myIsPaused)
+		{
+			TimePoint newTimePoint = Clock::now();
+			FloatDuration rawDeltaTime = newTimePoint - myLastTimePoint;
+			MicroSeconds deltaTime = std::chrono::duration_cast<MicroSeconds>(rawDeltaTime);
 
-		myDeltaTime = deltaTime.count();
-		myLifeTime += myDeltaTime;
+			myDeltaTime = deltaTime.count();
+			myLifeTime += myDeltaTime;
 
-		myLastTimePoint = newTimePoint;
+			myLastTimePoint = newTimePoint;
+		}
 	}
 }

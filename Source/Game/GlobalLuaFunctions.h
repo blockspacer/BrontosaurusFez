@@ -10,6 +10,7 @@ namespace SSlua
 	typedef std::function<ArgumentList(const ArgumentList&)> LuaCallbackFunction;
 }
 
+SSlua::ArgumentList GetPlayer(const SSlua::ArgumentList& aArgumentList);
 SSlua::ArgumentList ComponentGetParent(const SSlua::ArgumentList& aArgumentList);
 SSlua::ArgumentList ComponentNotifyParent(const SSlua::ArgumentList& aArgumentList);
 SSlua::ArgumentList ComponentSubscribeToMessage(const SSlua::ArgumentList& aArgumentList);

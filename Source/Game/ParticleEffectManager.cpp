@@ -19,6 +19,8 @@ struct CParticleEffectManager::SParticleData
 
 CParticleEffectManager::CParticleEffectManager(CScene& aScene)
 	: myActiveParticleEmitters(16u)
+	, myKilledParticleEmitters(16u)
+	, myFreeEmitterIDs(16u)
 	, myScene(aScene)
 {
 	assert(ourInstance == nullptr && "particle effect manager already created");
@@ -37,30 +39,52 @@ CParticleEffectManager::~CParticleEffectManager()
 
 void CParticleEffectManager::SpawnParticle(const std::string& aEffectName, const CU::Vector3f& aSpawnPosition)
 {
-	myActiveParticleEmitters.Add(SParticleData());
-	SParticleData& data = myActiveParticleEmitters.GetLast();
+	unsigned int activeParticlesIndex = myActiveParticleEmitters.Size();
+	if (!myFreeEmitterIDs.Empty())
+	{
+		activeParticlesIndex = myFreeEmitterIDs.Pop();
+	}
+	else
+	{
+		myActiveParticleEmitters.Add(SParticleData());
+	}
+
+	SParticleData& data = myActiveParticleEmitters[activeParticlesIndex];
 
 	if (!GetEmitterData(aEffectName, data))
 	{
-		myActiveParticleEmitters.Pop();
+		if (&data == &myActiveParticleEmitters.GetLast())
+		{
+			myActiveParticleEmitters.Pop();
+		}
+
 		return;
 	}
+
+	DL_PRINT("particle spawned");
 
 	CParticleEmitterInstance* particleEmitter = new CParticleEmitterInstance(data.myInitData);
 	particleEmitter->SetPosition(aSpawnPosition);
 	InstanceID particleID = myScene.AddParticleEmitterInstance(particleEmitter);
 	
-	unsigned int index = myActiveParticleEmitters.Size() - 1u;
-	data.myAlarmClock.Init(data.myActiveTime, std::bind(&CParticleEffectManager::DespawnParticle, this, particleID, index));
+	data.myAlarmClock.Init(data.myActiveTime, std::bind(&CParticleEffectManager::DespawnParticle, this, particleID, activeParticlesIndex));
 
 }
 
 void CParticleEffectManager::DespawnParticle(const InstanceID aEmitterIndex, const unsigned int aParticleDataIndex)
 {
 	SParticleData& particle = myActiveParticleEmitters[aParticleDataIndex];
-	myScene.DeleteParticleEmitterInstance(aEmitterIndex);
-
+	//myScene.DeleteParticleEmitterInstance(aEmitterIndex); //don't delete, just stop spawning and move to to-be-deleted-list
+	CParticleEmitterInstance* emitter = myScene.GetParticleEmitterInstance(aEmitterIndex);
+	if (emitter)
+	{
+		emitter->Deactivate();
+		myKilledParticleEmitters.Add(aEmitterIndex);
+		DL_PRINT("particle despawned");
+	}
+	
 	myActiveParticleEmitters[aParticleDataIndex] = SParticleData();
+	myFreeEmitterIDs.Add(aParticleDataIndex);
 }
 
 void CParticleEffectManager::Update()
@@ -68,6 +92,20 @@ void CParticleEffectManager::Update()
 	for (SParticleData& data : myActiveParticleEmitters)
 	{
 		data.myAlarmClock.Update();
+	}
+
+	for (unsigned int i = 0; i < myKilledParticleEmitters.Size(); ++i)
+	{
+		InstanceID id = myKilledParticleEmitters[i];
+		CParticleEmitterInstance* emitter = myScene.GetParticleEmitterInstance(id);
+		if (emitter && emitter->IsDone())
+		{
+			myScene.DeleteParticleEmitterInstance(id);
+			myKilledParticleEmitters.RemoveCyclicAtIndex(i);
+
+			DL_PRINT("particle destroyed");
+			--i;
+		}
 	}
 }
 
@@ -119,7 +157,6 @@ bool CParticleEffectManager::LoadParticleData(const std::string& aEffectPath, SE
 	aEmitterDataOut.EndRotation = particleEffectDocument["EndRotation"].GetFloat();
 	aEmitterDataOut.MinParticleLifeTime = particleEffectDocument["MinParticleLifeTime"].GetFloat();
 	aEmitterDataOut.MaxParticleLifeTime = particleEffectDocument["MaxParticleLifeTime"].GetFloat();
-	aEmitterDataOut.EmissonLifeTime = particleEffectDocument["EmissonLifeTime"].GetFloat();
 
 	CU::CJsonValue colorOverLifeArray = particleEffectDocument["ColorOverLife"];
 	for (int i = 0; i < colorOverLifeArray.Size(); ++i)

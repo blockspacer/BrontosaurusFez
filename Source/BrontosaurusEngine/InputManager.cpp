@@ -16,7 +16,6 @@
 #include "../PostMaster/MouseClicked.h"
 #include "../PostMaster/MouseReleased.h"
 #include "../PostMaster/MouseMoved.h"
-#include "../PostMaster/KeyDown.h"
 #include "../PostMaster/KeyPressed.h"
 #include "../PostMaster/KeyReleased.h"
 #include "../PostMaster//InputMessagePressed.h"
@@ -111,20 +110,12 @@ void CInputManager::UpdateMouse()
 
 void CInputManager::UpdateKeyboard()
 {
-	if (myDInputWrapper->GetKeysDown(myKeyDowns) == true)
-	{
-		for (unsigned int i = 0; i < myKeyDowns.Size(); ++i)
-		{
-			PostMaster::GetInstance().SendLetter(Message(eMessageType::eKeyboardMessage, KeyDown(myKeyDowns[i])));
-		}
-	}
-
 	if (myDInputWrapper->GetKeysPressed(myKeyDowns) == true)
 	{
 		for (unsigned int i = 0; i < myKeyDowns.Size(); ++i)
 		{
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eKeyboardMessage, KeyPressed(myKeyDowns[i])));
-			PostMaster::GetInstance().SendLetter(Message(eMessageType::eKeyPressed, KeyPressed(myKeyDowns[i])));
+			//PostMaster::GetInstance().SendLetter(Message(eMessageType::eKeyPressed, KeyPressed(myKeyDowns[i])));
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eInputMessagePressed, InputMessagePressed(static_cast<CU::eInputMessage>(myKeyDowns[i]))));
 		}
 	}

@@ -72,8 +72,6 @@ struct SEmitterData
 	float MinParticleLifeTime;
 	float MaxParticleLifeTime;
 	
-	float EmissonLifeTime;
-
 	CU::StaticArray<SEmitterKeyframe, 2> ColorOverLife; // sort these badboys
 
 

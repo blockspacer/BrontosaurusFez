@@ -11,6 +11,11 @@ namespace CU
 		CStopWatch();
 		~CStopWatch();
 
+		void Init();
+		void Start();
+		void Restart();
+		void Pause();
+		void Stop();
 		void Update();
 
 		inline Time GetLifeTime() const;
@@ -26,6 +31,8 @@ namespace CU
 
 		Time myLifeTime;
 		Time myDeltaTime;
+
+		bool myIsPaused;
 	};
 }
 

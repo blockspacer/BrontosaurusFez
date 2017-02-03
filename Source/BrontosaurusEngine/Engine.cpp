@@ -105,7 +105,6 @@ void CEngine::Render()
 
 	myLineDrawer->Render();
 	myDXFramework->Render();
-	myConsole->Render();
 }
 
 void CEngine::ThreadedRender()
@@ -162,6 +161,7 @@ void CEngine::Start()
 #endif
 
 	myInitCallbackFunction();
+	myConsole->GetLuaFunctions();
 
 	if (myThreadRender == true)
 	{
@@ -200,6 +200,7 @@ void CEngine::Start()
 	
 		myRenderCallbackFunction();
 
+		myConsole->Render();
 		if (myThreadRender == false)
 		{
 			Render();

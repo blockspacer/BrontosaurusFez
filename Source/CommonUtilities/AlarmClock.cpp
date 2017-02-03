@@ -26,6 +26,7 @@ namespace CU
 		myDoneTime = aTimeTillRinging;
 		myCallback = aCallback;
 
+		myStopWatch.Init();
 		//std::thread updateThread(std::bind(&CAlarmClock::Update, this));
 		//updateThread.detach();
 	}
@@ -41,6 +42,7 @@ namespace CU
 				{
 					myCallback();
 					myCallback = nullptr;
+					myStopWatch.Pause();
 				}
 			}
 		}

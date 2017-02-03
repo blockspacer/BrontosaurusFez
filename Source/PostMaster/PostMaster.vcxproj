@@ -61,7 +61,6 @@
     <ClCompile Include="Pop2States.cpp" />
     <ClCompile Include="PopCurrentState.cpp" />
     <ClCompile Include="MouseMoved.cpp" />
-    <ClCompile Include="KeyDown.cpp" />
     <ClCompile Include="MouseClicked.cpp" />
     <ClCompile Include="PostMaster.cpp" />
     <ClCompile Include="PushState.cpp" />
@@ -102,7 +101,6 @@
     <ClInclude Include="Message.h" />
     <ClInclude Include="MessageType.h" />
     <ClInclude Include="PostMaster.h" />
-    <ClInclude Include="KeyDown.h" />
     <ClInclude Include="MouseMoved.h" />
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="MouseReleased.h" />

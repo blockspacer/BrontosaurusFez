@@ -314,6 +314,11 @@ CU::Camera& CScene::GetCamera(const eCameraType aCameraType)
 	return myCameras[static_cast<int>(aCameraType)];
 }
 
+CParticleEmitterInstance* CScene::GetParticleEmitterInstance(const InstanceID aParticleEmitterID)
+{
+	return (myParticleEmitters.HasIndex(aParticleEmitterID)) ? myParticleEmitters[aParticleEmitterID] : nullptr;
+}
+
 void CScene::DeleteModelInstance(CModelInstance* anInstance)
 {
 	InstanceID currentId;

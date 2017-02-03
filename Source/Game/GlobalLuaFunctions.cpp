@@ -14,11 +14,29 @@
 
 #include "ComponentMessageTypeToLua.h"
 #include "ParticleEffectManager.h"
+#include "PollingStation.h"
 
 #define GLOBAL_LUA_FUNCTION_ERROR DL_MESSAGE_BOX
 #define RETURN_VOID() return SSlua::ArgumentList()
 #define RETURN_ZERO() return SSlua::ArgumentList(ssLuaNumber(0.0))
 #define PAPA CGameObject* parent
+
+SSlua::ArgumentList GetPlayer(const SSlua::ArgumentList & aArgumentList)
+{
+	if (!ScriptHelper::AssertArgumentCount("GetPlayer", 0, aArgumentList.Size(), true))
+	{
+		GLOBAL_LUA_FUNCTION_ERROR("GetPlayer does not take any arguments, discarding them, not aborting");
+	}
+
+	CGameObject* player = PollingStation::playerObject;
+	if (!player)
+	{
+		GLOBAL_LUA_FUNCTION_ERROR("Player is NULL, returning 0 (null component id)");
+		RETURN_ZERO();
+	}
+
+	return{ ssLuaNumber(player->GetId()) };
+}
 
 SSlua::ArgumentList ComponentGetParent(const SSlua::ArgumentList& aArgumentList)
 {

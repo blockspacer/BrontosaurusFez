@@ -13,6 +13,7 @@ namespace SSlua
 
 void ScriptLoader::RegisterLuaFunctions(SSlua::LuaWrapper& aLuaWrapper)
 {
+	aLuaWrapper.RegisterFunction(GetPlayer, "GetPlayer", "Takes no arguments, Return value: id of the player's game object", true);
 	aLuaWrapper.RegisterFunction(ComponentGetParent, "GetParent", "Argument: component id (number), Return value: the component's parent's id. Returns 0 (zero) if it fails", false);
 	aLuaWrapper.RegisterFunction(GameObjectGetPosition, "GetPosition", "Argument: game object id, Return value: numbers x, y, z ", true);
 	aLuaWrapper.RegisterFunction(ComponentSubscribeToMessage, "SubscribeToMessage", "First argument: component id (number), second argument: messagetype (number), third argument: name of callback function to call in lua (string). Returns nothing. The callback function must take two arguments, where the first is the component id, and the second is a pointer to the message data", false);

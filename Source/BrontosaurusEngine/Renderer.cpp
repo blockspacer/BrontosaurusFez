@@ -29,8 +29,6 @@
 
 CRenderer::CRenderer()
 {
-	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed);
-
 	myIsRunning = true;
 
 	mySettings.HDR = false;
@@ -61,8 +59,6 @@ CRenderer::CRenderer()
 
 CRenderer::~CRenderer()
 {
-	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyPressed);
-
 	for (int i = 0; i < myRasterizerStates.Size(); ++i)
 	{
 		myRasterizerStates[i]->Release();

@@ -1,14 +1,23 @@
 #pragma once
 #include <map>
-#include "../LuaWrapper/SSlua/SSlua.h"
 #include "../PostMaster/Subscriber.h"
-#include "../LoadManager/LuaFunctions.h"
 
 namespace CU
 {
+	class DynamicString;
 	enum class eKeys;
 }
+
+struct SSArgument;
+
+namespace SSlua
+{
+	typedef CU::GrowingArray<SSArgument> ArgumentList;
+	typedef std::function<ArgumentList(const ArgumentList&)> LuaCallbackFunction;
+}
+
 class CTextInstance;
+
 class CConsole : public Subscriber
 {
 public:
@@ -21,6 +30,7 @@ public:
 	void Deactivate();
 	eMessageReturn Recieve(const Message & aMessage) override;
 	eMessageReturn TakeKeyBoardInputPressedChar(const char aKey);
+	eMessageReturn TakeKeyBoardInput(const CU::eKeys aKey);
 	
 
 	bool Update(float aDeltaTime);

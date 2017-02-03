@@ -26,6 +26,9 @@ private:
 	std::map<std::string, SParticleData> myParticleData;
 
 	CU::GrowingArray<SParticleData> myActiveParticleEmitters;
+	CU::GrowingArray<InstanceID> myKilledParticleEmitters;
+	CU::GrowingArray<unsigned int> myFreeEmitterIDs;
+
 	CScene& myScene;
 
 	static CParticleEffectManager* ourInstance;

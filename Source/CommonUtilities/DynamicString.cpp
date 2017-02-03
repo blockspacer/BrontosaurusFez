@@ -221,6 +221,11 @@ bool DynamicString::operator==(const char* aLiteralString) const
 	return false;
 }
 
+bool CU::DynamicString::operator==(const char aCharacter) const
+{
+	return mySize == 1 && myString[0] == aCharacter;
+}
+
 int DynamicString::Find(const DynamicString& aSubString) const
 {
 	if (aSubString.Size() < self.Size())

@@ -50,6 +50,7 @@ public:
 	CModelInstance& GetModelAt(InstanceID aModelID);
 	CFireEmitterInstance& GetFireEmitter(const InstanceID aFireEmitterID);
 	CU::Camera& GetCamera(const eCameraType aCameraType);
+	CParticleEmitterInstance* GetParticleEmitterInstance(const InstanceID aParticleEmitterID);
 	
 	//Delete Shiz here
 	void DeleteModelInstance(CModelInstance* anInstance);

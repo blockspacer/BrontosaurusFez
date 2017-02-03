@@ -32,8 +32,7 @@ public:
 	inline InstanceID GetInstanceID();
 	inline void SetInstandeID(const InstanceID aID);
 
-	void Destroy();
-	bool IsDestroyed() const;
+	bool IsDone() const;
 
 private:
 	void Init();
@@ -83,13 +82,7 @@ inline void CParticleEmitterInstance::SetInstandeID(const InstanceID aID)
 	myInstanceID = aID;
 }
 
-inline void CParticleEmitterInstance::Destroy()
-{
-	myParticles.RemoveAll();
-	myParticleLogic.RemoveAll();
-}
-
-inline bool CParticleEmitterInstance::IsDestroyed() const
+inline bool CParticleEmitterInstance::IsDone() const
 {
 	return myParticles.Empty();
 }
