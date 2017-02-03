@@ -19,6 +19,6 @@ namespace GUI
 	private:
 		short GetCheapestHatPrice();
 		//float myMoneyPercent;
-		short& myMoney;
+		unsigned short& myMoney;
 	};
 }
