@@ -49,6 +49,10 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 			for(unsigned short i = 0; i < mySkills.Size(); i++)
 			{
 				mySkills[i]->Deselect();
+				if(mySkills[aMessageData.myInt]->GetSkillData()->isChannel == true && i != aMessageData.myInt)
+				{
+					mySkills[i]->Deactivate();
+				}
 			}
 			mySkills[aMessageData.myInt]->Select();
 		}
@@ -78,6 +82,7 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 	else if (aMessageType == eComponentMessageType::eSetSkillTargetObject)
 	{
 		bool isAnythingSelected = false;
+		bool isAnythingActive = false;
 		for (unsigned short i = 0; i < mySkills.Size(); i++)
 		{
 			mySkills[i]->SetTargetObject(aMessageData.myGameObject);
@@ -86,8 +91,12 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 				isAnythingSelected = true;
 				mySkills[i]->TryToActivate();
 			}
+			if (mySkills[i]->GetIsActive() == true)
+			{
+				isAnythingActive = true;
+			}
 		}
-		if(isAnythingSelected == false)
+		if(isAnythingSelected == false && isAnythingActive == false)
 		{
 
 			mySkills[0]->TryToActivate();
@@ -159,6 +168,22 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 				mySkills[i]->GetSkillData()->manaRefund = 35.0f;
 			}
 		}
+	}
+	else if (aMessageType == eComponentMessageType::eStopWhirlwind)
+	{
+		for (int i = 0; i < mySkills.Size(); i++)
+		{
+			if (mySkills[i]->GetSkillData()->skillName == "WhirlWind")
+			{
+				if (mySkills[i]->GetIsActive() == true)
+				{
+					mySkills[i]->Deactivate();
+				
+				}
+			}
+		
+		}
+			
 	}
 }
 
