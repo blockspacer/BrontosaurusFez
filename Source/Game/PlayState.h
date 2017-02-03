@@ -46,6 +46,8 @@ class DeathComponentFactory;
 class CParticleEmitterComponent;
 class EnemyAIControllerComponent;
 class CHealthBarComponentManager;
+class CScriptComponentManager;
+class CParticleEffectManager;
 
 class CPlayState : public State, public Subscriber
 {
@@ -90,6 +92,8 @@ private:
 
 	CGameObjectManager* myGameObjectManager;
 	CCollisionComponentManager* myCollisionComponentManager;
+	CScriptComponentManager* myScriptComponentManager;
+	CParticleEffectManager* myParticleEffectManager;
 	GUI::GUIManager* myGUIManager;
 	StatManager* myStatManager;
 	CTextInstance* myGoldText;

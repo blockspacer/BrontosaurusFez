@@ -13,6 +13,9 @@ namespace SSlua
 SSlua::ArgumentList ComponentGetParent(const SSlua::ArgumentList& aArgumentList);
 SSlua::ArgumentList ComponentNotifyParent(const SSlua::ArgumentList& aArgumentList);
 SSlua::ArgumentList ComponentSubscribeToMessage(const SSlua::ArgumentList& aArgumentList);
-SSlua::ArgumentList ComponentGetMessageData(const SSlua::ArgumentList& aArgumentList);
+SSlua::ArgumentList ComponentGetParentPosition(const SSlua::ArgumentList& aArgumentList);
+SSlua::ArgumentList GameObjectGetPosition(const SSlua::ArgumentList& aArgumentList);
+SSlua::ArgumentList GetMessageData(const SSlua::ArgumentList& aArgumentList);
 SSlua::ArgumentList GetMessageType(const SSlua::ArgumentList& aArgumentList);
+SSlua::ArgumentList SpawnParticles(const SSlua::ArgumentList& aArgumentList);
 

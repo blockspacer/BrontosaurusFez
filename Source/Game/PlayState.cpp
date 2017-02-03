@@ -95,6 +95,7 @@
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
 #include "../Components/ScriptComponent.h"
 #include "../Components/ScriptComponentManager.h"
+#include "ParticleEffectManager.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -115,6 +116,8 @@ CPlayState::~CPlayState()
 	//Don forgetti to deletti
 	SAFE_DELETE(myEmitterComp);
 	SAFE_DELETE(myCollisionComponentManager);
+	SAFE_DELETE(myScriptComponentManager);
+	SAFE_DELETE(myParticleEffectManager);
 	SAFE_DELETE(myStatManager);
 	SAFE_DELETE(myGoldText);
 	SAFE_DELETE(myHealthBarManager);
@@ -165,24 +168,6 @@ void CPlayState::Load()
 
 	CreateManagersAndFactories();
 	LoadManagerGuard loadManagerGuard;
-
-
-	////TEMP CARL BEGIN
-
-	//CGameObject* gotemp = myGameObjectManager->CreateGameObject();
-	//gotemp->SetName("calle");
-	//CScriptComponentManager compMan;
-	//CScriptComponent* scriptComp = compMan.CreateComponent("Script/test_script.lua"/*, "test_script_init"*/);
-	//gotemp->AddComponent(scriptComp);
-	//SComponentMessageData numberData;
-	//numberData.myInt = 234;
-	//scriptComp->Receive(eComponentMessageType::eDied, numberData);
-
-	//myGameObjectManager->DestroyObject(gotemp);
-
-	////TEMP CARL END
-
-
 
 	CShopStorage::GetInstance().LoadStorage("Json/Hats/HatBluePrints.json");
 
@@ -284,6 +269,17 @@ void CPlayState::Load()
 		PollingStation::playerObject->AddComponent(CPickupManager::GetInstance().CreatePickerUpperComp());
 		PollingStation::playerObject->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
 		PollingStation::playerObject->AddComponent(new CMainStatComponent());
+
+		////TEMP CARL BEGIN
+
+		CScriptComponent* scriptComp = myScriptComponentManager->CreateComponent("Script/exempel_script.lua");
+		PollingStation::playerObject->AddComponent(scriptComp);
+		//SComponentMessageData numberData;
+		//numberData.myInt = 234;
+		//scriptComp->Receive(eComponentMessageType::eDied, numberData);
+
+
+		////TEMP CARL END
 	}
 
 	myGameObjectManager->SendObjectsDoneMessage();
@@ -360,6 +356,7 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	}
 
 	myCollisionComponentManager->Update();
+	myParticleEffectManager->Update();
 	myScene->Update(aDeltaTime);
 
 	myGameObjectManager->DestroyObjectsWaitingForDestruction();
@@ -484,7 +481,9 @@ void CPlayState::CreateManagersAndFactories()
 	myGUIManager = new GUI::GUIManager();
 	myGUIManager->Init("Models/gui/guiBase.fbx");
 
-	myCollisionComponentManager = new CCollisionComponentManager;
+	myCollisionComponentManager = new CCollisionComponentManager();
+	myScriptComponentManager = new CScriptComponentManager();
+	myParticleEffectManager = new CParticleEffectManager(*myScene);
 	CComponentManager::CreateInstance();
 	CAudioSourceComponentManager::Create();
 	CModelComponentManager::Create();

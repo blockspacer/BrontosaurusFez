@@ -96,6 +96,11 @@ void CScene::Update(const CU::Time aDeltaTime)
 	{
 		model->Update(aDeltaTime);
 	}
+	for (CParticleEmitterInstance* particle : myParticleEmitters)
+	{
+		if (particle == nullptr) continue;
+		particle->Update(aDeltaTime);
+	}
 }
 
 void CScene::Render()
@@ -182,10 +187,10 @@ void CScene::Render()
 
 	for (unsigned int i = 0; i < myParticleEmitters.Size(); ++i)
 	{
-		/*if (myParticleEmitters[i]->IsVisible() == false)
+		if (myParticleEmitters[i] == nullptr || myParticleEmitters[i]->IsVisible() == false)
 		{
 			continue;
-		}*/
+		}
 
 		myParticleEmitters[i]->Render(GetCamera(eCameraType::ePlayerOneCamera));
 	}
@@ -227,7 +232,7 @@ InstanceID CScene::AddPointLightInstance(CPointLightInstance* aPointLight)
 	return 0;
 }
 
-InstanceID CScene::AddParticleEmitterInstance(CParticleEmitterInstance * aParticleEmitterInstance)
+InstanceID CScene::AddParticleEmitterInstance(CParticleEmitterInstance* aParticleEmitterInstance)
 {
 	if (myFreeParticleEmitters.Size() < 1)
 	{
@@ -236,7 +241,7 @@ InstanceID CScene::AddParticleEmitterInstance(CParticleEmitterInstance * aPartic
 		return temp;
 	}
 
-	const InstanceID tempId = myFreeParticleEmitters.Pop();
+	InstanceID tempId = myFreeParticleEmitters.Pop();
 	myParticleEmitters[tempId] = aParticleEmitterInstance;
 
 	return  tempId;
@@ -335,11 +340,19 @@ void CScene::DeleteModelInstance(const InstanceID& anId)
 void CScene::DeleteParticleEmitterInstance(const InstanceID anID)
 {
 	//if thread lock here
-	//CParticleEmitterInstance* currentEmitter = myParticleEmitters[anID];
+	
+	//static std::mutex lockHere;
+	//lockHere.lock();
+	
+	CParticleEmitterInstance* emitter = myParticleEmitters[anID];
 	myParticleEmitters[anID] = nullptr;
 	myFreeParticleEmitters.Push(anID);
-	//if thread unlock here
 
-	// Deletas i emitterInstance tror jag?
-	//delete currentEmitter;
+	//lockHere.unlock();
+	
+	//if thread unlock here
+	
+	
+	delete emitter;
+	//emitter->Destroy();
 }

@@ -761,3 +761,5 @@ namespace CU
 		}
 	};
 }
+
+#undef self

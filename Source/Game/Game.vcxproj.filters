@@ -49,11 +49,15 @@
       <Filter>States</Filter>
     </ClCompile>
     <ClCompile Include="ScriptLoader.cpp">
-      <Filter>QuestManager\ScriptLoader</Filter>
+      <Filter>ScriptLoader</Filter>
     </ClCompile>
     <ClCompile Include="GlobalLuaFunctions.cpp">
-      <Filter>QuestManager\ScriptLoader</Filter>
+      <Filter>ScriptLoader</Filter>
     </ClCompile>
+    <ClCompile Include="ScriptHelperFunctions.cpp">
+      <Filter>ScriptLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEffectManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackgroundLoadingManager.h" />
@@ -112,11 +116,15 @@
       <Filter>States</Filter>
     </ClInclude>
     <ClInclude Include="ScriptLoader.h">
-      <Filter>QuestManager\ScriptLoader</Filter>
+      <Filter>ScriptLoader</Filter>
     </ClInclude>
     <ClInclude Include="GlobalLuaFunctions.h">
-      <Filter>QuestManager\ScriptLoader</Filter>
+      <Filter>ScriptLoader</Filter>
     </ClInclude>
+    <ClInclude Include="ScriptHelperFunctions.h">
+      <Filter>ScriptLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEffectManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="States">
@@ -128,8 +136,11 @@
     <Filter Include="QuestManager\QuestDrawer">
       <UniqueIdentifier>{9a07a5b7-1f30-4254-a41d-51f10733cc67}</UniqueIdentifier>
     </Filter>
-    <Filter Include="QuestManager\ScriptLoader">
+    <Filter Include="ScriptLoader">
       <UniqueIdentifier>{45fcaf0e-06d6-4dc1-a35e-d4ea40dfcbb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ParticleEffectManager">
+      <UniqueIdentifier>{3f3a576b-896e-4f22-b6f5-349ab51bbd89}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
