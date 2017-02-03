@@ -370,6 +370,8 @@
     <ClInclude Include="HealthBarComponent.h" />
     <ClInclude Include="HealthBarComponentManager.h" />
     <ClInclude Include="HealthPoint.h" />
+    <ClInclude Include="HealthRestoreTriggerComponent.h" />
+    <ClInclude Include="HealthRestoreTriggerComponentManager.h" />
     <ClInclude Include="ManaComponent.h" />
     <ClInclude Include="ManaComponentManager.h" />
     <ClInclude Include="ManaPoint.h" />
@@ -443,6 +445,8 @@
     <ClCompile Include="HatActivator.cpp" />
     <ClCompile Include="HealthBarComponent.cpp" />
     <ClCompile Include="HealthBarComponentManager.cpp" />
+    <ClCompile Include="HealthRestoreTriggerComponent.cpp" />
+    <ClCompile Include="HealthRestoreTriggerComponentManager.cpp" />
     <ClCompile Include="ManaComponent.cpp" />
     <ClCompile Include="ManaComponentManager.cpp" />
     <ClCompile Include="OpenShopListenerComponent.cpp" />

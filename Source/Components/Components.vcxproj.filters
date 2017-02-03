@@ -159,6 +159,8 @@
     <ClCompile Include="FireComponent.cpp">
       <Filter>FireComponent</Filter>
     </ClCompile>
+    <ClCompile Include="HealthRestoreTriggerComponent.cpp" />
+    <ClCompile Include="HealthRestoreTriggerComponentManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -342,6 +344,8 @@
     <ClInclude Include="FireComponent.h">
       <Filter>FireComponent</Filter>
     </ClInclude>
+    <ClInclude Include="HealthRestoreTriggerComponent.h" />
+    <ClInclude Include="HealthRestoreTriggerComponentManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
