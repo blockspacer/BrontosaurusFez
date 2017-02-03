@@ -192,7 +192,9 @@ void MovementComponent::Receive(const eComponentMessageType aMessageType, const 
 		}
 		break;
 	case eComponentMessageType::eAddToMovementSpeed:
-		myMovementSpeed += aMessageData.myInt;
+		myMovementSpeed += aMessageData.myFloat;
+		DL_PRINT("add movespeed %f", aMessageData.myFloat);
+		DL_PRINT("movementSpeed %f", myMovementSpeed);
 		break;
 	case eComponentMessageType::eLookAt:
 	{

@@ -74,6 +74,8 @@ Skill::Skill(SkillData* aSkillDataPointer)
 	mySkillData->damageBonus = 0.0f;
 	mySkillData->manaRefund = 0.0f;
 	myAnimationTimeElapsed = 0.f;
+	mySpeedBonusStats = new Stats::SBonusStats;
+	mySpeedBonusStats->BonusMovementSpeed = mySkillData->movementSpeedBuffModifier;
 }
 
 
@@ -96,8 +98,8 @@ void Skill::Activate()
 {
 	if (myElapsedCoolDownTime >= mySkillData->coolDown)
 	{
-		myIsActive = true;
 		OnActivation();
+		myIsActive = true;
 	}
 }
 
@@ -129,6 +131,12 @@ void Skill::Update(float aDeltaTime)
 		if (myAnimationTimeElapsed > mySkillData->animationDuration)
 		{
 			Deactivate();
+			if(mySkillData->isChannel == true)
+			{
+				myElapsedCoolDownTime = mySkillData->coolDown;
+				TryToActivate();
+			}
+
 		}
 	
 	}
@@ -328,6 +336,15 @@ void Skill::OnActivation()
 	myHaveActivatedCollider = false;
 	myShouldPlayAnimation = false;
 	//DL_PRINT("Animation started");
+	if (myIsActive == false)
+	{
+		SComponentMessageData speedBonusData;
+
+		speedBonusData.myStatsToAdd = mySpeedBonusStats;
+		mySpeedBonusStats->BonusMovementSpeed = mySpeedBonusStats->BonusMovementSpeed * -1;
+		DL_PRINT("activate %f", mySpeedBonusStats->BonusMovementSpeed);
+		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eAddStats, speedBonusData);
+	}
 }
 
 void Skill::OnDeActivation()
@@ -342,6 +359,11 @@ void Skill::OnDeActivation()
 	{
 		PollingStation::playerData->myIsWhirlwinding = false;
 	}
+	SComponentMessageData speedBonusData;
+	mySpeedBonusStats->BonusMovementSpeed = mySpeedBonusStats->BonusMovementSpeed * -1;
+	speedBonusData.myStatsToAdd = mySpeedBonusStats;
+	DL_PRINT("Deactivate %f", mySpeedBonusStats->BonusMovementSpeed);
+	PollingStation::playerObject->NotifyComponents(eComponentMessageType::eAddStats, speedBonusData);
 }
 
 void Skill::Select()

@@ -3,7 +3,10 @@
 #include "../CommonUtilities/vector3.h"
 class CGameObject;
 struct SkillData;
-
+namespace Stats
+{
+	struct SBonusStats;
+}
 class Skill
 {
 public:
@@ -39,6 +42,7 @@ protected:
 	CGameObject* myColliderObject;
 	CGameObject* myTargetObject;
 	SkillData* mySkillData;
+	Stats::SBonusStats* mySpeedBonusStats;
 	float myElapsedCoolDownTime;
 	float myAnimationTimeElapsed;
 	bool myIsActive;
