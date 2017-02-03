@@ -109,7 +109,6 @@ void CMouseComponent::Update()
 		if (myMouseIsDown == true)
 		{
 			CGameObject* targetObject = nullptr;
-
 			float lowestDistance = 99999999.0f;
 			for (unsigned int i = 0; i < myHoveredGameObjects.Size(); ++i)
 			{
@@ -146,7 +145,7 @@ eMessageReturn CMouseComponent::Recieve(const Message& aMessage)
 
 void CMouseComponent::HighlightClosest()
 {
-	CGameObject* targetObject = nullptr;
+	CGameObject* aObject = nullptr;
 	float lowestDistance = 99999999.0f;
 	for (unsigned int i = 0; i < myHoveredGameObjects.Size(); ++i)
 	{
@@ -165,15 +164,15 @@ void CMouseComponent::HighlightClosest()
 		if (dis < lowestDistance)
 		{
 			lowestDistance = distance.Length();
-			targetObject = myHoveredGameObjects[i];
+			aObject = myHoveredGameObjects[i];
 		}
 	}
-	assert(targetObject != nullptr && "Finding the closest CGameObject to the mouse position did not work :(");
+	assert(aObject != nullptr && "Finding the closest CGameObject to the mouse position did not work :(");
 	SComponentMessageData data;
 	data.myFloat = 0.5f;
-	if (PollingStation::playerObject != targetObject)
+	if (PollingStation::playerObject != aObject)
 	{
-		targetObject->NotifyComponents(eComponentMessageType::eSetHighLight, data);
+		aObject->NotifyComponents(eComponentMessageType::eSetHighLight, data);
 	}
 }
 

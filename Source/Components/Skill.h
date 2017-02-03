@@ -50,6 +50,7 @@ protected:
 	bool myHaveActivatedCollider;
 	bool myShouldPlayAnimation;
 	bool myHavePlayedSound;
+	bool myShouldDoDirectdamage;
 };
 
 
