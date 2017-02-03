@@ -1,17 +1,21 @@
 #include "stdafx.h"
 #include "Console.h"
+#include "TextInstance.h"
+
+#include "../LuaWrapper/SSlua/SSlua.h"
+#include "../LoadManager/LuaFunctions.h"
+
 #include "../PostMaster/Event.h"
 #include "../PostMaster/Message.h"
 #include "../PostMaster/PostMaster.h"
-#include "TextInstance.h"
-
-#include <iostream>
-#include "../PostMaster/PushState.h"
-#include "../PostMaster/PopCurrentState.h"
 #include "../PostMaster/ConsoleCalledUpon.h"
+#include "../PostMaster/KeyCharPressed.h"
+#include "../CommonUtilities/EKeyboardKeys.h"
+
 CConsole::CConsole()
 {
-	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed, 10);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage, 10);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage, 100);
 	myIsActive = false;
 	myHaveIAfterCurrentText = false;
 	myElapsedAnimationTimer = 0.0f;
@@ -19,7 +23,7 @@ CConsole::CConsole()
 	myCurrentText = new CTextInstance;
 	mySuggestedCommand = new CTextInstance;
 	myCurrentText->SetColor(CTextInstance::Red);
-	myCurrentText->SetPosition(CU::Vector2f(0.2f,0.8f));
+	myCurrentText->SetPosition(CU::Vector2f(0.2f,0.3f));
 	mySuggestedCommand->SetColor(CTextInstance::Red);
 	mySuggestedCommand->SetPosition(myCurrentText->GetPosition() + CU::Vector2f(0.0f, 0.05f));
 	myCurrentText->SetText("");
@@ -30,7 +34,8 @@ CConsole::CConsole()
 
 CConsole::~CConsole()
 {
-	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyPressed);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);
 }
 
 void CConsole::Init()
@@ -68,7 +73,7 @@ bool CConsole::Update(float aDeltaTime)
 			}
 			else
 			{
-				myCurrentText->SetText(myCurrentText->GetText() + "|");
+				myCurrentText->SetText(myCurrentText->GetText() + '|');
 			}
 			myHaveIAfterCurrentText = !myHaveIAfterCurrentText;
 		}
@@ -187,7 +192,8 @@ eMessageReturn CConsole::TakeKeyBoardInputPressedChar(const char aKey)
 			{
 				myTextLog[i]->SetPosition(myTextLog[i]->GetPosition() + CU::Vector2f(0.0f, -0.05f));
 			}
-			CheckIfTextIsCommand(myCurrentText->GetText());
+			CU::DynamicString error = CheckIfTextIsCommand(myCurrentText->GetText());
+			DL_PRINT(error.c_str());
 			myCurrentText->SetText("");
 			mySuggestedCommand->SetText("");
 		}
@@ -215,8 +221,67 @@ eMessageReturn CConsole::TakeKeyBoardInputPressedChar(const char aKey)
 	return eMessageReturn::eContinue;
 }
 
+eMessageReturn CConsole::TakeKeyBoardInput(const CU::eKeys aKey)
+{
+	if (myIsActive == true)
+	{
+		switch (aKey)
+		{
+		case CU::eKeys::UP:
+		{
+			if (myCurrentText->GetText().Empty() || myCurrentText->GetText() == '|')
+			{
+				if (!myTextLog.Empty())
+				{
+					myCurrentText = myTextLog.GetLast();
+
+					myHaveIAfterCurrentText = false;
+
+					for (unsigned short i = 0; i < myTextLog.Size(); i++)
+					{
+						myTextLog[i]->SetPosition(myTextLog[i]->GetPosition() + CU::Vector2f(0.0f, 0.05f));
+					}
+				}
+			}
+			else
+			{
+				unsigned int index = myTextLog.Find(myCurrentText);
+				if (index != myTextLog.FoundNone)
+				{
+					if (myTextLog.HasIndex(index - 1))
+					{
+						myCurrentText = myTextLog[index - 1];
+					}
+				}
+				else
+				{
+					CTextInstance* topCommand = myTextLog.GetLast();
+					myTextLog.Add(myCurrentText);
+					myCurrentText = topCommand;
+
+					for (unsigned int i = 0; i < myTextLog.Size(); i++)
+					{
+						myTextLog[i]->SetPosition(myTextLog[i]->GetPosition() + CU::Vector2f(0.0f, -0.05f));
+					}
+				}
+			}
+		}
+			break;
+		case CU::eKeys::DOWN:
+			//unsigned int index = myTextLog.Find(myCurrentText);
+			//myCurrentText = myTextLog[index + 1];
+			break;
+		}
+
+		return eMessageReturn::eStop;
+	}
+
+	return eMessageReturn::eContinue;
+}
+
 const CU::DynamicString CConsole::CheckIfTextIsCommand(const CU::DynamicString& aText)
 {
+	const CU::DynamicString LuaFunction("-lua ");
 	if (aText == "GodMode")
 	{
 		//doGodMode();
@@ -225,6 +290,19 @@ const CU::DynamicString CConsole::CheckIfTextIsCommand(const CU::DynamicString& 
 	else if (aText == "help")
 	{
 		PrintCommands();
+	}
+	else if (aText.Find(LuaFunction) == 0)
+	{
+		std::string pieceOfCode = aText.SubStr(LuaFunction.Size(), aText.Size() - LuaFunction.Size()).c_str();
+		if (!SSlua::LuaWrapper::GetInstance().DoString(pieceOfCode))
+		{
+			std::string luaError;
+			SSlua::LuaWrapper::GetInstance().GetLastError(luaError);
+
+			return aText + " could not be parsed by lua: " + luaError.c_str();
+		}
+		PostMaster::GetInstance().SendLetter(eMessageType::eKeyboardMessage, KeyCharPressed('§'));
+		return "Success";
 	}
 	else
 	{
@@ -331,7 +409,8 @@ void CConsole::Print(const CU::DynamicString & aText)
 {
 	myCurrentText->SetText(aText);
 	myTextLog.Add(new CTextInstance(*myCurrentText));
-	CheckIfTextIsCommand(myCurrentText->GetText());
+	CU::DynamicString error = CheckIfTextIsCommand(myCurrentText->GetText());
+	DL_PRINT(error.c_str());
 	for (unsigned short i = 0; i < myTextLog.Size(); i++)
 	{
 		myTextLog[i]->SetPosition(myTextLog[i]->GetPosition() + CU::Vector2f(0.0f, -0.05f));

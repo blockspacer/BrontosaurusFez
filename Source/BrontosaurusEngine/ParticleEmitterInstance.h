@@ -32,6 +32,8 @@ public:
 	inline InstanceID GetInstanceID();
 	inline void SetInstandeID(const InstanceID aID);
 
+	bool IsDone() const;
+
 private:
 	void Init();
 	void EmitParticle();
@@ -78,5 +80,10 @@ inline InstanceID CParticleEmitterInstance::GetInstanceID()
 inline void CParticleEmitterInstance::SetInstandeID(const InstanceID aID)
 {
 	myInstanceID = aID;
+}
+
+inline bool CParticleEmitterInstance::IsDone() const
+{
+	return myParticles.Empty();
 }
 

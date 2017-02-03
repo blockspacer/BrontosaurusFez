@@ -36,6 +36,7 @@ namespace SSlua
 		void LoadCode(const std::string& aFileName);
 		void RunLoadedCode();
 		bool DoFile(const std::string& aFileName);
+		bool DoString(const std::string& aPieceOfCode);
 		bool LoadLuaString(const std::string& aLuaScript);
 		void GetGlobal(const std::string& aVariableName, int* const aType = nullptr);
 		void AssignePairToTableAt(const int aTableIndex);

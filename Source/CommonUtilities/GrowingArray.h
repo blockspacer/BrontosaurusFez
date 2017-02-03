@@ -77,6 +77,9 @@ namespace CU
 
 		inline ObjectType& GetLast();
 		inline const ObjectType& GetLast() const;
+		inline ObjectType& GetFirst();
+		inline const ObjectType& GetFirst() const;
+
 		inline ObjectType* AsPointer(const SizeType aIndex = 0);
 		inline const ObjectType* AsPointer(const SizeType aIndex = 0) const;
 		inline void* AsVoidPointer(const SizeType aIndex = 0);
@@ -101,6 +104,7 @@ namespace CU
 		__forceinline SizeType Capacity() const;
 		__forceinline bool Empty() const;
 		__forceinline bool IsInitialized() const;
+		__forceinline bool HasIndex(const SizeType aIndex) const;
 
 		static const SizeType FoundNone = static_cast<SizeType>(-1);
 
@@ -525,6 +529,7 @@ namespace CU
 	inline ObjectType& GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::GetLast()
 	{
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		assert((0 < mySize) && "GrowingArray is empty");
 		return myArray[mySize - 1];
 	}
 
@@ -532,7 +537,24 @@ namespace CU
 	inline const ObjectType& GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::GetLast() const
 	{
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		assert((0 < mySize) && "GrowingArray is empty");
 		return myArray[mySize - 1];
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline ObjectType& GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::GetFirst()
+	{
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		assert((0 < mySize) && "GrowingArray is empty");
+		return myArray[0];
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline const ObjectType& GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::GetFirst() const
+	{
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+		assert((0 < mySize) && "GrowingArray is empty");
+		return myArray[0];
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
@@ -645,6 +667,12 @@ namespace CU
 	inline bool GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::IsInitialized() const
 	{
 		return myArray != nullptr;
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline bool GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::HasIndex(const SizeType aIndex) const
+	{
+		return aIndex >= 0 && aIndex < Size();
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
@@ -761,3 +789,5 @@ namespace CU
 		}
 	};
 }
+
+#undef self

@@ -364,6 +364,12 @@
     <ClInclude Include="dbtweener.h">
       <Filter>Tweener</Filter>
     </ClInclude>
+    <ClInclude Include="AlarmClock.h">
+      <Filter>Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="StopWatch.h">
+      <Filter>Timer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Timer.cpp">
@@ -446,6 +452,12 @@
     </ClCompile>
     <ClCompile Include="dbtweener.cpp">
       <Filter>Tweener</Filter>
+    </ClCompile>
+    <ClCompile Include="AlarmClock.cpp">
+      <Filter>Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="StopWatch.cpp">
+      <Filter>Timer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -281,13 +281,25 @@ namespace DL_Debug
 		VSPRINTF(buffer, aMessage, args);
 		va_end(args);
 
-		int returnValue = MessageBoxA(nullptr, buffer, "Error (press cancel to quit, press retry to try to continue", MB_RETRYCANCEL);
+		int returnValue = MessageBoxA(nullptr, buffer, "Error (press 'abort' to exit program, 'retry' to debug, 'ignore' to continue", MB_ABORTRETRYIGNORE);
 
-		if (returnValue == IDCANCEL)
+		if (returnValue == IDABORT)
 		{
-			assert(false); // TODO: FIX MINIDUMP AND SHIT
 			exit(1);
 		}
+		else if (returnValue == IDRETRY)
+		{
+			DL_ASSERT(buffer);
+		}
+		else if (returnValue == IDIGNORE)
+		{
+			return;
+		}
+		//if (returnValue == IDCANCEL)
+		//{
+		//	assert(false); // TODO: FIX MINIDUMP AND SHIT
+		//	exit(1);
+		//}
 #else
 		aMessage;
 		//implement mbx for unix
@@ -304,12 +316,27 @@ namespace DL_Debug
 		wvsprintf(buffer, aMessage, args);
 		va_end(args);
 
-		int returnValue = MessageBoxW(nullptr, buffer, L"Error (press cancel to quit, press retry to try to continue", MB_RETRYCANCEL);
-		if (returnValue == IDCANCEL)
+		int returnValue = MessageBoxW(nullptr, buffer, L"Error (press 'abort' to exit program, 'retry' to debug, 'ignore' to continue", MB_ABORTRETRYIGNORE);
+
+		if (returnValue == IDABORT)
 		{
-			assert(false); // TODO: FIX MINIDUMP AND SHIT
 			exit(1);
 		}
+		else if (returnValue == IDRETRY)
+		{
+			DL_ASSERT(buffer);
+		}
+		else if (returnValue == IDIGNORE)
+		{
+			return;
+		}
+
+		//int returnValue = MessageBoxW(nullptr, buffer, L"Error (press cancel to quit, press retry to try to continue", MB_RETRYCANCEL);
+		//if (returnValue == IDCANCEL)
+		//{
+		//	assert(false); // TODO: FIX MINIDUMP AND SHIT
+		//	exit(1);
+		//}
 #else
 		aMessage;
 		//implement mbx for unix

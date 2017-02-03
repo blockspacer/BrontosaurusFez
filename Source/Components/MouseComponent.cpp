@@ -35,10 +35,6 @@ void CMouseComponent::Receive(const eComponentMessageType aMessageType, const SC
 		{
 		HandleCollision(aMessageData.myGameObject);
 		SComponentMessageData data; data.myFloat = 0.5f;
-		if (PollingStation::playerObject != aMessageData.myGameObject)
-		{
-			//aMessageData.myGameObject->NotifyComponents(eComponentMessageType::eSetHighLight, data);
-		}
 		break;
 		}
 	case eComponentMessageType::eOnCollisionExit:
@@ -118,11 +114,10 @@ void CMouseComponent::Update()
 				distance = objectposition - myMousePosition;
 
 				float dis = distance.Length();
-				DL_PRINT("size %u", myHoveredGameObjects.Size());
 
 				if (dis < lowestDistance)
 				{
-					lowestDistance = distance.Length();
+					lowestDistance = dis;
 					targetObject = myHoveredGameObjects[i];
 				}
 			}

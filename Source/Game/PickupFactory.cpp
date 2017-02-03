@@ -185,6 +185,10 @@ void CPickupFactory::Init(const std::string& aKey)
 	const std::string& errorString = levelsFile.Parse("Json/Drops.json");
 
 	CU::CJsonValue levelsArray = levelsFile.at(aKey);
+	if (levelsArray.IsNull() == true)
+	{
+		return;
+	}
 
 	myHealthDropHealValue = levelsArray.at("healthDropRestorePercentage").GetFloat();
 	myManaDropRestoreValue = levelsArray.at("manaDropRestorePercentage").GetFloat();
