@@ -49,6 +49,10 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 			for(unsigned short i = 0; i < mySkills.Size(); i++)
 			{
 				mySkills[i]->Deselect();
+				if(mySkills[aMessageData.myInt]->GetSkillData()->isChannel == true && i != aMessageData.myInt)
+				{
+					mySkills[i]->Deactivate();
+				}
 			}
 			mySkills[aMessageData.myInt]->Select();
 		}
