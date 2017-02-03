@@ -157,10 +157,9 @@ void CAIControllerComponent::CreatePathToPlayer()
 	startNode.myPosition = GetParent()->GetWorldPosition();
 	startNode.myTriangle = myTrianglePointer;
 	DL_PRINT("Calc Path");
-	// Formation pos?
+
 	endNode.myPosition = PollingStation::playerObject->GetWorldPosition();
-	navmesh->IsValid(endNode.myPosition, endNode.myTriangle, intersectingPoint);
-	endNode.myPosition = intersectingPoint;
+	endNode.myTriangle = &navmesh->GetClosestTriangle(endNode.myPosition);
 
 	myPath = navmesh->CalculatePath(startNode, endNode);
 	myPath.Smooth();
