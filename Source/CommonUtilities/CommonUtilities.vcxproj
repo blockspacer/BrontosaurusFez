@@ -373,6 +373,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h" />
+    <ClInclude Include="AlarmClock.h" />
     <ClInclude Include="binary_tree.h" />
     <ClInclude Include="BitSet.h" />
     <ClInclude Include="Camera.h" />
@@ -454,6 +455,7 @@
     <ClInclude Include="StaticTypeTraits.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="CUstring.h" />
+    <ClInclude Include="StopWatch.h" />
     <ClInclude Include="StringHelper.h" />
     <ClInclude Include="SubscriberKyle.h" />
     <ClInclude Include="targetver.h" />
@@ -472,6 +474,7 @@
     <ClInclude Include="XInputWrapper.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AlarmClock.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CommandLineManager.cpp" />
     <ClCompile Include="CountDown.cpp" />
@@ -502,6 +505,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ModelViewerRelease|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="StopWatch.cpp" />
     <ClCompile Include="StringHelper.cpp" />
     <ClCompile Include="ThreadNamer.cpp" />
     <ClCompile Include="ThreadPool.cpp" />

@@ -10,6 +10,7 @@
 #include <d3d11.h>
 
 #define RING_BRANDBILEN() assert(!"Fail in fire emitter")
+#define self (*this)
 
 struct SNoiseBufferStruct
 {
@@ -414,3 +415,5 @@ void CFireEmitter::SetTextures()
 	ID3D11ShaderResourceView* const textures[3] = { myFireTexture->GetShaderResourceView(), myNoiseTexture->GetShaderResourceView(), myAlphaTexture->GetShaderResourceView() };
 	deviceContext->PSSetShaderResources(1, 3, textures);
 }
+
+#undef self

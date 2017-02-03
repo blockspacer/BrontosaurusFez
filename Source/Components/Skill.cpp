@@ -325,14 +325,26 @@ void Skill::ActivateCollider()
 	}
 	else
 	{
-		//Johan added this
-		//-------------------------------------------------------------------------------------------------------------------
-		//-------------------------------------------------------------------------------------------------------------------
-		if(myTargetObject != nullptr)
+		if(mySkillData->isAOE == false)
 		{
-			SComponentMessageData damageData;
-			damageData.myInt = static_cast<int>((mySkillData->damage + mySkillData->damageBonus) * mySkillData->damageModifier);
-			myTargetObject->NotifyComponents(eComponentMessageType::eTakeDamage, damageData);
+			//Johan added this
+			//-------------------------------------------------------------------------------------------------------------------
+			//-------------------------------------------------------------------------------------------------------------------
+			if(myTargetObject != nullptr)
+			{
+				SComponentMessageData damageData;
+				damageData.myInt = static_cast<int>((mySkillData->damage + mySkillData->damageBonus) * mySkillData->damageModifier);
+				myTargetObject->NotifyComponents(eComponentMessageType::eTakeDamage, damageData);
+			}
+		
+		}
+		else
+		{
+			eComponentMessageType type = eComponentMessageType::eSetIsColliderActive;
+			SComponentMessageData data;
+
+			data.myBool = true;
+			myColliderObject->NotifyComponents(type, data);	
 		}
 	}
 }

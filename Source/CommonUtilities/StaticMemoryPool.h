@@ -35,8 +35,6 @@ namespace CU
 	template<typename ObjectType, int ObjectCapacity>
 	inline CStaticMemoryPool<ObjectType, ObjectCapacity>::~CStaticMemoryPool()
 	{
-		int br = 0;
-		br++;
 	}
 
 	template<typename ObjectType, int ObjectCapacity>

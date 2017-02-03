@@ -51,6 +51,7 @@ void InitComponentTypes()
 	locComponentTypeNames[TO_STRING(eHeal)] = eComponentMessageType::eHeal;
 	locComponentTypeNames[TO_STRING(eOnCollisionEnter)] = eComponentMessageType::eOnCollisionEnter;
 	locComponentTypeNames[TO_STRING(eOnCollisionExit)] = eComponentMessageType::eOnCollisionExit;
+	locComponentTypeNames[TO_STRING(ePercentHPLeft)] = eComponentMessageType::ePercentHPLeft;
 
 		//eComponentMessageType::ePercentHPLeft:
 		//eComponentMessageType::eLootDropped:

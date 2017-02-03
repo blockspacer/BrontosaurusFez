@@ -103,9 +103,13 @@ eMessageReturn KeyPressed::DoEvent(PauseMenu *aPauseMenu) const
 	return eMessageReturn::eContinue;
 }
 
-eMessageReturn KeyPressed::DoEvent(CConsole* /*aConsole*/) const
+eMessageReturn KeyPressed::DoEvent(CConsole* aConsole) const
 {
-	//aConsole->TakeKeyBoardInputPressedChar(myKey);
+	if (aConsole != nullptr)
+	{
+		return aConsole->TakeKeyBoardInput(myKey);
+	}
+
 	return eMessageReturn::eContinue;
 }
 

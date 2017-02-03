@@ -20,7 +20,11 @@ void CCameraComponent::Receive(const eComponentMessageType aMessageType, const S
 	{
 	case eComponentMessageType::eObjectDone:
 	case eComponentMessageType::eMoving:
-		myCamera->SetPosition(myOffsetPosition + GetParent()->GetWorldPosition());
+	{
+		CU::Vector3f parentPosition = GetParent()->GetWorldPosition();
+		parentPosition.y = 0.f;
+		myCamera->SetPosition(myOffsetPosition + parentPosition);
+	}
 		break;
 	}
 }
