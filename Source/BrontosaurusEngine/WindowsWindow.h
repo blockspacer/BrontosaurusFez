@@ -14,7 +14,7 @@ public:
 	inline HWND GetHWND();
 	inline HINSTANCE GetHinstance();
 
-	const CU::Vector2ui& GetWindowSize();
+	const CU::Vector2ui GetWindowSize();
 
 private:
 	ATOM MyRegisterClass(HINSTANCE hInstance, const wchar_t* windowName);
@@ -38,4 +38,16 @@ inline HWND CWindowsWindow::GetHWND()
 inline HINSTANCE CWindowsWindow::GetHinstance()
 {
 	return myHInst;
+}
+
+inline const CU::Vector2ui CWindowsWindow::GetWindowSize()
+{
+	RECT windowRect;
+	GetClientRect(myHWnd, &windowRect);
+	unsigned int width, height = width = 0;
+
+	width = windowRect.right - windowRect.left;
+	height = windowRect.bottom - windowRect.top;
+
+	return CU::Vector2ui(width, height);
 }
