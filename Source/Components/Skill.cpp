@@ -373,7 +373,6 @@ void Skill::OnActivation()
 
 		speedBonusData.myStatsToAdd = mySpeedBonusStats;
 		mySpeedBonusStats->BonusMovementSpeed = mySpeedBonusStats->BonusMovementSpeed * -1;
-		DL_PRINT("activate %f", mySpeedBonusStats->BonusMovementSpeed);
 		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eAddStats, speedBonusData);
 	}
 }
@@ -393,7 +392,6 @@ void Skill::OnDeActivation()
 	SComponentMessageData speedBonusData;
 	mySpeedBonusStats->BonusMovementSpeed = mySpeedBonusStats->BonusMovementSpeed * -1;
 	speedBonusData.myStatsToAdd = mySpeedBonusStats;
-	DL_PRINT("Deactivate %f", mySpeedBonusStats->BonusMovementSpeed);
 	PollingStation::playerObject->NotifyComponents(eComponentMessageType::eAddStats, speedBonusData);
 }
 
