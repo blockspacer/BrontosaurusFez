@@ -40,6 +40,7 @@
 #include "../CommonUtilities/GrowingArray.h"
 #include "../CommonUtilities/StaticArray.h"
 #include "../CommonUtilities/DynamicString.h"
+#include "../CommonUtilities/StringHelper.h"
 
 #include "../CommonUtilities/MemoryLeekLogger.h"
 #include "../CommonUtilities/TimerManager.h"

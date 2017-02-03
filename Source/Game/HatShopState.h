@@ -44,5 +44,6 @@ private:
 	GUI::GUIManager* myGUIManager;
 	SShopSelection* myCurrentlySelected;
 	CU::Vector2f myWindowPosition;
+	CU::Vector2f myShopPosition;
 	bool myIsInitied;
 };

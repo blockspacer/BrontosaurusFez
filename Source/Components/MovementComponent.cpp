@@ -63,7 +63,6 @@ void MovementComponent::Update(float aDeltaTime)
 					CU::Vector3f movement = directionNormalized * (myMovementSpeed) * aDeltaTime;
 
 					CU::Matrix44f& localTransform = GetParent()->GetLocalTransform();
-					
 						if (IsOnNavmesh(movement + position) == false)
 						{
 							if(myIsFollowingPath == false)
@@ -71,7 +70,6 @@ void MovementComponent::Update(float aDeltaTime)
 								SComponentMessageData stoppedMovingMessage;
 								stoppedMovingMessage.myString = "idle";
 								GetParent()->NotifyComponents(eComponentMessageType::eStoppedMoving, stoppedMovingMessage);
-								
 								myIsFollowingPath = true;
 								GetParent()->NotifyComponents(eComponentMessageType::eNotOnNavmesh, SComponentMessageData());
 								return;
@@ -255,11 +253,11 @@ bool MovementComponent::IsOnNavmesh(const CU::Vector3f & aPosition)
 					{
 						myTriangle = myTriangle->Edges[i]->Triangles[0];
 						
-
 						SComponentMessageData changeTriangleMessage;
 						changeTriangleMessage.myTrianglePointer = myTriangle;
 						GetParent()->NotifyComponents(eComponentMessageType::eEnterNewTriangle, changeTriangleMessage);
 						myIsOnnewTriangle = true;
+						return true;
 					}
 				}
 
@@ -275,11 +273,11 @@ bool MovementComponent::IsOnNavmesh(const CU::Vector3f & aPosition)
 					{
 						myTriangle = myTriangle->Edges[i]->Triangles[1];
 						
-
 						SComponentMessageData changeTriangleMessage;
 						changeTriangleMessage.myTrianglePointer = myTriangle;
 						GetParent()->NotifyComponents(eComponentMessageType::eEnterNewTriangle, changeTriangleMessage);
 						myIsOnnewTriangle = true;
+						return true;
 					}
 
 				}

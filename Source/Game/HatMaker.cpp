@@ -126,6 +126,8 @@ void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName)
 			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eActivateManaRefund, SComponentMessageData());
 		}
 	}
+	SComponentMessageData data;
+	PollingStation::playerObject->NotifyComponents(eComponentMessageType::eMoving, data);
 }
 
 void CHatMaker::GiveTheManAHat()
@@ -134,6 +136,8 @@ void CHatMaker::GiveTheManAHat()
 	{
 		MakeHatFromBluePrint(PollingStation::playerHatList[i]);
 	}
+	SComponentMessageData data;
+	PollingStation::playerObject->NotifyComponents(eComponentMessageType::eMoving, data);
 }
 
 const bool CHatMaker::CheckIfHatIsMade(const std::string & aHatName)

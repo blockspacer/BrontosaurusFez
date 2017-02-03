@@ -37,6 +37,7 @@ namespace Lights
 		SDirectionalLight myDirectionalLight;
 		SPointLight myPointLights[NUMBER_OF_POINTLIGHTS];
 		unsigned int cubeMap_mipCount;
+		CU::Vector4f highlightColor;
 		float trash[3];
 	};
 

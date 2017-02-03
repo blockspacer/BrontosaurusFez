@@ -18,5 +18,8 @@ private:
 	CPickupManager& myManager;
 	float mySpeed;
 	float mySuckUpRadius;
+	float myTimeBeforeAbleToPickup;
+	float myElapsedTime;
+	bool myNope;
 };
 

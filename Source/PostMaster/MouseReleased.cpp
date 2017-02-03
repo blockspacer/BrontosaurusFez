@@ -5,6 +5,7 @@
 #include "Game/LevelSelectState.h"
 #include "Components/InputController.h"
 #include "Components/MouseComponent.h"
+#include "CommonUtilities/EMouseButtons.h"
 
 MouseReleased::MouseReleased(const CU::Vector2f& aMousePosition, const CU::eMouseButtons& aMouseButton)
 	: myMousePosition(aMousePosition)
@@ -50,7 +51,11 @@ eMessageReturn MouseReleased::DoEvent(CMouseComponent* aMouseComponent) const
 {
 	if (aMouseComponent != nullptr)
 	{
-		aMouseComponent->SetMouseIsDown(false);
+		if (myMouseButton == CU::eMouseButtons::LBUTTON)
+		{
+			aMouseComponent->SetMouseIsDown(false);
+		
+		}
 	}
 
 	return eMessageReturn::eContinue;

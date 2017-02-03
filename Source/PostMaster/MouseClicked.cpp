@@ -5,6 +5,7 @@
 #include "Components\InputController.h"
 #include "BrontosaurusEngine/Engine.h"
 #include "Components/MouseComponent.h"
+#include "CommonUtilities/EMouseButtons.h"
 #include "Game/DialogState.h"
 
 MouseClicked::MouseClicked(const CU::Vector2f& aMousePosition, const CU::eMouseButtons& aMouseButton)
@@ -41,7 +42,10 @@ eMessageReturn MouseClicked::DoEvent(CMouseComponent* aMouseComponent) const
 {
 	if (aMouseComponent != nullptr)
 	{
-		aMouseComponent->SetMouseIsDown(true);
+		if(myMouseButton == CU::eMouseButtons::LBUTTON)
+		{
+			aMouseComponent->SetMouseIsDown(true);	
+		}
 	}
 
 	return eMessageReturn::eContinue;

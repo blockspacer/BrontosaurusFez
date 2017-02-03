@@ -47,10 +47,8 @@ CEnemyFactory* CEnemyFactory::ourInstance = nullptr;
 
 void CEnemyFactory::Create(CGameObjectManager& aGameObjectManager, CCollisionComponentManager& aCollisionComponentManager, CHealthBarComponentManager& aHealthbarManager)
 {
-	if (ourInstance == nullptr)
-	{
-		ourInstance = new CEnemyFactory(aGameObjectManager,aCollisionComponentManager, aHealthbarManager);
-	}
+	assert(ourInstance == nullptr && "enemy factory not created");
+	ourInstance = new CEnemyFactory(aGameObjectManager,aCollisionComponentManager, aHealthbarManager);
 }
 
 void CEnemyFactory::Destroy()
@@ -73,6 +71,7 @@ void CEnemyFactory::CreateEnemy(CU::Vector3f aPosition)
 
 	CHealthComponent* health = new CHealthComponent();
 	health->SetMaxHealth(myEnemiesHealth); //json
+	health->SetObjectType(eObjectType::eZombie);
 	CComponentManager::GetInstance().RegisterComponent(health);
 	Enemy->AddComponent(health);
 

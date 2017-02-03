@@ -1,11 +1,13 @@
 #include "stdafx.h"
 #include "ChangeLevelTriggerComponent.h"
+#include "PollingStation.h"
 #include "../Game/LevelManager.h"
 
 
-ChangeLevelTriggerComponent::ChangeLevelTriggerComponent(unsigned char aLevelToGoTo)
+ChangeLevelTriggerComponent::ChangeLevelTriggerComponent(const unsigned char aLevelToGoTo, const unsigned short aPortalID)
 {
 	myLevelToGoTo = aLevelToGoTo;
+	myPortalID = aPortalID;
 	myType = eComponentType::eChangeLevelTrigger;
 }
 
@@ -19,7 +21,20 @@ void ChangeLevelTriggerComponent::Receive(const eComponentMessageType aMessageTy
 	switch (aMessageType)
 	{
 	case(eComponentMessageType::eActivate):
-		CLevelManager::GetInstance()->GoToLevel(myLevelToGoTo);
+		if (myPortalID == 0)
+		{
+			CLevelManager::GetInstance()->GoToLevel(myLevelToGoTo);
+		}
+		else
+		{
+			for (int i = 0; i < PollingStation::OpenPortals.Size(); i++)
+			{
+				if (PollingStation::OpenPortals[i] == myPortalID)
+				{
+					CLevelManager::GetInstance()->GoToLevel(myLevelToGoTo);
+				}
+			}
+		}
 		break;
 	default:
 		break;

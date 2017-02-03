@@ -68,7 +68,7 @@ eMessageReturn KeyPressed::DoEvent(CPlayState* aPlayState) const
 		switch (myKey)
 		{
 		case CU::eKeys::S:
-			aPlayState->BuyHats();
+			//aPlayState->BuyHats();
 			return eMessageReturn::eContinue;
 			break;
 		case CU::eKeys::F7:

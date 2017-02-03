@@ -46,9 +46,12 @@ void CHealthComponent::SetHealth(const HealthPoint aValue)
 		{
 			//dead stuff
 			GetParent()->NotifyComponents(eComponentMessageType::eDied, SComponentMessageData());
-			SComponentMessageData data;
+			SComponentMessageData startedAttackingMessage;
+			startedAttackingMessage.myString = "die";
+			GetParent()->NotifyComponents(eComponentMessageType::eBasicAttack, startedAttackingMessage);
+			/*SComponentMessageData data;
 			data.myBool = false;
-			GetParent()->NotifyComponents(eComponentMessageType::eSetVisibility, data);
+			GetParent()->NotifyComponents(eComponentMessageType::eSetVisibility, data);*/
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eGameObjectDied, GameObjectDiedEvent(GetParent())));
 		}
 	}
@@ -58,6 +61,11 @@ void CHealthComponent::SetMaxHealth(const HealthPoint aValue)
 {
 	myMaxHealth = aValue;
 	SetHealth(myMaxHealth * myPercentageLeft);
+}
+
+void CHealthComponent::SetObjectType(const eObjectType aType)
+{
+	myObjectType = aType;
 }
 
 void CHealthComponent::Init()
@@ -87,7 +95,7 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data);
 		break;
 	case eComponentMessageType::eHealPercent:
-		temp = myMaxHealth * (aMessageData.myInt / 100);
+		temp = static_cast<float>(myMaxHealth * (static_cast<float>(aMessageData.myInt / 100.0f)));
 		SetHealth(myHealth + temp);
 		data.myUChar = myPercentageLeft * 100;
 		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data);
@@ -97,6 +105,36 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 		data.myUChar = myPercentageLeft * 100;
 		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data);
 		break;
+	case eComponentMessageType::eDied:
+		switch (myObjectType)
+		{
+		case eObjectType::eUrn:
+			data.myString = "BreakUrn";
+			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
+			break;
+		case eObjectType::eBarrel:
+			data.myString = "BreakBarrel";
+			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
+			break;
+		case eObjectType::eWitch:
+			data.myString = "EnemyDie";
+			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
+			break;
+		case eObjectType::eZombie:
+			data.myString = "EnemyDie";
+			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
+			break;
+		case eObjectType::eBlob:
+			data.myString = "EnemyDie";
+			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
+			break;
+		case eObjectType::ePlayer:
+			data.myString = "EnemyDie";
+			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
+			break;
+		default:
+			break;
+		}
 	}
 }
 

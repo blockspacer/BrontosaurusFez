@@ -2,6 +2,8 @@
 
 #include "../CommonUtilities/GrowingArray.h"
 #include "../CommonUtilities/DL_Debug.h"
+#include "../CommonUtilities/StaticMemoryPool.h"
+
 #include "Intersection.h"
 
 #include "SquareCollider.h"

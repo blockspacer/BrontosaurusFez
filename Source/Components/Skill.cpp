@@ -37,6 +37,10 @@ Skill::Skill(SkillData* aSkillDataPointer)
 	{
 		myUpdateFunction = std::bind(&Skill::SpawnEnemyAttackUpdate, this, std::placeholders::_1);
 	}
+	if (aSkillDataPointer->skillName == "BlobAttack")
+	{
+		myUpdateFunction = std::bind(&Skill::BasicAttackUpdate, this, std::placeholders::_1);
+	}
 	else
 	{
 		DL_PRINT("Wow Skill couldn't find what skill to use as updatefunction. Check spelling and/or yell at Marcus.");
@@ -44,6 +48,8 @@ Skill::Skill(SkillData* aSkillDataPointer)
 	mySkillData = aSkillDataPointer;
 	myIsActive = false;
 	myIsSelected = false;
+	myShouldPlayAnimation = false;
+	myHaveActivatedCollider = false;
 	myUser = nullptr;
 	myColliderObject = SkillSystemComponentManager::GetInstance().GetGameObjectManager()->CreateGameObject();
 	Intersection::CollisionData circleCollisionData = Intersection::CollisionData();
@@ -82,7 +88,7 @@ void Skill::TryToActivate()
 		SComponentMessageData data;
 		data.mySkill = this;
 		myUser->NotifyComponents(eComponentMessageType::eCheckIfCanUseSkill, data);
-
+		myIsSelected = false;
 	}
 }
 
@@ -111,12 +117,19 @@ void Skill::Update(float aDeltaTime)
 	if(myIsActive == true)
 	{
 		myUpdateFunction(aDeltaTime);
-		if (myAnimationTimeElapsed > mySkillData->animationDuration)
+		if(myShouldPlayAnimation == true)
+		{
+			PlayAnimation();
+		
+		}
+		if (myAnimationTimeElapsed > mySkillData->animationDuration - mySkillData->animationWindDown && myHaveActivatedCollider == false)
 		{
 			ActivateCollider(); // Remove this later on and replace it with animation wait time.
-			myAnimationTimeElapsed = 0.f;
 		}
-
+		if (myAnimationTimeElapsed > mySkillData->animationDuration)
+		{
+			Deactivate();
+		}
 	
 	}
 }
@@ -146,9 +159,6 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 				stopData.myFloat *= 3.5f;
 			}
 			myUser->NotifyComponents(type, stopData);
-			SComponentMessageData statedAttackingMessage;
-			statedAttackingMessage.myString = "attack";
-			myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
 			myElapsedCoolDownTime = 0.0f;
 			myColliderObject->GetLocalTransform().SetPosition(myTargetObject->GetWorldPosition());
 			myColliderObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
@@ -156,13 +166,18 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 			SComponentMessageData lookAtData;
 			lookAtData.myVector3f = myTargetObject->GetWorldPosition();
 			myUser->NotifyComponents(eComponentMessageType::eLookAt, lookAtData);
+			myShouldPlayAnimation = true;
+			if (myHavePlayedSound == false)
+			{
+				SComponentMessageData data2;
+				data2.myString = mySkillData->skillName.c_str();
+				myUser->NotifyComponents(eComponentMessageType::ePlaySound, data2);
+				myHavePlayedSound = true;
+			}
 		}
 	}
 	else
 	{
-		SComponentMessageData statedAttackingMessage;
-		statedAttackingMessage.myString = "attack";
-		myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
 		myElapsedCoolDownTime = 0.0f;
 		CU::Vector3f direction = myTargetPosition - myUser->GetWorldPosition();
 		myAnimationTimeElapsed += aDeltaTime;
@@ -183,6 +198,14 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 		SComponentMessageData lookAtData;
 		lookAtData.myVector3f = myTargetPosition;
 		myUser->NotifyComponents(eComponentMessageType::eLookAt, lookAtData);
+		myShouldPlayAnimation = true;
+		if (myHavePlayedSound == false)
+		{
+			SComponentMessageData data2;
+			data2.myString = mySkillData->skillName.c_str();
+			myUser->NotifyComponents(eComponentMessageType::ePlaySound, data2);
+			myHavePlayedSound = true;
+		}
 		//ActivateCollider(); // Remove this later on and replace it with animation wait time.
 	}
 }
@@ -190,12 +213,13 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 void Skill::WhirlWindUpdate(float aDeltaTime)
 {
 	SComponentMessageData statedAttackingMessage;
-	statedAttackingMessage.myString = "turnRight90";
+	statedAttackingMessage.myString = mySkillData->animationPlayedName.c_str();
 	myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
 	myElapsedCoolDownTime = 0.0f;
 	myAnimationTimeElapsed += aDeltaTime;
 	myColliderObject->GetLocalTransform().SetPosition(myUser->GetWorldPosition());
 	myColliderObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
+	myShouldPlayAnimation = true;
 }
 
 void Skill::SweepAttackUpdate(float aDeltaTime)
@@ -203,9 +227,14 @@ void Skill::SweepAttackUpdate(float aDeltaTime)
 	SComponentMessageData stopData;
 	stopData.myFloat = 0.1f;
 	myUser->NotifyComponents(eComponentMessageType::eStopMovement, stopData);
-	SComponentMessageData startedAttackingMessage;
-	startedAttackingMessage.myString = "turnLeft90";
-	myUser->NotifyComponents(eComponentMessageType::eBasicAttack, startedAttackingMessage);
+	if(myHavePlayedSound == false)
+	{
+		SComponentMessageData data2;
+		data2.myString = mySkillData->skillName.c_str();
+		myUser->NotifyComponents(eComponentMessageType::ePlaySound, data2);
+		myHavePlayedSound = true;
+	}
+
 	myElapsedCoolDownTime = 0.0f;
 	myAnimationTimeElapsed += aDeltaTime;
 	CU::Vector3f direction = myTargetPosition - myUser->GetWorldPosition();
@@ -223,18 +252,23 @@ void Skill::SweepAttackUpdate(float aDeltaTime)
 	SComponentMessageData lookAtData;
 	lookAtData.myVector3f = myTargetPosition;
 	myUser->NotifyComponents(eComponentMessageType::eLookAt, lookAtData);
+	myShouldPlayAnimation = true;
 }
 
 void Skill::SpawnEnemyAttackUpdate(float aDeltaTime)
 {
+	if (myHavePlayedSound == false)
+	{
+		SComponentMessageData data2;
+		data2.myString = mySkillData->skillName.c_str();
+		myUser->NotifyComponents(eComponentMessageType::ePlaySound, data2);
+		myHavePlayedSound = true;
+	}
 
 	SComponentMessageData stopData;
 	stopData.myFloat = 0.1f;
 	myUser->NotifyComponents(eComponentMessageType::eStopMovement, stopData);
 
-	SComponentMessageData startedAttackingMessage;
-	startedAttackingMessage.myString = "turnLeft90";
-	myUser->NotifyComponents(eComponentMessageType::eBasicAttack, startedAttackingMessage);
 
 
 	myAnimationTimeElapsed += aDeltaTime;
@@ -245,10 +279,16 @@ void Skill::SpawnEnemyAttackUpdate(float aDeltaTime)
 
 		for (int i = 0; i < mySkillData->numberOfEnemiesToSpawn; i++)
 		{
-			CEnemyFactory::GetInstance().CreateEnemy(temp.GetPosition());
+			CU::Vector3f temp(temp.GetPosition());
+
+			temp.x += i * 50;
+			temp.z += i * 50;
+
+			CEnemyFactory::GetInstance().CreateEnemy(temp);
 		}
 		myElapsedCoolDownTime = 0.0f;
 	}
+	myShouldPlayAnimation = true;
 }
 
 void Skill::SetTargetPosition(CU::Vector3f aTargetPosition)
@@ -262,15 +302,12 @@ void Skill::SetTargetObject(CGameObject* aTargetObject)
 }
 void Skill::ActivateCollider()
 {
-	//DL_PRINT("Animation done");
-	Deactivate();
+	myHaveActivatedCollider = true;
 	eComponentMessageType type = eComponentMessageType::eSetIsColliderActive;
 	SComponentMessageData data;
 	
 	data.myBool = true;
 	myColliderObject->NotifyComponents(type, data);
-
-	myAnimationTimeElapsed = 0.f;
 }
 void Skill::OnActivation()
 {
@@ -279,16 +316,17 @@ void Skill::OnActivation()
 	myUser->NotifyComponents(eComponentMessageType::eBurnMana, data);
 
 	SComponentMessageData data2;
-
+	myHavePlayedSound = false;
 	if (mySkillData->isChannel == true)
 	{
 		PollingStation::playerData->myIsWhirlwinding = true;
 	}
 	else
 	{
-		data2.myString = mySkillData->skillName.c_str();
-		myUser->NotifyComponents(eComponentMessageType::ePlaySound, data2);
+	
 	}
+	myHaveActivatedCollider = false;
+	myShouldPlayAnimation = false;
 	//DL_PRINT("Animation started");
 }
 
@@ -298,6 +336,8 @@ void Skill::OnDeActivation()
 	statedAttackingMessage.myString = "idle";
 	myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
 	myTargetObject = nullptr;
+	myAnimationTimeElapsed = 0.0f;
+	myShouldPlayAnimation = false;
 	if (mySkillData->isChannel == true)
 	{
 		PollingStation::playerData->myIsWhirlwinding = false;
@@ -326,4 +366,11 @@ void Skill::UpdateStats(const Stats::STotalStats& someStats)
 {
 	mySkillData->manaCostModifier = someStats.MaxManaConstModifier;
 	mySkillData->damageModifier = someStats.MaxDamageModifier;
+}
+
+void Skill::PlayAnimation()
+{
+	SComponentMessageData startedAttackingMessage;
+	startedAttackingMessage.myString = mySkillData->animationPlayedName.c_str();
+	myUser->NotifyComponents(eComponentMessageType::eBasicAttack, startedAttackingMessage);
 }
