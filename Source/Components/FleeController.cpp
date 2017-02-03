@@ -30,7 +30,7 @@ const CU::Vector2f CFleeController::Update(const CU::Time & aDeltaTime)
 
 	steering += desiredVelocity - hostVelocity;
 
-	return steering * myWeight * 0;
+	return steering * myWeight;
 }
 
 void CFleeController::SetWeight(const float aWeight)
