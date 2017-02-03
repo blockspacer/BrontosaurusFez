@@ -109,6 +109,7 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 {
 	myIsLoaded = false;
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eHatAdded);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eGoldChanged);
 }
 
 CPlayState::~CPlayState()
@@ -153,6 +154,7 @@ CPlayState::~CPlayState()
 	SkillFactory::DestroyInstance();
 	CComponentManager::DestroyInstance();
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eHatAdded);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eGoldChanged);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
 
 	CLevelManager::DestroyInstance();
@@ -193,9 +195,11 @@ void CPlayState::Load()
 	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
 	cameraComponent->SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 
+	myChangeTexts.Init(5);
+
 	myGoldText = new CTextInstance;
-	myGoldText->SetColor(CTextInstance::Yellow);
-	myGoldText->SetPosition(CU::Vector2f(0.4f, 0.2f));
+	myGoldText->SetColor(CTextInstance::Black);
+	myGoldText->SetPosition(CU::Vector2f(0.575f, 0.93f));
 	myGoldText->SetText("");
 	myGoldText->Init();
 
@@ -370,6 +374,15 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	myHealthBarManager->Update();
 	BlessingTowerComponentManager::GetInstance().Update(aDeltaTime);
 
+	for (unsigned int i = 0; i < myChangeTexts.Size(); ++i)
+	{
+		CU::Vector2f position = myChangeTexts[i]->GetPosition();
+
+		position.y += 1 * aDeltaTime.GetSeconds();
+		myChangeTexts[i]->SetPosition(position);
+	}
+
+
 	return myStatus;
 }
 
@@ -409,6 +422,10 @@ void CPlayState::Render()
 
 	myHealthBarManager->Render();
 	myGoldText->Render();
+	for (unsigned int i = 0; i < myChangeTexts.Size(); ++i)
+	{
+		myChangeTexts[i]->Render();
+	}
 
 	myQuestDrawer.Render();
 }
@@ -453,6 +470,26 @@ void CPlayState::CheckReturnToLevelSelect() // Formerly NextLevel -Kyle
 		//myStatus = eStateStatus::ePop; ?? //Was this only checked when pressing F7 - for change level ?
 	}
 }
+
+void CPlayState::ChangeGoldAmount(const int aValue, const bool aDecreaseGold)
+{
+	PollingStation::playerData->myGold += aValue;
+
+	myChangeTexts.Add(new CTextInstance());
+ 	CTextInstance* text = myChangeTexts.GetLast();
+
+	text->SetColor(CTextInstance::Black);
+	text->SetPosition(myGoldText->GetPosition());
+	if (aDecreaseGold == false)
+	{
+		text->SetText("+" + aValue);
+	}
+	if (aDecreaseGold == true)
+	{
+		text->SetText("-" + aValue);
+	}
+}
+
 
 eMessageReturn CPlayState::Recieve(const Message& aMessage)
 {

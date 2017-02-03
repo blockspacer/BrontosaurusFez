@@ -50,6 +50,7 @@
     <ClCompile Include="DroppedFile.cpp" />
     <ClCompile Include="FocusChange.cpp" />
     <ClCompile Include="GameObjectDiedEvent.cpp" />
+    <ClCompile Include="GoldChanged.cpp" />
     <ClCompile Include="HatBought.cpp" />
     <ClCompile Include="InputMessagePressed.cpp" />
     <ClCompile Include="KeyCharPressed.cpp" />
@@ -89,6 +90,7 @@
     <ClInclude Include="Event.h" />
     <ClInclude Include="FocusChange.h" />
     <ClInclude Include="GameObjectDiedEvent.h" />
+    <ClInclude Include="GoldChanged.h" />
     <ClInclude Include="HatBought.h" />
     <ClInclude Include="InputMessagePressed.h" />
     <ClInclude Include="KeyCharPressed.h" />

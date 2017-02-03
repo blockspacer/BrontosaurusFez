@@ -63,6 +63,7 @@ public:
 	void OnExit() override;
 	void Pause();
 	void BuyHats();
+	void ChangeGoldAmount(const int aValue, const bool aDecreaseGold);
 
 	void CheckReturnToLevelSelect();
 
@@ -97,6 +98,7 @@ private:
 	GUI::GUIManager* myGUIManager;
 	StatManager* myStatManager;
 	CTextInstance* myGoldText;
+	CU::GrowingArray<CTextInstance*> myChangeTexts;
 	CHatMaker* myHatMaker;
 	CShopStorage* myShopStorage;
 	//CGameObject* myCameraObject;
