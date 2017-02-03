@@ -136,6 +136,7 @@ void CMouseComponent::Update()
 
 		}
 	}
+	myClickPulse->Update();
 }
 
 eMessageReturn CMouseComponent::Recieve(const Message& aMessage)

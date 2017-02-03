@@ -18,7 +18,7 @@ void CClickPulse::ActivateAtPos(CU::Vector2f aPos)
 {
 	myIsActive = true;
 	myPos = aPos;
-	mySprite->SetPosition(myPos);
+	mySprite->SetPosition({0.5f,0.5f});
 	// mebe pos needs to be usin da camera magic from healthbar?
 }
 
