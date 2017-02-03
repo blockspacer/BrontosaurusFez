@@ -323,7 +323,13 @@ eMessageReturn InputController::TakeKeyReleased(const CU::eKeys & aKey)
 	{
 		myIsShiftDown = false;
 	}
+	if (aKey == CU::eKeys::SPACE)
+	{
+		eComponentMessageType type;
 
+		type = eComponentMessageType::eStopWhirlwind;
+		GetParent()->NotifyComponents(type, SComponentMessageData());
+	}
 	for(unsigned short i = 0; i < mySkillInputMessageActivators.Size(); i++)
 	{
 		if(mySkillInputMessageActivators[i] == static_cast<CU::eInputMessage>(aKey))

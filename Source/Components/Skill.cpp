@@ -131,6 +131,12 @@ void Skill::Update(float aDeltaTime)
 		if (myAnimationTimeElapsed > mySkillData->animationDuration)
 		{
 			Deactivate();
+			if(mySkillData->isChannel == true)
+			{
+				myElapsedCoolDownTime = mySkillData->coolDown;
+				TryToActivate();
+			}
+
 		}
 	
 	}
