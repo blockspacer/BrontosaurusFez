@@ -5,6 +5,8 @@
 #include "../BrontosaurusEngine/TextInstance.h"
 #include "PostMaster/Subscriber.h"
 
+class CSpriteInstance;
+
 struct SDialogPiece
 {
 	SDialogPiece() { myDialogTexts.Init(2); }
@@ -30,6 +32,9 @@ public:
 
 	eMessageReturn Recieve(const Message& aMessage) override;
 
+	bool GetLetThroughRender() const override;
+	bool GetLetThroughUpdate() const override;
+
 	void Next();
 private:
 	CU::GrowingArray<SDialogPiece, unsigned short> myCurrentDialog;
@@ -43,5 +48,7 @@ private:
 	bool myIsDone;
 	eStateStatus myState;
 	CU::TimeUnit myCurrentTime;
+
+	CSpriteInstance* myBackground;
 };
 

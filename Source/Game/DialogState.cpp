@@ -6,9 +6,14 @@
 #include "PostMaster/Event.h"
 #include "PostMaster/PostMaster.h"
 #include "CommonUtilities.h"
+#include "SpriteInstance.h"
+#include "Engine.h"
+#include "RenderStates.h"
+#include "RenderMessages.h"
+#include "Renderer.h"
 
 
-CDialogState::CDialogState(StateStack& aStateStack) : State(aStateStack), myCurrentPiece(0), myHasFailed(false), myIsDone(false), myState(eStateStatus::eKeep)
+CDialogState::CDialogState(StateStack& aStateStack) : State(aStateStack), myCurrentPiece(0), myHasFailed(false), myIsDone(false), myState(eStateStatus::eKeep), myCurrentTime(0), myBackground(nullptr)
 {
 	myCurrentDialog.Init(2);
 }
@@ -80,6 +85,8 @@ void CDialogState::Init()
 	}
 
 	myActorNameText.SetTextLines({ myCurrentDialog[myCurrentPiece].myCurrentActor });
+
+	myBackground = new CSpriteInstance("Sprites/Dialog/background.dds", { 1, 1 }, { 0,0 });
 }
 
 eStateStatus CDialogState::Update(const CU::Time& aDeltaTime)
@@ -128,6 +135,24 @@ void CDialogState::Render()
 {
 	if (myHasFailed == false)
 	{
+		SChangeStatesMessage* changeStateMessage = new SChangeStatesMessage();
+		changeStateMessage->myBlendState = eBlendState::eNoBlend;
+		changeStateMessage->myDepthStencilState = eDepthStencilState::eDefault;
+		changeStateMessage->myRasterizerState = eRasterizerState::eDefault;
+		changeStateMessage->mySamplerState = eSamplerState::eClamp;
+
+		CEngine::GetInstance()->GetRenderer().AddRenderMessage(changeStateMessage);
+
+		myBackground->Render();
+
+		changeStateMessage = new SChangeStatesMessage();
+		changeStateMessage->myBlendState = eBlendState::eAlphaBlend;
+		changeStateMessage->myDepthStencilState = eDepthStencilState::eDisableDepth;
+		changeStateMessage->myRasterizerState = eRasterizerState::eNoCulling;
+		changeStateMessage->mySamplerState = eSamplerState::eClamp;
+
+		CEngine::GetInstance()->GetRenderer().AddRenderMessage(changeStateMessage);
+
 		myDialogTextInstance.Render();
 		myActorNameText.Render();
 	}
@@ -142,12 +167,14 @@ void CDialogState::OnEnter()
 {
 	DL_PRINT("Entered dialog");
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage, 3);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage, 3);
 }
 
 void CDialogState::OnExit()
 {
 	DL_PRINT("Exited dialog");
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);
 }
 
 void CDialogState::ClearScreen()
@@ -159,6 +186,16 @@ void CDialogState::ClearScreen()
 eMessageReturn CDialogState::Recieve(const Message& aMessage)
 {
 	return aMessage.myEvent.DoEvent(this);
+}
+
+bool CDialogState::GetLetThroughRender() const
+{
+	return true;
+}
+
+bool CDialogState::GetLetThroughUpdate() const
+{
+	return true;
 }
 
 void CDialogState::Next()

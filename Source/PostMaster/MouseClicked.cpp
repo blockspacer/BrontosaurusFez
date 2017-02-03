@@ -5,6 +5,7 @@
 #include "Components\InputController.h"
 #include "BrontosaurusEngine/Engine.h"
 #include "Components/MouseComponent.h"
+#include "Game/DialogState.h"
 
 MouseClicked::MouseClicked(const CU::Vector2f& aMousePosition, const CU::eMouseButtons& aMouseButton)
 	: myMousePosition(aMousePosition)
@@ -44,4 +45,11 @@ eMessageReturn MouseClicked::DoEvent(CMouseComponent* aMouseComponent) const
 	}
 
 	return eMessageReturn::eContinue;
+}
+
+eMessageReturn MouseClicked::DoEvent(CDialogState* aDialogState) const
+{
+	aDialogState->Next();
+
+	return eMessageReturn::eStop;
 }
