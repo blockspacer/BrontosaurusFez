@@ -74,6 +74,7 @@ BOOL CWindowsWindow::InitInstance(const SInitWindowParams& aInitWindowParams)
 
 	ShowWindow(myHWnd, SW_SHOW); //5 = show normal
 	UpdateWindow(myHWnd);
+	ShowCursor(FALSE);
 
 	return TRUE;
 }

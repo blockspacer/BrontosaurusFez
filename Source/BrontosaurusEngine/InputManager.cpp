@@ -25,16 +25,16 @@ CInputManager::CInputManager()
 	, myXInputWrapper(nullptr)
 {
 	myDInputWrapper = new CU::InputWrapper();
-	void* hingsten = CEngine::GetInstance()->GetWindow()->GetHinstance(),
-		* hunden = CEngine::GetInstance()->GetWindow()->GetHWND();
 
-	/*bool directInputSuccess =*/ myDInputWrapper->Init(reinterpret_cast<HINSTANCE>(hingsten), reinterpret_cast<HWND>(hunden));
-	//assert(directInputSuccess == true && "Failed to init direct input wrapper :(");
+	HINSTANCE hingsten = CEngine::GetInstance()->GetWindow()->GetHinstance();
+	HWND hunden = CEngine::GetInstance()->GetWindow()->GetHWND();
+
+	/*bool directInputSuccess =*/ myDInputWrapper->Init(hingsten, hunden);
 
 	myXInputWrapper = new CU::XInputWrapper();
 	myXInputWrapper->Init(4);
 
-	myDInputWrapper->Init(reinterpret_cast<HINSTANCE>(CEngine::GetInstance()->GetWindow()->GetHinstance()), reinterpret_cast<HWND>(CEngine::GetInstance()->GetWindow()->GetHWND()));
+	myDInputWrapper->Init(hingsten, hunden);
 	myKeyDowns.Init(20);
 
 	myHasFocus = true;
@@ -49,7 +49,7 @@ CInputManager::~CInputManager()
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eFokusChanged);
 }
 
-eMessageReturn CInputManager::Recieve(const Message & aMessage)
+eMessageReturn CInputManager::Recieve(const Message& aMessage)
 {
 	return aMessage.myEvent.DoEvent(this);
 }
