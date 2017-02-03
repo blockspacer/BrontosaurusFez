@@ -2,10 +2,14 @@
 #include "Component.h"
 #include "../PostMaster/Subscriber.h"
 #include "../CommonUtilities/vector2.h"
+
+
 namespace CU
 {
 	class Camera;
 }
+
+class CClickPulse;
 
 class CMouseComponent : public CComponent, public Subscriber
 {
@@ -27,6 +31,6 @@ private:
 
 	CU::GrowingArray<CGameObject*> myHoveredGameObjects;
 	bool myMouseIsDown;
-
+	CClickPulse* myClickPulse;
 	const CU::Camera& myPlayerCamera;
 };

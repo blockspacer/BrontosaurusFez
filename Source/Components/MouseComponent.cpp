@@ -5,6 +5,7 @@
 #include "..\Collision\ICollider.h"
 #include "..\Game\PollingStation.h"
 #include "..\Game\PollingStation.h"
+#include "..\Game\ClickPulse.h"
 
 CMouseComponent::CMouseComponent(const CU::Camera& aPlayerCamera)
 	: myPlayerCamera(aPlayerCamera)
@@ -15,6 +16,7 @@ CMouseComponent::CMouseComponent(const CU::Camera& aPlayerCamera)
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eGameObjectDied);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eShopClosed);
 	myType = eComponentType::eMouse;
+	myClickPulse = new CClickPulse();
 }
 
 CMouseComponent::~CMouseComponent()
@@ -101,6 +103,8 @@ void CMouseComponent::Update()
 	{
 		HandleCollision(myHoveredGameObjects[0]);
 	}
+
+	myClickPulse->Update();
 }
 
 eMessageReturn CMouseComponent::Recieve(const Message& aMessage)
@@ -134,7 +138,7 @@ void CMouseComponent::HandleCollision(CGameObject* aCollidedWith)
 
 	if (myMouseIsDown == true)
 	{
-		DL_PRINT("clicked on enemy: %s", aCollidedWith->GetName().c_str());
+		//DL_PRINT("clicked on enemy: %s", aCollidedWith->GetName().c_str());
 
 		SComponentMessageData hitThisBastard;
 		hitThisBastard.myGameObject = aCollidedWith;
@@ -146,9 +150,12 @@ void CMouseComponent::HandleCollision(CGameObject* aCollidedWith)
 void CMouseComponent::SetMouseIsDown(const bool aIsDown)
 {
 	myMouseIsDown = aIsDown;
-
+	
 	if (myMouseIsDown == true)
 	{
+		// Highlight sprite.
+		myClickPulse->ActivateAtPos({ 0.1337f,0.1337f });
+
 		if(myHoveredGameObjects.Size() > 0)
 		{
 			HandleCollision(myHoveredGameObjects[0]);
