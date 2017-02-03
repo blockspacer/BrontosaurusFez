@@ -74,11 +74,15 @@ Skill::Skill(SkillData* aSkillDataPointer)
 	mySkillData->damageBonus = 0.0f;
 	mySkillData->manaRefund = 0.0f;
 	myAnimationTimeElapsed = 0.f;
+	mySpeedBonusStats = new Stats::SBonusStats;
+	mySpeedBonusStats->BonusMovementSpeed = mySkillData->movementSpeedBuffModifier;
+	myShouldDoDirectdamage = false;
 }
 
 
 Skill::~Skill()
 {
+	SAFE_DELETE(mySpeedBonusStats);
 }
 
 void Skill::TryToActivate()
@@ -96,8 +100,8 @@ void Skill::Activate()
 {
 	if (myElapsedCoolDownTime >= mySkillData->coolDown)
 	{
-		myIsActive = true;
 		OnActivation();
+		myIsActive = true;
 	}
 }
 
@@ -129,6 +133,12 @@ void Skill::Update(float aDeltaTime)
 		if (myAnimationTimeElapsed > mySkillData->animationDuration)
 		{
 			Deactivate();
+			if(mySkillData->isChannel == true)
+			{
+				myElapsedCoolDownTime = mySkillData->coolDown;
+				TryToActivate();
+			}
+
 		}
 	
 	}
@@ -279,7 +289,12 @@ void Skill::SpawnEnemyAttackUpdate(float aDeltaTime)
 
 		for (int i = 0; i < mySkillData->numberOfEnemiesToSpawn; i++)
 		{
-			CEnemyFactory::GetInstance().CreateEnemy(temp.GetPosition());
+			CU::Vector3f temp(temp.GetPosition());
+
+			temp.x += i * 50;
+			temp.z += i * 50;
+
+			CEnemyFactory::GetInstance().CreateEnemy(temp);
 		}
 		myElapsedCoolDownTime = 0.0f;
 	}
@@ -290,19 +305,48 @@ void Skill::SetTargetPosition(CU::Vector3f aTargetPosition)
 {	
 	myTargetPosition = aTargetPosition;
 	myTargetObject = nullptr;
+	myShouldDoDirectdamage = false;
 }
 void Skill::SetTargetObject(CGameObject* aTargetObject)
 {
 	myTargetObject = aTargetObject;
+	myShouldDoDirectdamage = true;
 }
 void Skill::ActivateCollider()
 {
 	myHaveActivatedCollider = true;
-	eComponentMessageType type = eComponentMessageType::eSetIsColliderActive;
-	SComponentMessageData data;
-	
-	data.myBool = true;
-	myColliderObject->NotifyComponents(type, data);
+	if(myShouldDoDirectdamage == false)
+	{
+		eComponentMessageType type = eComponentMessageType::eSetIsColliderActive;
+		SComponentMessageData data;
+
+		data.myBool = true;
+		myColliderObject->NotifyComponents(type, data);
+	}
+	else
+	{
+		if(mySkillData->isAOE == false)
+		{
+			//Johan added this
+			//-------------------------------------------------------------------------------------------------------------------
+			//-------------------------------------------------------------------------------------------------------------------
+			if(myTargetObject != nullptr)
+			{
+				SComponentMessageData damageData;
+				damageData.myInt = static_cast<int>((mySkillData->damage + mySkillData->damageBonus) * mySkillData->damageModifier);
+				myTargetObject->NotifyComponents(eComponentMessageType::eTakeDamage, damageData);
+			}
+		
+		}
+		else
+		{
+			eComponentMessageType type = eComponentMessageType::eSetIsColliderActive;
+			SComponentMessageData data;
+
+			data.myBool = true;
+			myColliderObject->NotifyComponents(type, data);	
+		}
+	}
 }
 void Skill::OnActivation()
 {
@@ -323,6 +367,15 @@ void Skill::OnActivation()
 	myHaveActivatedCollider = false;
 	myShouldPlayAnimation = false;
 	//DL_PRINT("Animation started");
+	if (myIsActive == false)
+	{
+		SComponentMessageData speedBonusData;
+
+		speedBonusData.myStatsToAdd = mySpeedBonusStats;
+		mySpeedBonusStats->BonusMovementSpeed = mySpeedBonusStats->BonusMovementSpeed * -1;
+		DL_PRINT("activate %f", mySpeedBonusStats->BonusMovementSpeed);
+		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eAddStats, speedBonusData);
+	}
 }
 
 void Skill::OnDeActivation()
@@ -337,6 +390,11 @@ void Skill::OnDeActivation()
 	{
 		PollingStation::playerData->myIsWhirlwinding = false;
 	}
+	SComponentMessageData speedBonusData;
+	mySpeedBonusStats->BonusMovementSpeed = mySpeedBonusStats->BonusMovementSpeed * -1;
+	speedBonusData.myStatsToAdd = mySpeedBonusStats;
+	DL_PRINT("Deactivate %f", mySpeedBonusStats->BonusMovementSpeed);
+	PollingStation::playerObject->NotifyComponents(eComponentMessageType::eAddStats, speedBonusData);
 }
 
 void Skill::Select()

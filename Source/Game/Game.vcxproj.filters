@@ -54,6 +54,7 @@
     <ClCompile Include="GlobalLuaFunctions.cpp">
       <Filter>ScriptLoader</Filter>
     </ClCompile>
+    <ClCompile Include="ClickPulse.cpp" />
     <ClCompile Include="ScriptHelperFunctions.cpp">
       <Filter>ScriptLoader</Filter>
     </ClCompile>
@@ -121,6 +122,7 @@
     <ClInclude Include="GlobalLuaFunctions.h">
       <Filter>ScriptLoader</Filter>
     </ClInclude>
+    <ClInclude Include="ClickPulse.h" />
     <ClInclude Include="ScriptHelperFunctions.h">
       <Filter>ScriptLoader</Filter>
     </ClInclude>

@@ -800,7 +800,7 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 	{
 		SRenderModelMessage* msg = static_cast<SRenderModelMessage*>(aRenderMesage);
 		CModel* model = CEngine::GetInstance()->GetModelManager()->GetModel(msg->myModelID);
-		model->Render(msg->myTransformation, msg->myLastFrameTransformation, msg->myDirectionalLight, msg->myPointLights, msg->myCurrentAnimation, msg->myAnimationTime, msg->myHighlightIntencity);
+		model->Render(msg->myTransformation, msg->myLastFrameTransformation, msg->myDirectionalLight, msg->myPointLights, msg->myCurrentAnimation, msg->myAnimationTime, msg->myAnimationLooping, msg->myHighlightIntencity);
 		++aDrawCallCount;
 		break;
 	}
@@ -808,7 +808,7 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 	{
 		SRenderModelDepthMessage* msg = static_cast<SRenderModelDepthMessage*>(aRenderMesage);
 		CModel* model = CEngine::GetInstance()->GetModelManager()->GetModel(msg->myModelID);
-		model->Render(msg->myTransformation, msg->myCurrentAnimation, msg->myAnimationTime);
+		model->Render(msg->myTransformation, msg->myCurrentAnimation, msg->myAnimationTime, msg->myAnimationLooping);
 		++aDrawCallCount;
 		break;
 	}

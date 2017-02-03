@@ -44,9 +44,12 @@ void CHealthComponent::SetHealth(const HealthPoint aValue)
 		{
 			//dead stuff
 			GetParent()->NotifyComponents(eComponentMessageType::eDied, SComponentMessageData());
-			SComponentMessageData data;
+			SComponentMessageData startedAttackingMessage;
+			startedAttackingMessage.myString = "die";
+			GetParent()->NotifyComponents(eComponentMessageType::eBasicAttack, startedAttackingMessage);
+			/*SComponentMessageData data;
 			data.myBool = false;
-			GetParent()->NotifyComponents(eComponentMessageType::eSetVisibility, data);
+			GetParent()->NotifyComponents(eComponentMessageType::eSetVisibility, data);*/
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eGameObjectDied, GameObjectDiedEvent(GetParent())));
 		}
 	}

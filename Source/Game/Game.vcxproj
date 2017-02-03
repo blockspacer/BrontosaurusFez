@@ -234,6 +234,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BackgroundLoadingManager.cpp" />
+    <ClCompile Include="ClickPulse.cpp" />
     <ClCompile Include="CreditsState.cpp" />
     <ClCompile Include="DialogState.cpp" />
     <ClCompile Include="EnemyFactory.cpp" />
@@ -268,6 +269,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackgroundLoadingManager.h" />
+    <ClInclude Include="ClickPulse.h" />
     <ClInclude Include="CreditsState.h" />
     <ClInclude Include="DialogState.h" />
     <ClInclude Include="EnemyFactory.h" />
