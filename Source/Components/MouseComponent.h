@@ -23,6 +23,7 @@ public:
 	void CheckIfHoveredGameObjectDied(CGameObject* aGameobjectThatDied);
 	void RemoveHoveredObjects();
 private:
+	void HighlightClosest();
 	void HandleCollision(CGameObject* aCollidedWith);
 	eMessageReturn Recieve(const Message& aMessage) override;
 
