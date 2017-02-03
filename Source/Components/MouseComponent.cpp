@@ -18,6 +18,7 @@ CMouseComponent::CMouseComponent(const CU::Camera& aPlayerCamera)
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eShopClosed);
 	myMousePosition = CU::Vector3f::Zero;
 	myType = eComponentType::eMouse;
+	myClickPulse = new CClickPulse();
 }
 
 CMouseComponent::~CMouseComponent()
