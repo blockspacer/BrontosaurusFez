@@ -43,7 +43,7 @@ namespace CU
 		eJsoneValueType GetType() const;
 		int Size() const;
 
-		int Count(const std::string& aKey);
+		int Count(const std::string& aKey) const;
 
 		bool IsNull() const;
 		bool IsBool() const;

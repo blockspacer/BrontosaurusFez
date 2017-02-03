@@ -370,6 +370,8 @@
     <ClInclude Include="HealthBarComponent.h" />
     <ClInclude Include="HealthBarComponentManager.h" />
     <ClInclude Include="HealthPoint.h" />
+    <ClInclude Include="HealthRestoreTriggerComponent.h" />
+    <ClInclude Include="HealthRestoreTriggerComponentManager.h" />
     <ClInclude Include="ManaComponent.h" />
     <ClInclude Include="ManaComponentManager.h" />
     <ClInclude Include="ManaPoint.h" />
@@ -377,6 +379,8 @@
     <ClInclude Include="PlayerData.h" />
     <ClInclude Include="PlayerHealthMessenger.h" />
     <ClInclude Include="PlayerManaMessenger.h" />
+    <ClInclude Include="PointLightComponent.h" />
+    <ClInclude Include="PointLightComponentManager.h" />
     <ClInclude Include="RespawnComponent.h" />
     <ClInclude Include="RespawnComponentManager.h" />
     <ClInclude Include="ScriptComponent.h" />
@@ -443,11 +447,15 @@
     <ClCompile Include="HatActivator.cpp" />
     <ClCompile Include="HealthBarComponent.cpp" />
     <ClCompile Include="HealthBarComponentManager.cpp" />
+    <ClCompile Include="HealthRestoreTriggerComponent.cpp" />
+    <ClCompile Include="HealthRestoreTriggerComponentManager.cpp" />
     <ClCompile Include="ManaComponent.cpp" />
     <ClCompile Include="ManaComponentManager.cpp" />
     <ClCompile Include="OpenShopListenerComponent.cpp" />
     <ClCompile Include="PlayerHealthMessenger.cpp" />
     <ClCompile Include="PlayerManaMessenger.cpp" />
+    <ClCompile Include="PointLightComponent.cpp" />
+    <ClCompile Include="PointLightComponentManager.cpp" />
     <ClCompile Include="RespawnComponent.cpp" />
     <ClCompile Include="RespawnComponentManager.cpp" />
     <ClCompile Include="ScriptComponent.cpp" />

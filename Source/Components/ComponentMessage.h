@@ -96,7 +96,8 @@ enum class eComponentMessageType
 	eSetPathPosition,
 	eSetHighLight,
 	eStopWhirlwind,
-	eLength
+	eLength,
+	eActivate2,
 };
 
 #define STATIC_SIZEOF(x) { char STATIC_SIZEOF_TEMP[(x)]; STATIC_SIZEOF_TEMP = 1; }

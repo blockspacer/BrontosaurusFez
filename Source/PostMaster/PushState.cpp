@@ -9,6 +9,7 @@
 #include "Game/LevelSelectState.h"
 #include "Game/MainMenuState.h"
 #include "Game/LoadState.h"
+#include "Game/DialogState.h"
 
 PushState::PushState(eState aState, const int aLevelIndex)
 	: myState(aState)
@@ -50,6 +51,9 @@ eMessageReturn PushState::DoEvent(StateStack* aStateStack) const
 		case eState::eLevelSelect:
 			static_cast<MainMenuState*>(aStateStack->GetCurrentState())->SetIsGoingToLevelSelect(true);
 			aStateStack->PushState(new LevelSelectState(*aStateStack));
+			break;
+		case eState::eDialog:
+			aStateStack->PushState(new CDialogState(*aStateStack));
 			break;
 		default: break;
 		}

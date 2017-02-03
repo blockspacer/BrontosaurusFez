@@ -34,6 +34,7 @@ class CCollisionComponentManager;
 class CHatMaker;
 class CShopStorage;
 class COpenShopListenerComponent;
+class CDialogState;
 
 //temp
 class CHealthComponent;
@@ -70,7 +71,7 @@ public:
 	virtual eMessageReturn DoEvent(CShopStorage*) const { return  eMessageReturn::eContinue; }
 	
 	virtual eMessageReturn DoEvent(CHatMaker*) const { return eMessageReturn::eContinue; }
-
+	virtual eMessageReturn DoEvent(CDialogState*) const { return eMessageReturn::eContinue; }
 	//temp
 	virtual eMessageReturn DoEvent(CHealthComponent*) const { return eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(CRenderer*) const { return eMessageReturn::eContinue; }

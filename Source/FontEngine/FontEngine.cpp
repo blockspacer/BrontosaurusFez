@@ -66,9 +66,11 @@ void CFontEngine::LoadFonts(std::string aFontJsonFile)
 		const std::string fontName = fontValue.at("name").GetString();
 		const std::string fontFile = fontValue.at("file").GetString();
 		const int fontSize = fontValue.at("size").GetInt();
+		const int lineHeight = fontValue.at("lineHeight").GetInt();
 
 		CFT_Font* font = CreateFace(fontFile.c_str());
 		font->SetSize(fontSize, 0, 0);
+		font->SetLineHeight(lineHeight);
 
 		myFaces[fontName] = font;
 	}

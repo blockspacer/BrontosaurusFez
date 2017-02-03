@@ -24,7 +24,7 @@ public:
 
 	void Init(const CU::DynamicString& aFontPath, const int aPixelSize);
 	void Init(const CU::DynamicString& aFontPath = "Default");
-	void Render();
+	void Render() const;
 
 	void SetLineGap();
 
@@ -82,7 +82,7 @@ inline void CTextInstance::SetText(const CU::DynamicString& aString)
 	{
 		if (aString.at(i) == '/n')
 		{
-			DL_PRINT_WARNING("Warning slow consider using different set text method");
+			DL_PRINT_WARNING("Warning slow! consider using different set text method");
 			const CU::DynamicString explainingString(aString.SubStr(lastPosition, i - lastPosition));
 			myStrings.Add(explainingString);
 			lastPosition = i + 1;
@@ -101,7 +101,7 @@ inline CU::DynamicString CTextInstance::GetText() const
 	{
 		if (i != 0)
 		{
-			DL_PRINT_WARNING("Warning slow please consider just getting a separete line");
+			DL_PRINT_WARNING("Warning slow! please consider just getting a separete line");
 			string += '/n';
 		}
 		string += myStrings[i];
