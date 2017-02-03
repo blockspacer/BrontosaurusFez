@@ -11,8 +11,12 @@ FocusChange::~FocusChange()
 {
 }
 
-eMessageReturn FocusChange::DoEvent(CInputManager * aInputManager) const
+eMessageReturn FocusChange::DoEvent(CInputManager* aInputManager) const
 {
-	aInputManager->LockUnlockMouse(myHasFocus);
+	if (aInputManager)
+	{
+		aInputManager->LockUnlockMouse(myHasFocus);
+	}
+
 	return eMessageReturn::eContinue;
 }

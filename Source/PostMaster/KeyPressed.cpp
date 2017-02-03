@@ -20,6 +20,9 @@
 //temp
 #include "Components\HealthComponent.h"
 #include "../BrontosaurusEngine/Renderer.h"
+#include "Game/DialogState.h"
+#include "PostMaster.h"
+#include "PushState.h"
 
 KeyPressed::KeyPressed(const CU::eKeys& aKey)
 	: myKey(aKey)
@@ -129,6 +132,19 @@ eMessageReturn KeyPressed::DoEvent(CCollisionComponentManager* aCollisionCompone
 	}
 
 	return eMessageReturn::eContinue;
+}
+
+eMessageReturn KeyPressed::DoEvent(CDialogState* aDialogState) const
+{
+	if (myKey != CU::eKeys::ESCAPE)
+	{
+		aDialogState->Next();
+	}
+	else
+	{
+		PostMaster::GetInstance().SendLetter(eMessageType::eStateStackMessage, PushState(PushState::eState::ePauseScreen, 0));
+	}
+	return eMessageReturn::eStop;
 }
 
 eMessageReturn KeyPressed::DoEvent(CHealthComponent * aHealthComponent) const

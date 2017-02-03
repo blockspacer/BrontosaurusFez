@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "TextInstance.h"
-#include "Text.h"
 
 #include "Renderer.h"
 
@@ -40,19 +39,10 @@ void CTextInstance::Init(const CU::DynamicString & aFontPath, const int aPixelSi
 	myText = new CCoolText(aFontPath,aPixelSize);
 }
 
-void CTextInstance::Render()
+void CTextInstance::Render() const
 {
 	if (myText != nullptr && myStrings.Size() > 0)
 	{
-		//SChangeStatesMessage* changeStateMessage = new SChangeStatesMessage();
-		//changeStateMessage->myBlendState = eBlendState::eAlphaBlend;
-		//changeStateMessage->myDepthStencilState = eDepthStencilState::eDisableDepth;
-		//changeStateMessage->myRasterizerState = eRasterizerState::eNoCulling;
-		//changeStateMessage->mySamplerState = eSamplerState::eClamp;
-
-		//CEngine::GetInstance()->GetRenderer().AddRenderMessage(changeStateMessage);
-
-
 		SRenderTextMessage* renderTextMessage = new SRenderTextMessage();
 		renderTextMessage->myColor = myColor;
 		renderTextMessage->myPosition = myPosition;
@@ -60,14 +50,6 @@ void CTextInstance::Render()
 		renderTextMessage->myStrings = myStrings;
 		renderTextMessage->myText = myText;
 		CEngine::GetInstance()->GetRenderer().AddRenderMessage(renderTextMessage);
-
-		//changeStateMessage = new SChangeStatesMessage();
-		//changeStateMessage->myBlendState = eBlendState::eNoBlend;
-		//changeStateMessage->myDepthStencilState = eDepthStencilState::eDefault;
-		//changeStateMessage->myRasterizerState = eRasterizerState::eDefault;
-		//changeStateMessage->mySamplerState = eSamplerState::eClamp;
-
-		//CEngine::GetInstance()->GetRenderer().AddRenderMessage(changeStateMessage);
 	}
 }
 

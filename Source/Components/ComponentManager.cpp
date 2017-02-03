@@ -13,11 +13,11 @@ CComponentManager::CComponentManager()
 CComponentManager::~CComponentManager()
 {
 	//DESTROY EVERYTHING.
-	for (int i = 0; i < myComponents.Size(); ++i)
+	for (CComponent* component : myComponents)
 	{
-		if (myComponents[i] != nullptr)
+		if (component != nullptr)
 		{
-			DeleteComponent(myComponents[i]->GetId());
+			DeleteComponent(component->GetId());
 		}
 	}
 }

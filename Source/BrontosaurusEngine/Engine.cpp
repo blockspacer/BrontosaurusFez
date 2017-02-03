@@ -85,8 +85,6 @@ void CEngine::Init(SInitEngineParams& aInitEngineParams)
 	myConsole->Init();
 	myDebugInfoDrawer = new CDebugInfoDrawer(aInitEngineParams.myDebugFlags);
 
-	ShowCursor(TRUE);
-
 	bool result;
 	Audio::CAudioInterface::CreateInstance();
 	result = Audio::CAudioInterface::GetInstance()->Init("Audio/Init.bnk");

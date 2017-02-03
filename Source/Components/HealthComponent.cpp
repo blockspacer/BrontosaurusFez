@@ -66,6 +66,8 @@ void CHealthComponent::SetObjectType(const eObjectType aType)
 	myObjectType = aType;
 }
 
+#include "ScriptComponentManager.h"
+
 void CHealthComponent::Init()
 {
 	SComponentMessageData data;
@@ -79,6 +81,14 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 	float temp;
 	switch (aMessageType)
 	{
+	case eComponentMessageType::eObjectDone:
+	{
+		CScriptComponentManager* scriptManager = CScriptComponentManager::GetInstance();
+		if (!scriptManager) break;
+		CComponent* bloodEmitter = scriptManager->CreateAbstractComponent("Script/blood_emitter.lua");
+		GetParent()->AddComponent(bloodEmitter);
+	}
+		break;
 	case eComponentMessageType::eAddToMaxHealth:
 		SetMaxHealth(myMaxHealth + aMessageData.myInt);
 		break;

@@ -14,7 +14,7 @@ CActivationObjectiveComponent::~CActivationObjectiveComponent()
 
 void CActivationObjectiveComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData)
 {
-	if (aMessageType == eComponentMessageType::eActivate)
+	if (aMessageType == eComponentMessageType::eActivate2)
 	{
 		CUpdateQuestEvent questEvent(myObjectiveName);
 

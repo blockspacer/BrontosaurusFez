@@ -77,6 +77,13 @@ void ManaComponent::Receive(const eComponentMessageType aMessageType, const SCom
 			aMessageData.mySkill->Activate();
 		}
 		break;
+	case eComponentMessageType::eCheckIfCanSelect:
+		if (myMana >= static_cast<int>(aMessageData.mySkill->GetSkillData()->manaCost * aMessageData.mySkill->GetSkillData()->manaCostModifier))
+		{
+			data.mySkill = aMessageData.mySkill;
+			GetParent()->NotifyComponents(eComponentMessageType::eSelectSkill, data);
+		}
+		break;
 	case eComponentMessageType::eRestoreMana:
 		SetMana(myMana + aMessageData.myInt);
 		data.myUChar = myPercentageLeft * 100;
