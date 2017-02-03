@@ -272,12 +272,8 @@ void CPlayState::Load()
 
 		////TEMP CARL BEGIN
 
-		CScriptComponent* scriptComp = myScriptComponentManager->CreateComponent("Script/exempel_script.lua");
-		PollingStation::playerObject->AddComponent(scriptComp);
-		//SComponentMessageData numberData;
-		//numberData.myInt = 234;
-		//scriptComp->Receive(eComponentMessageType::eDied, numberData);
-
+		//CScriptComponent* scriptComp = myScriptComponentManager->CreateComponent("Script/exempel_script.lua");
+		//PollingStation::playerObject->AddComponent(scriptComp);
 
 		////TEMP CARL END
 	}
