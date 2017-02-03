@@ -6,6 +6,8 @@
 #include "..\Game\PollingStation.h"
 #include "..\Game\PollingStation.h"
 
+#include "..\Game\ClickPulse.h"
+
 CMouseComponent::CMouseComponent(const CU::Camera& aPlayerCamera)
 	: myPlayerCamera(aPlayerCamera)
 	, myHoveredGameObjects(10)
@@ -203,6 +205,9 @@ void CMouseComponent::SetMouseIsDown(const bool aIsDown)
 
 	if (myMouseIsDown == true)
 	{
+		// Highlight sprite.
+		myClickPulse->ActivateAtPos({ 0.1337f,0.1337f });
+
 		if(myHoveredGameObjects.Size() > 0)
 		{
 			HandleCollision(myHoveredGameObjects[0]);

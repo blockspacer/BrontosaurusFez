@@ -8,6 +8,8 @@ namespace CU
 	class Camera;
 }
 
+class CClickPulse;
+
 class CMouseComponent : public CComponent, public Subscriber
 {
 public:
@@ -30,6 +32,6 @@ private:
 	CU::GrowingArray<CGameObject*> myHoveredGameObjects;
 	CU::Vector3f myMousePosition;
 	bool myMouseIsDown;
-
+	CClickPulse* myClickPulse;
 	const CU::Camera& myPlayerCamera;
 };

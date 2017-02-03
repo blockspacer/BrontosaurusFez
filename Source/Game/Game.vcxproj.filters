@@ -54,6 +54,7 @@
     <ClCompile Include="GlobalLuaFunctions.cpp">
       <Filter>QuestManager\ScriptLoader</Filter>
     </ClCompile>
+    <ClCompile Include="ClickPulse.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackgroundLoadingManager.h" />
@@ -117,6 +118,7 @@
     <ClInclude Include="GlobalLuaFunctions.h">
       <Filter>QuestManager\ScriptLoader</Filter>
     </ClInclude>
+    <ClInclude Include="ClickPulse.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="States">
