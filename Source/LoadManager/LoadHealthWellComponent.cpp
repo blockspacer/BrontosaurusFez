@@ -10,7 +10,7 @@ int LoadHealthWellComponent(KLoader::SLoadedComponentData someData)
 {
 	HealthRestoreTriggerComponent* healing = CHealthRestoreTriggerComponentManager::GetInstance().CreateAndRegisterComponent();
 	healing->SetCoolDown(someData.myData.at("CoolDown").GetFloat());
-	healing->SetHealAmount(someData.myData.at("HealPercent").GetUInt());
+	healing->SetHealAmount(someData.myData.at("HealAmount").GetUInt());
 
 	return healing->GetId();
 }
