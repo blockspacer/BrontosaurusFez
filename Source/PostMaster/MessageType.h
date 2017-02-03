@@ -5,7 +5,7 @@ enum class eMessageType
 	eWindowSizeChanged,
 	eMouseMessage,
 	eKeyboardMessage,
-	eKeyPressed,
+	//eKeyPressed,
 	eInputMessagePressed,
 	eStateStackMessage,
 	eFokusChanged,

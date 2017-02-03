@@ -63,7 +63,10 @@ void CEngine::Init(SInitEngineParams& aInitEngineParams)
 	myRenderCallbackFunction = aInitEngineParams.myRenderCallbackFunction;
 
 	myDXFramework = new CDXFramework();
-	myDXFramework->Initialize(aInitEngineParams.myWindowParams.Width, aInitEngineParams.myWindowParams.Height, aInitEngineParams.myWindowParams.Fullscreen ,myWindowsWindow->GetHWND());
+	CU::Vector2ui actualDrawSize = myWindowsWindow->GetWindowSize();
+
+
+	myDXFramework->Initialize(actualDrawSize.x, actualDrawSize.y, aInitEngineParams.myWindowParams.Fullscreen ,myWindowsWindow->GetHWND());
 	myInputManager = new CInputManager();
 	myModelManager = new CModelManager();
 	mySpriteManager = new CSpriteManager();
@@ -105,7 +108,6 @@ void CEngine::Render()
 
 	myLineDrawer->Render();
 	myDXFramework->Render();
-	myConsole->Render();
 }
 
 void CEngine::ThreadedRender()
@@ -162,6 +164,7 @@ void CEngine::Start()
 #endif
 
 	myInitCallbackFunction();
+	myConsole->GetLuaFunctions();
 
 	if (myThreadRender == true)
 	{
@@ -200,6 +203,7 @@ void CEngine::Start()
 	
 		myRenderCallbackFunction();
 
+		myConsole->Render();
 		if (myThreadRender == false)
 		{
 			Render();

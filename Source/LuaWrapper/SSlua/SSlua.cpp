@@ -146,6 +146,12 @@ namespace SSlua
 		return error == LUA_OK;
 	}
 
+	bool LuaWrapper::DoString(const std::string& aPieceOfCode)
+	{
+		int error = luaL_dostring(myState, aPieceOfCode.c_str());
+		return error == LUA_OK;
+	}
+
 	bool LuaWrapper::LoadLuaString(const std::string& aLuaScript)
 	{
 		int error = luaL_loadstring(myState, aLuaScript.c_str());

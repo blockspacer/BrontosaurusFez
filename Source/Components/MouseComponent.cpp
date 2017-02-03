@@ -4,7 +4,8 @@
 #include "..\CommonUtilities\Camera.h"
 #include "..\Collision\ICollider.h"
 #include "..\Game\PollingStation.h"
-#include "..\Game\PollingStation.h"
+
+#include "..\Game\ClickPulse.h"
 
 CMouseComponent::CMouseComponent(const CU::Camera& aPlayerCamera)
 	: myPlayerCamera(aPlayerCamera)
@@ -16,6 +17,7 @@ CMouseComponent::CMouseComponent(const CU::Camera& aPlayerCamera)
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eShopClosed);
 	myMousePosition = CU::Vector3f::Zero;
 	myType = eComponentType::eMouse;
+	myClickPulse = new CClickPulse();
 }
 
 CMouseComponent::~CMouseComponent()
@@ -33,10 +35,6 @@ void CMouseComponent::Receive(const eComponentMessageType aMessageType, const SC
 		{
 		HandleCollision(aMessageData.myGameObject);
 		SComponentMessageData data; data.myFloat = 0.5f;
-		if (PollingStation::playerObject != aMessageData.myGameObject)
-		{
-			//aMessageData.myGameObject->NotifyComponents(eComponentMessageType::eSetHighLight, data);
-		}
 		break;
 		}
 	case eComponentMessageType::eOnCollisionExit:
@@ -89,6 +87,7 @@ void CMouseComponent::MouseMoved(const CU::Vector2f& aMousePosition)
 		if (std::fabs(t) > 0.0001f)
 		{
 			targetPosition3D = myPlayerCamera.GetPosition() + direction * t;
+			targetPosition3D.y = PollingStation::playerObject->GetWorldPosition().y;
 		}
 	}
 	//for evaluating distance to things
@@ -106,7 +105,6 @@ void CMouseComponent::Update()
 		if (myMouseIsDown == true)
 		{
 			CGameObject* targetObject = nullptr;
-
 			float lowestDistance = 99999999.0f;
 			for (unsigned int i = 0; i < myHoveredGameObjects.Size(); ++i)
 			{
@@ -116,11 +114,10 @@ void CMouseComponent::Update()
 				distance = objectposition - myMousePosition;
 
 				float dis = distance.Length();
-				DL_PRINT("size %u", myHoveredGameObjects.Size());
 
 				if (dis < lowestDistance)
 				{
-					lowestDistance = distance.Length();
+					lowestDistance = dis;
 					targetObject = myHoveredGameObjects[i];
 				}
 			}
@@ -133,6 +130,7 @@ void CMouseComponent::Update()
 
 		}
 	}
+	myClickPulse->Update();
 }
 
 eMessageReturn CMouseComponent::Recieve(const Message& aMessage)
@@ -142,7 +140,7 @@ eMessageReturn CMouseComponent::Recieve(const Message& aMessage)
 
 void CMouseComponent::HighlightClosest()
 {
-	CGameObject* targetObject = nullptr;
+	CGameObject* aObject = nullptr;
 	float lowestDistance = 99999999.0f;
 	for (unsigned int i = 0; i < myHoveredGameObjects.Size(); ++i)
 	{
@@ -161,15 +159,15 @@ void CMouseComponent::HighlightClosest()
 		if (dis < lowestDistance)
 		{
 			lowestDistance = distance.Length();
-			targetObject = myHoveredGameObjects[i];
+			aObject = myHoveredGameObjects[i];
 		}
 	}
-	assert(targetObject != nullptr && "Finding the closest CGameObject to the mouse position did not work :(");
+	assert(aObject != nullptr && "Finding the closest CGameObject to the mouse position did not work :(");
 	SComponentMessageData data;
 	data.myFloat = 0.5f;
-	if (PollingStation::playerObject != targetObject)
+	if (PollingStation::playerObject != aObject)
 	{
-		targetObject->NotifyComponents(eComponentMessageType::eSetHighLight, data);
+		aObject->NotifyComponents(eComponentMessageType::eSetHighLight, data);
 	}
 }
 
@@ -203,6 +201,9 @@ void CMouseComponent::SetMouseIsDown(const bool aIsDown)
 
 	if (myMouseIsDown == true)
 	{
+		// Highlight sprite.
+		myClickPulse->ActivateAtPos({ 0.1337f,0.1337f });
+
 		if(myHoveredGameObjects.Size() > 0)
 		{
 			HandleCollision(myHoveredGameObjects[0]);

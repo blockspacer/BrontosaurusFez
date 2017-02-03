@@ -234,6 +234,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BackgroundLoadingManager.cpp" />
+    <ClCompile Include="ClickPulse.cpp" />
     <ClCompile Include="CreditsState.cpp" />
     <ClCompile Include="DialogState.cpp" />
     <ClCompile Include="EnemyFactory.cpp" />
@@ -247,6 +248,7 @@
     <ClCompile Include="LoadState.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="MasterAI.cpp" />
+    <ClCompile Include="ParticleEffectManager.cpp" />
     <ClCompile Include="PauseMenu.cpp" />
     <ClCompile Include="PickerUpperComponent.cpp" />
     <ClCompile Include="PickupComponent.cpp" />
@@ -256,6 +258,7 @@
     <ClCompile Include="PollingStation.cpp" />
     <ClCompile Include="QuestDrawer.cpp" />
     <ClCompile Include="QuestManager.cpp" />
+    <ClCompile Include="ScriptHelperFunctions.cpp" />
     <ClCompile Include="ScriptLoader.cpp" />
     <ClCompile Include="ShopStorage.cpp" />
     <ClCompile Include="SplashScreen.cpp" />
@@ -266,6 +269,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackgroundLoadingManager.h" />
+    <ClInclude Include="ClickPulse.h" />
     <ClInclude Include="CreditsState.h" />
     <ClInclude Include="DialogState.h" />
     <ClInclude Include="EnemyFactory.h" />
@@ -280,6 +284,7 @@
     <ClInclude Include="LoadState.h" />
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="MasterAI.h" />
+    <ClInclude Include="ParticleEffectManager.h" />
     <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="PickerUpperComponent.h" />
     <ClInclude Include="PickupComponent.h" />
@@ -290,6 +295,7 @@
     <ClInclude Include="PollingStation.h" />
     <ClInclude Include="QuestDrawer.h" />
     <ClInclude Include="QuestManager.h" />
+    <ClInclude Include="ScriptHelperFunctions.h" />
     <ClInclude Include="ScriptLoader.h" />
     <ClInclude Include="ShopStorage.h" />
     <ClInclude Include="ShopStructs.h" />

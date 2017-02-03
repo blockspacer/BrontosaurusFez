@@ -15,6 +15,7 @@
 #include "ModelManager.h"
 #include "ConstBufferTemplate.h"
 #include "Text.h"
+#include "WindowsWindow.h"
 #include <Camera.h>
 
 #include "ModelInstance.h"
@@ -29,8 +30,6 @@
 
 CRenderer::CRenderer()
 {
-	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed);
-
 	myIsRunning = true;
 
 	mySettings.HDR = false;
@@ -61,8 +60,6 @@ CRenderer::CRenderer()
 
 CRenderer::~CRenderer()
 {
-	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyPressed);
-
 	for (int i = 0; i < myRasterizerStates.Size(); ++i)
 	{
 		myRasterizerStates[i]->Release();
@@ -278,7 +275,9 @@ void CRenderer::Downsample(CRenderPackage & aRenderPackage)
 
 void CRenderer::InitPackages()
 {
-	CU::Vector2ui windowSize = ENGINE->GetWindowSize();
+	//CU::Vector2ui windowSize = ENGINE->GetWindowSize();
+	CU::Vector2ui windowSize = ENGINE->GetWindow()->GetWindowSize();
+
 	myIntermediatePackage.Init(windowSize);
 
 

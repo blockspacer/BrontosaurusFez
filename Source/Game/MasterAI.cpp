@@ -37,7 +37,7 @@ CMasterAI & CMasterAI::GetInstance()
 const float CMasterAI::DetermineHealthDrop()
 {
 
-	float result = 75 - PollingStation::playerData->myPercentHPLeft;
+	float result = 50 - PollingStation::playerData->myPercentHPLeft;
 
 	if (result < 0)
 	{

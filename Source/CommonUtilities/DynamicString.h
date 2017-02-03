@@ -55,6 +55,7 @@ namespace CU
 
 		bool operator==(const DynamicString& aString) const;
 		bool operator==(const char* aLiteralString) const;
+		bool operator==(const char aCharacter) const;
 
 		int Find(const DynamicString& aSubString) const;
 		int Find(const char* aSubString, const int aSubStringSize) const;

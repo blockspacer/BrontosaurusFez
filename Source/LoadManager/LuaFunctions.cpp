@@ -254,7 +254,7 @@ SSlua::ArgumentList LuaFunctions::CreateParticleEmitterComponent(SSlua::Argument
 	data.StartRotation = 0.0f;
 	data.EndRotation = 0.0f;
 
-	data.EmissonLifeTime = anArgumentList[10].GetFloat();
+	//data.EmissonLifeTime = anArgumentList[10].GetFloat();
 	data.NumOfParticles = anArgumentList[11].GetInt();
 
 	data.ColorOverLife;

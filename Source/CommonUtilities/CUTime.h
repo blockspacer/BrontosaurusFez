@@ -10,15 +10,20 @@ namespace CU
 		Time(const TimeUnit someTime);
 		~Time();
 
-		inline void Reset();
 		Time operator+(const Time& aRight) const;
 		Time& operator+=(const Time& aRight);
+		bool operator<(const Time& aRight) const;
+		bool operator>(const Time& aRight) const;
 
-		TimeUnit GetHours() const;
-		TimeUnit GetMinutes() const;
-		TimeUnit GetSeconds() const;
-		TimeUnit GetMilliseconds() const;
-		TimeUnit GetMicroseconds() const;
+		inline void Reset();
+
+		inline void SetSeconds(const TimeUnit aSeconds);
+
+		inline TimeUnit GetHours() const;
+		inline TimeUnit GetMinutes() const;
+		inline TimeUnit GetSeconds() const;
+		inline TimeUnit GetMilliseconds() const;
+		inline TimeUnit GetMicroseconds() const;
 		
 	private:
 		TimeUnit myTime;
@@ -29,15 +34,9 @@ namespace CU
 		myTime = 0.f;
 	}
 
-	inline Time Time::operator+(const Time& aRight) const
+	inline void Time::SetSeconds(const TimeUnit aSeconds)
 	{
-		return Time(*this) += aRight;
-	}
-
-	inline Time& Time::operator+=(const Time& aRight)
-	{
-		myTime += aRight.myTime;
-		return *this;
+		myTime = aSeconds * 1000.f * 1000.f;
 	}
 
 	inline TimeUnit Time::GetHours() const

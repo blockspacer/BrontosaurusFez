@@ -76,11 +76,13 @@ Skill::Skill(SkillData* aSkillDataPointer)
 	myAnimationTimeElapsed = 0.f;
 	mySpeedBonusStats = new Stats::SBonusStats;
 	mySpeedBonusStats->BonusMovementSpeed = mySkillData->movementSpeedBuffModifier;
+	myShouldDoDirectdamage = false;
 }
 
 
 Skill::~Skill()
 {
+	SAFE_DELETE(mySpeedBonusStats);
 }
 
 void Skill::TryToActivate()
@@ -131,6 +133,12 @@ void Skill::Update(float aDeltaTime)
 		if (myAnimationTimeElapsed > mySkillData->animationDuration)
 		{
 			Deactivate();
+			if(mySkillData->isChannel == true)
+			{
+				myElapsedCoolDownTime = mySkillData->coolDown;
+				TryToActivate();
+			}
+
 		}
 	
 	}
@@ -297,19 +305,48 @@ void Skill::SetTargetPosition(CU::Vector3f aTargetPosition)
 {	
 	myTargetPosition = aTargetPosition;
 	myTargetObject = nullptr;
+	myShouldDoDirectdamage = false;
 }
 void Skill::SetTargetObject(CGameObject* aTargetObject)
 {
 	myTargetObject = aTargetObject;
+	myShouldDoDirectdamage = true;
 }
 void Skill::ActivateCollider()
 {
 	myHaveActivatedCollider = true;
-	eComponentMessageType type = eComponentMessageType::eSetIsColliderActive;
-	SComponentMessageData data;
-	
-	data.myBool = true;
-	myColliderObject->NotifyComponents(type, data);
+	if(myShouldDoDirectdamage == false)
+	{
+		eComponentMessageType type = eComponentMessageType::eSetIsColliderActive;
+		SComponentMessageData data;
+
+		data.myBool = true;
+		myColliderObject->NotifyComponents(type, data);
+	}
+	else
+	{
+		if(mySkillData->isAOE == false)
+		{
+			//Johan added this
+			//-------------------------------------------------------------------------------------------------------------------
+			//-------------------------------------------------------------------------------------------------------------------
+			if(myTargetObject != nullptr)
+			{
+				SComponentMessageData damageData;
+				damageData.myInt = static_cast<int>((mySkillData->damage + mySkillData->damageBonus) * mySkillData->damageModifier);
+				myTargetObject->NotifyComponents(eComponentMessageType::eTakeDamage, damageData);
+			}
+		
+		}
+		else
+		{
+			eComponentMessageType type = eComponentMessageType::eSetIsColliderActive;
+			SComponentMessageData data;
+
+			data.myBool = true;
+			myColliderObject->NotifyComponents(type, data);	
+		}
+	}
 }
 void Skill::OnActivation()
 {

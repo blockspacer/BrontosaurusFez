@@ -94,8 +94,9 @@ enum class eComponentMessageType
 	eEnterNewTriangle,
 	eNotOnNavmesh,
 	eSetPathPosition,
-	eLength,
 	eSetHighLight,
+	eStopWhirlwind,
+	eLength
 	eActivate2,
 };
 
