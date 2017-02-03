@@ -3,6 +3,7 @@
 #include "HealthRestoreTriggerComponent.h"
 #include "ComponentManager.h"
 
+CHealthRestoreTriggerComponentManager* CHealthRestoreTriggerComponentManager::ourInstance = nullptr;
 
 void CHealthRestoreTriggerComponentManager::Destroy()
 {

@@ -57,6 +57,7 @@
     <ClInclude Include="LoadFireComponent.h">
       <Filter>LoadThings\LoadFireComponent</Filter>
     </ClInclude>
+    <ClInclude Include="LoadHealthWellComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -112,6 +113,7 @@
     <ClCompile Include="LoadFireComponent.cpp">
       <Filter>LoadThings\LoadFireComponent</Filter>
     </ClCompile>
+    <ClCompile Include="LoadHealthWellComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="VS">
