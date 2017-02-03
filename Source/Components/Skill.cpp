@@ -37,6 +37,10 @@ Skill::Skill(SkillData* aSkillDataPointer)
 	{
 		myUpdateFunction = std::bind(&Skill::SpawnEnemyAttackUpdate, this, std::placeholders::_1);
 	}
+	if (aSkillDataPointer->skillName == "BlobAttack")
+	{
+		myUpdateFunction = std::bind(&Skill::BasicAttackUpdate, this, std::placeholders::_1);
+	}
 	else
 	{
 		DL_PRINT("Wow Skill couldn't find what skill to use as updatefunction. Check spelling and/or yell at Marcus.");
@@ -163,6 +167,13 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 			lookAtData.myVector3f = myTargetObject->GetWorldPosition();
 			myUser->NotifyComponents(eComponentMessageType::eLookAt, lookAtData);
 			myShouldPlayAnimation = true;
+			if (myHavePlayedSound == false)
+			{
+				SComponentMessageData data2;
+				data2.myString = mySkillData->skillName.c_str();
+				myUser->NotifyComponents(eComponentMessageType::ePlaySound, data2);
+				myHavePlayedSound = true;
+			}
 		}
 	}
 	else
@@ -188,6 +199,13 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 		lookAtData.myVector3f = myTargetPosition;
 		myUser->NotifyComponents(eComponentMessageType::eLookAt, lookAtData);
 		myShouldPlayAnimation = true;
+		if (myHavePlayedSound == false)
+		{
+			SComponentMessageData data2;
+			data2.myString = mySkillData->skillName.c_str();
+			myUser->NotifyComponents(eComponentMessageType::ePlaySound, data2);
+			myHavePlayedSound = true;
+		}
 		//ActivateCollider(); // Remove this later on and replace it with animation wait time.
 	}
 }
@@ -209,7 +227,13 @@ void Skill::SweepAttackUpdate(float aDeltaTime)
 	SComponentMessageData stopData;
 	stopData.myFloat = 0.1f;
 	myUser->NotifyComponents(eComponentMessageType::eStopMovement, stopData);
-
+	if(myHavePlayedSound == false)
+	{
+		SComponentMessageData data2;
+		data2.myString = mySkillData->skillName.c_str();
+		myUser->NotifyComponents(eComponentMessageType::ePlaySound, data2);
+		myHavePlayedSound = true;
+	}
 
 	myElapsedCoolDownTime = 0.0f;
 	myAnimationTimeElapsed += aDeltaTime;
@@ -233,6 +257,13 @@ void Skill::SweepAttackUpdate(float aDeltaTime)
 
 void Skill::SpawnEnemyAttackUpdate(float aDeltaTime)
 {
+	if (myHavePlayedSound == false)
+	{
+		SComponentMessageData data2;
+		data2.myString = mySkillData->skillName.c_str();
+		myUser->NotifyComponents(eComponentMessageType::ePlaySound, data2);
+		myHavePlayedSound = true;
+	}
 
 	SComponentMessageData stopData;
 	stopData.myFloat = 0.1f;
@@ -248,7 +279,12 @@ void Skill::SpawnEnemyAttackUpdate(float aDeltaTime)
 
 		for (int i = 0; i < mySkillData->numberOfEnemiesToSpawn; i++)
 		{
-			CEnemyFactory::GetInstance().CreateEnemy(temp.GetPosition());
+			CU::Vector3f temp(temp.GetPosition());
+
+			temp.x += i * 50;
+			temp.z += i * 50;
+
+			CEnemyFactory::GetInstance().CreateEnemy(temp);
 		}
 		myElapsedCoolDownTime = 0.0f;
 	}
@@ -280,15 +316,14 @@ void Skill::OnActivation()
 	myUser->NotifyComponents(eComponentMessageType::eBurnMana, data);
 
 	SComponentMessageData data2;
-
+	myHavePlayedSound = false;
 	if (mySkillData->isChannel == true)
 	{
 		PollingStation::playerData->myIsWhirlwinding = true;
 	}
 	else
 	{
-		data2.myString = mySkillData->skillName.c_str();
-		myUser->NotifyComponents(eComponentMessageType::ePlaySound, data2);
+	
 	}
 	myHaveActivatedCollider = false;
 	myShouldPlayAnimation = false;

@@ -44,7 +44,11 @@ public:
 	CAnimEvaluator( const aiAnimation* pAnim);
 	void Evaluate( float pTime, std::map<std::string, CBone*>& bones);
 	std::vector<mat4>& GetTransforms(float dt){ return Transforms[GetFrameIndexAt(dt)]; }
+	std::vector<mat4>& GetTransforms(float dt, bool loop) { return Transforms[GetFrameIndexAt(dt, loop)]; }
+
 	unsigned int GetFrameIndexAt(float time);
+	unsigned int GetFrameIndexAt(float time, bool loop);
+
 
 	std::string Name;
 	std::vector<CAnimationChannel> Channels;
@@ -79,6 +83,8 @@ public:
 	float GetAnimationSpeed() const { return Animations[CurrentAnimIndex].TicksPerSecond; }
 	// get the transforms needed to pass to the vertex shader. This will wrap the dt value passed, so it is safe to pass 50000000 as a valid number
 	std::vector<mat4>& GetTransforms(float dt){ return Animations[CurrentAnimIndex].GetTransforms(dt); }
+	std::vector<mat4>& GetTransforms(float dt, bool loop) { return Animations[CurrentAnimIndex].GetTransforms(dt, loop); }
+
 
 	int32_t GetAnimationIndex() const { return CurrentAnimIndex; }
 	std::string GetAnimationName() const { return Animations[CurrentAnimIndex].Name;  }

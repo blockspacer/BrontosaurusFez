@@ -273,7 +273,7 @@ bool CModel::InitBuffers(CU::GrowingArray<SVertexDataCube>& aVertexList)
 	return true;
 }
 
-void CModel::Render(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aAnimationState, const float aAnimationTime, const float aHighlightIntencity)
+void CModel::Render(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aAnimationState, const float aAnimationTime, const bool aAnimationLooping, const float aHighlightIntencity)
 {
 	myEffect->Activate();
 
@@ -282,7 +282,7 @@ void CModel::Render(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLa
 		mySurface->Activate();
 	}
 	
-	UpdateCBuffer(aToWorldSpace, aLastFrameTransformation, aLight, aPointLightList, aAnimationState, aAnimationTime, aHighlightIntencity);
+	UpdateCBuffer(aToWorldSpace, aLastFrameTransformation, aLight, aPointLightList, aAnimationState, aAnimationTime, aAnimationLooping, aHighlightIntencity);
 
 	UINT stride = myVertexSize;
 	UINT offset = 0;
@@ -302,11 +302,11 @@ void CModel::Render(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLa
 	}
 }
 
-void CModel::Render(const CU::Matrix44f & aToWorldSpace, const char* aAnimationState, const float aAnimationTime, const float aHighlightIntencity)
+void CModel::Render(const CU::Matrix44f & aToWorldSpace, const char* aAnimationState, const float aAnimationTime, const bool aAnimationLooping, const float aHighlightIntencity)
 {
 	myEffect->ActivateForDepth();
 
-	UpdateCBuffer(aToWorldSpace, aToWorldSpace, nullptr, nullptr, aAnimationState, aAnimationTime);
+	UpdateCBuffer(aToWorldSpace, aToWorldSpace, nullptr, nullptr, aAnimationState, aAnimationTime, aAnimationLooping);
 
 	UINT stride = myVertexSize;
 	UINT offset = 0;
@@ -326,7 +326,7 @@ void CModel::Render(const CU::Matrix44f & aToWorldSpace, const char* aAnimationS
 	}
 }
 
-void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aAnimationState, const float aAnimationTime, const float aHighlightIntencity) // TODO: Do not update some of the cbuffers	
+void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aAnimationState, const float aAnimationTime, const bool aAnimationLooping,const float aHighlightIntencity) // TODO: Do not update some of the cbuffers	
 {
 	// WorldSpace thingy
 	D3D11_MAPPED_SUBRESOURCE mappedSubResource;
@@ -360,7 +360,7 @@ void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix4
 	if (mySceneAnimator != nullptr && (aAnimationState != nullptr && aAnimationState != ""))
 	{
 
-		std::vector<mat4>& bones = GetBones(aAnimationTime, aAnimationState);
+		std::vector<mat4>& bones = GetBones(aAnimationTime, aAnimationState, aAnimationLooping);
 
 		//memcpy(static_cast<void*>(msg->myBoneMatrices), &bones[0], min(sizeof(msg->myBoneMatrices), bones.size() * sizeof(mat4)));
 
@@ -438,7 +438,7 @@ void CModel::UpdateConstantBuffer(const eShaderStage aShaderStage, const void* a
 	myFramework->GetDeviceContext()->Unmap(myConstantBuffers[static_cast<int>(aShaderStage)], 0);
 }
 
-std::vector<mat4>& CModel::GetBones(float aTime, const char * aAnimationState)
+std::vector<mat4>& CModel::GetBones(float aTime, const char * aAnimationState, const bool aAnimationLooping)
 {
 	if(mySceneAnimator != nullptr)
 	{
@@ -452,7 +452,7 @@ std::vector<mat4>& CModel::GetBones(float aTime, const char * aAnimationState)
 		}
 
 		//std::vector<mat4>& transforms = mySceneAnimator->GetTransforms(aTime);
-		return mySceneAnimator->GetTransforms(aTime);
+		return mySceneAnimator->GetTransforms(aTime, aAnimationLooping);
 
 		//memcpy(static_cast<void*>(aReturn), &transforms[0], min(sizeof(aReturn), transforms.size() * sizeof(mat4)));
 

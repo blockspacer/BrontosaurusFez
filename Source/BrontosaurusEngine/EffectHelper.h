@@ -28,14 +28,17 @@ namespace EffectHelper
 		HRESULT result;
 		ID3D10Blob* errorMessageBlob = nullptr;
 		UINT flags = 0;
+		const D3D_SHADER_MACRO* globalShaderDefines = nullptr;
 #if defined (DEBUG) || defined (_DEBUG)
 		flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION | D3DCOMPILE_PREFER_FLOW_CONTROL;
+		//const D3D_SHADER_MACRO debugShaderDefines[] = { "DEBUG" "1" }; ?????
+		//globalShaderDefines = globalShaderDefines;
 #endif
-		result = D3DCompileFromFile(aShader, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, aMainFunction, aTarget, flags, 0, &aCodeBlob, &errorMessageBlob);
+		result = D3DCompileFromFile(aShader, globalShaderDefines, D3D_COMPILE_STANDARD_FILE_INCLUDE, aMainFunction, aTarget, flags, 0, &aCodeBlob, &errorMessageBlob);
 		if (FAILED(result))
 		{
 			outError = "Failed to compile shader.";
-			OutputDebugStringA(outError.c_str()); // TODO: DL_FATAL_ERROR that crashes everytime, be kihnd to folks gpu exit(1)
+			OutputDebugStringA(outError.c_str());
 		}
 
 		LPVOID voidError = NULL;

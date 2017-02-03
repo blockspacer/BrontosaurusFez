@@ -22,6 +22,8 @@
 #include "GUI/GUIManager.h"
 #include "BrontosaurusEngine/TextInstance.h"
 
+#include "Audio/AudioInterface.h"
+
 HatShopState::HatShopState(StateStack & aStateStack) :
 	State(aStateStack)
 {
@@ -153,6 +155,7 @@ void HatShopState::ValidatePurchase()
 	{
 		if (playerWallet >= myCurrentlySelected->myCost)
 		{
+			Audio::CAudioInterface::GetInstance()->PostEvent("BuyHat");
 		 	PostMaster::GetInstance().SendLetter(eMessageType::eHatAdded,HatBought(myCurrentlySelected->HatName));
 		 	PollingStation::playerData->myGold -= myCurrentlySelected->myCost;
 		 	mySelections.Delete(myCurrentlySelected);

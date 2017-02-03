@@ -59,6 +59,7 @@ void CPickupFactory::CreateHealthGlobe(CU::Vector3f aPosition)
 
 	collider->AddCollidsWith(eColliderType::eColliderType_Player);
 	collider->SetColliderType(eColliderType::eColliderType_PickUp);
+	collider->DeactivateCollider();
 
 	healthGlobe->AddComponent(collider);
 
@@ -93,6 +94,7 @@ void CPickupFactory::CreateGoldPickup(CU::Vector3f aPosition, const unsigned int
 
 	collider->AddCollidsWith(eColliderType::eColliderType_Player);
 	collider->SetColliderType(eColliderType::eColliderType_PickUp);
+	collider->DeactivateCollider();
 
 	manaGlobe->AddComponent(collider);
 
@@ -127,6 +129,7 @@ void CPickupFactory::CreateManaGlobe(CU::Vector3f aPosition)
 
 	collider->AddCollidsWith(eColliderType::eColliderType_Player);
 	collider->SetColliderType(eColliderType::eColliderType_PickUp);
+	collider->DeactivateCollider();
 
 	healthGlobe->AddComponent(collider);
 
@@ -161,6 +164,7 @@ void CPickupFactory::CreateHatDrop(CU::Vector3f aPosition, const char* aHatName)
 
 	collider->AddCollidsWith(eColliderType::eColliderType_Player);
 	collider->SetColliderType(eColliderType::eColliderType_PickUp);
+	collider->DeactivateCollider();
 
 	hat->AddComponent(collider);
 
@@ -199,4 +203,11 @@ CPickupFactory::CPickupFactory(CGameObjectManager* aCGameObjectManager, CCollisi
 
 CPickupFactory::~CPickupFactory()
 {
+}
+
+CU::Vector3f CPickupFactory::CalculateOffsetSpawnPosition()
+{
+
+
+	return CU::Vector3f();
 }

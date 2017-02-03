@@ -61,6 +61,8 @@ public:
 	void SetPosition(CU::Vector3f aPosition);
 
 	void ChangeAnimation(const char* aAnimationKey);
+	void SetAnimationLooping(const bool aValue);
+
 	void SetHighlightIntencity(const float aHighlightIntencity);
 	
 	//LAT!
@@ -81,6 +83,7 @@ private:
 	float myHighlightIntencity;
 	bool myIsVisible;
 	bool myHasAnimations;
+	bool myAnimationLooping;
 };
 
 inline const CU::Matrix44f& CModelInstance::GetTransformation() const
