@@ -20,5 +20,6 @@ private:
 	float mySuckUpRadius;
 	float myTimeBeforeAbleToPickup;
 	float myElapsedTime;
+	bool myNope;
 };
 

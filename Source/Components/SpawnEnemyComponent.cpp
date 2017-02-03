@@ -23,7 +23,12 @@ void CSpawnEnemyOnDeathComponent::Receive(const eComponentMessageType aMessageTy
 	{
 		for (unsigned short i = 0; i < myNumberOfEnemiesToSpawn; i++)
 		{
-			CEnemyFactory::GetInstance().CreateEnemy(GetParent()->GetWorldPosition());
+			CU::Vector3f temp(GetParent()->GetWorldPosition());
+
+			temp.x += i*50;
+			temp.z += i*50;
+
+			CEnemyFactory::GetInstance().CreateEnemy(temp);
 		}
 	}
 }

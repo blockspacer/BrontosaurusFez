@@ -160,6 +160,22 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 			}
 		}
 	}
+	else if (aMessageType == eComponentMessageType::eStopWhirlwind)
+	{
+		for (int i = 0; i < mySkills.Size(); i++)
+		{
+			if (mySkills[i]->GetSkillData()->skillName == "WhirlWind")
+			{
+				if (mySkills[i]->GetIsActive() == true)
+				{
+					mySkills[i]->Deactivate();
+				
+				}
+			}
+		
+		}
+			
+	}
 }
 
 void SkillSystemComponent::Destroy()

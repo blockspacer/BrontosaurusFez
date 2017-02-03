@@ -71,6 +71,7 @@ void CEnemyFactory::CreateEnemy(CU::Vector3f aPosition)
 
 	CHealthComponent* health = new CHealthComponent();
 	health->SetMaxHealth(myEnemiesHealth); //json
+	health->SetObjectType(eObjectType::eZombie);
 	CComponentManager::GetInstance().RegisterComponent(health);
 	Enemy->AddComponent(health);
 
