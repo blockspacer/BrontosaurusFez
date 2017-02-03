@@ -181,6 +181,8 @@ void CModelInstance::ChangeAnimation(const char* aAnimationKey)
 void CModelInstance::SetAnimationLooping(const bool aValue)
 {
 	myAnimationLooping = aValue;
+	myAnimationCounter = 0.0f;
+
 }
 
 void CModelInstance::SetHighlightIntencity(const float aHighlightIntencity)

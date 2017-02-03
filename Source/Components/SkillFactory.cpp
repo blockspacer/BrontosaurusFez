@@ -96,6 +96,7 @@ void SkillFactory::RegisterSkills()
 		skill->animationWindDown = levelsArray[i].at("animationWindDown").GetFloat();
 		skill->skillName = levelsArray[i].at("name").GetString().c_str();
 		skill->animationPlayedName = levelsArray[i].at("animationPlayedName").GetString().c_str();
+		skill->movementSpeedBuffModifier = levelsArray[i].at("movementSpeedBuffModifier").GetFloat() * -1;
 
 		mySkillDataList.Add(skill);
 	}

@@ -2,6 +2,7 @@
 #include "Component.h"
 #include "../PostMaster/Subscriber.h"
 #include "../CommonUtilities/vector2.h"
+#include "../CommonUtilities/vector3.h"
 namespace CU
 {
 	class Camera;
@@ -22,10 +23,12 @@ public:
 	void CheckIfHoveredGameObjectDied(CGameObject* aGameobjectThatDied);
 	void RemoveHoveredObjects();
 private:
+	void HighlightClosest();
 	void HandleCollision(CGameObject* aCollidedWith);
 	eMessageReturn Recieve(const Message& aMessage) override;
 
 	CU::GrowingArray<CGameObject*> myHoveredGameObjects;
+	CU::Vector3f myMousePosition;
 	bool myMouseIsDown;
 
 	const CU::Camera& myPlayerCamera;

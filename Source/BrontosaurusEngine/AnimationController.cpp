@@ -63,7 +63,7 @@ unsigned int CAnimEvaluator::GetFrameIndexAt(float ptime, bool loop)
 
 	float time = 0.0f;
 
-	if (loop)
+	if (loop == true)
 	{
 		if (Duration > 0.0)
 			time = fmod(ptime, Duration);
@@ -77,8 +77,8 @@ unsigned int CAnimEvaluator::GetFrameIndexAt(float ptime, bool loop)
 	float percent = time / Duration;
 	if (loop == false)
 	{
-		if (percent > 0.99999f)
-			percent = 0.99999f;
+		if (percent > 0.98f)
+			percent = 0.98f;
 	}
 	
 

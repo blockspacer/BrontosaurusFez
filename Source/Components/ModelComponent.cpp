@@ -56,6 +56,12 @@ void CModelComponent::Receive(const eComponentMessageType aType, const SComponen
 {
 	switch (aType)
 	{
+	case eComponentMessageType::eDied:
+
+		ChangeAnimation("die");
+		myModel->SetAnimationLooping(false);
+		myModel->SetHighlightIntencity(0.0f);
+		break;
 	case eComponentMessageType::eAddComponent:
 		if (aData.myComponentTypeAdded != eComponentType::eModel) break; //else: fall through
 	case eComponentMessageType::eMoving:
@@ -76,9 +82,10 @@ void CModelComponent::Receive(const eComponentMessageType aType, const SComponen
 	case eComponentMessageType::eBasicAttack:
 		ChangeAnimation(aData.myString);
 		break;
-
 	case eComponentMessageType::eRespawned:
+		ChangeAnimation("idle");
 		myModel->SetVisibility(true);
+		myModel->SetAnimationLooping(true);
 		break;
 	case eComponentMessageType::eSetHighLight:
 		myModel->SetHighlightIntencity(aData.myFloat);

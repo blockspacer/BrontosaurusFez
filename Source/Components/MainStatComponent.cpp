@@ -46,7 +46,7 @@ void CMainStatComponent::CalculateTotalStats()
 	GetParent()->NotifyComponents(eComponentMessageType::eAddToMaxHealth, newMaxdata);
 	newMaxdata.myInt = myBonusStats->BonusMana;
 	GetParent()->NotifyComponents(eComponentMessageType::eAddToMaxMana, newMaxdata);
-	newMaxdata.myInt = myBonusStats->BonusMovementSpeed;
+	newMaxdata.myFloat = myBonusStats->BonusMovementSpeed;
 	GetParent()->NotifyComponents(eComponentMessageType::eAddToMovementSpeed, newMaxdata);
 
 	SComponentMessageData data;
@@ -66,6 +66,8 @@ void CMainStatComponent::Receive(const eComponentMessageType aMessageType, const
 		*myBaseStats += *collectedStats->myBaseStats;
 		*myBonusStats += *collectedStats->myBonusStats;*/
 		*myBonusStats += *aMessageData.myStatsToAdd;
+		myBonusStats->BonusMovementSpeed = 0.0f;
+		myBonusStats->BonusMovementSpeed = aMessageData.myStatsToAdd->BonusMovementSpeed;
 		CalculateTotalStats();
 		break;
 	}
