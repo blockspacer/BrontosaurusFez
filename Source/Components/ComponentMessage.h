@@ -96,7 +96,7 @@ enum class eComponentMessageType
 	eSetPathPosition,
 	eSetHighLight,
 	eStopWhirlwind,
-	eLength
+	eLength,
 	eActivate2,
 };
 
