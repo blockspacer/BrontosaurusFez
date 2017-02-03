@@ -4,6 +4,7 @@
 #include "..\CommonUtilities\Camera.h"
 #include "..\Collision\ICollider.h"
 #include "..\Game\PollingStation.h"
+#include "..\Game\PollingStation.h"
 
 CMouseComponent::CMouseComponent(const CU::Camera& aPlayerCamera)
 	: myPlayerCamera(aPlayerCamera)
@@ -28,8 +29,15 @@ void CMouseComponent::Receive(const eComponentMessageType aMessageType, const SC
 	switch (aMessageType)
 	{
 	case eComponentMessageType::eOnCollisionEnter:
+		{
 		HandleCollision(aMessageData.myGameObject);
+		SComponentMessageData data; data.myFloat = 0.5f;
+		if (PollingStation::playerObject != aMessageData.myGameObject)
+		{
+			aMessageData.myGameObject->NotifyComponents(eComponentMessageType::eSetHighLight, data);
+		}
 		break;
+		}
 	case eComponentMessageType::eOnCollisionExit:
 		for(unsigned short i = 0; i < myHoveredGameObjects.Size(); i++)
 		{
@@ -38,6 +46,8 @@ void CMouseComponent::Receive(const eComponentMessageType aMessageType, const SC
 				myHoveredGameObjects.RemoveAtIndex(i);
 			}
 		}
+		SComponentMessageData data; data.myFloat = 0.f;
+		aMessageData.myGameObject->NotifyComponents(eComponentMessageType::eSetHighLight, data);
 		break;
 	}
 }

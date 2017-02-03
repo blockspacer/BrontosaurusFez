@@ -10,6 +10,7 @@
 CModelInstance::CModelInstance(const char* aModelPath)
 {
 	myIsVisible = true;
+	myHighlightIntencity = 0.f;
 	myAnimationCounter = 0.f;
 	myModel = MODELMGR->LoadModel(aModelPath);
 	CModel* model = MODELMGR->GetModel(myModel);
@@ -18,6 +19,7 @@ CModelInstance::CModelInstance(const char* aModelPath)
 		myHasAnimations = model->HasAnimations();
 	}
 	myCurrentAnimation = "idle";
+	myAnimationLooping = true;
 }
 
 CModelInstance::CModelInstance(const char* aModelPath, const CU::Matrix44f& aTransformation)
@@ -75,11 +77,14 @@ void CModelInstance::Render(Lights::SDirectionalLight* aLight, CU::GrowingArray<
 		msg->myModelID = myModel;
 		msg->myTransformation =	myTransformation;
 		msg->myLastFrameTransformation = myLastFrame;
+		msg->myHighlightIntencity = myHighlightIntencity;
 		
 		if (myHasAnimations != false)
 		{
 			msg->myAnimationTime = myAnimationCounter;
 			msg->myCurrentAnimation = myCurrentAnimation;
+			msg->myAnimationLooping = myAnimationLooping;
+
 		}
 
 		RENDERER.AddRenderMessage(msg);
@@ -104,6 +109,8 @@ void CModelInstance::Render(Lights::SDirectionalLight * aLight, CU::GrowingArray
 		{
 			msg->myAnimationTime = myAnimationCounter;
 			msg->myCurrentAnimation = myCurrentAnimation;
+			msg->myAnimationLooping = myAnimationLooping;
+
 		}
 
 		if (aPointLightList == nullptr && aLight == nullptr)
@@ -169,4 +176,14 @@ void CModelInstance::ChangeAnimation(const char* aAnimationKey)
 			mySceneAnimator = &it->second;
 		}
 	}*/
+}
+
+void CModelInstance::SetAnimationLooping(const bool aValue)
+{
+	myAnimationLooping = aValue;
+}
+
+void CModelInstance::SetHighlightIntencity(const float aHighlightIntencity)
+{
+	myHighlightIntencity = aHighlightIntencity;
 }

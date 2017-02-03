@@ -16,7 +16,7 @@
 
 #include "../CommonUtilities/matrix44.h"
 #include "../CommonUtilities/JsonValue.h"
-
+#include "PollingStation.h"
 CPickupFactory* CPickupFactory::ourInstance = nullptr;
 
 void CPickupFactory::Create(CGameObjectManager* aCGameObjectManager, CCollisionComponentManager* aManager)
@@ -40,7 +40,10 @@ CPickupFactory & CPickupFactory::GetInstance()
 void CPickupFactory::CreateHealthGlobe(CU::Vector3f aPosition)
 {
 	CGameObject* healthGlobe = myGameObjectManager->CreateGameObject();
-	healthGlobe->SetWorldPosition(aPosition);
+	CU::Vector3f direction = aPosition - PollingStation::playerObject->GetWorldPosition();
+	direction.Normalize();
+	CU::Vector3f newPosition = aPosition + direction * 50.0f;
+	healthGlobe->SetWorldPosition(newPosition);
 
 	CPickupComponent* pickup = CPickupManager::GetInstance().CreatePickupComponent(ePickupType::HEALTH, myHealthDropHealValue, 0, 100);
 
@@ -49,7 +52,7 @@ void CPickupFactory::CreateHealthGlobe(CU::Vector3f aPosition)
 	Intersection::CollisionData CollisionData;
 
 	CollisionData.myCircleData = new Intersection::SCircle;
-	CollisionData.myCircleData->myCenterPosition = aPosition;
+	CollisionData.myCircleData->myCenterPosition = newPosition;
 	CollisionData.myCircleData->myRadius = myPickupRadius; //should not be hard coded, maybe not a problem
 
 	CCollisionComponent* collider = myCollisionComponentManager->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, CollisionData);
@@ -71,7 +74,10 @@ void CPickupFactory::CreateHealthGlobe(CU::Vector3f aPosition)
 void CPickupFactory::CreateGoldPickup(CU::Vector3f aPosition, const unsigned int aAmountToDrop)
 {
 	CGameObject* manaGlobe = myGameObjectManager->CreateGameObject();
-	manaGlobe->SetWorldPosition(aPosition);
+	CU::Vector3f direction = aPosition - PollingStation::playerObject->GetWorldPosition();
+	direction.Normalize();
+	CU::Vector3f newPosition = aPosition + direction * 50.0f;
+	manaGlobe->SetWorldPosition(newPosition);
 
 	CPickupComponent* pickup = CPickupManager::GetInstance().CreatePickupComponent(ePickupType::GOLD, aAmountToDrop, 0, 100);
 
@@ -80,7 +86,7 @@ void CPickupFactory::CreateGoldPickup(CU::Vector3f aPosition, const unsigned int
 	Intersection::CollisionData CollisionData;
 
 	CollisionData.myCircleData = new Intersection::SCircle;
-	CollisionData.myCircleData->myCenterPosition = aPosition;
+	CollisionData.myCircleData->myCenterPosition = newPosition;
 	CollisionData.myCircleData->myRadius = myPickupRadius; //should not be hard coded, maybe not a problem
 
 	CCollisionComponent* collider = myCollisionComponentManager->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, CollisionData);
@@ -102,7 +108,10 @@ void CPickupFactory::CreateGoldPickup(CU::Vector3f aPosition, const unsigned int
 void CPickupFactory::CreateManaGlobe(CU::Vector3f aPosition)
 {
 	CGameObject* healthGlobe = myGameObjectManager->CreateGameObject();
-	healthGlobe->SetWorldPosition(aPosition);
+	CU::Vector3f direction = aPosition - PollingStation::playerObject->GetWorldPosition();
+	direction.Normalize();
+	CU::Vector3f newPosition = aPosition + direction * 50.0f;
+	healthGlobe->SetWorldPosition(newPosition);
 
 	CPickupComponent* pickup = CPickupManager::GetInstance().CreatePickupComponent(ePickupType::MANA, myManaDropRestoreValue, 0, 100);
 
@@ -111,7 +120,7 @@ void CPickupFactory::CreateManaGlobe(CU::Vector3f aPosition)
 	Intersection::CollisionData CollisionData;
 
 	CollisionData.myCircleData = new Intersection::SCircle;
-	CollisionData.myCircleData->myCenterPosition = aPosition;
+	CollisionData.myCircleData->myCenterPosition = newPosition;
 	CollisionData.myCircleData->myRadius = myPickupRadius; //should not be hard coded, maybe not a problem
 
 	CCollisionComponent* collider = myCollisionComponentManager->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, CollisionData);
@@ -133,7 +142,10 @@ void CPickupFactory::CreateManaGlobe(CU::Vector3f aPosition)
 void CPickupFactory::CreateHatDrop(CU::Vector3f aPosition, const char* aHatName)
 {
 	CGameObject* hat = myGameObjectManager->CreateGameObject();
-	hat->SetWorldPosition(aPosition);
+	CU::Vector3f direction = aPosition - PollingStation::playerObject->GetWorldPosition();
+	direction.Normalize();
+	CU::Vector3f newPosition = aPosition + direction * 50.0f;
+	hat->SetWorldPosition(newPosition);
 
 	CPickupComponent* pickup = CPickupManager::GetInstance().CreatePickupComponent(ePickupType::HAT, aHatName, 0, 100);
 
@@ -142,7 +154,7 @@ void CPickupFactory::CreateHatDrop(CU::Vector3f aPosition, const char* aHatName)
 	Intersection::CollisionData CollisionData;
 
 	CollisionData.myCircleData = new Intersection::SCircle;
-	CollisionData.myCircleData->myCenterPosition = aPosition;
+	CollisionData.myCircleData->myCenterPosition = newPosition;
 	CollisionData.myCircleData->myRadius = myPickupRadius; //should not be hard coded, maybe not a problem
 
 	CCollisionComponent* collider = myCollisionComponentManager->CreateCollisionComponent(CCollisionComponentManager::eColliderType::eCircle, CollisionData);
@@ -187,4 +199,11 @@ CPickupFactory::CPickupFactory(CGameObjectManager* aCGameObjectManager, CCollisi
 
 CPickupFactory::~CPickupFactory()
 {
+}
+
+CU::Vector3f CPickupFactory::CalculateOffsetSpawnPosition()
+{
+
+
+	return CU::Vector3f();
 }

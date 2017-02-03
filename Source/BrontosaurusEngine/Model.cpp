@@ -17,7 +17,7 @@
 #include "../Collision/Intersection.h"
 #include <CUTime.h>
 #include <StringHelper.h>
-
+#include "Renderer.h"
 
 CModel::CModel()
 	: myConstantBuffers(nullptr)
@@ -273,7 +273,7 @@ bool CModel::InitBuffers(CU::GrowingArray<SVertexDataCube>& aVertexList)
 	return true;
 }
 
-void CModel::Render(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aAnimationState, const float aAnimationTime)
+void CModel::Render(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aAnimationState, const float aAnimationTime, const bool aAnimationLooping, const float aHighlightIntencity)
 {
 	myEffect->Activate();
 
@@ -282,7 +282,7 @@ void CModel::Render(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLa
 		mySurface->Activate();
 	}
 	
-	UpdateCBuffer(aToWorldSpace, aLastFrameTransformation, aLight, aPointLightList, aAnimationState, aAnimationTime);
+	UpdateCBuffer(aToWorldSpace, aLastFrameTransformation, aLight, aPointLightList, aAnimationState, aAnimationTime, aAnimationLooping, aHighlightIntencity);
 
 	UINT stride = myVertexSize;
 	UINT offset = 0;
@@ -302,11 +302,11 @@ void CModel::Render(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLa
 	}
 }
 
-void CModel::Render(const CU::Matrix44f & aToWorldSpace, const char* aAnimationState, const float aAnimationTime)
+void CModel::Render(const CU::Matrix44f & aToWorldSpace, const char* aAnimationState, const float aAnimationTime, const bool aAnimationLooping, const float aHighlightIntencity)
 {
 	myEffect->ActivateForDepth();
 
-	UpdateCBuffer(aToWorldSpace, aToWorldSpace, nullptr, nullptr, aAnimationState, aAnimationTime);
+	UpdateCBuffer(aToWorldSpace, aToWorldSpace, nullptr, nullptr, aAnimationState, aAnimationTime, aAnimationLooping);
 
 	UINT stride = myVertexSize;
 	UINT offset = 0;
@@ -326,7 +326,7 @@ void CModel::Render(const CU::Matrix44f & aToWorldSpace, const char* aAnimationS
 	}
 }
 
-void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aAnimationState, const float aAnimationTime) // TODO: Do not update some of the cbuffers	
+void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aAnimationState, const float aAnimationTime, const bool aAnimationLooping,const float aHighlightIntencity) // TODO: Do not update some of the cbuffers	
 {
 	// WorldSpace thingy
 	D3D11_MAPPED_SUBRESOURCE mappedSubResource;
@@ -360,7 +360,7 @@ void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix4
 	if (mySceneAnimator != nullptr && (aAnimationState != nullptr && aAnimationState != ""))
 	{
 
-		std::vector<mat4>& bones = GetBones(aAnimationTime, aAnimationState);
+		std::vector<mat4>& bones = GetBones(aAnimationTime, aAnimationState, aAnimationLooping);
 
 		//memcpy(static_cast<void*>(msg->myBoneMatrices), &bones[0], min(sizeof(msg->myBoneMatrices), bones.size() * sizeof(mat4)));
 
@@ -378,7 +378,7 @@ void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix4
 		ZeroMemory(&mappedSubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
 
 		Lights::SLightsBuffer updatedLights;
-		updatedLights.myCameraPos/* = CAMERA->GetPosition()*/;
+		updatedLights.myCameraPos = RENDERER.GetCamera().GetPosition();
 		updatedLights.myDirectionalLight.direction = aLight->direction;
 		updatedLights.myDirectionalLight.color = aLight->color;
 
@@ -401,6 +401,8 @@ void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix4
 		}
 
 		updatedLights.cubeMap_mipCount = 11; // TODO FIX WTH?!
+
+		updatedLights.highlightColor = { 0.f, 1.f, 0.f, aHighlightIntencity };
 
 		DEVICE_CONTEXT->Map(myLightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubResource);
 		memcpy(mappedSubResource.pData, &updatedLights, sizeof(Lights::SLightsBuffer));
@@ -436,7 +438,7 @@ void CModel::UpdateConstantBuffer(const eShaderStage aShaderStage, const void* a
 	myFramework->GetDeviceContext()->Unmap(myConstantBuffers[static_cast<int>(aShaderStage)], 0);
 }
 
-std::vector<mat4>& CModel::GetBones(float aTime, const char * aAnimationState)
+std::vector<mat4>& CModel::GetBones(float aTime, const char * aAnimationState, const bool aAnimationLooping)
 {
 	if(mySceneAnimator != nullptr)
 	{
@@ -450,7 +452,7 @@ std::vector<mat4>& CModel::GetBones(float aTime, const char * aAnimationState)
 		}
 
 		//std::vector<mat4>& transforms = mySceneAnimator->GetTransforms(aTime);
-		return mySceneAnimator->GetTransforms(aTime);
+		return mySceneAnimator->GetTransforms(aTime, aAnimationLooping);
 
 		//memcpy(static_cast<void*>(aReturn), &transforms[0], min(sizeof(aReturn), transforms.size() * sizeof(mat4)));
 

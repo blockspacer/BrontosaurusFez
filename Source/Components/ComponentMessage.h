@@ -94,7 +94,8 @@ enum class eComponentMessageType
 	eEnterNewTriangle,
 	eNotOnNavmesh,
 	eSetPathPosition,
-	eLength
+	eLength,
+	eSetHighLight,
 };
 
 #define STATIC_SIZEOF(x) { char STATIC_SIZEOF_TEMP[(x)]; STATIC_SIZEOF_TEMP = 1; }
