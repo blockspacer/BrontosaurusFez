@@ -37,6 +37,7 @@
 #include "Components/CollisionComponentManager.h"
 #include "Components\BlessingTowerComponentManager.h"
 #include "MainStatComponent.h"
+#include "Components/HealthRestoreTriggerComponentManager.h"
 
 #include "../GUI/GUIManager.h"
 
@@ -151,6 +152,7 @@ CPlayState::~CPlayState()
 	BlessingTowerComponentManager::DestroyInstance();
 	CEnemyFactory::Destroy();
 	SkillFactory::DestroyInstance();
+	CHealthRestoreTriggerComponentManager::Destroy();
 	CComponentManager::DestroyInstance();
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eHatAdded);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
@@ -513,4 +515,5 @@ void CPlayState::CreateManagersAndFactories()
 	CLevelManager::CreateInstance();
 	CEnemyFactory::Create(*myGameObjectManager,*myCollisionComponentManager,*myHealthBarManager);
 	BlessingTowerComponentManager::CreateInstance();
+	CHealthRestoreTriggerComponentManager::Create();
 }

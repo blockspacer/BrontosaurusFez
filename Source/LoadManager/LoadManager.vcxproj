@@ -353,6 +353,7 @@
     <ClInclude Include="LoadFireComponent.h" />
     <ClInclude Include="LoadHealthBarComponent.h" />
     <ClInclude Include="LoadHealthComponent.h" />
+    <ClInclude Include="LoadHealthWellComponent.h" />
     <ClInclude Include="LoadInventoryComponent.h" />
     <ClInclude Include="LoadMainStatComponent.h" />
     <ClInclude Include="LoadManaComponent.h" />
@@ -385,6 +386,7 @@
     <ClCompile Include="LoadFireComponent.cpp" />
     <ClCompile Include="LoadHealthBarComponent.cpp" />
     <ClCompile Include="LoadHealthComponent.cpp" />
+    <ClCompile Include="LoadHealthWellComponent.cpp" />
     <ClCompile Include="LoadInventoryComponent.cpp" />
     <ClCompile Include="LoadMainStatComponent.cpp" />
     <ClCompile Include="LoadManaComponent.cpp" />
