@@ -81,6 +81,7 @@ Skill::Skill(SkillData* aSkillDataPointer)
 
 Skill::~Skill()
 {
+	SAFE_DELETE(mySpeedBonusStats);
 }
 
 void Skill::TryToActivate()
