@@ -21,6 +21,7 @@
 
 CFT_Font::CFT_Font()
 {
+	myLineHeight = 0;
 	myFace = nullptr;
 	myFacePath = nullptr;
 
@@ -45,12 +46,13 @@ CFT_Font::~CFT_Font()
 void CFT_Font::SetSize(const int pt, const  int aDeviceWidth, const unsigned int aDeviceHeight)
 {
 	FT_Error error;
-	error = FT_Set_Char_Size(myFace, 0, pt * 64, 0, 0);
-	ERROR_CHECK(error, "failed to set Face char size");
 
-	error = FT_Set_Pixel_Sizes(myFace, 0, pt);
+	/*bool isScalable = FT_IS_SCALABLE(myFace);
+	error = FT_Set_Char_Size(myFace, 0, pt , 0, 0);
+	ERROR_CHECK(error, "failed to set Face char size");*/
+
+	error = FT_Set_Pixel_Sizes(myFace, pt, pt);
 	ERROR_CHECK(error, "failed to set Face pixel sizes");
-
 }
 
 void CFT_Font::SetLineHeight(const int aLineHeight)

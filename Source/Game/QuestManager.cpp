@@ -13,7 +13,6 @@
 
 QM::CQuestManager::CQuestManager()
 {
-	myPortalIndexes.Init(1);
 	myDialogs.Init(1);
 	myProgression = 0;
 	myObjectives.Init(4);

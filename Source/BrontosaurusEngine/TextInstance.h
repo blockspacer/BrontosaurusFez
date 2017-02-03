@@ -24,7 +24,7 @@ public:
 
 	void Init(const CU::DynamicString& aFontPath, const int aPixelSize);
 	void Init(const CU::DynamicString& aFontPath = "Default");
-	void Render();
+	void Render() const;
 
 	void SetLineGap();
 

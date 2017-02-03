@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "TextInstance.h"
-#include "Text.h"
 
 #include "Renderer.h"
 
@@ -40,7 +39,7 @@ void CTextInstance::Init(const CU::DynamicString & aFontPath, const int aPixelSi
 	myText = new CCoolText(aFontPath,aPixelSize);
 }
 
-void CTextInstance::Render()
+void CTextInstance::Render() const
 {
 	if (myText != nullptr && myStrings.Size() > 0)
 	{
