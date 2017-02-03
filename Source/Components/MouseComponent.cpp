@@ -14,6 +14,7 @@ CMouseComponent::CMouseComponent(const CU::Camera& aPlayerCamera)
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eGameObjectDied);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eShopClosed);
+	myMousePosition = CU::Vector3f::Zero;
 	myType = eComponentType::eMouse;
 }
 
@@ -90,7 +91,9 @@ void CMouseComponent::MouseMoved(const CU::Vector2f& aMousePosition)
 			targetPosition3D = myPlayerCamera.GetPosition() + direction * t;
 		}
 	}
-
+	//for evaluating distance to things
+	myMousePosition = targetPosition3D;
+	//-------------------------------------
 	GetParent()->GetLocalTransform().SetPosition(targetPosition3D);
 	GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 }
@@ -99,7 +102,35 @@ void CMouseComponent::Update()
 {
 	if (myHoveredGameObjects.Size() > 0)
 	{
-		HandleCollision(myHoveredGameObjects[0]);
+		if (myMouseIsDown == true)
+		{
+			CGameObject* targetObject = nullptr;
+
+			float lowestDistance = 99999999.0f;
+			for (unsigned int i = 0; i < myHoveredGameObjects.Size(); ++i)
+			{
+				CU::Vector3f distance;
+				CU::Vector3f objectposition = myHoveredGameObjects[i]->GetWorldPosition();
+
+				distance = objectposition - myMousePosition;
+
+				float dis = distance.Length();
+				DL_PRINT("size %u", myHoveredGameObjects.Size());
+
+				if (dis < lowestDistance)
+				{
+					lowestDistance = distance.Length();
+					targetObject = myHoveredGameObjects[i];
+				}
+			}
+			assert(targetObject != nullptr && "Finding the closest CGameObject to the mouse position did not work :(");
+			DL_PRINT("clicked on enemy: %s", targetObject->GetName().c_str());
+
+			SComponentMessageData hitThisBastard;
+			hitThisBastard.myGameObject = targetObject;
+			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eSetSkillTargetObject, hitThisBastard);
+
+		}
 	}
 }
 
@@ -129,17 +160,6 @@ void CMouseComponent::HandleCollision(CGameObject* aCollidedWith)
 	if(newGameObject == true)
 	{
 		myHoveredGameObjects.Add(aCollidedWith);
-	
-	}
-
-	if (myMouseIsDown == true)
-	{
-		DL_PRINT("clicked on enemy: %s", aCollidedWith->GetName().c_str());
-
-		SComponentMessageData hitThisBastard;
-		hitThisBastard.myGameObject = aCollidedWith;
-		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eSetSkillTargetObject, hitThisBastard);
-
 	}
 }
 
