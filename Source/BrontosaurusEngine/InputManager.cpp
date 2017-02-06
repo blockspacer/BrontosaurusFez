@@ -37,6 +37,10 @@ CInputManager::CInputManager()
 	myDInputWrapper->Init(hingsten, hunden);
 	myKeyDowns.Init(20);
 
+	CU::Vector2f windowSize(WINDOW_SIZE);
+	CU::Vector2f middleOfWindow = windowSize / 2.f;
+	myLastMousePosition = middleOfWindow;
+
 	myHasFocus = true;
 
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eFokusChanged);
@@ -79,21 +83,19 @@ void CInputManager::UpdateMouse()
 {
 	if (myHasFocus == true)
 	{
-		static CU::Vector2f lastMousePosition(0, 0);
-
 		CU::Vector2i windowSize(WINDOW_SIZE);
-		CU::Vector2i middleOfWindow = windowSize / 2.f;
+		CU::Vector2i middleOfWindow = windowSize / 2;
 		CU::Vector2i newWindowsMousePos(myDInputWrapper->GetMousePositionX(), myDInputWrapper->GetMousePositionY());
 
 		CU::Vector2f mouseDelta(newWindowsMousePos - middleOfWindow);
-		CU::Vector2f mousePosition = lastMousePosition + mouseDelta;
+		CU::Vector2f mousePosition = myLastMousePosition + mouseDelta;
 
 		mousePosition.Clamp(CU::Vector2f::Zero, CU::Vector2f(windowSize));
 
-		if (lastMousePosition != mousePosition)
+		if (myLastMousePosition != mousePosition)
 		{
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eMouseMessage, MouseMoved(mousePosition)));
-			lastMousePosition = mousePosition;
+			myLastMousePosition = mousePosition;
 		}
 		if (myDInputWrapper->IsMouseButtonPressed(CU::eMouseButtons::LBUTTON) == true)
 		{
@@ -114,7 +116,6 @@ void CInputManager::UpdateMouse()
 
 		myDInputWrapper->SetMousePosition(middleOfWindow.x, middleOfWindow.y);
 	}
-	
 }
 
 void CInputManager::UpdateKeyboard()
