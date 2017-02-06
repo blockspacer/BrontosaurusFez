@@ -65,12 +65,13 @@ public:
 
 	void SetHighlightIntencity(const float aHighlightIntencity);
 	
-	//LAT!
-	inline CModel* GetModel();
-
 	inline ModelId GetModelID();
 
 	CU::AABB GetModelBoundingBox();
+
+	inline const char* GetAnimationState() { return myCurrentAnimation; }
+	inline float GetAnimationCounter() { return myAnimationCounter; }
+
 private:
 	CU::Matrix44f myTransformation;
 	CU::Matrix44f myLastFrame;
@@ -101,10 +102,6 @@ inline void CModelInstance::SetVisibility(const bool aFlag)
 	myIsVisible = aFlag;
 }
 
-inline CModel* CModelInstance::GetModel()
-{
-	return NULL;//myModel;
-}
 
 inline int CModelInstance::GetModelID()
 {

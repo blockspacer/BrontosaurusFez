@@ -337,6 +337,23 @@ CBone* CSceneAnimator::CreateBoneTree( aiNode* pNode, CBone* pParent)
 	return internalNode;
 }
 
+mat4 CSceneAnimator::GetBoneWorldTransform(float dt, const std::string & bname)
+{
+	int bindex = GetBoneIndex(bname); 
+	if (bindex == -1) return mat4(); 
+
+	mat4 retVal = mat4::Identity;
+	for (CBone* bone = Bones[bindex]; bone != nullptr; bone = bone->Parent)
+	{
+		bindex = GetBoneIndex(bone->Name);
+		if (bindex == -1)
+			continue;
+		retVal *= Animations[CurrentAnimIndex].GetTransforms(dt)[GetBoneIndex(bone->Name)];
+	}
+
+	return retVal;
+}
+
 // ------------------------------------------------------------------------------------------------
 // Recursively updates the internal node transformations from the given matrix array
 void CSceneAnimator::UpdateTransforms(CBone* pNode) 

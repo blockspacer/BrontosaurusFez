@@ -1,4 +1,10 @@
 #include "stdafx.h"
+#include "..\BrontosaurusEngine\Engine.h"
+#include "..\BrontosaurusEngine\ModelManager.h"
+#include "..\BrontosaurusEngine\ModelInstance.h"
+
+#include "..\CommonUtilities\StringHelper.h"
+
 #include "HatMaker.h"
 #include "PollingStation.h"
 #include "PostMaster/Event.h"
@@ -13,10 +19,13 @@
 #include "Components/InventoryComponent.h"
 #include "Components/HatActivator.h"
 #include "Components/ComponentMessage.h"
+#include "Component.h"
 
 CHatMaker::CHatMaker(CGameObjectManager* aGameObjectManager)
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eHatAdded);
+	myHatObjects.Init(14);
+
 	myGameObjectManager = aGameObjectManager;
 	myHatsGivenToPlayer = 0;
 }
@@ -25,6 +34,25 @@ CHatMaker::~CHatMaker()
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eHatAdded);
 	myGameObjectManager = nullptr;
+	
+	
+	
+	//TODO: Kanske minnesläcka :O
+	myHatObjects.RemoveAll();
+}
+
+void CHatMaker::Update()
+{
+	CModel* model = CEngine::GetInstance()->GetModelManager()->GetModel(myPlayerModel->GetModelInst()->GetModelID());
+	for (int i = 0; i < myHatObjects.Size(); ++i)
+	{
+		std::string boneName = "hatslot";
+		boneName += std::to_string(i + 1);
+		boneName += "_SKIN";
+		CU::Matrix44f hatTransform = model->GetBoneTransform(myPlayerModel->GetModelInst()->GetAnimationCounter(), myPlayerModel->GetModelInst()->GetAnimationState(), boneName.c_str());
+		hatTransform *= myHatObjects[i]->GetToWorldTransform().GetInverted();
+		myHatObjects[i]->GetLocalTransform() = hatTransform;
+	}
 }
 
 void CHatMaker::LoadBluePrints(const std::string& aFilePath)
@@ -80,6 +108,19 @@ void CHatMaker::LoadBluePrints(const std::string& aFilePath)
 
 		myBluePrints.emplace(blueprint->HatName, blueprint);
 	}
+
+	CU::GrowingArray<CComponent*> playerComponents = PollingStation::playerObject->GetComponents();
+
+	myPlayerModel = nullptr;
+	for (unsigned int i = 0; i < playerComponents.Size(); ++i)
+	{
+		if (playerComponents[i]->GetType() == eComponentType::eModel)
+		{
+			myPlayerModel = static_cast<CModelComponent*>(playerComponents[i]);
+			break;
+		}
+	}
+	assert(myPlayerModel != nullptr && "Didn't find PlayerModel");
 }
 
 void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName)
@@ -88,6 +129,7 @@ void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName)
 	{
 		SHatBluePrint* theBluePrint = myBluePrints.at(aHatName);
 		CGameObject* hatObject = myGameObjectManager->CreateGameObject();
+		myHatObjects.Add(hatObject);
 		CU::Vector3f hatPos = hatObject->GetLocalTransform().GetPosition();
 		hatObject->GetLocalTransform().SetPosition({ hatPos.x, hatPos.y + 175.f + 12.5f * myHatsGivenToPlayer, hatPos.z });
 		myHatsGivenToPlayer++;

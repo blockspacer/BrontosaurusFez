@@ -102,7 +102,7 @@ public:
 	inline void RemoveRef();
 
 	inline int GetRefCount();
-
+	CU::Matrix44f GetBoneTransform(const float aTime, const char * aAnimationState, const char* aBoneName);
 	std::vector<mat4>& GetBones(float aTime, const char * aAnimationState, const bool aAnimationLooping);
 
 private:
