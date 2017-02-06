@@ -93,7 +93,7 @@ float4 PS_FresnelHighlight(PosNormBinormTanTex_InputPixel input, float4 aColorIn
 	float3 normal = PS_ObjectNormal(input).color.xyz;
 
 
-	float4 TextureIn = aColorInput;
+	float4 TextureIn = float4(0.0f, 0.0f, 0.0f, 1.0f);//aColorInput;
 	float4 RimlightColor = highlightColor;
 
 	float4x4 viewI = cameraSpaceInversed;
