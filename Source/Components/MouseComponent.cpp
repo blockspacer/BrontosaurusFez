@@ -17,7 +17,7 @@ CMouseComponent::CMouseComponent(const CU::Camera& aPlayerCamera)
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eShopClosed);
 	myMousePosition = CU::Vector3f::Zero;
 	myType = eComponentType::eMouse;
-	myClickPulse = new CClickPulse();
+	myClickPulse = new CClickPulse(myPlayerCamera);
 }
 
 CMouseComponent::~CMouseComponent()
@@ -97,7 +97,7 @@ void CMouseComponent::MouseMoved(const CU::Vector2f& aMousePosition)
 	GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 }
 
-void CMouseComponent::Update()
+void CMouseComponent::Update(const CU::Time& aDeltaTime)
 {
 	if (myHoveredGameObjects.Size() > 0)
 	{
@@ -130,7 +130,7 @@ void CMouseComponent::Update()
 
 		}
 	}
-	myClickPulse->Update();
+	myClickPulse->Update(aDeltaTime);
 }
 
 eMessageReturn CMouseComponent::Recieve(const Message& aMessage)
@@ -200,8 +200,8 @@ void CMouseComponent::SetMouseIsDown(const bool aIsDown)
 
 	if (myMouseIsDown == true)
 	{
-		// Highlight sprite.
-		myClickPulse->ActivateAtPos({ 0.1337f,0.1337f });
+		// Pulsify!
+		myClickPulse->ActivateAtPos(myMousePosition);
 
 		if(myHoveredGameObjects.Size() > 0)
 		{

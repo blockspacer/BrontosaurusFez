@@ -17,6 +17,7 @@
 #include "../CommonUtilities/GrowingArray.h"
 #include "../CommonUtilities/StaticArray.h"
 #include "../CommonUtilities/DL_Debug.h"
+#include "../CommonUtilities/vector2.h"
 
 #define IntCast(eMsg) static_cast<unsigned int>(eMsg)
 

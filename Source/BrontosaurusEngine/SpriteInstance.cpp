@@ -5,12 +5,10 @@
 #include "Renderer.h"
 #include "SpriteManager.h"
 
-CSpriteInstance::CSpriteInstance(const char* aTexturePath, const CU::Vector2f& aSize, const CU::Vector2f& aPosition, const CU::Vector4f& aRect, const CU::Vector4f& aColour, const bool aShouldAutoSize)
-	: myPosition(aPosition)
-	, mySize(aSize)
-	, myRect(aRect)
-	, myColor(aColour)
-	, mySprite(nullptr)
+CSpriteInstance::CSpriteInstance(const char* aTexturePath, const CU::Vector2f& aSize, const CU::Vector2f& aPosition, const CU::Vector2f& aPivot, const CU::Vector4f& aRect, const CU::Vector4f& aColour, const bool aShouldAutoSize)
+	: myPosition(aPosition), mySize(aSize),
+	myPivot(aPivot), myRect(aRect),
+	myColor(aColour), mySprite(nullptr)
 {
 	mySprite = SPRMGR.CreateSprite(aTexturePath);
 	//mySprite = new CSprite();
@@ -35,6 +33,7 @@ void CSpriteInstance::Render()
 	renderMessage->myPosition = myPosition;
 	renderMessage->mySize = mySize;
 	renderMessage->myRect = myRect;
+	renderMessage->myPivot = myPivot;
 	renderMessage->myColor = myColor;
 	renderMessage->mySprite = mySprite;
 

@@ -30,9 +30,10 @@ private:
 	void UpdateKeyboard();
 	void UpdateGamePad();
 
+	CU::GrowingArray<CU::eKeys, unsigned int, false> myKeyDowns;
+	CU::Vector2f myLastMousePosition;
 	CU::InputWrapper* myDInputWrapper;
 	CU::XInputWrapper* myXInputWrapper;
-	CU::GrowingArray<CU::eKeys, unsigned int, false> myKeyDowns;
 
 	bool myHasFocus;
 };
