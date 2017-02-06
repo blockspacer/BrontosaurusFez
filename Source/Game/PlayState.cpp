@@ -362,7 +362,7 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 
 	myGameObjectManager->DestroyObjectsWaitingForDestruction();
 	std::string goldAmount = "Gold: ";
-	goldAmount +=std::to_string(PollingStation::playerData->myGold);
+	goldAmount +=std::to_string(PollingStation::playerData->GetGold());
 	myGoldText->SetText(goldAmount.c_str());
 
 	SkillComponentManager::GetInstance().Update(aDeltaTime);

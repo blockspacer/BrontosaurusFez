@@ -47,7 +47,7 @@ void CPickerUpperComponent::Receive(const eComponentMessageType aMessageType, co
 		case ePickupType::GOLD:
 		{
 
-			PollingStation::playerData->myGold += data.myValue;
+			PollingStation::playerData->AddGold(data.myValue);
 
 			SComponentMessageData messageData2;
 			messageData2.myString = "PickupGold";

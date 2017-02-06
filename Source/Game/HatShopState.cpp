@@ -150,14 +150,14 @@ void HatShopState::OnExit()
 
 void HatShopState::ValidatePurchase()
 {
-	short playerWallet = PollingStation::playerData->myGold;
+	unsigned short playerWallet = PollingStation::playerData->GetGold();
 	if (myCurrentlySelected != nullptr)
 	{
 		if (playerWallet >= myCurrentlySelected->myCost)
 		{
 			Audio::CAudioInterface::GetInstance()->PostEvent("BuyHat");
 		 	PostMaster::GetInstance().SendLetter(eMessageType::eHatAdded,HatBought(myCurrentlySelected->HatName));
-		 	PollingStation::playerData->myGold -= myCurrentlySelected->myCost;
+		 	PollingStation::playerData->RemoveGold(myCurrentlySelected->myCost);
 		 	mySelections.Delete(myCurrentlySelected);
 		 	myCurrentlySelected = nullptr;
 		 	AdjustText();

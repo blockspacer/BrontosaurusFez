@@ -13,7 +13,7 @@ namespace GUI
 	CMoneyWidget::CMoneyWidget(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const std::string& aName)
 		: WidgetContainer(aPosition, aSize, aName, true)
 		//, myMoneyPercent(0.25f)
-		, myMoney(PollingStation::playerData->myGold)
+		//, myMoney(PollingStation::playerData->GetGold())
 	{
 		//PostMaster::GetInstance().Subscribe(this, eMessageType::ePlayerMoneyChanged);
 	}
@@ -40,10 +40,10 @@ namespace GUI
 		short cheapestHatPrice = GetCheapestHatPrice();
 		if (cheapestHatPrice == 0)
 		{
-			cheapestHatPrice = myMoney;
+			cheapestHatPrice = PollingStation::playerData->GetGold();
 		}
 
-		float moneyPercent = static_cast<float>(myMoney) / static_cast<float>(cheapestHatPrice);
+		float moneyPercent = static_cast<float>(PollingStation::playerData->GetGold()) / static_cast<float>(cheapestHatPrice);
 
 #define min(a,b) (((a) < (b)) ? (a) : (b))
 		SetMoneyPercent(min(moneyPercent, 1.f));
