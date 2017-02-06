@@ -170,29 +170,6 @@ namespace CU
 
 			memcpy(this, &temp, sizeof(TYPE) * 16);
 			return *this;
-
-			//Matrix44 temp = *this;
-
-			//m11 = (temp.m11 * aRight.m11) + (temp.m12 * aRight.m21) + (temp.m13 * aRight.m31) + (temp.m14 * aRight.m41);
-			//m12 = (temp.m11 * aRight.m12) + (temp.m12 * aRight.m22) + (temp.m13 * aRight.m32) + (temp.m14 * aRight.m42);
-			//m13 = (temp.m11 * aRight.m13) + (temp.m12 * aRight.m23) + (temp.m13 * aRight.m33) + (temp.m14 * aRight.m43);
-			//m14 = (temp.m11 * aRight.m14) + (temp.m12 * aRight.m24) + (temp.m13 * aRight.m34) + (temp.m14 * aRight.m44);
-
-			//m21 = (temp.m21 * aRight.m11) + (temp.m22 * aRight.m21) + (temp.m23 * aRight.m31) + (temp.m24 * aRight.m41);
-			//m22 = (temp.m21 * aRight.m12) + (temp.m22 * aRight.m22) + (temp.m23 * aRight.m32) + (temp.m24 * aRight.m42);
-			//m23 = (temp.m21 * aRight.m13) + (temp.m22 * aRight.m23) + (temp.m23 * aRight.m33) + (temp.m24 * aRight.m43);
-			//m24 = (temp.m21 * aRight.m14) + (temp.m22 * aRight.m24) + (temp.m23 * aRight.m34) + (temp.m24 * aRight.m44);
-
-			//m31 = (temp.m31 * aRight.m11) + (temp.m32 * aRight.m21) + (temp.m33 * aRight.m31) + (temp.m34 * aRight.m41);
-			//m32 = (temp.m31 * aRight.m12) + (temp.m32 * aRight.m22) + (temp.m33 * aRight.m32) + (temp.m34 * aRight.m42);
-			//m33 = (temp.m31 * aRight.m13) + (temp.m32 * aRight.m23) + (temp.m33 * aRight.m33) + (temp.m34 * aRight.m43);
-			//m34 = (temp.m31 * aRight.m14) + (temp.m32 * aRight.m24) + (temp.m33 * aRight.m34) + (temp.m34 * aRight.m44);
-
-			//m41 = (temp.m41 * aRight.m11) + (temp.m42 * aRight.m21) + (temp.m43 * aRight.m31) + (temp.m44 * aRight.m41);
-			//m42 = (temp.m41 * aRight.m12) + (temp.m42 * aRight.m22) + (temp.m43 * aRight.m32) + (temp.m44 * aRight.m42);
-			//m43 = (temp.m41 * aRight.m13) + (temp.m42 * aRight.m23) + (temp.m43 * aRight.m33) + (temp.m44 * aRight.m43);
-			//m44 = (temp.m41 * aRight.m14) + (temp.m42 * aRight.m24) + (temp.m43 * aRight.m34) + (temp.m44 * aRight.m44);
-			//return *this;
 		}
 
 		Matrix44& operator=(const Matrix44& aRight)
@@ -276,84 +253,11 @@ namespace CU
 			temp.m44 = 0.0f;
 
 			return temp;
-
-
-			//// A-la Kyle
-			//TYPE sinFov;
-			//TYPE cosFov;
-			//TYPE height;
-			//TYPE width;
-			//sinFov = std::sin(0.5f * aFov);
-			//cosFov = std::cos(0.5f * aFov);
-			//height = cosFov / sinFov;
-			//width = height / aAspectRatio;
-			//TYPE scaling = aFar / (aFar - aNear);
-			//temp.m11 = width; temp.m12 = 0.0f;   temp.m13 = 0.0f;				  temp.m14 = 0.0f;
-			//temp.m21 = 0.0f;  temp.m22 = height; temp.m23 = 0.0f;				  temp.m24 = 0.0f;
-			//temp.m31 = 0.0f;  temp.m32 = 0.0f;   temp.m33 = scaling;			  temp.m34 = 1.0f;
-			//temp.m41 = 0.0f;  temp.m42 = 0.0f;   temp.m43 = -scaling * aNear;    temp.m44 = 0.0f;
-			//return temp;
-
-
-
-			//// a-la internet
-			//float frustumDepth = aFar - aNear;
-			//float oneOverDepth = 1 / frustumDepth;
-			//temp.m22 = 1 / tan(0.5f * aFov);
-			//temp.m11 = temp.m22 / aAspectRatio;
-			//temp.m33 = aFar * oneOverDepth;
-			//temp.m43 = (-aFar * aNear) * oneOverDepth;
-			//temp.m34 = 1.0f;
-			//temp.m44 = 0.0f;
-			//return temp;
-
-
-			//TYPE AspectRatioX = aWidth / aHeight;
-			//TYPE AspectRatioY = aHeight / aWidth;
-			//TYPE FovX = aFov * (M_PI / 180.0f);
-			//TYPE TanFovX = std::tan(FovX / 2.0f);
-			//TYPE FovY = 2.0f * std::atan(TanFovX * AspectRatioY);
-
-			//TYPE Near = aNear;
-			//TYPE Far = aFar;
-			//TYPE TanFovY = std::tan(FovY / 2.0f);
-			//TYPE FarMinusNear = Far - Near;
-			//TYPE OneDivTanFov = 1.0f / TanFovY;
-			//TYPE FovYDivFarMinusNear = FovY / FarMinusNear;
-
-			//temp.m11 = AspectRatioY * OneDivTanFov;
-			//temp.m22 = OneDivTanFov;
-			//temp.m33 = FovYDivFarMinusNear;
-			//temp.m34 = 1.f;
-			//temp.m43 = -Near * FovYDivFarMinusNear;
-			//temp.m44 = 0;
-			//return temp;
 		}
 
 
 		Matrix44 CreateOrthogonalProjectionMatrixLH(TYPE aNear, TYPE aFar, TYPE aWidth, TYPE aHeight)
 		{
-			//Matrix44 output = Matrix44::Identity;
-			//TYPE right = aWidth;
-			//TYPE left = static_cast<TYPE>(0);
-			//TYPE top = static_cast<TYPE>(0);
-			//TYPE bottom =  aHeight;
-			//TYPE far = aFar;
-			//TYPE near = aNear;
-
-			//output.m11 = static_cast<TYPE>(2) / (right - left);
-			//output.m22 = static_cast<TYPE>(2) / (top - bottom);
-			//output.m33 = static_cast<TYPE>(2) / (far - near);
-
-			//output.m41 = -(right + left) / (right - left);
-			//output.m42 = -(top + bottom) / (top - bottom);
-			//output.m43 = -(far + near) / (far - near);
-			//output.m44 = 1.0f;
-			//return output;
-
-
-			//Kevin Code
-
 			Matrix44f matrix;
 
 			matrix.m11 = 2.f / aWidth;
