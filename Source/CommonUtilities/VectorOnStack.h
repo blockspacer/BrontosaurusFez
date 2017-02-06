@@ -33,7 +33,7 @@ namespace CU
 		const_iterator end() const;
 
 		inline void Add(const ObjectType& aObject);
-		inline void SafeAdd(const ObjectType& aObject);
+		inline bool SafeAdd(const ObjectType& aObject);
 		inline void Add(ObjectType&& aObject);
 		inline void Insert(const SizeType aIndex, ObjectType& aObject);
 		inline void Remove(const ObjectType& aObject);
@@ -189,12 +189,15 @@ namespace CU
 	}
 
 	template<typename ObjectType, int Capacity, typename SizeType, bool UseSafeModeFlag>
-	inline void VectorOnStack<ObjectType, Capacity, SizeType, UseSafeModeFlag>::SafeAdd(const ObjectType& aObject)
+	inline bool VectorOnStack<ObjectType, Capacity, SizeType, UseSafeModeFlag>::SafeAdd(const ObjectType& aObject)
 	{
 		if (mySize < Capacity)
 		{
 			myVectorOnStack[mySize++] = aObject;
+			return true;
 		}
+
+		return false;
 	}
 
 	template<typename ObjectType, int Capacity, typename SizeType, bool UseSafeModeFlag>
