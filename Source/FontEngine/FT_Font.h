@@ -34,6 +34,7 @@ public:
 	CU::Vector2i GetAdvance(const FT_UInt aNextGlyph, const FT_UInt aPrevoiusGlyph, const bool aUseKerning);
 
 	CU::Vector2i GetGlyphSize(wchar_t aChar);
+	bool RequestGlyphSize(CU::Vector2i& aSizeOut, wchar_t aChar);
 
 	CU::Vector2i GetBearing(const wchar_t aChar);
 	CU::Vector2i GetBearing(const FT_UInt aChar);
