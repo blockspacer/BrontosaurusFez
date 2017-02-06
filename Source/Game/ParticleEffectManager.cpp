@@ -61,7 +61,6 @@ void CParticleEffectManager::SpawnParticle(const std::string& aEffectName, const
 		return;
 	}
 
-	DL_PRINT("particle spawned");
 
 	CParticleEmitterInstance* particleEmitter = new CParticleEmitterInstance(data.myInitData);
 	particleEmitter->SetPosition(aSpawnPosition);
@@ -80,7 +79,7 @@ void CParticleEffectManager::DespawnParticle(const InstanceID aEmitterIndex, con
 	{
 		emitter->Deactivate();
 		myKilledParticleEmitters.Add(aEmitterIndex);
-		DL_PRINT("particle despawned");
+	
 	}
 	
 	myActiveParticleEmitters[aParticleDataIndex] = SParticleData();
@@ -103,7 +102,6 @@ void CParticleEffectManager::Update()
 			myScene.DeleteParticleEmitterInstance(id);
 			myKilledParticleEmitters.RemoveCyclicAtIndex(i);
 
-			DL_PRINT("particle destroyed");
 			--i;
 		}
 	}
