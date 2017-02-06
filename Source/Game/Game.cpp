@@ -40,7 +40,6 @@ void CGame::Init()
 	 luaWrapper.RegisterFunctions(&ScriptLoader::RegisterLuaFunctions);
 	 
 	 PollingStation::playerData = new PlayerData;
-	 PollingStation::playerData->myGold = 0;
 
 	if (CommandLineManager::GetInstance()->HasParameter("-skipMainMenu") == true)
 	{

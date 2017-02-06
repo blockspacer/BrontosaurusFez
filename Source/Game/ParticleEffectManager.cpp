@@ -165,9 +165,9 @@ bool CParticleEffectManager::LoadParticleData(const std::string& aEffectPath, SE
 
 	aEmitterDataOut.NumOfParticles = particleEffectDocument["NumberOfParticles"].GetInt();
 
-	aEmitterDataOut.RotationCurve = particleEffectDocument["RotationCurve"].GetInteger<eLerpCurve>();
-	aEmitterDataOut.ColorCurve = particleEffectDocument["ColorCurve"].GetInteger<eLerpCurve>();
-	aEmitterDataOut.SizeCurve = particleEffectDocument["SizeCurve"].GetInteger<eLerpCurve>();
+	aEmitterDataOut.RotationCurve = particleEffectDocument["RotationCurve"].GetEnum<eLerpCurve>();
+	aEmitterDataOut.ColorCurve = particleEffectDocument["ColorCurve"].GetEnum<eLerpCurve>();
+	aEmitterDataOut.SizeCurve = particleEffectDocument["SizeCurve"].GetEnum<eLerpCurve>();
 
 	aEmitterDataOut.UseGravity = particleEffectDocument["UseGravity"].GetBool();
 

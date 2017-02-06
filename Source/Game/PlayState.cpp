@@ -121,7 +121,7 @@ CPlayState::~CPlayState()
 	SAFE_DELETE(myCollisionComponentManager);
 	SAFE_DELETE(myScriptComponentManager);
 	SAFE_DELETE(myParticleEffectManager);
-	SAFE_DELETE(myStatManager);
+	//SAFE_DELETE(myStatManager);
 	SAFE_DELETE(myGoldText);
 	SAFE_DELETE(myHealthBarManager);
 	SAFE_DELETE(myHatMaker);
@@ -169,7 +169,7 @@ void CPlayState::Load()
 	CU::TimerManager timerMgr;
 	CU::TimerHandle handle = timerMgr.CreateTimer();
 	timerMgr.StartTimer(handle);
-	srand(time(NULL));
+	srand(static_cast<unsigned int>(time(NULL)));
 
 	CreateManagersAndFactories();
 	LoadManagerGuard loadManagerGuard;
@@ -206,7 +206,9 @@ void CPlayState::Load()
 
 	//Loading
 	CU::CJsonValue levelsFile;
-	const std::string& errorString = levelsFile.Parse("Json/LevelList.json");
+
+	std::string errorString = levelsFile.Parse("Json/LevelList.json");
+	if (!errorString.empty()) DL_MESSAGE_BOX(errorString.c_str());
 
 	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
@@ -283,9 +285,7 @@ void CPlayState::Load()
 		////TEMP CARL END
 	}
 
-	myGameObjectManager->SendObjectsDoneMessage();
-
-	for (int i = 0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); i++)
+	for (unsigned int i = 0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); i++)
 	{
 		PollingStation::myThingsEnemiesShouldAvoid[i]->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
 	}
@@ -304,7 +304,7 @@ void CPlayState::Load()
 	myMouseComponent = new CMouseComponent(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 	mouseObject->AddComponent(myMouseComponent);
 
-
+	myGameObjectManager->SendObjectsDoneMessage();
 
 	myHatMaker->LoadBluePrints("Json/Hats/HatBluePrints.json");
 	myHatMaker->GiveTheManAHat();
@@ -365,7 +365,7 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 
 	myGameObjectManager->DestroyObjectsWaitingForDestruction();
 	std::string goldAmount = "Gold: ";
-	goldAmount +=std::to_string(PollingStation::playerData->myGold);
+	goldAmount +=std::to_string(PollingStation::playerData->GetGold());
 	myGoldText->SetText(goldAmount.c_str());
 
 	SkillComponentManager::GetInstance().Update(aDeltaTime);
