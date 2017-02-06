@@ -11,6 +11,8 @@ struct SVertexConstantBufferType
 {
 	CU::Vector2f position;
 	CU::Vector2f size;
+	CU::Vector2f pivot;
+	CU::Vector2f TRASH;
 	CU::Vector4f rect;
 	CU::Vector4f color;
 };
@@ -190,6 +192,7 @@ void CCoolText::UpdateAndSetVertexConstantBuffer(const CU::Vector2f& aPosition, 
 	SVertexConstantBufferType cbufferStruct = {};
 	cbufferStruct.position = aPosition;
 	cbufferStruct.size = aSize;
+	cbufferStruct.pivot = { 0.0f,0.0f };
 	cbufferStruct.rect = aRect;
 	cbufferStruct.color = aColor;
 
