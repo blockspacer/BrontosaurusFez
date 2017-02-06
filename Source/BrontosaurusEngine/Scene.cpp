@@ -9,6 +9,8 @@
 #include "Skybox.h"
 #include "ParticleEmitterInstance.h"
 #include "FireEmitterInstance.h"
+#include "../Game/PollingStation.h"
+#include "../Components/GameObject.h"
 
 #define Intify(A_ENUM_CLASS) static_cast<int>(A_ENUM_CLASS)
 
@@ -75,7 +77,7 @@ CScene::CScene()
 	myFireEmitters.Init(8);
 	mySkybox = nullptr;
 
-	myShadowCamera.InitOrthographic(6000, 6000, 6000.f, 100.f, 4096, 4096);
+	myShadowCamera.InitOrthographic(8000, 5000, 8000.f, 5.f, 4096, 4096);
 }
 
 CScene::~CScene()
@@ -108,10 +110,13 @@ void CScene::Render()
 	cameraMsg.myCamera = myCameras[Intify(eCameraType::ePlayerOneCamera)];
 	RENDERER.AddRenderMessage(new SSetCameraMessage(cameraMsg));
 
+
+	//EDVIN POLLAR PLAYERPOS HÄR, DETTA BORDE GÖRAS FINARE :C
 	CU::Vector3f shadowCamDirection = { myDirectionalLight.direction.x, myDirectionalLight.direction.y, myDirectionalLight.direction.z };
-	CU::Vector3f shadowCameraPosition = myCameras[Intify(eCameraType::ePlayerOneCamera)].GetPosition() + (-shadowCamDirection * 1250.f);
+	CU::Vector3f shadowCameraPosition = PollingStation::playerObject->GetWorldPosition() + (-shadowCamDirection * 2000);
 	myShadowCamera.GetCamera().SetPosition(shadowCameraPosition);
-	myShadowCamera.GetCamera().LookAt(myCameras[Intify(eCameraType::ePlayerOneCamera)].GetPosition());
+	myShadowCamera.GetCamera().LookAt(PollingStation::playerObject->GetWorldPosition());
+
 
 	SChangeStatesMessage statemsg;
 	statemsg.myRasterizerState = eRasterizerState::eDefault;
@@ -193,7 +198,7 @@ void CScene::Render()
 	// DRAW SHADOWBUFFER
 
 	//SRenderToIntermediate * interMSG = new SRenderToIntermediate();
-	//interMSG->myRect = { 0.0f, 0.0f, 0.25f, 0.25f };
+	//interMSG->myRect = { 0.0f, 0.0f, 0.5f, 0.5f };
 	//interMSG->useDepthResource = true;
 	//interMSG->myRenderPackage = myShadowCamera.GetRenderPackage();
 	//RENDERER.AddRenderMessage(interMSG);
