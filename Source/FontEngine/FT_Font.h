@@ -7,6 +7,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include "../BrontosaurusEngine/Effect.h"
+#include <mutex>
 
 class CTextBitmap;
 
@@ -39,6 +40,8 @@ public:
 	CU::Vector2i GetBearing(const wchar_t aChar);
 	CU::Vector2i GetBearing(const FT_UInt aChar);
 
+	GlyphData GetGlyphData(unsigned);
+
 	//void SetLineGap(const int pt)
 
 	CEffect* GetEffect() const;
@@ -66,5 +69,7 @@ private:
 		FT_UInt myGlyphIndex;
 		FT_GlyphSlot mySlot;
 	} myCurrentGlyph;
+
+	std::recursive_mutex myMutex;
 };
 
