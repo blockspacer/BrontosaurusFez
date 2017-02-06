@@ -3,37 +3,69 @@
 #include "LightManager.h"
 #include "Engine.h"
 
-CPointLightInstance::CPointLightInstance(ePointLights aType)
+CPointLightInstance::CPointLightInstance()
 {
-	myLight = LIGHTMANAGER->LoadLight(aType);
+	//myLight = LIGHTMANAGER->LoadLight(aType);
+	myIsActive = true;
 }
 
 CPointLightInstance::~CPointLightInstance()
 {
 }
 
-void CPointLightInstance::SetPosition(CU::Vector3f aPos)
+void CPointLightInstance::SetPosition(const CU::Vector3f & aPos)
 {
-	myPosition = aPos;
+	myData.position = aPos;
 }
 
-CU::Vector3f CPointLightInstance::GetPosition()
+void CPointLightInstance::SetRange(const float aRange)
 {
-	return myPosition;
+	myData.range = aRange;
+}
+
+void CPointLightInstance::SetInstensity(const float aIntencity)
+{
+	myData.intensity = aIntencity;
+}
+
+void CPointLightInstance::SetColor(const CU::Vector3f & aColor)
+{
+	myData.color = aColor;
+}
+
+
+const CU::Vector3f& CPointLightInstance::GetPosition()
+{
+	return myData.position;
 }
 
 
 float CPointLightInstance::GetRange()
 {
-	return myLight->GetRange();
+	return myData.range;
 }
 
 float CPointLightInstance::GetInstensity()
 {
-	return myLight->GetIntensity();
+	return myData.intensity;
 }
 
-CU::Vector4f CPointLightInstance::GetColor()
+const CU::Vector3f& CPointLightInstance::GetColor()
 {
-	return myLight->GetColor();
+	return myData.color;
+}
+
+const Lights::SPointLight & CPointLightInstance::GetData()
+{
+	return myData;
+}
+
+bool CPointLightInstance::GetIsActive()
+{
+	return myIsActive;
+}
+
+void CPointLightInstance::SetActive(const bool aIsActive)
+{
+	myIsActive = aIsActive;
 }

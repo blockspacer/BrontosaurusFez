@@ -2,6 +2,7 @@
 
 #include "../CommonUtilities/GrowingArray.h"
 #include "../CommonUtilities/DL_Debug.h"
+#include "../CommonUtilities/VectorOnStack.h"
 #include "../CommonUtilities/StaticMemoryPool.h"
 
 #include "Intersection.h"

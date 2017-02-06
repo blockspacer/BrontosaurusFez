@@ -15,6 +15,7 @@
 #include "../CommonUtilities/DL_Debug.h"
 #include "../CommonUtilities/GrowingArray.h"
 #include "../CommonUtilities/StaticArray.h"
+#include "../CommonUtilities/VectorOnStack.h"
 #include "../CommonUtilities/EMouseButtons.h"
 #include "../CommonUtilities/DynamicString.h"
 #include "../CommonUtilities/StringHelper.h"
