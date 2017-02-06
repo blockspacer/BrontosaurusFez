@@ -22,11 +22,15 @@ class CParticleEmitter
 {
 public:
 	CParticleEmitter();
-	CParticleEmitter(const CParticleEmitter& aParticleEmitter) = delete;
+	CParticleEmitter(const CParticleEmitter& aParticleEmitter);
 	~CParticleEmitter();
 	void Init(const SEmitterData& EmitterData);
 	void Render(const CU::Matrix44f & aToWorldSpace, const CU::GrowingArray<SParticle, unsigned short, false>& aParticleList);
 	void Destroy();
+
+	CParticleEmitter& operator=(const CParticleEmitter& aParticleEmitter);
+	CParticleEmitter& operator=(CParticleEmitter&& aParticleEmitter);
+
 private:
 	void ResizeVertexBuffer(const CU::GrowingArray<SParticle, unsigned short, false>& aParticleList);
 	void UpdateCBuffers(const CU::Matrix44f& aToWorldSpace);

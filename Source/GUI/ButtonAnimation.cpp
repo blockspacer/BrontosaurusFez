@@ -78,7 +78,7 @@ namespace GUI
 				SAFE_DELETE(myTweener);
 			}
 
-			myTweener = new CU::Tween(CU::TweenType::Sinusoidal, CU::TweenMod::EaseIn, myResetPosition, myTurnPosition, myGoDownTime);
+			myTweener = new CU::Tween(CU::TweenType::Bounce, CU::TweenMod::EaseIn, myResetPosition, myTurnPosition, myGoDownTime);
 		}
 	}
 
@@ -94,7 +94,7 @@ namespace GUI
 				SAFE_DELETE(myTweener);
 			}
 
-			myTweener = new CU::Tween(CU::TweenType::Sinusoidal, CU::TweenMod::EaseOut, myResetPosition, myTurnPosition, myGoUpTime);
+			myTweener = new CU::Tween(CU::TweenType::Bounce, CU::TweenMod::EaseOut, myResetPosition, myTurnPosition, myGoUpTime);
 		}
 	}
 
@@ -111,7 +111,6 @@ namespace GUI
 	void ButtonAnimation::DoStartedAnimation(const CU::Time aDeltaTime)
 	{
 		*myAnimationTimer += aDeltaTime;
-		static float traveled = 0.f;
 		if (aDeltaTime.GetMilliseconds() < 60.f)
 		{
 			ModelWidget* modelWidget = static_cast<ModelWidget*>(*myDecoratedWidget);
@@ -121,16 +120,12 @@ namespace GUI
 				CU::Vector3f& pos = transformation.GetPosition();
 				if (myTweener)
 				{
-					pos += myForwardDirection * myTweener->GetValue() * 0.1f;
+					pos += myForwardDirection * myTweener->GetValue() * aDeltaTime.GetMilliseconds();
 				}
 				else
 				{
 					pos += myForwardDirection * aDeltaTime.GetMilliseconds() * 0.1f;
-					traveled += myForwardDirection.Length() * aDeltaTime.GetMilliseconds() * 0.1f;
 				}
-
-				//float& posY = transformation.GetPosition().y;
-				//posY += aDeltaTime.GetMilliseconds() * -0.1f;
 
 				modelWidget->myModelInstance->SetTransformation(transformation);
 			}
@@ -153,7 +148,7 @@ namespace GUI
 		CU::Vector3f& pos = transformation.GetPosition();
 		if (myTweener)
 		{
-			pos += myForwardDirection * myTweener->GetValue() * -0.1f;
+			pos += myForwardDirection * myTweener->GetValue() * -1.f * aDeltaTime.GetMilliseconds();
 		}
 		else
 		{
