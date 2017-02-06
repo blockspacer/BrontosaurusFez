@@ -284,7 +284,10 @@ void CPlayState::Load()
 
 	myGameObjectManager->SendObjectsDoneMessage();
 
-
+	for (int i = 0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); i++)
+	{
+		PollingStation::myThingsEnemiesShouldAvoid[i]->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
+	}
 
 
 
