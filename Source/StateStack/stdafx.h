@@ -15,6 +15,7 @@
 
 #include "../CommonUtilities/GrowingArray.h"
 #include "../CommonUtilities/StaticArray.h"
+#include "../CommonUtilities/VectorOnStack.h"
 #include "../CommonUtilities/CUTime.h"
 //#include "../CommonUtilities/MemoryLeekLogger.h"
 

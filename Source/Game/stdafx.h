@@ -14,6 +14,7 @@
 #include "../CommonUtilities/DL_Debug.h"
 #include "../CommonUtilities/GrowingArray.h"
 #include "../CommonUtilities/StaticArray.h"
+#include "../CommonUtilities/VectorOnStack.h"
 #include "../CommonUtilities/CUTime.h"
 #include "../CommonUtilities/vector3.h"
 #include "../CommonUtilities/vector2.h"
