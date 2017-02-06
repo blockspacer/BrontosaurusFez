@@ -77,7 +77,7 @@ CScene::CScene()
 	myFireEmitters.Init(8);
 	mySkybox = nullptr;
 
-	myShadowCamera.InitOrthographic(8000, 5000, 8000.f, 5.f, 4096, 4096);
+	myShadowCamera.InitOrthographic(7000, 3000, 7000.f, 50.f, 4098, 4098);
 }
 
 CScene::~CScene()
@@ -119,6 +119,22 @@ void CScene::Render()
 
 
 	SChangeStatesMessage statemsg;
+
+	if (mySkybox)
+	{
+		statemsg.myBlendState = eBlendState::eNoBlend;
+		statemsg.myRasterizerState = eRasterizerState::eNoCulling;
+		statemsg.myDepthStencilState = eDepthStencilState::eDisableDepth;
+		statemsg.mySamplerState = eSamplerState::eWrap;
+
+		RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
+
+		SRenderSkyboxMessage* msg = new SRenderSkyboxMessage();
+		mySkybox->AddRef();
+		msg->mySkybox = mySkybox;
+		RENDERER.AddRenderMessage(msg);
+	}
+
 	statemsg.myRasterizerState = eRasterizerState::eDefault;
 	statemsg.myDepthStencilState = eDepthStencilState::eDefault;
 	statemsg.myBlendState = eBlendState::eNoBlend;
@@ -138,7 +154,7 @@ void CScene::Render()
 			continue;
 		}
 
-		myModels[i]->Render(&myDirectionalLight, myPointLights, myShadowCamera);
+		myModels[i]->Render(nullptr, myPointLights, myShadowCamera);
 	}
 
 
@@ -198,10 +214,11 @@ void CScene::Render()
 	// DRAW SHADOWBUFFER
 
 	//SRenderToIntermediate * interMSG = new SRenderToIntermediate();
-	//interMSG->myRect = { 0.0f, 0.0f, 0.5f, 0.5f };
+	//interMSG->myRect = { 0.0f, 0.0f, 0.25f, 0.25f };
 	//interMSG->useDepthResource = true;
 	//interMSG->myRenderPackage = myShadowCamera.GetRenderPackage();
 	//RENDERER.AddRenderMessage(interMSG);
+
 }
 
 InstanceID CScene::AddModelInstance(CModelInstance* aModelInstance)
@@ -282,26 +299,7 @@ void CScene::SetSkybox(const char* aPath)
 	mySkybox = new CSkybox();
 	mySkybox->Init(aPath);
 
-	SChangeStatesMessage statemsg;
 
-	statemsg.myBlendState = eBlendState::eNoBlend;
-	statemsg.myRasterizerState = eRasterizerState::eNoCulling;
-	statemsg.myDepthStencilState = eDepthStencilState::eDisableDepth;
-	statemsg.mySamplerState = eSamplerState::eWrap;
-
-	RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
-
-	SRenderSkyboxMessage* msg = new SRenderSkyboxMessage();
-	mySkybox->AddRef();
-	msg->mySkybox = mySkybox;
-	RENDERER.AddRenderMessage(msg);
-
-	statemsg.myRasterizerState = eRasterizerState::eDefault;
-	statemsg.myDepthStencilState = eDepthStencilState::eDefault;
-	statemsg.myBlendState = eBlendState::eNoBlend;
-	statemsg.mySamplerState = eSamplerState::eClamp;
-
-	RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
 
 
 }
