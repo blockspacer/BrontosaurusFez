@@ -9,7 +9,7 @@
 GUICursor::GUICursor()
 	: mySprite(nullptr)
 {
-	mySprite = new CSpriteInstance("Models/mousePointer/mousePointer.dds", CU::Vector2f::Zero, CU::Vector2f(0.5f, 0.5f), { 0.f, 0.f , 1.f , 1.f }, { 1.f, 1.f ,1.f ,1.f }, true); //TODO: FIX hardcoded windowsize
+	mySprite = new CSpriteInstance("Models/mousePointer/mousePointer.dds", CU::Vector2f::Zero, CU::Vector2f(0.5f, 0.5f), { 0.f, 0.f }, { 0.f, 0.f, 1.f, 1.f }, { 1.f, 1.f ,1.f ,1.f }, true); //TODO: FIX hardcoded windowsize
 }
 
 GUICursor::~GUICursor()

@@ -60,7 +60,7 @@ void CPickerUpperComponent::Receive(const eComponentMessageType aMessageType, co
 			SComponentMessageData messageData2;
 			messageData2.myString = "AddedHat";
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, messageData2);
-			PostMaster::GetInstance().SendLetter(eMessageType::eHatAdded, HatBought(data.myString));
+			PostMaster::GetInstance().SendLetter(eMessageType::eHatAdded, HatBought(data.myString)); 
 		}
 		break;
 		default: break;

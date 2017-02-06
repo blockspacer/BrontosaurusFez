@@ -3,6 +3,8 @@
 #include "../PostMaster/Subscriber.h"
 #include "../CommonUtilities/vector2.h"
 #include "../CommonUtilities/vector3.h"
+#include "../CommonUtilities/CUTime.h"
+
 namespace CU
 {
 	class Camera;
@@ -20,7 +22,7 @@ public:
 	void Destroy() override;
 
 	void MouseMoved(const CU::Vector2f& aMousePosition);
-	void Update();
+	void Update(const CU::Time& aDeltaTime);
 	void SetMouseIsDown(const bool aIsDown);
 	void CheckIfHoveredGameObjectDied(CGameObject* aGameobjectThatDied);
 	void RemoveHoveredObjects();

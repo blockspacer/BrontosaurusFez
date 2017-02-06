@@ -47,8 +47,8 @@ void CSplashScreen::Render()
 }
 
 void CSplashScreen::AddPicture(const char* aPath)
-{	// 								             size           pos                rect					 colour
-	mySprites.Add(new CSpriteInstance(aPath, { 1.f, 1.f }, { 0.f, 0.f }, { 0.f, 0.f ,1.f, 1.f }, {1.f, 1.f, 1.f, 0.f}));
+{	// 								             size           pos			Pivot				rect					 colour
+	mySprites.Add(new CSpriteInstance(aPath, { 1.f, 1.f }, { 0.f, 0.f }, { 0.f, 0.f }, { 0.f, 0.f, 1.f, 1.f }, { 1.f, 1.f, 1.f, 0.f }));
 }
 
 void CSplashScreen::FadeIn(const CU::Time& aDeltaTime)
