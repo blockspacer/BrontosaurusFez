@@ -3,8 +3,13 @@
 #include "picojson.h"
 #include <fstream>
 
+#include "vector2.h"
+#include "vector3.h"
+#include "vector4.h"
+
 //#define JSON_ERROR(ERROR_MESSAGE) assert(ERROR_MESSAGE && false)
 #define JSON_ERROR DL_MESSAGE_BOX
+#define CHAR_TO_STR(A_CHAR) std::string(1, A_CHAR)
 
 namespace CU
 {
@@ -124,7 +129,7 @@ namespace CU
 
 		if (IsObject() == true)
 		{
-			return static_cast<int>(myValue->get<picojson::array>().size());
+			return static_cast<int>(myValue->get<picojson::object>().size());
 		}
 
 		if (IsString() == true)
@@ -136,30 +141,21 @@ namespace CU
 		return 0;
 	}
 
-	int CJsonValue::Count(const std::string& aKey)
+	int CJsonValue::Count(const std::string& aKey) const
 	{
-		//maybe not work work in progress, feel free to remove or redo.
-		if (myValue == nullptr)
+		if (IsNull() == true)
 		{
 			JSON_ERROR("json value is null");
 			return 0;
 		}
-		if (IsArray() == false)
+		if (IsObject() == false)
 		{
-			eJsoneValueType type = GetType();
-			JSON_ERROR("json value is not an array");
+			JSON_ERROR("json value is not an object, it's %s", myValue->to_str().c_str());
 			return 0;
 		}
 
 		const picojson::object& tempObject = myValue->get<picojson::object>();
-		auto it = tempObject.count(aKey);
-		if (it <= 0)
-		{
-			JSON_ERROR("json object invalid key");
-			return 0;
-		}
-
-		return it;
+		return static_cast<int>(tempObject.count(aKey));
 	}
 
 	bool CJsonValue::IsNull() const
@@ -193,7 +189,7 @@ namespace CU
 
 	bool CJsonValue::HasKey(const std::string& aKey) const
 	{
-		if (myValue == nullptr)
+		if (IsNull() == true)
 		{
 			JSON_ERROR("json value is null");
 			return false;
@@ -212,7 +208,7 @@ namespace CU
 
 	bool CJsonValue::GetBool() const
 	{
-		if (myValue == nullptr)
+		if (IsNull() == true)
 		{
 			JSON_ERROR("json value is null");
 			return false;
@@ -228,7 +224,7 @@ namespace CU
 
 	double CJsonValue::GetNumber() const
 	{
-		if (myValue == nullptr)
+		if (IsNull() == true)
 		{
 			JSON_ERROR("json value is null");
 			return 0.0;
@@ -261,7 +257,7 @@ namespace CU
 	{
 		const static std::string nullString("");
 
-		if (myValue == nullptr)
+		if (IsNull() == true)
 		{
 			JSON_ERROR("json value is null");
 			return nullString;
@@ -284,6 +280,77 @@ namespace CU
 		}
 
 		return myValue->get<std::string>();
+	}
+	
+	Vector2f CJsonValue::GetVector2f(const std::string& aNameXY) const
+	{
+		if (IsNull() == true)
+		{
+			JSON_ERROR("json value is null");
+			return Vector2f();
+		}
+		if (IsObject() == false)
+		{
+			eJsoneValueType type = GetType();
+			JSON_ERROR("json value is not an array");
+			type = eJsoneValueType::JSON_NULL; //remove warning
+			return Vector2f();
+		}
+		if (Size() != 2)
+		{
+			JSON_ERROR("json value does not have 2 elements");
+			return Vector2f();
+		}
+		assert(aNameXY.size() == 2u && "vector2 name does not match vector 2");
+
+		return Vector2f(at(CHAR_TO_STR(aNameXY[0])).GetFloat(), at(CHAR_TO_STR(aNameXY[1])).GetFloat());
+	}
+	
+	Vector3f CJsonValue::GetVector3f(const std::string& aNameXYZ) const
+	{
+		if (IsNull() == true)
+		{
+			JSON_ERROR("json value is null");
+			return Vector3f();
+		}
+		if (IsObject() == false)
+		{
+			eJsoneValueType type = GetType();
+			JSON_ERROR("json value is not an array");
+			type = eJsoneValueType::JSON_NULL; //remove warning
+			return Vector3f();
+		}
+		if (Size() != 3)
+		{
+			JSON_ERROR("json value does not have three elements");
+			return Vector3f();
+		}
+		assert(aNameXYZ.size() == 3u && "vector3 name does not match vector3");
+		return Vector3f(at(CHAR_TO_STR(aNameXYZ[0])).GetFloat(), at(CHAR_TO_STR(aNameXYZ[1])).GetFloat(), at(CHAR_TO_STR(aNameXYZ[2])).GetFloat());
+	}
+
+	Vector4f CJsonValue::GetVector4f(const std::string& aNameXYZW) const
+	{
+		if (IsNull() == true)
+		{
+			JSON_ERROR("json value is null");
+			return Vector4f();
+		}
+		if (IsObject() == false)
+		{
+			eJsoneValueType type = GetType();
+			JSON_ERROR("json value is not an array");
+			type = eJsoneValueType::JSON_NULL; //remove warning
+			return Vector4f();
+		}
+		if (Size() != 4)
+		{
+			JSON_ERROR("json value does not have 4 elements");
+			return Vector4f();
+		}
+		assert(aNameXYZW.size() == 4u && "vector4 name does not match vector 4");
+
+		return Vector4f(at(CHAR_TO_STR(aNameXYZW[0])).GetFloat(), at(CHAR_TO_STR(aNameXYZW[1])).GetFloat(), at(CHAR_TO_STR(aNameXYZW[2])).GetFloat(), at(CHAR_TO_STR(aNameXYZW[3])).GetFloat());
 	}
 
 	CJsonValue CJsonValue::operator[](const int anIndex) const
@@ -322,8 +389,7 @@ namespace CU
 		}
 		if (IsObject() == false)
 		{
-			eJsoneValueType type = GetType();
-			JSON_ERROR("json value is not an object");
+			JSON_ERROR("json value is not an object, it's %s", myValue->to_str().c_str());
 			return CJsonValue();
 		}
 

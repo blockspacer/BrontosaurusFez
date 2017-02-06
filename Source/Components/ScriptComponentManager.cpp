@@ -16,7 +16,17 @@ CScriptComponentManager::~CScriptComponentManager()
 	assert(ourInstance == this && "There should not exists another script component manager");
 	ourInstance = nullptr;
 
+	for (CScriptComponent* component : myComponents)
+	{
+		CComponentManager::GetInstance().RemoveComponent(component->GetId());
+	}
+
 	myComponents.DeleteAll();
+}
+
+CComponent* CScriptComponentManager::CreateAbstractComponent(const std::string & aScriptPath)
+{
+	return CreateComponent(aScriptPath);
 }
 
 CScriptComponent* CScriptComponentManager::CreateComponent(const std::string& aScriptPath/*, const std::string& aInitFunction*/)

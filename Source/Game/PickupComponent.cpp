@@ -29,7 +29,7 @@ CPickupComponent::CPickupComponent(CPickupManager& aManager) : myManager(aManage
 	mySuckUpRadius = 10000.0f;
 	mySpeed = 1000.0f;
 	myElapsedTime = 0.0f;
-	myTimeBeforeAbleToPickup = 2.0f;
+	myTimeBeforeAbleToPickup = 0.5f;
 	myNope = false;
 	myType = eComponentType::ePickup;
 }

@@ -21,6 +21,7 @@
 
 CFT_Font::CFT_Font()
 {
+	myLineHeight = 0;
 	myFace = nullptr;
 	myFacePath = nullptr;
 
@@ -36,7 +37,7 @@ CFT_Font::~CFT_Font()
 {
 	SAFE_DELETE(myEffect);
 
-	for (auto it = myRenderedGlyphs.begin(); it != myRenderedGlyphs.end(); it++)
+	for (auto it = myRenderedGlyphs.begin(); it != myRenderedGlyphs.end(); ++it)
 	{
 		SAFE_RELEASE(it->second);
 	}
@@ -45,12 +46,18 @@ CFT_Font::~CFT_Font()
 void CFT_Font::SetSize(const int pt, const  int aDeviceWidth, const unsigned int aDeviceHeight)
 {
 	FT_Error error;
-	error = FT_Set_Char_Size(myFace, 0, pt * 64, 0, 0);
-	ERROR_CHECK(error, "failed to set Face char size");
 
-	error = FT_Set_Pixel_Sizes(myFace, 0, pt);
+	/*bool isScalable = FT_IS_SCALABLE(myFace);
+	error = FT_Set_Char_Size(myFace, 0, pt , 0, 0);
+	ERROR_CHECK(error, "failed to set Face char size");*/
+
+	error = FT_Set_Pixel_Sizes(myFace, pt, pt);
 	ERROR_CHECK(error, "failed to set Face pixel sizes");
+}
 
+void CFT_Font::SetLineHeight(const int aLineHeight)
+{
+	myLineHeight = aLineHeight;
 }
 
 ID3D11ShaderResourceView* CFT_Font::GetCharResourceView(wchar_t aChar)
@@ -130,7 +137,8 @@ CEffect* CFT_Font::GetEffect() const
 
 float CFT_Font::GetlineHeight() const
 {
-	return myFace->height / 64;
+	//return myFace->height / 64;
+	return myLineHeight;
 }
 
 FT_Error CFT_Font::LoadGlyph(FT_UInt aGlyphIndex)

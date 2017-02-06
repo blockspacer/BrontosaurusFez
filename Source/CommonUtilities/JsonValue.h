@@ -7,6 +7,16 @@ namespace picojson
 
 namespace CU
 {
+	template<typename T>
+	class Vector2;
+	using Vector2f = Vector2<float>;
+	template<typename T>
+	class Vector3;
+	using Vector3f = Vector3<float>;
+	template<typename T>
+	class Vector4;
+	using Vector4f = Vector4<float>;
+
 	enum class eJsoneValueType
 	{
 		JSON_NULL,
@@ -33,7 +43,7 @@ namespace CU
 		eJsoneValueType GetType() const;
 		int Size() const;
 
-		int Count(const std::string& aKey);
+		int Count(const std::string& aKey) const;
 
 		bool IsNull() const;
 		bool IsBool() const;
@@ -50,8 +60,15 @@ namespace CU
 		int GetInt() const;
 		unsigned int GetUInt() const;
 
+		template<typename T>
+		T GetInteger();
+
 		const std::string& GetString() const;
 		const std::string& TryGetString() const;
+
+		Vector2f GetVector2f(const std::string& aNameXY = "xy") const;
+		Vector3f GetVector3f(const std::string& aNameXYZ = "xyz") const;
+		Vector4f GetVector4f(const std::string& aNameXYZW = "xyzw") const;
 
 		CJsonValue operator[](const int aIndex) const;
 		CJsonValue operator[](const std::string& aKey) const;
@@ -65,4 +82,10 @@ namespace CU
 		const picojson::value* myValue;
 		bool myIsBorrowed;
 	};
+
+	template<typename T>
+	inline T CJsonValue::GetInteger()
+	{
+		return static_cast<T>(GetInt());
+	}
 }

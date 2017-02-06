@@ -44,19 +44,37 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 {
 	if(aMessageType == eComponentMessageType::eSelectSkill)
 	{
-		if(aMessageData.myInt < mySkills.Size())
+		unsigned short index = -1;
+		for (unsigned short i = 0; i < mySkills.Size(); i++)
+		{
+			if(mySkills[i] == aMessageData.mySkill)
+			{
+				index = i;
+			}
+		}
+		if(index >= 0)
 		{
 			for(unsigned short i = 0; i < mySkills.Size(); i++)
 			{
 				mySkills[i]->Deselect();
+				if(mySkills[index]->GetSkillData()->isChannel == true && i != index)
+				{
+					mySkills[i]->Deactivate();
+				}
 			}
-			mySkills[aMessageData.myInt]->Select();
+			mySkills[index]->Select();
 		}
 		else
 		{
 			DL_PRINT_WARNING("Tried to use a skill that was not in skillSystemComponent");
 		}
 	
+	}
+	else if (aMessageType == eComponentMessageType::eTryToSelectSkill)
+	{
+		SComponentMessageData data;
+		data.mySkill = mySkills[aMessageData.myInt];
+		GetParent()->NotifyComponents(eComponentMessageType::eCheckIfCanSelect, data);
 	}
 	else if(aMessageType == eComponentMessageType::eSetSkillTargetPosition)
 	{
@@ -78,6 +96,7 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 	else if (aMessageType == eComponentMessageType::eSetSkillTargetObject)
 	{
 		bool isAnythingSelected = false;
+		bool isAnythingActive = false;
 		for (unsigned short i = 0; i < mySkills.Size(); i++)
 		{
 			mySkills[i]->SetTargetObject(aMessageData.myGameObject);
@@ -86,8 +105,12 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 				isAnythingSelected = true;
 				mySkills[i]->TryToActivate();
 			}
+			if (mySkills[i]->GetIsActive() == true)
+			{
+				isAnythingActive = true;
+			}
 		}
-		if(isAnythingSelected == false)
+		if(isAnythingSelected == false && isAnythingActive == false)
 		{
 
 			mySkills[0]->TryToActivate();

@@ -13,9 +13,6 @@
     <ClCompile Include="DrawCallsCount.cpp">
       <Filter>Events\DrawCallsCount</Filter>
     </ClCompile>
-    <ClCompile Include="KeyDown.cpp">
-      <Filter>Events\KeyDown</Filter>
-    </ClCompile>
     <ClCompile Include="KeyPressed.cpp">
       <Filter>Events\KeyPressed</Filter>
     </ClCompile>
@@ -123,9 +120,6 @@
     </ClInclude>
     <ClInclude Include="DrawCallsCount.h">
       <Filter>Events\DrawCallsCount</Filter>
-    </ClInclude>
-    <ClInclude Include="KeyDown.h">
-      <Filter>Events\KeyDown</Filter>
     </ClInclude>
     <ClInclude Include="KeyPressed.h">
       <Filter>Events\KeyPressed</Filter>
@@ -256,6 +250,8 @@
     <ClInclude Include="PushState.h">
       <Filter>Events\PushState</Filter>
     </ClInclude>
+    <ClInclude Include="PopCurrentState.h" />
+    <ClInclude Include="PostMaster.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Events">
@@ -278,9 +274,6 @@
     </Filter>
     <Filter Include="Events\FocusChanged">
       <UniqueIdentifier>{4997c80e-70d9-4e26-b70b-2a02bc395942}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Events\KeyDown">
-      <UniqueIdentifier>{c3eb3e45-41f9-42da-91d1-d1ab47681823}</UniqueIdentifier>
     </Filter>
     <Filter Include="Events\KeyPressed">
       <UniqueIdentifier>{f81fd590-d30d-439d-b548-da313a2aa399}</UniqueIdentifier>

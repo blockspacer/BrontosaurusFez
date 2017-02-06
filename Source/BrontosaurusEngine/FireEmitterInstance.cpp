@@ -4,6 +4,8 @@
 
 #include "Renderer.h"
 
+#define self (*this)
+
 CFireEmitterInstance::CFireEmitterInstance()
 	: myFireEmitter(-1)
 {
@@ -59,3 +61,5 @@ void CFireEmitterInstance::Render()
 
 	RENDERER.AddRenderMessage(renderFireMessage);
 }
+
+#undef self

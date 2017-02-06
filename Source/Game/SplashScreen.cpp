@@ -102,7 +102,7 @@ bool CSplashScreen::CheckIfMorePicsInArray()
 
 void CSplashScreen::OnEnter()
 {
-	POSTMASTER.Subscribe(this, eMessageType::eKeyPressed);
+	POSTMASTER.Subscribe(this, eMessageType::eKeyboardMessage);
 	//POSTMASTER.Subscribe(this, eMessageType::eMousePressed);
 
 
@@ -117,14 +117,14 @@ void CSplashScreen::OnEnter()
 
 void CSplashScreen::OnExit()
 {
-	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyPressed);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
 	//PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMousePressed);
 
 }
 
 eMessageReturn CSplashScreen::Recieve(const Message& aMessage)
 {
-	if (aMessage.myMessageType == eMessageType::eKeyPressed /*|| aMessage.myMessageType ==  eMessageType::eMousePressed*/)
+	if (aMessage.myMessageType == eMessageType::eKeyboardMessage /*|| aMessage.myMessageType ==  eMessageType::eMousePressed*/)
 	{
 		if (CheckIfMorePicsInArray() == true)
 			SetNextPic();

@@ -13,14 +13,12 @@ CHealthComponent::CHealthComponent()
 	myHealth = myMaxHealth;
 	myPercentageLeft = static_cast<float>(myHealth) / static_cast<float>(myMaxHealth);
 
-	//PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyPressed);
 	myType = eComponentType::eHealth;
 }
 
 
 CHealthComponent::~CHealthComponent()
 {
-	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyPressed);
 }
 
 float CHealthComponent::GetPrecentLeft() const
@@ -68,6 +66,8 @@ void CHealthComponent::SetObjectType(const eObjectType aType)
 	myObjectType = aType;
 }
 
+#include "ScriptComponentManager.h"
+
 void CHealthComponent::Init()
 {
 	SComponentMessageData data;
@@ -81,6 +81,14 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 	float temp;
 	switch (aMessageType)
 	{
+	case eComponentMessageType::eObjectDone:
+	{
+		CScriptComponentManager* scriptManager = CScriptComponentManager::GetInstance();
+		if (!scriptManager) break;
+		CComponent* bloodEmitter = scriptManager->CreateAbstractComponent("Script/blood_emitter.lua");
+		GetParent()->AddComponent(bloodEmitter);
+	}
+		break;
 	case eComponentMessageType::eAddToMaxHealth:
 		SetMaxHealth(myMaxHealth + aMessageData.myInt);
 		break;

@@ -34,6 +34,7 @@ public:
 	inline IDXGISwapChain& GetSwapChain();
 
 private:
+	bool CollectAdapters(CU::Vector2<unsigned int> aWindowSize, CU::Vector2<int>& aNumDenumerator, IDXGIAdapter*& outAdapter);
 	DXGI_FORMAT GetDepthResourceFormat(DXGI_FORMAT depthformat);
 	DXGI_FORMAT GetDepthSRVFormat(DXGI_FORMAT depthformat);
 

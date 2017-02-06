@@ -16,7 +16,6 @@
 #include "../PostMaster/MouseClicked.h"
 #include "../PostMaster/MouseReleased.h"
 #include "../PostMaster/MouseMoved.h"
-#include "../PostMaster/KeyDown.h"
 #include "../PostMaster/KeyPressed.h"
 #include "../PostMaster/KeyReleased.h"
 #include "../PostMaster//InputMessagePressed.h"
@@ -26,16 +25,16 @@ CInputManager::CInputManager()
 	, myXInputWrapper(nullptr)
 {
 	myDInputWrapper = new CU::InputWrapper();
-	void* hingsten = CEngine::GetInstance()->GetWindow()->GetHinstance(),
-		* hunden = CEngine::GetInstance()->GetWindow()->GetHWND();
 
-	/*bool directInputSuccess =*/ myDInputWrapper->Init(reinterpret_cast<HINSTANCE>(hingsten), reinterpret_cast<HWND>(hunden));
-	//assert(directInputSuccess == true && "Failed to init direct input wrapper :(");
+	HINSTANCE hingsten = CEngine::GetInstance()->GetWindow()->GetHinstance();
+	HWND hunden = CEngine::GetInstance()->GetWindow()->GetHWND();
+
+	/*bool directInputSuccess =*/ myDInputWrapper->Init(hingsten, hunden);
 
 	myXInputWrapper = new CU::XInputWrapper();
 	myXInputWrapper->Init(4);
 
-	myDInputWrapper->Init(reinterpret_cast<HINSTANCE>(CEngine::GetInstance()->GetWindow()->GetHinstance()), reinterpret_cast<HWND>(CEngine::GetInstance()->GetWindow()->GetHWND()));
+	myDInputWrapper->Init(hingsten, hunden);
 	myKeyDowns.Init(20);
 
 	myHasFocus = true;
@@ -50,7 +49,7 @@ CInputManager::~CInputManager()
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eFokusChanged);
 }
 
-eMessageReturn CInputManager::Recieve(const Message & aMessage)
+eMessageReturn CInputManager::Recieve(const Message& aMessage)
 {
 	return aMessage.myEvent.DoEvent(this);
 }
@@ -81,7 +80,13 @@ void CInputManager::UpdateMouse()
 	if (myHasFocus == true)
 	{
 		static CU::Vector2f lastMousePosition(0, 0);
-		CU::Vector2f mousePosition(myDInputWrapper->GetMousePositionX(), myDInputWrapper->GetMousePositionY());
+
+		CU::Vector2i windowSize(WINDOW_SIZE);
+		CU::Vector2i middleOfWindow = windowSize / 2.f;
+		CU::Vector2i newWindowsMousePos(myDInputWrapper->GetMousePositionX(), myDInputWrapper->GetMousePositionY());
+
+		CU::Vector2f mouseDelta(newWindowsMousePos - middleOfWindow);
+		CU::Vector2f mousePosition = lastMousePosition + mouseDelta;
 
 		if (lastMousePosition != mousePosition)
 		{
@@ -104,27 +109,20 @@ void CInputManager::UpdateMouse()
 		{
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eMouseMessage, MouseReleased(mousePosition, CU::eMouseButtons::RBUTTON)));
 		}
-		//myDInputWrapper->SetMousePosition(CEngine::GetInstance()->GetWindowSize().x / 2, CEngine::GetInstance()->GetWindowSize().y / 2);
+
+		myDInputWrapper->SetMousePosition(middleOfWindow.x, middleOfWindow.y);
 	}
 	
 }
 
 void CInputManager::UpdateKeyboard()
 {
-	if (myDInputWrapper->GetKeysDown(myKeyDowns) == true)
-	{
-		for (unsigned int i = 0; i < myKeyDowns.Size(); ++i)
-		{
-			PostMaster::GetInstance().SendLetter(Message(eMessageType::eKeyboardMessage, KeyDown(myKeyDowns[i])));
-		}
-	}
-
 	if (myDInputWrapper->GetKeysPressed(myKeyDowns) == true)
 	{
 		for (unsigned int i = 0; i < myKeyDowns.Size(); ++i)
 		{
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eKeyboardMessage, KeyPressed(myKeyDowns[i])));
-			PostMaster::GetInstance().SendLetter(Message(eMessageType::eKeyPressed, KeyPressed(myKeyDowns[i])));
+			//PostMaster::GetInstance().SendLetter(Message(eMessageType::eKeyPressed, KeyPressed(myKeyDowns[i])));
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eInputMessagePressed, InputMessagePressed(static_cast<CU::eInputMessage>(myKeyDowns[i]))));
 		}
 	}

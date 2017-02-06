@@ -17,6 +17,7 @@
 #include "../CommonUtilities/matrix44.h"
 #include "../CommonUtilities/JsonValue.h"
 #include "PollingStation.h"
+#include "matrix33.h"
 CPickupFactory* CPickupFactory::ourInstance = nullptr;
 
 void CPickupFactory::Create(CGameObjectManager* aCGameObjectManager, CCollisionComponentManager* aManager)
@@ -40,9 +41,7 @@ CPickupFactory & CPickupFactory::GetInstance()
 void CPickupFactory::CreateHealthGlobe(CU::Vector3f aPosition)
 {
 	CGameObject* healthGlobe = myGameObjectManager->CreateGameObject();
-	CU::Vector3f direction = aPosition - PollingStation::playerObject->GetWorldPosition();
-	direction.Normalize();
-	CU::Vector3f newPosition = aPosition + direction * 50.0f;
+	CU::Vector3f newPosition = GenerateNewPosition(aPosition);
 	healthGlobe->SetWorldPosition(newPosition);
 
 	CPickupComponent* pickup = CPickupManager::GetInstance().CreatePickupComponent(ePickupType::HEALTH, myHealthDropHealValue, 0, 100);
@@ -75,9 +74,7 @@ void CPickupFactory::CreateHealthGlobe(CU::Vector3f aPosition)
 void CPickupFactory::CreateGoldPickup(CU::Vector3f aPosition, const unsigned int aAmountToDrop)
 {
 	CGameObject* manaGlobe = myGameObjectManager->CreateGameObject();
-	CU::Vector3f direction = aPosition - PollingStation::playerObject->GetWorldPosition();
-	direction.Normalize();
-	CU::Vector3f newPosition = aPosition + direction * 50.0f;
+	CU::Vector3f newPosition = GenerateNewPosition(aPosition);
 	manaGlobe->SetWorldPosition(newPosition);
 
 	CPickupComponent* pickup = CPickupManager::GetInstance().CreatePickupComponent(ePickupType::GOLD, aAmountToDrop, 0, 100);
@@ -110,9 +107,7 @@ void CPickupFactory::CreateGoldPickup(CU::Vector3f aPosition, const unsigned int
 void CPickupFactory::CreateManaGlobe(CU::Vector3f aPosition)
 {
 	CGameObject* healthGlobe = myGameObjectManager->CreateGameObject();
-	CU::Vector3f direction = aPosition - PollingStation::playerObject->GetWorldPosition();
-	direction.Normalize();
-	CU::Vector3f newPosition = aPosition + direction * 50.0f;
+	CU::Vector3f newPosition = GenerateNewPosition(aPosition);
 	healthGlobe->SetWorldPosition(newPosition);
 
 	CPickupComponent* pickup = CPickupManager::GetInstance().CreatePickupComponent(ePickupType::MANA, myManaDropRestoreValue, 0, 100);
@@ -145,9 +140,7 @@ void CPickupFactory::CreateManaGlobe(CU::Vector3f aPosition)
 void CPickupFactory::CreateHatDrop(CU::Vector3f aPosition, const char* aHatName)
 {
 	CGameObject* hat = myGameObjectManager->CreateGameObject();
-	CU::Vector3f direction = aPosition - PollingStation::playerObject->GetWorldPosition();
-	direction.Normalize();
-	CU::Vector3f newPosition = aPosition + direction * 50.0f;
+	CU::Vector3f newPosition = GenerateNewPosition(aPosition);
 	hat->SetWorldPosition(newPosition);
 
 	CPickupComponent* pickup = CPickupManager::GetInstance().CreatePickupComponent(ePickupType::HAT, aHatName, 0, 100);
@@ -185,6 +178,10 @@ void CPickupFactory::Init(const std::string& aKey)
 	const std::string& errorString = levelsFile.Parse("Json/Drops.json");
 
 	CU::CJsonValue levelsArray = levelsFile.at(aKey);
+	if (levelsArray.IsNull() == true)
+	{
+		return;
+	}
 
 	myHealthDropHealValue = levelsArray.at("healthDropRestorePercentage").GetFloat();
 	myManaDropRestoreValue = levelsArray.at("manaDropRestorePercentage").GetFloat();
@@ -205,9 +202,16 @@ CPickupFactory::~CPickupFactory()
 {
 }
 
-CU::Vector3f CPickupFactory::CalculateOffsetSpawnPosition()
+CU::Vector3f CPickupFactory::GenerateNewPosition(CU::Vector3f& aPosition)
 {
-
-
-	return CU::Vector3f();
+	CU::Vector3f direction = aPosition - PollingStation::playerObject->GetWorldPosition();
+	CU::Vector3f newPosition;
+	direction.Normalize();
+	float angle = rand() % 180;
+	angle - 90.0f;
+	angle *= PI / 180.0f;
+	direction = direction * CU::Matrix33f::CreateRotateAroundZ(angle);
+	newPosition = aPosition + direction * 50.0f;
+	DL_PRINT("Drop angle %f", angle * 180.0f / PI);
+	return newPosition;
 }

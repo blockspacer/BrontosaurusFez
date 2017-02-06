@@ -36,7 +36,7 @@ struct TextInstanceBufferType
 CCoolText::CCoolText(const CU::DynamicString& aFontPath): myVertexConstantBuffer(nullptr), myPixelConstantBuffer(nullptr)
 {
 	myFont = CFontEngineFacade::GetInstance().GetFace(aFontPath.c_str());
-	myFont.SetSize(32, 0, 0);
+	//myFont.SetSize(32, 0, 0);
 	InitBuffers();
 }
 

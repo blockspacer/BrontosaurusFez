@@ -17,6 +17,7 @@ void CActivationComponent::Receive(const eComponentMessageType aMessageType, con
 	{
 		SComponentMessageData messageData;
 		GetParent()->NotifyComponents(eComponentMessageType::eActivate, messageData);
+		GetParent()->NotifyComponents(eComponentMessageType::eActivate2, messageData);
 	}
 }
 

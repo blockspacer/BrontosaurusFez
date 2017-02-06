@@ -144,3 +144,6 @@ void CScriptComponent::AddSubscription(const SComponentMessageCallback& aCallbac
 void CScriptComponent::Destroy()
 {
 }
+
+#undef lie
+#undef fact

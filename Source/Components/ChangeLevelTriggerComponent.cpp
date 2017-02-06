@@ -3,6 +3,15 @@
 #include "PollingStation.h"
 #include "../Game/LevelManager.h"
 
+#include "ScriptComponentManager.h"
+
+void AddScript(CGameObject& aParent)
+{
+	CScriptComponentManager* scriptManager = CScriptComponentManager::GetInstance();
+	if (!scriptManager) return;
+
+	aParent.AddComponent(scriptManager->CreateAbstractComponent("Script/magic_teleport_emitter.lua"));
+}
 
 ChangeLevelTriggerComponent::ChangeLevelTriggerComponent(const unsigned char aLevelToGoTo, const unsigned short aPortalID)
 {
@@ -11,15 +20,20 @@ ChangeLevelTriggerComponent::ChangeLevelTriggerComponent(const unsigned char aLe
 	myType = eComponentType::eChangeLevelTrigger;
 }
 
-
 ChangeLevelTriggerComponent::~ChangeLevelTriggerComponent()
 {
 }
 
-void ChangeLevelTriggerComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
+void ChangeLevelTriggerComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData)
 {
 	switch (aMessageType)
 	{
+	case eComponentMessageType::eAddComponent:
+		if (GetParent() && aMessageData.myComponentTypeAdded == myType)
+		{
+			AddScript(*GetParent());
+		}
+		break;
 	case(eComponentMessageType::eActivate):
 		if (myPortalID == 0)
 		{
@@ -32,6 +46,7 @@ void ChangeLevelTriggerComponent::Receive(const eComponentMessageType aMessageTy
 				if (PollingStation::OpenPortals[i] == myPortalID)
 				{
 					CLevelManager::GetInstance()->GoToLevel(myLevelToGoTo);
+					//break; // mebe???
 				}
 			}
 		}

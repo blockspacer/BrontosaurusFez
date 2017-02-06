@@ -1,77 +1,61 @@
 #pragma once
+#include <math.h>
+
 #include "vector3.h"
 #include "vector2.h"
-#include <array>
-#include <math.h>
+#include "StaticArray.h"
+
+#define self (*this)
 
 namespace CU
 {
-
-	// Forward declarations
-	//
 	template<typename TYPE>
 	class Matrix44;
-
 
 	template<typename TYPE>
 	class Matrix33
 	{
-	public:     // Constants to avoid using magic numbers
-				//
-		static const unsigned int   NumRows = 3,
-			NumColumns = 3,
-			NumElements = NumRows * NumColumns;
+	public:
+		static const unsigned int NumRows = 3;
+		static const unsigned int NumColumns = 3;
+		static const unsigned int NumElements = NumRows * NumColumns;
 
-		// Initializes the matrix to the identity matrix
-		//
-		Matrix33(void)
+		Matrix33()
 		{
 			m11 = static_cast<TYPE>(1); m12 = static_cast<TYPE>(0); m13 = static_cast<TYPE>(0);
 			m21 = static_cast<TYPE>(0); m22 = static_cast<TYPE>(1); m23 = static_cast<TYPE>(0);
 			m31 = static_cast<TYPE>(0); m32 = static_cast<TYPE>(0); m33 = static_cast<TYPE>(1);
 		}
 
-		// Initializes the matrix with the data from anOther
-		//
-		Matrix33(const Matrix33 &anOther)
+		Matrix33(const Matrix33& aRight)
 		{
-			m11 = anOther.m11; m12 = anOther.m12; m13 = anOther.m13;
-			m21 = anOther.m21; m22 = anOther.m22; m23 = anOther.m23;
-			m31 = anOther.m31; m32 = anOther.m32; m33 = anOther.m33;
+			m11 = aRight.m11; m12 = aRight.m12; m13 = aRight.m13;
+			m21 = aRight.m21; m22 = aRight.m22; m23 = aRight.m23;
+			m31 = aRight.m31; m32 = aRight.m32; m33 = aRight.m33;
 		}
 
-		// Initializes the matrix with the 3x3-part from anOther
-		//
-		Matrix33(const Matrix44<TYPE> &anOther)
+		Matrix33(const Matrix44<TYPE>& aRight)
 		{
-			m11 = anOther.m11; m12 = anOther.m12; m13 = anOther.m13;
-			m21 = anOther.m21; m22 = anOther.m22; m23 = anOther.m23;
-			m31 = anOther.m31; m32 = anOther.m32; m33 = anOther.m33;
+			m11 = aRight.m11; m12 = aRight.m12; m13 = aRight.m13;
+			m21 = aRight.m21; m22 = aRight.m22; m23 = aRight.m23;
+			m31 = aRight.m31; m32 = aRight.m32; m33 = aRight.m33;
 		}
 
-		// Initializes the matrix with the static_cast'ed data from anOther which uses another base type
-		//
 		template<typename U>
-		Matrix33(const Matrix33<U> &anOther)
+		Matrix33(const Matrix33<U>& aRight)
 		{
-			m11 = static_cast<TYPE>(anOther.m11); m12 = static_cast<TYPE>(anOther.m12); m13 = static_cast<TYPE>(anOther.m13);
-			m21 = static_cast<TYPE>(anOther.m21); m22 = static_cast<TYPE>(anOther.m22); m23 = static_cast<TYPE>(anOther.m23);
-			m31 = static_cast<TYPE>(anOther.m31); m32 = static_cast<TYPE>(anOther.m32); m33 = static_cast<TYPE>(anOther.m33);
-		}
-		// Initializes the matrix with the data from an array
-		//
-		// Explanation:
-		// This allows the syntax: Matrix33 identity({1, 0, 0, 0, 1, 0, 0, 0, 1});
-		//
-		Matrix33(const TYPE(&anArray)[NumElements])
-		{
-			m11 = anArray[0]; m12 = anArray[1]; m13 = anArray[2];
-			m21 = anArray[3]; m22 = anArray[4]; m23 = anArray[5];
-			m31 = anArray[6]; m32 = anArray[7]; m33 = anArray[8];
+			m11 = static_cast<TYPE>(aRight.m11); m12 = static_cast<TYPE>(aRight.m12); m13 = static_cast<TYPE>(aRight.m13);
+			m21 = static_cast<TYPE>(aRight.m21); m22 = static_cast<TYPE>(aRight.m22); m23 = static_cast<TYPE>(aRight.m23);
+			m31 = static_cast<TYPE>(aRight.m31); m32 = static_cast<TYPE>(aRight.m32); m33 = static_cast<TYPE>(aRight.m33);
 		}
 
-		// Initializes the matrix with plain values
-		//
+		Matrix33(const TYPE(&aArray)[NumElements])
+		{
+			m11 = aArray[0]; m12 = aArray[1]; m13 = aArray[2];
+			m21 = aArray[3]; m22 = aArray[4]; m23 = aArray[5];
+			m31 = aArray[6]; m32 = aArray[7]; m33 = aArray[8];
+		}
+
 		Matrix33(
 			const TYPE a11, const TYPE a12, const TYPE a13,
 			const TYPE a21, const TYPE a22, const TYPE a23,
@@ -82,33 +66,29 @@ namespace CU
 			m31 = a31; m32 = a32; m33 = a33;
 		}
 
-		// Adds and assigns the values of aRight to this matrix
-		//
-		Matrix33 &operator +=(const Matrix33 &aRight)
+		~Matrix33() {}
+
+		Matrix33& operator+=(const Matrix33& aRight)
 		{
 			m11 += aRight.m11; m12 += aRight.m12; m13 += aRight.m13;
-
 			m21 += aRight.m21; m22 += aRight.m22; m23 += aRight.m23;
-
 			m31 += aRight.m31; m32 += aRight.m32; m33 += aRight.m33;
-			return *this;
+
+			return self;
 		}
 
-		// Subtract and assigns the values of aRight to this matrix
-		//
-		Matrix33 &operator -=(const Matrix33 &aRight)
+		Matrix33 &operator-=(const Matrix33& aRight)
 		{
 			m11 -= aRight.m11; m12 -= aRight.m12; m13 -= aRight.m13;
 			m21 -= aRight.m21; m22 -= aRight.m22; m23 -= aRight.m23;
 			m31 -= aRight.m31; m32 -= aRight.m32; m33 -= aRight.m33;
-			return *this;
+
+			return self;
 		}
 
-		// Multiplies this matrix with aRight
-		//
-		Matrix33 &operator *=(const Matrix33 &aRight)
+		Matrix33 &operator*=(const Matrix33& aRight)
 		{
-			Matrix33 temp = *this;
+			Matrix33 temp = self;
 
 			m11 = (temp.m11 * aRight.m11) + (temp.m12 * aRight.m21) + (temp.m13 * aRight.m31);
 			m12 = (temp.m11 * aRight.m12) + (temp.m12 * aRight.m22) + (temp.m13 * aRight.m32);
@@ -124,26 +104,22 @@ namespace CU
 			m32 = (temp.m31 * aRight.m12) + (temp.m32 * aRight.m22) + (temp.m33 * aRight.m32);
 			m33 = (temp.m31 * aRight.m13) + (temp.m32 * aRight.m23) + (temp.m33 * aRight.m33);
 
-
-			return *this;
+			return self;
 
 		}
 
-		// Sets the values of this matrix to those of aRight
-		//
-		Matrix33 &operator =(const Matrix33 &aRight)
+		Matrix33 &operator=(const Matrix33& aRight)
 		{
 			m11 = aRight.m11; m12 = aRight.m12; m13 = aRight.m13;
 			m21 = aRight.m21; m22 = aRight.m22; m23 = aRight.m23;
 			m31 = aRight.m31; m32 = aRight.m32; m33 = aRight.m33;
-			return *this;
+
+			return self;
 		}
 
-		// Transposes the matrix and returns *this
-		//
-		Matrix33 &Transpose(void)
+		Matrix33& Transpose()
 		{
-			Matrix33 temp = *this;
+			Matrix33 temp = self;
 
 			m12 = temp.m21;
 			m13 = temp.m31;
@@ -153,11 +129,10 @@ namespace CU
 
 			m31 = temp.m13;
 			m32 = temp.m23;
-			return *this;
+
+			return self;
 		}
 
-		// Creates a transformation matrix for rotating anAngle rad around the x-axis
-		//
 		static Matrix33 CreateRotateAroundX(const TYPE anAngle)
 		{
 			Matrix33 rotationX;
@@ -177,8 +152,6 @@ namespace CU
 			return rotationX;
 		}
 
-		// Creates a transformation matrix for rotating anAngle rad around the y-axis
-		//
 		static Matrix33 CreateRotateAroundY(const TYPE anAngle)
 		{
 			Matrix33 rotationY;
@@ -198,8 +171,6 @@ namespace CU
 			return rotationY;
 		}
 
-		// Creates a transformation matrix for rotating anAngle rad around the z-axis
-		//
 		static Matrix33 CreateRotateAroundZ(const TYPE anAngle)
 		{
 			Matrix33 rotationZ;
@@ -219,7 +190,7 @@ namespace CU
 			return rotationZ;
 		}
 
-		Matrix33 Lerp(const Matrix33<TYPE> aInterpolateToMatrix, TYPE aInterpolatingSpeed)
+		Matrix33 Lerp(const Matrix33<TYPE>& aInterpolateToMatrix, const TYPE aInterpolatingSpeed)
 		{
 			m21 = m21 + aInterpolatingSpeed * (aInterpolateToMatrix.m21 - m21);
 			m22 = m22 + aInterpolatingSpeed * (aInterpolateToMatrix.m22 - m22);
@@ -233,21 +204,18 @@ namespace CU
 			myRightVector = myUpVector.Cross(myForwardVector).GetNormalized();
 			myUpVector = myForwardVector.Cross(myRightVector).GetNormalized();
 
-			return *this;
+			return self;
 		}
-		Matrix33 LookAt(CU::Vector3<TYPE> aPositionToLookFrom, CU::Vector3<TYPE> aPositionToLookAt)
+
+		Matrix33 LookAt(const CU::Vector3<TYPE>& aPositionToLookFrom, const CU::Vector3<TYPE>& aPositionToLookAt)
 		{
-			CU::Vector3f lookAt = aPositionToLookAt;
-			CU::Vector3f lookFrom = aPositionToLookFrom;
 			CU::Vector3f objectUpVector = CU::Vector3f(0.0f, 1.0f, 0.0f);
 
-
-			CU::Vector3f zAxis = lookAt - lookFrom;
+			CU::Vector3f zAxis = aPositionToLookAt - aPositionToLookFrom;
 			zAxis = zAxis.GetNormalized();
 			CU::Vector3f xAxis = objectUpVector.Cross(zAxis);
 			xAxis = xAxis.GetNormalized();
 			CU::Vector3f yAxis = zAxis.Cross(xAxis);
-
 
 			m11 = xAxis.x;
 			m12 = xAxis.y;
@@ -261,10 +229,9 @@ namespace CU
 			m32 = zAxis.y;
 			m33 = zAxis.z;
 
-			return *this;
+			return self;
 		}
-		// Returns a transposed copy of aMatrix
-		//
+
 		static Matrix33 Transpose(Matrix33 aMatrix)
 		{
 			Matrix33 temp = aMatrix;
@@ -280,71 +247,41 @@ namespace CU
 			return temp;
 		}
 
-		// Sets the position part of a 2D transformation matrix 
-		// 
-
 		void SetPosition(const Vector2<TYPE> &aPosition)
 		{
 			m31 = aPosition.x;
 			m32 = aPosition.y;
 		}
 
-		// Gets the position part of a 2D transformation matrix 
-		// 
-		Vector2<TYPE> GetPosition(void) const
+		Vector2<TYPE> GetPosition() const
 		{
 			return Vector2<TYPE>(m31, m32);
 		}
 
-		// Rotates the upper left 2x2 part of the matrix by anAngle rad around the z-axis 
-		// 
-		Matrix33 &Rotate2D(const TYPE anAngle)
+		Matrix33& Rotate2D(const TYPE anAngle)
 		{
-			*(this) = CreateRotateAroundZ(anAngle) * *(this);
-			return *this;
-
-			/*Matrix33<TYPE> rotation = CreateRotateAroundZ(anAngle);
-
-			*this = *this * rotation;
-			return *this;*/
+			self = CreateRotateAroundZ(anAngle) * self;
+			return self;
 		}
-
-
-		// Sets the upper left 2x2 part of the matrix to the rotation of anAngle rad. Will 
-		// create the same values for the rotation-part as the CreateRotateAroundZ but 
-		// leaves the other values untouched. 
 
 		Matrix33 &Set2DRotation(const TYPE anAngle)
 		{
-			/*			Matrix33<TYPE> rotation = CreateRotateAroundZ(anAngle);
-						m11 = rotation.m11;
-						m12 = rotation.m12;
-
-						m21 = rotation.m21;
-						m22 = rotation.m22;
-
-						return *this;
-		*/
-			Matrix33<TYPE> tempMatrix = *(this);
+			static_assert(false, "this function doesn't do what it's supposed to do, mvh carl");
+			Matrix33<TYPE> tempMatrix = self;
 			tempMatrix.CreateRotateAroundZ(anAngle);
 			tempMatrix.m31 = m31;
 			tempMatrix.m32 = m32;
 			return tempMatrix;
 		}
 
-
-
-
-		// The data of this matrix
-		//
-#pragma warning( disable : 4201 ) // NOTE: This works fine in VC2013 and GCC so I'm keeping it. //MAHAM
+#pragma warning( disable : 4201 ) // remove warning namless struct
 		union
 		{
 			struct
 			{
-				TYPE    m11, m12, m13,
-					m21, m22, m23,
-					m31, m32, m33;
+				TYPE	m11, m12, m13,
+						m21, m22, m23,
+						m31, m32, m33;
 			};
 			struct
 			{
@@ -354,61 +291,35 @@ namespace CU
 			};
 #pragma warning( default : 4201 )
 
-			std::array<TYPE, NumElements> myMatrix;
+			CU::StaticArray<TYPE, NumElements> myMatrix;
 		};
 
-		// Pre-created matrices
-		//
-		static const Matrix33   Identity,   // Identity matrix
-			Zero;       // Matrix with all 0
+		static const Matrix33 Identity;
+		static const Matrix33 Zero;
 	};
 
-
-	// Alias for Matrix33<float>. Add more if needed.
-	//
 	using Matrix33f = Matrix33<float>;
 
-
-	// Returns a new matrix which is the sum of aLeft and aRight
-	//
 	template<typename TYPE>
-	Matrix33<TYPE> operator +(Matrix33<TYPE> aLeft, const Matrix33<TYPE> &aRight)
+	Matrix33<TYPE> operator+(Matrix33<TYPE> aLeft, const Matrix33<TYPE>& aRight)
 	{
 		return aLeft += aRight;
 	}
 
-
-	// Returns a new matrix wich is the difference of aLeft and aRight
-	//
 	template<typename TYPE>
-	Matrix33<TYPE> operator -(Matrix33<TYPE> aLeft, const Matrix33<TYPE> &aRight)
+	Matrix33<TYPE> operator-(Matrix33<TYPE> aLeft, const Matrix33<TYPE>& aRight)
 	{
 		return aLeft -= aRight;
 	}
 
-
-	// Returns a new matrix which is the product of aLeft and aRight
-	//
 	template<typename TYPE>
-	Matrix33<TYPE> operator *(Matrix33<TYPE> aLeftValue, const Matrix33<TYPE> &aRightValue)
+	Matrix33<TYPE> operator *(Matrix33<TYPE> aLeftValue, const Matrix33<TYPE>& aRightValue)
 	{
 		return aLeftValue *= aRightValue;
 	}
 
-
-	// Returns a new vector which is the product of the vector aLeft and the matrix 
-	// aRight. Make sure you convert aLeft to a Vector3 and set it's .z-value to 1 
-	// 
-
-	//template<typename TYPE>
-	//Vector2<TYPE> operator *(Vector2<TYPE> aLeft, const Matrix33<TYPE> &aRight)
-	//{
-	//	Vector3<TYPE> temp(aLeft.x, aLeft.y, static_cast<TYPE>(0));
-	//	temp = temp * aRight;
-	//	return Vector2<TYPE>(temp.x, temp.y);
-	//}
 	template<typename TYPE>
-	Vector2<TYPE> operator *(Vector2<TYPE> aLeftValue, const Matrix33<TYPE> &aRightValue)
+	Vector2<TYPE> operator*(Vector2<TYPE> aLeftValue, const Matrix33<TYPE>& aRightValue)
 	{
 		Vector3<TYPE> tempVec(aLeftValue.x, aLeftValue.y, 1);
 		Vector3<TYPE> returnVec;
@@ -422,10 +333,8 @@ namespace CU
 		return Vector2<TYPE>(returnVec.x, returnVec.y);
 	}
 
-	// Returns a new matrix which is the product of the vector aLeft and the matrix aRight
-	//
 	template<typename TYPE>
-	Vector3<TYPE> operator *(Vector3<TYPE> aLeft, const Matrix33<TYPE> &aRight)
+	Vector3<TYPE> operator*(Vector3<TYPE> aLeft, const Matrix33<TYPE>& aRight)
 	{
 		Vector3<TYPE> temp;
 
@@ -436,9 +345,6 @@ namespace CU
 		return temp;
 	}
 
-
-	// Compares aLeft and aRight componentwise
-	//
 	template<typename TYPE>
 	bool operator ==(const Matrix33<TYPE> &aLeft, const Matrix33<TYPE> &aRight)
 	{
@@ -448,12 +354,10 @@ namespace CU
 		{
 			return true;
 		}
+
 		return false;
 	}
 
-
-	// Returns the negated result of aLeft == aRight
-	//
 	template<typename TYPE>
 	bool operator !=(const Matrix33<TYPE> &aLeft, const Matrix33<TYPE> &aRight)
 	{
@@ -462,5 +366,6 @@ namespace CU
 
 	template<typename TYPE> const Matrix33<TYPE> Matrix33<TYPE>::Zero = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	template<typename TYPE> const Matrix33<TYPE> Matrix33<TYPE>::Identity = { 1, 0, 0, 0, 1, 0, 0, 0, 1 };
+}
 
-} 
+#undef self

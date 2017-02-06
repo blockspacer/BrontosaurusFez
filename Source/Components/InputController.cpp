@@ -111,7 +111,7 @@ void InputController::Update(float aDeltaTime)
 
 		if (mySkillActivatorKeyDown >= 0)
 		{
-			eComponentMessageType type = eComponentMessageType::eSelectSkill;
+			eComponentMessageType type = eComponentMessageType::eTryToSelectSkill;
 			SComponentMessageData data;
 			data.myInt = mySkillActivatorKeyDown;
 			GetParent()->NotifyComponents(type, data);

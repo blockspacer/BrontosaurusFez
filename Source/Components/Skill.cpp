@@ -76,6 +76,7 @@ Skill::Skill(SkillData* aSkillDataPointer)
 	myAnimationTimeElapsed = 0.f;
 	mySpeedBonusStats = new Stats::SBonusStats;
 	mySpeedBonusStats->BonusMovementSpeed = mySkillData->movementSpeedBuffModifier;
+	myShouldDoDirectdamage = false;
 }
 
 
@@ -304,19 +305,48 @@ void Skill::SetTargetPosition(CU::Vector3f aTargetPosition)
 {	
 	myTargetPosition = aTargetPosition;
 	myTargetObject = nullptr;
+	myShouldDoDirectdamage = false;
 }
 void Skill::SetTargetObject(CGameObject* aTargetObject)
 {
 	myTargetObject = aTargetObject;
+	myShouldDoDirectdamage = true;
 }
 void Skill::ActivateCollider()
 {
 	myHaveActivatedCollider = true;
-	eComponentMessageType type = eComponentMessageType::eSetIsColliderActive;
-	SComponentMessageData data;
-	
-	data.myBool = true;
-	myColliderObject->NotifyComponents(type, data);
+	if(myShouldDoDirectdamage == false)
+	{
+		eComponentMessageType type = eComponentMessageType::eSetIsColliderActive;
+		SComponentMessageData data;
+
+		data.myBool = true;
+		myColliderObject->NotifyComponents(type, data);
+	}
+	else
+	{
+		if(mySkillData->isAOE == false)
+		{
+			//Johan added this
+			//-------------------------------------------------------------------------------------------------------------------
+			//-------------------------------------------------------------------------------------------------------------------
+			if(myTargetObject != nullptr)
+			{
+				SComponentMessageData damageData;
+				damageData.myInt = static_cast<int>((mySkillData->damage + mySkillData->damageBonus) * mySkillData->damageModifier);
+				myTargetObject->NotifyComponents(eComponentMessageType::eTakeDamage, damageData);
+			}
+		
+		}
+		else
+		{
+			eComponentMessageType type = eComponentMessageType::eSetIsColliderActive;
+			SComponentMessageData data;
+
+			data.myBool = true;
+			myColliderObject->NotifyComponents(type, data);	
+		}
+	}
 }
 void Skill::OnActivation()
 {
@@ -343,7 +373,6 @@ void Skill::OnActivation()
 
 		speedBonusData.myStatsToAdd = mySpeedBonusStats;
 		mySpeedBonusStats->BonusMovementSpeed = mySpeedBonusStats->BonusMovementSpeed * -1;
-		DL_PRINT("activate %f", mySpeedBonusStats->BonusMovementSpeed);
 		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eAddStats, speedBonusData);
 	}
 }
@@ -363,7 +392,6 @@ void Skill::OnDeActivation()
 	SComponentMessageData speedBonusData;
 	mySpeedBonusStats->BonusMovementSpeed = mySpeedBonusStats->BonusMovementSpeed * -1;
 	speedBonusData.myStatsToAdd = mySpeedBonusStats;
-	DL_PRINT("Deactivate %f", mySpeedBonusStats->BonusMovementSpeed);
 	PollingStation::playerObject->NotifyComponents(eComponentMessageType::eAddStats, speedBonusData);
 }
 
