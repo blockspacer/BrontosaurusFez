@@ -62,6 +62,15 @@ void CModelComponent::Receive(const eComponentMessageType aType, const SComponen
 		myModel->SetAnimationLooping(false);
 		myModel->SetHighlightIntencity(0.0f);
 		break;
+	case eComponentMessageType::eChangeFBXToDead:
+	{
+		//CU::Matrix44f orientation = myModel->GetTransformation();
+		myModel->SetVisibility(false);
+		//orientation.GetPosition().y += 70;
+		//SAFE_DELETE(myModel);
+		//myModel = new CModelInstance("Models/Placeholders/barrelDead.fbx", orientation);
+		break;
+	}
 	case eComponentMessageType::eAddComponent:
 		if (aData.myComponentTypeAdded != eComponentType::eModel) break; //else: fall through
 	case eComponentMessageType::eMoving:
