@@ -420,7 +420,7 @@ void CPlayState::OnEnter()
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
 	Audio::CAudioInterface::GetInstance()->LoadBank("Audio/playState.bnk");
-	Audio::CAudioInterface::GetInstance()->PostEvent("PlayCoolSong");
+	Audio::CAudioInterface::GetInstance()->PostEvent("BayBlade");
 	myGUIManager->RestartRenderAndUpdate();
 }
 
@@ -432,7 +432,7 @@ void CPlayState::OnExit()
 	if (audioInterface != nullptr)
 	{
 		audioInterface->PostEvent("switchBank");
-		audioInterface->PostEvent("StopCoolSong");
+		audioInterface->PostEvent("BayBlade");
 		audioInterface->UnLoadBank("Audio/playState.bnk");
 	}
 	myGUIManager->PauseRenderAndUpdate();
