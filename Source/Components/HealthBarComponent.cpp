@@ -6,8 +6,8 @@
 CHealthBarComponent::CHealthBarComponent() : myBarSize(0.06f,0.01f)
 {		
 	myType = eComponentType::eHealthBar;
-	mySprite = new CSpriteInstance("Sprites/healthBar.dds", myBarSize,   { 0.5f, 0.5f }, { 0.f, 0.f ,1.0f, 1.f }, { 1.f, 0.f, 0.f, 0.f });
-	myBGSprite = new CSpriteInstance("Sprites/healthBar.dds", myBarSize, { 0.5f, 0.5f }, { 0.f, 0.f ,0.8f, 1.f }, { 0.1f, 0.1f, 0.1f, 0.f });
+	mySprite = new CSpriteInstance("Sprites/healthBar.dds",   myBarSize, { 0.5f, 0.5f }, { 0.f,0.f }, { 0.f, 0.f ,1.0f, 1.f }, { 1.0f, 0.0f, 0.0f, 0.f });
+	myBGSprite = new CSpriteInstance("Sprites/healthBar.dds", myBarSize, { 0.5f, 0.5f }, { 0.f,0.f }, { 0.f, 0.f ,0.8f, 1.f }, { 0.1f, 0.1f, 0.1f, 0.f });
 	myHasAppeared = false;
 	myShouldBeDeleted = false;
 }
