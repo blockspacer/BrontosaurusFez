@@ -14,6 +14,8 @@ cbuffer VertexConstantBuffer : register(b1)
 {
 	float2 position;
 	float2 size;
+	float2 pivot;
+	float2 TRASH;
 	float4 rect;
 	float4 color;
 }
@@ -23,8 +25,16 @@ SamplerState globalSamplerState;
 
 PixelInput VS_Sprite(VertexInput input)
 {	
-	float2 outPosition;
-	outPosition = input.position.xy * size;
+	float2 outPosition = input.position.xy;
+
+	outPosition.x -= pivot.x;
+	outPosition.y += pivot.y;
+
+	//input.position.x -= pivot.x;
+	//input.position.y += pivot.y;	
+
+	outPosition *=  size;
+
 	outPosition.x = outPosition.x + position.x;
 	outPosition.y = outPosition.y + 1.f - position.y - size.y;
 
@@ -34,12 +44,15 @@ PixelInput VS_Sprite(VertexInput input)
 
 	PixelInput output;
 	output.position = float4(outPosition, 0.5f, 1.f);
+
+	//output.position.x -= myPivot.x;
+	//output.position.y += myPivot.y;
+
 	output.color = color;
 
 	float2 uv;
 	uv.x = rect.x + input.position.x * (rect.z - rect.x);
 	uv.y = rect.y + input.position.y * (rect.w - rect.y);
-
 	//flip uv i y-led
 	output.uv = float2(uv.x, 1.f - uv.y);
 	

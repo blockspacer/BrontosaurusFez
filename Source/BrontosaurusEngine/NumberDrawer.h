@@ -55,7 +55,7 @@ inline void CNumberDrawer::AddSprite()
 		position.x += mySpriteData.mySize.x * digitOffset;
 		mySpriteInstances[i]->SetPosition(position);
 	}
-	CSpriteInstance* aPointer = new CSpriteInstance(mySpriteData.myImageFilPath.c_str(), mySpriteData.mySize, { mySpriteData.myPosition.x , mySpriteData.myPosition.y }, { 0, 0.9f, 1,1.f });
+	CSpriteInstance* aPointer = new CSpriteInstance(mySpriteData.myImageFilPath.c_str(), mySpriteData.mySize, { 0.f,0.f }, { mySpriteData.myPosition.x , mySpriteData.myPosition.y }, { 0, 0.9f, 1,1.f });
 	mySpriteInstances.Insert(0 , aPointer);
 }
 
