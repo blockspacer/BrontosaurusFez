@@ -61,6 +61,13 @@ void CCollisionComponent::Receive(const eComponentMessageType aMessageType, cons
 	case eComponentMessageType::eRespawned:
 		ActivateCollider();
 		break;
+	case eComponentMessageType::eRemoveAllCollidedWith:
+		for(unsigned short i = 0; i < myCollider->GetCollidedWith().Size(); i++)
+		{
+			const_cast<ICollider*>(myCollider->GetCollidedWith()[i])->GetCollidedWith().RemoveAll();
+		}
+		myCollider->GetCollidedWith().RemoveAll();
+		break;
 	}
 }
 
