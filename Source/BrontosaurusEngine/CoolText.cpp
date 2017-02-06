@@ -107,15 +107,13 @@ CU::Vector2i CCoolText::CalculateRectPixelSize(const std::string& aText)
 	std::wstring wText(aText.begin(), aText.end());
 	for (size_t i = 0; i < wText.size(); ++i)
 	{
-		if (wText[i] == L'w') //sorry mvh carl
+		CU::Vector2i charSize;
+		if (!myFont.RequestCharSize(charSize, wText[i]))
 		{
-			wText[i] = L'm';
+			DL_PRINT("failed to get char size for %c", aText[i]);
+			continue;
 		}
-		if (wText[i] == L' ') //sorry mvh carl
-		{
-			wText[i] = L'm';
-		}
-		CU::Vector2i charSize = myFont.GetCharSize(wText[i]);
+
 		rectSize.x += charSize.x;
 		if (charSize.y > rectSize.y)
 		{
