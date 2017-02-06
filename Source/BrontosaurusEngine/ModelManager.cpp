@@ -226,12 +226,10 @@ void CModelManager::LoadAnimations(const char* aPath, const ModelId aModelId)
 		for (int i = 0; i < animationCount; ++i)
 		{
 			const std::string& animationName = animationNames[i];
-			//TODO: just import the scene for the model here, no need to parse the vertices
 
 			const aiScene* animationScene = loader.GetScene(modelName + animationName + ".fbx");
 			
-			//ModelId tempAnimationModel = LoadModel((modelName + animationName + ".fbx").c_str(), false); //TODO: when above TODO is fixed, the bool can be removed
-			if (!animationScene/*tempAnimationModel == NULL_MODEL*/)
+			if (!animationScene)
 			{
 				continue;
 			}
@@ -239,7 +237,7 @@ void CModelManager::LoadAnimations(const char* aPath, const ModelId aModelId)
 			foundSpecial = true;
 
 			mdl->mySceneAnimators[animationName] = CSceneAnimator();
-			mdl->mySceneAnimators[animationName].Init(animationScene/*GetModel(tempAnimationModel)->GetScene()*/);
+			mdl->mySceneAnimators[animationName].Init(animationScene);
 		}
 
 		if (foundSpecial == false)
