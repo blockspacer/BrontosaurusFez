@@ -51,17 +51,17 @@ void CGame::Init()
 		myStateStack.PushState(new MainMenuState(myStateStack));
 	}
 	
-	//if (CommandLineManager::GetInstance()->HasParameter("-skipSplashScreen") == false)
-	//{
-	//	mySplashScreen = new CSplashScreen(myStateStack);
-	//
-	//	mySplashScreen->AddPicture("SplashScreen/DOtga.dds");
-	//	mySplashScreen->AddPicture("SplashScreen/DOtimeDust.dds");
-	//	mySplashScreen->AddPicture("SplashScreen/DOsplash.dds");
-	//
-	//
-	//	myStateStack.PushState(mySplashScreen);
-	//}
+	if (CommandLineManager::GetInstance()->HasParameter("-skipSplashScreen") == false)
+	{
+		mySplashScreen = new CSplashScreen(myStateStack);
+	
+		mySplashScreen->AddPicture("Sprites/SplashScreen/DOtga.dds");
+		mySplashScreen->AddPicture("Sprites/SplashScreen/DOtimeDust.dds");
+		mySplashScreen->AddPicture("Sprites/SplashScreen/doggo.dds");
+	
+	
+		myStateStack.PushState(mySplashScreen);
+	}
 }
 
 void CGame::Update(const CU::Time& aDeltaTime)
