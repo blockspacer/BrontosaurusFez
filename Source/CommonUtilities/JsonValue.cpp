@@ -143,23 +143,19 @@ namespace CU
 
 	int CJsonValue::Count(const std::string& aKey) const
 	{
-		//maybe not work work in progress, feel free to remove or redo.
-		if (myValue == nullptr)
+		if (IsNull() == true)
 		{
 			JSON_ERROR("json value is null");
 			return 0;
 		}
-		if (IsArray() == false && IsObject() == false)
+		if (IsObject() == false)
 		{
-			eJsoneValueType type = GetType();
-			JSON_ERROR("json value is not an array or object");
+			JSON_ERROR("json value is not an object, it's %s", myValue->to_str().c_str());
 			return 0;
 		}
 
-		//this should return zero and not crash if key does not exist 
-		//looks much nicer than find() == end
 		const picojson::object& tempObject = myValue->get<picojson::object>();
-		return tempObject.count(aKey);
+		return static_cast<int>(tempObject.count(aKey));
 	}
 
 	bool CJsonValue::IsNull() const
@@ -393,8 +389,7 @@ namespace CU
 		}
 		if (IsObject() == false)
 		{
-			eJsoneValueType type = GetType();
-			JSON_ERROR("json value is not an object");
+			JSON_ERROR("json value is not an object, it's %s", myValue->to_str().c_str());
 			return CJsonValue();
 		}
 

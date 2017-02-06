@@ -53,7 +53,7 @@ namespace CU
 			FloatDuration rawDeltaTime = newTimePoint - myLastTimePoint;
 			MicroSeconds deltaTime = std::chrono::duration_cast<MicroSeconds>(rawDeltaTime);
 
-			myDeltaTime = deltaTime.count();
+			myDeltaTime = static_cast<TimeUnit>(deltaTime.count());
 			myLifeTime += myDeltaTime;
 
 			myLastTimePoint = newTimePoint;
