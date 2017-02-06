@@ -2,6 +2,8 @@
 #include "../CommonUtilities/vector2.h"
 #include "../CommonUtilities/matrix44.h"
 #include "../CommonUtilities/vector4.h"
+#include "../CommonUtilities/VectorOnStack.h"
+#include "Lights.h"
 //#include <vector2.h>
 //#include <vector4.h>
 //#include <matrix44.h>
@@ -49,4 +51,20 @@ struct SOncePerFrameBuffer
 struct SAnimationBoneStruct 
 {
 	CU::Matrix44f boneMatrices[32];
+};
+
+struct SRenderModelParams
+{
+	CU::Matrix44f myTransform;
+	CU::Matrix44f myTransformLastFrame;
+	Lights::SDirectionalLight myDirectionalLight;
+	CU::VectorOnStack<Lights::SPointLight, 8> myPointLightList;
+	unsigned char myNumLights;
+
+	const char* aAnimationState = nullptr;
+	float aAnimationTime = 0.0f;
+	bool aAnimationLooping = true;
+	float aHighlightIntencity = 0.f;
+
+	bool myRenderToDepth = false;
 };

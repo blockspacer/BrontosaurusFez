@@ -193,12 +193,12 @@ void MovementComponent::Receive(const eComponentMessageType aMessageType, const 
 		break;
 	case eComponentMessageType::eAddToMovementSpeed:
 		myMovementSpeed += aMessageData.myFloat;
-		DL_PRINT("add movespeed %f", aMessageData.myFloat);
-		DL_PRINT("movementSpeed %f", myMovementSpeed);
 		break;
 	case eComponentMessageType::eLookAt:
 	{
-		GetParent()->GetLocalTransform().LookAt(aMessageData.myVector3f);
+		CU::Vector3f lookAtPosition = aMessageData.myVector3f;
+		lookAtPosition.y = GetParent()->GetWorldPosition().y;
+		GetParent()->GetLocalTransform().LookAt(lookAtPosition);
 		GetParent()->GetLocalTransform().Rotate(PI, CU::Axees::Y);
 		GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 	}

@@ -40,7 +40,7 @@ public:
 	//Add shiz, camera, modeller ljus, partiklar
 	InstanceID AddModelInstance(CModelInstance* aModelInstance); //return int
 	InstanceID AddDirectionalLight(Lights::SDirectionalLight& aDirectionalLight);
-	InstanceID AddPointLightInstance(CPointLightInstance* aPointLight);
+	InstanceID AddPointLightInstance(CPointLightInstance aPointLight);
 	InstanceID AddParticleEmitterInstance(CParticleEmitterInstance* aParticleEmitterInstance);
 	InstanceID AddFireEmitters(const CFireEmitterInstance& aFireEmitter);
 	void AddCamera(const eCameraType aCameraType);
@@ -51,6 +51,7 @@ public:
 	CFireEmitterInstance& GetFireEmitter(const InstanceID aFireEmitterID);
 	CU::Camera& GetCamera(const eCameraType aCameraType);
 	CParticleEmitterInstance* GetParticleEmitterInstance(const InstanceID aParticleEmitterID);
+	CPointLightInstance* GetPointLightInstance(const InstanceID aID);
 	
 	//Delete Shiz here
 	void DeleteModelInstance(CModelInstance* anInstance);
@@ -62,6 +63,7 @@ public:
 	inline unsigned int GetCameraListSize()  {return myCameras.Size();}
 
 	void DeleteParticleEmitterInstance(const InstanceID anID);
+	void RemovePointLightInstance(const InstanceID anID);
 
 	inline CSkybox& GetSkybox();
 	
@@ -70,7 +72,8 @@ private:
 	CU::GrowingArray<CModelInstance*, InstanceID> myModels;
 	CU::Stack<InstanceID, InstanceID> myFreeModels;
 
-	CU::GrowingArray<CPointLightInstance*> myPointLights;
+	CU::GrowingArray<CPointLightInstance, InstanceID> myPointLights;
+	CU::Stack<InstanceID, InstanceID> myFreePointlights;
 
 	CU::GrowingArray<CParticleEmitterInstance*, InstanceID> myParticleEmitters;
 	CU::Stack<InstanceID, InstanceID> myFreeParticleEmitters;
@@ -86,7 +89,6 @@ private:
 	float myFogEnd;
 
 	CRenderCamera myShadowCamera;
-
 };
 
 inline CSkybox& CScene::GetSkybox()

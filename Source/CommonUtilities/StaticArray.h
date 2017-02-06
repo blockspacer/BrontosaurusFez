@@ -44,7 +44,6 @@ namespace CU
 	template <typename Type, int ArraySize>
 	StaticArray<Type, ArraySize>::StaticArray()
 	{
-
 	}
 
 	template <typename Type, int ArraySize>

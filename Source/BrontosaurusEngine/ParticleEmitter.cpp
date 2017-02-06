@@ -10,16 +10,19 @@
 #include "ConstBufferTemplate.h"
 #include "TextureManager.h"
 
-
-
-
 CParticleEmitter::CParticleEmitter()
 {
+	myMaxNrOfParticles = 0;
 	myTexture = nullptr;
 	myEffect = nullptr;
 	myFramework = nullptr;
 	myVertexBuffer = nullptr;
 	myModelBuffer = nullptr;
+}
+
+CParticleEmitter::CParticleEmitter(const CParticleEmitter& aParticleEmitter)
+{
+	*this = aParticleEmitter;
 }
 
 CParticleEmitter::~CParticleEmitter()
@@ -52,6 +55,8 @@ void CParticleEmitter::Init(const SEmitterData& aEmitterData)
 
 void CParticleEmitter::Render(const CU::Matrix44f & aToWorldSpace, const CU::GrowingArray<SParticle, unsigned short, false>& aParticleList)
 {
+	if (!myEffect) return;
+
 	myEffect->Activate();
 	UpdateCBuffers(aToWorldSpace);
 	ResizeVertexBuffer(aParticleList);
@@ -69,37 +74,78 @@ void CParticleEmitter::Destroy()
 {
 	if (myTexture)
 	{
-		TEXTUREMGR.DestroyTexture(myTexture);
+		CTextureManager& textureManager = TEXTUREMGR;
+		textureManager.DestroyTexture(myTexture);
 	}
 
-	if (myModelBuffer)
-		myModelBuffer->Release();
-
-	if (myVertexBuffer)
-		myVertexBuffer->Release();
-
-	if (myEffect)
-	{
-		SAFE_DELETE(myEffect);
-	}
+	SAFE_RELEASE(myModelBuffer);
+	SAFE_RELEASE(myVertexBuffer);
+	SAFE_DELETE(myEffect);
 }
 
+CParticleEmitter& CParticleEmitter::operator=(const CParticleEmitter& aParticleEmitter)
+{
+	if (!aParticleEmitter.myEffect)
+	{
+		Destroy();
+		return *this;
+	}
+
+	myMaxNrOfParticles = aParticleEmitter.myMaxNrOfParticles;
+	myTexture = aParticleEmitter.myTexture;
+	SAFE_ADD_REF(myTexture);
+
+	myEffect = new CEffect(*aParticleEmitter.myEffect);
+
+	myFramework = aParticleEmitter.myFramework;
+
+	myVertexBuffer = aParticleEmitter.myVertexBuffer;
+	SAFE_ADD_REF(myVertexBuffer);
+	myModelBuffer = aParticleEmitter.myModelBuffer;
+	SAFE_ADD_REF(myModelBuffer);
+
+	return *this;
+}
+
+CParticleEmitter& CParticleEmitter::operator=(CParticleEmitter&& aParticleEmitter)
+{
+	myMaxNrOfParticles = aParticleEmitter.myMaxNrOfParticles;
+	myTexture = aParticleEmitter.myTexture;
+	myEffect = aParticleEmitter.myEffect;
+	myFramework = aParticleEmitter.myFramework;
+	myVertexBuffer = aParticleEmitter.myVertexBuffer;
+	myModelBuffer = aParticleEmitter.myModelBuffer;
+
+	aParticleEmitter.myMaxNrOfParticles = 0;
+	aParticleEmitter.myTexture = nullptr;
+	aParticleEmitter.myEffect = nullptr;
+	aParticleEmitter.myFramework = nullptr;
+	aParticleEmitter.myVertexBuffer = nullptr;
+	aParticleEmitter.myModelBuffer = nullptr;
+
+	return *this;
+}
 
 void CParticleEmitter::ResizeVertexBuffer(const CU::GrowingArray<SParticle, unsigned short, false>& aParticleList)
 {
-	D3D11_MAPPED_SUBRESOURCE resource;
-	ZeroMemory(&resource, sizeof(D3D11_MAPPED_SUBRESOURCE));
-	DEVICE_CONTEXT->Map(myVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+	if (aParticleList.Empty()) return;
 
 	unsigned int bufferSize = sizeof(SParticle);
 
 	if (aParticleList.Size() > myMaxNrOfParticles)
+	{
 		bufferSize *= myMaxNrOfParticles;
+	}
 	else
+	{
 		bufferSize *= aParticleList.Size();
+	}
 
-	if (aParticleList.Size() > 0)
-		memcpy(resource.pData, &aParticleList[0], bufferSize);
+	D3D11_MAPPED_SUBRESOURCE resource;
+	ZeroMemory(&resource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+	DEVICE_CONTEXT->Map(myVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+
+	memcpy(resource.pData, &aParticleList[0], bufferSize);
 
 	DEVICE_CONTEXT->Unmap(myVertexBuffer, 0);
 }
@@ -132,6 +178,7 @@ bool CParticleEmitter::InitBuffers()
 	result = DEVICE->CreateBuffer(&vertexBufferDesc, nullptr, &myVertexBuffer);
 	CHECK_RESULT(result, "Failed to create vertex buffer.");
 
+	SAFE_RELEASE(myModelBuffer);
 	//Cbuffers
 	SToWorldSpace worldBufferData;
 	myModelBuffer = BSR::CreateCBuffer<SToWorldSpace>(&worldBufferData);

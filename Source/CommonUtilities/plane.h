@@ -34,7 +34,7 @@ namespace CU
 		bool IsInside(const Point3<TYPE> &aPoint) const;
 
 
-		bool IsInside(const Point3<TYPE> &aPoint, const float aRadius) const;
+		__forceinline bool IsInside(const Point3<TYPE> &aPoint, const float aRadius) const;
 
 
 
@@ -113,7 +113,7 @@ namespace CU
 	}
 
 	template<typename TYPE>
-	inline bool CU::Plane<TYPE>::IsInside(const Point3<TYPE>& aPoint, const float aRadius) const
+	__forceinline bool CU::Plane<TYPE>::IsInside(const Point3<TYPE>& aPoint, const float aRadius) const
 	{
 		Vector3<TYPE> temp = aPoint - (myPoint + (myNormal * aRadius));
 

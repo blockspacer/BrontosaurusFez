@@ -8,7 +8,6 @@
 #include "PostMaster/Message.h"
 #include "PostMaster/PostMaster.h"
 #include "PostMaster/PopCurrentState.h"
-#include "PostMaster/GoldChanged.h"
 
 #include "Components/GameObject.h"
 #include "Components/GameObjectManager.h"
@@ -104,17 +103,15 @@ eStateStatus HatShopState::Update(const CU::Time & aDeltaTime)
 {
 	myGUIManager->Update(aDeltaTime);
 
-	const float MaxDistance = 150;
+	const float MaxDistance = 1000;
 
 	CU::Vector2f distance;
 	CU::Vector2f playerPosition = PollingStation::playerObject->GetWorldPosition();
 
-	distance.x = myShopPosition.x - playerPosition.x;
-	distance.y = myShopPosition.y - playerPosition.y;
+	distance.x = abs(myShopPosition.x - playerPosition.x);
+	distance.y = abs(myShopPosition.y - playerPosition.y);
 
-	float a = distance.Length();
-
-	if (a > MaxDistance)
+	if (distance.Length2() > MaxDistance)
 	{
 		CloseShop();
 	}
@@ -153,15 +150,14 @@ void HatShopState::OnExit()
 
 void HatShopState::ValidatePurchase()
 {
-	short playerWallet = PollingStation::playerData->myGold;
+	unsigned short playerWallet = PollingStation::playerData->GetGold();
 	if (myCurrentlySelected != nullptr)
 	{
 		if (playerWallet >= myCurrentlySelected->myCost)
 		{
 			Audio::CAudioInterface::GetInstance()->PostEvent("BuyHat");
 		 	PostMaster::GetInstance().SendLetter(eMessageType::eHatAdded,HatBought(myCurrentlySelected->HatName));
-			PostMaster::GetInstance().SendLetter(eMessageType::eGoldChanged, GoldChanged(myCurrentlySelected->myCost, true));
-		 	PollingStation::playerData->myGold -= myCurrentlySelected->myCost;
+		 	PollingStation::playerData->RemoveGold(myCurrentlySelected->myCost);
 		 	mySelections.Delete(myCurrentlySelected);
 		 	myCurrentlySelected = nullptr;
 		 	AdjustText();

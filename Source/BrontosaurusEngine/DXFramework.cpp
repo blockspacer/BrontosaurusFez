@@ -16,7 +16,7 @@ CDXFramework::~CDXFramework()
 	Shutdown();
 }
 
-#define INFO_PRINT
+#define INFO_PRINT DL_PRINT
 #define ENABLE_VSYNC true
 
 bool CDXFramework::CollectAdapters(CU::Vector2<unsigned int> aWindowSize, CU::Vector2<int>& aNumDenumerator, IDXGIAdapter*& outAdapter)
@@ -179,7 +179,7 @@ bool CDXFramework::Initialize(const int aWidth, const int aHeight, const bool aI
 	CU::Vector2<unsigned int> windowSize(aWidth, aHeight);
 	if (CollectAdapters(windowSize, numDenum, adapter))
 	{
-		//INFO_PRINT("%s%s", "VSYNC Compatible: Yes, Enabled: ", myEnableVSync ? "Yes" : "No");
+		INFO_PRINT("%s%s", "VSYNC Compatible: Yes, Enabled: ", (ENABLE_VSYNC ? "Yes" : "No"));
 	}
 
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;

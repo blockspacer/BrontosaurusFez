@@ -770,7 +770,9 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 	{
 		SRenderNavmeshMessage* msg = static_cast<SRenderNavmeshMessage*>(aRenderMesage);
 		CModel* model = msg->myModel;
-		model->Render(msg->myTransformation, msg->myTransformation, nullptr, nullptr, nullptr, 0.0f);
+		
+		
+		//model->Render(msg->myTransformation, msg->myTransformation, nullptr, nullptr, nullptr, 0.0f);
 		++aDrawCallCount;
 		break;
 	}
@@ -803,7 +805,7 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 	{
 		SRenderModelMessage* msg = static_cast<SRenderModelMessage*>(aRenderMesage);
 		CModel* model = CEngine::GetInstance()->GetModelManager()->GetModel(msg->myModelID);
-		model->Render(msg->myTransformation, msg->myLastFrameTransformation, msg->myDirectionalLight, msg->myPointLights, msg->myCurrentAnimation, msg->myAnimationTime, msg->myAnimationLooping, msg->myHighlightIntencity);
+		model->Render(msg->myRenderParams);
 		++aDrawCallCount;
 		break;
 	}
@@ -811,7 +813,7 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 	{
 		SRenderModelDepthMessage* msg = static_cast<SRenderModelDepthMessage*>(aRenderMesage);
 		CModel* model = CEngine::GetInstance()->GetModelManager()->GetModel(msg->myModelID);
-		model->Render(msg->myTransformation, msg->myCurrentAnimation, msg->myAnimationTime, msg->myAnimationLooping);
+		model->Render(msg->myRenderParams);
 		++aDrawCallCount;
 		break;
 	}
@@ -821,6 +823,13 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 		SRenderGUIModelMessage* msg = static_cast<SRenderGUIModelMessage*>(aRenderMesage);
 		CModelManager* modelManager = CEngine::GetInstance()->GetModelManager();
 		CModel* model = modelManager->GetModel(msg->myModelID);
+
+		SRenderModelParams params;
+		params.myTransform = msg->myToWorld;
+		params.myTransformLastFrame = msg->myToWorld;
+		params.myRenderToDepth = false;
+		params.aAnimationState = nullptr;
+
 		if (model == nullptr) break;
 
 		if (model->HasConstantBuffer(CModel::eShaderStage::ePixel) == true)
@@ -828,14 +837,7 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 			msg->myPixelConstantBufferStruct.myCameraPosition = myCamera.GetPosition();
 			model->UpdateConstantBuffer(CModel::eShaderStage::ePixel, &msg->myPixelConstantBufferStruct, sizeof(msg->myPixelConstantBufferStruct));
 		
-			model->Render(msg->myToWorld, msg->myToWorld, nullptr, nullptr); //don't blur  GUI, atm fullösning deluxe.
-		}
-		else
-		{
-			Lights::SDirectionalLight light;
-			light.direction.Set(-0.2f, -0.9f, 0.f, 1.f);
-			light.direction.Normalize();
-			model->Render(msg->myToWorld, msg->myToWorld, &light, nullptr, "idle", myFireTimer);
+			model->Render(params); //don't blur  GUI, atm fullösning deluxe.
 		}
 
 		++aDrawCallCount;
@@ -849,7 +851,7 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 	{
 		myGUIData.myInputPackage.Activate();
 		SRenderSpriteMessage* msg = static_cast<SRenderSpriteMessage*>(aRenderMesage);
-		msg->mySprite->Render(msg->myPosition, msg->mySize, msg->myRect, msg->myColor);
+		msg->mySprite->Render(msg->myPosition, msg->mySize, msg->myPivot, msg->myRect, msg->myColor);
 		++aDrawCallCount;
 
 		if (mySettings.Motionblur == true) renderTo->Activate(myMotionBlurData.velocityPackage);

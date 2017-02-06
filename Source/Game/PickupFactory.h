@@ -19,6 +19,7 @@ public:
 	void CreateManaGlobe(CU::Vector3f aPosition);
 	void CreateHatDrop(CU::Vector3f aPosition, const char* aHatName);
 	void Init(const std::string& aKey);
+	CU::Vector3f GenerateNewPosition(CU::Vector3f& aPosition);
 
 private:
 

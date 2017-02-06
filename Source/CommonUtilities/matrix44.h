@@ -1,17 +1,18 @@
 #pragma once
 #define _USE_MATH_DEFINES
 
-#include "vector4.h"
-#include "vector3.h"
-#include <array>
 #include <math.h>
 #include <cmath>
 #include <intrin.h>
+
+#include "vector4.h"
+#include "vector3.h"
+#include "StaticArray.h"
+
 #include "InvertMatrix.h"
 
 namespace CU
 {
-
 	enum class Axees
 	{
 		X,
@@ -83,7 +84,9 @@ namespace CU
 			m41 = a41; m42 = a42; m43 = a43; m44 = a44;
 		}
 
-		Matrix44 &operator+=(const Matrix44& aRight)
+		~Matrix44() {}
+
+		Matrix44& operator+=(const Matrix44& aRight)
 		{
 			m11 += aRight.m11; m12 += aRight.m12; m13 += aRight.m13; m14 += aRight.m14;
 			m21 += aRight.m21; m22 += aRight.m22; m23 += aRight.m23; m24 += aRight.m24;
@@ -92,7 +95,7 @@ namespace CU
 			return *this;
 		}
 
-		Matrix44 &operator-=(const Matrix44& aRight)
+		Matrix44& operator-=(const Matrix44& aRight)
 		{
 			m11 -= aRight.m11; m12 -= aRight.m12; m13 -= aRight.m13; m14 -= aRight.m14;
 			m21 -= aRight.m21; m22 -= aRight.m22; m23 -= aRight.m23; m24 -= aRight.m24;
@@ -101,7 +104,7 @@ namespace CU
 			return *this;
 		}
 
-		Matrix44 &operator*=(const TYPE aScalar)
+		Matrix44& operator*=(const TYPE aScalar)
 		{
 			for (unsigned int i = 0; i < NumElements; ++i)
 			{
@@ -111,7 +114,7 @@ namespace CU
 			return *this;
 		}
 
-		Matrix44 &operator*=(const Matrix44& aRight)
+		Matrix44& operator*=(const Matrix44& aRight)
 		{
 			Matrix44 temp = *this;
 			const __m128 X = aRight.m1;
@@ -167,29 +170,6 @@ namespace CU
 
 			memcpy(this, &temp, sizeof(TYPE) * 16);
 			return *this;
-
-			//Matrix44 temp = *this;
-
-			//m11 = (temp.m11 * aRight.m11) + (temp.m12 * aRight.m21) + (temp.m13 * aRight.m31) + (temp.m14 * aRight.m41);
-			//m12 = (temp.m11 * aRight.m12) + (temp.m12 * aRight.m22) + (temp.m13 * aRight.m32) + (temp.m14 * aRight.m42);
-			//m13 = (temp.m11 * aRight.m13) + (temp.m12 * aRight.m23) + (temp.m13 * aRight.m33) + (temp.m14 * aRight.m43);
-			//m14 = (temp.m11 * aRight.m14) + (temp.m12 * aRight.m24) + (temp.m13 * aRight.m34) + (temp.m14 * aRight.m44);
-
-			//m21 = (temp.m21 * aRight.m11) + (temp.m22 * aRight.m21) + (temp.m23 * aRight.m31) + (temp.m24 * aRight.m41);
-			//m22 = (temp.m21 * aRight.m12) + (temp.m22 * aRight.m22) + (temp.m23 * aRight.m32) + (temp.m24 * aRight.m42);
-			//m23 = (temp.m21 * aRight.m13) + (temp.m22 * aRight.m23) + (temp.m23 * aRight.m33) + (temp.m24 * aRight.m43);
-			//m24 = (temp.m21 * aRight.m14) + (temp.m22 * aRight.m24) + (temp.m23 * aRight.m34) + (temp.m24 * aRight.m44);
-
-			//m31 = (temp.m31 * aRight.m11) + (temp.m32 * aRight.m21) + (temp.m33 * aRight.m31) + (temp.m34 * aRight.m41);
-			//m32 = (temp.m31 * aRight.m12) + (temp.m32 * aRight.m22) + (temp.m33 * aRight.m32) + (temp.m34 * aRight.m42);
-			//m33 = (temp.m31 * aRight.m13) + (temp.m32 * aRight.m23) + (temp.m33 * aRight.m33) + (temp.m34 * aRight.m43);
-			//m34 = (temp.m31 * aRight.m14) + (temp.m32 * aRight.m24) + (temp.m33 * aRight.m34) + (temp.m34 * aRight.m44);
-
-			//m41 = (temp.m41 * aRight.m11) + (temp.m42 * aRight.m21) + (temp.m43 * aRight.m31) + (temp.m44 * aRight.m41);
-			//m42 = (temp.m41 * aRight.m12) + (temp.m42 * aRight.m22) + (temp.m43 * aRight.m32) + (temp.m44 * aRight.m42);
-			//m43 = (temp.m41 * aRight.m13) + (temp.m42 * aRight.m23) + (temp.m43 * aRight.m33) + (temp.m44 * aRight.m43);
-			//m44 = (temp.m41 * aRight.m14) + (temp.m42 * aRight.m24) + (temp.m43 * aRight.m34) + (temp.m44 * aRight.m44);
-			//return *this;
 		}
 
 		Matrix44& operator=(const Matrix44& aRight)
@@ -229,6 +209,7 @@ namespace CU
 			m41 = temp.m14;
 			m42 = temp.m24;
 			m43 = temp.m34;
+
 			return *this;
 		}
 
@@ -272,84 +253,11 @@ namespace CU
 			temp.m44 = 0.0f;
 
 			return temp;
-
-
-			//// A-la Kyle
-			//TYPE sinFov;
-			//TYPE cosFov;
-			//TYPE height;
-			//TYPE width;
-			//sinFov = std::sin(0.5f * aFov);
-			//cosFov = std::cos(0.5f * aFov);
-			//height = cosFov / sinFov;
-			//width = height / aAspectRatio;
-			//TYPE scaling = aFar / (aFar - aNear);
-			//temp.m11 = width; temp.m12 = 0.0f;   temp.m13 = 0.0f;				  temp.m14 = 0.0f;
-			//temp.m21 = 0.0f;  temp.m22 = height; temp.m23 = 0.0f;				  temp.m24 = 0.0f;
-			//temp.m31 = 0.0f;  temp.m32 = 0.0f;   temp.m33 = scaling;			  temp.m34 = 1.0f;
-			//temp.m41 = 0.0f;  temp.m42 = 0.0f;   temp.m43 = -scaling * aNear;    temp.m44 = 0.0f;
-			//return temp;
-
-
-
-			//// a-la internet
-			//float frustumDepth = aFar - aNear;
-			//float oneOverDepth = 1 / frustumDepth;
-			//temp.m22 = 1 / tan(0.5f * aFov);
-			//temp.m11 = temp.m22 / aAspectRatio;
-			//temp.m33 = aFar * oneOverDepth;
-			//temp.m43 = (-aFar * aNear) * oneOverDepth;
-			//temp.m34 = 1.0f;
-			//temp.m44 = 0.0f;
-			//return temp;
-
-
-			//TYPE AspectRatioX = aWidth / aHeight;
-			//TYPE AspectRatioY = aHeight / aWidth;
-			//TYPE FovX = aFov * (M_PI / 180.0f);
-			//TYPE TanFovX = std::tan(FovX / 2.0f);
-			//TYPE FovY = 2.0f * std::atan(TanFovX * AspectRatioY);
-
-			//TYPE Near = aNear;
-			//TYPE Far = aFar;
-			//TYPE TanFovY = std::tan(FovY / 2.0f);
-			//TYPE FarMinusNear = Far - Near;
-			//TYPE OneDivTanFov = 1.0f / TanFovY;
-			//TYPE FovYDivFarMinusNear = FovY / FarMinusNear;
-
-			//temp.m11 = AspectRatioY * OneDivTanFov;
-			//temp.m22 = OneDivTanFov;
-			//temp.m33 = FovYDivFarMinusNear;
-			//temp.m34 = 1.f;
-			//temp.m43 = -Near * FovYDivFarMinusNear;
-			//temp.m44 = 0;
-			//return temp;
 		}
 
 
 		Matrix44 CreateOrthogonalProjectionMatrixLH(TYPE aNear, TYPE aFar, TYPE aWidth, TYPE aHeight)
 		{
-			//Matrix44 output = Matrix44::Identity;
-			//TYPE right = aWidth;
-			//TYPE left = static_cast<TYPE>(0);
-			//TYPE top = static_cast<TYPE>(0);
-			//TYPE bottom =  aHeight;
-			//TYPE far = aFar;
-			//TYPE near = aNear;
-
-			//output.m11 = static_cast<TYPE>(2) / (right - left);
-			//output.m22 = static_cast<TYPE>(2) / (top - bottom);
-			//output.m33 = static_cast<TYPE>(2) / (far - near);
-
-			//output.m41 = -(right + left) / (right - left);
-			//output.m42 = -(top + bottom) / (top - bottom);
-			//output.m43 = -(far + near) / (far - near);
-			//output.m44 = 1.0f;
-			//return output;
-
-
-			//Kevin Code
-
 			Matrix44f matrix;
 
 			matrix.m11 = 2.f / aWidth;
@@ -362,19 +270,13 @@ namespace CU
 			matrix.m44 = 1.f;
 
 			return matrix;
-
-
-
-
 		}
 
-		// Creates a transformation matrix for rotating anAngle rad around the x-axis
-		//
 		static Matrix44 CreateRotateAroundX(const TYPE aAngle)
 		{
 			Matrix44 rotationX;
 
-			rotationX.m11 = 1;
+			rotationX.m11 = static_cast<TYPE>(1);
 			rotationX.m12 = static_cast<TYPE>(0);
 			rotationX.m13 = static_cast<TYPE>(0);
 			rotationX.m14 = static_cast<TYPE>(0);
@@ -484,17 +386,15 @@ namespace CU
 			return myPosition;
 		}
 
-		
 		Matrix44<TYPE> GetRotation()
 		{
 			return Matrix44(m11, m12, m13, 0,
-				m21, m22, m23, 0,
-				m31, m32, m33, 0,
-				0, 0, 0, 1);
+							m21, m22, m23, 0,
+							m31, m32, m33, 0,
+							0, 0, 0, 1);
 		}
-
 		
-		Matrix44<TYPE>& SetRotation(const Matrix33<TYPE> &aMatrix)
+		Matrix44<TYPE>& SetRotation(const Matrix33<TYPE>& aMatrix)
 		{
 			m11 = aMatrix.m11;
 			m12 = aMatrix.m12;
@@ -542,7 +442,7 @@ namespace CU
 		}
 
 		/* rotates x,y then z*/
-		Matrix44<TYPE> &Rotate(const float x, const float y, const float z)
+		Matrix44<TYPE>& Rotate(const float x, const float y, const float z)
 		{
 			Rotate(x, Axees::X);
 			Rotate(y, Axees::Y);
@@ -551,7 +451,7 @@ namespace CU
 			return *this;
 		}
 
-		Matrix44<TYPE> &Scale(const Vector3<TYPE> &aScaleVector)
+		Matrix44<TYPE>& Scale(const Vector3<TYPE>& aScaleVector)
 		{
 			Matrix44 scaleMatrix;
 			
@@ -565,18 +465,16 @@ namespace CU
 			return *this;
 		}
 
-		void Move(const Vector3<TYPE> &aDisplacement)
+		void Move(const Vector3<TYPE>& aDisplacement)
 		{
-			SetPosition(aDisplacement * GetRotation() + Vector3<TYPE>(m41, m42, m43));
+			SetPosition(aDisplacement * GetRotation() + GetPosition());
 		}
 
 		Matrix44& LookAt(const Vector3<TYPE>& aLookFrom, const Vector3<TYPE>& aLookTo)
 		{
-			const CU::Vector3f lookAt = aLookTo;
-			const CU::Vector3f lookFrom = aLookFrom;
 			static const CU::Vector3f objectUpVector(0.0f, 1.0f, 0.0f);
 
-			CU::Vector3f zAxis = lookAt - lookFrom;
+			CU::Vector3f zAxis = aLookTo - aLookFrom;
 			zAxis.Normalize();
 			CU::Vector3f xAxis = objectUpVector.Cross(zAxis);
 			xAxis.Normalize();
@@ -609,7 +507,7 @@ namespace CU
 			return matrixToReturn;
 		}
 
-		Matrix44 Lerp(const Matrix44<TYPE> aInterpolateToMatrix, TYPE aInterpolatingSpeed)
+		Matrix44 Lerp(const Matrix44<TYPE>& aInterpolateToMatrix, const TYPE aInterpolatingSpeed)
 		{
 			m21 = m21 + aInterpolatingSpeed * (aInterpolateToMatrix.m21 - m21);
 			m22 = m22 + aInterpolatingSpeed * (aInterpolateToMatrix.m22 - m22);
@@ -631,7 +529,7 @@ namespace CU
 			InvertMatrix(&m11);
 		}
 
-		Matrix44<TYPE>GetInverted() const
+		Matrix44<TYPE> GetInverted() const
 		{
 			Matrix44<TYPE> matrix44 = *this;
 			matrix44.InvertMe();
@@ -662,9 +560,9 @@ namespace CU
 				Vector3<TYPE> myPosition;		TYPE ms44;
 			};
 
-			std::array<std::array<TYPE, NumColumns>, NumRows> my2DArray;
+			CU::StaticArray<CU::StaticArray<TYPE, NumColumns>, NumRows> my2DArray;
 
-			std::array<TYPE, NumElements> myMatrix;
+			CU::StaticArray<TYPE, NumElements> myMatrix;
 		};
 #pragma warning( default : 4201 )
 
@@ -672,17 +570,16 @@ namespace CU
 		static const Matrix44 Zero;
 	};
 
-
 	using Matrix44f = Matrix44<float>;
 
 	template<typename TYPE>
-	Matrix44<TYPE> operator+(Matrix44<TYPE> aLeft, const Matrix44<TYPE> &aRight)
+	Matrix44<TYPE> operator+(Matrix44<TYPE> aLeft, const Matrix44<TYPE>& aRight)
 	{
 		return aLeft += aRight;
 	}
 
 	template<typename TYPE>
-	Matrix44<TYPE> operator-(Matrix44<TYPE> aLeft, const Matrix44<TYPE> &aRight)
+	Matrix44<TYPE> operator-(Matrix44<TYPE> aLeft, const Matrix44<TYPE>& aRight)
 	{
 		return aLeft -= aRight;
 	}
@@ -709,7 +606,7 @@ namespace CU
 	}
 
 	template<typename TYPE>
-	Vector3<TYPE> operator*(Vector3<TYPE> aLeftValue, const Matrix44<TYPE> &aRightValue)
+	Vector3<TYPE> operator*(Vector3<TYPE> aLeftValue, const Matrix44<TYPE>& aRightValue)
 	{
 		Vector4<TYPE> tempVec(aLeftValue);
 		tempVec = tempVec * aRightValue;
@@ -717,7 +614,7 @@ namespace CU
 	}
 
 	template<typename TYPE>
-	bool operator ==(const Matrix44<TYPE> &aLeft, const Matrix44<TYPE> &aRight)
+	bool operator ==(const Matrix44<TYPE> &aLeft, const Matrix44<TYPE>& aRight)
 	{
 		if (aLeft.m11 == aRight.m11 && aLeft.m12 == aRight.m12 && aLeft.m13 == aRight.m13 && aLeft.m14 == aRight.m14 &&
 			aLeft.m21 == aRight.m21 && aLeft.m22 == aRight.m22 && aLeft.m23 == aRight.m23 && aLeft.m24 == aRight.m24 &&
@@ -730,7 +627,7 @@ namespace CU
 	}
 
 	template<typename TYPE>
-	bool operator !=(const Matrix44<TYPE> &aLeft, const Matrix44<TYPE> &aRight)
+	bool operator !=(const Matrix44<TYPE>& aLeft, const Matrix44<TYPE>& aRight)
 	{
 		return (!(aLeft == aRight));
 	}
