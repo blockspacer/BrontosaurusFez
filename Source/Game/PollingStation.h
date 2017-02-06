@@ -1,4 +1,5 @@
 #pragma once
+#include <map>
 class CGameObject;
 class CollisionManager;
 
@@ -35,4 +36,6 @@ struct PollingStation
 	static CU::GrowingArray<std::string> playerHatList;
 	static std::string currentDialog;
 	static CU::GrowingArray<int,char> OpenPortals;
+
+	static std::map<std::string, unsigned int>  QuestProgress;
 };

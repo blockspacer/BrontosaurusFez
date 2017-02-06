@@ -33,8 +33,12 @@ namespace QM
 
 		EventHandle LoadObjective(const CU::CPJWrapper& anEvent, const std::string& aFileName);
 		EventHandle LoadQuest(const CU::CPJWrapper& aCurrentEvent, const std::string& aQuestlinesFile);
+
 		bool LoadQuestlines(std::string aQuestline);
 		bool GetIfLoadingSuceeded() const;
+
+		void LoadProgression(const std::string &aFileName);
+
 		std::string myError;
 	private:
 		static void SendUpdateMessage();
@@ -50,7 +54,9 @@ namespace QM
 		std::map<std::string, EventHandle> myObjectiveHandles;
 
 		bool myLoadSuccess;
-		int myProgression;
+		unsigned int myProgression;
+
+		static std::map<std::string, unsigned int> ourProgression;
 	};
 	
 }

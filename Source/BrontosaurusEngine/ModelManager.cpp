@@ -248,8 +248,23 @@ void CModelManager::LoadAnimations(const char* aPath, const ModelId aModelId)
 			mdl->mySceneAnimators["idle"].Init(mdl->GetScene());
 		}
 
-		mdl->mySceneAnimator = &mdl->mySceneAnimators["idle"];
-		mdl->mySceneAnimator->PlayAnimationForward();
+		if (mdl->mySceneAnimators.find("idle") != mdl->mySceneAnimators.end())
+		{
+			mdl->mySceneAnimator = &mdl->mySceneAnimators["idle"];
+		}
+		else if (mdl->mySceneAnimators.begin() != mdl->mySceneAnimators.end())
+		{
+			mdl->mySceneAnimator = &mdl->mySceneAnimators.begin()->second;
+		}
+		else
+		{
+			mdl->mySceneAnimator = nullptr;
+		}
+
+		if (mdl->mySceneAnimator)
+		{
+			mdl->mySceneAnimator->PlayAnimationBackward();
+		}
 	}
 }
 
