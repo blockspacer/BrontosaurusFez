@@ -56,6 +56,7 @@ void CCollisionComponent::Receive(const eComponentMessageType aMessageType, cons
 		}
 	break;
 	case eComponentMessageType::eDied:
+		GetParent()->NotifyOnlyComponents(eComponentMessageType::eRemoveAllCollidedWith, SComponentMessageData());
 		DeactivateCollider();
 		break;
 	case eComponentMessageType::eRespawned:

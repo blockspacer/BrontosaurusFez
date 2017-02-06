@@ -115,6 +115,7 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 
 CPlayState::~CPlayState()
 {
+
 	//Don forgetti to deletti
 	SAFE_DELETE(myEmitterComp);
 	SAFE_DELETE(myCollisionComponentManager);
@@ -435,6 +436,7 @@ void CPlayState::OnExit()
 		audioInterface->PostEvent("StopBayBlade");
 		audioInterface->UnLoadBank("Audio/playState.bnk");
 	}
+
 	myGUIManager->PauseRenderAndUpdate();
 }
 
