@@ -46,11 +46,11 @@ cbuffer PixelShaderBuffer : register(b1) //to pixel
 		float intensity;
 	} myPointLights[NUMBER_POINTLIGHTS];
 
-	uint CubeMap_MipCount;
-
 	float4 highlightColor;
 
-	float trash[3];
+	uint numberOfPointLights;
+	uint CubeMap_MipCount;
+	float2 trash;
 }
 
 struct PixelOutput
@@ -79,10 +79,10 @@ PixelOutput PS_PosNormBinormTanTex(PosNormBinormTanTex_InputPixel input)
 	PixelOutput output;
 
 	float4 pblColor = PS_PBL(input).color;
-	float4 highlightColor = PS_FresnelHighlight(input, pblColor);
+	pblColor += PS_FresnelHighlight(input, pblColor) * highlightColor.a;
 	//DistanceFog(input, pblColor).color;
 
-	output.color = highlightColor;
+	output.color = pblColor;
 	output.velocity = (input.viewPosition.xyz - input.worldPosLastFrame.xyz) * 100.f;
 	return output;
 }
@@ -105,9 +105,9 @@ float4 PS_FresnelHighlight(PosNormBinormTanTex_InputPixel input, float4 aColorIn
 	float AddOp = (-0.4 + CamVecNorm.y);
 	float3 VectorConstruct = float3(CamVecNorm.x, AddOp, CamVecNorm.z);
 	float3 NormOp = normalize(normal);
-	
+
 	float AddOp75 = (dot(VectorConstruct.xyz, NormOp) + -0.4);
-	
+
 	float power = 0.5f;// 0.182219
 
 	float PowOp = (pow(AddOp75, power));
@@ -125,7 +125,7 @@ float4 PS_FresnelHighlight(PosNormBinormTanTex_InputPixel input, float4 aColorIn
 	float4 AddOp84 = (TextureIn + (RimlightColor * OneMinusOp));
 	float4 SatOp85 = saturate(AddOp84);
 	float4 VectorConstruct102 = float4(SatOp85.xyz.x, SatOp85.xyz.y, SatOp85.xyz.z, 1.0);
-	
+
 	//float4 testColor = ((float4(CameraPosition.xyz, 1.0f)));
 	//return testColor;
 	//return aColorInput * RimlightColor;
@@ -509,77 +509,79 @@ PixelOutput PS_PBL(PosNormBinormTanTex_InputPixel input)
 	float2 texCord;
 	texCord.x = shadowCamPosition.x * 0.5f + 0.5f;
 	texCord.y = shadowCamPosition.y * -0.5f + 0.5f;
+	float shadowCamDepth = shadowBuffer.SampleLevel(samplerWrap, texCord, 0).x;
 
-	float fluff = 0.0005f;
-	float exposure = 0.0f;
-	[unroll]for(int y = -1; y < 2; ++y)
-	{
-		[unroll]for(int x = -1; x < 2; ++x)
-		{
-			float2 offset;
-			offset.x = x * fluff;
-			offset.y = y * fluff;
-			float depth = shadowBuffer.SampleLevel(samplerWrap, texCord + offset, 0).x + 0.0001f;
-
-			if(shadowCamPosition.z < depth)
-			{
-				exposure += (1.0f / 9.0f);
-			}
-		}
-	}
-
-	directionDiffuse.rgb *= exposure;
-	directionSpecularity.rgb *= exposure;
-
-
-	//float shadowCamDepth = shadowBuffer.SampleLevel(Sampler, texCord, 0).x;
-
-	//if(shadowCamDepth < shadowCamPosition.z - 0.001f && shadowCamDepth != 0.f)
+	//
+	//float fluff = 0.0005f;
+	//float exposure = 0.0f;
+	//[unroll]for(int y = -1; y < 2; ++y)
 	//{
-	//	directionDiffuse.rgb = 0.0f;
-	//	directionSpecularity.rgb = 0.0f;
+	//	[unroll]for(int x = -1; x < 2; ++x)
+	//	{
+	//
+	//		float zOffsetX = (input.tangent * (x * fluff)).z;
+	//		float zOffsetY = (input.biTangent * (y * fluff)).z;
+	//
+	//		float2 offset;
+	//		offset.x = x * fluff;
+	//		offset.y = y * fluff;
+	//		float depth = shadowBuffer.SampleLevel(samplerWrap, texCord + offset, 0).x + 0.0001f;
+	//
+	//		if(shadowCamPosition.z + zOffsetX + zOffsetY < depth)
+	//		{
+	//			exposure += (1.0f / 9.0f);
+	//		}
+	//	}
 	//}
+	//
+	//directionDiffuse.rgb *= exposure;
+	//directionSpecularity.rgb *= exposure;
+
+	if(shadowCamDepth < shadowCamPosition.z - 0.001f && shadowCamDepth != 0.f)
+	{
+		directionDiffuse.rgb = 0.0f;
+		directionSpecularity.rgb = 0.0f;
+	}
 
 // PointLight
 
-		//for(int i = 0; i < NUMBER_POINTLIGHTS; ++i)
-		//{
-		//    float3 difference = (myPointLights[i].position.xyz) - input.worldPosition.xyz;
-		//    float l = length(difference);
-		//    float lightRange = myPointLights[i].range / l;
-		//    lightRange = saturate(lightRange);
-		//    float3 direction = normalize(difference);
-		//
-		//    float4 color = (float4)0;
-		//
-		//    lightColor = myPointLights[i].color.rgb;
-		//    lambert = PS_Lambert(input, normal, -direction).color.xyz;
-		//    toLight = direction;
-		//    halfvec = normalize(toLight + toEye);
-		//
-		//    LdotH = dot(toLight, halfvec);
-		//    LdotH = saturate(LdotH);
-		//    LdotH = 1.0f - LdotH;
-		//    LdotH = pow(LdotH, 5);
-		//    Dirrfresnel = LdotH * (1.f - substance);
-		//    Dirrfresnel = substance + Dirrfresnel;
-		//    color = float4(metalnessAlbedo * myPointLights[i].color.rgb * lambert * (one - Dirrfresnel), 1.0f);
-		//    directionDiffuse += color.rgb * myPointLights[i].intensity * lightRange;
-		//
-		//
-		//    distribution = PS_Distribution(input, -direction).color.xxx;
-		//    visibility = PS_Visibility(input, -direction).color.xxx;
-		//    //float3 directionSpecularity = lightColor * lambert * Dirrfresnel * distribution * visibility;
-		//
-		//
-		//    directionSpecularity += lightColor * lambert * Dirrfresnel * distribution * visibility * myPointLights[i].intensity * lightRange;
-		//}
+	for(uint i = 0; i < numberOfPointLights; ++i)
+	{
+    	float3 difference = (myPointLights[i].position.xyz) - input.worldPosition.xyz;
+    	float l = length(difference);
+
+    	float lightRange = l / myPointLights[i].range;
+		lightRange = saturate(lightRange);
+		lightRange = 1.0f - lightRange;
 
 
+    	float3 direction = normalize(difference);
+    	float4 color = (float4)0;
+    	lightColor = myPointLights[i].color.rgb;
+    	lambert = PS_Lambert(input, normal, -direction).color.xyz;
+    	toLight = direction;
+    	halfvec = normalize(toLight + toEye);
+    	LdotH = dot(toLight, halfvec);
+    	LdotH = saturate(LdotH);
+    	LdotH = 1.0f - LdotH;
+    	LdotH = pow(LdotH, 5);
+    	Dirrfresnel = LdotH * (1.f - substance);
+    	Dirrfresnel = substance + Dirrfresnel;
+    	color = float4(metalnessAlbedo * myPointLights[i].color.rgb * lambert * (one - Dirrfresnel), 1.0f);
+    	directionDiffuse += color.rgb * myPointLights[i].intensity * lightRange;
+    	distribution = PS_Distribution(input, -direction).color.xxx;
+    	visibility = PS_Visibility(input, -direction).color.xxx;
+    	//float3 directionSpecularity = lightColor * lambert * Dirrfresnel * distribution * visibility;
+    	directionSpecularity += lightColor * lambert * Dirrfresnel * distribution * visibility * myPointLights[i].intensity * lightRange;
+
+
+
+	}
 
 
 
 	PixelOutput output;
+
 
 	//output.color.xyz = normal.xyz;
 	//output.color.a = 1.0f;
