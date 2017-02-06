@@ -7,6 +7,7 @@
 #include "Components/MouseComponent.h"
 #include "CommonUtilities/EMouseButtons.h"
 #include "Game/DialogState.h"
+#include "Game/SplashScreen.h"
 
 MouseClicked::MouseClicked(const CU::Vector2f& aMousePosition, const CU::eMouseButtons& aMouseButton)
 	: myMousePosition(aMousePosition)
@@ -53,7 +54,21 @@ eMessageReturn MouseClicked::DoEvent(CMouseComponent* aMouseComponent) const
 
 eMessageReturn MouseClicked::DoEvent(CDialogState* aDialogState) const
 {
-	aDialogState->Next();
+	if (aDialogState)
+	{
+		aDialogState->Next();
+		return eMessageReturn::eStop;
+	}
 
-	return eMessageReturn::eStop;
+	return eMessageReturn::eContinue;
+}
+
+eMessageReturn MouseClicked::DoEvent(CSplashScreen* aSplashScreen) const
+{
+	if (aSplashScreen)
+	{
+		aSplashScreen->UserWantsToContinue();
+	}
+
+	return eMessageReturn::eContinue;
 }

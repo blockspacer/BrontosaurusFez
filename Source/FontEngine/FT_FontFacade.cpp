@@ -55,6 +55,11 @@ CU::Vector2i CFT_FontFacade::GetCharSize(const wchar_t aChar)
 	return  myFontpointer->GetGlyphSize(aChar);
 }
 
+bool CFT_FontFacade::RequestCharSize(CU::Vector2i & aSizeOut, const wchar_t aChar)
+{
+	return myFontpointer->RequestGlyphSize(aSizeOut, aChar);
+}
+
 CU::Vector2i CFT_FontFacade::GetBearing(const wchar_t aChar)
 {
 	return  myFontpointer->GetBearing(aChar);

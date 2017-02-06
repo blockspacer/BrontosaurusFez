@@ -19,6 +19,7 @@ public:
 	eStateStatus Update(const CU::Time& aDeltaTime) override;
 	void Render() override;
 	void AddPicture(const char * aPath);
+	void UserWantsToContinue();
 
 	eMessageReturn Recieve(const Message& aMessage) override;
 

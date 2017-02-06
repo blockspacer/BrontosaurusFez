@@ -246,7 +246,7 @@ void CPlayState::Load()
 
 
 	myQuestManager.LoadQuestlines(questPath);
-	myQuestManager.CompleteEvent();
+
 	KLoader::CKevinLoader &loader = KLoader::CKevinLoader::GetInstance();
 
 	const KLoader::eError loadError = loader.LoadFile(levelPath);
@@ -421,8 +421,19 @@ void CPlayState::OnEnter()
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
 	Audio::CAudioInterface::GetInstance()->LoadBank("Audio/playState.bnk");
-	Audio::CAudioInterface::GetInstance()->PostEvent("BayBlade");
+
+	CU::CJsonValue levelsFile;
+
+	std::string errorString = levelsFile.Parse("Json/LevelList.json");
+	if (!errorString.empty()) DL_MESSAGE_BOX(errorString.c_str());
+
+	CU::CJsonValue levelsArray = levelsFile.at("levels");
+
+	Audio::CAudioInterface::GetInstance()->PostEvent(levelsArray[myLevelIndex].GetString().c_str());
+
+	//Audio::CAudioInterface::GetInstance()->PostEvent("BayBlade");
 	myGUIManager->RestartRenderAndUpdate();
+	myQuestManager.CompleteEvent();
 }
 
 void CPlayState::OnExit()
@@ -433,7 +444,21 @@ void CPlayState::OnExit()
 	if (audioInterface != nullptr)
 	{
 		audioInterface->PostEvent("switchBank");
-		audioInterface->PostEvent("StopBayBlade");
+
+		//audioInterface->PostEvent("StopBayBlade");
+		CU::CJsonValue levelsFile;
+
+		std::string errorString = levelsFile.Parse("Json/LevelList.json");
+		if (!errorString.empty()) DL_MESSAGE_BOX(errorString.c_str());
+
+		CU::CJsonValue levelsArray = levelsFile.at("levels");
+
+		std::string temp = "Stop";
+		temp += levelsArray[myLevelIndex].GetString();
+
+		Audio::CAudioInterface::GetInstance()->PostEvent(levelsArray[myLevelIndex].GetString().c_str());
+
+
 		audioInterface->UnLoadBank("Audio/playState.bnk");
 	}
 

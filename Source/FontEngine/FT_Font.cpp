@@ -114,6 +114,19 @@ CU::Vector2i CFT_Font::GetGlyphSize(wchar_t aChar)
 	return myGlyphData[glyphIndex].mySize;
 }
 
+bool CFT_Font::RequestGlyphSize(CU::Vector2i & aSizeOut, wchar_t aChar)
+{
+	const FT_UInt glyphIndex = FT_Get_Char_Index(myFace, aChar);
+	if (myRenderedGlyphs.count(glyphIndex) < 1)
+	{
+		return false;
+	}
+
+	aSizeOut = myGlyphData[glyphIndex].mySize;
+	
+	return true;
+}
+
 CU::Vector2i CFT_Font::GetBearing(wchar_t aChar)
 {
 	const FT_UInt glyphIndex = FT_Get_Char_Index(myFace, aChar);
