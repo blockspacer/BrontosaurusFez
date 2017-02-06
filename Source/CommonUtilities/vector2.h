@@ -53,6 +53,8 @@ namespace CU
 		inline TYPE Cross(Vector2<TYPE> aVector) const;
 		inline Vector2 GetNormalized() const;
 		inline Vector2& Normalize();
+		inline Vector2& Saturate();
+		inline Vector2& Clamp(const Vector2& aLowest, const Vector2& aHighest);
 
 		inline void Print() const;
 
@@ -343,6 +345,23 @@ namespace CU
 		{
 			self /= length;
 		}
+
+		return self;
+	}
+
+	template<typename TYPE>
+	inline Vector2<TYPE>& Vector2<TYPE>::Saturate()
+	{
+		return Clamp(Zero, One);
+	}
+
+	template<typename TYPE>
+	inline Vector2<TYPE>& Vector2<TYPE>::Clamp(const Vector2& aLowest, const Vector2& aHighest)
+	{
+		if (x < aLowest.x) x = aLowest.x;
+		else if (x > aHighest.x) x = aHighest.x;
+		if (y < aLowest.y) y = aLowest.y;
+		else if (y > aHighest.y) y = aHighest.y;
 
 		return self;
 	}

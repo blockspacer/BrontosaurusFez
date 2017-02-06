@@ -16,7 +16,7 @@ CDXFramework::~CDXFramework()
 	Shutdown();
 }
 
-#define INFO_PRINT
+#define INFO_PRINT DL_PRINT
 #define ENABLE_VSYNC true
 
 bool CDXFramework::CollectAdapters(CU::Vector2<unsigned int> aWindowSize, CU::Vector2<int>& aNumDenumerator, IDXGIAdapter*& outAdapter)

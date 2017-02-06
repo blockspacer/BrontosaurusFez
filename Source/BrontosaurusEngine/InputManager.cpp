@@ -88,6 +88,8 @@ void CInputManager::UpdateMouse()
 		CU::Vector2f mouseDelta(newWindowsMousePos - middleOfWindow);
 		CU::Vector2f mousePosition = lastMousePosition + mouseDelta;
 
+		mousePosition.Clamp(CU::Vector2f::Zero, CU::Vector2f(windowSize));
+
 		if (lastMousePosition != mousePosition)
 		{
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eMouseMessage, MouseMoved(mousePosition)));
