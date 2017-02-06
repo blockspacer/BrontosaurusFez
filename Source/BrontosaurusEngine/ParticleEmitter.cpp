@@ -55,6 +55,8 @@ void CParticleEmitter::Init(const SEmitterData& aEmitterData)
 
 void CParticleEmitter::Render(const CU::Matrix44f & aToWorldSpace, const CU::GrowingArray<SParticle, unsigned short, false>& aParticleList)
 {
+	if (!myEffect) return;
+
 	myEffect->Activate();
 	UpdateCBuffers(aToWorldSpace);
 	ResizeVertexBuffer(aParticleList);
@@ -83,11 +85,17 @@ void CParticleEmitter::Destroy()
 
 CParticleEmitter& CParticleEmitter::operator=(const CParticleEmitter& aParticleEmitter)
 {
+	if (!aParticleEmitter.myEffect)
+	{
+		Destroy();
+		return *this;
+	}
+
 	myMaxNrOfParticles = aParticleEmitter.myMaxNrOfParticles;
 	myTexture = aParticleEmitter.myTexture;
 	SAFE_ADD_REF(myTexture);
 
-	myEffect = (aParticleEmitter.myEffect) ? new CEffect(*aParticleEmitter.myEffect) : nullptr;
+	myEffect = new CEffect(*aParticleEmitter.myEffect);
 
 	myFramework = aParticleEmitter.myFramework;
 
