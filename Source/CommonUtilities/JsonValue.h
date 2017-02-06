@@ -61,7 +61,7 @@ namespace CU
 		unsigned int GetUInt() const;
 
 		template<typename T>
-		T GetInteger();
+		T GetEnum();
 
 		const std::string& GetString() const;
 		const std::string& TryGetString() const;
@@ -84,7 +84,7 @@ namespace CU
 	};
 
 	template<typename T>
-	inline T CJsonValue::GetInteger()
+	inline T CJsonValue::GetEnum()
 	{
 		return static_cast<T>(GetInt());
 	}

@@ -1,4 +1,6 @@
 #pragma once
+
+#include "lights.h"
 #include "../CommonUtilities/matrix44.h"
 #include "../CommonUtilities/DynamicString.h"
 #include "../CommonUtilities/Vector2.h"
@@ -7,6 +9,8 @@
 #include "../GUI/GUIPixelConstantBuffer.h"
 #include "RenderPackage.h"
 #include "FullScreenHelper.h"
+#include "BufferStructs.h"
+
 
 
 class CSkybox;
@@ -143,15 +147,7 @@ struct SRenderCameraQueueMessage : SRenderMessage
 struct SRenderModelMessage : SRenderMessage
 {
 	SRenderModelMessage();
-	CU::Matrix44f myTransformation;
-	CU::Matrix44f myLastFrameTransformation;
-	CU::GrowingArray<CPointLightInstance*>* myPointLights;
-	Lights::SDirectionalLight* myDirectionalLight;
-
-	const char* myCurrentAnimation;
-	float myAnimationTime;
-	bool myAnimationLooping;
-	float myHighlightIntencity;
+	SRenderModelParams myRenderParams;
 	int myModelID;
 };
 
@@ -206,6 +202,7 @@ struct SRenderSpriteMessage : SRenderMessage
 	SRenderSpriteMessage();
 	CU::Vector2f myPosition;
 	CU::Vector2f mySize;
+	CU::Vector2f myPivot;
 	CU::Vector4f myRect;
 	CU::Vector4f myColor;
 	CSprite* mySprite;

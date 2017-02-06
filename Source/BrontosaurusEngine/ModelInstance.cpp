@@ -6,6 +6,10 @@
 #include "Renderer.h"
 #include "RenderCamera.h"
 
+//Lights
+#include "PointLightInstance.h"
+#include "Intersection.h"
+
 
 CModelInstance::CModelInstance(const char* aModelPath)
 {
@@ -66,25 +70,53 @@ CModelInstance::~CModelInstance()
 	//SAFE_DELETE(mySceneAnimator); //is deleted through the map
 }
 
-void CModelInstance::Render(Lights::SDirectionalLight* aLight, CU::GrowingArray<CPointLightInstance*>* aPointLightList)
+void CModelInstance::Render(Lights::SDirectionalLight* aLight, CU::GrowingArray<CPointLightInstance, unsigned int>& aPointLightList)
 {
 	if (ShouldRender() == true)
 	{
-		SRenderModelMessage* msg = new SRenderModelMessage();
 
-		msg->myDirectionalLight = aLight;
-		msg->myPointLights = aPointLightList;
+		SRenderModelMessage* msg = new SRenderModelMessage();
 		msg->myModelID = myModel;
-		msg->myTransformation =	myTransformation;
-		msg->myLastFrameTransformation = myLastFrame;
-		msg->myHighlightIntencity = myHighlightIntencity;
+		msg->myRenderParams.myTransform = myTransformation;
+		msg->myRenderParams.myTransformLastFrame = myLastFrame;
+		msg->myRenderParams.aHighlightIntencity = myHighlightIntencity;
+		msg->myRenderParams.myRenderToDepth = false;
+
+		msg->myRenderParams.myDirectionalLight = *aLight;
+		msg->myRenderParams.myNumLights = 0;
+		
+		CU::Intersection::Sphere light;
+		CU::Intersection::Sphere model;
+		model.myCenterPosition = myTransformation.GetPosition();
+		model.myRadius = GetModelBoundingBox().myRadius;
+		model.myRadiusSquared = model.myRadius * model.myRadius;
+
+		for (int i = 0; i < aPointLightList.Size(); ++i)
+		{
+			if (aPointLightList[i].GetIsActive() == true)
+			{
+				light.myCenterPosition = aPointLightList[i].GetPosition();
+				light.myRadius = aPointLightList[i].GetRange();
+				light.myRadiusSquared = light.myRadius * light.myRadius;
+
+				if (CU::Intersection::SphereVsSphere(model, light))
+				{
+					msg->myRenderParams.myPointLightList.Add(Lights::SPointLight());
+					msg->myRenderParams.myPointLightList.GetLast().color = aPointLightList[i].GetColor();
+					msg->myRenderParams.myPointLightList.GetLast().intensity = aPointLightList[i].GetInstensity();
+					msg->myRenderParams.myPointLightList.GetLast().position = aPointLightList[i].GetPosition();
+					msg->myRenderParams.myPointLightList.GetLast().range = aPointLightList[i].GetRange();
+					msg->myRenderParams.myNumLights++;
+				}
+			}
+		}
+
 		
 		if (myHasAnimations != false)
 		{
-			msg->myAnimationTime = myAnimationCounter;
-			msg->myCurrentAnimation = myCurrentAnimation;
-			msg->myAnimationLooping = myAnimationLooping;
-
+			msg->myRenderParams.aAnimationTime = myAnimationCounter;
+			msg->myRenderParams.aAnimationState = myCurrentAnimation;
+			msg->myRenderParams.aAnimationLooping = myAnimationLooping;
 		}
 
 		RENDERER.AddRenderMessage(msg);
@@ -93,29 +125,54 @@ void CModelInstance::Render(Lights::SDirectionalLight* aLight, CU::GrowingArray<
 	}
 }
 
-void CModelInstance::Render(Lights::SDirectionalLight * aLight, CU::GrowingArray<CPointLightInstance*>* aPointLightList, CRenderCamera & aRenderToCamera)
+void CModelInstance::Render(Lights::SDirectionalLight * aLight, CU::GrowingArray<CPointLightInstance, unsigned int>& aPointLightList, CRenderCamera & aRenderToCamera)
 {
 	if (ShouldRender() == true)
 	{
 		SRenderModelMessage* msg = new SRenderModelMessage();
-
-		msg->myDirectionalLight = aLight;
-		msg->myPointLights = aPointLightList;
 		msg->myModelID = myModel;
-		msg->myTransformation = myTransformation;
-		msg->myLastFrameTransformation = myLastFrame;
 
-		if (myHasAnimations != false)
-		{
-			msg->myAnimationTime = myAnimationCounter;
-			msg->myCurrentAnimation = myCurrentAnimation;
-			msg->myAnimationLooping = myAnimationLooping;
+		msg->myRenderParams.myTransform = myTransformation;
+		msg->myRenderParams.myTransformLastFrame = myLastFrame;
+		msg->myRenderParams.aHighlightIntencity = myHighlightIntencity;
 
-		}
-
-		if (aPointLightList == nullptr && aLight == nullptr)
+		if (aLight == nullptr)
 		{
 			msg->myType = SRenderMessage::eRenderMessageType::eRenderModelDepth;
+		}
+		else
+		{
+			CU::Intersection::Sphere model;
+			CU::Intersection::Sphere light;
+			msg->myRenderParams.myNumLights = 0;
+
+
+			for (int i = 0; i < aPointLightList.Size(); ++i)
+			{
+				if (aPointLightList[i].GetIsActive() == true)
+				{
+					light.myCenterPosition = aPointLightList[i].GetPosition();
+					light.myRadius = aPointLightList[i].GetRange();
+					light.myRadiusSquared = light.myRadius * light.myRadius;
+
+					if (CU::Intersection::SphereVsSphere(model, light))
+					{
+						msg->myRenderParams.myPointLightList.Add(Lights::SPointLight());
+						msg->myRenderParams.myPointLightList.GetLast().color = aPointLightList[i].GetColor();
+						msg->myRenderParams.myPointLightList.GetLast().intensity = aPointLightList[i].GetInstensity();
+						msg->myRenderParams.myPointLightList.GetLast().position = aPointLightList[i].GetPosition();
+						msg->myRenderParams.myPointLightList.GetLast().range = aPointLightList[i].GetRange();
+						msg->myRenderParams.myNumLights++;
+					}
+				}
+			}
+		}
+	
+		if (myHasAnimations != false)
+		{
+			msg->myRenderParams.aAnimationTime = myAnimationCounter;
+			msg->myRenderParams.aAnimationState = myCurrentAnimation;
+			msg->myRenderParams.aAnimationLooping = myAnimationLooping;
 		}
 
 		aRenderToCamera.AddRenderMessage(msg);

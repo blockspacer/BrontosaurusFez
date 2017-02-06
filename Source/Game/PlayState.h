@@ -32,7 +32,7 @@ class CCollisionComponentManager;
 class CScene;
 class CHatmaker;
 class CGameObject;
-class StatManager;
+//class StatManager;
 class CShopStorage;
 class CTextInstance;
 class CTextInstance;
@@ -95,7 +95,7 @@ private:
 	CScriptComponentManager* myScriptComponentManager;
 	CParticleEffectManager* myParticleEffectManager;
 	GUI::GUIManager* myGUIManager;
-	StatManager* myStatManager;
+	//StatManager* myStatManager;
 	CTextInstance* myGoldText;
 	CHatMaker* myHatMaker;
 	CShopStorage* myShopStorage;

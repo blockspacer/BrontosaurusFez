@@ -50,7 +50,8 @@ CFireEmitterInstance& CFireEmitterInstance::operator=(CFireEmitterInstance&& aTe
 
 void CFireEmitterInstance::Init(const SFireEmitterData& aFireEmitterData)
 {
-	myFireEmitter = CEngine::GetInstance()->GetFireEmitterManager().CreateFireEmitter(aFireEmitterData);
+	CFireEmitterManager& fireEmitterManager = CEngine::GetInstance()->GetFireEmitterManager();
+	myFireEmitter = fireEmitterManager.CreateFireEmitter(aFireEmitterData);
 }
 
 void CFireEmitterInstance::Render()

@@ -70,12 +70,12 @@ namespace
 CScene::CScene()
 {
 	myModels.Init(64);
-	myPointLights.Init(8);
+	myPointLights.Init(32);
 	myParticleEmitters.Init(8);
 	myFireEmitters.Init(8);
 	mySkybox = nullptr;
 
-	myShadowCamera.InitOrthographic(6000, 6000, 5000.f, 0.01f, 4096, 4096);
+	myShadowCamera.InitOrthographic(6000, 6000, 6000.f, 100.f, 4096, 4096);
 }
 
 CScene::~CScene()
@@ -87,7 +87,6 @@ CScene::~CScene()
 	myModels.DeleteAll();
 	myParticleEmitters.DeleteAll();
 	//myDebugObjects.DeleteAll();
-	myPointLights.DeleteAll();
 }
 
 void CScene::Update(const CU::Time aDeltaTime)
@@ -129,15 +128,14 @@ void CScene::Render()
 		{
 			continue;
 		}
-
 		if (myShadowCamera.GetCamera().IsInside(myModels[i]->GetModelBoundingBox()) == false)
 		{
 			continue;
 		}
 
-		myModels[i]->Render(&myDirectionalLight, &myPointLights, myShadowCamera);
-
+		myModels[i]->Render(&myDirectionalLight, myPointLights, myShadowCamera);
 	}
+
 
 	myShadowCamera.Render();
 	SSetShadowBuffer *shadowMSG = new SSetShadowBuffer();
@@ -158,18 +156,14 @@ void CScene::Render()
 			continue;
 		}
 
-		myModels[i]->Render(&myDirectionalLight, &myPointLights);
-
+		myModels[i]->Render(&myDirectionalLight, myPointLights);
 	}
-
 
 	SChangeStatesMessage* changeStateMessage = new SChangeStatesMessage();
 	changeStateMessage->myBlendState = eBlendState::eAlphaBlend;
 	changeStateMessage->myDepthStencilState = eDepthStencilState::eReadOnly; //don't know what to do here
 	changeStateMessage->myRasterizerState = eRasterizerState::eNoCullingClockwise;
 	changeStateMessage->mySamplerState = eSamplerState::eClamp0Wrap1;
-
-	//myTestCamera.AddRenderMessage(changeStateMessage);
 	RENDERER.AddRenderMessage(changeStateMessage);
 
 	for (CFireEmitterInstance& fireEmitter : myFireEmitters)
@@ -194,6 +188,9 @@ void CScene::Render()
 
 		myParticleEmitters[i]->Render(GetCamera(eCameraType::ePlayerOneCamera));
 	}
+
+
+	// DRAW SHADOWBUFFER
 
 	//SRenderToIntermediate * interMSG = new SRenderToIntermediate();
 	//interMSG->myRect = { 0.0f, 0.0f, 0.25f, 0.25f };
@@ -226,10 +223,21 @@ InstanceID CScene::AddDirectionalLight(Lights::SDirectionalLight & aDirectionalL
 	return 0;
 }
 
-InstanceID CScene::AddPointLightInstance(CPointLightInstance* aPointLight)
+InstanceID CScene::AddPointLightInstance(CPointLightInstance aPointLight)
 {
-	myPointLights.Add(aPointLight);
-	return 0;
+	InstanceID id = 0;
+
+	if (myFreePointlights.Size() < 1)
+	{
+		id = myPointLights.Size();
+		myPointLights.Add(aPointLight);
+		return id;
+	}
+
+	id = myFreePointlights.Pop();
+	myPointLights[id] = aPointLight;
+	myPointLights[id].SetActive(true);
+	return id;
 }
 
 InstanceID CScene::AddParticleEmitterInstance(CParticleEmitterInstance* aParticleEmitterInstance)
@@ -319,6 +327,11 @@ CParticleEmitterInstance* CScene::GetParticleEmitterInstance(const InstanceID aP
 	return (myParticleEmitters.HasIndex(aParticleEmitterID)) ? myParticleEmitters[aParticleEmitterID] : nullptr;
 }
 
+CPointLightInstance * CScene::GetPointLightInstance(const InstanceID aID)
+{
+	return (myPointLights.HasIndex(aID)) ? &myPointLights[aID] : nullptr;
+}
+
 void CScene::DeleteModelInstance(CModelInstance* anInstance)
 {
 	InstanceID currentId;
@@ -360,4 +373,11 @@ void CScene::DeleteParticleEmitterInstance(const InstanceID anID)
 	
 	delete emitter;
 	//emitter->Destroy();
+}
+
+void CScene::RemovePointLightInstance(const InstanceID anID)
+{
+	myPointLights[anID].SetActive(false);
+	myFreePointlights.Push(anID);
+
 }

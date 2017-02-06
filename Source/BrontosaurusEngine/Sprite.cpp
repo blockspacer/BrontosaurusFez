@@ -17,6 +17,8 @@ struct SVertexConstantBufferType
 {
 	CU::Vector2f position;
 	CU::Vector2f size;
+	CU::Vector2f pivot;
+	CU::Vector2f TRASH;
 	CU::Vector4f rect;
 	CU::Vector4f color;
 };
@@ -124,12 +126,12 @@ bool CSprite::InitBuffers()
 	return SUCCEEDED(result);
 }
 
-void CSprite::Render(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::Vector4f& aRect, const CU::Vector4f& aColor)
+void CSprite::Render(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::Vector2f& aPivot, const CU::Vector4f& aRect, const CU::Vector4f& aColor)
 {
 	myEffect->Activate();
 	mySurface->Activate();
 	
-	UpdateAndSetVertexConstantBuffer(aPosition, aSize, aRect, aColor);
+	UpdateAndSetVertexConstantBuffer(aPosition, aSize, aPivot, aRect, aColor);
 
 	UINT stride = sizeof(CU::Vector4f);
 	UINT offset = 0;
@@ -147,13 +149,16 @@ CU::Vector2f CSprite::GetTextureSizeFloat() const
 	return CU::Vector2f::Zero;
 }
 
-void CSprite::UpdateAndSetVertexConstantBuffer(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::Vector4f& aRect, const CU::Vector4f& aColor)
+void CSprite::UpdateAndSetVertexConstantBuffer(const CU::Vector2f& aPosition, const CU::Vector2f& aSize,
+	const CU::Vector2f& aPivot, const CU::Vector4f& aRect, const CU::Vector4f& aColor)
 {
 	ID3D11DeviceContext& context = *CEngine::GetInstance()->GetFramework()->GetDeviceContext();
 
 	SVertexConstantBufferType cbufferStruct = {};
 	cbufferStruct.position = aPosition;
 	cbufferStruct.size = aSize;
+	cbufferStruct.pivot = aPivot;
+	cbufferStruct.TRASH = { 0.f,0.f };
 	cbufferStruct.rect = aRect;
 	cbufferStruct.color = aColor;
 
