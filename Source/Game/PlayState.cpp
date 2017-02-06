@@ -248,16 +248,15 @@ void CPlayState::Load()
 	// Cubemap & Skybox
 	std::string cubemapPath = "Models/Cubemaps/";
 	cubemapPath += levelsArray[myLevelIndex].GetString();
-	cubemapPath -= ".dds";
+	cubemapPath -= ".json";
 	cubemapPath += "_cubemap.dds";
 	{
 		std::ifstream infile(cubemapPath);
 		if (infile.good())
 		{
-			myNavmesh.LoadFromFile(cubemapPath.c_str());
+			myScene->SetSkybox(cubemapPath.c_str());
 		}
 	}
-	myScene->SetSkybox("skybox.dds");
 
 	myQuestManager.LoadQuestlines(questPath);
 
