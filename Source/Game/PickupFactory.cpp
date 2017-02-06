@@ -212,6 +212,5 @@ CU::Vector3f CPickupFactory::GenerateNewPosition(CU::Vector3f& aPosition)
 	angle *= PI / 180.0f;
 	direction = direction * CU::Matrix33f::CreateRotateAroundZ(angle);
 	newPosition = aPosition + direction * 50.0f;
-	DL_PRINT("Drop angle %f", angle * 180.0f / PI);
 	return newPosition;
 }

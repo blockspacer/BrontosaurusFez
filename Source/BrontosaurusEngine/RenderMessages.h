@@ -202,6 +202,7 @@ struct SRenderSpriteMessage : SRenderMessage
 	SRenderSpriteMessage();
 	CU::Vector2f myPosition;
 	CU::Vector2f mySize;
+	CU::Vector2f myPivot;
 	CU::Vector4f myRect;
 	CU::Vector4f myColor;
 	CSprite* mySprite;

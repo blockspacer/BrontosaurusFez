@@ -25,6 +25,7 @@ void SkillComponent::Update(float aDeltaTime)
 			SComponentMessageData data2;
 			data2.myBool = false;
 			GetParent()->NotifyComponents(eComponentMessageType::eSetIsColliderActive, data2);
+			GetParent()->NotifyComponents(eComponentMessageType::eRemoveAllCollidedWith, SComponentMessageData());
 			myIsActive = false;
 		}
 		else
@@ -44,6 +45,7 @@ void SkillComponent::Receive(const eComponentMessageType aMessageType, const SCo
 			if(aMessageData.myGameObject != myUserObject)
 			{
 				DoDamage(aMessageData.myGameObject);
+				aMessageData.myGameObject->NotifyComponents(eComponentMessageType::eRemoveAllCollidedWith, SComponentMessageData());
 			}
 		}
 		else
@@ -60,6 +62,7 @@ void SkillComponent::Receive(const eComponentMessageType aMessageType, const SCo
 		{
 			myElapsedTime = 0.0f;
 			myIsActive = true;
+			GetParent()->NotifyComponents(eComponentMessageType::eRemoveAllCollidedWith, SComponentMessageData());
 		}
 		break;
 	default:

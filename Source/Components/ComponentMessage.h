@@ -99,6 +99,7 @@ enum class eComponentMessageType
 	eTryToSelectSkill,
 	eCheckIfCanSelect,
 	eActivate2,
+	eRemoveAllCollidedWith,
 	eLength
 };
 
