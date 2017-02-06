@@ -39,6 +39,7 @@
 #include "MainStatComponent.h"
 #include "Components/HealthRestoreTriggerComponentManager.h"
 #include "Components/PointLightComponentManager.h"
+#include "Components/PointLightComponent.h"
 
 #include "../GUI/GUIManager.h"
 
@@ -177,14 +178,13 @@ void CPlayState::Load()
 	CShopStorage::GetInstance().LoadStorage("Json/Hats/HatBluePrints.json");
 
 	MODELCOMP_MGR.SetScene(myScene);
-	myScene->SetSkybox("skybox.dds");
 	LoadManager::GetInstance().SetCurrentPlayState(this);
 	LoadManager::GetInstance().SetCurrentScene(myScene);
 
 
 	Lights::SDirectionalLight dirLight;
-	dirLight.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	dirLight.direction = { 0.0f, -1.0f, 1.0f, 1.0f };
+	dirLight.color = { .35f, .35f, .35f, 1.0f };
+	dirLight.direction = { -1.0f, -1.0f, 1.0f, 1.0f };
 	myScene->AddDirectionalLight(dirLight);
 
 	CONSOLE->GetLuaFunctions();
@@ -226,24 +226,38 @@ void CPlayState::Load()
 	questPath += levelsArray[myLevelIndex].GetString();
 	questPath += ".json";
 
-	std::string navmeshPath = "Json/Levels/";
+	std::string navmeshPath = "Models/Navmesh/";
 	navmeshPath += levelsArray[myLevelIndex].GetString();
-	navmeshPath += "/Navmesh.obj";
+	navmeshPath -= ".json";
+	navmeshPath += "_navmesh.obj";
 
 	//NAVMESH
-	std::ifstream infile(navmeshPath);
-	if (infile.good())
 	{
-		myNavmesh.LoadFromFile(navmeshPath.c_str());
-		PollingStation::Navmesh = &myNavmesh;
+		std::ifstream infile(navmeshPath);
+		if (infile.good())
+		{
+			myNavmesh.LoadFromFile(navmeshPath.c_str());
+			PollingStation::Navmesh = &myNavmesh;
+		}
+		else
+		{
+			PollingStation::Navmesh = nullptr;
+		}
 	}
-	else
+
+	// Cubemap & Skybox
+	std::string cubemapPath = "Models/Cubemaps/";
+	cubemapPath += levelsArray[myLevelIndex].GetString();
+	cubemapPath -= ".dds";
+	cubemapPath += "_cubemap.dds";
 	{
-		PollingStation::Navmesh = nullptr;
+		std::ifstream infile(cubemapPath);
+		if (infile.good())
+		{
+			myNavmesh.LoadFromFile(cubemapPath.c_str());
+		}
 	}
-
-
-
+	myScene->SetSkybox("skybox.dds");
 
 	myQuestManager.LoadQuestlines(questPath);
 	myQuestManager.CompleteEvent();
@@ -276,6 +290,15 @@ void CPlayState::Load()
 		PollingStation::playerObject->AddComponent(CPickupManager::GetInstance().CreatePickerUpperComp());
 		PollingStation::playerObject->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
 		PollingStation::playerObject->AddComponent(new CMainStatComponent());
+		
+		PointLightComponent* pl =  CPointLightComponentManager::GetInstance().CreateAndRegisterComponent();
+
+		pl->SetColor({ 1.0f, 1.0f, 1.0f });
+		pl->SetIntensity(1.0f);
+		pl->SetRange(500.f);
+
+		PollingStation::playerObject->AddComponent(pl);
+
 
 		////TEMP CARL BEGIN
 
