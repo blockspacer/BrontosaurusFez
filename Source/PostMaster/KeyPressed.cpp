@@ -23,6 +23,7 @@
 #include "Game/DialogState.h"
 #include "PostMaster.h"
 #include "PushState.h"
+#include "Game/SplashScreen.h"
 
 KeyPressed::KeyPressed(const CU::eKeys& aKey)
 	: myKey(aKey)
@@ -87,6 +88,16 @@ eMessageReturn KeyPressed::DoEvent(CPlayState* aPlayState) const
 		default:
 			break;
 		}
+	}
+
+	return eMessageReturn::eContinue;
+}
+
+eMessageReturn KeyPressed::DoEvent(CSplashScreen* aSplashScreen) const
+{
+	if (aSplashScreen)
+	{
+		aSplashScreen->UserWantsToContinue();
 	}
 
 	return eMessageReturn::eContinue;

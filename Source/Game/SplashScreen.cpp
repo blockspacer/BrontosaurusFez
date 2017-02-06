@@ -4,7 +4,8 @@
 #include "PostMaster\PostMaster.h"
 #include "BrontosaurusEngine\SpriteInstance.h"
 #include "PostMaster\Message.h"
-#include "PostMaster\EMessageReturn.h"
+#include "PostMaster\Event.h"
+//#include "PostMaster\EMessageReturn.h"
 
 #define MAX_ALPHA 1.0f
 #define MIN_APLHA 0.0f
@@ -49,6 +50,18 @@ void CSplashScreen::Render()
 void CSplashScreen::AddPicture(const char* aPath)
 {	// 								             size           pos			Pivot				rect					 colour
 	mySprites.Add(new CSpriteInstance(aPath, { 1.f, 1.f }, { 0.f, 0.f }, { 0.f, 0.f }, { 0.f, 0.f, 1.f, 1.f }, { 1.f, 1.f, 1.f, 0.f }));
+}
+
+void CSplashScreen::UserWantsToContinue()
+{
+	if (CheckIfMorePicsInArray() == true)
+	{
+		SetNextPic();
+	}
+	else
+	{
+		myIsDone = true;
+	}
 }
 
 void CSplashScreen::FadeIn(const CU::Time& aDeltaTime)
@@ -103,7 +116,7 @@ bool CSplashScreen::CheckIfMorePicsInArray()
 void CSplashScreen::OnEnter()
 {
 	POSTMASTER.Subscribe(this, eMessageType::eKeyboardMessage);
-	//POSTMASTER.Subscribe(this, eMessageType::eMousePressed);
+	POSTMASTER.Subscribe(this, eMessageType::eMouseMessage);
 
 
 	assert(mySprites.Size() > 0 && "You need to add something to the splashScreen");
@@ -118,19 +131,20 @@ void CSplashScreen::OnEnter()
 void CSplashScreen::OnExit()
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
-	//PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMousePressed);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);
 
 }
 
 eMessageReturn CSplashScreen::Recieve(const Message& aMessage)
 {
-	if (aMessage.myMessageType == eMessageType::eKeyboardMessage /*|| aMessage.myMessageType ==  eMessageType::eMousePressed*/)
-	{
-		if (CheckIfMorePicsInArray() == true)
-			SetNextPic();
-		else
-			myIsDone = true;
-	}
-
-	return eMessageReturn::eContinue;
+	return aMessage.myEvent.DoEvent(this);
+	//if (aMessage.myMessageType == eMessageType::eKeyboardMessage || aMessage.myMessageType == eMessageType::eMouseMessage)
+	//{
+	//	if (CheckIfMorePicsInArray() == true)
+	//		SetNextPic();
+	//	else
+	//		myIsDone = true;
+	//}
+	//
+	//return eMessageReturn::eContinue;
 }
