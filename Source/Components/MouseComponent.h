@@ -27,13 +27,17 @@ public:
 	void CheckIfHoveredGameObjectDied(CGameObject* aGameobjectThatDied);
 	void RemoveHoveredObjects();
 private:
+	void InternalInit();
 	void HighlightClosest();
 	void HandleCollision(CGameObject* aCollidedWith);
 	eMessageReturn Recieve(const Message& aMessage) override;
 
 	CU::GrowingArray<CGameObject*> myHoveredGameObjects;
 	CU::Vector3f myMousePosition;
-	bool myMouseIsDown;
+	CU::Vector2f myMouseScreenPosition;
+
 	CClickPulse* myClickPulse;
 	const CU::Camera& myPlayerCamera;
+	
+	bool myMouseIsDown;
 };

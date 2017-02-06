@@ -282,8 +282,6 @@ void CPlayState::Load()
 		////TEMP CARL END
 	}
 
-	myGameObjectManager->SendObjectsDoneMessage();
-
 	for (int i = 0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); i++)
 	{
 		PollingStation::myThingsEnemiesShouldAvoid[i]->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
@@ -303,7 +301,7 @@ void CPlayState::Load()
 	myMouseComponent = new CMouseComponent(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 	mouseObject->AddComponent(myMouseComponent);
 
-
+	myGameObjectManager->SendObjectsDoneMessage();
 
 	myHatMaker->LoadBluePrints("Json/Hats/HatBluePrints.json");
 	myHatMaker->GiveTheManAHat();
