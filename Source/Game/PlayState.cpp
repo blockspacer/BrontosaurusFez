@@ -432,7 +432,7 @@ void CPlayState::OnExit()
 	if (audioInterface != nullptr)
 	{
 		audioInterface->PostEvent("switchBank");
-		audioInterface->PostEvent("BayBlade");
+		audioInterface->PostEvent("StopBayBlade");
 		audioInterface->UnLoadBank("Audio/playState.bnk");
 	}
 	myGUIManager->PauseRenderAndUpdate();
