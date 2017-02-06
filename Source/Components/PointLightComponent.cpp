@@ -31,14 +31,15 @@ void PointLightComponent::SetIntensity(const float aIntensity)
 
 void PointLightComponent::Destroy()
 {
-	myScene->RemovePointLightInstance(myLightID);
-	myLightID = -1;
+	//myScene->RemovePointLightInstance(myLightID);
+	//myLightID = -1;
 }
 
 void PointLightComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
 {
 	switch (aMessageType)
 	{
+	case eComponentMessageType::eObjectDone:
 	case eComponentMessageType::eMoving:
 	{
 		myPointLightInstace->SetPosition(GetParent()->GetWorldPosition());
