@@ -246,7 +246,7 @@ void CPlayState::Load()
 
 
 	myQuestManager.LoadQuestlines(questPath);
-	myQuestManager.CompleteEvent();
+
 	KLoader::CKevinLoader &loader = KLoader::CKevinLoader::GetInstance();
 
 	const KLoader::eError loadError = loader.LoadFile(levelPath);
@@ -423,6 +423,7 @@ void CPlayState::OnEnter()
 	Audio::CAudioInterface::GetInstance()->LoadBank("Audio/playState.bnk");
 	Audio::CAudioInterface::GetInstance()->PostEvent("BayBlade");
 	myGUIManager->RestartRenderAndUpdate();
+	myQuestManager.CompleteEvent();
 }
 
 void CPlayState::OnExit()
