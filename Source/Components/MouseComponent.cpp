@@ -154,7 +154,6 @@ void CMouseComponent::HighlightClosest()
 		distance = objectposition - myMousePosition;
 
 		float dis = distance.Length();
-		DL_PRINT("size %u", myHoveredGameObjects.Size());
 
 		if (dis < lowestDistance)
 		{
