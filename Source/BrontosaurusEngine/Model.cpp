@@ -273,21 +273,28 @@ bool CModel::InitBuffers(CU::GrowingArray<SVertexDataCube>& aVertexList)
 	return true;
 }
 
-void CModel::Render(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aAnimationState, const float aAnimationTime, const bool aAnimationLooping, const float aHighlightIntencity)
+void CModel::Render(SRenderModelParams & aParamObj)
 {
-	myEffect->Activate();
+	if (aParamObj.myRenderToDepth == true)
+	{
+		myEffect->ActivateForDepth();
+	}
+	else
+	{
+		myEffect->Activate();
+	}
 
 	if (mySurface != nullptr)
 	{
 		mySurface->Activate();
 	}
 	
-	UpdateCBuffer(aToWorldSpace, aLastFrameTransformation, aLight, aPointLightList, aAnimationState, aAnimationTime, aAnimationLooping, aHighlightIntencity);
+	UpdateCBuffer(aParamObj);
 
 	UINT stride = myVertexSize;
 	UINT offset = 0;
 
-	SLodData& currentLodModel = GetCurrentLODModel(aToWorldSpace.GetPosition());
+	SLodData& currentLodModel = GetCurrentLODModel(aParamObj.myTransform.GetPosition());
 
 	DEVICE_CONTEXT->IASetVertexBuffers(0, 1, &currentLodModel.myVertexBuffer, &stride, &offset);
 	DEVICE_CONTEXT->IASetIndexBuffer(currentLodModel.myIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
@@ -302,39 +309,15 @@ void CModel::Render(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLa
 	}
 }
 
-void CModel::Render(const CU::Matrix44f & aToWorldSpace, const char* aAnimationState, const float aAnimationTime, const bool aAnimationLooping, const float aHighlightIntencity)
-{
-	myEffect->ActivateForDepth();
-
-	UpdateCBuffer(aToWorldSpace, aToWorldSpace, nullptr, nullptr, aAnimationState, aAnimationTime, aAnimationLooping);
-
-	UINT stride = myVertexSize;
-	UINT offset = 0;
-
-	SLodData& currentLodModel = GetCurrentLODModel(aToWorldSpace.GetPosition());
-
-	DEVICE_CONTEXT->IASetVertexBuffers(0, 1, &currentLodModel.myVertexBuffer, &stride, &offset);
-	DEVICE_CONTEXT->IASetIndexBuffer(currentLodModel.myIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
-	if (myLODModels.GetLast().myIndexBuffer == nullptr)
-	{
-		DEVICE_CONTEXT->Draw(currentLodModel.myVertexCount, 0);
-	}
-	else
-	{
-		DEVICE_CONTEXT->DrawIndexed(currentLodModel.myIndexCount, 0, 0);
-	}
-}
-
-void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix44f& aLastFrameTransformation, const Lights::SDirectionalLight* aLight, const CU::GrowingArray<CPointLightInstance*>* aPointLightList, const char* aAnimationState, const float aAnimationTime, const bool aAnimationLooping,const float aHighlightIntencity) // TODO: Do not update some of the cbuffers	
+void CModel::UpdateCBuffer(SRenderModelParams & aParamObj)
 {
 	// WorldSpace thingy
 	D3D11_MAPPED_SUBRESOURCE mappedSubResource;
 	ZeroMemory(&mappedSubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
 
 	SToWorldSpace updated;
-	updated.myWorldSpaceLastFrame = aLastFrameTransformation;
-	updated.myWorldSpace = aToWorldSpace;
+	updated.myWorldSpaceLastFrame = aParamObj.myTransform;
+	updated.myWorldSpace = aParamObj.myTransformLastFrame;
 	DEVICE_CONTEXT->Map(myCbuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubResource);
 	memcpy(mappedSubResource.pData, &updated, sizeof(SToWorldSpace));
 	DEVICE_CONTEXT->Unmap(myCbuffer, 0);
@@ -357,10 +340,10 @@ void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix4
 
 
 	//ANIMATION BUFFER
-	if (mySceneAnimator != nullptr && (aAnimationState != nullptr && aAnimationState != ""))
+	if (mySceneAnimator != nullptr && (aParamObj.aAnimationState != nullptr && aParamObj.aAnimationState != ""))
 	{
 
-		std::vector<mat4>& bones = GetBones(aAnimationTime, aAnimationState, aAnimationLooping);
+		std::vector<mat4>& bones = GetBones(aParamObj.aAnimationTime, aParamObj.aAnimationState, aParamObj.aAnimationLooping);
 
 		//memcpy(static_cast<void*>(msg->myBoneMatrices), &bones[0], min(sizeof(msg->myBoneMatrices), bones.size() * sizeof(mat4)));
 
@@ -371,7 +354,7 @@ void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix4
 		DEVICE_CONTEXT->VSSetConstantBuffers(3, 1, &myBoneBuffer);
 	}
 
-	if (aLight != nullptr)
+	if (aParamObj.myRenderToDepth == false)
 	{
 		//LIGHT
 
@@ -379,38 +362,22 @@ void CModel::UpdateCBuffer(const CU::Matrix44f& aToWorldSpace, const CU::Matrix4
 
 		Lights::SLightsBuffer updatedLights;
 		updatedLights.myCameraPos = RENDERER.GetCamera().GetPosition();
-		updatedLights.myDirectionalLight.direction = aLight->direction;
-		updatedLights.myDirectionalLight.color = aLight->color;
+		updatedLights.myDirectionalLight = aParamObj.myDirectionalLight;
 
-		for (unsigned int i = 0; i < NUMBER_OF_POINTLIGHTS; ++i)
+		for (unsigned int i = 0; i < aParamObj.myPointLightList.Size(); ++i)
 		{
-			//if (aPointLightList == nullptr || i >= aPointLightList->Size())
-			{
-				updatedLights.myPointLights[i].color = { 0.0f, 0.0f, 0.0f, 0.0f };
-				updatedLights.myPointLights[i].position = { 0.0f, 0.0f, 0.0f };
-				updatedLights.myPointLights[i].intensity = 0.0f;
-				updatedLights.myPointLights[i].range = 0.0f;
-			}
-			/*else
-			{
-				updatedLights.myPointLights[i].color = aPointLightList->At(i)->GetColor();
-				updatedLights.myPointLights[i].position = aPointLightList->At(i)->GetPosition();
-				updatedLights.myPointLights[i].intensity = aPointLightList->At(i)->GetInstensity();
-				updatedLights.myPointLights[i].range = aPointLightList->At(i)->GetRange();
-			}*/
+			updatedLights.myPointLights[i] = aParamObj.myPointLightList[i];
 		}
 
 		updatedLights.cubeMap_mipCount = 11; // TODO FIX WTH?!
-
-		updatedLights.highlightColor = { 0.f, 1.f, 0.f, aHighlightIntencity };
+		updatedLights.highlightColor = { 1.f, 0.f, 0.f, aParamObj.aHighlightIntencity };
+		updatedLights.myNumberOfLights = aParamObj.myNumLights;
 
 		DEVICE_CONTEXT->Map(myLightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubResource);
 		memcpy(mappedSubResource.pData, &updatedLights, sizeof(Lights::SLightsBuffer));
 		DEVICE_CONTEXT->Unmap(myLightBuffer, 0);
 		DEVICE_CONTEXT->PSSetConstantBuffers(1, 1, &myLightBuffer);
 	}
-
-
 
 	//if (myConstantBuffers[eShaderStage::eVertex] != nullptr)
 	//{

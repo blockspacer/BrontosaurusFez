@@ -1,6 +1,5 @@
 #pragma once
-#include "../CommonUtilities/vector3.h"
-#include "../CommonUtilities/vector4.h"
+#include "Lights.h"
 
 enum class ePointLights;
 class CPointLight;
@@ -8,21 +7,27 @@ class CPointLight;
 class CPointLightInstance
 {
 public:
-	CPointLightInstance(ePointLights aType);
+	CPointLightInstance();
 	~CPointLightInstance();
 
-	void SetPosition(CU::Vector3f aPos);
+	void SetPosition(const CU::Vector3f& aPos);
+	void SetRange(const float aRange);
+	void SetInstensity(const float aIntencity);
+	void SetColor(const CU::Vector3f & aColor);
 
-	CU::Vector3f GetPosition();
-
+	const CU::Vector3f& GetPosition();
 	float GetRange();
 	float GetInstensity();
-	CU::Vector4f GetColor();
+	const CU::Vector3f& GetColor();
 
+	const Lights::SPointLight& GetData();
 
+	bool GetIsActive();
+	void SetActive(const bool aIsActive);
 private:
-	CU::Vector3f myPosition;
-	CPointLight* myLight;
-
+	//CU::Vector3f myPosition;
+	//CPointLight* myLight;
+	Lights::SPointLight myData;
+	bool myIsActive;
 };
 

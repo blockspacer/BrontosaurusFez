@@ -26,7 +26,7 @@ CPointLightComponentManager & CPointLightComponentManager::GetInstance()
 
 PointLightComponent * CPointLightComponentManager::CreateAndRegisterComponent()
 {
-	PointLightComponent* pointLight = new PointLightComponent;
+	PointLightComponent* pointLight = new PointLightComponent(myScene);
 	CComponentManager::GetInstance().RegisterComponent(pointLight);
 	myComponents.Add(pointLight);
 	myScene;//add light to scene;

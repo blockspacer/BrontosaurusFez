@@ -41,7 +41,7 @@ enum eColliderType : unsigned int
 
 class ICollider
 {
-	static const int ourMaxNumberOfCollides = 4;
+	static const int ourMaxNumberOfCollides = 8;
 
 public:
 	using Callback = std::function<void(ICollider*)>;
@@ -149,7 +149,14 @@ inline void ICollider::AddCollidsWith(const unsigned int aColliderTypes)
 
 inline void ICollider::OnCollisionEnter(ICollider* aOther)
 {
-	myHasCollidedWith.SafeAdd(aOther);
+	if (myHasCollidedWith.Find(aOther) != myHasCollidedWith.FoundNone)
+	{
+		return;
+	}
+	if (!myHasCollidedWith.SafeAdd(aOther))
+	{
+		return;
+	}
 
 	if (myOnEnterCallback != nullptr)
 	{
