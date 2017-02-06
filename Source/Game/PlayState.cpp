@@ -115,6 +115,7 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 
 CPlayState::~CPlayState()
 {
+
 	//Don forgetti to deletti
 	SAFE_DELETE(myEmitterComp);
 	SAFE_DELETE(myCollisionComponentManager);
@@ -282,6 +283,8 @@ void CPlayState::Load()
 		////TEMP CARL END
 	}
 
+	myGameObjectManager->SendObjectsDoneMessage();
+
 	for (int i = 0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); i++)
 	{
 		PollingStation::myThingsEnemiesShouldAvoid[i]->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
@@ -301,7 +304,7 @@ void CPlayState::Load()
 	myMouseComponent = new CMouseComponent(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 	mouseObject->AddComponent(myMouseComponent);
 
-	myGameObjectManager->SendObjectsDoneMessage();
+
 
 	myHatMaker->LoadBluePrints("Json/Hats/HatBluePrints.json");
 	myHatMaker->GiveTheManAHat();
@@ -433,6 +436,7 @@ void CPlayState::OnExit()
 		audioInterface->PostEvent("StopBayBlade");
 		audioInterface->UnLoadBank("Audio/playState.bnk");
 	}
+
 	myGUIManager->PauseRenderAndUpdate();
 }
 
