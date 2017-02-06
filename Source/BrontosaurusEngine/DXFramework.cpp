@@ -179,7 +179,7 @@ bool CDXFramework::Initialize(const int aWidth, const int aHeight, const bool aI
 	CU::Vector2<unsigned int> windowSize(aWidth, aHeight);
 	if (CollectAdapters(windowSize, numDenum, adapter))
 	{
-		//INFO_PRINT("%s%s", "VSYNC Compatible: Yes, Enabled: ", myEnableVSync ? "Yes" : "No");
+		INFO_PRINT("%s%s", "VSYNC Compatible: Yes, Enabled: ", (ENABLE_VSYNC ? "Yes" : "No"));
 	}
 
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
