@@ -159,7 +159,7 @@ void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName)
 			data.myHat = theBluePrint->myHatStruct;
 			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eAddHat, data);
 		}
-		if(theBluePrint->HatName == "BurningSlashHat")
+		if(theBluePrint->HatName == "FireHat")
 		{
 			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eActivateBurningBasicAttack, SComponentMessageData());
 		}
