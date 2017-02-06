@@ -208,7 +208,7 @@ void CPlayState::Load()
 	CU::CJsonValue levelsFile;
 
 	std::string errorString = levelsFile.Parse("Json/LevelList.json");
-	DL_MESSAGE_BOX(errorString.c_str());
+	if (!errorString.empty()) DL_MESSAGE_BOX(errorString.c_str());
 
 	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
