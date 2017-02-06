@@ -37,7 +37,7 @@ namespace GUI
 	{
 		SUPRESS_UNUSED_WARNING(aDeltaTime);
 
-		short cheapestHatPrice = GetCheapestHatPrice();
+		unsigned int cheapestHatPrice = GetCheapestHatPrice();
 		if (cheapestHatPrice == 0)
 		{
 			cheapestHatPrice = PollingStation::playerData->GetGold();

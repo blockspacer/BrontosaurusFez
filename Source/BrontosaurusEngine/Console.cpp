@@ -414,7 +414,6 @@ void CConsole::Print(const CU::DynamicString & aText)
 	for (unsigned short i = 0; i < myTextLog.Size(); i++)
 	{
 		myTextLog[i]->SetPosition(myTextLog[i]->GetPosition() + CU::Vector2f(0.0f, -0.05f));
-		std::cout << myTextLog[i]->GetText().c_str() << std::endl;
 	}
 }
 

@@ -97,7 +97,7 @@ inline CU::DynamicString CTextInstance::GetText() const
 {
 
 	CU::DynamicString string;
-	for (int i = 0; i < myStrings.Size(); ++i)
+	for (unsigned int i = 0; i < myStrings.Size(); ++i)
 	{
 		if (i != 0)
 		{

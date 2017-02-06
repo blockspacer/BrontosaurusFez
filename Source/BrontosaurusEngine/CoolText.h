@@ -2,8 +2,6 @@
 #include "TextBitmap.h"
 #include <d3d11.h>
 #include "../FontEngine/FT_FontFacade.h"
-#include "../CommonUtilities/binary_tree.h"
-#include "../CommonUtilities/GrowingArray.h"
 
 namespace CU
 {
@@ -17,6 +15,8 @@ namespace CU
 	class Vector2;
 	using Vector2f = Vector2<float>;
 
+	template<typename T, typename S = unsigned int, bool F = true>
+	class GrowingArray;
 }
 
 class CFont;
