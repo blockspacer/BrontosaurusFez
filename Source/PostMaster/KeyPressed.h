@@ -15,6 +15,7 @@ public:
 	eMessageReturn DoEvent(CDebugInfoDrawer* aDebugInfoDrawer) const override;
 	eMessageReturn DoEvent(CreditsState*) const override;
 	eMessageReturn DoEvent(CPlayState*) const override;
+	eMessageReturn DoEvent(CSplashScreen* aSplashScreen) const override;
 	eMessageReturn DoEvent(PauseMenu*) const override;
 	eMessageReturn DoEvent(CConsole* aConsole) const override;
 	eMessageReturn DoEvent(InputController* aConsole) const override;

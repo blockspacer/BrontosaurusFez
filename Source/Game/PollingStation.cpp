@@ -13,6 +13,7 @@ CU::GrowingArray<CGameObject*> PollingStation::myThingsEnemiesShouldAvoid(100);
 CU::GrowingArray<std::string> PollingStation::playerHatList(12);
 std::string PollingStation::currentDialog = "";
 CU::GrowingArray<int, char> PollingStation::OpenPortals(1);
+std::map<std::string, unsigned int> PollingStation::QuestProgress;
 
 void PollingStation::NullifyLevelSpecificData()
 {

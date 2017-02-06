@@ -8,6 +8,8 @@ PostMaster* PostMaster::ourInstance = nullptr;
 
 void PostMaster::UnSubscribeEveryWhere(Subscriber* aSubscriber)
 {
+#ifndef _RETAIL_BUILD
+
 	for (int messageType = 0; messageType < mySubscribers.Size(); ++messageType)
 	{
 		for (int subscriber = 0; subscriber < mySubscribers[messageType].Size(); ++subscriber)
@@ -19,6 +21,12 @@ void PostMaster::UnSubscribeEveryWhere(Subscriber* aSubscriber)
 			}
 		}
 	}
+
+#else
+
+	SUPRESS_UNUSED_WARNING(aSubscriber);
+
+#endif // !_RETAIL_BUILD
 }
 
 void PostMaster::CreateInstance()
@@ -56,15 +64,11 @@ PostMaster* PostMaster::GetInstancePtr()
 	return ourInstance;
 }
 
-//void PostMaster::InsertSubscriber(Subscriber* aSubscriber, const eMessageType aMessageType)
-//{
-//	mySubscribers[IntCast(aMessageType)].Insert(0, aSubscriber);
-//}
-
 void PostMaster::Subscribe(Subscriber* aSubscriber, const eMessageType aMessageType, const int aPriority)
 {
 	aSubscriber->SetPriority(aPriority);
-	CU::GrowingArray<Subscriber*, int, false>& subscribers = mySubscribers[IntCast(aMessageType)];
+	CU::GrowingArray<Subscriber*, int>& subscribers = mySubscribers[IntCast(aMessageType)];
+
 	for (int i = 0; i < subscribers.Size(); ++i)
 	{
 		if (subscribers[i]->GetPriority() < aPriority)
@@ -89,9 +93,11 @@ void PostMaster::UnSubscribe(Subscriber* aSubscriber, const eMessageType aMessag
 
 void PostMaster::SendLetter(const Message& aMessage)
 {
-	for (int i = 0; i < mySubscribers[IntCast(aMessage.myMessageType)].Size(); ++i)
+	CU::GrowingArray<Subscriber*, int>& subscribers = mySubscribers[IntCast(aMessage.myMessageType)];
+
+	for (Subscriber* subscriber : subscribers)
 	{
-		if (mySubscribers[IntCast(aMessage.myMessageType)][i]->Recieve(aMessage) == eMessageReturn::eStop)
+		if (subscriber->Recieve(aMessage) == eMessageReturn::eStop)
 		{
 			break;
 		}
@@ -106,9 +112,9 @@ void PostMaster::SendLetter(const eMessageType aMessageType, const Event& aEvent
 
 PostMaster::PostMaster()
 {
-	for (int i = 0; i < mySubscribers.Size(); ++i)
+	for (CU::GrowingArray<Subscriber*, int>& subscriber : mySubscribers)
 	{
-		mySubscribers[i].Init(16);
+		subscriber.Init(16);
 	}
 }
 

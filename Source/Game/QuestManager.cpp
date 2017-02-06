@@ -9,7 +9,8 @@
 #include "PJWrapper.h"
 #include "PollingStation.h"
 #include "PostMaster/PushState.h"
-#include "PostMaster/PopCurrentState.h"
+
+std::map<std::string, unsigned int> QM::CQuestManager::ourProgression;
 
 QM::CQuestManager::CQuestManager()
 {

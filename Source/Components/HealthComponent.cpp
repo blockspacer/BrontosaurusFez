@@ -6,6 +6,8 @@
 #include "../PostMaster/Event.h"
 #include "../PostMaster/Message.h"
 #include "../PostMaster/GameObjectDiedEvent.h"
+#include "ModelInstance.h"
+#include "ModelComponent.h"
 
 CHealthComponent::CHealthComponent()
 {
@@ -117,13 +119,17 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 		switch (myObjectType)
 		{
 		case eObjectType::eUrn:
-			data.myString = "BreakUrn";
+     			data.myString = "BreakUrn";
+			GetParent()->NotifyComponents(eComponentMessageType::eChangeFBXToDead, data);
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
 			break;
 		case eObjectType::eBarrel:
+		{
 			data.myString = "BreakBarrel";
+			GetParent()->NotifyComponents(eComponentMessageType::eChangeFBXToDead, data);
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
 			break;
+		}
 		case eObjectType::eWitch:
 			data.myString = "EnemyDie";
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
