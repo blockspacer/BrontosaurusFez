@@ -3,7 +3,7 @@
 #include "Camera.h"
 #include "../BrontosaurusEngine/Engine.h"
 
-CHealthBarComponent::CHealthBarComponent() : myBarSize(0.06f,0.01f)
+CHealthBarComponent::CHealthBarComponent() : myBarSize(0.045f,0.0075f)
 {		
 	myType = eComponentType::eHealthBar;
 	mySprite = new CSpriteInstance("Sprites/healthBar.dds",   myBarSize, { 0.5f, 0.5f }, { 0.f,0.f }, { 0.f, 0.f ,1.0f, 1.f }, { 1.0f, 0.0f, 0.0f, 0.f });
