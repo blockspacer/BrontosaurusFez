@@ -113,7 +113,7 @@ bool CSplashScreen::CheckIfMorePicsInArray()
 	return true;
 }
 
-void CSplashScreen::OnEnter()
+void CSplashScreen::OnEnter(const bool /*aLetThroughRender*/)
 {
 	POSTMASTER.Subscribe(this, eMessageType::eKeyboardMessage);
 	POSTMASTER.Subscribe(this, eMessageType::eMouseMessage);
@@ -128,7 +128,7 @@ void CSplashScreen::OnEnter()
 	}
 }
 
-void CSplashScreen::OnExit()
+void CSplashScreen::OnExit(const bool /*aLetThroughRender*/)
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);

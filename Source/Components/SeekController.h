@@ -35,6 +35,8 @@ private:
 	float mySlowdownRadius;
 	float myAggroRange;
 	float myCallForHelpRadius;
+	float myEvadeRadius;
+	float myElapsedEvadeTime;
 
 	short myFormationIndex;
 	bool myHaveBeenCalledForHelp;

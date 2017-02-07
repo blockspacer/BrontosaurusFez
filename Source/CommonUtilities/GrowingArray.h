@@ -17,6 +17,7 @@ namespace CU
 	template<bool IsPod, bool MoveUp, typename ObjectType, typename SizeType>
 	struct MoveArray;
 
+#pragma warning(disable : 4348)
 	template<typename ObjectType, typename SizeType = unsigned int, bool USE_SAFE_MODE = true>
 	class GrowingArray
 	{
@@ -790,4 +791,5 @@ namespace CU
 	};
 }
 
+#pragma warning(default : 4348)
 #undef self

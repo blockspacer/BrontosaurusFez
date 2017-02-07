@@ -101,6 +101,7 @@ enum class eComponentMessageType
 	eActivate2,
 	eRemoveAllCollidedWith,
 	eChangeFBXToDead,
+	eRemoveHoveredObject,
 	eLength
 };
 

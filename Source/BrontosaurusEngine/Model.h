@@ -129,6 +129,8 @@ private:
 
 	std::map<std::string, CSceneAnimator> mySceneAnimators;
 	CSceneAnimator* mySceneAnimator;
+	CSceneAnimator* myBindposeSceneAnimator;
+
 #ifdef _DEBUG
 	std::string myFilePath;
 #endif // _DEBUG

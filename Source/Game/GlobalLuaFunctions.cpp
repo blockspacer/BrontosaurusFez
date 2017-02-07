@@ -18,7 +18,7 @@
 
 #define GLOBAL_LUA_FUNCTION_ERROR DL_MESSAGE_BOX
 #define RETURN_VOID() return SSlua::ArgumentList()
-#define RETURN_ZERO() return SSlua::ArgumentList(ssLuaNumber(0.0))
+#define RETURN_ZERO() return SSlua::ArgumentList({ SSArgument(ssLuaNumber(0.0)) })
 #define PAPA CGameObject* parent
 
 SSlua::ArgumentList GetPlayer(const SSlua::ArgumentList & aArgumentList)
