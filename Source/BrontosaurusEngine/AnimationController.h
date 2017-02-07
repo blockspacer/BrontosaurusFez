@@ -100,7 +100,10 @@ public:
 	std::vector<CAnimEvaluator> Animations;// a std::vector that holds each animation 
 	int32_t CurrentAnimIndex;/** Current animation index */
 
-	mat4 GetBoneWorldTransform(float dt, const std::string& bname);
+
+	//These functions are for getting the GlobalTransform of a bone
+	mat4 GetBoneGlobalTransform(const std::string& bname);
+	mat4 GetBoneGlobalTransform(unsigned int bindex);
 
 protected:
 

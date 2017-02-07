@@ -511,6 +511,15 @@ PixelOutput PS_PBL(PosNormBinormTanTex_InputPixel input)
 	texCord.y = shadowCamPosition.y * -0.5f + 0.5f;
 	float shadowCamDepth = shadowBuffer.SampleLevel(samplerWrap, texCord, 0).x;
 
+
+
+	if(shadowCamDepth < shadowCamPosition.z - 0.001f && shadowCamDepth != 0.f)
+	{
+		directionDiffuse.rgb = 0.0f;
+		directionSpecularity.rgb = 0.0f;
+	}
+
+
 	//
 	//float fluff = 0.0005f;
 	//float exposure = 0.0f;
@@ -536,12 +545,6 @@ PixelOutput PS_PBL(PosNormBinormTanTex_InputPixel input)
 	//
 	//directionDiffuse.rgb *= exposure;
 	//directionSpecularity.rgb *= exposure;
-
-	if(shadowCamDepth < shadowCamPosition.z - 0.001f && shadowCamDepth != 0.f)
-	{
-		directionDiffuse.rgb = 0.0f;
-		directionSpecularity.rgb = 0.0f;
-	}
 
 // PointLight
 

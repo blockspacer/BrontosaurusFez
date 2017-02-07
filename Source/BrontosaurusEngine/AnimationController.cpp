@@ -338,25 +338,18 @@ CBone* CSceneAnimator::CreateBoneTree( aiNode* pNode, CBone* pParent)
 	return internalNode;
 }
 
-mat4 CSceneAnimator::GetBoneWorldTransform(float dt, const std::string & bname)
+mat4 CSceneAnimator::GetBoneGlobalTransform(const std::string& bname)
 {
 	int bindex = GetBoneIndex(bname); 
 	if (bindex == -1) return mat4(); 
 
-	mat4 retVal = Bones[bindex]->GlobalTransform;
-	retVal *= Animations[CurrentAnimIndex].GetTransforms(dt)[GetBoneIndex(Bones[bindex]->Name)];
 
+	return GetBoneGlobalTransform(bindex);
+}
 
-
-	//for (CBone* bone = Bones[bindex]; bone != nullptr; bone = bone->Parent)
-	//{
-	//	bindex = GetBoneIndex(bone->Name);
-	//	if (bindex == -1)
-	//		continue;
-	//	retVal *= Animations[CurrentAnimIndex].GetTransforms(dt)[GetBoneIndex(bone->Name)];
-	//}
-
-	return retVal;
+mat4 CSceneAnimator::GetBoneGlobalTransform(unsigned int bindex)
+{
+	return Bones[bindex]->GlobalTransform;
 }
 
 // ------------------------------------------------------------------------------------------------

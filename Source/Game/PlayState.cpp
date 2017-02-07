@@ -287,6 +287,10 @@ void CPlayState::Load()
 		{
 			myScene->SetSkybox(cubemapPath.c_str());
 		}
+		else
+		{
+			myScene->SetSkybox("default_cubemap.dds");
+		}
 	}
 
 	myQuestManager.LoadQuestlines(questPath);
