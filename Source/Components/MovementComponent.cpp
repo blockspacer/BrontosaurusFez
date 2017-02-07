@@ -119,6 +119,9 @@ void MovementComponent::Update(float aDeltaTime)
 					
 						CU::Vector3f newPosition = CU::Vector3f(localTransform.GetPosition().x, height, localTransform.GetPosition().z);
 						localTransform.SetPosition(newPosition);
+						SComponentMessageData directionData;
+						directionData.myString = "walk";
+						GetParent()->NotifyComponents(eComponentMessageType::eStartedMoving, directionData);
 					}
 					else
 					{
