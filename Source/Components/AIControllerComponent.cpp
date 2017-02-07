@@ -18,6 +18,7 @@ CAIControllerComponent::CAIControllerComponent()
 	myElapsedPathFindingCountdown = 0.0f;
 	myTrianglePointer = nullptr;
 	myIsActive = true;
+	myIsPlayerAlive = true;
 }
 
 
@@ -84,14 +85,18 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 
 		CU::Vector2f velocity = (myVelocity * SCALAR) * aDeltaTime.GetSeconds();
 
-		if (PollingStation::playerObject != nullptr)
+		if(myIsPlayerAlive == true)
 		{
-			if (CU::Vector3f(GetParent()->GetWorldPosition() - PollingStation::playerObject->GetWorldPosition()).Length2() < 2000.0f * 2000.0f)
+			if (PollingStation::playerObject != nullptr)
 			{
-				SComponentMessageData data;
-				data.myGameObject = PollingStation::playerObject;
-				GetParent()->NotifyComponents(eComponentMessageType::eSetSkillTargetObject, data);
+				if (CU::Vector3f(GetParent()->GetWorldPosition() - PollingStation::playerObject->GetWorldPosition()).Length2() < 2000.0f * 2000.0f)
+				{
+					SComponentMessageData data;
+					data.myGameObject = PollingStation::playerObject;
+					GetParent()->NotifyComponents(eComponentMessageType::eSetSkillTargetObject, data);
+				}
 			}
+		
 		}
 
 
@@ -143,6 +148,16 @@ void CAIControllerComponent::Receive(const eComponentMessageType aMessageType, c
 	case eComponentMessageType::eRespawned:
 		myIsActive = true;
 		break;
+	case(eComponentMessageType::eEnemyReturnToSpawnPoint):
+	{
+		myIsPlayerAlive = false;
+	}
+	break;
+	case(eComponentMessageType::eEnemyStartChaseAgain):
+	{
+		myIsPlayerAlive = true;
+	}
+	break;
 	default:
 		break;
 	}
