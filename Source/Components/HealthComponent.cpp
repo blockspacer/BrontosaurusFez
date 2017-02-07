@@ -128,9 +128,9 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 		data.myUChar = myPercentageLeft * 100;
 		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data);
 		break;
-	case eComponentMessageType::eDied:
-		switch (myObjectType)
-		{
+	case eComponentMessageType::eDied:				// ULTRA TEMP :D
+		switch ((eObjectType)((int)myObjectType+1)) // NOTE till alex, tror inte att det är updaterat någonstans
+		{											// efter vi satte default högst upp.
 		case eObjectType::eUrn:
 			DL_PRINT("an URN died");
 			data.myString = "BreakUrn";
