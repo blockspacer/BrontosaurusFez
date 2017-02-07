@@ -99,9 +99,9 @@ void CGameObject::Destroy()
 
 void CGameObject::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
 {
-	for (CComponent* component : myComponents)
+	for (unsigned short i = 0; i < myComponents.Size(); i++)
 	{
-		component->Receive(aMessageType, aMessageData);
+		myComponents[i]->Receive(aMessageType, aMessageData);
 	}
 }
 
