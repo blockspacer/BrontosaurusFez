@@ -126,7 +126,7 @@ void HatShopState::Render()
 	}
 }
 
-void HatShopState::OnEnter()
+void HatShopState::OnEnter(const bool aLetThroughRender)
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eBuyButtonPressed);

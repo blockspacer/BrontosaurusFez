@@ -67,7 +67,7 @@ void MainMenuState::Render()
 	myGUIManager->Render();
 }
 
-void MainMenuState::OnEnter()
+void MainMenuState::OnEnter(const bool aLetThroughRender)
 {
 	//bool result;
 	Audio::CAudioInterface::GetInstance()->LoadBank("Audio/mainMenu.bnk");

@@ -16,7 +16,7 @@ public:
 	void Init() override;
 	eStateStatus Update(const CU::Time& aDeltaTime) override;
 	void Render() override;
-	void OnEnter() override;
+	void OnEnter(const bool aLetThroughRender) override;
 	void OnExit(const bool aLetThroughRender) override;
 
 	bool GetLetThroughRender() const override;
