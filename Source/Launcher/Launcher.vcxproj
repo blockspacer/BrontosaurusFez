@@ -201,7 +201,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)..\Bin\</OutDir>
-    <TargetName>$(ProjectName)_$(Configuration)</TargetName>
+    <TargetName>HatNSlash</TargetName>
     <IncludePath>$(SolutionDir)CommonUtilities\;$(SolutionDir)Game\;$(SolutionDir)BrontosaurusEngine\;$(SolutionDir)CommonUtilities/;$(IncludePath)</IncludePath>
     <IntDir>$(SolutionDir)..\Temp\$(ProjectName)_$(Configuration)\</IntDir>
     <LibraryPath>$(LibraryPath)</LibraryPath>

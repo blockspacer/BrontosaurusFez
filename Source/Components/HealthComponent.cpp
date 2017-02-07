@@ -132,22 +132,24 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 		switch (myObjectType)
 		{
 		case eObjectType::eUrn:
-			data.myString = "BreakUrn";
 			DL_PRINT("an URN died");
-			GetParent()->NotifyComponents(eComponentMessageType::eChangeFBXToDead, data);
+			data.myString = "BreakUrn";
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
+			data.myString = "Models/PlaceHolders/urnDead.fbx";
+			GetParent()->NotifyComponents(eComponentMessageType::eChangeFBXToDead, data); // Anims handled another way?
 			break;
 		case eObjectType::eBarrel:
 		{
-			data.myString = "BreakBarrel";
 			DL_PRINT("a BARREL died");
-			GetParent()->NotifyComponents(eComponentMessageType::eChangeFBXToDead, data);
+			data.myString = "BreakBarrel";
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
+			data.myString = "Models/PlaceHolders/barrelDead.fbx";
+			GetParent()->NotifyComponents(eComponentMessageType::eChangeFBXToDead, data);
 			break;
 		}
 		case eObjectType::eWitch:
-			data.myString = "EnemyDie";
 			DL_PRINT("a WITCH died");
+			data.myString = "EnemyDie";
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
 			break;
 		case eObjectType::eZombie:
@@ -156,13 +158,13 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
 			break;
 		case eObjectType::eBlob:
-			data.myString = "EnemyDie";
 			DL_PRINT("a BLOB died");
+			data.myString = "EnemyDie";
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
 			break;
 		case eObjectType::ePlayer:
-			data.myString = "EnemyDie";
 			DL_PRINT("a PLAYER died");
+			data.myString = "EnemyDie";
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
 			break;
 
@@ -170,6 +172,7 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 		case eObjectType::eDefault:
 		default:
 			DL_PRINT("a DEFAULT died"); ///yes I'm intentionally using DEFAULT as a noun.
+			data.myString = "Models/PlaceHolders/barrelDead.fbx";
 			GetParent()->NotifyComponents(eComponentMessageType::eChangeFBXToDead, data);
 			break;
 		}

@@ -7,7 +7,7 @@ enum class eObjectType
 {
 	eDefault,
 	eUrn,
-	eBarrel,
+	eBarrel, // Note: ADD GRAVE 
 	eWitch,
 	eZombie,
 	eBlob,

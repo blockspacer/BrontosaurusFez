@@ -23,6 +23,7 @@ public:
 	void SetWorldPosition(CU::Vector3f);
 
 	void AddComponent(CComponent* aComponent);
+	void RemoveComponent(CComponent* aComponent);
 	//notifies all 
 	void NotifyComponents(const eComponentMessageType aMessageType, const SComponentMessageData &aMessageData);
 	void NotifyOnlyComponents(const eComponentMessageType aMessageType, const SComponentMessageData &aMessageData);
