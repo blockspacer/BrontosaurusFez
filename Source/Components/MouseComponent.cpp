@@ -7,6 +7,9 @@
 
 #include "..\Game\ClickPulse.h"
 
+//temp
+#include "../PostMaster/SecretlySetMousePos.h"
+
 CMouseComponent::CMouseComponent(const CU::Camera& aPlayerCamera)
 	: myPlayerCamera(aPlayerCamera)
 	, myHoveredGameObjects(10)
@@ -92,6 +95,8 @@ void CMouseComponent::MouseMoved(const CU::Vector2f& aMousePosition)
 	//-------------------------------------
 	GetParent()->GetLocalTransform().SetPosition(targetPosition3D);
 	GetParent()->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
+
+	PostMaster::GetInstance().SendLetter(eMessageType::eSecretMouseMessageMvhCarl, CSecretlySetMousePos(targetPosition3D));
 }
 
 void CMouseComponent::Update(const CU::Time& aDeltaTime)

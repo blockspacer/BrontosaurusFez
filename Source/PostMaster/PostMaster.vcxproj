@@ -67,6 +67,7 @@
     <ClCompile Include="PostMaster.cpp" />
     <ClCompile Include="PushState.cpp" />
     <ClCompile Include="QuestDataUpdated.cpp" />
+    <ClCompile Include="SecretlySetMousePos.cpp" />
     <ClCompile Include="ShopClosed.cpp" />
     <ClCompile Include="ShopItemButtonHovered.cpp" />
     <ClCompile Include="ShopItemButtonPressed.cpp" />
@@ -112,6 +113,7 @@
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="PushState.h" />
     <ClInclude Include="QuestDataUpdated.h" />
+    <ClInclude Include="SecretlySetMousePos.h" />
     <ClInclude Include="ShopClosed.h" />
     <ClInclude Include="ShopItemButtonHovered.h" />
     <ClInclude Include="ShopItemButtonPressed.h" />
