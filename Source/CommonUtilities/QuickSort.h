@@ -31,7 +31,7 @@ namespace CU
 
 		type temp;
 
-		for (j = p + 1; j < q; j++)
+		for (j = p + static_cast<sizet>(1); j < q; j++)
 		{
 			if (aCompFunction(A[p], A[j]) == true)
 			{
