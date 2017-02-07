@@ -117,7 +117,7 @@ void CMouseComponent::Update(const CU::Time& aDeltaTime)
 				}
 			}
 			assert(targetObject != nullptr && "Finding the closest CGameObject to the mouse position did not work :(");
-			DL_PRINT("clicked on enemy: %s", targetObject->GetName().c_str());
+			//DL_PRINT("clicked on enemy: %s", targetObject->GetName().c_str());
 
 			SComponentMessageData hitThisBastard;
 			hitThisBastard.myGameObject = targetObject;
