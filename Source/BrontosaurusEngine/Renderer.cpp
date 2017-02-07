@@ -805,6 +805,7 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 	{
 		SRenderModelMessage* msg = static_cast<SRenderModelMessage*>(aRenderMesage);
 		CModel* model = CEngine::GetInstance()->GetModelManager()->GetModel(msg->myModelID);
+		if (!model) break;
 		model->Render(msg->myRenderParams);
 		++aDrawCallCount;
 		break;

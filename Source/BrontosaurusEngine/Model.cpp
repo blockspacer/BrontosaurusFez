@@ -340,7 +340,7 @@ void CModel::UpdateCBuffer(SRenderModelParams & aParamObj)
 
 
 	//ANIMATION BUFFER
-	if (mySceneAnimator != nullptr && (aParamObj.aAnimationState != nullptr && aParamObj.aAnimationState != ""))
+	if (mySceneAnimator != nullptr && (aParamObj.aAnimationState != nullptr) && (aParamObj.aAnimationState[0] != '\0'))
 	{
 
 		std::vector<mat4>& bones = GetBones(aParamObj.aAnimationTime, aParamObj.aAnimationState, aParamObj.aAnimationLooping);
@@ -409,21 +409,21 @@ std::vector<mat4>& CModel::GetBones(float aTime, const char * aAnimationState, c
 {
 	if(mySceneAnimator != nullptr)
 	{
-		if (mySceneAnimator != nullptr)
+		auto it = mySceneAnimators.find(aAnimationState);
+		if (it != mySceneAnimators.end())
 		{
-			auto it = mySceneAnimators.find(aAnimationState);
-			if (it != mySceneAnimators.end())
-			{
-				mySceneAnimator = &it->second;
-			}
+			mySceneAnimator = &it->second;
 		}
 
-		//std::vector<mat4>& transforms = mySceneAnimator->GetTransforms(aTime);
 		return mySceneAnimator->GetTransforms(aTime, aAnimationLooping);
-
-		//memcpy(static_cast<void*>(aReturn), &transforms[0], min(sizeof(aReturn), transforms.size() * sizeof(mat4)));
-
 	}
+	static std::vector<mat4> locNullBones;
+	if (locNullBones.empty())
+	{
+		locNullBones.push_back(mat4());
+	}
+
+	return locNullBones;
 }
 
 SLodData & CModel::GetCurrentLODModel(const CU::Vector3f& aModelPosition)

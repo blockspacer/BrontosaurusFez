@@ -105,6 +105,8 @@ public:
 
 	inline int GetRefCount();
 
+	inline bool HasBones() const;
+
 	std::vector<mat4>& GetBones(float aTime, const char * aAnimationState, const bool aAnimationLooping);
 
 private:
@@ -209,6 +211,11 @@ inline void CModel::RemoveRef()
 inline int CModel::GetRefCount()
 {
 	return myRefCount;
+}
+
+inline bool CModel::HasBones() const
+{
+	return myBoneBuffer != nullptr;
 }
 
 inline bool CModel::IsAlphaModel() const
