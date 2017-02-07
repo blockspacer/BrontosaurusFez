@@ -72,6 +72,7 @@ CModel::~CModel()
 	SAFE_DELETE(mySurface);
 
 	mySceneAnimator = nullptr;
+	SAFE_DELETE(myBindposeSceneAnimator);
 }
 
 bool CModel::Initialize(CEffect* aEffect, CSurface* aSurface)
@@ -479,7 +480,16 @@ CU::Matrix44f CModel::GetBoneTransform(const float aTime, const char * aAnimatio
 				mySceneAnimator = &it->second;
 			}
 		}
-		return mySceneAnimator->GetBoneWorldTransform(aTime, aBoneName);
+
+		int bindex = myBindposeSceneAnimator->GetBoneIndex(aBoneName);
+		if (bindex == -1)
+			return mat4();
+
+		CU::Matrix44f retVal = myBindposeSceneAnimator->GetBoneGlobalTransform(bindex);
+		retVal *= mySceneAnimator->GetBoneTransform(aTime, bindex);
+
+
+		return retVal;
 	}
 	return CU::Matrix44f::Identity;
 }
