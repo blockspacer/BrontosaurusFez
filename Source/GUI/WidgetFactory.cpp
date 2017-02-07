@@ -90,6 +90,18 @@ namespace GUI
 			buttonNames.Add(buttons[i].GetString());
 		}
 
+		CU::GrowingArray<std::string> guiHatnames(8u);
+		if (guiScene.HasKey("Hats"))
+		{
+			CU::CJsonValue guiHats = guiScene["Hats"];
+			int startIndex = guiHats["start"].GetInt();
+			int endIndex = guiHats["end"].GetInt();
+			const std::string& nameStart = guiHats["name"].GetString();
+			for (int i = startIndex; i < endIndex; ++i)
+			{
+				guiHatnames.Add(nameStart + std::to_string(i));
+			}
+		}
 
 		bool hasKeyHealthOrb = guiScene.HasKey("healthOrb");
 		std::string healthOrbName("");
@@ -121,6 +133,10 @@ namespace GUI
 			else if (hasKeyHealthOrb == true && widgetName == moneyName)
 			{
 				widget = new ModelWidget(meshes[i], { moneyTexture }, *guiCamera, isVisible);
+			}
+			else if (guiHatnames.Find(widgetName) != guiHatnames.FoundNone)
+			{
+				widget = new ModelWidget(meshes[i], { "error.dds" }, *guiCamera, true);
 			}
 			else
 			{
