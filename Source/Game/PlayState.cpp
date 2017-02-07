@@ -170,7 +170,6 @@ CPlayState::~CPlayState()
 	DropComponentManager::DestroyInstance();
 	PollingStation::NullifyLevelSpecificData();
 	ManaComponentManager::DestroyInstance();
-	CShopStorage::Destroy();
 	CPickupFactory::Destroy();
 	CPickupManager::DestroyInstance();
 	RespawnComponentManager::Destroy();
@@ -286,6 +285,10 @@ void CPlayState::Load()
 		{
 			myScene->SetSkybox(cubemapPath.c_str());
 		}
+		else
+		{
+			myScene->SetSkybox("default_cubemap.dds");
+		}
 	}
 
 	myQuestManager.LoadQuestlines(questPath);
@@ -339,11 +342,6 @@ void CPlayState::Load()
 		////TEMP CARL END
 	}
 
-	for (unsigned int i = 0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); i++)
-	{
-		PollingStation::myThingsEnemiesShouldAvoid[i]->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
-	}
-
 
 
 	CGameObject* mouseObject = myGameObjectManager->CreateGameObject();
@@ -359,6 +357,12 @@ void CPlayState::Load()
 	mouseObject->AddComponent(myMouseComponent);
 
 	myGameObjectManager->SendObjectsDoneMessage();
+
+
+	for (unsigned int i = 0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); i++)
+	{
+		PollingStation::myThingsEnemiesShouldAvoid[i]->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
+	}
 
 	//Give hats on level entry
 	myHatMaker->LoadBluePrints("Json/Hats/HatBluePrints.json");
@@ -529,23 +533,28 @@ void CPlayState::Render()
 	myGameEventMessenger.Render();
 }
 
-void CPlayState::OnEnter()
+void CPlayState::OnEnter(const bool aLetThroughRender)
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
 	
 
 	//Audio::CAudioInterface::GetInstance()->PostEvent("BayBlade");
-	myGUIManager->RestartRenderAndUpdate();
+	if (!aLetThroughRender)
+	{
+		myGUIManager->RestartRenderAndUpdate();
+	}
+
 	myQuestManager.CompleteEvent();
 }
 
-void CPlayState::OnExit()
+void CPlayState::OnExit(const bool aLetThroughRender)
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
 
-
-
-	myGUIManager->PauseRenderAndUpdate();
+	if (!aLetThroughRender)
+	{
+		myGUIManager->PauseRenderAndUpdate();
+	}
 }
 
 void CPlayState::Pause()

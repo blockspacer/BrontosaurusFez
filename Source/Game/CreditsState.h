@@ -16,8 +16,8 @@ public:
 
 	eStateStatus Update(const CU::Time & aDeltaTime) override;
 	void Render() override;
-	void OnEnter() override;
-	void OnExit() override;
+	void OnEnter(const bool aLetThroughRender) override;
+	void OnExit(const bool aLetThroughRender) override;
 	void GoToMainMenu();
 
 	eMessageReturn Recieve(const Message& aMessage) override;

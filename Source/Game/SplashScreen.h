@@ -27,8 +27,8 @@ private:
 	void FadeIn(const CU::Time& aDeltaTime);
 	void FadeOut(const CU::Time& aDeltaTime);
 	void Init()    override {};
-	void OnEnter() override;
-	void OnExit()  override;
+	void OnEnter(const bool aLetThroughRender) override;
+	void OnExit(const bool aLetThroughRender)  override;
 
 	void SetNextPic();
 	bool CheckIfMorePicsInArray();

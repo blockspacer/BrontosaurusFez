@@ -91,7 +91,7 @@ void CModelInstance::Render(Lights::SDirectionalLight* aLight, CU::GrowingArray<
 		model.myRadius = GetModelBoundingBox().myRadius;
 		model.myRadiusSquared = model.myRadius * model.myRadius;
 
-		for (int i = 0; i < aPointLightList.Size(); ++i)
+		for (unsigned int i = 0; i < aPointLightList.Size(); ++i)
 		{
 			if (aPointLightList[i].GetIsActive() == true)
 			{
@@ -148,7 +148,7 @@ void CModelInstance::Render(Lights::SDirectionalLight * aLight, CU::GrowingArray
 			msg->myRenderParams.myNumLights = 0;
 
 
-			for (int i = 0; i < aPointLightList.Size(); ++i)
+			for (unsigned int i = 0; i < aPointLightList.Size(); ++i)
 			{
 				if (aPointLightList[i].GetIsActive() == true)
 				{
@@ -193,10 +193,9 @@ void CModelInstance::SetTransformation(CU::Matrix44f& aTransformation)
 
 void CModelInstance::SetPosition(CU::Vector3f aPosition)
 {
-	myTransformation.m41 += aPosition.x;
-	myTransformation.m42 += aPosition.y;
-	myTransformation.m43 += aPosition.z;
-
+	myTransformation.m41 = aPosition.x;
+	myTransformation.m42 = aPosition.y;
+	myTransformation.m43 = aPosition.z;
 }
 
 bool CModelInstance::ShouldRender()

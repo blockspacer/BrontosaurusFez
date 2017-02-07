@@ -15,6 +15,7 @@ CMouseComponent::CMouseComponent(const CU::Camera& aPlayerCamera)
 	myMousePosition = CU::Vector3f::Zero;
 	myType = eComponentType::eMouse;
 	myClickPulse = new CClickPulse(myPlayerCamera);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eShrineOrWellClicked);
 }
 
 CMouseComponent::~CMouseComponent()
@@ -22,6 +23,7 @@ CMouseComponent::~CMouseComponent()
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eGameObjectDied);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eShopClosed);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eShrineOrWellClicked);
 }
 
 void CMouseComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
@@ -221,6 +223,9 @@ void CMouseComponent::CheckIfHoveredGameObjectDied(CGameObject * aGameobjectThat
 	{
 		if (myHoveredGameObjects[i] == aGameobjectThatDied)
 		{
+			SComponentMessageData data;
+			data.myFloat = 0.0f;
+			myHoveredGameObjects[i]->NotifyComponents(eComponentMessageType::eSetHighLight, data);
 			myHoveredGameObjects.RemoveAtIndex(i);
 		}
 	}
@@ -229,4 +234,16 @@ void CMouseComponent::CheckIfHoveredGameObjectDied(CGameObject * aGameobjectThat
 void CMouseComponent::RemoveHoveredObjects()
 {
 	myHoveredGameObjects.RemoveAll();
+}
+
+void CMouseComponent::RemoveHoveredGameObject(CGameObject * aGameObject)
+{
+	for (unsigned int i = 0; i < myHoveredGameObjects.Size(); ++i)
+	{
+		if (aGameObject == myHoveredGameObjects[i])
+		{
+			myHoveredGameObjects.Remove(aGameObject);
+			break;
+		}
+	}
 }

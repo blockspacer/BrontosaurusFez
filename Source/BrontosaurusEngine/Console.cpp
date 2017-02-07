@@ -11,6 +11,8 @@
 #include "../PostMaster/ConsoleCalledUpon.h"
 #include "../PostMaster/KeyCharPressed.h"
 #include "../CommonUtilities/EKeyboardKeys.h"
+#include "../Game/PollingStation.h"
+#include "../Components/PlayerData.h"
 
 CConsole::CConsole()
 {
@@ -286,6 +288,12 @@ const CU::DynamicString CConsole::CheckIfTextIsCommand(const CU::DynamicString& 
 	{
 		//doGodMode();
 		return aText + " is activated.";
+	}
+	else if (aText == "rosebud")
+	{
+		PollingStation::playerData->AddGold(1000);
+		return "Added 1000 Gold.";
+
 	}
 	else if (aText == "help")
 	{

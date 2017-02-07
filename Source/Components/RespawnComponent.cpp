@@ -25,7 +25,10 @@ void RespawnComponent::Receive(const eComponentMessageType aMessageType, const S
 		
 		PollingStation::playerData->RemoveGold(static_cast<unsigned short>(static_cast<float>(PollingStation::playerData->GetGold()) * (myGoldLossPercentage * 0.01f)));
 		myHasDied = true;
-
+		for(unsigned short i=0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); i++)
+		{
+			PollingStation::myThingsEnemiesShouldAvoid[i]->NotifyOnlyComponents(eComponentMessageType::eEnemyReturnToSpawnPoint, SComponentMessageData());
+		}
 		break;
 	}
 
@@ -55,6 +58,10 @@ void RespawnComponent::Update(const float aDeltaTime)
 			GetParent()->NotifyComponents(eComponentMessageType::eRespawned, SComponentMessageData());
 			myHasDied = false;
 			myElapsedTime = 0;
+			for (unsigned short i = 0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); i++)
+			{
+				PollingStation::myThingsEnemiesShouldAvoid[i]->NotifyOnlyComponents(eComponentMessageType::eEnemyStartChaseAgain, SComponentMessageData());
+			}
 		}
 	}
 }

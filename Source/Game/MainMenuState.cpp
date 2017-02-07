@@ -67,7 +67,7 @@ void MainMenuState::Render()
 	myGUIManager->Render();
 }
 
-void MainMenuState::OnEnter()
+void MainMenuState::OnEnter(const bool aLetThroughRender)
 {
 	//bool result;
 	Audio::CAudioInterface::GetInstance()->LoadBank("Audio/mainMenu.bnk");
@@ -88,7 +88,7 @@ void MainMenuState::OnEnter()
 	myGUIManager->SetRenderMouse(true);
 }
 
-void MainMenuState::OnExit()
+void MainMenuState::OnExit(const bool /*aLetThroughRender*/)
 {
 	Audio::CAudioInterface::GetInstance()->PostEvent("StopBasSong");
 	Audio::CAudioInterface::GetInstance()->PostEvent("switchBank");

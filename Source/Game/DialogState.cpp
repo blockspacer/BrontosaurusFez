@@ -163,14 +163,14 @@ void CDialogState::Render()
 	}
 }
 
-void CDialogState::OnEnter()
+void CDialogState::OnEnter(const bool aLetThroughRender)
 {
 	DL_PRINT("Entered dialog");
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage, 8);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage, 8);
 }
 
-void CDialogState::OnExit()
+void CDialogState::OnExit(const bool /*aLetThroughRender*/)
 {
 	DL_PRINT("Exited dialog");
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);

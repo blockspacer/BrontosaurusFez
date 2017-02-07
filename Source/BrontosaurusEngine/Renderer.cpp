@@ -770,9 +770,14 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 	{
 		SRenderNavmeshMessage* msg = static_cast<SRenderNavmeshMessage*>(aRenderMesage);
 		CModel* model = msg->myModel;
+		SRenderModelParams params;
+		params.myTransform = msg->myTransformation;
+		params.myTransformLastFrame = msg->myTransformation;
 		
-		
-		//model->Render(msg->myTransformation, msg->myTransformation, nullptr, nullptr, nullptr, 0.0f);
+		params.myRenderToDepth = false;
+
+
+		model->Render(params);
 		++aDrawCallCount;
 		break;
 	}

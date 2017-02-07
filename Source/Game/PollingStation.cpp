@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "PollingStation.h"
+#include "PlayerData.h"
+
 
 CGameObject* PollingStation::playerObject = nullptr;
 CComponent* PollingStation::PlayerInput = nullptr;
@@ -21,5 +23,6 @@ void PollingStation::NullifyLevelSpecificData()
 	playerHealthBar = nullptr;
 	playerBoostBar = nullptr;
 	collsionManager = nullptr;
+	playerData->myIsWhirlwinding = false;
 	myThingsEnemiesShouldAvoid.RemoveAll();
 }

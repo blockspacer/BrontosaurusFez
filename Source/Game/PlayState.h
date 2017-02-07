@@ -60,8 +60,8 @@ public:
 	void Init() override;
 	eStateStatus Update(const CU::Time& aDeltaTime) override;
 	void Render() override;
-	void OnEnter() override;
-	void OnExit() override;
+	void OnEnter(const bool aLetThroughRender) override;
+	void OnExit(const bool aLetThroughRender) override;
 	void Pause();
 	void BuyHats();
 	void ChangeGoldAmount(const int aValue, const bool aDecreaseGold);
