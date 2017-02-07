@@ -66,7 +66,7 @@ void CModelComponent::Receive(const eComponentMessageType aType, const SComponen
 	{
 		//CU::Matrix44f orientation = myModel->GetTransformation();
 		myModel->SetVisibility(false);
-		//orientation.GetPosition().y += 70;
+		//orientation.GetPosition().y -= 100;
 		//SAFE_DELETE(myModel);
 		//myModel = new CModelInstance("Models/Placeholders/barrelDead.fbx", orientation);
 		break;
