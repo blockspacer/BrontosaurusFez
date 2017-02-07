@@ -50,10 +50,13 @@ void CHatMaker::Update()
 		boneName += std::to_string(i + 1);
 		boneName += "_SKIN";
 		CU::Matrix44f hatTransform = model->GetBoneTransform(myPlayerModel->GetModelInst()->GetAnimationCounter(), myPlayerModel->GetModelInst()->GetAnimationState(), boneName.c_str());
-		hatTransform *= myHatObjects[i]->GetToWorldTransform().GetInverted();
+		//hatTransform *= myHatObjects[i]->GetLocalTransform();
+
 		myHatObjects[i]->GetLocalTransform() = hatTransform;
 	}
+	PollingStation::playerObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 }
+
 
 void CHatMaker::LoadBluePrints(const std::string& aFilePath)
 {
@@ -131,7 +134,7 @@ void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName)
 		CGameObject* hatObject = myGameObjectManager->CreateGameObject();
 		myHatObjects.Add(hatObject);
 		CU::Vector3f hatPos = hatObject->GetLocalTransform().GetPosition();
-		hatObject->GetLocalTransform().SetPosition({ hatPos.x, hatPos.y + 175.f + 12.5f * myHatsGivenToPlayer, hatPos.z });
+		//hatObject->GetLocalTransform().SetPosition({ hatPos.x, hatPos.y + 175.f + 12.5f * myHatsGivenToPlayer, hatPos.z });
 		myHatsGivenToPlayer++;
 		CModelComponent* hatModel = CModelComponentManager::GetInstance().CreateComponent(theBluePrint->HatModel.c_str());
 		hatObject->AddComponent(hatModel);

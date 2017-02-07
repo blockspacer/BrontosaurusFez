@@ -342,14 +342,18 @@ mat4 CSceneAnimator::GetBoneWorldTransform(float dt, const std::string & bname)
 	int bindex = GetBoneIndex(bname); 
 	if (bindex == -1) return mat4(); 
 
-	mat4 retVal = mat4::Identity;
-	for (CBone* bone = Bones[bindex]; bone != nullptr; bone = bone->Parent)
-	{
-		bindex = GetBoneIndex(bone->Name);
-		if (bindex == -1)
-			continue;
-		retVal *= Animations[CurrentAnimIndex].GetTransforms(dt)[GetBoneIndex(bone->Name)];
-	}
+	mat4 retVal = Bones[bindex]->GlobalTransform;
+	retVal *= Animations[CurrentAnimIndex].GetTransforms(dt)[GetBoneIndex(Bones[bindex]->Name)];
+
+
+
+	//for (CBone* bone = Bones[bindex]; bone != nullptr; bone = bone->Parent)
+	//{
+	//	bindex = GetBoneIndex(bone->Name);
+	//	if (bindex == -1)
+	//		continue;
+	//	retVal *= Animations[CurrentAnimIndex].GetTransforms(dt)[GetBoneIndex(bone->Name)];
+	//}
 
 	return retVal;
 }

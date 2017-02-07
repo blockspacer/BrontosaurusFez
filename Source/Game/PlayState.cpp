@@ -341,6 +341,8 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 		CAudioSourceComponentManager::GetInstance().Update();
 	}
 
+	myHatMaker->Update();
+
 	if (PollingStation::playerData->myIsWhirlwinding == true)
 	{
 		audio->PostEvent("WhirlWind");
@@ -478,7 +480,7 @@ void CPlayState::CheckReturnToLevelSelect() // Formerly NextLevel -Kyle
 
 void CPlayState::ChangeGoldAmount(const int aValue, const bool aDecreaseGold)
 {
-	PollingStation::playerData->myGold += aValue;
+	PollingStation::playerData->AddGold(aValue);
 
 	myChangeTexts.Add(new CTextInstance());
  	CTextInstance* text = myChangeTexts.GetLast();
