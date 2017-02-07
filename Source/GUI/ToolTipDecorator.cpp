@@ -34,6 +34,8 @@ namespace GUI
 
 	void CToolTipDecorator::OnMouseEnter(const CU::Vector2f& aMousePosition)
 	{
+		WidgetDecorator::OnMouseEnter(aMousePosition);
+
 		if (myGetTextFunction != nullptr)
 		{
 			std::string updatedTooltipText("");
@@ -45,15 +47,17 @@ namespace GUI
 
 		myShouldRender = true;
 		CU::Vector2f backGroundSize = myTextInstance->GetQuadSizeNormalized();
-		myBackGround->SetSize(backGroundSize);
+		myBackGround->SetSize(backGroundSize * CU::Vector2f(1.f, 1.5f));
 
 		CU::Vector2f newPosition(aMousePosition + myOffsetToMouse);
 		myTextInstance->SetPosition(newPosition);
-		myBackGround->SetPosition({ newPosition.x, newPosition.y /*- backGroundSize.y*/ });
+		myBackGround->SetPosition(newPosition);
 	}
 
 	void CToolTipDecorator::OnMouseExit(const CU::Vector2f& aMousePosition)
 	{
+		WidgetDecorator::OnMouseExit(aMousePosition);
+		
 		myShouldRender = false;
 		myBackGround->SetPosition(aMousePosition + myOffsetToMouse);
 		myTextInstance->SetPosition(aMousePosition + myOffsetToMouse);
@@ -93,7 +97,9 @@ namespace GUI
 		myBackGround->SetPosition(newPosition);
 
 		CU::Vector2f backGroundSize = myTextInstance->GetQuadSizeNormalized();
-		myBackGround->SetPosition({ newPosition.x, newPosition.y /*- backGroundSize.y*/ });
+		myBackGround->SetSize(backGroundSize * CU::Vector2f(1.2f, 1.5f));
+
+		myBackGround->SetPosition(newPosition);
 		myTextInstance->SetPosition(newPosition);
 	}
 }

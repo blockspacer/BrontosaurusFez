@@ -128,7 +128,7 @@ void CSplashScreen::OnEnter()
 	}
 }
 
-void CSplashScreen::OnExit()
+void CSplashScreen::OnExit(const bool /*aLetThroughRender*/)
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);

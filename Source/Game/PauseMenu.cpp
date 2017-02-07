@@ -51,7 +51,7 @@ void PauseMenu::OnEnter()
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
 }
 
-void PauseMenu::OnExit()
+void PauseMenu::OnExit(const bool /*aLetThroughRender*/)
 {
 	myGUIManager->PauseRenderAndUpdate();
 	//PostMaster::GetInstance().UnSubscribe(this, eMessageType::eStateMessage);

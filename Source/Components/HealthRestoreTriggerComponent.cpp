@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "HealthRestoreTriggerComponent.h"
 #include "PollingStation.h"
-
+#include "../PostMaster/CoolBoi.h"
 
 HealthRestoreTriggerComponent::HealthRestoreTriggerComponent()
 {
@@ -25,6 +25,10 @@ void HealthRestoreTriggerComponent::Update(const float & aDeltaTime)
 		{
 			myIsOnCoolDown = false;
 			myElaspedTime = 0;
+
+			SComponentMessageData data;
+			data.myBool = true;
+			GetParent()->NotifyComponents(eComponentMessageType::eSetIsColliderActive, data);
 		}
 	}
 }
@@ -58,6 +62,16 @@ void HealthRestoreTriggerComponent::Receive(const eComponentMessageType aMessage
 			SComponentMessageData data2;
 			data2.myString = "HealthWell";
 			PollingStation::playerObject->NotifyComponents(eComponentMessageType::ePlaySound, data2);
+
+			SComponentMessageData data3;
+			data3.myBool = false;
+			GetParent()->NotifyComponents(eComponentMessageType::eSetIsColliderActive, data3);
+
+			SComponentMessageData data4;
+			data4.myFloat = 0.0f;
+			GetParent()->NotifyComponents(eComponentMessageType::eSetHighLight, data4);
+
+			PostMaster::GetInstance().SendLetter(Message(eMessageType::eShrineOrWellClicked, CoolBoi(GetParent())));
 		}
 		break;
 	}

@@ -28,11 +28,8 @@ HatShopState::HatShopState(StateStack & aStateStack) :
 	myCurrentlySelected = nullptr;
 	myGUIManager = new GUI::GUIManager();
 	myGUIManager->Init("models/gui/shopWindow.fbx");
-	CU::CJsonValue value;
-	std::string errorString = value.Parse("Json/Hats/HatBluePrints.json");
-
-	CU::CJsonValue hatsArray = value.at("Hats");
-	if (CShopStorage::GetInstance().myStorage.HatStorage.Size() != 0)
+	int size = CShopStorage::GetInstance().myStorage.HatStorage.Size();
+	if (size != 0)
 	{
 		myOptionsText.Init(CShopStorage::GetInstance().myStorage.HatStorage.Size());
 		myCostText.Init(CShopStorage::GetInstance().myStorage.HatStorage.Size());
@@ -138,12 +135,59 @@ void HatShopState::OnEnter()
 	myCurrentlySelected = nullptr;
 }
 
-void HatShopState::OnExit()
+void HatShopState::OnExit(const bool /*aLetThroughRender*/)
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eBuyButtonPressed);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eShopItemSelected);
 	myGUIManager->PauseRenderAndUpdate();
+}
+
+void HatShopState::ReloadStore()
+{
+	int size = CShopStorage::GetInstance().myStorage.HatStorage.Size();
+	if (size != 0)
+	{
+		myOptionsText.ReInit(CShopStorage::GetInstance().myStorage.HatStorage.Size());
+		myCostText.ReInit(CShopStorage::GetInstance().myStorage.HatStorage.Size());
+		mySelections.ReInit(CShopStorage::GetInstance().myStorage.HatStorage.Size());
+	}
+	else
+	{
+		myOptionsText.ReInit(1);
+		myCostText.ReInit(1);
+		mySelections.ReInit(1);
+	}
+	for (unsigned int i = 0; i < CShopStorage::GetInstance().myStorage.StorageWithBuyOrder.Size(); ++i)
+	{
+		if (CShopStorage::GetInstance().myStorage.StorageWithBuyOrder[i].Size() != 0)
+		{
+			SShopSelection* shopSelection = new SShopSelection();
+			shopSelection->HatName = CShopStorage::GetInstance().myStorage.StorageWithBuyOrder[i][0].HatName;
+			shopSelection->myCost = CShopStorage::GetInstance().myStorage.StorageWithBuyOrder[i][0].myCost;
+
+			mySelections.Add(shopSelection);
+			myOptionsText.Add(new CTextInstance());
+			myCostText.Add(new CTextInstance());
+
+			std::string temp;
+
+			temp += std::to_string(i + 1);
+			temp += ". ";
+			temp += shopSelection->HatName.c_str();
+			myOptionsText.GetLast()->Init();
+			myOptionsText.GetLast()->SetText(temp.c_str());
+			myOptionsText.GetLast()->SetPosition(CU::Vector2f(0.02f, 0.2f + 0.1f * i));
+
+			temp = "Cost";
+			temp += ": ";
+			temp += std::to_string(shopSelection->myCost);
+			myCostText.GetLast()->Init();
+			myCostText.GetLast()->SetText(temp.c_str());
+			myCostText.GetLast()->SetPosition(CU::Vector2f(0.02f, 0.235f + 0.1f * i));
+		}
+	}
+	AdjustText();
 }
 
 void HatShopState::ValidatePurchase()
@@ -158,7 +202,7 @@ void HatShopState::ValidatePurchase()
 		 	PollingStation::playerData->RemoveGold(myCurrentlySelected->myCost);
 		 	mySelections.Delete(myCurrentlySelected);
 		 	myCurrentlySelected = nullptr;
-		 	AdjustText();
+			ReloadStore();
 		}
 	}
 }

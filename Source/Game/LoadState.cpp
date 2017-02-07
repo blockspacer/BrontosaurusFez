@@ -76,6 +76,6 @@ void CLoadState::OnEnter()
 {
 }
 
-void CLoadState::OnExit()
+void CLoadState::OnExit(const bool /*aLetThroughRender*/)
 {
 }

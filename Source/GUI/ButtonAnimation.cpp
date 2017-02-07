@@ -141,7 +141,9 @@ namespace GUI
 
 	void ButtonAnimation::DoFlippedAnimation(const CU::Time aDeltaTime)
 	{
-		ModelWidget* modelWidget = static_cast<ModelWidget*>(myDecoratedWidget);
+		ModelWidget* modelWidget = static_cast<ModelWidget*>(*myDecoratedWidget);
+		if (modelWidget == nullptr) return;
+
 		*myAnimationTimer += aDeltaTime;
 		CU::Matrix44f transformation = modelWidget->myModelInstance->GetTransformation();
 
@@ -155,23 +157,21 @@ namespace GUI
 			pos += myForwardDirection * aDeltaTime.GetMilliseconds() * -0.1f;
 		}
 
-		//float& posY = transformation.GetPosition().y;
-		//posY += aDeltaTime.GetMicroseconds() * 0.001f * 0.1f;
-
-		modelWidget->myModelInstance->SetTransformation(transformation);
-
 		if (pos.y >= myResetPosition)
 		{
 			pos.y = myResetPosition;
 			myAnimationState = eAnimationState::eDone;
 			myAnimationTimer->Reset();
 		}
+
+		modelWidget->myModelInstance->SetTransformation(transformation);
 	}
 
 	void ButtonAnimation::DoDoneAnimation()
 	{
 		myAnimationState = eAnimationState::eInActive;
 		myAnimationTimer->Reset();
+
 
 		if (myAnimationIsDoneCallback != nullptr)
 		{

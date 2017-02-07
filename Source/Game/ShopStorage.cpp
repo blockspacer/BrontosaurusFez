@@ -55,26 +55,31 @@ void CShopStorage::RemoveHat(const std::string & aHatName)
 
 void CShopStorage::LoadStorage(const std::string & aFilePath)
 {
-	CU::CJsonValue value;
-	value.Parse(aFilePath);
-
-	CU::CJsonValue hatsArray = value.at("Hats");
-	for (int i = 0; i < hatsArray.Size(); ++i)
+	if (myHasStorageBeenInited == false)
 	{
-		if (hatsArray[i].at("AvailableInShop").GetBool() == true)
-		{
-			SShopSelection* shopSelection = new SShopSelection();
-			shopSelection->HatName = hatsArray[i].at("HatName").GetString();
-			shopSelection->myCost = static_cast<SShopSelection::Cost>(hatsArray[i].at("ShopCost").GetInt());
+		CU::CJsonValue value;
+		value.Parse(aFilePath);
 
-			myStorage.HatStorage.Add(*shopSelection);
+		CU::CJsonValue hatsArray = value.at("Hats");
+		for (int i = 0; i < hatsArray.Size(); ++i)
+		{
+			if (hatsArray[i].at("AvailableInShop").GetBool() == true)
+			{
+				SShopSelection* shopSelection = new SShopSelection();
+				shopSelection->HatName = hatsArray[i].at("HatName").GetString();
+				shopSelection->myCost = static_cast<SShopSelection::Cost>(hatsArray[i].at("ShopCost").GetInt());
+
+				myStorage.HatStorage.Add(*shopSelection);
+			}
 		}
+		SetupBuyOrder("Json/Hats/BuyOrder.json");
+		myHasStorageBeenInited = true;
 	}
-	SetupBuyOrder("Json/Hats/BuyOrder.json");
 }
 
 const CShopStorage::SMatchReturn CShopStorage::MatchHatWithName(const std::string & aHatName) const
 {
+	assert(myHasStorageBeenInited == false && "Storage Has Already been intialized");
 	for (unsigned int i = 0; i < myStorage.HatStorage.Size(); ++i)
 	{
 		if (aHatName == myStorage.HatStorage[i].HatName)
@@ -127,6 +132,7 @@ void CShopStorage::SetupBuyOrder(const std::string & aFilepath)
 CShopStorage::CShopStorage()
 {
 	myStorage.HatStorage.Init(5);
+	myHasStorageBeenInited = false;
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eHatAdded);
 }
 
