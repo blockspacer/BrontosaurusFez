@@ -135,7 +135,7 @@ void HatShopState::OnEnter()
 	myCurrentlySelected = nullptr;
 }
 
-void HatShopState::OnExit()
+void HatShopState::OnExit(const bool /*aLetThroughRender*/)
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eBuyButtonPressed);

@@ -5,7 +5,7 @@
 #include "../BrontosaurusEngine/Renderer.h"
 
 
-State::State(StateStack & aStateStack)
+State::State(StateStack& aStateStack)
 	: myStateStack(aStateStack)
 	, myStatus(eStateStatus::eKeep)
 {
@@ -13,7 +13,6 @@ State::State(StateStack & aStateStack)
 
 State::~State()
 {
-	//RENDERER.ClearRenderQueue();
 }
 
 bool State::GetLetThroughRender() const

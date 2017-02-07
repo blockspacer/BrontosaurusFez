@@ -26,7 +26,7 @@ public:
 	void Render() override;
 
 	void OnEnter() override;
-	void OnExit() override;
+	void OnExit(const bool aLetThroughRender) override;
 
 	void ClearScreen();
 
