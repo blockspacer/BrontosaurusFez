@@ -104,6 +104,7 @@ public:
 	inline void RemoveRef();
 
 	inline int GetRefCount();
+	CU::Matrix44f GetBoneTransform(const float aTime, const char * aAnimationState, const char* aBoneName);
 
 	inline bool HasBones() const;
 

@@ -466,6 +466,23 @@ void CModel::InitConstBuffers()
 	myTimeCBuffer = BSR::CreateCBuffer<CU::Vector4f>(&tempTime);
 }
 
+CU::Matrix44f CModel::GetBoneTransform(const float aTime, const char * aAnimationState, const char* aBoneName)
+{
+	if (mySceneAnimator != nullptr)
+	{
+		if (mySceneAnimator != nullptr)
+		{
+			auto it = mySceneAnimators.find(aAnimationState);
+			if (it != mySceneAnimators.end())
+			{
+				mySceneAnimator = &it->second;
+			}
+		}
+		return mySceneAnimator->GetBoneWorldTransform(aTime, aBoneName);
+	}
+	return CU::Matrix44f::Identity;
+}
+
 CModel& CModel::operator=(CModel&& aModel)
 {
 	SAFE_DELETE(myEffect);

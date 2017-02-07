@@ -18,6 +18,7 @@
 
 #define SAFE_RELEASE(comptr) if (comptr != nullptr) { comptr->Release(); comptr = nullptr; }
 
+//#define LETTER_STRING L"ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvxyz.,!:; "
 
 CFT_Font::CFT_Font()
 {

@@ -100,6 +100,8 @@ public:
 	std::vector<CAnimEvaluator> Animations;// a std::vector that holds each animation 
 	int32_t CurrentAnimIndex;/** Current animation index */
 
+	mat4 GetBoneWorldTransform(float dt, const std::string& bname);
+
 protected:
 
 	CBone* Skeleton;/** Root node of the internal scene structure */
