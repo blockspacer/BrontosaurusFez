@@ -371,14 +371,6 @@ void CPlayState::Load()
 
 void CPlayState::Init()
 {
-	//skillnad på load, init & konstructor ?
-	//	svar:	1. konstruktor ska sätta allt till noll/null
-	//			2. init ska skapa allt som kan bero på ifall motorn är skapad etc
-	//			3. load kallas trådat för init kallas alltid av statestacken när den pushar ett nytt state
-
-
-
-
 
 }
 
