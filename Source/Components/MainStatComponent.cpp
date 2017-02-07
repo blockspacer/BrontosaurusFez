@@ -65,9 +65,16 @@ void CMainStatComponent::Receive(const eComponentMessageType aMessageType, const
 		/*CStatComponent* collectedStats = static_cast<CStatComponent*>(aMessageData.myComponent);
 		*myBaseStats += *collectedStats->myBaseStats;
 		*myBonusStats += *collectedStats->myBonusStats;*/
-		*myBonusStats += *aMessageData.myStatsToAdd;
+
+		myBonusStats->BonusDamageModifier = 0.0f;
+		myBonusStats->BonusGoldGetModifier = 0.0f;
+		myBonusStats->BonusHealth = 0.0f;
+		myBonusStats->BonusHealthDropChance = 0.0f;
+		myBonusStats->BonusMana = 0.0f;
+		myBonusStats->BonusManaCostModifier = 0.0f;
+		myBonusStats->BonusManaDropChance = 0.0f;
 		myBonusStats->BonusMovementSpeed = 0.0f;
-		myBonusStats->BonusMovementSpeed = aMessageData.myStatsToAdd->BonusMovementSpeed;
+		*myBonusStats += *aMessageData.myStatsToAdd;
 		CalculateTotalStats();
 		break;
 	}
