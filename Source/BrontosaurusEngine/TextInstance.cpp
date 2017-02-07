@@ -34,11 +34,6 @@ void CTextInstance::Init(const CU::DynamicString& aFontPath)
 	myLineGap.y = GetlineHeight();
 }
 
-//void CTextInstance::Init(const CU::DynamicString & aFontPath, const int aPixelSize)
-//{
-//	myText = new CCoolText(aFontPath,aPixelSize);
-//}
-
 void CTextInstance::Render() const
 {
 	if (myText != nullptr && myStrings.Size() > 0)
