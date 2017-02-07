@@ -151,6 +151,8 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 		case eObjectType::eDefault:
 		default:
 			DL_PRINT("a DEFAULT died");
+			GetParent()->NotifyComponents(eComponentMessageType::eChangeFBXToDead, data);
+
 			break;
 		}
 	}
