@@ -258,6 +258,8 @@
     <ClInclude Include="ObjLoader.h">
       <Filter>Model</Filter>
     </ClInclude>
+    <ClInclude Include="SettingsManager.h" />
+    <ClInclude Include="SettingsSubscriber.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -399,6 +401,8 @@
     <ClCompile Include="TextBox.cpp" />
     <ClCompile Include="Navmesh.cpp" />
     <ClCompile Include="ObjLoader.cpp" />
+    <ClCompile Include="SettingsManager.cpp" />
+    <ClCompile Include="SettingsSubscriber.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Brontosaurus.rc">
