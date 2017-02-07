@@ -163,7 +163,7 @@ void CDialogState::Render()
 	}
 }
 
-void CDialogState::OnEnter()
+void CDialogState::OnEnter(const bool aLetThroughRender)
 {
 	DL_PRINT("Entered dialog");
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage, 8);

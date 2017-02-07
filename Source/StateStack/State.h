@@ -24,7 +24,7 @@ public:
 	virtual eStateStatus Update(const CU::Time& aDeltaTime) = 0;
 	virtual void Render() = 0;
 
-	virtual void OnEnter(/*const bool aLetThroughRender*/) = 0;
+	virtual void OnEnter(const bool aLetThroughRender) = 0;
 	virtual void OnExit(const bool aLetThroughRender) = 0;
 	virtual bool GetLetThroughRender() const;
 	virtual bool GetLetThroughUpdate() const;

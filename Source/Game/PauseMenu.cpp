@@ -44,7 +44,7 @@ void PauseMenu::Render()
 	myGUIManager->Render();
 }
 
-void PauseMenu::OnEnter()
+void PauseMenu::OnEnter(const bool aLetThroughRender)
 {
 	myGUIManager->RestartRenderAndUpdate();
 	//PostMaster::GetInstance().Subscribe(this, eMessageType::eStateMessage);
