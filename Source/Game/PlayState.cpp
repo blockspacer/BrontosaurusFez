@@ -476,7 +476,14 @@ void CPlayState::Render()
 	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
 
 	myHealthBarManager->Render();
+
+	msg.myBlendState = eBlendState::eAlphaBlend;
+	msg.myDepthStencilState = eDepthStencilState::eDisableDepth;
+	msg.myRasterizerState = eRasterizerState::eNoCulling;
+	msg.mySamplerState = eSamplerState::eClamp;
+	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
 	myGoldText->Render();
+
 	for (unsigned int i = 0; i < myChangeTexts.Size(); ++i)
 	{
 		myChangeTexts[i]->Render();
