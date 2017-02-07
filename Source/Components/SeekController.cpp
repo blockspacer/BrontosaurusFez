@@ -19,6 +19,7 @@ CSeekController::CSeekController()
 	myFormationIndex = -1;
 	myEvadeRadius = 150.0f;
 	myElapsedEvadeTime = 0.0f;
+	myShouldGoBackToStatPosition = false;
 }
 
 
@@ -37,8 +38,12 @@ const CU::Vector2f CSeekController::Update(const CU::Time& aDeltaTime)
 	myTarget = CalculateFormationPosition(myTarget);
 	CU::Vector2f position = CU::Vector2f(myController->GetParent()->GetWorldPosition().x, myController->GetParent()->GetWorldPosition().z);
 	CU::Vector2f targetVelocity = CU::Vector2f::Zero;
+	if (myShouldGoBackToStatPosition == true)
+	{
+		myTarget = myStartPosition;
+		DL_PRINT("Goinf Back");
+	}
 	targetVelocity = myTarget - position;
-
 
 	float distance = targetVelocity.Length();
 
@@ -56,7 +61,7 @@ const CU::Vector2f CSeekController::Update(const CU::Time& aDeltaTime)
 		speed = myMaxSpeed * distance / mySlowdownRadius;
 		targetVelocity.Normalize() *= speed;
 	}
-	GetParent()->GetLocalTransform().Lerp(GetParent()->GetLocalTransform().CreateLookAt(PollingStation::playerObject->GetLocalTransform().GetPosition() * -1), 0.01f);
+	GetParent()->GetLocalTransform().Lerp(GetParent()->GetLocalTransform().CreateLookAt(CU::Vector3f(myTarget.x, GetParent()->GetWorldPosition().y, myTarget.y) * -1), 0.01f);
 	if (myHaveBeenCalledForHelp == false)
 	{
 		myHaveBeenCalledForHelp = true;
@@ -206,6 +211,8 @@ void CSeekController::Receive(const eComponentMessageType aMessageType, const SC
 		SComponentMessageData data;
 		data.myComponent = this;
 		GetParent()->NotifyComponents(eComponentMessageType::eAddAIBehavior, data);
+		myStartPosition = GetParent()->GetWorldPosition();
+		myStartPosition.y = GetParent()->GetWorldPosition().z;
 	}
 	break;
 	case(eComponentMessageType::eCalledForHelp):
@@ -213,6 +220,17 @@ void CSeekController::Receive(const eComponentMessageType aMessageType, const SC
 		CalledUponForHelp();
 		myFormationIndex = static_cast<short>(aMessageData.myUShort);
 	}
+	break;
+	case(eComponentMessageType::eEnemyReturnToSpawnPoint):
+	{
+		myShouldGoBackToStatPosition = true;
+	}
+	break;
+	case(eComponentMessageType::eEnemyStartChaseAgain):
+	{
+		myShouldGoBackToStatPosition = false;
+	}
+	break;
 	default:
 		break;
 	}

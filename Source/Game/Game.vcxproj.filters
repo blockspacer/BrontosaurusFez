@@ -59,6 +59,9 @@
       <Filter>ScriptLoader</Filter>
     </ClCompile>
     <ClCompile Include="ParticleEffectManager.cpp" />
+    <ClCompile Include="GameEventMessenger.cpp">
+      <Filter>GameEventMessager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackgroundLoadingManager.h" />
@@ -127,6 +130,9 @@
       <Filter>ScriptLoader</Filter>
     </ClInclude>
     <ClInclude Include="ParticleEffectManager.h" />
+    <ClInclude Include="GameEventMessenger.h">
+      <Filter>GameEventMessager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="States">
@@ -143,6 +149,9 @@
     </Filter>
     <Filter Include="ParticleEffectManager">
       <UniqueIdentifier>{3f3a576b-896e-4f22-b6f5-349ab51bbd89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEventMessager">
+      <UniqueIdentifier>{23f0c3e6-776a-4bc1-895e-49779b355a5a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

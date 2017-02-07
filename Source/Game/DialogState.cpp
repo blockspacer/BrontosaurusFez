@@ -16,6 +16,8 @@
 CDialogState::CDialogState(StateStack& aStateStack) : State(aStateStack), myCurrentPiece(0), myHasFailed(false), myIsDone(false), myState(eStateStatus::eKeep), myCurrentTime(0), myBackground(nullptr)
 {
 	myCurrentDialog.Init(2);
+	myWaitTime = 2;
+	myPassedTime = 0;
 }
 
 CDialogState::~CDialogState()
@@ -91,9 +93,10 @@ void CDialogState::Init()
 
 eStateStatus CDialogState::Update(const CU::Time& aDeltaTime)
 {
-	const float MaxTime = 0.1;
+	const float MaxTime = 0.05;
 
 	myCurrentTime += aDeltaTime.GetSeconds();
+	myPassedTime += aDeltaTime.GetSeconds();
 
 	if (myIsDone == false && myCurrentTime >= MaxTime)
 	{
@@ -195,7 +198,7 @@ bool CDialogState::GetLetThroughRender() const
 
 bool CDialogState::GetLetThroughUpdate() const
 {
-	return true;
+	return false;
 }
 
 void CDialogState::SetSatus(const eStateStatus aStateStatus)
@@ -205,26 +208,29 @@ void CDialogState::SetSatus(const eStateStatus aStateStatus)
 
 void CDialogState::Next()
 {
-	if (myIsDone == false)
+	if (myPassedTime >= myWaitTime)
 	{
-		myDialogTextInstance.SetTextLines(myCurrentDialog[myCurrentPiece].myDialogTexts);
-		myIsDone = true;
-	}
-	else
-	{
-		ClearScreen();
-		++myCurrentPiece;
-		unsigned short dialogSize = myCurrentDialog.Size();
-
-		if (myCurrentPiece < dialogSize)
+		if (myIsDone == false)
 		{
-			myActorNameText.SetTextLines({ myCurrentDialog[myCurrentPiece].myCurrentActor });
-			myDialogTextInstance.SetTextLines({ "" });
-			myIsDone = false;
+			myDialogTextInstance.SetTextLines(myCurrentDialog[myCurrentPiece].myDialogTexts);
+			myIsDone = true;
 		}
 		else
 		{
-			myState = eStateStatus::ePop;
+			ClearScreen();
+			++myCurrentPiece;
+			unsigned short dialogSize = myCurrentDialog.Size();
+
+			if (myCurrentPiece < dialogSize)
+			{
+				myActorNameText.SetTextLines({ myCurrentDialog[myCurrentPiece].myCurrentActor });
+				myDialogTextInstance.SetTextLines({ "" });
+				myIsDone = false;
+			}
+			else
+			{
+				myState = eStateStatus::ePop;
+			}
 		}
 	}
 }

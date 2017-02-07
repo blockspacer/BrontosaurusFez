@@ -3,6 +3,8 @@
 #include <d3d11.h>
 #include "../FontEngine/FT_FontFacade.h"
 
+enum class eAlignment;
+
 namespace CU
 {
 	class DynamicString;
@@ -35,7 +37,8 @@ public:
 	CCoolText(const CU::DynamicString& aFontPath, const int aPixelSize);
 	~CCoolText();
 
-	void Render(const CU::GrowingArray<CU::DynamicString>& someStrings, const CU::Vector2f& aPosition, const CU::Vector4f& aColor/*, const CU::Vector2i& aSize*/);
+
+	void Render(const CU::GrowingArray<CU::DynamicString>& someStrings, const CU::Vector2f& aPosition, const CU::Vector4f& aColor/*, const CU::Vector2i& aSize*/, eAlignment anAlignement);
 	float GetlineHeight() const;
 	CU::Vector2i CalculateRectPixelSize(const std::string& aText);
 private:
@@ -44,6 +47,8 @@ private:
 	void RenderCharacter(const wchar_t aCharacter, const CU::Vector2f& aPosition, const CU::Vector4f& aColor);
 	void ActivateEffect();
 	void UpdateAndSetVertexConstantBuffer(const CU::Vector2f& aPosition, const CU::Vector2f& aSize, const CU::Vector4f& aRectconst, const CU::Vector4f& aColor);
+
+	CU::Vector2f CalculateAdjustment(eAlignment aAlignement, std::wstring aWString);
 
 	ID3D11Buffer* myVertexBuffer;
 	ID3D11Buffer* myVertexConstantBuffer;

@@ -96,7 +96,6 @@
 #include "PlayerManaMessenger.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
-#include "../Components/ScriptComponent.h"
 #include "../Components/ScriptComponentManager.h"
 #include "ParticleEffectManager.h"
 
@@ -343,11 +342,6 @@ void CPlayState::Load()
 		////TEMP CARL END
 	}
 
-	for (unsigned int i = 0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); i++)
-	{
-		PollingStation::myThingsEnemiesShouldAvoid[i]->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
-	}
-
 
 
 	CGameObject* mouseObject = myGameObjectManager->CreateGameObject();
@@ -363,6 +357,12 @@ void CPlayState::Load()
 	mouseObject->AddComponent(myMouseComponent);
 
 	myGameObjectManager->SendObjectsDoneMessage();
+
+
+	for (unsigned int i = 0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); i++)
+	{
+		PollingStation::myThingsEnemiesShouldAvoid[i]->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
+	}
 
 	//Give hats on level entry
 	myHatMaker->LoadBluePrints("Json/Hats/HatBluePrints.json");
@@ -419,11 +419,7 @@ void CPlayState::Init()
 
 	Audio::CAudioInterface::GetInstance()->PostEvent(levelsArray[myLevelIndex].GetString().c_str());
 
-
-
-
-
-
+	myGameEventMessenger.Init({ 0.5f, 0.1f });
 }
 
 eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
@@ -480,7 +476,7 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 		position.y += 1 * aDeltaTime.GetSeconds();
 		myChangeTexts[i]->SetPosition(position);
 	}
-
+	myGameEventMessenger.Update(aDeltaTime.GetSeconds());
 
 	return myStatus;
 }
@@ -534,6 +530,7 @@ void CPlayState::Render()
 	}
 
 	myQuestDrawer.Render();
+	myGameEventMessenger.Render();
 }
 
 void CPlayState::OnEnter(const bool aLetThroughRender)

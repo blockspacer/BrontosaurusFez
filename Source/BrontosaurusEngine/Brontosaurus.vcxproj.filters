@@ -260,6 +260,9 @@
     </ClInclude>
     <ClInclude Include="SettingsManager.h" />
     <ClInclude Include="SettingsSubscriber.h" />
+    <ClInclude Include="Allignment.h">
+      <Filter>Text</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />

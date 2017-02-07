@@ -239,6 +239,7 @@
     <ClCompile Include="DialogState.cpp" />
     <ClCompile Include="EnemyFactory.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameEventMessenger.cpp" />
     <ClCompile Include="GlobalLuaFunctions.cpp" />
     <ClCompile Include="HatMaker.cpp" />
     <ClCompile Include="HatShopState.cpp" />
@@ -275,6 +276,7 @@
     <ClInclude Include="EnemyFactory.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameEventMessenger.h" />
     <ClInclude Include="GlobalLuaFunctions.h" />
     <ClInclude Include="HatMaker.h" />
     <ClInclude Include="HatShopState.h" />
