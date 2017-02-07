@@ -2,6 +2,7 @@
 #include "BlessingTowerComponent.h"
 #include "../Game/PollingStation.h"
 #include "StatStructs.h"
+#include "../PostMaster/CoolBoi.h"
 
 BlessingTowerComponent::BlessingTowerComponent()
 {
@@ -56,6 +57,12 @@ void BlessingTowerComponent::Receive(const eComponentMessageType aMessageType, c
 			
 			damaageData.myStatsToAdd = myDamageBonusStats;
 			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eAddStats, damaageData);
+
+			SComponentMessageData colliderData;
+			colliderData.myBool = false;
+			GetParent()->NotifyComponents(eComponentMessageType::eSetIsColliderActive, colliderData);
+
+			PostMaster::GetInstance().SendLetter(Message(eMessageType::eShrineOrWellClicked, CoolBoi(GetParent())));
 		}
 	}
 	

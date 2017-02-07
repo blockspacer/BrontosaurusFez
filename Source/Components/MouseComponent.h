@@ -26,6 +26,7 @@ public:
 	void SetMouseIsDown(const bool aIsDown);
 	void CheckIfHoveredGameObjectDied(CGameObject* aGameobjectThatDied);
 	void RemoveHoveredObjects();
+	void RemoveHoveredGameObject(CGameObject* aGameObject);
 private:
 	void InternalInit();
 	void HighlightClosest();
