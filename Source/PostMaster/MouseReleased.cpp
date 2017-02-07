@@ -60,3 +60,8 @@ eMessageReturn MouseReleased::DoEvent(CMouseComponent* aMouseComponent) const
 
 	return eMessageReturn::eContinue;
 }
+
+eMessageReturn MouseReleased::DoEvent(CDialogState* aDialogState) const
+{
+	return eMessageReturn::eStop;
+}

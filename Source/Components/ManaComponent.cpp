@@ -7,6 +7,8 @@
 #include "..\PostMaster\Message.h"
 #include "Skill.h"
 #include "SkillData.h"
+#include "PollingStation.h"
+#include "playerData.h"
 
 ManaComponent::ManaComponent(ManaPoint aMaxAmountOfMana)
 {
@@ -41,6 +43,7 @@ void ManaComponent::SetMana(const ManaPoint aValue)
 	SComponentMessageData data;
 	data.myUChar = myPercentageLeft * 100;
 	GetParent()->NotifyComponents(eComponentMessageType::ePercentMPLeft, data);
+	PollingStation::playerData->myPercentManaLeft = myPercentageLeft;
 }
 
 void ManaComponent::SetMaxMana(const ManaPoint aValue)

@@ -655,8 +655,14 @@ void CFBXLoader::LoadMeshChildren(aiNode* aNode, CU::GrowingArray<aiNode*>& aNod
 		static const std::string animationIdentifier = "SKEL";
 		static const std::string animationIdentifier2 = "SKIN";
 		std::string nodeName = aNode->mName.C_Str();
-		if (nodeName.find(animationIdentifier) != std::string::npos) continue;
-		if (nodeName.find(animationIdentifier2) != std::string::npos) continue;
+		if (nodeName.find(animationIdentifier) != std::string::npos)
+		{
+			continue;
+		}
+		if (nodeName.find(animationIdentifier2) != std::string::npos)
+		{
+			continue;
+		}
 		LoadMeshChildren(child, aNodesOut);
 	}
 }

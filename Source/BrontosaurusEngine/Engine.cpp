@@ -63,7 +63,7 @@ void CEngine::Init(SInitEngineParams& aInitEngineParams)
 	myRenderCallbackFunction = aInitEngineParams.myRenderCallbackFunction;
 
 	myDXFramework = new CDXFramework();
-	CU::Vector2ui actualDrawSize = myWindowsWindow->GetWindowSize();
+	CU::Vector2ui actualDrawSize = myWindowSize;//myWindowsWindow->GetWindowSize();
 
 
 	myDXFramework->Initialize(actualDrawSize.x, actualDrawSize.y, aInitEngineParams.myWindowParams.Fullscreen ,myWindowsWindow->GetHWND());

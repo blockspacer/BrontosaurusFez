@@ -134,23 +134,30 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 		}
 		case eObjectType::eWitch:
 			data.myString = "EnemyDie";
+			DL_PRINT("a WITCH died");
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
 			break;
 		case eObjectType::eZombie:
 			data.myString = "EnemyDie";
+			DL_PRINT("a ZOMBIE died");
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
 			break;
 		case eObjectType::eBlob:
 			data.myString = "EnemyDie";
+			DL_PRINT("a BLOB died");
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
 			break;
 		case eObjectType::ePlayer:
 			data.myString = "EnemyDie";
+			DL_PRINT("a PLAYER died");
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
 			break;
+
+
 		case eObjectType::eDefault:
 		default:
-			DL_PRINT("a DEFAULT died");
+			DL_PRINT("a DEFAULT died"); ///yes I'm intentionally using DEFAULT as a noun.
+			GetParent()->NotifyComponents(eComponentMessageType::eChangeFBXToDead, data);
 			break;
 		}
 	}
