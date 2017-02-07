@@ -6,6 +6,7 @@ struct PlayerData
 	SBaseStats* myStats; // kanske inte borde vara pointer //skrev jag det? //Jag vet inte // ok.
 	float myGoldGetModifier = 1.0f;
 	float myPercentHPLeft = 100.0f;
+	float myPercentManaLeft = 100.f;
 	bool myIsWhirlwinding = false;
 
 	inline unsigned short GetGold() const;

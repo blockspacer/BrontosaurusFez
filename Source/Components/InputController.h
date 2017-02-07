@@ -46,6 +46,8 @@ private:
 	CPath myPath;
 
 	const CU::Camera& myPlayerCamera;
+	float myElapsedManaRegenTimer; //#should not be here lol;
+	short myManaRecover;
 	short mySkillActivatorKeyDown;
 	bool myMouseIsDown;
 	bool myIsShiftDown;
