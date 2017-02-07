@@ -80,6 +80,7 @@ void CHealthComponent::Init()
 void CHealthComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
 {
 	SComponentMessageData data;
+	SComponentMessageData soundData;
 	float temp;
 	switch (aMessageType)
 	{
@@ -97,7 +98,19 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 	case eComponentMessageType::eTakeDamage:
 		SetHealth(myHealth - aMessageData.myInt);
 		data.myUChar = myPercentageLeft * 100;
-		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data);
+		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data); 
+		//if (myObjectType != eObjectType::eBarrel && myObjectType != eObjectType::eUrn)
+		{
+			if (myObjectType == eObjectType::ePlayer)
+			{
+				soundData.myString = "Hit";
+			}
+			else
+			{
+				soundData.myString = "Slash";
+			}
+			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, soundData);
+		}
 		break;
 	case eComponentMessageType::eHeal:
 		SetHealth(myHealth + aMessageData.myInt);
