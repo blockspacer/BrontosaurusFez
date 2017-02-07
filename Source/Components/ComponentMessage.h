@@ -102,6 +102,8 @@ enum class eComponentMessageType
 	eRemoveAllCollidedWith,
 	eChangeFBXToDead,
 	eRemoveHoveredObject,
+	eEnemyReturnToSpawnPoint,
+	eEnemyStartChaseAgain,
 	eLength
 };
 
