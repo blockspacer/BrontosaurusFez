@@ -5,6 +5,7 @@
 
 enum class eObjectType
 {
+	eDefault,
 	eUrn,
 	eBarrel,
 	eWitch,
