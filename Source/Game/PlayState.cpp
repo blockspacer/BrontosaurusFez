@@ -344,7 +344,7 @@ void CPlayState::Load()
 	}
 	else
 	{
-		std::string loadHatsMajiggerPath = "Json/Levels/stuffadoodles.json";
+		std::string loadHatsMajiggerPath = "Json/Hats/LevelSelectHatData.json";
 		CU::CJsonValue HatBluePrint;
 		const std::string& errorString = HatBluePrint.Parse(loadHatsMajiggerPath);
 		CU::CJsonValue loadHatsMajigger = HatBluePrint.at("HatsOnlevelEntryList");
