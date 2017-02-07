@@ -18,6 +18,7 @@
 
 #define SAFE_RELEASE(comptr) if (comptr != nullptr) { comptr->Release(); comptr = nullptr; }
 
+#define LETTER_STRING L"ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvxyz.,!:; "
 
 CFT_Font::CFT_Font()
 {
@@ -152,6 +153,17 @@ float CFT_Font::GetlineHeight() const
 {
 	//return myFace->height / 64;
 	return myLineHeight;
+}
+
+void CFT_Font::RenderCommonLetters()
+{
+	std::wstring commonLetters = LETTER_STRING;
+
+	for (std::wstring::size_type i = 0; i < commonLetters.size(); ++i)
+	{
+		const FT_UInt glyphIndex = FT_Get_Char_Index(myFace, commonLetters[i]);
+		CreateCharTexture(glyphIndex);
+	}
 }
 
 FT_Error CFT_Font::LoadGlyph(FT_UInt aGlyphIndex)

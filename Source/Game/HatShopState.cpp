@@ -7,7 +7,6 @@
 
 #include "PostMaster/Message.h"
 #include "PostMaster/PostMaster.h"
-#include "PostMaster/PopCurrentState.h"
 
 #include "Components/GameObject.h"
 #include "Components/GameObjectManager.h"
@@ -18,7 +17,6 @@
 
 #include "KevinLoader/KevinLoader.h"
 
-#include "GUI/Widget.h"
 #include "GUI/GUIManager.h"
 #include "BrontosaurusEngine/TextInstance.h"
 
@@ -240,7 +238,7 @@ void HatShopState::AdjustText()
 			temp += ". ";
 			temp += mySelections[i]->HatName.c_str();
 			myOptionsText.Add(new CTextInstance());
-			myOptionsText.GetLast()->Init("Default",32);
+			myOptionsText.GetLast()->Init("Default");
 			myOptionsText.GetLast()->SetText(temp.c_str());
 			myOptionsText.GetLast()->SetPosition(CU::Vector2f(0.114f, 0.18f + 0.175f * row));
 		
@@ -248,7 +246,7 @@ void HatShopState::AdjustText()
 			temp += ": ";
 			temp += std::to_string(mySelections[i]->myCost);
 			myCostText.Add(new CTextInstance());
-			myCostText.GetLast()->Init("Default",32);
+			myCostText.GetLast()->Init("Default");
 			myCostText.GetLast()->SetText(temp.c_str());
 			myCostText.GetLast()->SetPosition(CU::Vector2f(0.114f, 0.26f + 0.175f * row));
 			++row;
@@ -260,7 +258,7 @@ void HatShopState::AdjustText()
 			temp += ". ";
 			temp += mySelections[i]->HatName.c_str();
 			myOptionsText.Add(new CTextInstance());
-			myOptionsText.GetLast()->Init("Default", 32);
+			myOptionsText.GetLast()->Init("Default");
 			myOptionsText.GetLast()->SetText(temp.c_str());
 			myOptionsText.GetLast()->SetPosition(CU::Vector2f(0.027f, 0.18f + 0.175f * row));
 		
@@ -268,7 +266,7 @@ void HatShopState::AdjustText()
 			temp += ": ";
 			temp += std::to_string(mySelections[i]->myCost);
 			myCostText.Add(new CTextInstance());
-			myCostText.GetLast()->Init("Default", 32);
+			myCostText.GetLast()->Init("Default");
 			myCostText.GetLast()->SetText(temp.c_str());
 			myCostText.GetLast()->SetPosition(CU::Vector2f(0.027f, 0.26f + 0.175f * row));
 		}
