@@ -24,28 +24,28 @@ void GUICursor::Render()
 
 void GUICursor::SetPosition(const CU::Vector2f& aPosition)
 {
-	const CU::Vector2f windowSize(WINDOW_SIZE);
+	//const CU::Vector2f windowSize(WINDOW_SIZE);
 
-	CU::Vector2f position = aPosition;
-	if (aPosition.x > 1.f - 1.f / windowSize.x)
-	{
-		position.x = 1.f - 1.f / windowSize.x;
-	}
-	else if (aPosition.x < 0.f)
-	{
-		position.x = 0.f;
-	}
+	//CU::Vector2f position = aPosition;
+	//if (aPosition.x > 1.f - 1.f / windowSize.x)
+	//{
+	//	position.x = 1.f - 1.f / windowSize.x;
+	//}
+	//else if (aPosition.x < 0.f)
+	//{
+	//	position.x = 0.f;
+	//}
 
-	if (aPosition.y > 1.f - 1.f / windowSize.y)
-	{
-		position.y = 1.f - 1.f / windowSize.y;
-	}
-	else if (aPosition.y < 0.f)
-	{
-		position.y = 0.f;
-	}
+	//if (aPosition.y > 1.f - 1.f / windowSize.y)
+	//{
+	//	position.y = 1.f - 1.f / windowSize.y;
+	//}
+	//else if (aPosition.y < 0.f)
+	//{
+	//	position.y = 0.f;
+	//}
 
-	mySprite->SetPosition(position);
+	mySprite->SetPosition(/*position*/aPosition);
 }
 
 eMessageReturn GUICursor::Recieve(const Message& aMessage)

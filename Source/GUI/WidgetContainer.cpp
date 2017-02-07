@@ -110,9 +110,10 @@ namespace GUI
 			//}
 			for (int i = myOrderedWidgets.Size() - 1; i >= 0; --i)
 			{
-				if (myOrderedWidgets[i]->IsVisible() == true)
+				IWidget& child = *myOrderedWidgets[i];
+				if (child.IsVisible() == true)
 				{
-					myOrderedWidgets[i]->Render(myFrontLayerWidgets);
+					child.Render(myFrontLayerWidgets);
 				}
 			}
 		}
@@ -187,6 +188,10 @@ namespace GUI
 			IWidget* widgetToMove = it->second;
 			myOrderedWidgets.Remove(it->second);
 			myOrderedWidgets.Add(widgetToMove);
+		}
+		else
+		{
+			DL_PRINT("coudn't find %s", aWidgetName.c_str());
 		}
 	}
 }

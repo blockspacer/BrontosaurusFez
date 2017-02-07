@@ -35,11 +35,8 @@ eMessageReturn MouseMoved::DoEvent(GUICursor* aGUICursor) const
 	if (aGUICursor != nullptr)
 	{
 		CU::Vector2f windowSize(CEngine::GetInstance()->GetWindowSize());
-
-		const CU::Vector2f ScreenCenter(windowSize.x * 0.5f, windowSize.y * 0.5f);
-		CU::Vector2f deltaPosition = myMousePosition /*- ScreenCenter*/;
-		
-		aGUICursor->SetPosition(/*aGUICursor->GetPosition() +*/ CU::Vector2f(deltaPosition.x / windowSize.x, deltaPosition.y / windowSize.y));
+				
+		aGUICursor->SetPosition(CU::Vector2f(myMousePosition / windowSize));
 	}
 
 	return eMessageReturn::eContinue;
