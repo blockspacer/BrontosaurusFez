@@ -100,6 +100,7 @@ enum class eComponentMessageType
 	eCheckIfCanSelect,
 	eActivate2,
 	eRemoveAllCollidedWith,
+	eChangeFBXToDead,
 	eLength
 };
 

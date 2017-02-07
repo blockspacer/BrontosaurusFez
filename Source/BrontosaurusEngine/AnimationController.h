@@ -13,6 +13,7 @@
 #include <string>
 
 #include "../CommonUtilities/matrix44.h"
+#include "CommonUtilities.h"
 
 using mat4 = CU::Matrix44f;
 
@@ -44,7 +45,7 @@ public:
 	CAnimEvaluator( const aiAnimation* pAnim);
 	void Evaluate( float pTime, std::map<std::string, CBone*>& bones);
 	std::vector<mat4>& GetTransforms(float dt){ return Transforms[GetFrameIndexAt(dt)]; }
-	std::vector<mat4>& GetTransforms(float dt, bool loop) { return Transforms[GetFrameIndexAt(dt, loop)]; }
+	std::vector<mat4>& GetTransforms(float dt, bool loop) { return Transforms[MIN(GetFrameIndexAt(dt, loop), Transforms.size() -1)]; } // Quick temp fix 
 
 	unsigned int GetFrameIndexAt(float time);
 	unsigned int GetFrameIndexAt(float time, bool loop);

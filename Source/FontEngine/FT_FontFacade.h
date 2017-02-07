@@ -20,6 +20,7 @@ public:
 	CU::Vector2i GetAdvance(const wchar_t aNextChar, const wchar_t aPrevoiusChar, const bool aUseKerning) const;
 	CEffect* GetEffect();
 	CU::Vector2i GetCharSize(const wchar_t aChar);
+	bool RequestCharSize(CU::Vector2i& aSizeOut, const wchar_t aChar);
 	CU::Vector2i GetBearing(const wchar_t aChar);
 	float GetlineHeight() const;
 private:

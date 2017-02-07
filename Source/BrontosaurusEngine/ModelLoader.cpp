@@ -307,7 +307,7 @@ void CModelLoader::CreateSphere(CModel* aModel, const float aSize)
 	modelVertices.Init(3000);
 
 	int radius = static_cast<int>(aSize);
-	const float PI = 3.1415926535f;
+	//const float PI = 3.1415926535f;
 	int index = 0;
 
 
