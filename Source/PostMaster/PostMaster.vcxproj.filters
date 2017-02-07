@@ -92,6 +92,7 @@
     <ClCompile Include="PushState.cpp">
       <Filter>Events\PushState</Filter>
     </ClCompile>
+    <ClCompile Include="GoldChanged.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Subscriber.h">
@@ -252,6 +253,9 @@
     </ClInclude>
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
+    <ClInclude Include="PopCurrentState.h" />
+    <ClInclude Include="PostMaster.h" />
+    <ClInclude Include="GoldChanged.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Events">

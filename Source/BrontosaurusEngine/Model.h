@@ -104,8 +104,13 @@ public:
 	inline void RemoveRef();
 
 	inline int GetRefCount();
+	CU::Matrix44f GetBoneTransform(const float aTime, const char * aAnimationState, const char* aBoneName);
+
+	inline bool HasBones() const;
 
 	std::vector<mat4>& GetBones(float aTime, const char * aAnimationState, const bool aAnimationLooping);
+
+	__forceinline const std::string& GetName() const;
 
 private:
 
@@ -126,6 +131,9 @@ private:
 	CSceneAnimator* mySceneAnimator;
 	CSceneAnimator* myBindposeSceneAnimator;
 
+#ifdef _DEBUG
+	std::string myFilePath;
+#endif // _DEBUG
 
 	CEffect* myEffect;
 	CSurface* mySurface;
@@ -213,6 +221,11 @@ inline int CModel::GetRefCount()
 	return myRefCount;
 }
 
+inline bool CModel::HasBones() const
+{
+	return myBoneBuffer != nullptr;
+}
+
 inline bool CModel::IsAlphaModel() const
 {
 	return myIsAlphaModel;
@@ -223,3 +236,11 @@ inline bool CModel::GetInitialized() const
 	return myIsInitialized;
 }
 
+const std::string& CModel::GetName() const
+{
+#ifdef _DEBUG
+	return myFilePath;
+#else // !_DEBUG
+	return "";
+#endif // _DEBUG
+}

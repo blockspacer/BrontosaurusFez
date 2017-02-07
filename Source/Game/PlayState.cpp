@@ -112,6 +112,7 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 {
 	myIsLoaded = false;
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eHatAdded);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eGoldChanged);
 }
 
 CPlayState::~CPlayState()
@@ -159,6 +160,7 @@ CPlayState::~CPlayState()
 	CPointLightComponentManager::Destroy();
 	CComponentManager::DestroyInstance();
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eHatAdded);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eGoldChanged);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
 
 	CLevelManager::DestroyInstance();
@@ -167,6 +169,10 @@ CPlayState::~CPlayState()
 void CPlayState::Load()
 {
 	//start taking the time for loading level
+	if (myShouldReturnToLevelSelect == true)
+	{
+		myLevelIndex++;
+	}
 	CU::TimerManager timerMgr;
 	CU::TimerHandle handle = timerMgr.CreateTimer();
 	timerMgr.StartTimer(handle);
@@ -198,9 +204,11 @@ void CPlayState::Load()
 	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
 	cameraComponent->SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 
+	myChangeTexts.Init(5);
+
 	myGoldText = new CTextInstance;
-	myGoldText->SetColor(CTextInstance::Yellow);
-	myGoldText->SetPosition(CU::Vector2f(0.4f, 0.2f));
+	myGoldText->SetColor(CTextInstance::Black);
+	myGoldText->SetPosition(CU::Vector2f(0.575f, 0.93f));
 	myGoldText->SetText("");
 	myGoldText->Init();
 
@@ -328,8 +336,31 @@ void CPlayState::Load()
 
 	myGameObjectManager->SendObjectsDoneMessage();
 
+	//Give hats on level entry
 	myHatMaker->LoadBluePrints("Json/Hats/HatBluePrints.json");
-	myHatMaker->GiveTheManAHat();
+	if (myShouldReturnToLevelSelect == false)
+	{
+		myHatMaker->GiveTheManAHat();
+	}
+	else
+	{
+		std::string loadHatsMajiggerPath = "Json/Hats/LevelSelectHatData.json";
+		CU::CJsonValue HatBluePrint;
+		const std::string& errorString = HatBluePrint.Parse(loadHatsMajiggerPath);
+		CU::CJsonValue loadHatsMajigger = HatBluePrint.at("HatsOnlevelEntryList");
+		std::string levelname = levelsArray[myLevelIndex].GetString();
+		for (unsigned int i = 0; i < loadHatsMajigger.Size(); ++i)
+		{
+			if (loadHatsMajigger[i].at("LevelName").GetString() == levelname)
+			{
+				CU::CJsonValue hatArray = loadHatsMajigger[i].at("HatArray");
+				for (unsigned int j = 0; j < hatArray.Size(); ++j)
+				{
+					myHatMaker->MakeHatFromBluePrint(hatArray[j].GetString());
+				}
+			}
+		}
+	}
 	myIsLoaded = true;
 
 	//get time to load the level:
@@ -358,6 +389,8 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	{
 		CAudioSourceComponentManager::GetInstance().Update();
 	}
+
+	myHatMaker->Update();
 
 	if (PollingStation::playerData->myIsWhirlwinding == true)
 	{
@@ -395,6 +428,15 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 
 	myHealthBarManager->Update();
 	BlessingTowerComponentManager::GetInstance().Update(aDeltaTime);
+
+	for (unsigned int i = 0; i < myChangeTexts.Size(); ++i)
+	{
+		CU::Vector2f position = myChangeTexts[i]->GetPosition();
+
+		position.y += 1 * aDeltaTime.GetSeconds();
+		myChangeTexts[i]->SetPosition(position);
+	}
+
 
 	return myStatus;
 }
@@ -435,6 +477,10 @@ void CPlayState::Render()
 
 	myHealthBarManager->Render();
 	myGoldText->Render();
+	for (unsigned int i = 0; i < myChangeTexts.Size(); ++i)
+	{
+		myChangeTexts[i]->Render();
+	}
 
 	myQuestDrawer.Render();
 }
@@ -505,6 +551,26 @@ void CPlayState::CheckReturnToLevelSelect() // Formerly NextLevel -Kyle
 		//myStatus = eStateStatus::ePop; ?? //Was this only checked when pressing F7 - for change level ?
 	}
 }
+
+void CPlayState::ChangeGoldAmount(const int aValue, const bool aDecreaseGold)
+{
+	PollingStation::playerData->AddGold(aValue);
+
+	myChangeTexts.Add(new CTextInstance());
+ 	CTextInstance* text = myChangeTexts.GetLast();
+
+	text->SetColor(CTextInstance::Black);
+	text->SetPosition(myGoldText->GetPosition());
+	if (aDecreaseGold == false)
+	{
+		text->SetText("+" + aValue);
+	}
+	if (aDecreaseGold == true)
+	{
+		text->SetText("-" + aValue);
+	}
+}
+
 
 eMessageReturn CPlayState::Recieve(const Message& aMessage)
 {

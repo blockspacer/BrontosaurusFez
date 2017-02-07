@@ -70,6 +70,8 @@ CModel::~CModel()
 
 	SAFE_DELETE(myEffect); //make sure this releases stuff
 	SAFE_DELETE(mySurface);
+
+	mySceneAnimator = nullptr;
 }
 
 bool CModel::Initialize(CEffect* aEffect, CSurface* aSurface)
@@ -88,6 +90,10 @@ bool CModel::Initialize(CEffect* aEffect, CSurface* aSurface)
 //	FBX - AssImp
 bool CModel::Initialize(CEffect* aEffect, CSurface* aSurface, const CLoaderMesh* aLoadedMesh)
 {
+#ifdef _DEBUG
+	myFilePath = aLoadedMesh->myName;
+#endif
+
 	Initialize(aEffect, aSurface);
 	myAABB.myMinPos = aLoadedMesh->myMinPoint;
 	myAABB.myMaxPos = aLoadedMesh->myMaxPoint;
@@ -106,6 +112,10 @@ bool CModel::Initialize(CEffect* aEffect, CSurface* aSurface, const CLoaderMesh*
 }
 bool CModel::Initialize(CEffect* aEffect, CSurface* aSurface, const CU::GrowingArray<CLoaderMesh*>& aLoadedMeshList)
 {
+#ifdef _DEBUG
+	myFilePath = aLoadedMeshList.GetFirst()->myName;
+#endif // _DEBUG
+
 	Initialize(aEffect, aSurface);
 	myAABB.myMinPos = aLoadedMeshList.GetLast()->myMinPoint;
 	myAABB.myMaxPos = aLoadedMeshList.GetLast()->myMaxPoint;
@@ -341,7 +351,7 @@ void CModel::UpdateCBuffer(SRenderModelParams & aParamObj)
 
 
 	//ANIMATION BUFFER
-	if (mySceneAnimator != nullptr && (aParamObj.aAnimationState != nullptr && aParamObj.aAnimationState != ""))
+	if (mySceneAnimator != nullptr && (aParamObj.aAnimationState != nullptr) && (aParamObj.aAnimationState[0] != '\0'))
 	{
 
 		std::vector<mat4>& bones = GetBones(aParamObj.aAnimationTime, aParamObj.aAnimationState, aParamObj.aAnimationLooping);
@@ -410,21 +420,21 @@ std::vector<mat4>& CModel::GetBones(float aTime, const char * aAnimationState, c
 {
 	if(mySceneAnimator != nullptr)
 	{
-		if (mySceneAnimator != nullptr)
+		auto it = mySceneAnimators.find(aAnimationState);
+		if (it != mySceneAnimators.end())
 		{
-			auto it = mySceneAnimators.find(aAnimationState);
-			if (it != mySceneAnimators.end())
-			{
-				mySceneAnimator = &it->second;
-			}
+			mySceneAnimator = &it->second;
 		}
 
-		//std::vector<mat4>& transforms = mySceneAnimator->GetTransforms(aTime);
 		return mySceneAnimator->GetTransforms(aTime, aAnimationLooping);
-
-		//memcpy(static_cast<void*>(aReturn), &transforms[0], min(sizeof(aReturn), transforms.size() * sizeof(mat4)));
-
 	}
+	static std::vector<mat4> locNullBones;
+	if (locNullBones.empty())
+	{
+		locNullBones.push_back(mat4());
+	}
+
+	return locNullBones;
 }
 
 SLodData & CModel::GetCurrentLODModel(const CU::Vector3f& aModelPosition)
@@ -455,6 +465,23 @@ void CModel::InitConstBuffers()
 
 	CU::Vector4f tempTime;
 	myTimeCBuffer = BSR::CreateCBuffer<CU::Vector4f>(&tempTime);
+}
+
+CU::Matrix44f CModel::GetBoneTransform(const float aTime, const char * aAnimationState, const char* aBoneName)
+{
+	if (mySceneAnimator != nullptr)
+	{
+		if (mySceneAnimator != nullptr)
+		{
+			auto it = mySceneAnimators.find(aAnimationState);
+			if (it != mySceneAnimators.end())
+			{
+				mySceneAnimator = &it->second;
+			}
+		}
+		return mySceneAnimator->GetBoneWorldTransform(aTime, aBoneName);
+	}
+	return CU::Matrix44f::Identity;
 }
 
 CModel& CModel::operator=(CModel&& aModel)

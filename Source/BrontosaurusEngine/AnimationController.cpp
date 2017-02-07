@@ -83,7 +83,8 @@ unsigned int CAnimEvaluator::GetFrameIndexAt(float ptime, bool loop)
 	
 
 	if (!PlayAnimationForward) percent = (percent - 1.0f)*-1.0f;// this will invert the percent so the animation plays backwards
-	return static_cast<unsigned int>((static_cast<float>(Transforms.size()) * percent));
+	unsigned int chosenIndex = static_cast<unsigned int>((static_cast<float>(Transforms.size()) * percent));
+	return (chosenIndex < Transforms.size()) ? chosenIndex : Transforms.size() - 1;
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -335,6 +336,27 @@ CBone* CSceneAnimator::CreateBoneTree( aiNode* pNode, CBone* pParent)
 		internalNode->Children.push_back(CreateBoneTree( pNode->mChildren[a], internalNode));
 	}
 	return internalNode;
+}
+
+mat4 CSceneAnimator::GetBoneWorldTransform(float dt, const std::string & bname)
+{
+	int bindex = GetBoneIndex(bname); 
+	if (bindex == -1) return mat4(); 
+
+	mat4 retVal = Bones[bindex]->GlobalTransform;
+	retVal *= Animations[CurrentAnimIndex].GetTransforms(dt)[GetBoneIndex(Bones[bindex]->Name)];
+
+
+
+	//for (CBone* bone = Bones[bindex]; bone != nullptr; bone = bone->Parent)
+	//{
+	//	bindex = GetBoneIndex(bone->Name);
+	//	if (bindex == -1)
+	//		continue;
+	//	retVal *= Animations[CurrentAnimIndex].GetTransforms(dt)[GetBoneIndex(bone->Name)];
+	//}
+
+	return retVal;
 }
 
 // ------------------------------------------------------------------------------------------------

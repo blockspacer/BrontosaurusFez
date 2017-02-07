@@ -35,6 +35,8 @@ public:
 	bool GetLetThroughRender() const override;
 	bool GetLetThroughUpdate() const override;
 
+	void SetSatus(const eStateStatus aStateStatus);
+
 	void Next();
 private:
 	CU::GrowingArray<SDialogPiece, unsigned short> myCurrentDialog;

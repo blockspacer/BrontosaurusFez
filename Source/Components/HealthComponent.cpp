@@ -119,13 +119,15 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 		switch (myObjectType)
 		{
 		case eObjectType::eUrn:
-     			data.myString = "BreakUrn";
+			data.myString = "BreakUrn";
+			DL_PRINT("an URN died");
 			GetParent()->NotifyComponents(eComponentMessageType::eChangeFBXToDead, data);
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
 			break;
 		case eObjectType::eBarrel:
 		{
 			data.myString = "BreakBarrel";
+			DL_PRINT("a BARREL died");
 			GetParent()->NotifyComponents(eComponentMessageType::eChangeFBXToDead, data);
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
 			break;
@@ -146,7 +148,9 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 			data.myString = "EnemyDie";
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
 			break;
+		case eObjectType::eDefault:
 		default:
+			DL_PRINT("a DEFAULT died");
 			break;
 		}
 	}

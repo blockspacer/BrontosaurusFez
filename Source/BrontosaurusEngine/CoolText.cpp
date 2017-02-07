@@ -7,6 +7,7 @@
 #include "Effect.h"
 #include <minwinbase.h>
 
+
 struct SVertexConstantBufferType
 {
 	CU::Vector2f position;
