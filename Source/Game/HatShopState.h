@@ -32,7 +32,6 @@ public:
 	bool GetLetThroughRender() const override;
 	bool GetLetThroughUpdate() const override;
 
-
 	// Inherited via Subscriber
 	eMessageReturn Recieve(const Message & aMessage) override;
 private:

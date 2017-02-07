@@ -105,6 +105,11 @@ void CGameObject::Receive(const eComponentMessageType aMessageType, const SCompo
 	}
 }
 
+CU::GrowingArray<CComponent*>& CGameObject::GetComponents()
+{
+	return myComponents;
+}
+
 void CGameObject::ComponentReceive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
 {
 	for (CComponent* component : myComponents)

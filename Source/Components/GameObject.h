@@ -16,6 +16,10 @@ public:
 	CU::Matrix44f &GetLocalTransform();
 	CU::Matrix44f GetToWorldTransform();
 	CU::Vector3f GetWorldPosition();
+
+	//super derp ta bort nästa projekt - Johan
+	CU::GrowingArray<CComponent*>& GetComponents();
+
 	void SetWorldPosition(CU::Vector3f);
 
 	void AddComponent(CComponent* aComponent);

@@ -39,6 +39,7 @@
 #include "MainStatComponent.h"
 #include "Components/HealthRestoreTriggerComponentManager.h"
 #include "Components/PointLightComponentManager.h"
+#include "Components/PointLightComponent.h"
 
 #include "../GUI/GUIManager.h"
 
@@ -111,6 +112,7 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 {
 	myIsLoaded = false;
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eHatAdded);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eGoldChanged);
 }
 
 CPlayState::~CPlayState()
@@ -158,6 +160,7 @@ CPlayState::~CPlayState()
 	CPointLightComponentManager::Destroy();
 	CComponentManager::DestroyInstance();
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eHatAdded);
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eGoldChanged);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
 
 	CLevelManager::DestroyInstance();
@@ -177,14 +180,13 @@ void CPlayState::Load()
 	CShopStorage::GetInstance().LoadStorage("Json/Hats/HatBluePrints.json");
 
 	MODELCOMP_MGR.SetScene(myScene);
-	myScene->SetSkybox("skybox.dds");
 	LoadManager::GetInstance().SetCurrentPlayState(this);
 	LoadManager::GetInstance().SetCurrentScene(myScene);
 
 
 	Lights::SDirectionalLight dirLight;
-	dirLight.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	dirLight.direction = { 0.0f, -1.0f, 1.0f, 1.0f };
+	dirLight.color = { .35f, .35f, .35f, 1.0f };
+	dirLight.direction = { -1.0f, -1.0f, 1.0f, 1.0f };
 	myScene->AddDirectionalLight(dirLight);
 
 	CONSOLE->GetLuaFunctions();
@@ -198,9 +200,11 @@ void CPlayState::Load()
 	CCameraComponent* cameraComponent = CCameraComponentManager::GetInstance().CreateCameraComponent();
 	cameraComponent->SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 
+	myChangeTexts.Init(5);
+
 	myGoldText = new CTextInstance;
-	myGoldText->SetColor(CTextInstance::Yellow);
-	myGoldText->SetPosition(CU::Vector2f(0.4f, 0.2f));
+	myGoldText->SetColor(CTextInstance::Black);
+	myGoldText->SetPosition(CU::Vector2f(0.575f, 0.93f));
 	myGoldText->SetText("");
 	myGoldText->Init();
 
@@ -226,24 +230,37 @@ void CPlayState::Load()
 	questPath += levelsArray[myLevelIndex].GetString();
 	questPath += ".json";
 
-	std::string navmeshPath = "Json/Levels/";
+	std::string navmeshPath = "Models/Navmesh/";
 	navmeshPath += levelsArray[myLevelIndex].GetString();
-	navmeshPath += "/Navmesh.obj";
+	navmeshPath -= ".json";
+	navmeshPath += "_navmesh.obj";
 
 	//NAVMESH
-	std::ifstream infile(navmeshPath);
-	if (infile.good())
 	{
-		myNavmesh.LoadFromFile(navmeshPath.c_str());
-		PollingStation::Navmesh = &myNavmesh;
+		std::ifstream infile(navmeshPath);
+		if (infile.good())
+		{
+			myNavmesh.LoadFromFile(navmeshPath.c_str());
+			PollingStation::Navmesh = &myNavmesh;
+		}
+		else
+		{
+			PollingStation::Navmesh = nullptr;
+		}
 	}
-	else
+
+	// Cubemap & Skybox
+	std::string cubemapPath = "Models/Cubemaps/";
+	cubemapPath += levelsArray[myLevelIndex].GetString();
+	cubemapPath -= ".json";
+	cubemapPath += "_cubemap.dds";
 	{
-		PollingStation::Navmesh = nullptr;
+		std::ifstream infile(cubemapPath);
+		if (infile.good())
+		{
+			myScene->SetSkybox(cubemapPath.c_str());
+		}
 	}
-
-
-
 
 	myQuestManager.LoadQuestlines(questPath);
 
@@ -276,6 +293,15 @@ void CPlayState::Load()
 		PollingStation::playerObject->AddComponent(CPickupManager::GetInstance().CreatePickerUpperComp());
 		PollingStation::playerObject->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
 		PollingStation::playerObject->AddComponent(new CMainStatComponent());
+		
+		PointLightComponent* pl =  CPointLightComponentManager::GetInstance().CreateAndRegisterComponent();
+
+		pl->SetColor({ 1.0f, 1.0f, 1.0f });
+		pl->SetIntensity(1.0f);
+		pl->SetRange(500.f);
+
+		PollingStation::playerObject->AddComponent(pl);
+
 
 		////TEMP CARL BEGIN
 
@@ -337,6 +363,8 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 		CAudioSourceComponentManager::GetInstance().Update();
 	}
 
+	myHatMaker->Update();
+
 	if (PollingStation::playerData->myIsWhirlwinding == true)
 	{
 		audio->PostEvent("WhirlWind");
@@ -373,6 +401,15 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 
 	myHealthBarManager->Update();
 	BlessingTowerComponentManager::GetInstance().Update(aDeltaTime);
+
+	for (unsigned int i = 0; i < myChangeTexts.Size(); ++i)
+	{
+		CU::Vector2f position = myChangeTexts[i]->GetPosition();
+
+		position.y += 1 * aDeltaTime.GetSeconds();
+		myChangeTexts[i]->SetPosition(position);
+	}
+
 
 	return myStatus;
 }
@@ -413,6 +450,10 @@ void CPlayState::Render()
 
 	myHealthBarManager->Render();
 	myGoldText->Render();
+	for (unsigned int i = 0; i < myChangeTexts.Size(); ++i)
+	{
+		myChangeTexts[i]->Render();
+	}
 
 	myQuestDrawer.Render();
 }
@@ -483,6 +524,26 @@ void CPlayState::CheckReturnToLevelSelect() // Formerly NextLevel -Kyle
 		//myStatus = eStateStatus::ePop; ?? //Was this only checked when pressing F7 - for change level ?
 	}
 }
+
+void CPlayState::ChangeGoldAmount(const int aValue, const bool aDecreaseGold)
+{
+	PollingStation::playerData->AddGold(aValue);
+
+	myChangeTexts.Add(new CTextInstance());
+ 	CTextInstance* text = myChangeTexts.GetLast();
+
+	text->SetColor(CTextInstance::Black);
+	text->SetPosition(myGoldText->GetPosition());
+	if (aDecreaseGold == false)
+	{
+		text->SetText("+" + aValue);
+	}
+	if (aDecreaseGold == true)
+	{
+		text->SetText("-" + aValue);
+	}
+}
+
 
 eMessageReturn CPlayState::Recieve(const Message& aMessage)
 {

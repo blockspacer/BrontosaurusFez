@@ -58,6 +58,7 @@ public:
 	CComponent();
 	virtual ~CComponent();
 	
+	const eComponentType GetType() const;
 	void NotifyParent(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData);
 
 	//override this if you will need to get notified from other components
