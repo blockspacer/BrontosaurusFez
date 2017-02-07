@@ -26,6 +26,7 @@ public:
 	void Render() override;
 	void OnEnter() override;
 	void OnExit() override;
+	void ReloadStore();
 	void ValidatePurchase();
 	void SetSelected(const char aIndex);
 	void GetTooltipTextFromShopIndex(const int aHatShopIndex, std::string& aTooltipTextOut) const;
