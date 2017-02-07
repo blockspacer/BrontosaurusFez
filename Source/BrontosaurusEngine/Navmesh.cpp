@@ -78,7 +78,7 @@ void CNavmesh::LoadFromFile(const char * aFilePath)
 	myIndices.Init(loadedModel.FaceList.Size() * 3);
 
 	BuildNavmeshFromOBJ(loadedModel);
-	for (int i = 0; i < loadedModel.FaceList.Size(); ++i)
+	for (unsigned int i = 0; i < loadedModel.FaceList.Size(); ++i)
 	{
 		myIndices.Add(loadedModel.FaceList[i].myVerteces[0].VertexIndex);
 		myIndices.Add(loadedModel.FaceList[i].myVerteces[1].VertexIndex);
@@ -105,7 +105,7 @@ CPath CNavmesh::CalculatePath(const SNavmeshNode & aStartPoint, const SNavmeshNo
 	open.Enqueue(start);
 
 
-	for (int i = 0; i < myTriangles.Size(); ++i)
+	for (unsigned int i = 0; i < myTriangles.Size(); ++i)
 	{
 		CreateNode(nodes, myTriangles[i], aEndPoint, triangleNodeMap);
 	}
@@ -203,7 +203,7 @@ CPath CNavmesh::CalculatePath(const SNavmeshNode & aStartPoint, const SNavmeshNo
 		}
 
 
-		for (int i = 0; i < current->myNeighbours.Size(); ++i)
+		for (unsigned int i = 0; i < current->myNeighbours.Size(); ++i)
 		{
 			SNavmeshNode* neighbour = current->myNeighbours[i];
 
@@ -239,7 +239,7 @@ SNavmeshTriangle & CNavmesh::GetClosestTriangle(const CU::Vector3f & aPosition)
 	float d2 = 99999999999999.f;
 	float temp;
 	SNavmeshTriangle* closestTriangle = nullptr;
-	for (int i = 0; i < myTriangles.Size(); ++i)
+	for (unsigned int i = 0; i < myTriangles.Size(); ++i)
 	{
 		temp = dist2P2(aPosition, myTriangles[i].CenterPosition);
 		if (temp < d2)
@@ -261,7 +261,7 @@ bool CNavmesh::GetPointOnNavmesh(const CU::Vector3f & aOrigin, const CU::Vector3
 	CU::Vector3f v3;
 	CU::Vector3f triCentre;
 
-	for (int i = 0; i < myTriangles.Size(); ++i)
+	for (unsigned int i = 0; i < myTriangles.Size(); ++i)
 	{
 		triangle = &myTriangles[i];
 		aIntersectingTriangle = myTriangles[i];
@@ -360,7 +360,7 @@ bool CNavmesh::IsValid(const CU::Vector2f & aPosition, SNavmeshTriangle *& aInte
 	float tempX2 = 0.0f;
 	float tempZ2 = 0.0f;
 
-	for (int i = 0; i < myTriangles.Size(); ++i)
+	for (unsigned int i = 0; i < myTriangles.Size(); ++i)
 	{
 		triangle = &myTriangles[i];
 		triangleCenter2D = { triangle->CenterPosition.x, triangle->CenterPosition.z };
@@ -481,7 +481,7 @@ void CNavmesh::CreateModel()
 	CEffect* effect = new CEffect(vertexShader, pixelShader, nullptr, inputLayout, topology);
 	
 	myModelVertices.Init(myPoints.Size());
-	for (int i = 0; i < myPoints.Size(); ++i)
+	for (unsigned int i = 0; i < myPoints.Size(); ++i)
 	{
 		SVertexDataCube vertex;
 		vertex.position = myPoints[i].Position;
@@ -491,7 +491,7 @@ void CNavmesh::CreateModel()
 	}
 
 	myPositionsModelVertices.Init(myTriangles.Size());
-	for (int i = 0; i < myTriangles.Size(); ++i)
+	for (unsigned int i = 0; i < myTriangles.Size(); ++i)
 	{
 		SVertexDataCube vertex;
 		vertex.position = myTriangles[i].CenterPosition;
@@ -507,12 +507,12 @@ void CNavmesh::CreateModel()
 void CNavmesh::BuildNodeNetwork(CU::GrowingArray<SNavmeshNode>& aNodeList, std::unordered_map<SNavmeshTriangle*, SNavmeshNode*>& triangleNodes)
 {
 
-	for (int i = 0; i < aNodeList.Size(); ++i)
+	for (unsigned int i = 0; i < aNodeList.Size(); ++i)
 	{
 		SNavmeshTriangle* nodeTriangle = aNodeList[i].myTriangle;
 		CU::VectorOnStack < SNavmeshTriangle*, 3> neighbours;
 		
-		for (int j = 0; j < 3; ++j)
+		for (unsigned int j = 0; j < 3; ++j)
 		{
 			if (nodeTriangle->Edges[j]->Triangles[0] != nodeTriangle)
 			{
@@ -524,7 +524,7 @@ void CNavmesh::BuildNodeNetwork(CU::GrowingArray<SNavmeshNode>& aNodeList, std::
 			}
 		}
 
-		for (int j = 0; j < neighbours.Size(); ++j)
+		for (unsigned int j = 0; j < neighbours.Size(); ++j)
 		{
 			aNodeList[i].myNeighbours.Add(triangleNodes[neighbours[j]]);
 		}
@@ -533,14 +533,14 @@ void CNavmesh::BuildNodeNetwork(CU::GrowingArray<SNavmeshNode>& aNodeList, std::
 
 void CNavmesh::BuildNavmeshFromOBJ(const ObjLoader::SObjLoaderModel & aModel)
 {
-	for (int i = 0; i < aModel.VerticesList.Size(); ++i)
+	for (unsigned int i = 0; i < aModel.VerticesList.Size(); ++i)
 	{
 		//mebe memcpy?
 		myPoints.Add(SNavmeshPoint(aModel.VerticesList[i]));
 		myPoints.GetLast().Index = myPoints.Size() - 1;
 	}
 
-	for (int i = 0; i < aModel.FaceList.Size(); ++i)
+	for (unsigned int i = 0; i < aModel.FaceList.Size(); ++i)
 	{
 		BuildEdgesFromFace(aModel.FaceList[i]);
 	}
@@ -639,13 +639,13 @@ void CPath::Smooth()
 	CU::Vector2f portalLeft = CU::Vector2f(myWaypoints[0].myLeftPoint.x, myWaypoints[0].myLeftPoint.z);
 	CU::Vector2f portalRight = CU::Vector2f(myWaypoints[0].myRightPoint.x, myWaypoints[0].myRightPoint.z);
 
-	int apexIndex = 0;
-	int leftIndex = 0;
-	int rightIndex = 0;
+	unsigned int apexIndex = 0;
+	unsigned int leftIndex = 0;
+	unsigned int rightIndex = 0;
 
 	newWaypoints.Add(CU::Vector3f(portalApex.x, 1, portalApex.y));
 
-	for (int i = 1; i < myWaypoints.Size(); ++i)
+	for (unsigned int i = 1; i < myWaypoints.Size(); ++i)
 	{
 		SWaypoint& waypoint = myWaypoints[i];
 
@@ -662,10 +662,10 @@ void CPath::Smooth()
 			}
 			else
 			{
-				int next = leftIndex;
-				int prev = leftIndex;
+				unsigned int next = leftIndex;
+				unsigned int prev = leftIndex;
 
-				for (int j = next; j < myWaypoints.Size(); ++j)
+				for (unsigned int j = next; j < myWaypoints.Size(); ++j)
 				{
 					if (myWaypoints[j].myLeftPoint != myWaypoints[next].myLeftPoint)
 					{
@@ -724,10 +724,10 @@ void CPath::Smooth()
 			}
 			else
 			{
-				int next = rightIndex;
-				int prev = rightIndex;
+				unsigned int next = rightIndex;
+				unsigned int prev = rightIndex;
 
-				for (int j = next; j < myWaypoints.Size(); ++j)
+				for (unsigned int j = next; j < myWaypoints.Size(); ++j)
 				{
 					if (myWaypoints[j].myRightPoint != myWaypoints[next].myRightPoint)
 					{

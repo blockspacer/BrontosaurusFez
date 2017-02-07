@@ -21,6 +21,7 @@ enum class eMessageType
 	eDestroyComponent,
 	eObjectives,
 	eChangeLevel,
+	eShrineOrWellClicked,
 	//eLevelOver,
 	//eNextLevelPlease,
 	eConsoleCalledUpon,
