@@ -12,6 +12,7 @@
 #include "QuestManager.h"
 
 #include "../BrontosaurusEngine/Navmesh.h"
+#include "GameEventMessenger.h"
 
 namespace CU
 {
@@ -90,6 +91,8 @@ private:
 	CScene* myScene;
 	
 	CParticleEmitterComponent* myEmitterComp;
+
+	CGameEventMessenger myGameEventMessenger;
 
 	CGameObjectManager* myGameObjectManager;
 	CCollisionComponentManager* myCollisionComponentManager;
