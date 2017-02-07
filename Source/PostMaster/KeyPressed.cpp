@@ -24,6 +24,7 @@
 #include "PostMaster.h"
 #include "PushState.h"
 #include "Game/SplashScreen.h"
+#include "PopCurrentState.h"
 
 KeyPressed::KeyPressed(const CU::eKeys& aKey)
 	: myKey(aKey)
@@ -153,7 +154,7 @@ eMessageReturn KeyPressed::DoEvent(CDialogState* aDialogState) const
 	}
 	else
 	{
-		PostMaster::GetInstance().SendLetter(eMessageType::eStateStackMessage, PushState(PushState::eState::ePauseScreen, 0));
+		aDialogState->SetSatus(eStateStatus::ePop);
 	}
 	return eMessageReturn::eStop;
 }

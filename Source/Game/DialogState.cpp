@@ -198,6 +198,11 @@ bool CDialogState::GetLetThroughUpdate() const
 	return true;
 }
 
+void CDialogState::SetSatus(const eStateStatus aStateStatus)
+{
+	myState = aStateStatus;
+}
+
 void CDialogState::Next()
 {
 	if (myIsDone == false)
