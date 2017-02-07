@@ -41,6 +41,7 @@ void QM::CQuestManager::UpdateObjective(EventHandle anObjectiveHandle, int anAmm
 			SObjective& currentObjective = myObjectives[anObjectiveHandle];
 
 			currentObjective.myAmmount = MIN(currentObjective.myGoal, currentObjective.myAmmount + anAmmount);
+			++myProgression;
 		}
 	}
 
@@ -340,4 +341,16 @@ bool QM::CQuestManager::LoadQuestlines(std::string aQuestlinesFile)
 bool QM::CQuestManager::GetIfLoadingSuceeded() const
 {
 	return myLoadSuccess;
+}
+
+void QM::CQuestManager::LoadProgression(const std::string& aFileName)
+{
+	if (ourProgression.count(aFileName) == 0)
+	{
+		return;
+	}
+
+	unsigned int thisQuestProgression = ourProgression[aFileName];
+
+
 }

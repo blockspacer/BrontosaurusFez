@@ -51,6 +51,9 @@ private:
 	eStateStatus myState;
 	CU::TimeUnit myCurrentTime;
 
+	float myWaitTime;
+	float myPassedTime;
+
 	CSpriteInstance* myBackground;
 };
 

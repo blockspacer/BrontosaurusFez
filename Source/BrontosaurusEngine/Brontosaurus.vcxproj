@@ -379,6 +379,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Allignment.h" />
     <ClInclude Include="AnimationController.h" />
     <ClInclude Include="SettingsSubscriber.h" />
     <ClInclude Include="Navmesh.h" />
