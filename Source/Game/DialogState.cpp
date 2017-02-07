@@ -166,8 +166,8 @@ void CDialogState::Render()
 void CDialogState::OnEnter()
 {
 	DL_PRINT("Entered dialog");
-	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage, 3);
-	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage, 3);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage, 8);
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage, 8);
 }
 
 void CDialogState::OnExit()

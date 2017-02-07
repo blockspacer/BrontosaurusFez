@@ -118,6 +118,29 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 CPlayState::~CPlayState()
 {
 
+	Audio::CAudioInterface* audioInterface = Audio::CAudioInterface::GetInstance();
+	if (audioInterface != nullptr)
+	{
+		audioInterface->PostEvent("switchBank");
+
+		//audioInterface->PostEvent("StopBayBlade");
+		CU::CJsonValue levelsFile;
+
+		std::string errorString = levelsFile.Parse("Json/LevelList.json");
+		if (!errorString.empty()) DL_MESSAGE_BOX(errorString.c_str());
+
+		CU::CJsonValue levelsArray = levelsFile.at("levels");
+
+		std::string temp = "Stop";
+		temp += levelsArray[myLevelIndex].GetString();
+
+		Audio::CAudioInterface::GetInstance()->PostEvent(levelsArray[myLevelIndex].GetString().c_str());
+
+
+		audioInterface->UnLoadBank("Audio/playState.bnk");
+	}
+
+
 	//Don forgetti to deletti
 	SAFE_DELETE(myEmitterComp);
 	SAFE_DELETE(myCollisionComponentManager);
@@ -279,6 +302,8 @@ void CPlayState::Load()
 	CEnemyFactory::GetInstance().Init(levelsArray[myLevelIndex].GetString());
 	CPickupFactory::GetInstance().Init(levelsArray[myLevelIndex].GetString());
 
+
+
 	if (PollingStation::PlayerInput != nullptr)
 	{
 		PollingStation::playerObject = PollingStation::PlayerInput->GetParent();
@@ -375,6 +400,22 @@ void CPlayState::Init()
 	//	svar:	1. konstruktor ska sätta allt till noll/null
 	//			2. init ska skapa allt som kan bero på ifall motorn är skapad etc
 	//			3. load kallas trådat för init kallas alltid av statestacken när den pushar ett nytt state
+
+
+	//start sound
+
+
+	Audio::CAudioInterface::GetInstance()->LoadBank("Audio/playState.bnk");
+
+	CU::CJsonValue levelsFile;
+
+	std::string errorString = levelsFile.Parse("Json/LevelList.json");
+	if (!errorString.empty()) DL_MESSAGE_BOX(errorString.c_str());
+
+	CU::CJsonValue levelsArray = levelsFile.at("levels");
+
+	Audio::CAudioInterface::GetInstance()->PostEvent(levelsArray[myLevelIndex].GetString().c_str());
+
 
 
 
@@ -476,7 +517,14 @@ void CPlayState::Render()
 	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
 
 	myHealthBarManager->Render();
+
+	msg.myBlendState = eBlendState::eAlphaBlend;
+	msg.myDepthStencilState = eDepthStencilState::eDisableDepth;
+	msg.myRasterizerState = eRasterizerState::eNoCulling;
+	msg.mySamplerState = eSamplerState::eClamp;
+	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
 	myGoldText->Render();
+
 	for (unsigned int i = 0; i < myChangeTexts.Size(); ++i)
 	{
 		myChangeTexts[i]->Render();
@@ -488,16 +536,7 @@ void CPlayState::Render()
 void CPlayState::OnEnter()
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
-	Audio::CAudioInterface::GetInstance()->LoadBank("Audio/playState.bnk");
-
-	CU::CJsonValue levelsFile;
-
-	std::string errorString = levelsFile.Parse("Json/LevelList.json");
-	if (!errorString.empty()) DL_MESSAGE_BOX(errorString.c_str());
-
-	CU::CJsonValue levelsArray = levelsFile.at("levels");
-
-	Audio::CAudioInterface::GetInstance()->PostEvent(levelsArray[myLevelIndex].GetString().c_str());
+	
 
 	//Audio::CAudioInterface::GetInstance()->PostEvent("BayBlade");
 	myGUIManager->RestartRenderAndUpdate();
@@ -508,27 +547,7 @@ void CPlayState::OnExit()
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
 
-	Audio::CAudioInterface* audioInterface = Audio::CAudioInterface::GetInstance();
-	if (audioInterface != nullptr)
-	{
-		audioInterface->PostEvent("switchBank");
 
-		//audioInterface->PostEvent("StopBayBlade");
-		CU::CJsonValue levelsFile;
-
-		std::string errorString = levelsFile.Parse("Json/LevelList.json");
-		if (!errorString.empty()) DL_MESSAGE_BOX(errorString.c_str());
-
-		CU::CJsonValue levelsArray = levelsFile.at("levels");
-
-		std::string temp = "Stop";
-		temp += levelsArray[myLevelIndex].GetString();
-
-		Audio::CAudioInterface::GetInstance()->PostEvent(levelsArray[myLevelIndex].GetString().c_str());
-
-
-		audioInterface->UnLoadBank("Audio/playState.bnk");
-	}
 
 	myGUIManager->PauseRenderAndUpdate();
 }

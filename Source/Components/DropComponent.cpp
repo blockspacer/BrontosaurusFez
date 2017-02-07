@@ -77,10 +77,14 @@ bool DropComponent::CalculateDropManaGlobe()
 {
 	int result = (rand() % 100) + 1;
 
-	if (result <= myManaGlobeDropRate)
+	float MasterAImodifier = CMasterAI::GetInstance().DetermineManaDrop();
+
+
+	if (result <= myManaGlobeDropRate + MasterAImodifier)
 	{
 		return true;
 	}
+
 
 	return false;
 }
