@@ -44,7 +44,7 @@ private:
 	void UpdateDrawCallsCounter();
 	void UpdateMemoryUsage();
 
-	enum eDebugText
+	enum eDebugText : unsigned int
 	{
 		eDebugText_FPS,
 		eDebugText_LogicFPS,

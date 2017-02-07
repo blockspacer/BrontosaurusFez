@@ -380,6 +380,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AnimationController.h" />
+    <ClInclude Include="SettingsSubscriber.h" />
     <ClInclude Include="Navmesh.h" />
     <ClInclude Include="ObjLoader.h" />
     <ClInclude Include="RenderCamera.h" />
@@ -431,6 +432,7 @@
     <ClInclude Include="RenderStates.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="SettingsManager.h" />
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="Sprite.h" />
@@ -454,6 +456,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimationController.cpp" />
+    <ClCompile Include="SettingsSubscriber.cpp" />
     <ClCompile Include="Navmesh.cpp" />
     <ClCompile Include="ObjLoader.cpp" />
     <ClCompile Include="RenderCamera.cpp" />
@@ -490,6 +493,7 @@
     <ClCompile Include="RenderMessages.cpp" />
     <ClCompile Include="RenderPackage.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SettingsManager.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="Sprite.cpp" />
