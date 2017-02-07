@@ -51,6 +51,11 @@ const CModelManager::ModelId CModelManager::LoadModel(const CU::DynamicString& a
 
 		myModels[aModelPath.c_str()] = newModelID;
 
+		if (aModelPath.Find("standardEnemy") != CU::DynamicString::FoundNone)
+		{
+			int br = 0;
+			br++;
+		}
 
 		if (CreateModel(aModelPath, newModelID) == false)
 		{
@@ -213,25 +218,29 @@ void CModelManager::LoadAnimations(const char* aPath, const ModelId aModelId)
 	modelName -= std::string(".fbx");
 	modelName += std::string("_");
 
+	if (modelName.find("standardEnemy") != std::string::npos)
+	{
+		int br = 0;
+		br++;
+	}
+
 	const ModelId animationCount = 12;
 	const std::string animationNames[animationCount] = { ("idle"), ("idle2"), ("walk"), ("pickup"), ("turnRight90"), ("turnLeft90"), ("attack") , ("summon"), ("die"), ("sweep"), ("whirlwind"), ("hurt") };
 
 	CModel* mdl = GetModel(aModelId);
 	const aiScene* scene = mdl->GetScene();
 
-	if (mdl != nullptr && scene->HasAnimations())
+	if (mdl != nullptr && /*scene->HasAnimations()*/mdl->HasBones())
 	{
 		CFBXLoader loader;
 		bool foundSpecial = false;
 		for (int i = 0; i < animationCount; ++i)
 		{
 			const std::string& animationName = animationNames[i];
-			//TODO: just import the scene for the model here, no need to parse the vertices
 
 			const aiScene* animationScene = loader.GetScene(modelName + animationName + ".fbx");
 			
-			//ModelId tempAnimationModel = LoadModel((modelName + animationName + ".fbx").c_str(), false); //TODO: when above TODO is fixed, the bool can be removed
-			if (!animationScene/*tempAnimationModel == NULL_MODEL*/)
+			if (!animationScene)
 			{
 				continue;
 			}
@@ -239,7 +248,7 @@ void CModelManager::LoadAnimations(const char* aPath, const ModelId aModelId)
 			foundSpecial = true;
 
 			mdl->mySceneAnimators[animationName] = CSceneAnimator();
-			mdl->mySceneAnimators[animationName].Init(animationScene/*GetModel(tempAnimationModel)->GetScene()*/);
+			mdl->mySceneAnimators[animationName].Init(animationScene);
 		}
 
 		if (foundSpecial == false)
@@ -263,7 +272,7 @@ void CModelManager::LoadAnimations(const char* aPath, const ModelId aModelId)
 
 		if (mdl->mySceneAnimator)
 		{
-			mdl->mySceneAnimator->PlayAnimationBackward();
+			mdl->mySceneAnimator->PlayAnimationForward();
 		}
 	}
 }

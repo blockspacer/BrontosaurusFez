@@ -65,6 +65,11 @@ namespace CU
 		inline CReference operator[](const Type aIndex);
 		inline bool operator[](const Type aIndex) const;
 
+		//template<typename ENUM_TYPE>
+		//inline CReference operator[](const ENUM_TYPE aIndex);
+		//template<typename ENUM_TYPE>
+		//inline bool operator[](const ENUM_TYPE aIndex) const;
+
 		inline void Set(const Type aIndex, const bool aValue = true);
 		inline void Flip(const Type aIndex);
 
@@ -112,6 +117,20 @@ namespace CU
 		assert(aIndex < BIT_COUNT && "bitset index out of range");
 		return Get(aIndex);
 	}
+
+	//template<typename ENUM_TYPE>
+	//template<unsigned int BIT_COUNT>
+	//inline typename CBitSet<BIT_COUNT>::CReference CBitSet<BIT_COUNT>::operator[](const ENUM_TYPE aIndex)
+	//{
+	//	return CReference(self, static_cast<Type>(aIndex));
+	//}
+
+	//template<typename ENUM_TYPE>
+	//template<unsigned int BIT_COUNT>
+	//inline bool CBitSet<BIT_COUNT>::operator[](const ENUM_TYPE aIndex) const
+	//{
+	//	return Get(static_cast<Type>(aIndex));
+	//}
 
 	template<unsigned int BIT_COUNT>
 	inline void CBitSet<BIT_COUNT>::Set(const Type aIndex, const bool aValue)
