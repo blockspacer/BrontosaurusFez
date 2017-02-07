@@ -33,6 +33,7 @@ CModel::CModel()
 	, myIsInitialized(false)
 	, myIsAlphaModel(false)
 	, mySceneAnimator(nullptr)
+	, myBindposeSceneAnimator(nullptr)
 	, myVertexSize(0)
 	, myRefCount(0)
 {

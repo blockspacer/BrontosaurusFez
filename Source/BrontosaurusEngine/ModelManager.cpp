@@ -221,6 +221,8 @@ void CModelManager::LoadAnimations(const char* aPath, const ModelId aModelId)
 
 	if (mdl != nullptr && scene->HasAnimations())
 	{
+		mdl->myBindposeSceneAnimator->Init(scene); // shuld do it?
+
 		CFBXLoader loader;
 		bool foundSpecial = false;
 		for (int i = 0; i < animationCount; ++i)

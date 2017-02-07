@@ -124,6 +124,8 @@ private:
 
 	std::map<std::string, CSceneAnimator> mySceneAnimators;
 	CSceneAnimator* mySceneAnimator;
+	CSceneAnimator* myBindposeSceneAnimator;
+
 
 	CEffect* myEffect;
 	CSurface* mySurface;
