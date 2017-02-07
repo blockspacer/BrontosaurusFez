@@ -17,7 +17,7 @@ public:
 	eStateStatus Update(const CU::Time& aDeltaTime) override;
 	void Render() override;
 	void OnEnter() override;
-	void OnExit() override;
+	void OnExit(const bool aLetThroughRender) override;
 
 	bool GetLetThroughRender() const override;
 	eMessageReturn Recieve(const Message & aMessage) override;

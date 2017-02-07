@@ -170,7 +170,7 @@ void CDialogState::OnEnter()
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage, 8);
 }
 
-void CDialogState::OnExit()
+void CDialogState::OnExit(const bool /*aLetThroughRender*/)
 {
 	DL_PRINT("Exited dialog");
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
