@@ -70,6 +70,5 @@ private:
 		FT_GlyphSlot mySlot;
 	} myCurrentGlyph;
 
-	std::recursive_mutex myMutex;
 };
 

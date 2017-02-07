@@ -169,6 +169,10 @@ CPlayState::~CPlayState()
 void CPlayState::Load()
 {
 	//start taking the time for loading level
+	if (myShouldReturnToLevelSelect == true)
+	{
+		myLevelIndex++;
+	}
 	CU::TimerManager timerMgr;
 	CU::TimerHandle handle = timerMgr.CreateTimer();
 	timerMgr.StartTimer(handle);
@@ -332,8 +336,31 @@ void CPlayState::Load()
 
 	myGameObjectManager->SendObjectsDoneMessage();
 
+	//Give hats on level entry
 	myHatMaker->LoadBluePrints("Json/Hats/HatBluePrints.json");
-	myHatMaker->GiveTheManAHat();
+	if (myShouldReturnToLevelSelect == false)
+	{
+		myHatMaker->GiveTheManAHat();
+	}
+	else
+	{
+		std::string loadHatsMajiggerPath = "Json/Hats/LevelSelectHatData.json";
+		CU::CJsonValue HatBluePrint;
+		const std::string& errorString = HatBluePrint.Parse(loadHatsMajiggerPath);
+		CU::CJsonValue loadHatsMajigger = HatBluePrint.at("HatsOnlevelEntryList");
+		std::string levelname = levelsArray[myLevelIndex].GetString();
+		for (unsigned int i = 0; i < loadHatsMajigger.Size(); ++i)
+		{
+			if (loadHatsMajigger[i].at("LevelName").GetString() == levelname)
+			{
+				CU::CJsonValue hatArray = loadHatsMajigger[i].at("HatArray");
+				for (unsigned int j = 0; j < hatArray.Size(); ++j)
+				{
+					myHatMaker->MakeHatFromBluePrint(hatArray[j].GetString());
+				}
+			}
+		}
+	}
 	myIsLoaded = true;
 
 	//get time to load the level:
