@@ -343,11 +343,6 @@ void CPlayState::Load()
 		////TEMP CARL END
 	}
 
-	for (unsigned int i = 0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); i++)
-	{
-		PollingStation::myThingsEnemiesShouldAvoid[i]->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
-	}
-
 
 
 	CGameObject* mouseObject = myGameObjectManager->CreateGameObject();
@@ -363,6 +358,12 @@ void CPlayState::Load()
 	mouseObject->AddComponent(myMouseComponent);
 
 	myGameObjectManager->SendObjectsDoneMessage();
+
+
+	for (unsigned int i = 0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); i++)
+	{
+		PollingStation::myThingsEnemiesShouldAvoid[i]->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
+	}
 
 	//Give hats on level entry
 	myHatMaker->LoadBluePrints("Json/Hats/HatBluePrints.json");
