@@ -58,7 +58,7 @@ namespace DL_Debug
 #define DL_PRINT_WARNING(string, ...) (string)
 #define DL_WRITELOG(aLogTypes, ...) (aLogTypes)
 #define DL_MESSAGE_BOX(message, ...) (message)
-#define DL_FATAL_ERROR(string, ...) DL_Debug::Debug::GetInstance()->ShowMessageBox(message, __VA_ARGS__); exit(1)
+#define DL_FATAL_ERROR(message, ...) DL_Debug::Debug::GetInstance()->ShowMessageBox(message, __VA_ARGS__); exit(1)
 #endif //RETAIL_BUILD
 
 #define DL_DEBUG_INST DL_Debug::Debug::GetInstance()
