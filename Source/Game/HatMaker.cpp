@@ -44,16 +44,16 @@ CHatMaker::~CHatMaker()
 void CHatMaker::Update()
 {
 	CModel* model = CEngine::GetInstance()->GetModelManager()->GetModel(myPlayerModel->GetModelInst()->GetModelID());
-	for (int i = 0; i < myHatObjects.Size(); ++i)
-	{
-		std::string boneName = "hatslot";
-		boneName += std::to_string(i + 1);
-		boneName += "_SKIN";
-		CU::Matrix44f hatTransform = model->GetBoneTransform(myPlayerModel->GetModelInst()->GetAnimationCounter(), myPlayerModel->GetModelInst()->GetAnimationState(), boneName.c_str());
-		//hatTransform *= myHatObjects[i]->GetLocalTransform();
+	//for (int i = 0; i < myHatObjects.Size(); ++i)
+	//{
+	//	std::string boneName = "hatslot";
+	//	boneName += std::to_string(i + 1);
+	//	boneName += "_SKIN";
+	//	CU::Matrix44f hatTransform = model->GetBoneTransform(myPlayerModel->GetModelInst()->GetAnimationCounter(), myPlayerModel->GetModelInst()->GetAnimationState(), boneName.c_str());
+	//	//hatTransform *= myHatObjects[i]->GetLocalTransform();
 
-		myHatObjects[i]->GetLocalTransform() = hatTransform;
-	}
+	//	myHatObjects[i]->GetLocalTransform() = hatTransform;
+	//}
 	PollingStation::playerObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 }
 
