@@ -2,6 +2,7 @@
 #include "PollingStation.h"
 #include "PlayerData.h"
 
+
 CGameObject* PollingStation::playerObject = nullptr;
 CComponent* PollingStation::PlayerInput = nullptr;
 ValueObserver<int>* PollingStation::playerHealthBar = nullptr;
