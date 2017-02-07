@@ -33,6 +33,7 @@ private:
 
 
 	const SMatchReturn MatchHatWithName(const std::string& aHatName) const;
+	bool myHasStorageBeenInited;
 	void SetupBuyOrder(const std::string& aFilepath);
 	CShopStorage();
 	~CShopStorage();

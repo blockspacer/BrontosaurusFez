@@ -46,6 +46,7 @@
     <ClCompile Include="BuyButtonPressed.cpp" />
     <ClCompile Include="ChangeLevel.cpp" />
     <ClCompile Include="ConsoleCalledUpon.cpp" />
+    <ClCompile Include="CoolBoi.cpp" />
     <ClCompile Include="DrawCallsCount.cpp" />
     <ClCompile Include="DroppedFile.cpp" />
     <ClCompile Include="FocusChange.cpp" />
@@ -84,6 +85,7 @@
     <ClInclude Include="BuyButtonPressed.h" />
     <ClInclude Include="ChangeLevel.h" />
     <ClInclude Include="ConsoleCalledUpon.h" />
+    <ClInclude Include="CoolBoi.h" />
     <ClInclude Include="DrawCallsCount.h" />
     <ClInclude Include="DroppedFile.h" />
     <ClInclude Include="EMessageReturn.h" />

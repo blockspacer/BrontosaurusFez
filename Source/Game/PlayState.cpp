@@ -171,7 +171,6 @@ CPlayState::~CPlayState()
 	DropComponentManager::DestroyInstance();
 	PollingStation::NullifyLevelSpecificData();
 	ManaComponentManager::DestroyInstance();
-	CShopStorage::Destroy();
 	CPickupFactory::Destroy();
 	CPickupManager::DestroyInstance();
 	RespawnComponentManager::Destroy();
@@ -286,6 +285,10 @@ void CPlayState::Load()
 		if (infile.good())
 		{
 			myScene->SetSkybox(cubemapPath.c_str());
+		}
+		else
+		{
+			myScene->SetSkybox("default_cubemap.dds");
 		}
 	}
 
@@ -543,13 +546,14 @@ void CPlayState::OnEnter()
 	myQuestManager.CompleteEvent();
 }
 
-void CPlayState::OnExit()
+void CPlayState::OnExit(const bool aLetThroughRender)
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
 
-
-
-	myGUIManager->PauseRenderAndUpdate();
+	if (!aLetThroughRender)
+	{
+		myGUIManager->PauseRenderAndUpdate();
+	}
 }
 
 void CPlayState::Pause()

@@ -40,7 +40,7 @@ void LevelSelectState::OnEnter()
 	myGUIManager->RestartRenderAndUpdate();
 }
 
-void LevelSelectState::OnExit()
+void LevelSelectState::OnExit(const bool /*aLetThroughRender*/)
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);
 	myGUIManager->PauseRenderAndUpdate();
