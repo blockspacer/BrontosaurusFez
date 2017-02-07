@@ -138,6 +138,7 @@ void CModelInstance::Render(Lights::SDirectionalLight * aLight, CU::GrowingArray
 
 		if (aLight == nullptr)
 		{
+			msg->myRenderParams.myRenderToDepth = true;
 			msg->myType = SRenderMessage::eRenderMessageType::eRenderModelDepth;
 		}
 		else

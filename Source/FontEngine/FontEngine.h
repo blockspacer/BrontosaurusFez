@@ -30,6 +30,5 @@ private:
 	static CFontEngine* ourInstance;
 
 	std::map<std::string, CFT_Font*> myFaces;
-
 };
 

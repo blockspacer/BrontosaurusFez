@@ -39,6 +39,7 @@
 #include "MainStatComponent.h"
 #include "Components/HealthRestoreTriggerComponentManager.h"
 #include "Components/PointLightComponentManager.h"
+#include "Components/PointLightComponent.h"
 
 #include "../GUI/GUIManager.h"
 
@@ -177,14 +178,13 @@ void CPlayState::Load()
 	CShopStorage::GetInstance().LoadStorage("Json/Hats/HatBluePrints.json");
 
 	MODELCOMP_MGR.SetScene(myScene);
-	myScene->SetSkybox("skybox.dds");
 	LoadManager::GetInstance().SetCurrentPlayState(this);
 	LoadManager::GetInstance().SetCurrentScene(myScene);
 
 
 	Lights::SDirectionalLight dirLight;
-	dirLight.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	dirLight.direction = { 0.0f, -1.0f, 1.0f, 1.0f };
+	dirLight.color = { .35f, .35f, .35f, 1.0f };
+	dirLight.direction = { -1.0f, -1.0f, 1.0f, 1.0f };
 	myScene->AddDirectionalLight(dirLight);
 
 	CONSOLE->GetLuaFunctions();
@@ -226,27 +226,40 @@ void CPlayState::Load()
 	questPath += levelsArray[myLevelIndex].GetString();
 	questPath += ".json";
 
-	std::string navmeshPath = "Json/Levels/";
+	std::string navmeshPath = "Models/Navmesh/";
 	navmeshPath += levelsArray[myLevelIndex].GetString();
-	navmeshPath += "/Navmesh.obj";
+	navmeshPath -= ".json";
+	navmeshPath += "_navmesh.obj";
 
 	//NAVMESH
-	std::ifstream infile(navmeshPath);
-	if (infile.good())
 	{
-		myNavmesh.LoadFromFile(navmeshPath.c_str());
-		PollingStation::Navmesh = &myNavmesh;
+		std::ifstream infile(navmeshPath);
+		if (infile.good())
+		{
+			myNavmesh.LoadFromFile(navmeshPath.c_str());
+			PollingStation::Navmesh = &myNavmesh;
+		}
+		else
+		{
+			PollingStation::Navmesh = nullptr;
+		}
 	}
-	else
+
+	// Cubemap & Skybox
+	std::string cubemapPath = "Models/Cubemaps/";
+	cubemapPath += levelsArray[myLevelIndex].GetString();
+	cubemapPath -= ".json";
+	cubemapPath += "_cubemap.dds";
 	{
-		PollingStation::Navmesh = nullptr;
+		std::ifstream infile(cubemapPath);
+		if (infile.good())
+		{
+			myScene->SetSkybox(cubemapPath.c_str());
+		}
 	}
-
-
-
 
 	myQuestManager.LoadQuestlines(questPath);
-	myQuestManager.CompleteEvent();
+
 	KLoader::CKevinLoader &loader = KLoader::CKevinLoader::GetInstance();
 
 	const KLoader::eError loadError = loader.LoadFile(levelPath);
@@ -276,6 +289,15 @@ void CPlayState::Load()
 		PollingStation::playerObject->AddComponent(CPickupManager::GetInstance().CreatePickerUpperComp());
 		PollingStation::playerObject->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
 		PollingStation::playerObject->AddComponent(new CMainStatComponent());
+		
+		PointLightComponent* pl =  CPointLightComponentManager::GetInstance().CreateAndRegisterComponent();
+
+		pl->SetColor({ 1.0f, 1.0f, 1.0f });
+		pl->SetIntensity(1.0f);
+		pl->SetRange(500.f);
+
+		PollingStation::playerObject->AddComponent(pl);
+
 
 		////TEMP CARL BEGIN
 
@@ -421,8 +443,19 @@ void CPlayState::OnEnter()
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
 	Audio::CAudioInterface::GetInstance()->LoadBank("Audio/playState.bnk");
-	Audio::CAudioInterface::GetInstance()->PostEvent("BayBlade");
+
+	CU::CJsonValue levelsFile;
+
+	std::string errorString = levelsFile.Parse("Json/LevelList.json");
+	if (!errorString.empty()) DL_MESSAGE_BOX(errorString.c_str());
+
+	CU::CJsonValue levelsArray = levelsFile.at("levels");
+
+	Audio::CAudioInterface::GetInstance()->PostEvent(levelsArray[myLevelIndex].GetString().c_str());
+
+	//Audio::CAudioInterface::GetInstance()->PostEvent("BayBlade");
 	myGUIManager->RestartRenderAndUpdate();
+	myQuestManager.CompleteEvent();
 }
 
 void CPlayState::OnExit()
@@ -433,7 +466,21 @@ void CPlayState::OnExit()
 	if (audioInterface != nullptr)
 	{
 		audioInterface->PostEvent("switchBank");
-		audioInterface->PostEvent("StopBayBlade");
+
+		//audioInterface->PostEvent("StopBayBlade");
+		CU::CJsonValue levelsFile;
+
+		std::string errorString = levelsFile.Parse("Json/LevelList.json");
+		if (!errorString.empty()) DL_MESSAGE_BOX(errorString.c_str());
+
+		CU::CJsonValue levelsArray = levelsFile.at("levels");
+
+		std::string temp = "Stop";
+		temp += levelsArray[myLevelIndex].GetString();
+
+		Audio::CAudioInterface::GetInstance()->PostEvent(levelsArray[myLevelIndex].GetString().c_str());
+
+
 		audioInterface->UnLoadBank("Audio/playState.bnk");
 	}
 

@@ -66,11 +66,6 @@ void QM::CQuestDrawer::UpdateText()
 void QM::CQuestDrawer::Render()
 {
 	myTextBox.Render();
-
-	if (myQuestManager.CheckIfQuestComplete())
-	{
-		myQuestCompleteText->Render();
-	}
 }
 
 eMessageReturn QM::CQuestDrawer::Recieve(const Message& aMessage)
