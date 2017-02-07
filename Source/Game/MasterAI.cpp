@@ -46,6 +46,18 @@ const float CMasterAI::DetermineHealthDrop()
 	return result;
 }
 
+const float CMasterAI::DetermineManaDrop()
+{
+
+	float result = 50 - PollingStation::playerData->myPercentManaLeft;
+
+	if (result < 0)
+	{
+		return 0;
+	}
+	return result;
+}
+
 void CMasterAI::DetermineAmountOfMinionsToSpawn()
 {
 

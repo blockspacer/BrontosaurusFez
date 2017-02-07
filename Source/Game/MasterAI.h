@@ -11,6 +11,7 @@ public:
 
 
 	const float DetermineHealthDrop();
+	const float DetermineManaDrop();
 	void DetermineAmountOfMinionsToSpawn();
 	void CallForHelp(CGameObject* aEnemyObject, float aCallForHelpRadius);
 
