@@ -804,8 +804,16 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 	case SRenderMessage::eRenderMessageType::eRenderModel:
 	{
 		SRenderModelMessage* msg = static_cast<SRenderModelMessage*>(aRenderMesage);
-		CModel* model = CEngine::GetInstance()->GetModelManager()->GetModel(msg->myModelID);
+		CModelManager* modelManager = CEngine::GetInstance()->GetModelManager();
+		if (!modelManager) break;
+
+		CModel* model = modelManager->GetModel(msg->myModelID);
 		if (!model) break;
+		if (model->GetName().find("standardEnemy") != std::string::npos)
+		{
+			int br = 0;
+			br++;
+		}
 		model->Render(msg->myRenderParams);
 		++aDrawCallCount;
 		break;
@@ -825,13 +833,13 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 		CModelManager* modelManager = CEngine::GetInstance()->GetModelManager();
 		CModel* model = modelManager->GetModel(msg->myModelID);
 
+		if (model == nullptr) break;
+
 		SRenderModelParams params;
 		params.myTransform = msg->myToWorld;
 		params.myTransformLastFrame = msg->myToWorld;
 		params.myRenderToDepth = false;
 		params.aAnimationState = nullptr;
-
-		if (model == nullptr) break;
 
 		if (model->HasConstantBuffer(CModel::eShaderStage::ePixel) == true)
 		{

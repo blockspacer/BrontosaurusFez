@@ -69,6 +69,8 @@ CModel::~CModel()
 
 	SAFE_DELETE(myEffect); //make sure this releases stuff
 	SAFE_DELETE(mySurface);
+
+	mySceneAnimator = nullptr;
 }
 
 bool CModel::Initialize(CEffect* aEffect, CSurface* aSurface)
@@ -87,6 +89,10 @@ bool CModel::Initialize(CEffect* aEffect, CSurface* aSurface)
 //	FBX - AssImp
 bool CModel::Initialize(CEffect* aEffect, CSurface* aSurface, const CLoaderMesh* aLoadedMesh)
 {
+#ifdef _DEBUG
+	myFilePath = aLoadedMesh->myName;
+#endif
+
 	Initialize(aEffect, aSurface);
 	myAABB.myMinPos = aLoadedMesh->myMinPoint;
 	myAABB.myMaxPos = aLoadedMesh->myMaxPoint;
@@ -105,6 +111,10 @@ bool CModel::Initialize(CEffect* aEffect, CSurface* aSurface, const CLoaderMesh*
 }
 bool CModel::Initialize(CEffect* aEffect, CSurface* aSurface, const CU::GrowingArray<CLoaderMesh*>& aLoadedMeshList)
 {
+#ifdef _DEBUG
+	myFilePath = aLoadedMeshList.GetFirst()->myName;
+#endif // _DEBUG
+
 	Initialize(aEffect, aSurface);
 	myAABB.myMinPos = aLoadedMeshList.GetLast()->myMinPoint;
 	myAABB.myMaxPos = aLoadedMeshList.GetLast()->myMaxPoint;

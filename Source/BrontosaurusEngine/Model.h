@@ -109,6 +109,8 @@ public:
 
 	std::vector<mat4>& GetBones(float aTime, const char * aAnimationState, const bool aAnimationLooping);
 
+	__forceinline const std::string& GetName() const;
+
 private:
 
 	SLodData& GetCurrentLODModel(const CU::Vector3f& aModelPosition);
@@ -126,6 +128,9 @@ private:
 
 	std::map<std::string, CSceneAnimator> mySceneAnimators;
 	CSceneAnimator* mySceneAnimator;
+#ifdef _DEBUG
+	std::string myFilePath;
+#endif // _DEBUG
 
 	CEffect* myEffect;
 	CSurface* mySurface;
@@ -228,3 +233,11 @@ inline bool CModel::GetInitialized() const
 	return myIsInitialized;
 }
 
+const std::string& CModel::GetName() const
+{
+#ifdef _DEBUG
+	return myFilePath;
+#else // !_DEBUG
+	return "";
+#endif // _DEBUG
+}
