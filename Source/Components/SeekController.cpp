@@ -17,6 +17,7 @@ CSeekController::CSeekController()
 	myHaveBeenCalledForHelp = false;
 	myCallForHelpRadius = 0.0f;
 	myFormationIndex = -1;
+	myEvadeRadius = 150.0f;
 }
 
 
@@ -67,6 +68,25 @@ const CU::Vector2f CSeekController::Update(const CU::Time& aDeltaTime)
 		acceleration.Normalize() *= myMaxAcceleration;
 	}
 	myAcceleration = acceleration * SCALAR;
+	for(unsigned short i = 0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); i++)
+	{
+		CU::Vector3f avoidDistance = GetParent()->GetWorldPosition() - PollingStation::myThingsEnemiesShouldAvoid[i]->GetWorldPosition();
+		CU::Vector2f distance(avoidDistance.x, avoidDistance.z);
+		if(distance.Length2() < myEvadeRadius * myEvadeRadius)
+		{
+			CU::Vector2f direction = distance.GetNormalized();
+			direction *= myMaxAcceleration;
+			direction *= SCALAR;
+			float avoidDifferenceLength = 30.0f;
+			if (CU::Vector2f((direction * -1) - myAcceleration).Length2() > avoidDifferenceLength * avoidDifferenceLength)
+			{
+				continue;
+			}
+			direction = direction * CU::Matrix33f::CreateRotateAroundZ(45.0f * PI / 180.0f);
+			myAcceleration += direction;
+			break;
+		}
+	}
 	return myAcceleration * myWeight;
 }
 

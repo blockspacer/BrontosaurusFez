@@ -113,7 +113,7 @@ bool CSplashScreen::CheckIfMorePicsInArray()
 	return true;
 }
 
-void CSplashScreen::OnEnter()
+void CSplashScreen::OnEnter(const bool /*aLetThroughRender*/)
 {
 	POSTMASTER.Subscribe(this, eMessageType::eKeyboardMessage);
 	POSTMASTER.Subscribe(this, eMessageType::eMouseMessage);

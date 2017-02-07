@@ -536,13 +536,17 @@ void CPlayState::Render()
 	myQuestDrawer.Render();
 }
 
-void CPlayState::OnEnter()
+void CPlayState::OnEnter(const bool aLetThroughRender)
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
 	
 
 	//Audio::CAudioInterface::GetInstance()->PostEvent("BayBlade");
-	myGUIManager->RestartRenderAndUpdate();
+	if (!aLetThroughRender)
+	{
+		myGUIManager->RestartRenderAndUpdate();
+	}
+
 	myQuestManager.CompleteEvent();
 }
 

@@ -44,7 +44,7 @@ void CreditsState::Render()
 	mysprite->Render();
 }
 
-void CreditsState::OnEnter()
+void CreditsState::OnEnter(const bool aLetThroughRender)
 {
 	//PostMaster::GetInstance().Subscribe(this, eMessageType::eStateMessage);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);

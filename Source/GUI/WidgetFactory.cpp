@@ -157,6 +157,8 @@ namespace GUI
 
 		baseWidgetContainer->MoveToBack("shopWindow");
 		baseWidgetContainer->MoveToBack("guiBase");
+		baseWidgetContainer->MoveToFront(manaOrbName);
+		baseWidgetContainer->MoveToFront(healthOrbName);
 		baseWidgetContainer->MoveToFront(moneyName);
 		if (guiScene.HasKey("remove"))
 		{
