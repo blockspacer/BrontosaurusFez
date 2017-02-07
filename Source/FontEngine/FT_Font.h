@@ -46,7 +46,6 @@ public:
 
 	CEffect* GetEffect() const;
 	float GetlineHeight() const;
-	void RenderCommonLetters();
 	FT_Face myFace;
 	const char* myFacePath;
 
