@@ -21,6 +21,20 @@
 #include "Components/ComponentMessage.h"
 #include "Component.h"
 #include "PostMaster/PushState.h"
+#include "PostMaster\PlayerGotHat.h"
+
+
+
+namespace
+{
+#ifndef RAND_FLOAT_RANGE
+#define RAND_FLOAT_RANGE(LOW, HIGH) (LOW) + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/((HIGH)-(LOW))));
+#endif
+}
+
+
+
+
 
 CHatMaker::CHatMaker(CGameObjectManager* aGameObjectManager)
 {
@@ -39,6 +53,7 @@ CHatMaker::~CHatMaker()
 	
 	
 	//TODO: Kanske minnesläcka :O
+	//no, it is destroyed by game object manager :) mvh carl
 	myHatObjects.RemoveAll();
 }
 
@@ -58,7 +73,7 @@ void CHatMaker::Update()
 		for (int i = 0; i < myHatObjects.Size(); ++i)
 		{
 			hatTransform.m42 = startHeight + 10.f  * i;
-			myHatObjects[i]->GetLocalTransform() = hatTransform;
+			myHatObjects[i].myObjectPtr->GetLocalTransform() = myHatObjects[i].myTransformation * hatTransform;
 		}
 		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 	}
@@ -100,7 +115,8 @@ void CHatMaker::LoadBluePrints(const std::string& aFilePath)
 		blueprint->myHatStruct->stat->BonusHealthDropChance = levelsArray[i].at("HealthDropChance").GetFloat();
 		blueprint->myHatStruct->stat->BonusManaDropChance = levelsArray[i].at("ManaDropChance").GetFloat();
 		blueprint->myHatStruct->stat->BonusManaCostModifier = BonusManaCostModifier;
-		blueprint->myHatStruct->skillname = levelsArray[i].at("Skill").GetString().c_str();
+		blueprint->myHatStruct->skillname = levelsArray[i].at("Skill").GetString()/*.c_str()*/;
+		blueprint->myHatStruct->description = levelsArray[i].at("ShopTooltip").GetString();
 
 		HatActivatorData* hatActivatorData = new HatActivatorData;
 		float healthLimitActivator = levelsArray[i].at("HealthLimitActivation").GetFloat();
@@ -110,6 +126,8 @@ void CHatMaker::LoadBluePrints(const std::string& aFilePath)
 		hatActivatorData->healthLimitActivator = healthLimitActivator;
 		hatActivatorData->manaLimitActivator = manaLimitActivator;
 		hatActivatorData->isLimitActivationUnder = levelsArray[i].at("IsLimitActivatorUnder").GetBool();
+		
+
 		HatActivator* hatActivator;
 		if(healthLimitActivator >= 1 && manaLimitActivator >= 1)
 		{
@@ -125,7 +143,7 @@ void CHatMaker::LoadBluePrints(const std::string& aFilePath)
 		myBluePrints.emplace(blueprint->HatName, blueprint);
 	}
 
-	CU::GrowingArray<CComponent*> playerComponents = PollingStation::playerObject->GetComponents();
+	CU::GrowingArray<CComponent*>& playerComponents = PollingStation::playerObject->GetComponents();
 
 	myPlayerModel = nullptr;
 	for (unsigned int i = 0; i < playerComponents.Size(); ++i)
@@ -145,7 +163,41 @@ void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName,const bool aIsI
 	{
 		SHatBluePrint* theBluePrint = myBluePrints.at(aHatName);
 		CGameObject* hatObject = myGameObjectManager->CreateGameObject();
-		myHatObjects.Add(hatObject);
+		
+		SHatObject cashedHat;
+		cashedHat.myObjectPtr = hatObject;
+		//Hat offset magics
+
+		CU::Vector3f hatPositionOffset;
+
+		if (myHatObjects.Size() > 0) hatPositionOffset = myHatObjects.GetLast().myTransformation.GetPosition();
+
+		int i = min(myHatObjects.Size(), 1);
+		hatPositionOffset.x += RAND_FLOAT_RANGE(-5.f, 5.f);
+		hatPositionOffset.y += RAND_FLOAT_RANGE(0.f, 5.f);
+		hatPositionOffset.z += RAND_FLOAT_RANGE(-5.f, 5.f);
+		hatPositionOffset *= i;
+		cashedHat.myTransformation.SetPosition(hatPositionOffset);
+		float scale = RAND_FLOAT_RANGE(0.75f, 1.25f);
+		cashedHat.myTransformation.Scale({ scale, scale, scale });
+
+
+		
+		float angle = PI / 16.f;
+		float x = RAND_FLOAT_RANGE(-angle, angle);
+		float y = RAND_FLOAT_RANGE(0, 2 * PI);
+		float z = RAND_FLOAT_RANGE(-angle, angle);
+
+		cashedHat.myTransformation.Rotate(x, y, z);
+		//end of life and all		
+		
+
+
+
+
+
+
+		myHatObjects.Add(cashedHat);
 		CU::Vector3f hatPos = hatObject->GetLocalTransform().GetPosition();
 		//hatObject->GetLocalTransform().SetPosition({ hatPos.x, hatPos.y + 175.f + 12.5f * myHatsGivenToPlayer, hatPos.z });
 		myHatsGivenToPlayer++;
@@ -174,12 +226,13 @@ void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName,const bool aIsI
 			SComponentMessageData data;
 			data.myHat = theBluePrint->myHatStruct;
 			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eAddHat, data);
+			PostMaster::GetInstance().SendLetter(eMessageType::ePlayerGotHat, CPlayerGotHat(theBluePrint));
 		}
 		if(theBluePrint->HatName == "FireHat")
 		{
 			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eActivateBurningBasicAttack, SComponentMessageData());
 		}
-		else if (theBluePrint->HatName == "SweepAttackHatLvl2")
+		else if (theBluePrint->HatName == "SweepHatV2")
 		{
 			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eActivateManaRefund, SComponentMessageData());
 		}

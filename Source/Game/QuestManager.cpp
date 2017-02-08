@@ -9,6 +9,7 @@
 #include "PJWrapper.h"
 #include "PollingStation.h"
 #include "PostMaster/PushState.h"
+#include "Audio/AudioInterface.h"
 
 std::map<std::string, unsigned int> QM::CQuestManager::ourProgression;
 
@@ -72,7 +73,14 @@ void QM::CQuestManager::CompleteEvent()
 
 	myProgression += 1;
 
+	if (myCurrentObjectives.myObjectives.Size() > 0)
+	{
+		Audio::CAudioInterface::GetInstance()->PostEvent("MissionRecieved");
+	}
+
 	myCurrentObjectives = SQuest();
+
+	
 
 	if (myEvents.Size() < 1)
 	{

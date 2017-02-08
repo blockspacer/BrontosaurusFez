@@ -58,6 +58,7 @@
     <ClCompile Include="KeyPressed.cpp" />
     <ClCompile Include="KeyReleased.cpp" />
     <ClCompile Include="MouseReleased.cpp" />
+    <ClCompile Include="PlayerGotHat.cpp" />
     <ClCompile Include="PlayerHealthChanged.cpp" />
     <ClCompile Include="PlayerManaChanged.cpp" />
     <ClCompile Include="Pop2States.cpp" />
@@ -100,6 +101,7 @@
     <ClInclude Include="KeyPressed.h" />
     <ClInclude Include="KeyReleased.h" />
     <ClInclude Include="MouseClicked.h" />
+    <ClInclude Include="PlayerGotHat.h" />
     <ClInclude Include="PlayerHealthChanged.h" />
     <ClInclude Include="PlayerManaChanged.h" />
     <ClInclude Include="Pop2States.h" />

@@ -3,6 +3,7 @@
 #include "../Game/PollingStation.h"
 #include "StatStructs.h"
 #include "../PostMaster/CoolBoi.h"
+#include "../CommonUtilities/JsonValue.h"
 
 BlessingTowerComponent::BlessingTowerComponent()
 {
@@ -32,6 +33,9 @@ void BlessingTowerComponent::Update(float aDeltaTime)
 
 				damaageData.myStatsToAdd = myDamageBonusStats;
 				PollingStation::playerObject->NotifyComponents(eComponentMessageType::eAddStats, damaageData);
+
+				SComponentMessageData lightData;
+				PollingStation::playerObject->NotifyComponents(eComponentMessageType::eSetPointLightToLastState, lightData);
 			}
 		}
 	}
@@ -63,6 +67,31 @@ void BlessingTowerComponent::Receive(const eComponentMessageType aMessageType, c
 			SComponentMessageData colliderData;
 			colliderData.myBool = false;
 			GetParent()->NotifyComponents(eComponentMessageType::eSetIsColliderActive, colliderData);
+
+			
+			CU::CJsonValue levelsFile;
+
+			std::string errorString = levelsFile.Parse("Json/BlessingTowerBuffLight.json");
+			if (!errorString.empty()) DL_MESSAGE_BOX(errorString.c_str());
+
+			CU::CJsonValue levelsArray = levelsFile.at("levels");
+
+			CU::CJsonValue color = levelsArray.at("Color");
+
+			SComponentMessageData lightColorData;
+			lightColorData.myVector3f.r = color.at("r").GetFloat();
+			lightColorData.myVector3f.g = color.at("g").GetFloat();
+			lightColorData.myVector3f.b = color.at("b").GetFloat();
+			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eSetPointLightColor, lightColorData);
+
+			SComponentMessageData lightRangeData;
+			lightRangeData.myFloat = levelsArray.at("Range").GetFloat();
+			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eSetPointLightRange, lightRangeData);
+
+			SComponentMessageData lightIntensityData;
+			lightIntensityData.myFloat = levelsArray.at("Intensity").GetFloat();
+			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eSetPointLightIntensity, lightIntensityData);
+
 
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eShrineOrWellClicked, CoolBoi(GetParent())));
 		}

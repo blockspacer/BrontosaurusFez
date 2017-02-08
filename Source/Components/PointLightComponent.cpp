@@ -2,11 +2,29 @@
 #include "PointLightComponent.h"
 #include "PointLightInstance.h"
 
-PointLightComponent::PointLightComponent(CScene * aScene)
+float fLerp(float aStart, float aEnd, float aTime)
 {
-	myScene = aScene;
-	myLightID = aScene->AddPointLightInstance(CPointLightInstance());
-	myPointLightInstace = aScene->GetPointLightInstance(myLightID);
+	float t = aTime;
+	aTime = t*t*t * (t * (6.f*t - 15.f) + 10.f);
+	return (aStart + aTime*(aEnd - aStart));
+}
+
+CU::Vector3f f3Lerp(const CU::Vector3f& aStart, const CU::Vector3f& aEnd, float aTime)
+{
+	CU::Vector3f lerped;
+	lerped.x = fLerp(aStart.x, aEnd.x, aTime);
+	lerped.y = fLerp(aStart.y, aEnd.y, aTime);
+	lerped.z = fLerp(aStart.z, aEnd.z, aTime);
+
+	return lerped;
+}
+
+PointLightComponent::PointLightComponent(CScene& aScene)
+	: myScene(aScene)
+	, myTimeTilChangedColor(0.f)
+	, myChangeColorTime(0.f)
+{
+	myLightID = aScene.AddPointLightInstance(CPointLightInstance());
 	myType = eComponentType::ePointLight;
 }
 
@@ -15,42 +33,111 @@ PointLightComponent::~PointLightComponent()
 	Destroy();
 }
 
-void PointLightComponent::SetColor(const CU::Vector3f & aColor)
+void PointLightComponent::SetColor(const CU::Vector3f& aColor)
 {
-	myPointLightInstace->SetColor(aColor);
+	CPointLightInstance* pointLight = myScene.GetPointLightInstance(myLightID);
+	if (!pointLight) return;
+	pointLight->SetColor(aColor);
 }
 
 void PointLightComponent::SetRange(const float aRange)
 {
-	myPointLightInstace->SetRange(aRange);
+	CPointLightInstance* pointLight = myScene.GetPointLightInstance(myLightID);
+	if (!pointLight) return;
+	pointLight->SetRange(aRange);
 }
 
 void PointLightComponent::SetIntensity(const float aIntensity)
 {
-	myPointLightInstace->SetInstensity(aIntensity);
+	CPointLightInstance* pointLight = myScene.GetPointLightInstance(myLightID);
+	if (!pointLight) return;
+	pointLight->SetInstensity(aIntensity);
+}
+
+void PointLightComponent::SetOffsetToParent(const CU::Vector3f& aOffset)
+{
+	myOffsetToParent = aOffset;
+}
+
+void PointLightComponent::ChangeColorOverTime(const CU::Vector3f& aColor, const float aSeconds)
+{
+	CPointLightInstance* pointLight = myScene.GetPointLightInstance(myLightID);
+	if (!pointLight) return;
+	
+	if (aSeconds <= 0.f)
+	{
+		SetColor(aColor);
+		return;
+	}
+
+	myPreviousColor = pointLight->GetColor();
+	myToBeColor = aColor;
+	myTimeTilChangedColor = aSeconds;
+	myChangeColorTime = aSeconds;
+}
+
+void PointLightComponent::Update(const CU::Time aDeltaTime)
+{
+	CPointLightInstance* pointLight = myScene.GetPointLightInstance(myLightID);
+	if (!pointLight) return;
+
+	if (myTimeTilChangedColor > 0.f && myChangeColorTime > 0.f)
+	{
+		myTimeTilChangedColor -= aDeltaTime.GetSeconds();
+		if (myTimeTilChangedColor < 0.f)
+		{
+			myTimeTilChangedColor = 0.f;
+			myChangeColorTime = 0.f;
+			SetColor(myToBeColor);
+			return;
+			//done, callback?
+		}
+
+		float percent = fLerp(1.f, 0.f, myTimeTilChangedColor / myChangeColorTime);
+
+		pointLight->SetColor(f3Lerp(myPreviousColor, myToBeColor, percent));
+	}
 }
 
 void PointLightComponent::Destroy()
 {
-	//myScene->RemovePointLightInstance(myLightID);
-	//myLightID = -1;
 }
 
-void PointLightComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
+void PointLightComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData& aMessageData)
 {
+	CPointLightInstance* pointLight = myScene.GetPointLightInstance(myLightID);
+	if (!pointLight) return;
+
 	switch (aMessageType)
 	{
-
-	case eComponentMessageType::eAddComponent:
-		if (aMessageData.myComponentTypeAdded != eComponentType::ePointLight) break;
 	case eComponentMessageType::eObjectDone:
 	case eComponentMessageType::eMoving:
 	{
-		myPointLightInstace->SetPosition(GetParent()->GetWorldPosition());
+		pointLight->SetPosition(GetParent()->GetWorldPosition() + myOffsetToParent);
 		break;
 	}
-	case  eComponentMessageType::eTurnOffThePointLight:
-		myPointLightInstace->SetActive(false);
+	case eComponentMessageType::eTurnOnThePointLight:
+		pointLight->SetActive(true);
+		break;
+	case eComponentMessageType::eTurnOffThePointLight:
+		pointLight->SetActive(false);
+		break;
+	case eComponentMessageType::eSetPointLightIntensity:
+		myLastIntensity = pointLight->GetInstensity();
+		pointLight->SetInstensity(aMessageData.myFloat);
+		break;
+	case eComponentMessageType::eSetPointLightRange:
+		myLastRange = pointLight->GetRange();
+		pointLight->SetRange(aMessageData.myFloat);
+		break;
+	case eComponentMessageType::eSetPointLightColor:
+		myLastColor = pointLight->GetColor();
+		ChangeColorOverTime(aMessageData.myVector3f);
+		break;
+	case eComponentMessageType::eSetPointLightToLastState:
+		pointLight->SetInstensity(myLastIntensity);
+		pointLight->SetRange(myLastRange);
+		ChangeColorOverTime(myLastColor);
 		break;
 	default:
 		break;

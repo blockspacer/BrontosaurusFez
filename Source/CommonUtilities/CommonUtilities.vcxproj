@@ -405,6 +405,7 @@
     <ClInclude Include="matrix33.h" />
     <ClInclude Include="matrix44.h" />
     <ClInclude Include="MemoryLeekLogger.h" />
+    <ClInclude Include="Octree.h" />
     <ClInclude Include="ReverseGrowingArray.h" />
     <ClInclude Include="StaticMemoryPool.h" />
     <ClInclude Include="MessageKyle.h" />
@@ -414,7 +415,6 @@
     <ClInclude Include="plane_volume.h" />
     <ClInclude Include="PostMasterKyle.h" />
     <ClInclude Include="Queue.h" />
-    <ClInclude Include="QuickSort.h" />
     <ClInclude Include="rapidjson\allocators.h" />
     <ClInclude Include="rapidjson\document.h" />
     <ClInclude Include="rapidjson\encodedstream.h" />
@@ -489,6 +489,7 @@
     <ClCompile Include="InvertMatrix.cpp" />
     <ClCompile Include="JsonValue.cpp" />
     <ClCompile Include="MemoryLeekLogger.cpp" />
+    <ClCompile Include="Octree.cpp" />
     <ClCompile Include="PJWrapper.cpp" />
     <ClCompile Include="PostMasterKyle.cpp" />
     <ClCompile Include="Ray.cpp" />

@@ -199,6 +199,10 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 		}
 			
 	}
+	else if (aMessageType == eComponentMessageType::eAddSkill)
+	{
+		AddSkill(aMessageData.myString);
+	}
 }
 
 void SkillSystemComponent::Destroy()
@@ -207,6 +211,13 @@ void SkillSystemComponent::Destroy()
 
 void SkillSystemComponent::AddSkill(const char* aSkillName)
 {
+	for(unsigned short i = 0; i < mySkills.Size(); i++)
+	{
+		if(mySkills[i]->GetSkillData()->skillName == aSkillName)
+		{
+			return;
+		}
+	}
 	mySkills.Add(SkillFactory::GetInstance().CreateSkill(aSkillName));
 	mySkills.GetLast()->SetTargetPosition(myTargetPosition);
 }

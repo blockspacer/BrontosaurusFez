@@ -104,8 +104,14 @@ enum class eComponentMessageType
 	eRemoveHoveredObject,
 	eEnemyReturnToSpawnPoint,
 	eEnemyStartChaseAgain,
+	eTurnOnThePointLight,
 	eTurnOffThePointLight,
-	eLength
+	eSetPointLightIntensity,
+	eSetPointLightRange,
+	eSetPointLightColor,
+	eSetPointLightToLastState,
+	eUnlockCamera,
+	eLength,
 };
 
 #ifndef STATIC_SIZEOF

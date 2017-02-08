@@ -33,6 +33,7 @@
 #include "../Components/PlayerData.h"
 #include "../CommonUtilities/JsonValue.h"
 #include "../ShopItemButtonHovered.h"
+#include "HatIcon.h"
 
 using size_ga = CU::GrowingArray<CLoaderMesh*>::size_type;
 
@@ -40,6 +41,8 @@ const float PI_CONSTANT = 3.141592f;
 
 namespace GUI
 {
+	std::map<std::string, IWidget*> WidgetFactory::ourHatContainer;
+
 	const CU::Camera* WidgetFactory::ourCurrentGUICamera = nullptr;
 
 	WidgetContainer* WidgetFactory::CreateGUIScene(const char* aFilePathFBX, CU::Camera*& aGUIManagerCameraOut)
@@ -91,15 +94,22 @@ namespace GUI
 		}
 
 		CU::GrowingArray<std::string> guiHatnames(8u);
+		CU::GrowingArray<std::string> guiRealHatNames(8u);
 		if (guiScene.HasKey("Hats"))
 		{
 			CU::CJsonValue guiHats = guiScene["Hats"];
 			int startIndex = guiHats["start"].GetInt();
 			int endIndex = guiHats["end"].GetInt();
 			const std::string& nameStart = guiHats["name"].GetString();
-			for (int i = startIndex; i < endIndex; ++i)
+			for (int i = startIndex; i <= endIndex; ++i)
 			{
 				guiHatnames.Add(nameStart + std::to_string(i));
+			}
+
+			CU::CJsonValue guiHatNames = guiScene["HatNames"];
+			for (int i = 0; i < guiHatNames.Size(); ++i)
+			{
+				guiRealHatNames.Add(guiHatNames[i].GetString());
 			}
 		}
 
@@ -134,13 +144,23 @@ namespace GUI
 			{
 				widget = new ModelWidget(meshes[i], { moneyTexture }, *guiCamera, isVisible);
 			}
-			else if (guiHatnames.Find(widgetName) != guiHatnames.FoundNone)
-			{
-				widget = new ModelWidget(meshes[i], { "error.dds" }, *guiCamera, true);
-			}
 			else
 			{
 				widget = new ModelWidget(meshes[i], aLoaderScene->myTextures, *guiCamera, isVisible);
+			}
+
+			int hatIndex = guiHatnames.Find(widgetName);
+			if (hatIndex != guiHatnames.FoundNone)
+			{
+				widget->SetVisibility(true);
+				//CHatIcon* guiHat = new CHatIcon(*widget);
+				IWidget* guiHat = widget;
+				widget = nullptr;
+
+				CToolTipDecorator* finalhat = new CToolTipDecorator(guiHat, nullptr, nullptr, nullptr);
+				WidgetFactory::ourHatContainer[guiRealHatNames[hatIndex]] = finalhat;
+
+				continue;
 			}
 
 			if (widgetName == healthOrbName)
@@ -164,6 +184,12 @@ namespace GUI
 					widget = CreateButton(widget);
 				}
 			}
+			if (widgetName == "guiBase")
+			{
+				WidgetContainer* guiBase = new WidgetContainer(widget->GetWorldPosition(), widget->GetSize(), widget->GetName(), true);
+				guiBase->AddWidget("Model", widget);
+				widget = guiBase;
+			}
 
 			if (widget != nullptr)
 			{
@@ -176,6 +202,7 @@ namespace GUI
 		baseWidgetContainer->MoveToBack("PlayerHealthWidget");
 		baseWidgetContainer->MoveToBack("PlayerManaWidget");
 		baseWidgetContainer->MoveToFront(moneyName);
+
 		if (guiScene.HasKey("remove"))
 		{
 			if (guiScene["remove"].IsString())

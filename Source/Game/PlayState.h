@@ -14,6 +14,9 @@
 #include "../BrontosaurusEngine/Navmesh.h"
 #include "GameEventMessenger.h"
 
+#include "EKeyboardKeys.h"
+#include "BitSet.h"
+
 namespace CU
 {
 	class Time;
@@ -78,14 +81,23 @@ public:
 	CHealthBarComponentManager* GetHealthBarManager();
 	CCollisionComponentManager* GetCollisionManager();
 
+	
 	//TEMP - BELOW THIS LINE
-
 	QM::EventHandle fristObjective;
 	QM::EventHandle secondObjective;
 	QM::EventHandle thridObjective;
+
+
 	bool myShuldRenderNavmesh;
+	bool myCameraIsFree;
+	void CameraMovement(const CU::eKeys & aKey, bool pressed);
+	void UpdateCamera(const float dt);
+	void FlipCameraUnlocked();
+
+	CU::CBitSet<10> myCameraKeysDown;
 
 private:
+
 	void CreateManagersAndFactories();
 
 	CScene* myScene;
@@ -117,6 +129,7 @@ private:
 	CNavmesh myNavmesh;
 	CU::GrowingArray<CGameObject*> myEnemies;
 	CHealthBarComponentManager* myHealthBarManager;
+
 };
 
 inline bool CPlayState::IsLoaded() const
