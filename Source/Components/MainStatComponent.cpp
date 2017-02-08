@@ -25,6 +25,11 @@ CMainStatComponent::CMainStatComponent()
 	myBonusStats->BonusManaCostModifier = 0.0f;
 
 	myType = eComponentType::eMainStat;
+	myTotalStats->MaxDamageModifier = myBaseStats->DamageModifier;
+	myTotalStats->MaxGoldGetModifier = myBaseStats->GoldGetModifier;
+	myTotalStats->MaxHealthDropChance = myBaseStats->HealthDropChance;
+	myTotalStats->MaxManaDropChance = myBaseStats->ManaDropChance;
+	myTotalStats->MaxManaConstModifier = myBaseStats->ManaCostModifier;
 }
 
 CMainStatComponent::~CMainStatComponent()
@@ -35,15 +40,16 @@ void CMainStatComponent::CalculateTotalStats()
 {
 
 
-	myTotalStats->MaxDamageModifier = myBaseStats->DamageModifier + myBonusStats->BonusDamageModifier;
-	myTotalStats->MaxGoldGetModifier = myBaseStats->GoldGetModifier + myBonusStats->BonusGoldGetModifier;
-	myTotalStats->MaxHealthDropChance = myBaseStats->HealthDropChance + myBonusStats->BonusHealthDropChance;
-	myTotalStats->MaxManaDropChance = myBaseStats->ManaDropChance + myBonusStats->BonusManaDropChance;
-	myTotalStats->MaxManaConstModifier = myBaseStats->ManaCostModifier + myBonusStats->BonusManaCostModifier;
+	myTotalStats->MaxDamageModifier +=  myBonusStats->BonusDamageModifier;
+	myTotalStats->MaxGoldGetModifier +=  myBonusStats->BonusGoldGetModifier;
+	myTotalStats->MaxHealthDropChance += myBonusStats->BonusHealthDropChance;
+	myTotalStats->MaxManaDropChance +=  myBonusStats->BonusManaDropChance;
+	myTotalStats->MaxManaConstModifier +=  myBonusStats->BonusManaCostModifier;
 	
 	SComponentMessageData newMaxdata;
 	newMaxdata.myInt = myBonusStats->BonusHealth;
 	GetParent()->NotifyComponents(eComponentMessageType::eAddToMaxHealth, newMaxdata);
+	
 	newMaxdata.myInt = myBonusStats->BonusMana;
 	GetParent()->NotifyComponents(eComponentMessageType::eAddToMaxMana, newMaxdata);
 	newMaxdata.myFloat = myBonusStats->BonusMovementSpeed;
