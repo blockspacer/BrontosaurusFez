@@ -17,28 +17,38 @@ void CPointLightComponentManager::Create(CScene& aScene)
 	{
 		ourInstance = new CPointLightComponentManager(aScene);
 	}
+	else
+	{
+		assert(false);
+	}
 }
 
-CPointLightComponentManager & CPointLightComponentManager::GetInstance()
+CPointLightComponentManager& CPointLightComponentManager::GetInstance()
 {
 	return *ourInstance;
 }
 
-PointLightComponent * CPointLightComponentManager::CreateAndRegisterComponent()
+PointLightComponent* CPointLightComponentManager::CreateAndRegisterComponent()
 {
 	PointLightComponent* pointLight = new PointLightComponent(myScene);
 	CComponentManager::GetInstance().RegisterComponent(pointLight);
 	myComponents.Add(pointLight);
-	myScene;//add light to scene;
 	return pointLight;
 }
 
-CPointLightComponentManager::CPointLightComponentManager(CScene& aScene)
+void CPointLightComponentManager::Update(const CU::Time aDeltaTime)
 {
-	myComponents.Init(10);
-	myScene = &aScene;
+	for (PointLightComponent* component : myComponents)
+	{
+		component->Update(aDeltaTime);
+	}
 }
 
+CPointLightComponentManager::CPointLightComponentManager(CScene& aScene)
+	: myScene(aScene)
+	, myComponents(10)
+{
+}
 
 CPointLightComponentManager::~CPointLightComponentManager()
 {

@@ -232,7 +232,7 @@ void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName,const bool aIsI
 		{
 			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eActivateBurningBasicAttack, SComponentMessageData());
 		}
-		else if (theBluePrint->HatName == "SweepAttackHatLvl2")
+		else if (theBluePrint->HatName == "SweepHatV2")
 		{
 			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eActivateManaRefund, SComponentMessageData());
 		}
@@ -251,7 +251,7 @@ void CHatMaker::GiveTheManAHat()
 {
 	for (unsigned int i = 0; i < PollingStation::playerHatList.Size(); ++i)
 	{
-		MakeHatFromBluePrint(PollingStation::playerHatList[i]);
+		MakeHatFromBluePrint(PollingStation::playerHatList[i], true);
 	}
 	SComponentMessageData data;
 	PollingStation::playerObject->NotifyComponents(eComponentMessageType::eMoving, data);

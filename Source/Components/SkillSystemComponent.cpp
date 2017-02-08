@@ -199,6 +199,10 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 		}
 			
 	}
+	else if (aMessageType == eComponentMessageType::eAddSkill)
+	{
+		AddSkill(aMessageData.myString);
+	}
 }
 
 void SkillSystemComponent::Destroy()
