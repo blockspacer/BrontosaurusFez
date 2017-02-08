@@ -180,17 +180,17 @@ namespace GUI
 				widget->SetVisibility(true);
 				if (widgetName.rfind("1") != std::string::npos)
 				{
-					std::string basicAttackName = "Basic attack";
+					std::string basicAttackName = "Basic attack\nLeft button";
 					widget = new CToolTipDecorator(widget, nullptr, &basicAttackName, nullptr);
 				}
 				else if (widgetName.rfind("2") != std::string::npos)
 				{
-					std::string sweepAttackName = "Sweep attack\nDeals more damage over a wider area but costs some mana";
+					std::string sweepAttackName = "Sweep attack - Right button\nDeals more damage over a wider area but costs some mana";
 					widget = new CToolTipDecorator(widget, nullptr, &sweepAttackName, nullptr);
 				}
 				else if (widgetName.rfind("3") != std::string::npos)
 				{
-					std::string whirlwindAttackName = "Whirlwind\nDeals damage in a circle around you";
+					std::string whirlwindAttackName = "Whirlwind - Space\nDeals damage in a circle around you";
 					widget = new CToolTipDecorator(widget, nullptr, &whirlwindAttackName, nullptr);
 				}
 			}
