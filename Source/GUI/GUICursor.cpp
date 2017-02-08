@@ -8,6 +8,7 @@
 
 GUICursor::GUICursor()
 	: mySprite(nullptr)
+	, myHasRealPos(false)
 {
 	mySprite = new CSpriteInstance("Models/mousePointer/mousePointer.dds", CU::Vector2f::Zero, CU::Vector2f(0.5f, 0.5f), { 0.f, 0.f }, { 0.f, 0.f, 1.f, 1.f }, { 1.f, 1.f ,1.f ,1.f }, true); //TODO: FIX hardcoded windowsize
 }
@@ -22,8 +23,18 @@ void GUICursor::Render()
 	mySprite->Render();
 }
 
+void GUICursor::SetPositionAgain(const CU::Vector2f& aPosition)
+{
+	mySprite->SetPosition(aPosition);
+	myHasRealPos = true;
+}
+
 void GUICursor::SetPosition(const CU::Vector2f& aPosition)
 {
+	if (myHasRealPos)
+	{
+		return;
+	}
 	//const CU::Vector2f windowSize(WINDOW_SIZE);
 
 	//CU::Vector2f position = aPosition;

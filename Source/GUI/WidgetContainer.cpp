@@ -31,22 +31,31 @@ namespace GUI
 	{
 		assert(myWidgets.find(aWidgetName) == myWidgets.end() && "There is already a IWidget with that name.");
 		myWidgets[aWidgetName] = aWidget;
-		myOrderedWidgets.Add(aWidget);
+		myOrderedWidgets.Insert(0, aWidget);
 		SetChild(aWidget);
 	}
 
 	IWidget* WidgetContainer::RemoveWidget(const std::string& aWidgetName)
 	{
-		for (auto it = myWidgets.begin(); it != myWidgets.end(); ++it)
+		auto it = myWidgets.find(aWidgetName);
+		if (it != myWidgets.end())
 		{
-			if (aWidgetName == it->first)
-			{
-				IWidget* removedWidget = it->second;
-				myWidgets.erase(it);
-				myOrderedWidgets.Remove(removedWidget);
-				return removedWidget;
-			}
+			IWidget* removedWidget = it->second;
+			myWidgets.erase(it);
+			myOrderedWidgets.Remove(removedWidget);
+			return removedWidget;
 		}
+
+		//for (auto it = myWidgets.begin(); it != myWidgets.end(); ++it)
+		//{
+		//	if (aWidgetName == it->first)
+		//	{
+		//		IWidget* removedWidget = it->second;
+		//		myWidgets.erase(it);
+		//		myOrderedWidgets.Remove(removedWidget);
+		//		return removedWidget;
+		//	}
+		//}
 
 		return nullptr;
 	}
@@ -108,13 +117,27 @@ namespace GUI
 			//		widget->Render(myFrontLayerWidgets);
 			//	}
 			//}
-			for (int i = myOrderedWidgets.Size() - 1; i >= 0; --i)
+			//for (int i = myOrderedWidgets.Size() - 1; i >= 0; --i)
+			//{
+			//	IWidget& child = *myOrderedWidgets[i];
+			//	if (child.IsVisible() == true)
+			//	{
+			//		child.Render(myFrontLayerWidgets);
+			//	}
+			//}
+
+			Render(myFrontLayerWidgets);
+		}
+	}
+
+	void WidgetContainer::Render(CU::GrowingArray<IWidget*>& aWidgets)
+	{
+		for (int i = myOrderedWidgets.Size() - 1; i >= 0; --i)
+		{
+			IWidget& child = *myOrderedWidgets[i];
+			if (child.IsVisible() == true)
 			{
-				IWidget& child = *myOrderedWidgets[i];
-				if (child.IsVisible() == true)
-				{
-					child.Render(myFrontLayerWidgets);
-				}
+				child.Render(aWidgets);
 			}
 		}
 	}

@@ -64,6 +64,10 @@
     <ClInclude Include="DraggableArea.h">
       <Filter>Widgets\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="HatContainer.h">
+      <Filter>GUIManager</Filter>
+    </ClInclude>
+    <ClInclude Include="HatIcon.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BarWidget.cpp">
@@ -123,6 +127,10 @@
     <ClCompile Include="DraggableArea.cpp">
       <Filter>Widgets\Misc</Filter>
     </ClCompile>
+    <ClCompile Include="HatContainer.cpp">
+      <Filter>GUIManager</Filter>
+    </ClCompile>
+    <ClCompile Include="HatIcon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Widgets">

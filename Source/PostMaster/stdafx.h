@@ -10,6 +10,7 @@
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 
 #include <utility>
+#include <map>
 
 #include "MessageType.h"
 #include "EMessageReturn.h"

@@ -11,6 +11,10 @@ Subscriber::Subscriber()
 Subscriber::~Subscriber()
 {
 #ifdef _DEBUG
-	PostMaster::GetInstance().UnSubscribeEveryWhere(this);
+	PostMaster* postMaster = PostMaster::GetInstancePtr();
+	if (postMaster)
+	{
+		postMaster->UnSubscribeEveryWhere(this);
+	}
 #endif // _DEBUG
 }

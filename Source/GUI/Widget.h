@@ -22,6 +22,7 @@ namespace GUI
 {
 	class ModelWidget;
 	class ButtonAnimation;
+	class CToolTipDecorator;
 
 	class IWidget
 	{
@@ -69,6 +70,7 @@ namespace GUI
 		operator IWidget*() { return this; }
 		virtual operator ModelWidget*() { return nullptr; }
 		virtual operator ButtonAnimation*() { return nullptr; }
+		virtual operator CToolTipDecorator*() { return nullptr; }
 
 	protected:
 		void AddDebugLines() const;
