@@ -69,6 +69,7 @@ void GUI::GUIManager::Update(const CU::Time& aDeltaTime)
 {
 	if (myShouldUpdate == true)
 	{
+		//get skills from pollingstation and set icons to visible if player have them
 		myWidgetContainer->Update(aDeltaTime);
 
 		locMousePosition = myCursor->GetPosition();

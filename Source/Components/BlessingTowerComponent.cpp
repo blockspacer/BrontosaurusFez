@@ -79,9 +79,7 @@ void BlessingTowerComponent::Receive(const eComponentMessageType aMessageType, c
 			CU::CJsonValue color = levelsArray.at("Color");
 
 			SComponentMessageData lightColorData;
-			lightColorData.myVector3f.r = color.at("r").GetFloat();
-			lightColorData.myVector3f.g = color.at("g").GetFloat();
-			lightColorData.myVector3f.b = color.at("b").GetFloat();
+			lightColorData.myVector3f = color.GetVector3f("rgb"); //use this :D
 			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eSetPointLightColor, lightColorData);
 
 			SComponentMessageData lightRangeData;

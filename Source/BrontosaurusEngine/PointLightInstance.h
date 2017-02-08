@@ -15,14 +15,14 @@ public:
 	void SetInstensity(const float aIntencity);
 	void SetColor(const CU::Vector3f & aColor);
 
-	const CU::Vector3f& GetPosition();
-	float GetRange();
-	float GetInstensity();
-	const CU::Vector3f& GetColor();
+	const CU::Vector3f& GetPosition() const;
+	float GetRange() const;
+	float GetInstensity() const;
+	const CU::Vector3f& GetColor() const;
 
-	const Lights::SPointLight& GetData();
+	const Lights::SPointLight& GetData() const;
 
-	bool GetIsActive();
+	bool GetIsActive() const;
 	void SetActive(const bool aIsActive);
 private:
 	//CU::Vector3f myPosition;
