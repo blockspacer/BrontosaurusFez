@@ -25,6 +25,7 @@ private:
 	{
 		CGameObject* myObjectPtr = nullptr;
 		CU::Matrix44f myTransformation;
+		std::string hatName;
 	};
 
 public:
