@@ -29,8 +29,10 @@ CComponent* CScriptComponentManager::CreateAbstractComponent(const std::string &
 	return CreateComponent(aScriptPath);
 }
 
-CScriptComponent* CScriptComponentManager::CreateComponent(const std::string& aScriptPath/*, const std::string& aInitFunction*/)
+CScriptComponent* CScriptComponentManager::CreateComponent(const std::string& aScriptPath)
 {
+	if (aScriptPath.empty()) return nullptr;
+
 	CScriptComponent* newComponent = new CScriptComponent();
 	ComponentId componentID = CComponentManager::GetInstance().RegisterComponent(newComponent);
 
