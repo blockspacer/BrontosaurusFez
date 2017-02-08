@@ -13,6 +13,7 @@
 #include "../CommonUtilities/EKeyboardKeys.h"
 #include "../Game/PollingStation.h"
 #include "../Components/PlayerData.h"
+#include "../PostMaster/HatBought.h"
 
 CConsole::CConsole()
 {
@@ -291,13 +292,21 @@ const CU::DynamicString CConsole::CheckIfTextIsCommand(const CU::DynamicString& 
 	}
 	else if (aText == "rosebud")
 	{
-		PollingStation::playerData->AddGold(1000);
-		return "Added 1000 Gold.";
+		PollingStation::playerData->AddGold(10000);
 
 	}
 	else if (aText == "help")
 	{
 		PrintCommands();
+	}
+	else if (aText.Find("AddHat") != aText.FoundNone)
+	{
+		int startIndex = aText.FindFirst('\"') + 1;
+		int endIndex = aText.FindLast('\"');
+
+		std::string hatname = aText.SubStr(startIndex, endIndex - startIndex).c_str();
+
+		PostMaster::GetInstance().SendLetter(eMessageType::eHatAdded, HatBought(hatname));
 	}
 	else if (aText.Find(LuaFunction) == 0)
 	{
