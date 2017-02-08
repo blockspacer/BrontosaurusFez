@@ -198,7 +198,7 @@ void CHatMaker::GiveTheManAHat()
 {
 	for (unsigned int i = 0; i < PollingStation::playerHatList.Size(); ++i)
 	{
-		MakeHatFromBluePrint(PollingStation::playerHatList[i]);
+		MakeHatFromBluePrint(PollingStation::playerHatList[i], true);
 	}
 	SComponentMessageData data;
 	PollingStation::playerObject->NotifyComponents(eComponentMessageType::eMoving, data);

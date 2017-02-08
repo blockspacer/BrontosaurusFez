@@ -53,7 +53,7 @@ eMessageReturn PushState::DoEvent(StateStack* aStateStack) const
 			aStateStack->PushState(new LevelSelectState(*aStateStack));
 			break;
 		case eState::eDialog:
-			aStateStack->PushState(new CDialogState(*aStateStack));
+       			aStateStack->PushState(new CDialogState(*aStateStack));
 			break;
 		default: break;
 		}
