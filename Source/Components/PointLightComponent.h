@@ -20,5 +20,8 @@ private:
 	CScene* myScene;
 	InstanceID myLightID;
 	CPointLightInstance* myPointLightInstace;
+	CU::Vector3f myLastColor;
+	float myLastRange;
+	float myLastIntensity;
 };
 

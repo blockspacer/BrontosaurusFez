@@ -106,6 +106,10 @@ enum class eComponentMessageType
 	eEnemyStartChaseAgain,
 	eTurnOnThePointLight,
 	eTurnOffThePointLight,
+	eSetPointLightIntensity,
+	eSetPointLightRange,
+	eSetPointLightColor,
+	eSetPointLightToLastState,
 	eUnlockCamera,
 	eLength,
 };
