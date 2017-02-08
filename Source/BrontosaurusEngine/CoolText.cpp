@@ -100,7 +100,10 @@ void CCoolText::Render(const CU::GrowingArray<CU::DynamicString>& someStrings, c
 		std::wstring wideString(tempString.begin(), tempString.end());
 
 		penPosition.x = aPosition.x + CalculateAdjustment(anAlignement, wideString).x;
-		penPosition.y += GetlineHeight();
+		if (j > 0)
+		{
+			penPosition.y += GetlineHeight();
+		}
 
 		for (size_t i = 0; i < wideString.size(); ++i)
 		{
