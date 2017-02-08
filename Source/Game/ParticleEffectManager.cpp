@@ -146,6 +146,10 @@ bool CParticleEffectManager::LoadParticleData(const std::string& aEffectPath, SE
 
 	aEmitterDataOut.MinEmissionVelocity = particleEffectDocument["MinEmissionVelocity"].GetVector3f();
 	aEmitterDataOut.MaxEmissionVelocity = particleEffectDocument["MaxEmissionVelocity"].GetVector3f();
+
+	aEmitterDataOut.MinEmissionArea = particleEffectDocument["MinEmissionArea"].GetVector3f();
+	aEmitterDataOut.MaxEmissionArea = particleEffectDocument["MaxEmissionArea"].GetVector3f();
+
 	aEmitterDataOut.Gravity = particleEffectDocument["Gravity"].GetVector3f();
 
 	aEmitterDataOut.StartSize = particleEffectDocument["StartSize"].GetFloat();

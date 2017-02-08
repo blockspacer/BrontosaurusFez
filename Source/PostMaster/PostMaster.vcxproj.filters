@@ -94,6 +94,7 @@
     </ClCompile>
     <ClCompile Include="GoldChanged.cpp" />
     <ClCompile Include="CoolBoi.cpp" />
+    <ClCompile Include="SecretlySetMousePos.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Subscriber.h">
@@ -260,6 +261,9 @@
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="CoolBoi.h" />
+    <ClInclude Include="PopCurrentState.h" />
+    <ClInclude Include="PostMaster.h" />
+    <ClInclude Include="SecretlySetMousePos.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Events">

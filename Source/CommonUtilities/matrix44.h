@@ -453,14 +453,9 @@ namespace CU
 
 		Matrix44<TYPE>& Scale(const Vector3<TYPE>& aScaleVector)
 		{
-			Matrix44 scaleMatrix;
-			
-			scaleMatrix.m11 = aScaleVector.x;
-			scaleMatrix.m22 = aScaleVector.y;
-			scaleMatrix.m33 = aScaleVector.z;
-			scaleMatrix.m44 = 1;
-
-			*this = scaleMatrix * *this;
+			m11 *= aScaleVector.x;
+			m22 *= aScaleVector.y;
+			m33 *= aScaleVector.z;
 
 			return *this;
 		}
@@ -474,11 +469,16 @@ namespace CU
 		{
 			static const CU::Vector3f objectUpVector(0.0f, 1.0f, 0.0f);
 
+			float xSize = myRightVector.Length();
+			float ySize = myUpVector.Length();
+			float zSize = myForwardVector.Length();
+
 			CU::Vector3f zAxis = aLookTo - aLookFrom;
-			zAxis.Normalize();
+			zAxis = zAxis.GetNormalized() * zSize;
 			CU::Vector3f xAxis = objectUpVector.Cross(zAxis);
-			xAxis.Normalize();
+			xAxis = xAxis.GetNormalized() * xSize;
 			CU::Vector3f yAxis = zAxis.Cross(xAxis);
+			yAxis = yAxis.GetNormalized() * ySize;
 
 			m11 = xAxis.x;
 			m12 = xAxis.y;

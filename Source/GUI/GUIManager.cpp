@@ -38,6 +38,7 @@ GUI::GUIManager::~GUIManager()
 	SAFE_DELETE(myWidgetContainer);
 
 	PostMaster::GetInstance().UnSubscribe(myCursor, eMessageType::eMouseMessage);
+	PostMaster::GetInstance().UnSubscribe(myCursor, eMessageType::eSecretMouseMessageMvhCarl);
 	SAFE_DELETE(myCursor);
 	SAFE_DELETE(myCamera);
 }
@@ -48,6 +49,7 @@ void GUI::GUIManager::Init()
 
 	myCursor = new GUICursor();
 	PostMaster::GetInstance().Subscribe(myCursor, eMessageType::eMouseMessage, 6);
+	PostMaster::GetInstance().Subscribe(myCursor, eMessageType::eSecretMouseMessageMvhCarl);
 }
 
 void GUI::GUIManager::Init(const char* aGUIScenePath)
@@ -56,6 +58,7 @@ void GUI::GUIManager::Init(const char* aGUIScenePath)
 
 	myCursor = new GUICursor();
 	PostMaster::GetInstance().Subscribe(myCursor, eMessageType::eMouseMessage, 6);
+	PostMaster::GetInstance().Subscribe(myCursor, eMessageType::eSecretMouseMessageMvhCarl);
 }
 
 void GUI::GUIManager::Update(const CU::Time& aDeltaTime)
@@ -259,6 +262,7 @@ void GUI::GUIManager::PauseRenderAndUpdate()
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
 	PostMaster::GetInstance().UnSubscribe(myCursor, eMessageType::eMouseMessage);
+	PostMaster::GetInstance().UnSubscribe(myCursor, eMessageType::eSecretMouseMessageMvhCarl);
 
 	myShouldUpdate = false;
 	myShouldRender = false;
@@ -280,6 +284,7 @@ void GUI::GUIManager::RestartRenderAndUpdate()
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage, 5);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage, 5);
 	PostMaster::GetInstance().Subscribe(myCursor, eMessageType::eMouseMessage, 6);
+	PostMaster::GetInstance().Subscribe(myCursor, eMessageType::eSecretMouseMessageMvhCarl);
 
 
 	if (locMousePosition != CU::Vector2f::Zero && myCursor != nullptr)

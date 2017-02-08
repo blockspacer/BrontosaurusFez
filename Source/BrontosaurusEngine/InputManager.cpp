@@ -114,7 +114,7 @@ void CInputManager::UpdateMouse()
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eMouseMessage, MouseReleased(mousePosition, CU::eMouseButtons::RBUTTON)));
 		}
 
-		myDInputWrapper->SetMousePosition(middleOfWindow.x, middleOfWindow.y);
+		myDInputWrapper->SetMousePosition(middleOfWindow.x, middleOfWindow.y); // drar 1/3 av all prestanda på maintråden.
 	}
 }
 

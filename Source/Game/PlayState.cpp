@@ -98,6 +98,7 @@
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
 #include "../Components/ScriptComponentManager.h"
 #include "ParticleEffectManager.h"
+#include "PostMaster/SecretlySetMousePos.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -389,6 +390,9 @@ void CPlayState::Load()
 			}
 		}
 	}
+
+	CSecretlySetMousePos::SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
+
 	myIsLoaded = true;
 
 	//get time to load the level:
@@ -581,7 +585,7 @@ void CPlayState::ChangeGoldAmount(const int aValue, const bool aDecreaseGold)
 	PollingStation::playerData->AddGold(aValue);
 
 	myChangeTexts.Add(new CTextInstance());
- 	CTextInstance* text = myChangeTexts.GetLast();
+	CTextInstance* text = myChangeTexts.GetLast();
 
 	text->SetColor(CTextInstance::Black);
 	text->SetPosition(myGoldText->GetPosition());

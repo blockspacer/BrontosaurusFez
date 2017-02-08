@@ -3,6 +3,10 @@
 
 #include <windows.h>
 #include <thread>
+#include <map>
+
+static std::map<uint32_t, std::string> locThreadNames;
+static std::string locUnNamedThread("UnNamed");
 
 namespace CU
 {
@@ -47,6 +51,28 @@ namespace CU
 	{
 		DWORD threadId = ::GetThreadId(static_cast<HANDLE>(thread.native_handle()));
 		SetThreadName(threadId, threadName);
+	}
+
+	const std::string& GetThreadName()
+	{
+		DWORD id = GetCurrentThreadId();
+		return GetThreadName(id);
+	}
+
+	const std::string& GetThreadName(std::thread& aThread)
+	{
+		DWORD id = ::GetThreadId(static_cast<HANDLE>(aThread.native_handle()));
+		return GetThreadName(id);
+	}
+
+	const std::string& GetThreadName(const uint32_t aThreadID)
+	{
+		if (locThreadNames.find(aThreadID) != locThreadNames.end())
+		{
+			return locThreadNames[aThreadID];
+		}
+
+		return locUnNamedThread;
 	}
 
 

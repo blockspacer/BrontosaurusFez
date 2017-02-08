@@ -814,11 +814,7 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 
 		CModel* model = modelManager->GetModel(msg->myModelID);
 		if (!model) break;
-		if (model->GetName().find("standardEnemy") != std::string::npos)
-		{
-			int br = 0;
-			br++;
-		}
+
 		model->Render(msg->myRenderParams);
 		++aDrawCallCount;
 		break;
@@ -827,6 +823,7 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 	{
 		SRenderModelDepthMessage* msg = static_cast<SRenderModelDepthMessage*>(aRenderMesage);
 		CModel* model = CEngine::GetInstance()->GetModelManager()->GetModel(msg->myModelID);
+		if (!model) break;
 		model->Render(msg->myRenderParams);
 		++aDrawCallCount;
 		break;
@@ -842,7 +839,7 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 
 		SRenderModelParams params;
 		params.myTransform = msg->myToWorld;
-		params.myTransformLastFrame = msg->myToWorld;
+		params.myTransformLastFrame = msg->myToWorld; //don't blur  GUI, atm fullösning deluxe.
 		params.myRenderToDepth = false;
 		params.aAnimationState = nullptr;
 
@@ -850,9 +847,9 @@ void CRenderer::HandleRenderMessage(SRenderMessage * aRenderMesage, int & aDrawC
 		{
 			msg->myPixelConstantBufferStruct.myCameraPosition = myCamera.GetPosition();
 			model->UpdateConstantBuffer(CModel::eShaderStage::ePixel, &msg->myPixelConstantBufferStruct, sizeof(msg->myPixelConstantBufferStruct));
-		
-			model->Render(params); //don't blur  GUI, atm fullösning deluxe.
 		}
+
+		model->Render(params);
 
 		++aDrawCallCount;
 
