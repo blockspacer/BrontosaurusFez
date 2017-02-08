@@ -43,20 +43,24 @@ CHatMaker::~CHatMaker()
 
 void CHatMaker::Update()
 {
-	CModel* model = CEngine::GetInstance()->GetModelManager()->GetModel(myPlayerModel->GetModelInst()->GetModelID());
-
-
-	std::string boneName = "hatslot";
-	boneName += std::to_string(/*i +*/ 1);
-	boneName += "_SKIN";
-	CU::Matrix44f hatTransform = model->GetBoneTransform(myPlayerModel->GetModelInst()->GetAnimationCounter(), myPlayerModel->GetModelInst()->GetAnimationState(), boneName.c_str());
-
-	for (int i = 0; i < myHatObjects.Size(); ++i)
+	if (myHatObjects.Size() > 0)
 	{
-		hatTransform.m42 += 10.0f;
-		myHatObjects[i]->GetLocalTransform() = hatTransform;
+		CModel* model = CEngine::GetInstance()->GetModelManager()->GetModel(myPlayerModel->GetModelInst()->GetModelID());
+
+
+		std::string boneName = "hatslot";
+		boneName += std::to_string(/*i +*/ 1);
+		boneName += "_SKIN";
+		CU::Matrix44f hatTransform = model->GetBoneTransform(myPlayerModel->GetModelInst()->GetAnimationCounter(), myPlayerModel->GetModelInst()->GetAnimationState(), boneName.c_str());
+		float startHeight = hatTransform.m42;
+
+		for (int i = 0; i < myHatObjects.Size(); ++i)
+		{
+			hatTransform.m42 = startHeight + 10.f  * i;
+			myHatObjects[i]->GetLocalTransform() = hatTransform;
+		}
+		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 	}
-	PollingStation::playerObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 }
 
 

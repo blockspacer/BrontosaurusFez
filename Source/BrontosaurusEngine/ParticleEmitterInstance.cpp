@@ -221,7 +221,13 @@ void CParticleEmitterInstance::EmitParticle()
 	{
 
 		SParticle particle;
-		particle.position = myToWorldSpace.GetPosition();
+		CU::Vector3f volumePos;
+		volumePos.x = RAND_FLOAT_RANGE(myEmitterData.MinEmissionArea.x, myEmitterData.MaxEmissionArea.x);
+		volumePos.y = RAND_FLOAT_RANGE(myEmitterData.MinEmissionArea.y, myEmitterData.MaxEmissionArea.y);
+		volumePos.z = RAND_FLOAT_RANGE(myEmitterData.MinEmissionArea.z, myEmitterData.MaxEmissionArea.z);
+		particle.position = volumePos * myToWorldSpace;
+
+
 		particle.color = myEmitterData.StartColor;
 		particle.size = myEmitterData.StartSize;
 
