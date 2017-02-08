@@ -107,7 +107,7 @@ void CParticleEmitterInstance::Update(const CU::Time& aDeltaTime)
 	if (myIsActive == true)
 	{
 		myEmitTimer += deltaTime;
-		if (myEmitTimer >= myEmitDelta)
+		while (myEmitTimer >= myEmitDelta)
 		{
 			myEmitTimer -= myEmitDelta;
 			EmitParticle();
