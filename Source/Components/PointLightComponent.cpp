@@ -7,6 +7,7 @@ PointLightComponent::PointLightComponent(CScene * aScene)
 	myScene = aScene;
 	myLightID = aScene->AddPointLightInstance(CPointLightInstance());
 	myPointLightInstace = aScene->GetPointLightInstance(myLightID);
+	myType = eComponentType::ePointLight;
 }
 
 PointLightComponent::~PointLightComponent()
@@ -39,6 +40,9 @@ void PointLightComponent::Receive(const eComponentMessageType aMessageType, cons
 {
 	switch (aMessageType)
 	{
+
+	case eComponentMessageType::eAddComponent:
+		if (aMessageData.myComponentTypeAdded != eComponentType::ePointLight) break;
 	case eComponentMessageType::eObjectDone:
 	case eComponentMessageType::eMoving:
 	{
