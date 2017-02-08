@@ -355,6 +355,7 @@
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="ChangeLevelTriggerComponent.h" />
+    <ClInclude Include="ChangeLevelTriggerComponentManager.h" />
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionComponentManager.h" />
     <ClInclude Include="ComponentMessageCallback.h" />
@@ -434,6 +435,7 @@
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="ChangeLevelTriggerComponent.cpp" />
+    <ClCompile Include="ChangeLevelTriggerComponentManager.cpp" />
     <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="CollisionComponentManager.cpp" />
     <ClCompile Include="ComponentMessageTypeToLua.cpp" />

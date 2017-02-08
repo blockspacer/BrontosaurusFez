@@ -4,6 +4,7 @@
 #include "LoadManager.h"
 #include "ComponentManager.h"
 #include "../Components/ChangeLevelTriggerComponent.h"
+#include "ChangeLevelTriggerComponentManager.h"
 
 int LoadChangeLevelTriggerComponent(KLoader::SLoadedComponentData someData)
 {
@@ -15,9 +16,7 @@ int LoadChangeLevelTriggerComponent(KLoader::SLoadedComponentData someData)
 		id = someData.myData.at("ID").GetUInt();
 	}
 
-	ChangeLevelTriggerComponent* levelChange = new ChangeLevelTriggerComponent(someData.myData.at("LevelToGoTo").GetUInt(), id);
-
-	CComponentManager::GetInstance().RegisterComponent(levelChange);
+	ChangeLevelTriggerComponent* levelChange = CChangeLevelTriggerComponentManager::GetInstance().CreateAndRegisterComponent(someData.myData.at("LevelToGoTo").GetUInt(), id);
 
 	return levelChange->GetId();
 }

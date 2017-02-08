@@ -29,5 +29,9 @@ private:
 
 	float myChangeColorTime;
 	float myTimeTilChangedColor;
+	CPointLightInstance* myPointLightInstace;
+	CU::Vector3f myLastColor;
+	float myLastRange;
+	float myLastIntensity;
 };
 
