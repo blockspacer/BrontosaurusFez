@@ -178,14 +178,35 @@ void InputController::Receive(const eComponentMessageType aMessageType, const SC
 	{
 		if(strcmp(aMessageData.myString,"BasicAttack") == 0)
 		{
+			for(unsigned short i = 0; i < mySkillInputMessageActivators.Size(); i++)
+			{
+				if(mySkillInputMessageActivators[i] == CU::eInputMessage::DIVIDE)
+				{
+					return;
+				}
+			}
 			mySkillInputMessageActivators.Add(CU::eInputMessage::DIVIDE);
 		}
 		else if (strcmp(aMessageData.myString, "WhirlWind") == 0)
 		{
+			for (unsigned short i = 0; i < mySkillInputMessageActivators.Size(); i++)
+			{
+				if (mySkillInputMessageActivators[i] == CU::eInputMessage::SPACE)
+				{
+					return;
+				}
+			}
 			mySkillInputMessageActivators.Add(CU::eInputMessage::SPACE);
 		}
 		else if (strcmp(aMessageData.myString, "SweepAttack") == 0)
 		{
+			for (unsigned short i = 0; i < mySkillInputMessageActivators.Size(); i++)
+			{
+				if (mySkillInputMessageActivators[i] == CU::eInputMessage::RIGHTMOUSEBUTTON)
+				{
+					return;
+				}
+			}
 			mySkillInputMessageActivators.Add(CU::eInputMessage::RIGHTMOUSEBUTTON);
 		}
 		else
