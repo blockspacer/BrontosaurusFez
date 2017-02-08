@@ -21,6 +21,7 @@ MovementComponent::MovementComponent()
 	myType = eComponentType::eMovement;
 	myIsActive = true;
 	myIsFollowingPath = false;
+
 }
 
 
@@ -41,6 +42,8 @@ void MovementComponent::Update(float aDeltaTime)
 				if (navmesh->IsValid(GetParent()->GetWorldPosition(), myTriangle, intersectingPoint) == false)
 				{
 					DL_PRINT("AI not placed on Navmesh.");
+					myTriangle = &navmesh->GetClosestTriangle(intersectingPoint);
+
 				}
 				else
 				{
