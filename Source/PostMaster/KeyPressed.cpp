@@ -77,22 +77,22 @@ eMessageReturn KeyPressed::DoEvent(CPlayState* aPlayState) const
 			return eMessageReturn::eStop;
 			break;
 
+#ifdef _RETAIL_BUILD
 		case CU::eKeys::L:
 		{
 			aPlayState->FlipCameraUnlocked();
 			break;
 		}
-		case CU::eKeys::H:
-//			aPlayState->TEMP_ADD_HAT(aPlayState->myPlayerObject);
-		default:
-			break;
+#endif // _RETAIL_BUILD
 		}
 
 
+#ifdef _RETAIL_BUILD
 		if (aPlayState->myCameraIsFree == true)
 		{
 			aPlayState->CameraMovement(myKey, true);
 		}
+#endif
 
 	}
 
