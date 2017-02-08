@@ -242,6 +242,11 @@ void CModelInstance::SetAnimationLooping(const bool aValue)
 
 }
 
+void CModelInstance::ResetAnimation()
+{
+	myAnimationCounter = 0.0f;
+}
+
 void CModelInstance::SetHighlightIntencity(const float aHighlightIntencity)
 {
 	myHighlightIntencity = aHighlightIntencity;
