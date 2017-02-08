@@ -4,6 +4,7 @@
 #include "WidgetContainer.h"
 #include "WidgetFactory.h"
 #include "GUICursor.h"
+#include "HatContainer.h"
 
 #include "../PostMaster/PostMaster.h"
 #include "../PostMaster/Event.h"
@@ -16,6 +17,8 @@
 
 static CU::Vector2f locMousePosition;
 
+GUI::HatContainer GUI::GUIManager::ourHatContainer;
+
 GUI::GUIManager::GUIManager()
 	: myWidgetContainer(nullptr)
 	, myFocusedWidget(nullptr)
@@ -26,6 +29,7 @@ GUI::GUIManager::GUIManager()
 	, myCamera(nullptr)
 	, myShouldRenderMouse(true)
 {
+	ourHatContainer.TryInit();
 }
 
 GUI::GUIManager::~GUIManager()
@@ -230,7 +234,13 @@ eMessageReturn GUI::GUIManager::MouseMoved(const CU::Vector2f& aMousePosition)
 		}
 		if (widget != nullptr && widget != myWidgetContainer)
 		{
+			if (widget->GetName() == "guiHat03")
+			{
+				int br = 0;
+				br++;
+			}
 			//Audio::CAudioInterface::GetInstance()->PostEvent("ButtonHover");
+			DL_PRINT("mouse entered %s", widget->GetName().c_str());
 			widget->OnMouseEnter(mousePosition);
 		}
 
@@ -259,6 +269,7 @@ eMessageReturn GUI::GUIManager::Recieve(const Message& aMessage)
 
 void GUI::GUIManager::PauseRenderAndUpdate()
 {
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::ePlayerGotHat);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eMouseMessage);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
 	PostMaster::GetInstance().UnSubscribe(myCursor, eMessageType::eMouseMessage);
@@ -272,6 +283,8 @@ void GUI::GUIManager::PauseRenderAndUpdate()
 		myWidgetContainer->SetVisibility(false);
 		myWidgetContainer->RemoveDebugLines();
 	}
+	
+	ourHatContainer.RemoveAllHats(*this);
 }
 
 void GUI::GUIManager::RestartRenderAndUpdate()
@@ -281,6 +294,7 @@ void GUI::GUIManager::RestartRenderAndUpdate()
 
 	myWidgetContainer->SetVisibility(true);
 
+	PostMaster::GetInstance().Subscribe(this, eMessageType::ePlayerGotHat);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage, 5);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage, 5);
 	PostMaster::GetInstance().Subscribe(myCursor, eMessageType::eMouseMessage, 6);
@@ -291,4 +305,17 @@ void GUI::GUIManager::RestartRenderAndUpdate()
 	{
 		myCursor->SetPosition(locMousePosition);
 	}
+
+	ourHatContainer.AddAllHats(*this);
+}
+
+void GUI::GUIManager::UpdateHatIcons()
+{
+	ourHatContainer.RemoveAllHats(*this);
+	ourHatContainer.AddAllHats(*this);
+}
+
+void GUI::GUIManager::DestroyHatContainer()
+{
+	ourHatContainer.Destroy();
 }

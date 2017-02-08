@@ -348,6 +348,8 @@
     <ClInclude Include="GUICursor.h" />
     <ClInclude Include="GUIManager.h" />
     <ClInclude Include="GUIPixelConstantBuffer.h" />
+    <ClInclude Include="HatContainer.h" />
+    <ClInclude Include="HatIcon.h" />
     <ClInclude Include="HealthWidget.h" />
     <ClInclude Include="ManaWidget.h" />
     <ClInclude Include="MoneyWidget.h" />
@@ -370,6 +372,8 @@
     <ClCompile Include="DraggableArea.cpp" />
     <ClCompile Include="GUICursor.cpp" />
     <ClCompile Include="GUIManager.cpp" />
+    <ClCompile Include="HatContainer.cpp" />
+    <ClCompile Include="HatIcon.cpp" />
     <ClCompile Include="HealthWidget.cpp" />
     <ClCompile Include="ManaWidget.cpp" />
     <ClCompile Include="MoneyWidget.cpp" />

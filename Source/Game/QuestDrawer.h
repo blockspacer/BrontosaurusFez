@@ -2,6 +2,7 @@
 #include "../BrontosaurusEngine/TextBox.h"
 #include "../PostMaster/Subscriber.h"
 #include "QuestManager.h"
+#include "../BrontosaurusEngine/TextInstance.h"
 
 
 namespace QM
@@ -20,8 +21,7 @@ namespace QM
 		eMessageReturn Recieve(const Message& aMessage) override;
 
 	private:
-		CTextBox myTextBox;
-		CTextInstance* myQuestCompleteText;
+		CTextInstance myTextInstance;
 		CQuestManager & myQuestManager;
 	};
 }

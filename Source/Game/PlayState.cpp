@@ -159,7 +159,7 @@ CPlayState::~CPlayState()
 	SAFE_DELETE(myScene);
 	SAFE_DELETE(myGameObjectManager);
 	SAFE_DELETE(myGUIManager);
-	
+
 	CModelComponentManager::Destroy();
 	CAudioSourceComponentManager::Destroy();
 	CParticleEmitterComponentManager::Destroy();
@@ -232,8 +232,8 @@ void CPlayState::Load()
 	myChangeTexts.Init(5);
 
 	myGoldText = new CTextInstance;
-	myGoldText->SetColor(CTextInstance::Black);
-	myGoldText->SetPosition(CU::Vector2f(0.575f, 0.93f));
+	myGoldText->SetColor({ 0.f, 0.f , 0.f, 1.f });
+	myGoldText->SetPosition(CU::Vector2f(0.575f, 0.95f));
 	myGoldText->SetText("");
 	myGoldText->Init();
 
@@ -246,7 +246,7 @@ void CPlayState::Load()
 	CU::CJsonValue levelsArray = levelsFile.at("levels");
 
 #ifdef _DEBUGq
-	myLevelIndex = levelsArray.Size()-1;
+	myLevelIndex = levelsArray.Size() - 1;
 #else
 	const int levelIndex = 0;
 #endif
@@ -328,8 +328,8 @@ void CPlayState::Load()
 		PollingStation::playerObject->AddComponent(CPickupManager::GetInstance().CreatePickerUpperComp());
 		PollingStation::playerObject->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
 		PollingStation::playerObject->AddComponent(new CMainStatComponent());
-		
-		PointLightComponent* pl =  CPointLightComponentManager::GetInstance().CreateAndRegisterComponent();
+
+		PointLightComponent* pl = CPointLightComponentManager::GetInstance().CreateAndRegisterComponent();
 
 		pl->SetColor({ 1.0f, 1.0f, 1.0f });
 		pl->SetIntensity(1.0f);
@@ -473,7 +473,7 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 
 	myGameObjectManager->DestroyObjectsWaitingForDestruction();
 	std::string goldAmount = "Gold: ";
-	goldAmount +=std::to_string(PollingStation::playerData->GetGold());
+	goldAmount += std::to_string(PollingStation::playerData->GetGold());
 	myGoldText->SetText(goldAmount.c_str());
 
 	SkillComponentManager::GetInstance().Update(aDeltaTime);
@@ -501,7 +501,7 @@ void CPlayState::Render()
 	myCollisionComponentManager->Render();
 
 	SChangeStatesMessage msg;
-	
+
 
 	if (myShuldRenderNavmesh == true)
 	{
@@ -549,7 +549,7 @@ void CPlayState::Render()
 void CPlayState::OnEnter(const bool aLetThroughRender)
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
-	
+
 
 	//Audio::CAudioInterface::GetInstance()->PostEvent("BayBlade");
 	if (!aLetThroughRender)
@@ -751,7 +751,7 @@ void CPlayState::CreateManagersAndFactories()
 	CMasterAI::Create();
 	RespawnComponentManager::Create();
 	CLevelManager::CreateInstance();
-	CEnemyFactory::Create(*myGameObjectManager,*myCollisionComponentManager,*myHealthBarManager);
+	CEnemyFactory::Create(*myGameObjectManager, *myCollisionComponentManager, *myHealthBarManager);
 	BlessingTowerComponentManager::CreateInstance();
 	CHealthRestoreTriggerComponentManager::Create();
 	CPointLightComponentManager::Create(*myScene);

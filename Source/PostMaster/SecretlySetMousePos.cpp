@@ -26,7 +26,7 @@ eMessageReturn CSecretlySetMousePos::DoEvent(GUICursor* aGUICursor) const
 		projectedPosition += projectedPosition.One;
 		projectedPosition *= 0.5f;
 
-		aGUICursor->SetPosition(projectedPosition);
+		aGUICursor->SetPositionAgain(projectedPosition);
 	}
 
 	return eMessageReturn::eContinue;

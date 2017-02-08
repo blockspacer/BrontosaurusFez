@@ -7,6 +7,7 @@ namespace GUI
 	class GUIManager;
 	class CHealthWidget;
 	class CManaWidget;
+	class HatContainer;
 }
 
 namespace QM
@@ -71,6 +72,7 @@ public:
 	virtual eMessageReturn DoEvent(CCollisionComponentManager*) const { return  eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(GUI::CHealthWidget*) const { return  eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(GUI::CManaWidget*) const { return  eMessageReturn::eContinue; }
+	virtual eMessageReturn DoEvent(GUI::HatContainer*) const { return  eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(CShopStorage*) const { return  eMessageReturn::eContinue; }
 	
 	virtual eMessageReturn DoEvent(CHatMaker*) const { return eMessageReturn::eContinue; }
