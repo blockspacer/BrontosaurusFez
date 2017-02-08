@@ -69,10 +69,14 @@ void CHatMaker::Update()
 		boneName += "_SKIN";
 		CU::Matrix44f hatTransform = model->GetBoneTransform(myPlayerModel->GetModelInst()->GetAnimationCounter(), myPlayerModel->GetModelInst()->GetAnimationState(), boneName.c_str());
 		float startHeight = hatTransform.m42;
-
+		float totalHatOffset = 0.0f;
 		for (int i = 0; i < myHatObjects.Size(); ++i)
 		{
-			hatTransform.m42 = startHeight + 10.f  * i;
+
+			float heigth = i > 0 ? myHatObjects[i - 1].height : 0.0f;
+			totalHatOffset += heigth;
+
+			hatTransform.m42 = startHeight + totalHatOffset + 2.0f;
 			myHatObjects[i].myObjectPtr->GetLocalTransform() = myHatObjects[i].myTransformation * hatTransform;
 		}
 		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
@@ -93,6 +97,9 @@ void CHatMaker::LoadBluePrints(const std::string& aFilePath)
 		blueprint->HatName = levelsArray[i].at("HatName").GetString();
 		blueprint->HatModel = levelsArray[i].at("Model").GetString();
 		blueprint->HatDialog = "";
+
+		blueprint->height = levelsArray[i].at("Height").GetFloat();
+
 
 		if (levelsArray[i].Count("Dialog") > 0)
 		{
@@ -163,8 +170,8 @@ void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName,const bool aIsI
 	{
 		SHatBluePrint* theBluePrint = myBluePrints.at(aHatName);
 		CGameObject* hatObject = myGameObjectManager->CreateGameObject();
-		
 		SHatObject cashedHat;
+		cashedHat.height = theBluePrint->height;
 		cashedHat.myObjectPtr = hatObject;
 		cashedHat.hatName = aHatName;
 		//Hat offset magics
@@ -175,16 +182,14 @@ void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName,const bool aIsI
 
 		int i = min(myHatObjects.Size(), 1);
 		hatPositionOffset.x += RAND_FLOAT_RANGE(-2.5f, 2.5f);
-		hatPositionOffset.y += RAND_FLOAT_RANGE(0.f, 5.f);
+		//hatPositionOffset.y += RAND_FLOAT_RANGE(0.f, 5.f);
 		hatPositionOffset.z += RAND_FLOAT_RANGE(-2.5f, 2.5f);
 		hatPositionOffset *= i;
 		cashedHat.myTransformation.SetPosition(hatPositionOffset);
 		//float scale = RAND_FLOAT_RANGE(0.75f, 1.25f);
 		//cashedHat.myTransformation.Scale({ scale, scale, scale });
-
-
 		
-		float angle = PI / 8.f;
+		float angle = PI / 16.f;
 		float x = RAND_FLOAT_RANGE(-angle, angle);
 		float y = RAND_FLOAT_RANGE(0, 2 * PI);
 		float z = RAND_FLOAT_RANGE(-angle, angle);
@@ -240,25 +245,26 @@ void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName,const bool aIsI
 			PollingStation::currentDialog = theBluePrint->HatDialog;
 			PostMaster::GetInstance().SendLetter(eMessageType::eStateStackMessage, PushState(PushState::eState::eDialog, 1));
 		}
-
-		for (unsigned int i = 0; i < myHatObjects.Size(); ++i)
+		if (myHatObjects.Size() > 1)
 		{
-			if (myHatObjects[i].hatName == "StaminaHatV3")
+			bool iHaveStaminaHat = false;;
+			for (unsigned int i = 0; i < myHatObjects.Size(); ++i)
 			{
-				//myHatObjects[i].myTransformation.myPosition = { 0.0f, 0.0f, 0.0f };
-				SHatObject temp = myHatObjects[i];
-				myHatObjects[i] = myHatObjects.GetLast();
-				myHatObjects.GetLast() = temp;
-			}
-			else if (myHatObjects[i].hatName == "HealthHatV3")
+				if (myHatObjects[i].hatName == "StaminaHatV3")
+				{
+					SHatObject temp = myHatObjects[i];
+					myHatObjects[i] = myHatObjects.GetLast();
+					myHatObjects.GetLast() = temp;
+					iHaveStaminaHat = true;
+				}
+				else if (myHatObjects[i].hatName == "HealthHatV3")
+				{
+					SHatObject temp = myHatObjects[i];
+					myHatObjects[i] = myHatObjects.GetLast();
+					myHatObjects.GetLast() = temp;
+				}
 
-			{
-				myHatObjects[i].myTransformation.myPosition = { 0.0f, 0.0f, 0.0f };
-				SHatObject temp = myHatObjects[i];
-				myHatObjects[i] = myHatObjects.GetLast();
-				myHatObjects.GetLast() = temp;
 			}
-
 		}
 	}
 	SComponentMessageData data;
