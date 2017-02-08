@@ -58,7 +58,7 @@ void InputController::Update(float aDeltaTime)
 			{
 				mySkillInputMessageActivators[i] = CU::eInputMessage::RIGHTMOUSEBUTTON;
 			}
-			else if (i == 1 && mySkillInputMessageActivators[i] != CU::eInputMessage::SPACE)
+			else if (i == 2 && mySkillInputMessageActivators[i] != CU::eInputMessage::SPACE)
 			{
 				mySkillInputMessageActivators[i] = CU::eInputMessage::SPACE;
 			}
