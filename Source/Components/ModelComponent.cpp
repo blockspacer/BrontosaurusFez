@@ -99,7 +99,7 @@ void CModelComponent::Receive(const eComponentMessageType aType, const SComponen
 		myModel->SetVisibility(true);
 		myModel->SetAnimationLooping(true);
 		break;
-	case eComponentMessageType::eSetHighLight:
+	case eComponentMessageType::eSetHighlight:
 		myModel->SetHighlightIntencity(aData.myFloat);
 		break;
 	}

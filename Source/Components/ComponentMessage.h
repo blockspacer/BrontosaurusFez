@@ -94,7 +94,7 @@ enum class eComponentMessageType
 	eEnterNewTriangle,
 	eNotOnNavmesh,
 	eSetPathPosition,
-	eSetHighLight,
+	eSetHighlight,
 	eStopWhirlwind,
 	eTryToSelectSkill,
 	eCheckIfCanSelect,
