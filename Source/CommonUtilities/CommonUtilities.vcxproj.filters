@@ -324,7 +324,6 @@
     <ClInclude Include="EInputMessage.h">
       <Filter>Input</Filter>
     </ClInclude>
-    <ClInclude Include="QuickSort.h" />
     <ClInclude Include="DynamicMemoryPool.h">
       <Filter>MemoryPool</Filter>
     </ClInclude>
@@ -370,6 +369,7 @@
     <ClInclude Include="StopWatch.h">
       <Filter>Timer</Filter>
     </ClInclude>
+    <ClInclude Include="Octree.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Timer.cpp">
@@ -459,6 +459,7 @@
     <ClCompile Include="StopWatch.cpp">
       <Filter>Timer</Filter>
     </ClCompile>
+    <ClCompile Include="Octree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="CommonUtilities.rc" />
