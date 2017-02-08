@@ -53,7 +53,6 @@
 #include "PostMaster/Event.h"
 
 #include "PollingStation.h"
-
 #include "BrontosaurusEngine/LineDrawer.h"
 #include "BrontosaurusEngine/TextInstance.h"
 
@@ -109,10 +108,14 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 	, myQuestManager()
 	, myQuestDrawer(myQuestManager)
 	, myShuldRenderNavmesh(false)
+	, myCameraIsFree(false)
+	, myCameraKeysDown(false)
 {
 	myIsLoaded = false;
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eHatAdded);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eGoldChanged);
+	
+
 }
 
 CPlayState::~CPlayState()
@@ -432,21 +435,27 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	if (audio != nullptr)
 	{
 		CAudioSourceComponentManager::GetInstance().Update();
+		if (PollingStation::playerData->myIsWhirlwinding == true)
+		{
+			audio->PostEvent("WhirlWind");
+		}
+		else
+		{
+			audio->PostEvent("StopWhirlWind");
+		}
 	}
 
 	myHatMaker->Update();
 
-	if (PollingStation::playerData->myIsWhirlwinding == true)
-	{
-		audio->PostEvent("WhirlWind");
-	}
-	else
-	{
-		audio->PostEvent("StopWhirlWind");
-	}
 
 	CParticleEmitterComponentManager::GetInstance().UpdateEmitters(aDeltaTime);
 	InputControllerManager::GetInstance().Update(aDeltaTime);
+
+	if (myCameraIsFree == true)
+	{
+		UpdateCamera(aDeltaTime.GetSeconds());
+	}
+	
 	MovementComponentManager::GetInstance().Update(aDeltaTime);
 	AIControllerManager::GetInstance().Update(aDeltaTime);
 	SkillSystemComponentManager::GetInstance().Update(aDeltaTime);
@@ -599,7 +608,6 @@ void CPlayState::ChangeGoldAmount(const int aValue, const bool aDecreaseGold)
 	}
 }
 
-
 eMessageReturn CPlayState::Recieve(const Message& aMessage)
 {
 	return aMessage.myEvent.DoEvent(this);
@@ -618,6 +626,92 @@ CHealthBarComponentManager * CPlayState::GetHealthBarManager()
 CCollisionComponentManager* CPlayState::GetCollisionManager()
 {
 	return myCollisionComponentManager;
+}
+
+void CPlayState::CameraMovement(const CU::eKeys& aKey, bool pressed)
+{
+	switch (aKey)
+	{
+	case CU::eKeys::W:
+		myCameraKeysDown[0] = pressed;
+		break;
+	case CU::eKeys::S:
+		myCameraKeysDown[1] = pressed;
+		break;
+	case CU::eKeys::A:
+		myCameraKeysDown[2] = pressed;
+		break;
+	case CU::eKeys::D:
+		myCameraKeysDown[3] = pressed;
+		break;
+	case CU::eKeys::Q:
+		myCameraKeysDown[4] = pressed;
+		break;
+	case CU::eKeys::E:
+		myCameraKeysDown[5] = pressed;
+		break;
+	case CU::eKeys::UP:
+		myCameraKeysDown[6] = pressed;
+		break;
+	case CU::eKeys::DOWN:
+		myCameraKeysDown[7] = pressed;
+		break;
+	case CU::eKeys::LEFT:
+		myCameraKeysDown[8] = pressed;
+		break;
+	case CU::eKeys::RIGHT:
+		myCameraKeysDown[9] = pressed;
+		break;
+	default:
+		break;
+	}
+
+
+
+}
+
+void CPlayState::UpdateCamera(const float dt)
+{
+	CU::Camera& camera = myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera);
+	float deltaTime = dt;
+	float speed = 500.f;
+	float rotspeed = 50.f;
+	rotspeed = DEGREES_TO_RADIANS(rotspeed);
+
+	if(myCameraKeysDown[0] == true)
+		camera.TranslateForward(speed * deltaTime);
+	else if (myCameraKeysDown[1] == true)
+		camera.TranslateForward(-speed * deltaTime);
+	
+	if (myCameraKeysDown[2] == true)
+		camera.TranslateSideways(-speed * deltaTime);
+	else if (myCameraKeysDown[3] == true)
+		camera.TranslateSideways(speed * deltaTime);
+	
+	if (myCameraKeysDown[4] == true)
+		camera.Roll(rotspeed * deltaTime);
+	else if (myCameraKeysDown[5] == true)
+		camera.Roll(-rotspeed * deltaTime);
+	
+	if (myCameraKeysDown[6] == true)
+
+		camera.Pitch(rotspeed * deltaTime);
+	else if (myCameraKeysDown[7] == true)
+		camera.Pitch(-rotspeed * deltaTime);
+	
+	
+	if (myCameraKeysDown[8] == true)
+		camera.Jaw(-rotspeed * deltaTime);
+	else if (myCameraKeysDown[9] == true)
+		camera.Jaw(rotspeed * deltaTime);
+}
+
+void CPlayState::FlipCameraUnlocked()
+{
+	myCameraIsFree = !myCameraIsFree;
+	SComponentMessageData data;
+	data.myBool = myCameraIsFree;
+	PollingStation::playerObject->NotifyComponents(eComponentMessageType::eUnlockCamera, data);
 }
 
 void CPlayState::CreateManagersAndFactories()

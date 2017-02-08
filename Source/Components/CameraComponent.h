@@ -29,6 +29,7 @@ private:
 
 	CU::Vector3f myOffsetPosition;
 	CU::Camera* myCamera;
+	bool myUnlocked;
 };
 
 inline void CCameraComponent::SetCamera(CU::Camera& aCamera)

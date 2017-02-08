@@ -23,6 +23,19 @@
 #include "PostMaster/PushState.h"
 #include "PostMaster\PlayerGotHat.h"
 
+
+
+namespace
+{
+#ifndef RAND_FLOAT_RANGE
+#define RAND_FLOAT_RANGE(LOW, HIGH) (LOW) + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/((HIGH)-(LOW))));
+#endif
+}
+
+
+
+
+
 CHatMaker::CHatMaker(CGameObjectManager* aGameObjectManager)
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eHatAdded);
@@ -60,7 +73,7 @@ void CHatMaker::Update()
 		for (int i = 0; i < myHatObjects.Size(); ++i)
 		{
 			hatTransform.m42 = startHeight + 10.f  * i;
-			myHatObjects[i]->GetLocalTransform() = hatTransform;
+			myHatObjects[i].myObjectPtr->GetLocalTransform() = myHatObjects[i].myTransformation * hatTransform;
 		}
 		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 	}
@@ -150,7 +163,41 @@ void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName,const bool aIsI
 	{
 		SHatBluePrint* theBluePrint = myBluePrints.at(aHatName);
 		CGameObject* hatObject = myGameObjectManager->CreateGameObject();
-		myHatObjects.Add(hatObject);
+		
+		SHatObject cashedHat;
+		cashedHat.myObjectPtr = hatObject;
+		//Hat offset magics
+
+		CU::Vector3f hatPositionOffset;
+
+		if (myHatObjects.Size() > 0) hatPositionOffset = myHatObjects.GetLast().myTransformation.GetPosition();
+
+		int i = min(myHatObjects.Size(), 1);
+		hatPositionOffset.x += RAND_FLOAT_RANGE(-5.f, 5.f);
+		hatPositionOffset.y += RAND_FLOAT_RANGE(0.f, 5.f);
+		hatPositionOffset.z += RAND_FLOAT_RANGE(-5.f, 5.f);
+		hatPositionOffset *= i;
+		cashedHat.myTransformation.SetPosition(hatPositionOffset);
+		float scale = RAND_FLOAT_RANGE(0.75f, 1.25f);
+		cashedHat.myTransformation.Scale({ scale, scale, scale });
+
+
+		
+		float angle = PI / 16.f;
+		float x = RAND_FLOAT_RANGE(-angle, angle);
+		float y = RAND_FLOAT_RANGE(0, 2 * PI);
+		float z = RAND_FLOAT_RANGE(-angle, angle);
+
+		cashedHat.myTransformation.Rotate(x, y, z);
+		//end of life and all		
+		
+
+
+
+
+
+
+		myHatObjects.Add(cashedHat);
 		CU::Vector3f hatPos = hatObject->GetLocalTransform().GetPosition();
 		//hatObject->GetLocalTransform().SetPosition({ hatPos.x, hatPos.y + 175.f + 12.5f * myHatsGivenToPlayer, hatPos.z });
 		myHatsGivenToPlayer++;

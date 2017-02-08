@@ -139,7 +139,7 @@ eStateStatus CDialogState::Update(const CU::Time& aDeltaTime)
 
 void CDialogState::Render()
 {
-	if (myHasFailed == false)
+	if (myHasFailed == false && myBackground != nullptr)
 	{
 		SChangeStatesMessage* changeStateMessage = new SChangeStatesMessage();
 		changeStateMessage->myBlendState = eBlendState::eNoBlend;

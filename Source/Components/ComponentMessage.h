@@ -105,7 +105,8 @@ enum class eComponentMessageType
 	eEnemyReturnToSpawnPoint,
 	eEnemyStartChaseAgain,
 	eTurnOffThePointLight,
-	eLength
+	eUnlockCamera,
+	eLength,
 };
 
 #ifndef STATIC_SIZEOF
