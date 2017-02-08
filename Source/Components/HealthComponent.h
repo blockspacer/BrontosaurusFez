@@ -3,7 +3,7 @@
 #include "../PostMaster/Subscriber.h"
 #include "HealthPoint.h"
 
-enum class eObjectType
+enum class eObjectType // ORDER MATTERS
 {
 	eDefault,
 	eUrn,
@@ -11,8 +11,9 @@ enum class eObjectType
 	eWitch,
 	eZombie,
 	eBlob,
+	ePlayer,
 	eLeaper,
-	ePlayer
+	eChest,
 };
 
 class CHealthComponent : public CComponent, public Subscriber
