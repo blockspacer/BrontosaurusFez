@@ -80,6 +80,7 @@ void CHealthComponent::Init()
 void CHealthComponent::Receive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
 {
 	SComponentMessageData data;
+	SComponentMessageData soundData;
 	float temp;
 	switch (aMessageType)
 	{
@@ -97,7 +98,19 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 	case eComponentMessageType::eTakeDamage:
 		SetHealth(myHealth - aMessageData.myInt);
 		data.myUChar = myPercentageLeft * 100;
-		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data);
+		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data); 
+		//if (myObjectType != eObjectType::eBarrel && myObjectType != eObjectType::eUrn)
+		{
+			if (myObjectType == eObjectType::ePlayer)
+			{
+				soundData.myString = "Hit";
+			}
+			else
+			{
+				soundData.myString = "Slash";
+			}
+			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, soundData);
+		}
 		break;
 	case eComponentMessageType::eHeal:
 		SetHealth(myHealth + aMessageData.myInt);
@@ -115,26 +128,28 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 		data.myUChar = myPercentageLeft * 100;
 		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data);
 		break;
-	case eComponentMessageType::eDied:
-		switch (myObjectType)
-		{
+	case eComponentMessageType::eDied:				// ULTRA TEMP :D
+		switch ((eObjectType)((int)myObjectType+1)) // NOTE till alex, tror inte att det är updaterat någonstans
+		{											// efter vi satte default högst upp.
 		case eObjectType::eUrn:
-			data.myString = "BreakUrn";
 			DL_PRINT("an URN died");
-			GetParent()->NotifyComponents(eComponentMessageType::eChangeFBXToDead, data);
+			data.myString = "BreakUrn";
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
+			data.myString = "Models/PlaceHolders/urnDead.fbx";
+			GetParent()->NotifyComponents(eComponentMessageType::eChangeFBXToDead, data); // Anims handled another way?
 			break;
 		case eObjectType::eBarrel:
 		{
-			data.myString = "BreakBarrel";
 			DL_PRINT("a BARREL died");
-			GetParent()->NotifyComponents(eComponentMessageType::eChangeFBXToDead, data);
+			data.myString = "BreakBarrel";
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
+			data.myString = "Models/PlaceHolders/barrelDead.fbx";
+			GetParent()->NotifyComponents(eComponentMessageType::eChangeFBXToDead, data);
 			break;
 		}
 		case eObjectType::eWitch:
-			data.myString = "EnemyDie";
 			DL_PRINT("a WITCH died");
+			data.myString = "EnemyDie";
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
 			break;
 		case eObjectType::eZombie:
@@ -143,13 +158,13 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
 			break;
 		case eObjectType::eBlob:
-			data.myString = "EnemyDie";
 			DL_PRINT("a BLOB died");
+			data.myString = "EnemyDie";
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
 			break;
 		case eObjectType::ePlayer:
-			data.myString = "EnemyDie";
 			DL_PRINT("a PLAYER died");
+			data.myString = "EnemyDie";
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
 			break;
 
@@ -157,6 +172,7 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 		case eObjectType::eDefault:
 		default:
 			DL_PRINT("a DEFAULT died"); ///yes I'm intentionally using DEFAULT as a noun.
+			data.myString = "Models/PlaceHolders/barrelDead.fbx";
 			GetParent()->NotifyComponents(eComponentMessageType::eChangeFBXToDead, data);
 			break;
 		}

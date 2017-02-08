@@ -2,7 +2,7 @@
 #include "IController.h"
 
 
-class CSeekController : public IController  // Bugg, fiender kan typ gå in i orbit.
+class CSeekController : public IController 
 {
 public:
 	CSeekController();
@@ -28,6 +28,7 @@ private:
 	CU::Vector2f myTarget;
 	CU::Vector2f myAcceleration;
 	CU::Vector2f myFormationDirection;
+	CU::Vector2f myStartPosition;
 
 	float myMaxSpeed;
 	float myMaxAcceleration;
@@ -35,9 +36,12 @@ private:
 	float mySlowdownRadius;
 	float myAggroRange;
 	float myCallForHelpRadius;
+	float myEvadeRadius;
+	float myElapsedEvadeTime;
 
 	short myFormationIndex;
 	bool myHaveBeenCalledForHelp;
+	bool myShouldGoBackToStatPosition;
 	// Inherited via IController
 	void Destroy() override;
 };

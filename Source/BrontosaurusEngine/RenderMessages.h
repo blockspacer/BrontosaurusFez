@@ -30,6 +30,8 @@ enum class eRasterizerState : int;
 enum class eBlendState : int;
 enum class eDepthStencilState : int;
 enum class eSamplerState : int;
+enum class eAlignment : int;
+
 
 typedef unsigned int ParticleEmitterID;
 
@@ -241,6 +243,7 @@ struct SRenderTextMessage : SRenderMessage
 	CU::Vector2f myPosition;
 	CCoolText *myText;
 	CU::Vector2f myLineHeight;
+	eAlignment myAlignement;
 };
 
 

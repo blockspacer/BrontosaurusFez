@@ -24,12 +24,12 @@ void StateStack::PushState(State *aState)
 	{
 		if (myStates.Size() > 0)
 		{
-			myStates.GetLast()->OnExit();
+			myStates.GetLast()->OnExit(aState->GetLetThroughRender());
 		}
 
 		myStates.Add(aState);
 		aState->Init();
-		aState->OnEnter();
+		aState->OnEnter(false);
 	}
 }
 
@@ -119,13 +119,13 @@ void StateStack::Render()
 
 void StateStack::Pop()
 {
-	myStates.GetLast()->OnExit();
-
+	myStates.GetLast()->OnExit(false);
+	bool letThroughRender = myStates.GetLast()->GetLetThroughRender();
 	delete myStates.Pop();
 
 	if (myStates.Size() > 0)
 	{
-		myStates.GetLast()->OnEnter();
+		myStates.GetLast()->OnEnter(letThroughRender);
 	}
 }
 
@@ -133,7 +133,7 @@ void StateStack::Clear()
 {
 	while (myStates.Size() > 0)
 	{
-		myStates.GetLast()->OnExit();
+		myStates.GetLast()->OnExit(false);
 		delete myStates.Pop();
 	}
 }

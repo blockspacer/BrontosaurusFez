@@ -37,5 +37,6 @@ private:
 	float myMaxVelocity;
 	float myElapsedPathFindingCountdown;
 	bool myIsActive;
+	bool myIsPlayerAlive;
 };
 

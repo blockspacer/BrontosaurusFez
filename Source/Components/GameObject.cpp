@@ -59,6 +59,11 @@ void CGameObject::AddComponent(CComponent* aComponent)
 	Receive(eComponentMessageType::eAddComponent, data);
 }
 
+void CGameObject::RemoveComponent(CComponent * aComponent)
+{
+	myComponents.RemoveCyclic(aComponent);
+}
+
 void CGameObject::NotifyComponents(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
 {
 	if (myParent != nullptr)

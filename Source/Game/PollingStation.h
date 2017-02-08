@@ -9,6 +9,7 @@ struct PlayerData;
 class CComponent;
 class CNavmesh;
 
+
 template<class _Elem, class _Traits, class _Alloc>
 class basic_string;
 

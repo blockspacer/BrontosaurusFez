@@ -453,14 +453,9 @@ namespace CU
 
 		Matrix44<TYPE>& Scale(const Vector3<TYPE>& aScaleVector)
 		{
-			Matrix44 scaleMatrix;
-			
-			scaleMatrix.m11 = aScaleVector.x;
-			scaleMatrix.m22 = aScaleVector.y;
-			scaleMatrix.m33 = aScaleVector.z;
-			scaleMatrix.m44 = 1;
-
-			*this = scaleMatrix * *this;
+			m11 *= aScaleVector.x;
+			m22 *= aScaleVector.y;
+			m33 *= aScaleVector.z;
 
 			return *this;
 		}

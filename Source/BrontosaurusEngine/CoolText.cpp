@@ -63,7 +63,31 @@ CCoolText::~CCoolText()
 	SAFE_RELEASE(myPixelConstantBuffer);
 }
 
-void CCoolText::Render(const CU::GrowingArray<CU::DynamicString>& someStrings, const CU::Vector2f& aPosition, const CU::Vector4f& aColor/*, const CU::Vector2i& aSize*/)
+CU::Vector2f CCoolText::CalculateAdjustment(eAlignment aAlignement,std::wstring aWString)
+{
+	if (aAlignement == eAlignment::LEFT)
+	{
+		return CU::Vector2f::Zero;
+	}
+
+	float stringWidth = 0;
+
+	for (std::wstring::size_type i = 1; i < aWString.size(); ++i)
+	{
+		const CU::Vector2i pixelAdvance = myFont.GetAdvance(aWString[i], aWString[i - 1], true);
+		const CU::Vector2f screenAdvance(static_cast<float>(pixelAdvance.x) / WINDOW_SIZE_F.x, static_cast<float>(pixelAdvance.y) / WINDOW_SIZE_F.y);
+		stringWidth -= screenAdvance.x;
+	}
+
+	if (aAlignement == eAlignment::CENTER)
+	{
+		stringWidth = stringWidth / 2;
+	}
+
+	return CU::Vector2f(stringWidth, 0);
+}
+
+void CCoolText::Render(const CU::GrowingArray<CU::DynamicString>& someStrings, const CU::Vector2f& aPosition, const CU::Vector4f& aColor/*, const CU::Vector2i& aSize*/, eAlignment anAlignement)
 {
 	CU::Vector2f penPosition = aPosition;
 
@@ -72,11 +96,11 @@ void CCoolText::Render(const CU::GrowingArray<CU::DynamicString>& someStrings, c
 	for (int j = 0; j < someStrings.Size(); ++j)
 	{
 
-		penPosition.x = aPosition.x;
-		penPosition.y += GetlineHeight();
-
 		const std::string tempString = someStrings[j].c_str();
 		std::wstring wideString(tempString.begin(), tempString.end());
+
+		penPosition.x = aPosition.x + CalculateAdjustment(anAlignement, wideString).x;
+		penPosition.y += GetlineHeight();
 
 		for (size_t i = 0; i < wideString.size(); ++i)
 		{

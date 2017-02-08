@@ -193,10 +193,9 @@ void CModelInstance::SetTransformation(CU::Matrix44f& aTransformation)
 
 void CModelInstance::SetPosition(CU::Vector3f aPosition)
 {
-	myTransformation.m41 += aPosition.x;
-	myTransformation.m42 += aPosition.y;
-	myTransformation.m43 += aPosition.z;
-
+	myTransformation.m41 = aPosition.x;
+	myTransformation.m42 = aPosition.y;
+	myTransformation.m43 = aPosition.z;
 }
 
 bool CModelInstance::ShouldRender()

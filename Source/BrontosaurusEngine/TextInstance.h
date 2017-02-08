@@ -5,8 +5,11 @@
 #include "CoolText.h"
 #include "../CommonUtilities/GrowingArray.h"
 #include "../CommonUtilities/DL_Debug.h"
+#include "Allignment.h"
 
 class CText;
+
+
 
 class CTextInstance
 {
@@ -42,6 +45,8 @@ public:
 
 	CU::Vector2f GetQuadSizeNormalized() const;
 
+	void SetAlignment(eAlignment anAlignment);
+
 	CTextInstance& operator=(const CTextInstance& aTextInstance);
 private:
 	//CU::DynamicString myString;
@@ -50,6 +55,8 @@ private:
 	CU::Vector2f myPosition;
 	CCoolText* myText;
 	CU::Vector2f myLineGap;
+
+	eAlignment myAlignemnt;
 };
 
 inline void CTextInstance::SetPosition(const CU::Vector2f & aPosition)

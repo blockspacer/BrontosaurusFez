@@ -12,7 +12,7 @@ const CU::Vector4f CTextInstance::White(1, 1, 1, 1);
 
 CTextInstance::CTextInstance()
 	: myText(nullptr)
-	, myColor(1, 1, 1, 1)
+	  , myAlignemnt(eAlignment::LEFT), myColor(1, 1, 1, 1)
 {
 	myStrings.Init(2);
 }
@@ -44,6 +44,7 @@ void CTextInstance::Render() const
 		renderTextMessage->myLineHeight = myLineGap + CU::Vector2f(0,GetlineHeight());
 		renderTextMessage->myStrings = myStrings;
 		renderTextMessage->myText = myText;
+		renderTextMessage->myAlignement = myAlignemnt;
 		CEngine::GetInstance()->GetRenderer().AddRenderMessage(renderTextMessage);
 	}
 }
@@ -74,6 +75,11 @@ CU::Vector2f CTextInstance::GetQuadSizeNormalized() const
 
 	rectPixelSize /= WINDOW_SIZE_F;
 	return rectPixelSize;
+}
+
+void CTextInstance::SetAlignment(eAlignment anAlignment)
+{
+	myAlignemnt = anAlignment;
 }
 
 CTextInstance& CTextInstance::operator=(const CTextInstance& aTextInstance)

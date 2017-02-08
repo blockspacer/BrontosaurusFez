@@ -64,11 +64,14 @@ void CModelComponent::Receive(const eComponentMessageType aType, const SComponen
 		break;
 	case eComponentMessageType::eChangeFBXToDead:
 	{
-		//CU::Matrix44f orientation = myModel->GetTransformation();
-		myModel->SetVisibility(false);
-		//orientation.GetPosition().y -= 100;
-		//SAFE_DELETE(myModel);
-		//myModel = new CModelInstance("Models/Placeholders/barrelDead.fbx", orientation);
+		CU::Matrix44f orientation = myModel->GetTransformation();
+		myModel->SetVisibility(false); // Much easier to just temp set to invis.
+		
+		CModelComponent* newComp =
+			CModelComponentManager::GetInstance().CreateComponent(aData.myString);
+		newComp->myModel->myTransformation = orientation;
+		GetParent()->AddComponent(&*newComp);
+		GetParent()->RemoveComponent(this); // is deleted in compmgr when level changes.
 		break;
 	}
 	case eComponentMessageType::eAddComponent:

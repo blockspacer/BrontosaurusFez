@@ -44,14 +44,14 @@ void CreditsState::Render()
 	mysprite->Render();
 }
 
-void CreditsState::OnEnter()
+void CreditsState::OnEnter(const bool aLetThroughRender)
 {
 	//PostMaster::GetInstance().Subscribe(this, eMessageType::eStateMessage);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
 	mysprite = new CSpriteInstance("Models/credits/CreditsScreen.dds",CU::Vector2f(1, 1),CU::Vector2f(0,1));
 }
 
-void CreditsState::OnExit()
+void CreditsState::OnExit(const bool /*aLetThroughRender*/)
 {
 	//PostMaster::GetInstance().UnSubscribe(this, eMessageType::eStateMessage);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);

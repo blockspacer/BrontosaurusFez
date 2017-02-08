@@ -96,9 +96,9 @@
 #include "PlayerManaMessenger.h"
 
 //ULTRA TEMP INCLUDES, remove if you see and remove the things that don't compile afterwards
-#include "../Components/ScriptComponent.h"
 #include "../Components/ScriptComponentManager.h"
 #include "ParticleEffectManager.h"
+#include "PostMaster/SecretlySetMousePos.h"
 
 CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const bool aShouldReturnToLevelSelect)
 	: State(aStateStack)
@@ -171,7 +171,6 @@ CPlayState::~CPlayState()
 	DropComponentManager::DestroyInstance();
 	PollingStation::NullifyLevelSpecificData();
 	ManaComponentManager::DestroyInstance();
-	CShopStorage::Destroy();
 	CPickupFactory::Destroy();
 	CPickupManager::DestroyInstance();
 	RespawnComponentManager::Destroy();
@@ -344,11 +343,6 @@ void CPlayState::Load()
 		////TEMP CARL END
 	}
 
-	for (unsigned int i = 0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); i++)
-	{
-		PollingStation::myThingsEnemiesShouldAvoid[i]->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
-	}
-
 
 
 	CGameObject* mouseObject = myGameObjectManager->CreateGameObject();
@@ -364,6 +358,12 @@ void CPlayState::Load()
 	mouseObject->AddComponent(myMouseComponent);
 
 	myGameObjectManager->SendObjectsDoneMessage();
+
+
+	for (unsigned int i = 0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); i++)
+	{
+		PollingStation::myThingsEnemiesShouldAvoid[i]->AddComponent(CAudioSourceComponentManager::GetInstance().CreateComponent());
+	}
 
 	//Give hats on level entry
 	myHatMaker->LoadBluePrints("Json/Hats/HatBluePrints.json");
@@ -390,6 +390,9 @@ void CPlayState::Load()
 			}
 		}
 	}
+
+	CSecretlySetMousePos::SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
+
 	myIsLoaded = true;
 
 	//get time to load the level:
@@ -420,11 +423,7 @@ void CPlayState::Init()
 
 	Audio::CAudioInterface::GetInstance()->PostEvent(levelsArray[myLevelIndex].GetString().c_str());
 
-
-
-
-
-
+	myGameEventMessenger.Init({ 0.5f, 0.1f });
 }
 
 eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
@@ -481,7 +480,7 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 		position.y += 1 * aDeltaTime.GetSeconds();
 		myChangeTexts[i]->SetPosition(position);
 	}
-
+	myGameEventMessenger.Update(aDeltaTime.GetSeconds());
 
 	return myStatus;
 }
@@ -535,25 +534,31 @@ void CPlayState::Render()
 	}
 
 	myQuestDrawer.Render();
+	myGameEventMessenger.Render();
 }
 
-void CPlayState::OnEnter()
+void CPlayState::OnEnter(const bool aLetThroughRender)
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage);
 	
 
 	//Audio::CAudioInterface::GetInstance()->PostEvent("BayBlade");
-	myGUIManager->RestartRenderAndUpdate();
+	if (!aLetThroughRender)
+	{
+		myGUIManager->RestartRenderAndUpdate();
+	}
+
 	myQuestManager.CompleteEvent();
 }
 
-void CPlayState::OnExit()
+void CPlayState::OnExit(const bool aLetThroughRender)
 {
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eKeyboardMessage);
 
-
-
-	myGUIManager->PauseRenderAndUpdate();
+	if (!aLetThroughRender)
+	{
+		myGUIManager->PauseRenderAndUpdate();
+	}
 }
 
 void CPlayState::Pause()
@@ -580,7 +585,7 @@ void CPlayState::ChangeGoldAmount(const int aValue, const bool aDecreaseGold)
 	PollingStation::playerData->AddGold(aValue);
 
 	myChangeTexts.Add(new CTextInstance());
- 	CTextInstance* text = myChangeTexts.GetLast();
+	CTextInstance* text = myChangeTexts.GetLast();
 
 	text->SetColor(CTextInstance::Black);
 	text->SetPosition(myGoldText->GetPosition());
