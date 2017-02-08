@@ -104,7 +104,12 @@ enum class eComponentMessageType
 	eRemoveHoveredObject,
 	eEnemyReturnToSpawnPoint,
 	eEnemyStartChaseAgain,
+	eTurnOnThePointLight,
 	eTurnOffThePointLight,
+	eSetPointLightIntensity,
+	eSetPointLightRange,
+	eSetPointLightColor,
+	eSetPointLightToLastState,
 	eUnlockCamera,
 	eLength,
 };

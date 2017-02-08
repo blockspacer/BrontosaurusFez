@@ -207,6 +207,13 @@ void SkillSystemComponent::Destroy()
 
 void SkillSystemComponent::AddSkill(const char* aSkillName)
 {
+	for(unsigned short i = 0; i < mySkills.Size(); i++)
+	{
+		if(mySkills[i]->GetSkillData()->skillName == aSkillName)
+		{
+			return;
+		}
+	}
 	mySkills.Add(SkillFactory::GetInstance().CreateSkill(aSkillName));
 	mySkills.GetLast()->SetTargetPosition(myTargetPosition);
 }

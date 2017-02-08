@@ -49,8 +49,28 @@ void PointLightComponent::Receive(const eComponentMessageType aMessageType, cons
 		myPointLightInstace->SetPosition(GetParent()->GetWorldPosition());
 		break;
 	}
-	case  eComponentMessageType::eTurnOffThePointLight:
+	case eComponentMessageType::eTurnOnThePointLight:
+		myPointLightInstace->SetActive(true);
+		break;
+	case eComponentMessageType::eTurnOffThePointLight:
 		myPointLightInstace->SetActive(false);
+		break;
+	case eComponentMessageType::eSetPointLightIntensity:
+		myLastIntensity = myPointLightInstace->GetInstensity();
+		myPointLightInstace->SetInstensity(aMessageData.myFloat);
+		break;
+	case eComponentMessageType::eSetPointLightRange:
+		myLastRange = myPointLightInstace->GetRange();
+		myPointLightInstace->SetRange(aMessageData.myFloat);
+		break;
+	case eComponentMessageType::eSetPointLightColor:
+		myLastColor = myPointLightInstace->GetColor();
+		myPointLightInstace->SetColor(aMessageData.myVector3f);
+		break;
+	case eComponentMessageType::eSetPointLightToLastState:
+		myPointLightInstace->SetInstensity(myLastIntensity);
+		myPointLightInstace->SetRange(myLastRange);
+		myPointLightInstace->SetColor(myLastColor);
 		break;
 	default:
 		break;
