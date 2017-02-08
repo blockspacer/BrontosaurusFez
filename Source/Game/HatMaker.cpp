@@ -232,7 +232,7 @@ void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName,const bool aIsI
 		{
 			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eActivateBurningBasicAttack, SComponentMessageData());
 		}
-		else if (theBluePrint->HatName == "SweepAttackHatLvl2")
+		else if (theBluePrint->HatName == "SweepHatV2")
 		{
 			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eActivateManaRefund, SComponentMessageData());
 		}
