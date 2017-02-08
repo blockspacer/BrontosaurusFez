@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 const Intersection::SCircle CCircleCollider::ourNullCircle = {};
-CU::CStaticMemoryPool<CCircleCollider, 1024> CCircleCollider::ourMemoryPool;
+CU::CStaticMemoryPool<CCircleCollider, 2048> CCircleCollider::ourMemoryPool;
 
 CCircleCollider::CCircleCollider()
 	: myCircleData(nullptr)
