@@ -55,7 +55,6 @@ void InputController::Update(float aDeltaTime)
 			manaRecoverData.myInt = myManaRecover;
 			GetParent()->NotifyComponents(eComponentMessageType::eRestoreMana, manaRecoverData);
 			myElapsedManaRegenTimer = 1.5f;
-			DL_PRINT("Mana Reovered");
 		}
 		if (myMouseIsDown == true)
 		{
