@@ -14,7 +14,7 @@ public:
 	void SetIntensity(const float aIntensity);
 	void SetOffsetToParent(const CU::Vector3f& aOffset);
 
-	void ChangeColorOverTime(const CU::Vector3f& aColor, const float aSeconds);
+	void ChangeColorOverTime(const CU::Vector3f& aColor, const float aSeconds = 0.5f);
 	void Update(const CU::Time aDeltaTime);
 
 	void Destroy() override;
@@ -29,7 +29,7 @@ private:
 
 	float myChangeColorTime;
 	float myTimeTilChangedColor;
-	CPointLightInstance* myPointLightInstace;
+
 	CU::Vector3f myLastColor;
 	float myLastRange;
 	float myLastIntensity;

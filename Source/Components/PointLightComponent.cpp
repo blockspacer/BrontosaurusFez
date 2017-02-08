@@ -117,27 +117,27 @@ void PointLightComponent::Receive(const eComponentMessageType aMessageType, cons
 		break;
 	}
 	case eComponentMessageType::eTurnOnThePointLight:
-		myPointLightInstace->SetActive(true);
+		pointLight->SetActive(true);
 		break;
 	case eComponentMessageType::eTurnOffThePointLight:
-		myPointLightInstace->SetActive(false);
+		pointLight->SetActive(false);
 		break;
 	case eComponentMessageType::eSetPointLightIntensity:
-		myLastIntensity = myPointLightInstace->GetInstensity();
-		myPointLightInstace->SetInstensity(aMessageData.myFloat);
+		myLastIntensity = pointLight->GetInstensity();
+		pointLight->SetInstensity(aMessageData.myFloat);
 		break;
 	case eComponentMessageType::eSetPointLightRange:
-		myLastRange = myPointLightInstace->GetRange();
-		myPointLightInstace->SetRange(aMessageData.myFloat);
+		myLastRange = pointLight->GetRange();
+		pointLight->SetRange(aMessageData.myFloat);
 		break;
 	case eComponentMessageType::eSetPointLightColor:
-		myLastColor = myPointLightInstace->GetColor();
-		myPointLightInstace->SetColor(aMessageData.myVector3f);
+		myLastColor = pointLight->GetColor();
+		ChangeColorOverTime(aMessageData.myVector3f);
 		break;
 	case eComponentMessageType::eSetPointLightToLastState:
-		myPointLightInstace->SetInstensity(myLastIntensity);
-		myPointLightInstace->SetRange(myLastRange);
-		myPointLightInstace->SetColor(myLastColor);
+		pointLight->SetInstensity(myLastIntensity);
+		pointLight->SetRange(myLastRange);
+		ChangeColorOverTime(myLastColor);
 		break;
 	default:
 		break;
