@@ -3,6 +3,8 @@
 #include <string>
 #include "PostMaster/Subscriber.h"
 #include "Components/StatStructs.h"
+#include "matrix44.h"
+
 
 class CGameObjectManager;
 class CGameObject;
@@ -15,9 +17,15 @@ struct SHatBluePrint
 	std::string HatModel;
 	SHat* myHatStruct;
 };
-
 class CHatMaker : public Subscriber
 {
+private:
+	struct SHatObject
+	{
+		CGameObject* myObjectPtr = nullptr;
+		CU::Matrix44f myTransformation;
+	};
+
 public:
 	CHatMaker(CGameObjectManager* aGameObjectManager);
 	~CHatMaker();
@@ -28,7 +36,7 @@ public:
 	const bool CheckIfHatIsMade(const std::string& aHatName);
 private:
 	short myHatsGivenToPlayer;
-	CU::GrowingArray<CGameObject*> myHatObjects;
+	CU::GrowingArray<SHatObject> myHatObjects;
 	CModelComponent* myPlayerModel;;
 	std::map<std::string, SHatBluePrint*> myBluePrints;
 	CGameObjectManager* myGameObjectManager;
