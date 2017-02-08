@@ -57,6 +57,10 @@ void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 			myElapsedSpawnTime = 0.0f;
 			myHaveSpawned = true;
 			GetParent()->NotifyOnlyComponents(eComponentMessageType::eDoneSpawning, SComponentMessageData());
+			GetParent()->NotifyOnlyComponents(eComponentMessageType::eMoving, SComponentMessageData());
+			SComponentMessageData activationData;
+			activationData.myInt = 1;
+			GetParent()->NotifyOnlyComponents(eComponentMessageType::eCalledForHelp, activationData);
 		}
 	}
 	else
@@ -172,6 +176,7 @@ void CAIControllerComponent::Receive(const eComponentMessageType aMessageType, c
 		SComponentMessageData spawningData;
 		spawningData.myString = "idle";
 		GetParent()->NotifyOnlyComponents(eComponentMessageType::eBasicAttack, spawningData);
+		GetParent()->NotifyOnlyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 	}
 		break;
 	case eComponentMessageType::eRespawned:
