@@ -11,6 +11,7 @@ public:
 	static CPointLightComponentManager& GetInstance();
 
 	PointLightComponent* CreateAndRegisterComponent();
+	void Update(const CU::Time aDeltaTime);
 
 private:
 	CPointLightComponentManager(CScene& aScene);
@@ -21,6 +22,6 @@ private:
 	static CPointLightComponentManager* ourInstance;
 	
 	CU::GrowingArray<PointLightComponent*> myComponents;
-	CScene* myScene;
+	CScene& myScene;
 };
 

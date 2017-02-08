@@ -47,7 +47,7 @@ namespace GUI
 		void RestartUpdate();
 		void RestartRender();
 		void PauseRenderAndUpdate();
-		void RestartRenderAndUpdate(const bool aSubscribeToSecretMessage = true);
+		void RestartRenderAndUpdate(const bool aSubscribeToSecretMessage = true, const bool aAddSecretHats = true);
 
 		eMessageReturn MouseClicked(const CU::eMouseButtons aMouseButton, const CU::Vector2f& aMousePosition);
 		eMessageReturn MouseReleased(const CU::eMouseButtons aMouseButton, const CU::Vector2f& aMousePosition);

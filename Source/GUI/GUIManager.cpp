@@ -287,7 +287,7 @@ void GUI::GUIManager::PauseRenderAndUpdate()
 	ourHatContainer.RemoveAllHats(*this);
 }
 
-void GUI::GUIManager::RestartRenderAndUpdate(const bool aSubscribeToSecretMessage)
+void GUI::GUIManager::RestartRenderAndUpdate(const bool aSubscribeToSecretMessage, const bool aAddSecretHats)
 {
 	myShouldUpdate = true;
 	myShouldRender = true;
@@ -310,7 +310,10 @@ void GUI::GUIManager::RestartRenderAndUpdate(const bool aSubscribeToSecretMessag
 		myCursor->SetPosition(locMousePosition);
 	}
 
-	ourHatContainer.AddAllHats(*this);
+	if (aAddSecretHats)
+	{
+		ourHatContainer.AddAllHats(*this);
+	}
 }
 
 void GUI::GUIManager::UpdateHatIcons()
