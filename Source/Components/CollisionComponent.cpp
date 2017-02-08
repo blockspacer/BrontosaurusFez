@@ -59,6 +59,13 @@ void CCollisionComponent::Receive(const eComponentMessageType aMessageType, cons
 		GetParent()->NotifyOnlyComponents(eComponentMessageType::eRemoveAllCollidedWith, SComponentMessageData());
 		DeactivateCollider();
 		break;
+	case eComponentMessageType::eSpawning:
+		GetParent()->NotifyOnlyComponents(eComponentMessageType::eRemoveAllCollidedWith, SComponentMessageData());
+		DeactivateCollider();
+		break;
+	case eComponentMessageType::eDoneSpawning:
+		ActivateCollider();
+		break;
 	case eComponentMessageType::eRespawned:
 		ActivateCollider();
 		break;

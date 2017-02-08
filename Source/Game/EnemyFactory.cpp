@@ -42,6 +42,7 @@
 #include "ManaComponentManager.h"
 
 #include "../CommonUtilities/JsonValue.h"
+#include "ComponentMessage.h"
 
 CEnemyFactory* CEnemyFactory::ourInstance = nullptr;
 
@@ -137,7 +138,11 @@ void CEnemyFactory::CreateEnemy(CU::Vector3f aPosition)
 
 	Enemy->AddComponent(audio);
 
+	SComponentMessageData spawningData;
+	spawningData.myString = "spawn";
+	Enemy->NotifyOnlyComponents(eComponentMessageType::eBasicAttack, spawningData);
 
+	Enemy->NotifyOnlyComponents(eComponentMessageType::eSpawning, SComponentMessageData());
 }
 
 void CEnemyFactory::Init(const std::string& aKey)

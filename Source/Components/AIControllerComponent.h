@@ -36,7 +36,9 @@ private:
 
 	float myMaxVelocity;
 	float myElapsedPathFindingCountdown;
+	float myElapsedSpawnTime;
 	bool myIsActive;
 	bool myIsPlayerAlive;
+	bool myHaveSpawned;
 };
 

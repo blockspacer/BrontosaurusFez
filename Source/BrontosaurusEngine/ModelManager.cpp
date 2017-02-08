@@ -224,8 +224,8 @@ void CModelManager::LoadAnimations(const char* aPath, const ModelId aModelId)
 		br++;
 	}
 
-	const ModelId animationCount = 12;
-	const std::string animationNames[animationCount] = { ("idle"), ("idle2"), ("walk"), ("pickup"), ("turnRight90"), ("turnLeft90"), ("attack") , ("summon"), ("die"), ("sweep"), ("whirlwind"), ("hurt") };
+	const ModelId animationCount = 13;
+	const std::string animationNames[animationCount] = { ("idle"), ("idle2"), ("walk"), ("pickup"), ("turnRight90"), ("turnLeft90"), ("attack") , ("summon"), ("die"), ("sweep"), ("whirlwind"), ("hurt"), ("spawn") };
 
 	CModel* mdl = GetModel(aModelId);
 	const aiScene* scene = mdl->GetScene();
