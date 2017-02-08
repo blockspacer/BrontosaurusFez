@@ -163,6 +163,11 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 			data.myString = "EnemyDie";
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
 			break;
+		case eObjectType::eLeaper:
+			DL_PRINT("a LEAPER died");
+			data.myString = "EnemyDie";
+			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
+			break;
 		case eObjectType::ePlayer:
 			DL_PRINT("a PLAYER died");
 			data.myString = "EnemyDie";
