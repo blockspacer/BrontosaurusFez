@@ -286,3 +286,8 @@ CU::Time CEngine::GetTime()
 {
 	return myTimerManager->GetTimer(myTimerH).GetLifeTime();
 }
+
+CU::Time CEngine::GetDeltaTime()
+{
+	return myTimerManager->GetTimer(myTimerH).GetDeltaTime();
+}

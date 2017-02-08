@@ -23,6 +23,7 @@ namespace GUI
 {
 	class IWidget;
 	class WidgetContainer;
+	class HatContainer;
 
 	class GUIManager : public Subscriber
 	{
@@ -46,7 +47,7 @@ namespace GUI
 		void RestartUpdate();
 		void RestartRender();
 		void PauseRenderAndUpdate();
-		void RestartRenderAndUpdate();
+		void RestartRenderAndUpdate(const bool aSubscribeToSecretMessage = true);
 
 		eMessageReturn MouseClicked(const CU::eMouseButtons aMouseButton, const CU::Vector2f& aMousePosition);
 		eMessageReturn MouseReleased(const CU::eMouseButtons aMouseButton, const CU::Vector2f& aMousePosition);
@@ -56,6 +57,9 @@ namespace GUI
 		eMessageReturn Recieve(const Message& aMessage) override;
 
 		inline void SetRenderMouse(const bool aShouldRenderMouse);
+
+		void UpdateHatIcons();
+		static void DestroyHatContainer();
 
 	private:
 		WidgetContainer* myWidgetContainer;
@@ -68,6 +72,8 @@ namespace GUI
 		bool myShouldUpdate;
 		bool myShouldRender;
 		bool myShouldRenderMouse;
+
+		static HatContainer ourHatContainer;
 	};
 }
 

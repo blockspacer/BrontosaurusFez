@@ -28,6 +28,8 @@ MainMenuState::~MainMenuState()
 	{
 		SAFE_DELETE(mySkyBox);
 	}
+
+	GUI::GUIManager::DestroyHatContainer();
 }
 
 void MainMenuState::Init()
@@ -75,7 +77,7 @@ void MainMenuState::OnEnter(const bool aLetThroughRender)
 	
 	if (myIsGoingToLevelSelect == false)
 	{
-		myGUIManager->RestartRenderAndUpdate();
+		myGUIManager->RestartRenderAndUpdate(false);
 	}
 	else
 	{

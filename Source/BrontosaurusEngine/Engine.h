@@ -98,6 +98,8 @@ public:
 	inline CConsole* GetConsole();
 
 	CU::Time GetTime();
+	CU::Time GetDeltaTime();
+
 
 	void Render();
 	void ThreadedRender();

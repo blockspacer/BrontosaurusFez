@@ -18,6 +18,7 @@ namespace GUI
 
 		virtual void Update(const CU::Time& aDeltaTime) override;
 		virtual void Render() override;
+		virtual void Render(CU::GrowingArray<IWidget*>& aWidgets) override;
 		virtual void SetVisibilityRecursive(const bool aVisibility) override;
 		virtual void RemoveDebugLines() const override;
 
