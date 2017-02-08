@@ -20,6 +20,7 @@
 #include "Components/HatActivator.h"
 #include "Components/ComponentMessage.h"
 #include "Component.h"
+#include "PostMaster/PushState.h"
 
 CHatMaker::CHatMaker(CGameObjectManager* aGameObjectManager)
 {
@@ -76,6 +77,12 @@ void CHatMaker::LoadBluePrints(const std::string& aFilePath)
 
 		blueprint->HatName = levelsArray[i].at("HatName").GetString();
 		blueprint->HatModel = levelsArray[i].at("Model").GetString();
+		blueprint->HatDialog = "";
+
+		if (levelsArray[i].Count("Dialog") > 0)
+		{
+			blueprint->HatDialog = levelsArray[i].at("Dialog").GetString();
+		}
 
 		blueprint->myHatStruct = new SHat();
 		blueprint->myHatStruct->stat = new Stats::SBonusStats;
@@ -132,7 +139,7 @@ void CHatMaker::LoadBluePrints(const std::string& aFilePath)
 	assert(myPlayerModel != nullptr && "Didn't find PlayerModel");
 }
 
-void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName)
+void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName,const bool aIsInBeginningOfLevel)
 {
 	if (myBluePrints.find(aHatName) != myBluePrints.end())
 	{
@@ -175,6 +182,12 @@ void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName)
 		else if (theBluePrint->HatName == "SweepAttackHatLvl2")
 		{
 			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eActivateManaRefund, SComponentMessageData());
+		}
+
+		if (aIsInBeginningOfLevel == false && theBluePrint->HatDialog != "")
+		{
+			PollingStation::currentDialog = theBluePrint->HatDialog;
+			PostMaster::GetInstance().SendLetter(eMessageType::eStateStackMessage, PushState(PushState::eState::eDialog, 1));
 		}
 	}
 	SComponentMessageData data;
