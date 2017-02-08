@@ -332,8 +332,9 @@ void CPlayState::Load()
 		PointLightComponent* pl = CPointLightComponentManager::GetInstance().CreateAndRegisterComponent();
 
 		pl->SetColor({ 1.0f, 1.0f, 1.0f });
-		pl->SetIntensity(1.0f);
+		pl->SetIntensity(0.85f);
 		pl->SetRange(500.f);
+		pl->SetOffsetToParent(CU::Vector3f(0.f, 100.f, 0.f));
 
 		PollingStation::playerObject->AddComponent(pl);
 
@@ -449,6 +450,7 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 
 
 	CParticleEmitterComponentManager::GetInstance().UpdateEmitters(aDeltaTime);
+	CPointLightComponentManager::GetInstance().Update(aDeltaTime);
 	InputControllerManager::GetInstance().Update(aDeltaTime);
 
 	if (myCameraIsFree == true)
