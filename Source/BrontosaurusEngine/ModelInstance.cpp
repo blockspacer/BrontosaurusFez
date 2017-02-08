@@ -101,12 +101,15 @@ void CModelInstance::Render(Lights::SDirectionalLight* aLight, CU::GrowingArray<
 
 				if (CU::Intersection::SphereVsSphere(model, light))
 				{
-					msg->myRenderParams.myPointLightList.Add(Lights::SPointLight());
-					msg->myRenderParams.myPointLightList.GetLast().color = aPointLightList[i].GetColor();
-					msg->myRenderParams.myPointLightList.GetLast().intensity = aPointLightList[i].GetInstensity();
-					msg->myRenderParams.myPointLightList.GetLast().position = aPointLightList[i].GetPosition();
-					msg->myRenderParams.myPointLightList.GetLast().range = aPointLightList[i].GetRange();
-					msg->myRenderParams.myNumLights++;
+					if(msg->myRenderParams.myPointLightList.SafeAdd(Lights::SPointLight()) == true)
+					{
+						msg->myRenderParams.myPointLightList.GetLast().color = aPointLightList[i].GetColor();
+						msg->myRenderParams.myPointLightList.GetLast().intensity = aPointLightList[i].GetInstensity();
+						msg->myRenderParams.myPointLightList.GetLast().position = aPointLightList[i].GetPosition();
+						msg->myRenderParams.myPointLightList.GetLast().range = aPointLightList[i].GetRange();
+						msg->myRenderParams.myNumLights++;
+					
+					}
 				}
 			}
 		}
