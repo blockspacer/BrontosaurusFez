@@ -59,6 +59,9 @@ struct SEmitterData
 	CU::Vector3f MinEmissionVelocity;
 	CU::Vector3f MaxEmissionVelocity;
 	
+	CU::Vector3f MinEmissionArea;
+	CU::Vector3f MaxEmissionArea;
+
 	CU::Vector3f Gravity;
 	
 	float StartSize;
