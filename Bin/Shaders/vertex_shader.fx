@@ -60,9 +60,9 @@ PosNormBinormTanTex_InputPixel VS_PosNormBinormTanTexBones(PosNormBinormTanTexBo
 	PosNormBinormTanTex_InputPixel output;
 	float3x3 rotation = (float3x3) worldSpace;
 
-	output.normals = float4(mul(rotation, normalize(input.normals.xyz)), 1.0f);
-	output.tangent = float4(mul(rotation, normalize(input.tangent.xyz)), 1.0f); //input.tangent;
-	output.biTangent = float4(mul(rotation, normalize(input.biTangent.xyz)), 1.0f); //input.biTangent;
+	//output.normals = float4(mul(rotation, normalize(input.normals.xyz)), 1.0f);
+	//output.tangent = float4(mul(rotation, normalize(input.tangent.xyz)), 1.0f); //input.tangent;
+	//output.biTangent = float4(mul(rotation, normalize(input.biTangent.xyz)), 1.0f); //input.biTangent;
 	output.uv = input.uv;
 
 	output.position = input.position;
@@ -71,23 +71,10 @@ PosNormBinormTanTex_InputPixel VS_PosNormBinormTanTexBones(PosNormBinormTanTexBo
 	output.position = mul(worldSpace, output.position);
 	output.worldPosition = float4(output.position.xyz, 1.0f);
 
-	float4x4 scale = (float4x4)0.0f;
-	scale._m00 = worldSpace._m00;
-	scale._m11 = worldSpace._m11;
-	scale._m22 = worldSpace._m22;
-	scale._m33 = 1.0f;
-
-
 	float4 weights = input.weights;
 	uint4 bones = uint4((uint) input.boneIDs.x, (uint) input.boneIDs.y, (uint) input.boneIDs.z, (uint) input.boneIDs.w);
 
 	float4x4 finalMatrix = (float4x4)0;
-	finalMatrix._m00 = worldSpace._m00;
-	finalMatrix._m11 = worldSpace._m11;
-	finalMatrix._m22 = worldSpace._m22;
-	finalMatrix._m33 = 1.0f;
-
-
 	finalMatrix = mul(Bones[bones.x], weights.x);
 	finalMatrix += mul(Bones[bones.y], weights.y);
 	finalMatrix += mul(Bones[bones.z], weights.z);
@@ -97,8 +84,12 @@ PosNormBinormTanTex_InputPixel VS_PosNormBinormTanTexBones(PosNormBinormTanTexBo
 	float4 animatedPosition = mul(finalMatrix, float4(input.position.xyz, 1.f));
 	output.position = mul(worldSpace, animatedPosition);
 
-	float4 animatedNormal = mul(finalMatrix, float4(input.normals.xyz, 1.f));
-	output.normals = mul(worldSpace, animatedNormal);
+	float4 animatedNormal = float4(mul((float3x3)finalMatrix, input.normals.xyz).xyz, 1.f);
+	output.normals = float4(mul(rotation, animatedNormal.xyz).xyz, 1.f);
+	float4 animatedTangent = float4(mul((float3x3)finalMatrix, input.tangent.xyz).xyz, 1.f);
+	output.tangent = float4(mul(rotation, animatedTangent.xyz).xyz, 1.f);
+	float4 animatedBiTangent = float4(mul((float3x3)finalMatrix, input.biTangent.xyz).xyz, 1.f);
+	output.biTangent = float4(mul(rotation, animatedBiTangent.xyz).xyz, 1.f);
 
 
 

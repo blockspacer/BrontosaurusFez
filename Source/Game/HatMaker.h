@@ -17,6 +17,8 @@ struct SHatBluePrint
 	std::string HatModel;
 	std::string HatDialog;
 	SHat* myHatStruct;
+	float height;
+
 };
 class CHatMaker : public Subscriber
 {
@@ -25,6 +27,8 @@ private:
 	{
 		CGameObject* myObjectPtr = nullptr;
 		CU::Matrix44f myTransformation;
+		std::string hatName;
+		float height;
 	};
 
 public:
