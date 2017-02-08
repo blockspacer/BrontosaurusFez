@@ -47,11 +47,12 @@ namespace GUI
 
 		myShouldRender = true;
 		CU::Vector2f backGroundSize = myTextInstance->GetQuadSizeNormalized();
-		myBackGround->SetSize(backGroundSize * CU::Vector2f(1.f, 1.5f));
 
 		CU::Vector2f newPosition(aMousePosition + myOffsetToMouse);
-		myTextInstance->SetPosition(newPosition + CU::Vector2f(0.f, backGroundSize.y));
+		myTextInstance->SetPosition(newPosition + CU::Vector2f(0.f, backGroundSize.y * 0.5f));
 		myBackGround->SetPosition(newPosition);
+
+		myBackGround->SetSize(backGroundSize * CU::Vector2f(1.16f, 1.2f));
 	}
 
 	void CToolTipDecorator::OnMouseExit(const CU::Vector2f& aMousePosition)
@@ -106,11 +107,11 @@ namespace GUI
 	void CToolTipDecorator::OnMouseMove(const CU::Vector2f& aMousePosition)
 	{
 		CU::Vector2f backGroundSize = myTextInstance->GetQuadSizeNormalized();
-		myBackGround->SetSize(backGroundSize * CU::Vector2f(1.2f, 1.5f));
-
 		CU::Vector2f newPosition(aMousePosition + myOffsetToMouse);
 
 		myBackGround->SetPosition(newPosition);
-		myTextInstance->SetPosition(newPosition + CU::Vector2f(0.f, backGroundSize.y));
+		myTextInstance->SetPosition(newPosition + CU::Vector2f(0.f, backGroundSize.y * 0.5f));
+
+		myBackGround->SetSize(backGroundSize * CU::Vector2f(1.16f, 1.2f));
 	}
 }

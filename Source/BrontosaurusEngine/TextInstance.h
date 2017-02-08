@@ -86,7 +86,7 @@ inline void CTextInstance::SetText(const CU::DynamicString& aString)
 	int lastPosition = 0;
 	for (int i = 0; i < aString.Size(); ++i)
 	{
-		if (aString.at(i) == '/n')
+		if (aString.at(i) == '\n')
 		{
 			DL_PRINT_WARNING("Warning slow! consider using different set text method");
 			const CU::DynamicString explainingString(aString.SubStr(lastPosition, i - lastPosition));
