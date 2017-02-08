@@ -42,7 +42,7 @@ PosNormBinormTanTex_InputPixel VS_PosNormBinormTanTex(PosNormBinormTanTex_InputV
 
 	output.position = input.position;
 	output.worldPosLastFrame = mul(worldSpaceLastFrame, output.position);
-   
+
 	output.position = mul(worldSpace, output.position);
 	output.worldPosition = float4(output.position.xyz, 1.0f);
 
@@ -67,34 +67,46 @@ PosNormBinormTanTex_InputPixel VS_PosNormBinormTanTexBones(PosNormBinormTanTexBo
 
 	output.position = input.position;
 	output.worldPosLastFrame = mul(worldSpaceLastFrame, output.position);
-   
+
 	output.position = mul(worldSpace, output.position);
 	output.worldPosition = float4(output.position.xyz, 1.0f);
+
+	float4x4 scale = (float4x4)0.0f;
+	scale._m00 = worldSpace._m00;
+	scale._m11 = worldSpace._m11;
+	scale._m22 = worldSpace._m22;
+	scale._m33 = 1.0f;
 
 
 	float4 weights = input.weights;
 	uint4 bones = uint4((uint) input.boneIDs.x, (uint) input.boneIDs.y, (uint) input.boneIDs.z, (uint) input.boneIDs.w);
 
 	float4x4 finalMatrix = (float4x4)0;
+	finalMatrix._m00 = worldSpace._m00;
+	finalMatrix._m11 = worldSpace._m11;
+	finalMatrix._m22 = worldSpace._m22;
+	finalMatrix._m33 = 1.0f;
+
+
 	finalMatrix = mul(Bones[bones.x], weights.x);
 	finalMatrix += mul(Bones[bones.y], weights.y);
 	finalMatrix += mul(Bones[bones.z], weights.z);
 	finalMatrix += mul(Bones[bones.w], weights.w);
-	
+
+
 	float4 animatedPosition = mul(finalMatrix, float4(input.position.xyz, 1.f));
 	output.position = mul(worldSpace, animatedPosition);
-	
+
 	float4 animatedNormal = mul(finalMatrix, float4(input.normals.xyz, 1.f));
 	output.normals = mul(worldSpace, animatedNormal);
-	
-	
-	
-	
+
+
+
+
 	output.worldPosLastFrame = mul(cameraSpaceInversed, output.worldPosLastFrame);
 	output.position = mul(cameraSpaceInversed, output.position);
 	output.viewPosition = float4(output.position.xyz, 1.0f);
 	output.position = mul(projectionSpace, output.position);
-	
+
 	return output;
 }
-

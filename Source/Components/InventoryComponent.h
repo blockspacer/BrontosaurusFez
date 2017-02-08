@@ -15,7 +15,8 @@ struct SHat
 	Stats::SBonusStats* stat;
 	CGameObject* gameObject; // GameObj hatObj  -> AddComp(statComp)
 	HatActivator* hatActivator;
-	const char* skillname;
+	std::string skillname;
+	std::string description;
 };
 
 class CInventoryComponent : public CComponent//, public Subscriber

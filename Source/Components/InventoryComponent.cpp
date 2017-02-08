@@ -23,6 +23,7 @@ void CInventoryComponent::Receive(const eComponentMessageType aMessageType, cons
 			AddGold(aMessageData.myUShort);
 			break;
 		case eComponentMessageType::eAddHat:
+			if (aMessageData.myHat == nullptr) break;
 			AddHat(*aMessageData.myHat);
 			break;
 		case eComponentMessageType::ePercentHPLeft:
@@ -56,10 +57,10 @@ void CInventoryComponent::AddHat(SHat& aHat)
 	{
 		SComponentMessageData data;
 		SComponentMessageData skillNameData;
-		skillNameData.myString = myHats.GetLast().skillname;
+		skillNameData.myString = myHats.GetLast().skillname.c_str();
 		data.myStatsToAdd = myHats.GetLast().stat;
 		GetParent()->NotifyComponents(eComponentMessageType::eAddStats, data);
-		if(myHats.GetLast().skillname != "")
+		if(myHats.GetLast().skillname.empty() == false)
 		{
 			GetParent()->NotifyComponents(eComponentMessageType::eAddSkill, skillNameData);
 		}

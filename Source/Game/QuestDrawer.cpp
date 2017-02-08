@@ -11,12 +11,8 @@
 
 QM::CQuestDrawer::CQuestDrawer(CQuestManager& aQuestManger): myQuestManager(aQuestManger)
 {
-	myTextBox.SetPosition(CU::Vector2f(0.f, 0.2f));
-
-	myQuestCompleteText = new CTextInstance;
-	myQuestCompleteText->Init();
-	myQuestCompleteText->SetPosition(CU::Vector2f(0.f, 0.8f));
-	myQuestCompleteText->SetText("press enter to complete quest :)");
+	myTextInstance.Init("Objective");
+	myTextInstance.SetPosition(CU::Vector2f(0.f, 0.2f));
 
 	PostMaster::GetInstance().Subscribe(this, eMessageType::QuestRelated);
 	UpdateText();
@@ -34,38 +30,30 @@ void QM::CQuestDrawer::UpdateText()
 	{
 		const SQuest quest = myQuestManager.GetCurrentQuest();
 
-		myTextBox.Clear();
 		for (int i = 0; i < quest.myObjectives.Size(); ++i)
 		{
 			const SObjective objective = myQuestManager.GetObjective(quest.myObjectives[i]);
-			CU::DynamicString textLine1;
-			textLine1 += objective.myName.c_str();
-			textLine1 += ": ";
-			CU::DynamicString textLine2;
-			textLine2 += objective.myText.c_str();
-			textLine2 += " (";
-			textLine2 += objective.myAmmount;
-			textLine2 += "/";
-			textLine2 += objective.myGoal;
-			textLine2 += ")";
+			CU::DynamicString textLine;
+			textLine += objective.myText.c_str();
+			textLine += " (";
+			textLine += objective.myAmmount;
+			textLine += "/";
+			textLine += objective.myGoal;
+			textLine += ")";
 
-			myTextBox.AddText(textLine1);
-			myTextBox.NewLine();
-			myTextBox.AddText(textLine2);
-			myTextBox.NewLine();
+			myTextInstance.SetTextLines({ textLine });
 		}
 	}
 	else
 	{
-		myTextBox.Clear();
 		CU::DynamicString error = myQuestManager.myError.c_str();
-		myTextBox.AddText(error);
+		myTextInstance.SetTextLines({error});
 	}
 }
 
 void QM::CQuestDrawer::Render()
 {
-	myTextBox.Render();
+	myTextInstance.Render();
 }
 
 eMessageReturn QM::CQuestDrawer::Recieve(const Message& aMessage)

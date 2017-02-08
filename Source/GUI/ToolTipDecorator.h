@@ -22,6 +22,11 @@ namespace GUI
 
 		IWidget* MouseIsOver(const CU::Vector2f& aPosition) override;
 
+		void SetTextFunction(const std::function<bool(std::string&)>& aGetTextFunction);
+		void ChangeTextFunction(const std::function<bool(std::string&)>& aGetTextFunction);
+
+		virtual operator CToolTipDecorator*() { return this; }
+
 	private:
 		std::function<bool(std::string&)> myGetTextFunction;
 

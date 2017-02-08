@@ -8,7 +8,7 @@
 namespace GUI
 {
 	CToolTipDecorator::CToolTipDecorator(IWidget* aDecoratedWidget, ModelWidget* /*aBackGround*/, const std::string* const aTooltipText, const std::function<bool(std::string&)>& aGetTextFunction)
-		: WidgetDecorator(aDecoratedWidget, CU::Vector2f::Zero, CU::Vector2f::Zero, aDecoratedWidget->GetName() + "_Tooltip", false)
+		: WidgetDecorator(aDecoratedWidget, CU::Vector2f::Zero, CU::Vector2f::Zero, aDecoratedWidget->GetName(), false)
 		, myGetTextFunction(aGetTextFunction)
 		, myOffsetToMouse(0.f, -0.05f)
 		, myBackGround(nullptr)
@@ -74,6 +74,18 @@ namespace GUI
 		return mouseIsOver;
 	}
 
+	void CToolTipDecorator::SetTextFunction(const std::function<bool(std::string&)>& aGetTextFunction)
+	{
+		assert(myGetTextFunction == nullptr);
+		myGetTextFunction = aGetTextFunction;
+	}
+
+	void CToolTipDecorator::ChangeTextFunction(const std::function<bool(std::string&)>& aGetTextFunction)
+	{
+		assert(myGetTextFunction != nullptr);
+		myGetTextFunction = aGetTextFunction;
+	}
+
 	void CToolTipDecorator::Render()
 	{
 		//WidgetDecorator::Render();
@@ -93,13 +105,12 @@ namespace GUI
 
 	void CToolTipDecorator::OnMouseMove(const CU::Vector2f& aMousePosition)
 	{
-		CU::Vector2f newPosition(aMousePosition + myOffsetToMouse);
-		myBackGround->SetPosition(newPosition);
-
 		CU::Vector2f backGroundSize = myTextInstance->GetQuadSizeNormalized();
 		myBackGround->SetSize(backGroundSize * CU::Vector2f(1.2f, 1.5f));
 
+		CU::Vector2f newPosition(aMousePosition + myOffsetToMouse);
+
 		myBackGround->SetPosition(newPosition);
-		myTextInstance->SetPosition(newPosition);
+		myTextInstance->SetPosition(newPosition + CU::Vector2f(0.f, backGroundSize.y));
 	}
 }

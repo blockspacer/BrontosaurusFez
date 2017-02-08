@@ -23,6 +23,7 @@ namespace GUI
 {
 	class IWidget;
 	class WidgetContainer;
+	class HatContainer;
 
 	class GUIManager : public Subscriber
 	{
@@ -57,6 +58,9 @@ namespace GUI
 
 		inline void SetRenderMouse(const bool aShouldRenderMouse);
 
+		void UpdateHatIcons();
+		static void DestroyHatContainer();
+
 	private:
 		WidgetContainer* myWidgetContainer;
 		IWidget* myFocusedWidget;
@@ -68,6 +72,8 @@ namespace GUI
 		bool myShouldUpdate;
 		bool myShouldRender;
 		bool myShouldRenderMouse;
+
+		static HatContainer ourHatContainer;
 	};
 }
 

@@ -28,6 +28,8 @@ MainMenuState::~MainMenuState()
 	{
 		SAFE_DELETE(mySkyBox);
 	}
+
+	GUI::GUIManager::DestroyHatContainer();
 }
 
 void MainMenuState::Init()
