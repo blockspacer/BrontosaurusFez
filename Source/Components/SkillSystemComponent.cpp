@@ -187,7 +187,7 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 		{
 			if (mySkills[i]->GetSkillData()->skillName == "SweepAttack")
 			{
-				mySkills[i]->GetSkillData()->manaRefund = 35.0f;
+				mySkills[i]->GetSkillData()->manaRefund = 5.0f;
 			}
 		}
 	}
