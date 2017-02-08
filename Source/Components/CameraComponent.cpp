@@ -18,6 +18,8 @@ void CCameraComponent::Receive(const eComponentMessageType aMessageType, const S
 
 	switch (aMessageType)
 	{
+	case eComponentMessageType::eAddComponent:
+		if (aMessageData.myComponentTypeAdded != eComponentType::eCamera) break;
 	case eComponentMessageType::eObjectDone:
 	case eComponentMessageType::eMoving:
 	{

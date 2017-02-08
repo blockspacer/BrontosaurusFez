@@ -117,11 +117,11 @@ CU::GrowingArray<CComponent*>& CGameObject::GetComponents()
 
 void CGameObject::ComponentReceive(const eComponentMessageType aMessageType, const SComponentMessageData & aMessageData)
 {
-	for (CComponent* component : myComponents)
+	for (unsigned int i = 0; i < myComponents.Size(); i++)
 	{
-		if (!component->IsGameObject())
+		if (myComponents[i]->IsGameObject() == false)
 		{
-			component->Receive(aMessageType, aMessageData);
+			myComponents[i]->Receive(aMessageType, aMessageData);
 		}
 	}
 

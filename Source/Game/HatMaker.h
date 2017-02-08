@@ -15,6 +15,7 @@ struct SHatBluePrint
 {
 	std::string HatName;
 	std::string HatModel;
+	std::string HatDialog;
 	SHat* myHatStruct;
 };
 class CHatMaker : public Subscriber
@@ -31,7 +32,7 @@ public:
 	~CHatMaker();
 	void Update();
 	void LoadBluePrints(const std::string& aFilePath);
-	void MakeHatFromBluePrint(const std::string& aHatName);
+	void MakeHatFromBluePrint(const std::string& aHatName, const bool aIsInBeginningOfLevel = false);
 	void GiveTheManAHat();
 	const bool CheckIfHatIsMade(const std::string& aHatName);
 private:

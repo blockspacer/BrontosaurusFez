@@ -51,7 +51,7 @@ void CMouseComponent::Receive(const eComponentMessageType aMessageType, const SC
 			}
 		}
 		SComponentMessageData data; data.myFloat = 0.f;
-		aMessageData.myGameObject->NotifyComponents(eComponentMessageType::eSetHighLight, data);
+		aMessageData.myGameObject->NotifyComponents(eComponentMessageType::eSetHighlight, data);
 		break;
 	}
 }
@@ -155,7 +155,7 @@ void CMouseComponent::HighlightClosest()
 	{
 		SComponentMessageData data;
 		data.myFloat = 0.0f;
-		myHoveredGameObjects[i]->NotifyComponents(eComponentMessageType::eSetHighLight, data);
+		myHoveredGameObjects[i]->NotifyComponents(eComponentMessageType::eSetHighlight, data);
 
 		CU::Vector3f distance;
 		CU::Vector3f objectposition = myHoveredGameObjects[i]->GetWorldPosition();
@@ -180,7 +180,7 @@ void CMouseComponent::HighlightClosest()
 	data.myFloat = 0.5f;
 	if (PollingStation::playerObject != gameObject)
 	{
-		gameObject->NotifyComponents(eComponentMessageType::eSetHighLight, data);
+		gameObject->NotifyComponents(eComponentMessageType::eSetHighlight, data);
 	}
 }
 
@@ -230,7 +230,7 @@ void CMouseComponent::CheckIfHoveredGameObjectDied(CGameObject * aGameobjectThat
 		{
 			SComponentMessageData data;
 			data.myFloat = 0.0f;
-			myHoveredGameObjects[i]->NotifyComponents(eComponentMessageType::eSetHighLight, data);
+			myHoveredGameObjects[i]->NotifyComponents(eComponentMessageType::eSetHighlight, data);
 			myHoveredGameObjects.RemoveAtIndex(i);
 		}
 	}

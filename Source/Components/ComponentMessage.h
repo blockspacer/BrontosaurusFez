@@ -94,7 +94,7 @@ enum class eComponentMessageType
 	eEnterNewTriangle,
 	eNotOnNavmesh,
 	eSetPathPosition,
-	eSetHighLight,
+	eSetHighlight,
 	eStopWhirlwind,
 	eTryToSelectSkill,
 	eCheckIfCanSelect,
@@ -104,6 +104,7 @@ enum class eComponentMessageType
 	eRemoveHoveredObject,
 	eEnemyReturnToSpawnPoint,
 	eEnemyStartChaseAgain,
+	eTurnOffThePointLight,
 	eLength
 };
 

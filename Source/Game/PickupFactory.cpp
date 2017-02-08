@@ -8,6 +8,8 @@
 #include "../Components/ModelComponent.h"
 #include "../Components/ModelComponentManager.h"
 
+#include "Audio/AudioInterface.h"
+
 #include "../Collision/Intersection.h"
 #include "../Collision/ICollider.h"
 
@@ -168,6 +170,8 @@ void CPickupFactory::CreateHatDrop(CU::Vector3f aPosition, const char* aHatName)
 	myObjects.Add(hat);
 	myComponents.Add(pickup);
 	myComponents.Add(collider);
+
+	Audio::CAudioInterface::GetInstance()->PostEvent("");
 }
 
 

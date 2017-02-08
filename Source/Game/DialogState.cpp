@@ -88,7 +88,7 @@ void CDialogState::Init()
 
 	myActorNameText.SetTextLines({ myCurrentDialog[myCurrentPiece].myCurrentActor });
 
-	myBackground = new CSpriteInstance("Sprites/Dialog/background.dds", { 1, 1 }, { 0,0 });
+	myBackground = new CSpriteInstance("Sprites/Dialog/background.dds", { 1.f, 1.f }, { 0.f,0.f });
 }
 
 eStateStatus CDialogState::Update(const CU::Time& aDeltaTime)
@@ -96,7 +96,10 @@ eStateStatus CDialogState::Update(const CU::Time& aDeltaTime)
 	const float MaxTime = 0.05;
 
 	myCurrentTime += aDeltaTime.GetSeconds();
-	myPassedTime += aDeltaTime.GetSeconds();
+	if (myPassedTime < myWaitTime)
+	{
+		myPassedTime += aDeltaTime.GetSeconds();
+	}
 
 	if (myIsDone == false && myCurrentTime >= MaxTime)
 	{

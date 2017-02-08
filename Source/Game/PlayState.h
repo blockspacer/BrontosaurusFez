@@ -92,7 +92,7 @@ private:
 	
 	CParticleEmitterComponent* myEmitterComp;
 
-	CGameEventMessenger myGameEventMessenger;
+	//CGameEventMessenger myGameEventMessenger;
 
 	CGameObjectManager* myGameObjectManager;
 	CCollisionComponentManager* myCollisionComponentManager;

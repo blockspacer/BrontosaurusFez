@@ -70,7 +70,7 @@ namespace RealLauncher
             ProcessStartInfo startinfo = new ProcessStartInfo();
             startinfo.CreateNoWindow = false;
             startinfo.UseShellExecute = false;
-            startinfo.FileName = "Launcher_Retail.exe";
+            startinfo.FileName = "HatNSlash.exe";
             startinfo.Arguments = "-height " + wh + " -width " + ww + " -fullscreen " + fullscreen;
             Process.Start(startinfo);
         }
