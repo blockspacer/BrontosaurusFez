@@ -11,6 +11,7 @@ enum class eObjectType
 	eWitch,
 	eZombie,
 	eBlob,
+	eLeaper,
 	ePlayer
 };
 
