@@ -216,11 +216,36 @@ namespace CU
 			float zSize = myForwardVector.Length();
 
 			CU::Vector3f zAxis = aPositionToLookAt - aPositionToLookFrom;
-			zAxis = zAxis.GetNormalized() * zSize;
+			if (zSize <= 0)
+			{
+				DL_PRINT("FUCKED FORWARD call Marcus if things got wonkee %f %f %f", myForwardVector.x, myForwardVector.y, myForwardVector.z);
+				zAxis = zAxis.GetNormalized();
+			}
+			else
+			{
+				zAxis = zAxis.GetNormalized() * zSize;
+			}
+
 			CU::Vector3f xAxis = objectUpVector.Cross(zAxis);
-			xAxis = xAxis.GetNormalized() * xSize;
+			if(xSize <= 0)
+			{
+				DL_PRINT("FUCKED RIGHT call Marcus if things got wonkee %f %f %f", myRightVector.x, myRightVector.y, myRightVector.z);
+				xAxis = xAxis.GetNormalized();
+			}
+			else
+			{
+				xAxis = xAxis.GetNormalized() * xSize;
+			}
 			CU::Vector3f yAxis = zAxis.Cross(xAxis);
-			yAxis = yAxis.GetNormalized() * ySize;
+			if (ySize <= 0)
+			{
+				DL_PRINT("FUCKED UP call Marcus if things got wonkee %f %f %f", myUpVector.x, myUpVector.y, myUpVector.z);
+				yAxis = yAxis.GetNormalized();
+			}
+			else
+			{
+				yAxis = yAxis.GetNormalized() * ySize;
+			}
 
 			m11 = xAxis.x;
 			m12 = xAxis.y;
