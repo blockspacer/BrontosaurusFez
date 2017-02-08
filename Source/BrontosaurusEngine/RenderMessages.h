@@ -1,6 +1,5 @@
 #pragma once
 
-#include "lights.h"
 #include "../CommonUtilities/matrix44.h"
 #include "../CommonUtilities/DynamicString.h"
 #include "../CommonUtilities/Vector2.h"

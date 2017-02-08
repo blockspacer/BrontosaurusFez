@@ -419,7 +419,7 @@ void CPlayState::Init()
 
 	Audio::CAudioInterface::GetInstance()->PostEvent(levelsArray[myLevelIndex].GetString().c_str());
 
-	myGameEventMessenger.Init({ 0.5f, 0.1f });
+	//myGameEventMessenger.Init({ 0.5f, 0.1f });
 }
 
 eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
@@ -476,7 +476,7 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 		position.y += 1 * aDeltaTime.GetSeconds();
 		myChangeTexts[i]->SetPosition(position);
 	}
-	myGameEventMessenger.Update(aDeltaTime.GetSeconds());
+	//myGameEventMessenger.Update(aDeltaTime.GetSeconds());
 
 	return myStatus;
 }
@@ -530,7 +530,7 @@ void CPlayState::Render()
 	}
 
 	myQuestDrawer.Render();
-	myGameEventMessenger.Render();
+	//myGameEventMessenger.Render();
 }
 
 void CPlayState::OnEnter(const bool aLetThroughRender)
