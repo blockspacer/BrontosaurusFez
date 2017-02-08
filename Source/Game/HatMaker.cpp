@@ -245,13 +245,15 @@ void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName,const bool aIsI
 		{
 			if (myHatObjects[i].hatName == "StaminaHatV3")
 			{
-				myHatObjects[i].myTransformation.myPosition = { 0.0f, 0.0f, 0.0f };
+				//myHatObjects[i].myTransformation.myPosition = { 0.0f, 0.0f, 0.0f };
 				SHatObject temp = myHatObjects[i];
 				myHatObjects[i] = myHatObjects.GetLast();
 				myHatObjects.GetLast() = temp;
 			}
 			else if (myHatObjects[i].hatName == "HealthHatV3")
+
 			{
+				myHatObjects[i].myTransformation.myPosition = { 0.0f, 0.0f, 0.0f };
 				SHatObject temp = myHatObjects[i];
 				myHatObjects[i] = myHatObjects.GetLast();
 				myHatObjects.GetLast() = temp;
