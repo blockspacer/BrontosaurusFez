@@ -216,7 +216,7 @@ void CPlayState::Load()
 
 
 	Lights::SDirectionalLight dirLight;
-	dirLight.color = { .35f, .35f, .35f, 1.0f };
+	dirLight.color = { .25f, .25f, .25f, 1.0f };
 	dirLight.direction = { -1.0f, -1.0f, 1.0f, 1.0f };
 	myScene->AddDirectionalLight(dirLight);
 
