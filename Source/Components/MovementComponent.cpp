@@ -212,6 +212,12 @@ void MovementComponent::Receive(const eComponentMessageType aMessageType, const 
 	case eComponentMessageType::eDied:
 		myIsActive = false;
 		break;
+	case eComponentMessageType::eSpawning:
+		myIsActive = false;
+		break;
+	case eComponentMessageType::eDoneSpawning:
+		myIsActive = true;
+		break;
 	case eComponentMessageType::eRespawned:
 		myIsActive = true;
 		break;
