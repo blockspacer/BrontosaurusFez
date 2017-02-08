@@ -34,33 +34,33 @@ void CPointLightInstance::SetColor(const CU::Vector3f & aColor)
 }
 
 
-const CU::Vector3f& CPointLightInstance::GetPosition()
+const CU::Vector3f& CPointLightInstance::GetPosition() const
 {
 	return myData.position;
 }
 
 
-float CPointLightInstance::GetRange()
+float CPointLightInstance::GetRange() const
 {
 	return myData.range;
 }
 
-float CPointLightInstance::GetInstensity()
+float CPointLightInstance::GetInstensity() const
 {
 	return myData.intensity;
 }
 
-const CU::Vector3f& CPointLightInstance::GetColor()
+const CU::Vector3f& CPointLightInstance::GetColor() const
 {
 	return myData.color;
 }
 
-const Lights::SPointLight & CPointLightInstance::GetData()
+const Lights::SPointLight & CPointLightInstance::GetData() const
 {
 	return myData;
 }
 
-bool CPointLightInstance::GetIsActive()
+bool CPointLightInstance::GetIsActive() const
 {
 	return myIsActive;
 }
