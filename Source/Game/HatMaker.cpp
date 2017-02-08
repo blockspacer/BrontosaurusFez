@@ -71,8 +71,7 @@ void CHatMaker::Update()
 		for (int i = 0; i < myHatObjects.Size(); ++i)
 		{
 			hatTransform.m42 = startHeight + 10.f  * i;
-			auto parent = /*(i > 0) ? myHatObjects[i - 1].myTransformation :*/ CU::Matrix44f::Identity;
-			myHatObjects[i].myObjectPtr->GetLocalTransform() = myHatObjects[i].myTransformation * parent * hatTransform;
+			myHatObjects[i].myObjectPtr->GetLocalTransform() = myHatObjects[i].myTransformation * hatTransform;
 		}
 		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 	}
@@ -172,13 +171,14 @@ void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName,const bool aIsI
 		hatPositionOffset.x += RAND_FLOAT_RANGE(-5.f, 5.f);
 		hatPositionOffset.y += RAND_FLOAT_RANGE(0.f, 5.f);
 		hatPositionOffset.z += RAND_FLOAT_RANGE(-5.f, 5.f);
-
 		hatPositionOffset *= i;
-
 		cashedHat.myTransformation.SetPosition(hatPositionOffset);
+		float scale = RAND_FLOAT_RANGE(0.75f, 1.25f);
+		cashedHat.myTransformation.Scale({ scale, scale, scale });
 
-		float angle = PI / 16.f;
+
 		
+		float angle = PI / 16.f;
 		float x = RAND_FLOAT_RANGE(-angle, angle);
 		float y = RAND_FLOAT_RANGE(0, 2 * PI);
 		float z = RAND_FLOAT_RANGE(-angle, angle);
