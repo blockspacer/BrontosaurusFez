@@ -53,5 +53,6 @@ private:
 	bool myIsShiftDown;
 	bool myIsActive;
 	bool myIsRightMouseButtonDown;
+	bool myShouldRecoverManaQuickly;
 };
 
