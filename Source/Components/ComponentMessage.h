@@ -113,6 +113,7 @@ enum class eComponentMessageType
 	eUnlockCamera,
 	eSpawning,
 	eDoneSpawning,
+	ePickupVisual,
 	eLength,
 };
 

@@ -53,6 +53,7 @@ void InitComponentTypes()
 	locComponentTypeNames[TO_STRING(eOnCollisionExit)] = eComponentMessageType::eOnCollisionExit;
 	locComponentTypeNames[TO_STRING(ePercentHPLeft)] = eComponentMessageType::ePercentHPLeft;
 	locComponentTypeNames[TO_STRING(eActivate)] = eComponentMessageType::eActivate;
+	locComponentTypeNames[TO_STRING(ePickupVisual)] = eComponentMessageType::ePickupVisual;
 
 		//eComponentMessageType::ePercentHPLeft:
 		//eComponentMessageType::eLootDropped:

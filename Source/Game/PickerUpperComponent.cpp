@@ -10,6 +10,7 @@
 #include "PlayerData.h"
 #include "../PostMaster/PostMaster.h"
 #include "../PostMaster/HatBought.h"
+#include "ScriptComponentManager.h"
 
 CPickerUpperComponent::~CPickerUpperComponent()
 {
@@ -35,6 +36,10 @@ void CPickerUpperComponent::Receive(const eComponentMessageType aMessageType, co
 				messageData2.myString = "HealthGlobe";
 				GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, messageData2);
 				//GetParent()->NotifyComponents(eComponentMessageType::eRestoreMana, messageData);
+
+				SComponentMessageData messageData3;
+				messageData3.myString = "health";
+				GetParent()->NotifyComponents(eComponentMessageType::ePickupVisual, messageData3);
 			}
 			break;
 		case ePickupType::MANA:
@@ -46,6 +51,10 @@ void CPickerUpperComponent::Receive(const eComponentMessageType aMessageType, co
 				SComponentMessageData messageData2;
 				messageData2.myString = "HealthGlobe";
 				GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, messageData2);
+
+				SComponentMessageData messageData3;
+				messageData3.myString = "mana";
+				GetParent()->NotifyComponents(eComponentMessageType::ePickupVisual, messageData3);
 			}
 			break;
 		case ePickupType::GOLD:
@@ -56,6 +65,10 @@ void CPickerUpperComponent::Receive(const eComponentMessageType aMessageType, co
 			SComponentMessageData messageData2;
 			messageData2.myString = "PickupGold";
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, messageData2);
+
+			SComponentMessageData messageData3;
+			messageData3.myString = "goldPickup";
+			GetParent()->NotifyComponents(eComponentMessageType::ePickupVisual, messageData3);
 		}
 		break;
 		case ePickupType::HAT:
@@ -64,7 +77,7 @@ void CPickerUpperComponent::Receive(const eComponentMessageType aMessageType, co
 			SComponentMessageData messageData2;
 			messageData2.myString = "AddedHat";
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, messageData2);
-			PostMaster::GetInstance().SendLetter(eMessageType::eHatAdded, HatBought(data.myString)); 
+			PostMaster::GetInstance().SendLetter(eMessageType::eHatAdded, HatBought(data.myString));
 		}
 		break;
 		default: break;
@@ -75,6 +88,17 @@ void CPickerUpperComponent::Receive(const eComponentMessageType aMessageType, co
 		pickupComponent->GetParent()->NotifyComponents(eComponentMessageType::eSetVisibility, messageData2);
 		pickupComponent->GetParent()->NotifyComponents(eComponentMessageType::eSetIsColliderActive, messageData2);
 
+	}
+	else if (aMessageType == eComponentMessageType::eAddComponent)
+	{
+		if (aMessageData.myComponentTypeAdded == eComponentType::ePickerUpper)
+		{
+			CScriptComponentManager* scriptManager = CScriptComponentManager::GetInstance();
+			if (scriptManager && GetParent())
+			{
+				GetParent()->AddComponent(scriptManager->CreateAbstractComponent("Script/pickup_emitter.lua"));
+			}
+		}
 	}
 }
 
