@@ -49,7 +49,10 @@ void PointLightComponent::Receive(const eComponentMessageType aMessageType, cons
 		myPointLightInstace->SetPosition(GetParent()->GetWorldPosition());
 		break;
 	}
-	case  eComponentMessageType::eTurnOffThePointLight:
+	case eComponentMessageType::eTurnOnThePointLight:
+		myPointLightInstace->SetActive(true);
+		break;
+	case eComponentMessageType::eTurnOffThePointLight:
 		myPointLightInstace->SetActive(false);
 		break;
 	default:

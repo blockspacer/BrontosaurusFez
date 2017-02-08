@@ -15,9 +15,11 @@ void AddScript(CGameObject& aParent)
 
 ChangeLevelTriggerComponent::ChangeLevelTriggerComponent(const unsigned char aLevelToGoTo, const unsigned short aPortalID)
 {
+	myType = eComponentType::eChangeLevelTrigger;
 	myLevelToGoTo = aLevelToGoTo;
 	myPortalID = aPortalID;
-	myType = eComponentType::eChangeLevelTrigger;
+	myIsActive = false;
+	int someInt = 0;
 }
 
 ChangeLevelTriggerComponent::~ChangeLevelTriggerComponent()
@@ -58,4 +60,22 @@ void ChangeLevelTriggerComponent::Receive(const eComponentMessageType aMessageTy
 
 void ChangeLevelTriggerComponent::Destroy()
 {
+}
+
+bool ChangeLevelTriggerComponent::CheckIfActive()
+{
+	if (myPortalID == 0)
+	{
+		return true;
+	}
+
+	for (int i = 0; i < PollingStation::OpenPortals.Size(); i++)
+	{
+		if (PollingStation::OpenPortals[i] == myPortalID)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
