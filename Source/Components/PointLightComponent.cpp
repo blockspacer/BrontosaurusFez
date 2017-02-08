@@ -38,6 +38,7 @@ void PointLightComponent::SetColor(const CU::Vector3f& aColor)
 	CPointLightInstance* pointLight = myScene.GetPointLightInstance(myLightID);
 	if (!pointLight) return;
 	pointLight->SetColor(aColor);
+	myLastColor = aColor;
 }
 
 void PointLightComponent::SetRange(const float aRange)
@@ -45,6 +46,7 @@ void PointLightComponent::SetRange(const float aRange)
 	CPointLightInstance* pointLight = myScene.GetPointLightInstance(myLightID);
 	if (!pointLight) return;
 	pointLight->SetRange(aRange);
+	myLastRange = aRange;
 }
 
 void PointLightComponent::SetIntensity(const float aIntensity)
@@ -52,6 +54,7 @@ void PointLightComponent::SetIntensity(const float aIntensity)
 	CPointLightInstance* pointLight = myScene.GetPointLightInstance(myLightID);
 	if (!pointLight) return;
 	pointLight->SetInstensity(aIntensity);
+	myLastIntensity = aIntensity;
 }
 
 void PointLightComponent::SetOffsetToParent(const CU::Vector3f& aOffset)
@@ -66,7 +69,7 @@ void PointLightComponent::ChangeColorOverTime(const CU::Vector3f& aColor, const 
 	
 	if (aSeconds <= 0.f)
 	{
-		SetColor(aColor);
+		pointLight->SetColor(aColor);
 		return;
 	}
 
@@ -88,7 +91,7 @@ void PointLightComponent::Update(const CU::Time aDeltaTime)
 		{
 			myTimeTilChangedColor = 0.f;
 			myChangeColorTime = 0.f;
-			SetColor(myToBeColor);
+			pointLight->SetColor(myToBeColor);
 			return;
 			//done, callback?
 		}
@@ -123,15 +126,12 @@ void PointLightComponent::Receive(const eComponentMessageType aMessageType, cons
 		pointLight->SetActive(false);
 		break;
 	case eComponentMessageType::eSetPointLightIntensity:
-		myLastIntensity = pointLight->GetInstensity();
 		pointLight->SetInstensity(aMessageData.myFloat);
 		break;
 	case eComponentMessageType::eSetPointLightRange:
-		myLastRange = pointLight->GetRange();
 		pointLight->SetRange(aMessageData.myFloat);
 		break;
 	case eComponentMessageType::eSetPointLightColor:
-		myLastColor = pointLight->GetColor();
 		ChangeColorOverTime(aMessageData.myVector3f);
 		break;
 	case eComponentMessageType::eSetPointLightToLastState:

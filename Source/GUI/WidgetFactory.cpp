@@ -175,6 +175,25 @@ namespace GUI
 			{
 				widget = CreateMoney(widget);
 			}
+			else if (widgetName.find("skillKnapp0") != std::string::npos)
+			{
+				widget->SetVisibility(true);
+				if (widgetName.rfind("1") != std::string::npos)
+				{
+					std::string basicAttackName = "Basic attack";
+					widget = new CToolTipDecorator(widget, nullptr, &basicAttackName, nullptr);
+				}
+				else if (widgetName.rfind("2") != std::string::npos)
+				{
+					std::string sweepAttackName = "Sweep attack\nDeals more damage over a wider area but costs some mana";
+					widget = new CToolTipDecorator(widget, nullptr, &sweepAttackName, nullptr);
+				}
+				else if (widgetName.rfind("3") != std::string::npos)
+				{
+					std::string whirlwindAttackName = "Whirlwind\nDeals damage in a circle around you";
+					widget = new CToolTipDecorator(widget, nullptr, &whirlwindAttackName, nullptr);
+				}
+			}
 			else if (buttonNames.Find(widgetName) != buttonNames.FoundNone ||  widget->GetName().find("button") != std::string::npos || widget->GetName().find("Button") != std::string::npos
 				|| widget->GetName() == "Resume" || widget->GetName() == "Return" || widget->GetName().find("Knapp") != std::string::npos
 				|| widget->GetName().find("knapp") != std::string::npos)
