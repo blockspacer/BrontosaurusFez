@@ -115,7 +115,7 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 	myIsLoaded = false;
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eHatAdded);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eGoldChanged);
-	
+
 
 }
 
@@ -404,6 +404,8 @@ void CPlayState::Load()
 	//get time to load the level:
 	timerMgr.UpdateTimers();
 	float time = timerMgr.GetTimer(handle).GetLifeTime().GetMilliseconds();
+
+	myGameEventMessenger.Init({ 0.5f, 0.1f});
 	GAMEPLAY_LOG("Game Inited in %f ms", time);
 }
 
@@ -459,7 +461,7 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	{
 		UpdateCamera(aDeltaTime.GetSeconds());
 	}
-	
+
 	MovementComponentManager::GetInstance().Update(aDeltaTime);
 	AIControllerManager::GetInstance().Update(aDeltaTime);
 	SkillSystemComponentManager::GetInstance().Update(aDeltaTime);
@@ -494,7 +496,7 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 		position.y += 1 * aDeltaTime.GetSeconds();
 		myChangeTexts[i]->SetPosition(position);
 	}
-	//myGameEventMessenger.Update(aDeltaTime.GetSeconds());
+	myGameEventMessenger.Update(aDeltaTime.GetSeconds());
 
 	return myStatus;
 }
@@ -548,7 +550,7 @@ void CPlayState::Render()
 	}
 
 	myQuestDrawer.Render();
-	//myGameEventMessenger.Render();
+	myGameEventMessenger.Render();
 }
 
 void CPlayState::OnEnter(const bool aLetThroughRender)
@@ -683,28 +685,28 @@ void CPlayState::UpdateCamera(const float dt)
 	float rotspeed = 50.f;
 	rotspeed = DEGREES_TO_RADIANS(rotspeed);
 
-	if(myCameraKeysDown[0] == true)
+	if (myCameraKeysDown[0] == true)
 		camera.TranslateForward(speed * deltaTime);
 	else if (myCameraKeysDown[1] == true)
 		camera.TranslateForward(-speed * deltaTime);
-	
+
 	if (myCameraKeysDown[2] == true)
 		camera.TranslateSideways(-speed * deltaTime);
 	else if (myCameraKeysDown[3] == true)
 		camera.TranslateSideways(speed * deltaTime);
-	
+
 	if (myCameraKeysDown[4] == true)
 		camera.Roll(rotspeed * deltaTime);
 	else if (myCameraKeysDown[5] == true)
 		camera.Roll(-rotspeed * deltaTime);
-	
+
 	if (myCameraKeysDown[6] == true)
 
 		camera.Pitch(rotspeed * deltaTime);
 	else if (myCameraKeysDown[7] == true)
 		camera.Pitch(-rotspeed * deltaTime);
-	
-	
+
+
 	if (myCameraKeysDown[8] == true)
 		camera.Jaw(-rotspeed * deltaTime);
 	else if (myCameraKeysDown[9] == true)
