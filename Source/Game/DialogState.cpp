@@ -15,7 +15,7 @@
 
 CDialogState::CDialogState(StateStack& aStateStack) : State(aStateStack), myCurrentPiece(0), myHasFailed(false), myIsDone(false), myState(eStateStatus::eKeep), myCurrentTime(0), myBackground(nullptr)
 {
-	myCurrentDialog.Init(2.f);
+	myCurrentDialog.Init(2);
 	myWaitTime = 1.f;
 	myPassedTime = 0.f;
 	myVinjette = nullptr;
