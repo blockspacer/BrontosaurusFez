@@ -36,6 +36,7 @@
 #include "Components/SkillSystemComponentManager.h"
 #include "Components/CollisionComponentManager.h"
 #include "Components\BlessingTowerComponentManager.h"
+#include "ChangeLevelTriggerComponentManager.h"
 #include "MainStatComponent.h"
 #include "Components/HealthRestoreTriggerComponentManager.h"
 #include "Components/PointLightComponentManager.h"
@@ -180,6 +181,7 @@ CPlayState::~CPlayState()
 	SkillFactory::DestroyInstance();
 	CHealthRestoreTriggerComponentManager::Destroy();
 	CPointLightComponentManager::Destroy();
+	CChangeLevelTriggerComponentManager::Create();
 	CComponentManager::DestroyInstance();
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eHatAdded);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eGoldChanged);
@@ -472,6 +474,7 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 
 	myHealthBarManager->Update();
 	BlessingTowerComponentManager::GetInstance().Update(aDeltaTime);
+	CChangeLevelTriggerComponentManager::GetInstance().Update();
 
 	for (unsigned int i = 0; i < myChangeTexts.Size(); ++i)
 	{
@@ -661,4 +664,5 @@ void CPlayState::CreateManagersAndFactories()
 	BlessingTowerComponentManager::CreateInstance();
 	CHealthRestoreTriggerComponentManager::Create();
 	CPointLightComponentManager::Create(*myScene);
+	CChangeLevelTriggerComponentManager::GetInstance().Create();
 }
