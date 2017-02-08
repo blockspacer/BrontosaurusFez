@@ -48,6 +48,21 @@ void InputController::Update(float aDeltaTime)
 {
 	if (myIsActive == true)
 	{
+		for (unsigned short i = 0; i < mySkillInputMessageActivators.Size(); i++)
+		{
+			if(i == 0 && mySkillInputMessageActivators[i] != CU::eInputMessage::DIVIDE)
+			{
+				mySkillInputMessageActivators[i] = CU::eInputMessage::DIVIDE;
+			}
+			else if (i == 1 && mySkillInputMessageActivators[i] != CU::eInputMessage::RIGHTMOUSEBUTTON)
+			{
+				mySkillInputMessageActivators[i] = CU::eInputMessage::RIGHTMOUSEBUTTON;
+			}
+			else if (i == 1 && mySkillInputMessageActivators[i] != CU::eInputMessage::SPACE)
+			{
+				mySkillInputMessageActivators[i] = CU::eInputMessage::SPACE;
+			}
+		}
 		myElapsedManaRegenTimer -= aDeltaTime;
 		if(myElapsedManaRegenTimer < 0.0f)
 		{
@@ -183,8 +198,10 @@ void InputController::Receive(const eComponentMessageType aMessageType, const SC
 				if(mySkillInputMessageActivators[i] == CU::eInputMessage::DIVIDE)
 				{
 					return;
+					DL_PRINT("basicattack adding skipped");
 				}
 			}
+			DL_PRINT("adding basicattack");
 			mySkillInputMessageActivators.Add(CU::eInputMessage::DIVIDE);
 		}
 		else if (strcmp(aMessageData.myString, "WhirlWind") == 0)
@@ -193,9 +210,11 @@ void InputController::Receive(const eComponentMessageType aMessageType, const SC
 			{
 				if (mySkillInputMessageActivators[i] == CU::eInputMessage::SPACE)
 				{
+					DL_PRINT("whirlWind adding skipped");
 					return;
 				}
 			}
+			DL_PRINT("adding whirlWind");
 			mySkillInputMessageActivators.Add(CU::eInputMessage::SPACE);
 		}
 		else if (strcmp(aMessageData.myString, "SweepAttack") == 0)
@@ -204,15 +223,18 @@ void InputController::Receive(const eComponentMessageType aMessageType, const SC
 			{
 				if (mySkillInputMessageActivators[i] == CU::eInputMessage::RIGHTMOUSEBUTTON)
 				{
+					DL_PRINT("sweep attack adding skipped");
 					return;
 				}
 			}
+			DL_PRINT("adding sweep attack");
 			mySkillInputMessageActivators.Add(CU::eInputMessage::RIGHTMOUSEBUTTON);
 		}
 		else
 		{
 			std::cout << "Skill not found when adding key binding." << std::endl;
 		}
+		DL_PRINT("skill index Input %u", mySkillInputMessageActivators.Size());
 	}
 	else if (aMessageType == eComponentMessageType::eDied)
 	{
