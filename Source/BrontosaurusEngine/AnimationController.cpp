@@ -77,12 +77,15 @@ unsigned int CAnimEvaluator::GetFrameIndexAt(float ptime, bool loop)
 	float percent = time / Duration;
 	if (loop == false)
 	{
-		if (percent > 0.98f)
-			percent = 0.98f;
+		if (percent > 0.90f)
+		{				
+			percent = 0.90f;
+		}
 	}
+	if (!PlayAnimationForward) percent = (percent - 1.0f)*-1.0f;// this will invert the percent so the animation plays backwards
 	
 
-	if (!PlayAnimationForward) percent = (percent - 1.0f)*-1.0f;// this will invert the percent so the animation plays backwards
+
 	unsigned int chosenIndex = static_cast<unsigned int>((static_cast<float>(Transforms.size()) * percent));
 	return (chosenIndex < Transforms.size()) ? chosenIndex : Transforms.size() - 1;
 }
