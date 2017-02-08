@@ -35,6 +35,7 @@ InputController::InputController(const CU::Camera& aPlayerCamera)
 	myType = eComponentType::eInputController;
 	myElapsedManaRegenTimer = 1.5f;
 	myManaRecover = 1;
+	myShouldRecoverManaQuickly = false;
 }
 
 
@@ -68,6 +69,10 @@ void InputController::Update(float aDeltaTime)
 		{
 			SComponentMessageData manaRecoverData;
 			manaRecoverData.myInt = myManaRecover;
+			if(myShouldRecoverManaQuickly == true)
+			{
+				manaRecoverData.myInt = myManaRecover * 1;
+			}
 			GetParent()->NotifyComponents(eComponentMessageType::eRestoreMana, manaRecoverData);
 			myElapsedManaRegenTimer = 1.5f;
 		}
@@ -243,6 +248,17 @@ void InputController::Receive(const eComponentMessageType aMessageType, const SC
 	else if (aMessageType == eComponentMessageType::eRespawned)
 	{
 		myIsActive = true;
+	}
+	else if (aMessageType == eComponentMessageType::ePercentMPLeft)
+	{
+		if(aMessageData.myUChar < 30)
+		{
+			myShouldRecoverManaQuickly = true;
+		}
+		else
+		{
+			myShouldRecoverManaQuickly = false;
+		}
 	}
 }
 

@@ -83,7 +83,7 @@ namespace GUI
 
 	void CToolTipDecorator::ChangeTextFunction(const std::function<bool(std::string&)>& aGetTextFunction)
 	{
-		assert(myGetTextFunction != nullptr);
+		//assert(myGetTextFunction != nullptr);
 		myGetTextFunction = aGetTextFunction;
 	}
 
