@@ -69,14 +69,6 @@ eMessageReturn KeyPressed::DoEvent(CPlayState* aPlayState) const
 	{
 		switch (myKey)
 		{
-		case CU::eKeys::S:
-			//aPlayState->BuyHats();
-			return eMessageReturn::eContinue;
-			break;
-		case CU::eKeys::F7:
-			//aPlayState->NextLevel();
-			CLevelManager::GetInstance()->GoToLevel(2);
-			break;
 		case CU::eKeys::N:
 			aPlayState->myShuldRenderNavmesh = !aPlayState->myShuldRenderNavmesh;
 			break;
@@ -84,11 +76,24 @@ eMessageReturn KeyPressed::DoEvent(CPlayState* aPlayState) const
 			aPlayState->Pause();
 			return eMessageReturn::eStop;
 			break;
+
+		case CU::eKeys::L:
+		{
+			aPlayState->FlipCameraUnlocked();
+			break;
+		}
 		case CU::eKeys::H:
 //			aPlayState->TEMP_ADD_HAT(aPlayState->myPlayerObject);
 		default:
 			break;
 		}
+
+
+		if (aPlayState->myCameraIsFree == true)
+		{
+			aPlayState->CameraMovement(myKey, true);
+		}
+
 	}
 
 	return eMessageReturn::eContinue;

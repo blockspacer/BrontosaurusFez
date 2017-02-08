@@ -14,6 +14,7 @@ public:
 
 	eMessageReturn DoEvent(CDebugInfoDrawer* aDebugInfoDrawer) const;
 	eMessageReturn DoEvent(InputController* aDebugInfoDrawer) const;
+	eMessageReturn DoEvent(CPlayState * aPlayState) const;
 private:
 	const CU::eKeys& myKey;
 };

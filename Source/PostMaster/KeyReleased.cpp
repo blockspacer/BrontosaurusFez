@@ -3,6 +3,8 @@
 
 #include "../BrontosaurusEngine/DebugInfoDrawer.h"
 #include "../Components/InputController.h"
+#include "../Game/PlayState.h"
+
 
 KeyReleased::KeyReleased(const CU::eKeys& aKey)
 	: myKey(aKey)
@@ -26,4 +28,12 @@ eMessageReturn KeyReleased::DoEvent(CDebugInfoDrawer* aDebugInfoDrawer) const
 eMessageReturn KeyReleased::DoEvent(InputController * aInputController) const
 {
 	return aInputController->TakeKeyReleased(myKey);
+}
+
+
+eMessageReturn KeyReleased::DoEvent(CPlayState * aPlayState) const
+{
+	aPlayState->CameraMovement(myKey, false);
+	return eMessageReturn::eContinue;
+
 }
