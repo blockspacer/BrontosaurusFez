@@ -96,6 +96,9 @@
     <ClCompile Include="CoolBoi.cpp" />
     <ClCompile Include="SecretlySetMousePos.cpp" />
     <ClCompile Include="PlayerGotHat.cpp" />
+    <ClCompile Include="GameEventMessageEvent.cpp">
+      <Filter>Events\GameEventMessageEvent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Subscriber.h">
@@ -268,6 +271,11 @@
     <ClInclude Include="PopCurrentState.h" />
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="PlayerGotHat.h" />
+    <ClInclude Include="PopCurrentState.h" />
+    <ClInclude Include="PostMaster.h" />
+    <ClInclude Include="GameEventMessageEvent.h">
+      <Filter>Events\GameEventMessageEvent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Events">
@@ -359,6 +367,9 @@
     </Filter>
     <Filter Include="Events\ShopClosed">
       <UniqueIdentifier>{91c0a917-7452-4023-802a-da89ce235515}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events\GameEventMessageEvent">
+      <UniqueIdentifier>{ec19fe1a-2054-4c6c-bebe-5ca32c20c21c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

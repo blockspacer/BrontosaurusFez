@@ -15,9 +15,9 @@
 
 CDialogState::CDialogState(StateStack& aStateStack) : State(aStateStack), myCurrentPiece(0), myHasFailed(false), myIsDone(false), myState(eStateStatus::eKeep), myCurrentTime(0), myBackground(nullptr)
 {
-	myCurrentDialog.Init(2);
-	myWaitTime = 2;
-	myPassedTime = 0;
+	myCurrentDialog.Init(2.f);
+	myWaitTime = 1.f;
+	myPassedTime = 0.f;
 }
 
 CDialogState::~CDialogState()
@@ -93,7 +93,7 @@ void CDialogState::Init()
 
 eStateStatus CDialogState::Update(const CU::Time& aDeltaTime)
 {
-	const float MaxTime = 0.05;
+	const float MaxTime = 0.02;
 
 	myCurrentTime += aDeltaTime.GetSeconds();
 	if (myPassedTime < myWaitTime)

@@ -119,6 +119,8 @@ private:
 	//CGameObject* myCameraObject;
 	CMouseComponent* myMouseComponent;
 
+	CGameEventMessenger myGameEventMessenger;
+
 	int myLevelIndex;
 	std::atomic_bool  myIsLoaded;
 	bool myShouldReturnToLevelSelect;
