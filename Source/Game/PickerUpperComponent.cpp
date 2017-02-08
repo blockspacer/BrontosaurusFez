@@ -42,6 +42,10 @@ void CPickerUpperComponent::Receive(const eComponentMessageType aMessageType, co
 				messageData.myInt = data.myValue;
 
 				GetParent()->NotifyComponents(eComponentMessageType::eRestorePercentMana, messageData);
+
+				SComponentMessageData messageData2;
+				messageData2.myString = "HealthGlobe";
+				GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, messageData2);
 			}
 			break;
 		case ePickupType::GOLD:
