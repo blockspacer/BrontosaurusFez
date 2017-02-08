@@ -58,7 +58,7 @@ void BlessingTowerComponent::Receive(const eComponentMessageType aMessageType, c
 			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eAddStats, damageData);
 
 			SComponentMessageData turnOffThePointLight;
-			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eTurnOffThePointLight, turnOffThePointLight);
+			GetParent()->NotifyComponents(eComponentMessageType::eTurnOffThePointLight, turnOffThePointLight);
 
 			SComponentMessageData colliderData;
 			colliderData.myBool = false;
