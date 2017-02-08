@@ -104,6 +104,7 @@ enum class eComponentMessageType
 	eRemoveHoveredObject,
 	eEnemyReturnToSpawnPoint,
 	eEnemyStartChaseAgain,
+	eTurnOffThePointLight,
 	eLength
 };
 
