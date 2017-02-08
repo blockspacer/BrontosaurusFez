@@ -161,6 +161,9 @@
     </ClCompile>
     <ClCompile Include="HealthRestoreTriggerComponent.cpp" />
     <ClCompile Include="HealthRestoreTriggerComponentManager.cpp" />
+    <ClCompile Include="PointLightComponent.cpp" />
+    <ClCompile Include="PointLightComponentManager.cpp" />
+    <ClCompile Include="ChangeLevelTriggerComponentManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -346,6 +349,9 @@
     </ClInclude>
     <ClInclude Include="HealthRestoreTriggerComponent.h" />
     <ClInclude Include="HealthRestoreTriggerComponentManager.h" />
+    <ClInclude Include="PointLightComponent.h" />
+    <ClInclude Include="PointLightComponentManager.h" />
+    <ClInclude Include="ChangeLevelTriggerComponentManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
