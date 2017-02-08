@@ -9,6 +9,8 @@
 #include "ModelInstance.h"
 #include "ModelComponent.h"
 
+std::string GetEmitterTypeFromObjectType(const eObjectType aObjectType);
+
 CHealthComponent::CHealthComponent()
 {
 	myMaxHealth = 100;
@@ -88,8 +90,12 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 	{
 		CScriptComponentManager* scriptManager = CScriptComponentManager::GetInstance();
 		if (!scriptManager) break;
-		CComponent* bloodEmitter = scriptManager->CreateAbstractComponent("Script/blood_emitter.lua");
-		GetParent()->AddComponent(bloodEmitter);
+		
+		CComponent* bloodEmitter = scriptManager->CreateAbstractComponent(GetEmitterTypeFromObjectType(myObjectType));
+		if (bloodEmitter)
+		{
+			GetParent()->AddComponent(bloodEmitter);
+		}
 	}
 		break;
 	case eComponentMessageType::eAddToMaxHealth:
@@ -177,6 +183,9 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 			DL_PRINT("a PLAYER died");
 			data.myString = "EnemyDie";
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
+
+			//data.myString = "bloodBath";
+			//GetParent()->NotifyComponents(eComponentMessageType::eHealthVisual, data);
 			break;
 
 
@@ -197,4 +206,29 @@ void CHealthComponent::Destroy()
 eMessageReturn CHealthComponent::Recieve(const Message & aMessage)
 {
 	return aMessage.myEvent.DoEvent(this);
+}
+
+
+
+std::string GetEmitterTypeFromObjectType(const eObjectType aObjectType)
+{
+	std::string name("");
+
+	switch (aObjectType)
+	{
+	case eObjectType::eUrn:
+	case eObjectType::eBarrel:
+	case eObjectType::eWitch:
+	case eObjectType::eChest:
+		name = "Script/debris_emitter.lua";
+		break;
+	case eObjectType::eZombie:
+	case eObjectType::eBlob:
+	case eObjectType::ePlayer:
+	case eObjectType::eLeaper:
+		name = "Script/blood_emitter.lua";
+		break;
+	}
+
+	return std::move(name);
 }

@@ -13,6 +13,7 @@
 #include "SkillData.h"
 
 #include <iostream>
+#include "../PostMaster/GameEventMessageEvent.h"
 
 
 // The Legacy of Kevin!
@@ -220,6 +221,7 @@ void InputController::Receive(const eComponentMessageType aMessageType, const SC
 				}
 			}
 			DL_PRINT("adding whirlWind");
+			PostMaster::GetInstance().SendLetter( eMessageType::eGameEventMessage, CGameEventMessageEvent({"Skill aquired: Whirlwind", "Activate with space"}));
 			mySkillInputMessageActivators.Add(CU::eInputMessage::SPACE);
 		}
 		else if (strcmp(aMessageData.myString, "SweepAttack") == 0)
@@ -233,6 +235,7 @@ void InputController::Receive(const eComponentMessageType aMessageType, const SC
 				}
 			}
 			DL_PRINT("adding sweep attack");
+			PostMaster::GetInstance().SendLetter(eMessageType::eGameEventMessage, CGameEventMessageEvent({ "Skill aquired: Sweep", "Activate with right click" }));
 			mySkillInputMessageActivators.Add(CU::eInputMessage::RIGHTMOUSEBUTTON);
 		}
 		else

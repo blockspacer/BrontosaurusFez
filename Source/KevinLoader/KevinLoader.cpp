@@ -92,27 +92,6 @@ namespace KLoader
 
 	void CKevinLoader::PrintMissingComponents(const std::string& aComponentName)
 	{
-#ifndef _RETAIL_BUILD
-		const char * fileName = "IMPORTANT_FOR_PROG_MISSING_COMPONENTS.txt";
-
-		std::ofstream missingComponetsFile;
-		if (myHasLoadedFile == false)
-		{
-			missingComponetsFile.open(fileName, std::ofstream::trunc);
-			missingComponetsFile << "Components That was not Loaded --------------------------------------------------" << std::endl;
-			myHasLoadedFile = true;
-		}
-		else
-		{
-			missingComponetsFile.open(fileName, std::ofstream::app);
-		}
-
-		const std::string outString = aComponentName + " ---> was not loded due to note beeing suported yet!!   poke a prog to fix or if prog, fix plz";
-
-		DL_PRINT(outString.c_str());
-		missingComponetsFile << outString << std::endl;
-		missingComponetsFile.close();
-#endif
 	}
 
 	CKevinLoader::CKevinLoader()

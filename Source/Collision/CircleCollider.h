@@ -46,5 +46,5 @@ private:
 	Intersection::SCircle* myCircleData;
 
 	const static Intersection::SCircle ourNullCircle;
-	static CU::CStaticMemoryPool<CCircleCollider, 1024> ourMemoryPool;
+	static CU::CStaticMemoryPool<CCircleCollider, 2048> ourMemoryPool;
 };

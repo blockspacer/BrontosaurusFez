@@ -58,17 +58,17 @@ CParticleEmitter * CParticleEmitterManager::GetParticleEmitter(const ParticleEmi
 void CParticleEmitterManager::RemoveParticleEmitter(const ParticleEmitterID aID)
 {
 	RemoveRef(aID);
-	if (myParticleEmitterComp[aID].myRefCount <= 0)
-	{
-		myParticleEmitters[aID].Destroy();
+	//if (myParticleEmitterComp[aID].myRefCount <= 0)
+	//{
+	//	myParticleEmitters[aID].Destroy();
 
-		myParticleEmitterComp[aID].myID = -1;
-		myParticleEmitterComp[aID].myNumOfParticles = 0;
-		myParticleEmitterComp[aID].myTexturePath = "";
-		myParticleEmitterComp[aID].myRefCount = 0;
+	//	myParticleEmitterComp[aID].myID = -1;
+	//	myParticleEmitterComp[aID].myNumOfParticles = 0;
+	//	myParticleEmitterComp[aID].myTexturePath = "";
+	//	myParticleEmitterComp[aID].myRefCount = 0;
 
-		myFreeParticleEmitterIDs.Push(aID);
-	}
+	//	myFreeParticleEmitterIDs.Push(aID);
+	//}
 }
 
 int CParticleEmitterManager::EmitterExists(const SEmitterData & aEmitterData)
