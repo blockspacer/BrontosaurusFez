@@ -20,6 +20,7 @@
 #include "Components/HatActivator.h"
 #include "Components/ComponentMessage.h"
 #include "Component.h"
+#include "PostMaster\PlayerGotHat.h"
 
 CHatMaker::CHatMaker(CGameObjectManager* aGameObjectManager)
 {
@@ -38,6 +39,7 @@ CHatMaker::~CHatMaker()
 	
 	
 	//TODO: Kanske minnesläcka :O
+	//no, it is destroyed by game object manager :) mvh carl
 	myHatObjects.RemoveAll();
 }
 
@@ -89,7 +91,8 @@ void CHatMaker::LoadBluePrints(const std::string& aFilePath)
 		blueprint->myHatStruct->stat->BonusHealthDropChance = levelsArray[i].at("HealthDropChance").GetFloat();
 		blueprint->myHatStruct->stat->BonusManaDropChance = levelsArray[i].at("ManaDropChance").GetFloat();
 		blueprint->myHatStruct->stat->BonusManaCostModifier = BonusManaCostModifier;
-		blueprint->myHatStruct->skillname = levelsArray[i].at("Skill").GetString().c_str();
+		blueprint->myHatStruct->skillname = levelsArray[i].at("Skill").GetString()/*.c_str()*/;
+		blueprint->myHatStruct->description = levelsArray[i].at("ShopTooltip").GetString();
 
 		HatActivatorData* hatActivatorData = new HatActivatorData;
 		float healthLimitActivator = levelsArray[i].at("HealthLimitActivation").GetFloat();
@@ -99,6 +102,8 @@ void CHatMaker::LoadBluePrints(const std::string& aFilePath)
 		hatActivatorData->healthLimitActivator = healthLimitActivator;
 		hatActivatorData->manaLimitActivator = manaLimitActivator;
 		hatActivatorData->isLimitActivationUnder = levelsArray[i].at("IsLimitActivatorUnder").GetBool();
+		
+
 		HatActivator* hatActivator;
 		if(healthLimitActivator >= 1 && manaLimitActivator >= 1)
 		{
@@ -114,7 +119,7 @@ void CHatMaker::LoadBluePrints(const std::string& aFilePath)
 		myBluePrints.emplace(blueprint->HatName, blueprint);
 	}
 
-	CU::GrowingArray<CComponent*> playerComponents = PollingStation::playerObject->GetComponents();
+	CU::GrowingArray<CComponent*>& playerComponents = PollingStation::playerObject->GetComponents();
 
 	myPlayerModel = nullptr;
 	for (unsigned int i = 0; i < playerComponents.Size(); ++i)
@@ -163,6 +168,7 @@ void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName)
 			SComponentMessageData data;
 			data.myHat = theBluePrint->myHatStruct;
 			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eAddHat, data);
+			PostMaster::GetInstance().SendLetter(eMessageType::ePlayerGotHat, CPlayerGotHat(theBluePrint));
 		}
 		if(theBluePrint->HatName == "FireHat")
 		{
