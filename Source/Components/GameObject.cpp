@@ -119,7 +119,7 @@ void CGameObject::ComponentReceive(const eComponentMessageType aMessageType, con
 {
 	for (unsigned int i = 0; i < myComponents.Size(); i++)
 	{
-		if (myComponents[i]->IsGameObject())
+		if (myComponents[i]->IsGameObject() == false)
 		{
 			myComponents[i]->Receive(aMessageType, aMessageData);
 		}
