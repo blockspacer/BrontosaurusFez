@@ -42,8 +42,8 @@ void Init(int argc, char* argv[])
 		SInitEngineParams engineParams;
 		engineParams.myWindowParams.Width = 1920;
 		engineParams.myWindowParams.Height = 1080;
-		engineParams.myWindowParams.Name = L"Brontosaurus-BassKodd";
-		engineParams.myWindowParams.Title = L"Brontosaurus-BassKodd";
+		engineParams.myWindowParams.Name = L"Hat 'n' Slash";
+		engineParams.myWindowParams.Title = L"Hat 'n' Slash";
 		engineParams.myWindowParams.Fullscreen = false;
 
 		engineParams.myThreadRender = true;
