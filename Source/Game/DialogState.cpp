@@ -18,10 +18,14 @@ CDialogState::CDialogState(StateStack& aStateStack) : State(aStateStack), myCurr
 	myCurrentDialog.Init(2);
 	myWaitTime = 2;
 	myPassedTime = 0;
+	myVinjette = nullptr;
+ 
 }
 
 CDialogState::~CDialogState()
 {
+	SAFE_DELETE(myVinjette);
+	SAFE_DELETE(myBackground);
 }
 
 void CDialogState::Init()
@@ -89,6 +93,8 @@ void CDialogState::Init()
 	myActorNameText.SetTextLines({ myCurrentDialog[myCurrentPiece].myCurrentActor });
 
 	myBackground = new CSpriteInstance("Sprites/Dialog/background.dds", { 1.f, 1.f }, { 0.f,0.f });
+	myVinjette = new CSpriteInstance("Sprites/vingette/vignette.dds", { 1.0f, 1.0f });
+	myVinjette->SetAlpha(0.5f);
 }
 
 eStateStatus CDialogState::Update(const CU::Time& aDeltaTime)
@@ -158,7 +164,7 @@ void CDialogState::Render()
 		changeStateMessage->mySamplerState = eSamplerState::eClamp;
 
 		CEngine::GetInstance()->GetRenderer().AddRenderMessage(changeStateMessage);
-
+		myVinjette->Render();
 		myDialogTextInstance.Render();
 		myActorNameText.Render();
 	}

@@ -37,6 +37,7 @@ class CScene;
 class CHatmaker;
 class CGameObject;
 //class StatManager;
+class CSpriteInstance;
 class CShopStorage;
 class CTextInstance;
 class CTextInstance;
@@ -130,6 +131,9 @@ private:
 	CU::GrowingArray<CGameObject*> myEnemies;
 	CHealthBarComponentManager* myHealthBarManager;
 
+
+
+	CSpriteInstance* myVignetteSprite;
 };
 
 inline bool CPlayState::IsLoaded() const

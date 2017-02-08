@@ -55,5 +55,7 @@ private:
 	float myPassedTime;
 
 	CSpriteInstance* myBackground;
+	CSpriteInstance* myVinjette;
+
 };
 

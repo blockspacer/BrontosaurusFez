@@ -111,6 +111,7 @@ CPlayState::CPlayState(StateStack& aStateStack, const int aLevelIndex, const boo
 	, myShuldRenderNavmesh(false)
 	, myCameraIsFree(false)
 	, myCameraKeysDown(false)
+	, myVignetteSprite(nullptr)
 {
 	myIsLoaded = false;
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eHatAdded);
@@ -160,6 +161,7 @@ CPlayState::~CPlayState()
 	SAFE_DELETE(myScene);
 	SAFE_DELETE(myGameObjectManager);
 	SAFE_DELETE(myGUIManager);
+	SAFE_DELETE(myVignetteSprite);
 
 	CModelComponentManager::Destroy();
 	CAudioSourceComponentManager::Destroy();
@@ -399,7 +401,9 @@ void CPlayState::Load()
 
 	CSecretlySetMousePos::SetCamera(myScene->GetCamera(CScene::eCameraType::ePlayerOneCamera));
 
+
 	myIsLoaded = true;
+	myVignetteSprite = new CSpriteInstance("Sprites/vingette/vignette.dds", { 1.0f, 1.0f });
 
 	//get time to load the level:
 	timerMgr.UpdateTimers();
@@ -465,7 +469,6 @@ eStateStatus CPlayState::Update(const CU::Time& aDeltaTime)
 	SkillSystemComponentManager::GetInstance().Update(aDeltaTime);
 	CPickupManager::GetInstance().Update(aDeltaTime);
 	RespawnComponentManager::GetInstance().Update(aDeltaTime);
-	myMouseComponent->Update(aDeltaTime);
 	if (myGUIManager)
 	{
 		myGUIManager->Update(aDeltaTime);
@@ -508,16 +511,16 @@ void CPlayState::Render()
 	SChangeStatesMessage msg;
 
 
-	if (myShuldRenderNavmesh == true)
-	{
-		msg.myBlendState = eBlendState::eAlphaBlend;
-		msg.myDepthStencilState = eDepthStencilState::eDisableDepth;
-		msg.myRasterizerState = eRasterizerState::eWireFrame;
-		msg.mySamplerState = eSamplerState::eClamp;
-
-		RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
-		myNavmesh.Render();
-	}
+	//if (myShuldRenderNavmesh == true)
+	//{
+	//	msg.myBlendState = eBlendState::eAlphaBlend;
+	//	msg.myDepthStencilState = eDepthStencilState::eDisableDepth;
+	//	msg.myRasterizerState = eRasterizerState::eWireFrame;
+	//	msg.mySamplerState = eSamplerState::eClamp;
+	//
+	//	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
+	//	myNavmesh.Render();
+	//}
 
 	msg.myBlendState = eBlendState::eAlphaBlend;
 	msg.myDepthStencilState = eDepthStencilState::eDisableDepth;
@@ -525,13 +528,15 @@ void CPlayState::Render()
 	msg.mySamplerState = eSamplerState::eClamp;
 	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
 
+	myVignetteSprite->Render();
+	myMouseComponent->Update(CEngine::GetInstance()->GetDeltaTime()); // Because of Kyle :(
 	myGUIManager->Render();
 
-	msg.myBlendState = eBlendState::eNoBlend;
-	msg.myDepthStencilState = eDepthStencilState::eDisableDepth;
-	msg.myRasterizerState = eRasterizerState::eNoCulling;
-	msg.mySamplerState = eSamplerState::eClamp;
-	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
+	//msg.myBlendState = eBlendState::eNoBlend;
+	//msg.myDepthStencilState = eDepthStencilState::eDisableDepth;
+	//msg.myRasterizerState = eRasterizerState::eNoCulling;
+	//msg.mySamplerState = eSamplerState::eClamp;
+	//RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
 
 	myHealthBarManager->Render();
 
