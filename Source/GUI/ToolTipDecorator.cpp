@@ -50,7 +50,7 @@ namespace GUI
 		myBackGround->SetSize(backGroundSize * CU::Vector2f(1.f, 1.5f));
 
 		CU::Vector2f newPosition(aMousePosition + myOffsetToMouse);
-		myTextInstance->SetPosition(newPosition);
+		myTextInstance->SetPosition(newPosition + CU::Vector2f(0.f, backGroundSize.y));
 		myBackGround->SetPosition(newPosition);
 	}
 

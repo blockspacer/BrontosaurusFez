@@ -287,7 +287,7 @@ void GUI::GUIManager::PauseRenderAndUpdate()
 	ourHatContainer.RemoveAllHats(*this);
 }
 
-void GUI::GUIManager::RestartRenderAndUpdate()
+void GUI::GUIManager::RestartRenderAndUpdate(const bool aSubscribeToSecretMessage)
 {
 	myShouldUpdate = true;
 	myShouldRender = true;
@@ -298,7 +298,11 @@ void GUI::GUIManager::RestartRenderAndUpdate()
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage, 5);
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eKeyboardMessage, 5);
 	PostMaster::GetInstance().Subscribe(myCursor, eMessageType::eMouseMessage, 6);
-	PostMaster::GetInstance().Subscribe(myCursor, eMessageType::eSecretMouseMessageMvhCarl);
+
+	if (aSubscribeToSecretMessage)
+	{
+		PostMaster::GetInstance().Subscribe(myCursor, eMessageType::eSecretMouseMessageMvhCarl);
+	}
 
 
 	if (locMousePosition != CU::Vector2f::Zero && myCursor != nullptr)
