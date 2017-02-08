@@ -19,6 +19,8 @@ CAIControllerComponent::CAIControllerComponent()
 	myTrianglePointer = nullptr;
 	myIsActive = true;
 	myIsPlayerAlive = true;
+	myElapsedSpawnTime = 0.0f;
+	myHaveSpawned = true;
 }
 
 
@@ -48,6 +50,20 @@ const CU::Vector2f & CAIControllerComponent::GetVelocity()
 
 void CAIControllerComponent::Update(const CU::Time& aDeltaTime)
 {
+	if(myElapsedSpawnTime <= 0)
+	{
+		if(myHaveSpawned == false)
+		{
+			myElapsedSpawnTime = 0.0f;
+			myHaveSpawned = true;
+			GetParent()->NotifyOnlyComponents(eComponentMessageType::eDoneSpawning, SComponentMessageData());
+		}
+	}
+	else
+	{
+		myElapsedSpawnTime -= aDeltaTime.GetSeconds();
+	}
+
 	if(myIsActive == true)
 	{
 		if (myElapsedPathFindingCountdown > 0.0f)
@@ -144,6 +160,19 @@ void CAIControllerComponent::Receive(const eComponentMessageType aMessageType, c
 		break;
 	case(eComponentMessageType::eDied):
 		myIsActive = false;
+		break;
+	case(eComponentMessageType::eSpawning):
+		myIsActive = false;
+		myElapsedSpawnTime = 0.9f;
+		myHaveSpawned = false;
+		break;
+	case(eComponentMessageType::eDoneSpawning):
+	{
+		myIsActive = true;
+		SComponentMessageData spawningData;
+		spawningData.myString = "idle";
+		GetParent()->NotifyOnlyComponents(eComponentMessageType::eBasicAttack, spawningData);
+	}
 		break;
 	case eComponentMessageType::eRespawned:
 		myIsActive = true;

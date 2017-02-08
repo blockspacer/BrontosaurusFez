@@ -111,6 +111,8 @@ enum class eComponentMessageType
 	eSetPointLightColor,
 	eSetPointLightToLastState,
 	eUnlockCamera,
+	eSpawning,
+	eDoneSpawning,
 	eLength,
 };
 

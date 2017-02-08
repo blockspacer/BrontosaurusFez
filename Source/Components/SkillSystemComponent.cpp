@@ -149,6 +149,14 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 	{
 		myIsActive = false;
 	}
+	else if (aMessageType == eComponentMessageType::eSpawning)
+	{
+		myIsActive = false;
+	}
+	else if (aMessageType == eComponentMessageType::eDoneSpawning)
+	{
+		myIsActive = true;
+	}
 	else if (aMessageType == eComponentMessageType::eRespawned)
 	{
 		myIsActive = true;
