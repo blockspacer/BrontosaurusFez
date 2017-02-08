@@ -77,7 +77,7 @@ void MainMenuState::OnEnter(const bool aLetThroughRender)
 	
 	if (myIsGoingToLevelSelect == false)
 	{
-		myGUIManager->RestartRenderAndUpdate(false);
+		myGUIManager->RestartRenderAndUpdate(false, false);
 	}
 	else
 	{
