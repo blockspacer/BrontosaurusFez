@@ -61,6 +61,11 @@ const CU::Vector2f CSeekController::Update(const CU::Time& aDeltaTime)
 		speed = myMaxSpeed * distance / mySlowdownRadius;
 		targetVelocity.Normalize() *= speed;
 	}
+	else if (distance > (myAggroRange * 3))
+	{
+		myHaveBeenCalledForHelp = false;
+		return CU::Vector2f::Zero;
+	}
 	GetParent()->GetLocalTransform().Lerp(GetParent()->GetLocalTransform().CreateLookAt(CU::Vector3f(myTarget.x, GetParent()->GetWorldPosition().y, myTarget.y) * -1), 0.01f);
 	if (myHaveBeenCalledForHelp == false)
 	{
