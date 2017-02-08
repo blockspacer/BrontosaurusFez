@@ -140,14 +140,19 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 			GetParent()->NotifyComponents(eComponentMessageType::eChangeFBXToDead, data); // Anims handled another way?
 			break;
 		case eObjectType::eBarrel:
-		{
 			DL_PRINT("a BARREL died");
 			data.myString = "BreakBarrel";
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
 			data.myString = "Models/PlaceHolders/barrelDead.fbx";
 			GetParent()->NotifyComponents(eComponentMessageType::eChangeFBXToDead, data);
 			break;
-		}
+		case eObjectType::eChest:
+			DL_PRINT("a CHEST died");
+			data.myString = "BreakBarrel";
+			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
+			data.myString = "Models/PlaceHolders/chestDead.fbx";
+			GetParent()->NotifyComponents(eComponentMessageType::eChangeFBXToDead, data);
+			break;
 		case eObjectType::eWitch:
 			DL_PRINT("a WITCH died");
 			data.myString = "EnemyDie";
