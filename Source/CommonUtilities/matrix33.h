@@ -211,11 +211,16 @@ namespace CU
 		{
 			CU::Vector3f objectUpVector = CU::Vector3f(0.0f, 1.0f, 0.0f);
 
+			float xSize = myRightVector.Length();
+			float ySize = myUpVector.Length();
+			float zSize = myForwardVector.Length();
+
 			CU::Vector3f zAxis = aPositionToLookAt - aPositionToLookFrom;
-			zAxis = zAxis.GetNormalized();
+			zAxis = zAxis.GetNormalized() * zSize;
 			CU::Vector3f xAxis = objectUpVector.Cross(zAxis);
-			xAxis = xAxis.GetNormalized();
+			xAxis = xAxis.GetNormalized() * xSize;
 			CU::Vector3f yAxis = zAxis.Cross(xAxis);
+			yAxis = yAxis.GetNormalized() * ySize;
 
 			m11 = xAxis.x;
 			m12 = xAxis.y;
