@@ -181,7 +181,7 @@ CPlayState::~CPlayState()
 	SkillFactory::DestroyInstance();
 	CHealthRestoreTriggerComponentManager::Destroy();
 	CPointLightComponentManager::Destroy();
-	CChangeLevelTriggerComponentManager::Create();
+	CChangeLevelTriggerComponentManager::Destroy();
 	CComponentManager::DestroyInstance();
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eHatAdded);
 	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eGoldChanged);
@@ -664,5 +664,5 @@ void CPlayState::CreateManagersAndFactories()
 	BlessingTowerComponentManager::CreateInstance();
 	CHealthRestoreTriggerComponentManager::Create();
 	CPointLightComponentManager::Create(*myScene);
-	CChangeLevelTriggerComponentManager::GetInstance().Create();
+	CChangeLevelTriggerComponentManager::Create();
 }
