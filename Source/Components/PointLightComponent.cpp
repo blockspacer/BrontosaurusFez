@@ -18,16 +18,19 @@ PointLightComponent::~PointLightComponent()
 void PointLightComponent::SetColor(const CU::Vector3f & aColor)
 {
 	myPointLightInstace->SetColor(aColor);
+	myLastColor = aColor;
 }
 
 void PointLightComponent::SetRange(const float aRange)
 {
 	myPointLightInstace->SetRange(aRange);
+	myLastRange = aRange;
 }
 
 void PointLightComponent::SetIntensity(const float aIntensity)
 {
 	myPointLightInstace->SetInstensity(aIntensity);
+	myLastIntensity = aIntensity;
 }
 
 void PointLightComponent::Destroy()
@@ -56,15 +59,12 @@ void PointLightComponent::Receive(const eComponentMessageType aMessageType, cons
 		myPointLightInstace->SetActive(false);
 		break;
 	case eComponentMessageType::eSetPointLightIntensity:
-		myLastIntensity = myPointLightInstace->GetInstensity();
 		myPointLightInstace->SetInstensity(aMessageData.myFloat);
 		break;
 	case eComponentMessageType::eSetPointLightRange:
-		myLastRange = myPointLightInstace->GetRange();
 		myPointLightInstace->SetRange(aMessageData.myFloat);
 		break;
 	case eComponentMessageType::eSetPointLightColor:
-		myLastColor = myPointLightInstace->GetColor();
 		myPointLightInstace->SetColor(aMessageData.myVector3f);
 		break;
 	case eComponentMessageType::eSetPointLightToLastState:
