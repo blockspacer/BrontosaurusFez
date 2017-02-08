@@ -105,13 +105,12 @@ namespace GUI
 
 	void CToolTipDecorator::OnMouseMove(const CU::Vector2f& aMousePosition)
 	{
-		CU::Vector2f newPosition(aMousePosition + myOffsetToMouse);
-		myBackGround->SetPosition(newPosition);
-
 		CU::Vector2f backGroundSize = myTextInstance->GetQuadSizeNormalized();
 		myBackGround->SetSize(backGroundSize * CU::Vector2f(1.2f, 1.5f));
 
+		CU::Vector2f newPosition(aMousePosition + myOffsetToMouse);
+
 		myBackGround->SetPosition(newPosition);
-		myTextInstance->SetPosition(newPosition);
+		myTextInstance->SetPosition(newPosition + CU::Vector2f(0.f, backGroundSize.y));
 	}
 }
