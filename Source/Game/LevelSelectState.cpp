@@ -37,7 +37,7 @@ void LevelSelectState::Render()
 void LevelSelectState::OnEnter(const bool aLetThroughRender)
 {
 	PostMaster::GetInstance().Subscribe(this, eMessageType::eMouseMessage);
-	myGUIManager->RestartRenderAndUpdate();
+	myGUIManager->RestartRenderAndUpdate(false, false);
 }
 
 void LevelSelectState::OnExit(const bool /*aLetThroughRender*/)
