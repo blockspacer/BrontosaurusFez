@@ -229,7 +229,7 @@ void CPlayState::Load()
 	myChangeTexts.Init(5);
 
 	myGoldText = new CTextInstance;
-	myGoldText->SetColor({ 1.f, 0.50f , 0.f, 1.f });
+	myGoldText->SetColor({ 0.f, 0.f , 0.f, 1.f });
 	myGoldText->SetPosition(CU::Vector2f(0.575f, 0.95f));
 	myGoldText->SetText("");
 	myGoldText->Init();
