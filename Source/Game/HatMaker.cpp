@@ -20,6 +20,7 @@
 #include "Components/HatActivator.h"
 #include "Components/ComponentMessage.h"
 #include "Component.h"
+#include "PostMaster/PushState.h"
 #include "PostMaster\PlayerGotHat.h"
 
 CHatMaker::CHatMaker(CGameObjectManager* aGameObjectManager)
@@ -45,20 +46,24 @@ CHatMaker::~CHatMaker()
 
 void CHatMaker::Update()
 {
-	CModel* model = CEngine::GetInstance()->GetModelManager()->GetModel(myPlayerModel->GetModelInst()->GetModelID());
-
-
-	std::string boneName = "hatslot";
-	boneName += std::to_string(/*i +*/ 1);
-	boneName += "_SKIN";
-	CU::Matrix44f hatTransform = model->GetBoneTransform(myPlayerModel->GetModelInst()->GetAnimationCounter(), myPlayerModel->GetModelInst()->GetAnimationState(), boneName.c_str());
-
-	for (int i = 0; i < myHatObjects.Size(); ++i)
+	if (myHatObjects.Size() > 0)
 	{
-		hatTransform.m42 += 10.0f;
-		myHatObjects[i]->GetLocalTransform() = hatTransform;
+		CModel* model = CEngine::GetInstance()->GetModelManager()->GetModel(myPlayerModel->GetModelInst()->GetModelID());
+
+
+		std::string boneName = "hatslot";
+		boneName += std::to_string(/*i +*/ 1);
+		boneName += "_SKIN";
+		CU::Matrix44f hatTransform = model->GetBoneTransform(myPlayerModel->GetModelInst()->GetAnimationCounter(), myPlayerModel->GetModelInst()->GetAnimationState(), boneName.c_str());
+		float startHeight = hatTransform.m42;
+
+		for (int i = 0; i < myHatObjects.Size(); ++i)
+		{
+			hatTransform.m42 = startHeight + 10.f  * i;
+			myHatObjects[i]->GetLocalTransform() = hatTransform;
+		}
+		PollingStation::playerObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 	}
-	PollingStation::playerObject->NotifyComponents(eComponentMessageType::eMoving, SComponentMessageData());
 }
 
 
@@ -74,6 +79,12 @@ void CHatMaker::LoadBluePrints(const std::string& aFilePath)
 
 		blueprint->HatName = levelsArray[i].at("HatName").GetString();
 		blueprint->HatModel = levelsArray[i].at("Model").GetString();
+		blueprint->HatDialog = "";
+
+		if (levelsArray[i].Count("Dialog") > 0)
+		{
+			blueprint->HatDialog = levelsArray[i].at("Dialog").GetString();
+		}
 
 		blueprint->myHatStruct = new SHat();
 		blueprint->myHatStruct->stat = new Stats::SBonusStats;
@@ -133,7 +144,7 @@ void CHatMaker::LoadBluePrints(const std::string& aFilePath)
 	assert(myPlayerModel != nullptr && "Didn't find PlayerModel");
 }
 
-void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName)
+void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName,const bool aIsInBeginningOfLevel)
 {
 	if (myBluePrints.find(aHatName) != myBluePrints.end())
 	{
@@ -177,6 +188,12 @@ void CHatMaker::MakeHatFromBluePrint(const std::string& aHatName)
 		else if (theBluePrint->HatName == "SweepAttackHatLvl2")
 		{
 			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eActivateManaRefund, SComponentMessageData());
+		}
+
+		if (aIsInBeginningOfLevel == false && theBluePrint->HatDialog != "")
+		{
+			PollingStation::currentDialog = theBluePrint->HatDialog;
+			PostMaster::GetInstance().SendLetter(eMessageType::eStateStackMessage, PushState(PushState::eState::eDialog, 1));
 		}
 	}
 	SComponentMessageData data;

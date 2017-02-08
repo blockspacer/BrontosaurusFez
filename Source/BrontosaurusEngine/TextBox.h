@@ -21,8 +21,6 @@ public:
 	void SetPosition(const CU::Vector2f &aPosition);
 private:
 	CU::Vector2f myPosition;
-
-	//FU whoever forced me to this
 	CU::GrowingArray<CTextInstance*> myTextInstances;
 };
 

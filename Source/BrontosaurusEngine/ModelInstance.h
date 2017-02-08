@@ -62,6 +62,7 @@ public:
 
 	void ChangeAnimation(const char* aAnimationKey);
 	void SetAnimationLooping(const bool aValue);
+	void ResetAnimation();
 
 	void SetHighlightIntencity(const float aHighlightIntencity);
 	

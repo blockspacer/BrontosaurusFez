@@ -55,21 +55,24 @@ void HealthRestoreTriggerComponent::Receive(const eComponentMessageType aMessage
 		if (myIsOnCoolDown == false)
 		{
 			myIsOnCoolDown = true;
-			SComponentMessageData data;
-			data.myInt = myHealAmount;
-			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eHealPercent, data);
+			SComponentMessageData healData;
+			healData.myInt = myHealAmount;
+			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eHealPercent, healData);
 
-			SComponentMessageData data2;
-			data2.myString = "HealthWell";
-			PollingStation::playerObject->NotifyComponents(eComponentMessageType::ePlaySound, data2);
+			SComponentMessageData soundStrData;
+			soundStrData.myString = "HealthWell";
+			PollingStation::playerObject->NotifyComponents(eComponentMessageType::ePlaySound, soundStrData);
 
-			SComponentMessageData data3;
-			data3.myBool = false;
-			GetParent()->NotifyComponents(eComponentMessageType::eSetIsColliderActive, data3);
+			SComponentMessageData turnOffPointLightData;
+			GetParent()->NotifyComponents(eComponentMessageType::eTurnOffThePointLight, turnOffPointLightData);
 
-			SComponentMessageData data4;
-			data4.myFloat = 0.0f;
-			GetParent()->NotifyComponents(eComponentMessageType::eSetHighLight, data4);
+			SComponentMessageData collisionActiveData;
+			collisionActiveData.myBool = false;
+			GetParent()->NotifyComponents(eComponentMessageType::eSetIsColliderActive, collisionActiveData);
+
+			SComponentMessageData highlightData;
+			highlightData.myFloat = 0.0f;
+			GetParent()->NotifyComponents(eComponentMessageType::eSetHighlight, highlightData);
 
 			PostMaster::GetInstance().SendLetter(Message(eMessageType::eShrineOrWellClicked, CoolBoi(GetParent())));
 		}

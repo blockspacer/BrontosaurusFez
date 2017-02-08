@@ -128,9 +128,10 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 		data.myUChar = myPercentageLeft * 100;
 		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data);
 		break;
-	case eComponentMessageType::eDied:				// ULTRA TEMP :D
-		switch ((eObjectType)((int)myObjectType+1)) // NOTE till alex, tror inte att det är updaterat någonstans
-		{											// efter vi satte default högst upp.
+	case eComponentMessageType::eDied:
+		//switch ((eObjectType)((int)myObjectType + 1))
+		switch (myObjectType)
+		{
 		case eObjectType::eUrn:
 			DL_PRINT("an URN died");
 			data.myString = "BreakUrn";
@@ -162,6 +163,11 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 			data.myString = "EnemyDie";
 			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
 			break;
+		case eObjectType::eLeaper:
+			DL_PRINT("a LEAPER died");
+			data.myString = "EnemyDie";
+			GetParent()->NotifyComponents(eComponentMessageType::ePlaySound, data);
+			break;
 		case eObjectType::ePlayer:
 			DL_PRINT("a PLAYER died");
 			data.myString = "EnemyDie";
@@ -172,7 +178,7 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 		case eObjectType::eDefault:
 		default:
 			DL_PRINT("a DEFAULT died"); ///yes I'm intentionally using DEFAULT as a noun.
-			data.myString = "Models/PlaceHolders/barrelDead.fbx";
+			data.myString = "Models/Error/error.fbx";
 			GetParent()->NotifyComponents(eComponentMessageType::eChangeFBXToDead, data);
 			break;
 		}

@@ -53,10 +53,12 @@ void BlessingTowerComponent::Receive(const eComponentMessageType aMessageType, c
 			manaData.myInt = myGiveManaAmount;
 			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eRestoreMana, manaData);
 
-			SComponentMessageData damaageData;
-			
-			damaageData.myStatsToAdd = myDamageBonusStats;
-			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eAddStats, damaageData);
+			SComponentMessageData damageData;
+			damageData.myStatsToAdd = myDamageBonusStats;
+			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eAddStats, damageData);
+
+			SComponentMessageData turnOffThePointLight;
+			GetParent()->NotifyComponents(eComponentMessageType::eTurnOffThePointLight, turnOffThePointLight);
 
 			SComponentMessageData colliderData;
 			colliderData.myBool = false;

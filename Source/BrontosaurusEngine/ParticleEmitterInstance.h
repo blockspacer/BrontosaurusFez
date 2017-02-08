@@ -40,7 +40,7 @@ private:
 
 
 private:
-	CU::Matrix44f myToWorldSpace;
+	CU::Matrix44f	myToWorldSpace;
 	SEmitterData	myEmitterData;
 
 
