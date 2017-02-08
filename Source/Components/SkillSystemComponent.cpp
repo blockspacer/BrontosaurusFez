@@ -177,7 +177,7 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 		{
 			if(mySkills[i]->GetSkillData()->skillName == "BasicAttack")
 			{
-				mySkills[i]->GetSkillData()->damageBonus = 40.0f;
+				mySkills[i]->GetSkillData()->damageBonus = 33.0f;
 			}
 		}
 	}
