@@ -419,6 +419,15 @@
     <Image Include="Brontosaurus.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\..\Bin\Sprites\launcher\icon.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icon1.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\Bin\Sprites\launcher\icon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
