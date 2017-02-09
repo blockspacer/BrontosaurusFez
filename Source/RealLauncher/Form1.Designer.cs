@@ -40,21 +40,25 @@
             // 
             // button1
             // 
+            this.button1.BackColor = System.Drawing.Color.Black;
             this.button1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button1.BackgroundImage")));
             this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button1.Location = new System.Drawing.Point(256, 699);
+            this.button1.Location = new System.Drawing.Point(92, 616);
+            this.button1.Margin = new System.Windows.Forms.Padding(0);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(402, 125);
+            this.button1.Size = new System.Drawing.Size(267, 107);
             this.button1.TabIndex = 0;
-            this.button1.UseVisualStyleBackColor = true;
+            this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // FullScreen
             // 
             this.FullScreen.AutoSize = true;
             this.FullScreen.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.FullScreen.Checked = true;
+            this.FullScreen.CheckState = System.Windows.Forms.CheckState.Checked;
             this.FullScreen.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.FullScreen.Location = new System.Drawing.Point(523, 833);
+            this.FullScreen.Location = new System.Drawing.Point(291, 755);
             this.FullScreen.Name = "FullScreen";
             this.FullScreen.Size = new System.Drawing.Size(76, 17);
             this.FullScreen.TabIndex = 1;
@@ -64,7 +68,7 @@
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(256, 830);
+            this.comboBox1.Location = new System.Drawing.Point(88, 753);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 21);
             this.comboBox1.TabIndex = 2;
@@ -74,7 +78,7 @@
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label1.Location = new System.Drawing.Point(383, 834);
+            this.label1.Location = new System.Drawing.Point(215, 756);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(57, 13);
             this.label1.TabIndex = 3;
@@ -94,7 +98,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ClientSize = new System.Drawing.Size(884, 1041);
+            this.ClientSize = new System.Drawing.Size(461, 784);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.FullScreen);
@@ -102,7 +106,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Form1";
-            this.Text = "Decaying Orbit";
+            this.Text = "Hat N\' Slash";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

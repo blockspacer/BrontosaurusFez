@@ -36,7 +36,14 @@ namespace RealLauncher
                     i--;
                 }
             }
-            comboBox1.SelectedItem = comboBox1.Items[0];
+
+            for (int i = 0; i < comboBox1.Items.Count; i++)
+            {
+                if (comboBox1.Items[i].ToString() == "1920X1080")
+                {
+                    comboBox1.SelectedItem = comboBox1.Items[i];
+                }
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -73,6 +80,8 @@ namespace RealLauncher
             startinfo.FileName = "HatNSlash.exe";
             startinfo.Arguments = "-height " + wh + " -width " + ww + " -fullscreen " + fullscreen;
             Process.Start(startinfo);
+
+            this.Close();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
