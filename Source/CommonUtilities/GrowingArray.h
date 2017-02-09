@@ -59,11 +59,14 @@ namespace CU
 		iterator rend();
 		const_iterator rend() const;
 
+		inline void Add();
 		inline void Add(const ObjectType& aObject);
 		inline void Add(ObjectType&& aObject);
 		inline void Add(const GrowingArray& aArray);
 		inline void AddChunk(const void* aChunkPointer, const SizeType aByteSize);
 		inline void Insert(const SizeType aIndex, const ObjectType& aObject);
+		inline void Insert(const SizeType aIndex, ObjectType&& aObject);
+
 		inline void Remove(const ObjectType& aObject);
 		inline void RemoveAtIndex(const SizeType aIndex);
 		inline void RemoveCyclic(const ObjectType& aObject);
@@ -332,6 +335,13 @@ namespace CU
 	}
 
 	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Add()
+	{
+		ObjectType temp;
+		Add(std::move(temp));
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
 	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Add(const ObjectType& aObject)
 	{
 		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
@@ -402,6 +412,22 @@ namespace CU
 		Move<true>::DoMove(myArray, 1, aIndex, mySize);
 
 		myArray[aIndex] = aObject;
+		++mySize;
+	}
+
+	template<typename ObjectType, typename SizeType, bool USE_SAFE_MODE>
+	inline void GrowingArray<ObjectType, SizeType, USE_SAFE_MODE>::Insert(const SizeType aIndex, ObjectType&& aObject)
+	{
+		assert(IsInitialized() == true && "GrowingArray not yet initialized.");
+
+		if (mySize >= myCapacity)
+		{
+			Reallocate(myCapacity * 2);
+		}
+
+		Move<true>::DoMove(myArray, 1, aIndex, mySize);
+
+		myArray[aIndex] = std::move(aObject);
 		++mySize;
 	}
 

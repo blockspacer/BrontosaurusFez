@@ -49,11 +49,48 @@ void CTextInstance::Render() const
 	}
 }
 
+bool CTextInstance::SetTextLine(const unsigned int aLineNumber, const CU::DynamicString& aString)
+{
+	if (aLineNumber < myStrings.Size() && aLineNumber >= 0)
+	{
+		myStrings[aLineNumber] = aString;
+		return true;
+	}
+
+	if (aLineNumber == myStrings.Size())
+	{
+		myStrings.Add(aString);
+		return true;
+	}
+
+	return false;
+}
+
+bool CTextInstance::SetTextLine(const unsigned int aLineNumber, CU::DynamicString&& aString)
+{
+	if (aLineNumber < myStrings.Size() && aLineNumber >= 0)
+	{
+		myStrings[aLineNumber] = std::move(aString);
+	}
+
+	if (aLineNumber == myStrings.Size())
+	{
+		myStrings.Add(std::move(aString));
+		return true;
+	}
+
+	return false;
+}
+
 void CTextInstance::SetTextLines(const CU::GrowingArray<CU::DynamicString>& someLines)
 {
 	myStrings = someLines;
 }
 
+void CTextInstance::SetTextLines(CU::GrowingArray<CU::DynamicString>&& someLines)
+{
+	myStrings = std::move(someLines);
+}
 
 const CU::GrowingArray<CU::DynamicString>& CTextInstance::GetTextLines()
 {

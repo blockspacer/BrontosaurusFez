@@ -36,7 +36,10 @@ public:
 	inline void SetColor(const CU::Vector4f& aColor);
 	inline const CU::Vector4f& GetColor() const;
 
+	bool SetTextLine(const unsigned int aLineNumber, const CU::DynamicString& aString);
+	bool SetTextLine(const unsigned int aLineNumber, CU::DynamicString&& aString);
 	void SetTextLines(const CU::GrowingArray<CU::DynamicString>& someLines);
+	void SetTextLines(CU::GrowingArray<CU::DynamicString>&& someLines);
 	const CU::GrowingArray<CU::DynamicString> &GetTextLines();
 
 	inline void SetText(const CU::DynamicString& aString);
@@ -88,15 +91,22 @@ inline void CTextInstance::SetText(const CU::DynamicString& aString)
 	{
 		if (aString.at(i) == '\n')
 		{
-			//DL_PRINT_WARNING("Warning slow! consider using different set text method");
+			DL_PRINT_WARNING("Warning slow! consider using different set text method");
 			const CU::DynamicString explainingString(aString.SubStr(lastPosition, i - lastPosition));
 			myStrings.Add(explainingString);
 			lastPosition = i + 1;
 		}
 	}
 
-	const  CU::DynamicString lastExplaingString(aString.SubStr(lastPosition, aString.Size() - lastPosition));
-	myStrings.Add(lastExplaingString);
+	if (lastPosition == 0)
+	{
+		myStrings.Add(aString);
+	}
+	else
+	{
+		const  CU::DynamicString lastExplaingString(aString.SubStr(lastPosition, aString.Size() - lastPosition));
+		myStrings.Add(lastExplaingString);
+	}
 }
 
 inline CU::DynamicString CTextInstance::GetText() const
@@ -107,7 +117,7 @@ inline CU::DynamicString CTextInstance::GetText() const
 	{
 		if (i != 0)
 		{
-			//DL_PRINT_WARNING("Warning slow! please consider just getting a separete line");
+			DL_PRINT_WARNING("Warning slow! please consider just getting a separete line");
 			string += '/n';
 		}
 		string += myStrings[i];

@@ -20,7 +20,6 @@ namespace CU
 
 	private:
 		CTextInstance* myOutputText;
-		const DynamicString* const myDiscriptionText;
 
 		time_t myGoalTime;
 		time_t myCurrentTime;
