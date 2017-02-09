@@ -34,6 +34,7 @@ enum class eMessageType
 	eGoldChanged,
 	eSecretMouseMessageMvhCarl,
 	ePlayerGotHat,
+	eGameEventMessage,
 	eLength,
 };
 //Ifall du vill lägga till en till messagetyp så kompilera om Postmaster Projekter annars kraschar det. 

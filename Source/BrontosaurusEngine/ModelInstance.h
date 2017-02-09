@@ -2,6 +2,7 @@
 #include "../BrontosaurusEngine/ModelShapes.h"
 #include "../CommonUtilities/matrix44.h"
 #include "../CommonUtilities/AABB.h"
+#include "../CommonUtilities/VectorOnStack.h"
 
 #include <map>
 
@@ -49,11 +50,11 @@ public:
 	inline bool GetVisibility() { return myIsVisible; }
 
 	//Make GA StaticArray, no need for dynamicArray yo // or make it VectorOnStack?? :) // VectorOnAStick
-	void Render(Lights::SDirectionalLight* aLight, CU::GrowingArray<CPointLightInstance, unsigned int>& aPointLightList);
+	void Render(Lights::SDirectionalLight* aLight, CU::VectorOnStack<CPointLightInstance, 8>& aPointLightList);
 
 
 	//Edvin testar med kamera
-	void Render(Lights::SDirectionalLight* aLight, CU::GrowingArray<CPointLightInstance, unsigned int>& aPointLightList, CRenderCamera& aRenderToCamera);
+	void Render(Lights::SDirectionalLight* aLight, CU::VectorOnStack<CPointLightInstance, 8>& aPointLightList, CRenderCamera& aRenderToCamera);
 
 	void Update(const CU::Time aDeltaTime);
 

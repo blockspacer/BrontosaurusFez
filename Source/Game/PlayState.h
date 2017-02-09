@@ -37,6 +37,7 @@ class CScene;
 class CHatmaker;
 class CGameObject;
 //class StatManager;
+class CSpriteInstance;
 class CShopStorage;
 class CTextInstance;
 class CTextInstance;
@@ -119,6 +120,8 @@ private:
 	//CGameObject* myCameraObject;
 	CMouseComponent* myMouseComponent;
 
+	CGameEventMessenger myGameEventMessenger;
+
 	int myLevelIndex;
 	std::atomic_bool  myIsLoaded;
 	bool myShouldReturnToLevelSelect;
@@ -130,6 +133,9 @@ private:
 	CU::GrowingArray<CGameObject*> myEnemies;
 	CHealthBarComponentManager* myHealthBarManager;
 
+
+
+	CSpriteInstance* myVignetteSprite;
 };
 
 inline bool CPlayState::IsLoaded() const

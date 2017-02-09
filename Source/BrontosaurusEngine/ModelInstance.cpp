@@ -70,7 +70,7 @@ CModelInstance::~CModelInstance()
 	//SAFE_DELETE(mySceneAnimator); //is deleted through the map
 }
 
-void CModelInstance::Render(Lights::SDirectionalLight* aLight, CU::GrowingArray<CPointLightInstance, unsigned int>& aPointLightList)
+void CModelInstance::Render(Lights::SDirectionalLight* aLight, CU::VectorOnStack<CPointLightInstance, 8>& aPointLightList)
 {
 	if (ShouldRender() == true)
 	{
@@ -85,32 +85,15 @@ void CModelInstance::Render(Lights::SDirectionalLight* aLight, CU::GrowingArray<
 		msg->myRenderParams.myDirectionalLight = *aLight;
 		msg->myRenderParams.myNumLights = 0;
 		
-		CU::Intersection::Sphere light;
-		CU::Intersection::Sphere model;
-		model.myCenterPosition = myTransformation.GetPosition();
-		model.myRadius = GetModelBoundingBox().myRadius;
-		model.myRadiusSquared = model.myRadius * model.myRadius;
-
 		for (unsigned int i = 0; i < aPointLightList.Size(); ++i)
 		{
-			if (aPointLightList[i].GetIsActive() == true)
+			if (msg->myRenderParams.myPointLightList.SafeAdd(Lights::SPointLight()) == true)
 			{
-				light.myCenterPosition = aPointLightList[i].GetPosition();
-				light.myRadius = aPointLightList[i].GetRange();
-				light.myRadiusSquared = light.myRadius * light.myRadius;
-
-				if (CU::Intersection::SphereVsSphere(model, light))
-				{
-					if(msg->myRenderParams.myPointLightList.SafeAdd(Lights::SPointLight()) == true)
-					{
-						msg->myRenderParams.myPointLightList.GetLast().color = aPointLightList[i].GetColor();
-						msg->myRenderParams.myPointLightList.GetLast().intensity = aPointLightList[i].GetInstensity();
-						msg->myRenderParams.myPointLightList.GetLast().position = aPointLightList[i].GetPosition();
-						msg->myRenderParams.myPointLightList.GetLast().range = aPointLightList[i].GetRange();
-						msg->myRenderParams.myNumLights++;
-					
-					}
-				}
+				msg->myRenderParams.myPointLightList.GetLast().color = aPointLightList[i].GetColor();
+				msg->myRenderParams.myPointLightList.GetLast().intensity = aPointLightList[i].GetInstensity();
+				msg->myRenderParams.myPointLightList.GetLast().position = aPointLightList[i].GetPosition();
+				msg->myRenderParams.myPointLightList.GetLast().range = aPointLightList[i].GetRange();
+				msg->myRenderParams.myNumLights++;
 			}
 		}
 
@@ -128,7 +111,7 @@ void CModelInstance::Render(Lights::SDirectionalLight* aLight, CU::GrowingArray<
 	}
 }
 
-void CModelInstance::Render(Lights::SDirectionalLight * aLight, CU::GrowingArray<CPointLightInstance, unsigned int>& aPointLightList, CRenderCamera & aRenderToCamera)
+void CModelInstance::Render(Lights::SDirectionalLight * aLight, CU::VectorOnStack<CPointLightInstance, 8>& aPointLightList, CRenderCamera & aRenderToCamera)
 {
 	if (ShouldRender() == true)
 	{

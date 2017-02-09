@@ -62,6 +62,9 @@ const Lights::SPointLight & CPointLightInstance::GetData() const
 
 bool CPointLightInstance::GetIsActive() const
 {
+	if (myData.intensity == 0.0f || myData.range == 0.0f)
+		return false;
+
 	return myIsActive;
 }
 

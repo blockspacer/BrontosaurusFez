@@ -50,6 +50,7 @@
     <ClCompile Include="DrawCallsCount.cpp" />
     <ClCompile Include="DroppedFile.cpp" />
     <ClCompile Include="FocusChange.cpp" />
+    <ClCompile Include="GameEventMessageEvent.cpp" />
     <ClCompile Include="GameObjectDiedEvent.cpp" />
     <ClCompile Include="GoldChanged.cpp" />
     <ClCompile Include="HatBought.cpp" />
@@ -93,6 +94,7 @@
     <ClInclude Include="EMessageReturn.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="FocusChange.h" />
+    <ClInclude Include="GameEventMessageEvent.h" />
     <ClInclude Include="GameObjectDiedEvent.h" />
     <ClInclude Include="GoldChanged.h" />
     <ClInclude Include="HatBought.h" />

@@ -143,6 +143,28 @@ void CScene::Render()
 	RENDERER.AddRenderMessage(new SChangeStatesMessage(statemsg));
 	myShadowCamera.AddRenderMessage(new SChangeStatesMessage(statemsg));
 
+	CU::VectorOnStack<CPointLightInstance, 8> culledPointlights;
+
+
+	for (unsigned int i = 0; i < myPointLights.Size(); ++i)
+	{
+		if (myPointLights[i].GetIsActive() == false)
+		{
+			continue;
+		}
+
+		CU::AABB lightBB;
+		lightBB.myCenterPos = myPointLights[i].GetPosition();
+		lightBB.myRadius = myPointLights[i].GetRange();
+
+		if (myShadowCamera.GetCamera().IsInside(lightBB) == false)
+		{
+			continue;
+		}
+		culledPointlights.SafeAdd(myPointLights[i]);
+	}
+
+
 	for (unsigned int i = 0; i < myModels.Size(); ++i)
 	{
 		if (myModels[i] == nullptr || myModels[i]->ShouldRender() == false)
@@ -154,7 +176,7 @@ void CScene::Render()
 			continue;
 		}
 
-		myModels[i]->Render(nullptr, myPointLights, myShadowCamera);
+		myModels[i]->Render(nullptr, culledPointlights, myShadowCamera);
 	}
 
 
@@ -177,7 +199,7 @@ void CScene::Render()
 			continue;
 		}
 
-		myModels[i]->Render(&myDirectionalLight, myPointLights);
+		myModels[i]->Render(&myDirectionalLight, culledPointlights);
 	}
 
 	SChangeStatesMessage* changeStateMessage = new SChangeStatesMessage();
