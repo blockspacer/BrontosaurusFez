@@ -9,7 +9,6 @@ namespace CU
 
 	CountDown::CountDown()
 		: myOutputText(nullptr)
-		, myDiscriptionText(new DynamicString("Time left until deadline:\n"))
 		, myGoalTime(0)
 		, myCurrentTime(0)
 	{
@@ -32,17 +31,17 @@ namespace CU
 		myOutputText = new CTextInstance();
 		myOutputText->Init();
 		myOutputText->SetPosition(CU::Vector2f(0.1f, 0.9f));
+		myOutputText->SetText("Time left until deadline:");
 	}
 
 	CountDown::~CountDown()
 	{
 		SAFE_DELETE(myOutputText);
-		delete(myDiscriptionText);
 	}
 
 	void CountDown::Update()
 	{
-		if (myDiscriptionText != nullptr && myOutputText != nullptr)
+		if (myOutputText != nullptr)
 		{
 			time(&myCurrentTime);
 
@@ -88,7 +87,7 @@ namespace CU
 			timeString += seconds;
 			timeString += " seconds.";
 
-			myOutputText->SetText((*myDiscriptionText) + timeString);
+			myOutputText->SetTextLine(1, std::move(timeString));
 		}
 	}
 
