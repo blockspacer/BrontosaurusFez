@@ -2,9 +2,6 @@
 
 namespace CU
 {
-	template<typename ObjectType, typename SizeType = unsigned int, bool USE_SAFE_MODE = true>
-	class GrowingArray;
-
 	template<typename GrowingArrayType>
 	class Reverse;
 
