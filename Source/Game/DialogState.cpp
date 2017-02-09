@@ -162,8 +162,12 @@ void CDialogState::Render()
 		changeStateMessage->myRasterizerState = eRasterizerState::eNoCulling;
 		changeStateMessage->mySamplerState = eSamplerState::eClamp;
 
-		CEngine::GetInstance()->GetRenderer().AddRenderMessage(changeStateMessage);
-		myVinjette->Render();
+		CRenderer& renderer = RENDERER;
+		renderer.AddRenderMessage(changeStateMessage);
+		if (myVinjette)
+		{
+			myVinjette->Render();
+		}
 		myDialogTextInstance.Render();
 		myActorNameText.Render();
 	}

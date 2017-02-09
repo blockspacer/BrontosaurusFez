@@ -23,6 +23,10 @@ void ScriptLoader::RegisterLuaFunctions(SSlua::LuaWrapper& aLuaWrapper)
 	aLuaWrapper.RegisterFunction(SpawnParticles, "SpawnParticles", "First argument: effect type (string), second argument: position to spawn at (three numbers xyz). Example: SpawnParticles(\"blood\", GetPosition(GetParent()))", true);
 	aLuaWrapper.RegisterFunction(ComponentGetParentPosition, "GetParentPosition", "Get the position of the component's gameobject. First argument: component id(number)", false);
 
+#ifndef _RETAIL_BUILD
+
 	aLuaWrapper.PrintDocumentation();
 	ComponentMessage::PrintComponentsToFile("Script/Documentation/ComponentMessageTypes.txt");
+
+#endif // !_RETAIL_BUILD
 }
