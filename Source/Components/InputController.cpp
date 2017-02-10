@@ -34,7 +34,7 @@ InputController::InputController(const CU::Camera& aPlayerCamera)
 	mySkillInputMessageActivators.Init(5);
 	mySkillActivatorKeyDown = -1;
 	myType = eComponentType::eInputController;
-	myElapsedManaRegenTimer = 1.5f;
+	myElapsedManaRegenTimer = 0.667f;
 	myManaRecover = 1;
 	myShouldRecoverManaQuickly = false;
 }
@@ -72,10 +72,10 @@ void InputController::Update(float aDeltaTime)
 			manaRecoverData.myInt = myManaRecover;
 			if(myShouldRecoverManaQuickly == true)
 			{
-				manaRecoverData.myInt = myManaRecover * 1;
+				manaRecoverData.myInt = myManaRecover * 3;
 			}
 			GetParent()->NotifyComponents(eComponentMessageType::eRestoreMana, manaRecoverData);
-			myElapsedManaRegenTimer = 1.5f;
+			myElapsedManaRegenTimer = 0.667f;
 		}
 		if (myMouseIsDown == true)
 		{
