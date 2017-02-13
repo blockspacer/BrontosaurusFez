@@ -103,7 +103,6 @@ namespace CU
 
 	CountDown::CountDown()
 		: myOutputText(nullptr)
-		, myDiscriptionText(nullptr)
 		, myGoalTime(0)
 		, myCurrentTime(0)
 	{
