@@ -28,7 +28,12 @@ void RespawnComponent::Receive(const eComponentMessageType aMessageType, const S
 		int gold = PollingStation::playerData->GetGold();
 		int goldAfter = PollingStation::playerData->RemoveGold(static_cast<unsigned short>(static_cast<float>(PollingStation::playerData->GetGold()) * (myGoldLossPercentage * 0.01f)));
 
+		SComponentMessageData soundData;
+
 		myHasDied = true;
+
+		soundData.myString = "PlayerDie";
+		PollingStation::playerObject->NotifyComponents(eComponentMessageType::ePlaySound, soundData);
 
 		std::string temp("You lost ");
 		temp += std::to_string(gold - goldAfter);
@@ -38,6 +43,9 @@ void RespawnComponent::Receive(const eComponentMessageType aMessageType, const S
 
 
 		PostMaster::GetInstance().SendLetter(eMessageType::eGameEventMessage, CGameEventMessageEvent({ "You Died, you lost some of your fortune." ,  temp2 }));
+
+		soundData.myString = "BuyHat";
+		PollingStation::playerObject->NotifyComponents(eComponentMessageType::ePlaySound, soundData);
 
 		for(unsigned short i=0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); i++)
 		{
