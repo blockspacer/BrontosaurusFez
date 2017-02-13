@@ -1,6 +1,7 @@
 #pragma once
 
 #include "WidgetDecorator.h"
+#include "../CommonUtilities/StopWatch.h"
 
 class CTextInstance;
 class CSpriteInstance;
@@ -14,6 +15,7 @@ namespace GUI
 		CToolTipDecorator(IWidget* aDecoratedWidget, ModelWidget* aBackGround, const std::string* const aTooltipText, const std::function<bool(std::string&)>& aGetTextFunction);
 		~CToolTipDecorator();
 
+		void Update(const CU::Time& aDeltaTime) override;
 		void Render() override;
 		void Render(CU::GrowingArray<IWidget*>& aWidgets) override;
 		void OnMouseMove(const CU::Vector2f& aMousePosition) override;
@@ -29,7 +31,7 @@ namespace GUI
 
 	private:
 		std::function<bool(std::string&)> myGetTextFunction;
-
+		CU::CStopWatch myUpdateTextfunctionTimer;
 		CU::Vector2f myOffsetToMouse;
 		CSpriteInstance* myBackGround;
 		CTextInstance* myTextInstance;

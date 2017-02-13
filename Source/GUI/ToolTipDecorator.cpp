@@ -22,7 +22,7 @@ namespace GUI
 		{
 			myTextInstance->SetText(aTooltipText->c_str());
 		}
-
+		myUpdateTextfunctionTimer.Init();
 		myBackGround = new CSpriteInstance("Sprites/tooltipBackground.dds", myTextInstance->GetQuadSizeNormalized(), aDecoratedWidget->GetWorldPosition());
 	}
 
@@ -85,6 +85,24 @@ namespace GUI
 	{
 		//assert(myGetTextFunction != nullptr);
 		myGetTextFunction = aGetTextFunction;
+	}
+
+	void CToolTipDecorator::Update(const CU::Time& aDeltaTime)
+	{
+		if (myGetTextFunction)
+		{
+			myUpdateTextfunctionTimer.Update();
+			if (myUpdateTextfunctionTimer.GetLifeTime().GetMilliseconds() > 500.f)
+			{
+				myUpdateTextfunctionTimer.Restart();
+
+				std::string updatedTooltipText("");
+				if (myGetTextFunction(updatedTooltipText))
+				{
+					myTextInstance->SetText(updatedTooltipText.c_str());
+				}
+			}
+		}
 	}
 
 	void CToolTipDecorator::Render()

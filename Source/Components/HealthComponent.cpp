@@ -134,6 +134,9 @@ void CHealthComponent::Receive(const eComponentMessageType aMessageType, const S
 		data.myUChar = myPercentageLeft * 100;
 		GetParent()->NotifyComponents(eComponentMessageType::ePercentHPLeft, data);
 		break;
+	case eComponentMessageType::eQueryHealth:
+		*static_cast<int*>(aMessageData.myVoidPointer) = myHealth;
+		break;
 	case eComponentMessageType::eDied:
 		//switch ((eObjectType)((int)myObjectType + 1))
 		switch (myObjectType)

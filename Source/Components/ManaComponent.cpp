@@ -105,6 +105,9 @@ void ManaComponent::Receive(const eComponentMessageType aMessageType, const SCom
 		data.myUChar = myPercentageLeft * 100;
 		GetParent()->NotifyComponents(eComponentMessageType::ePercentMPLeft, data);
 		break;
+	case eComponentMessageType::eQueryMana:
+		*static_cast<int*>(aMessageData.myVoidPointer) = myMana;
+		break;
 	}
 }
 

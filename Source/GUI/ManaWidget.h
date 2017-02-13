@@ -15,7 +15,14 @@ namespace GUI
 
 		eMessageReturn Recieve(const Message& aMessage) override;
 
+		inline float GetManaPercent() const;
+
 	private:
 		float myManaPercent;
 	};
+
+	inline float CManaWidget::GetManaPercent() const
+	{
+		return myManaPercent;
+	}
 }

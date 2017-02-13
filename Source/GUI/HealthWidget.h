@@ -14,8 +14,14 @@ namespace GUI
 		void SetHealthPercent(const float aHealthPercent);
 
 		eMessageReturn Recieve(const Message& aMessage) override;
+		inline float GetHealthPercent() const;
 
 	private:
 		float myHealthPercent;
 	};
+
+	inline float CHealthWidget::GetHealthPercent() const
+	{
+		return myHealthPercent;
+	}
 }

@@ -34,6 +34,8 @@
 #include "../CommonUtilities/JsonValue.h"
 #include "../ShopItemButtonHovered.h"
 #include "HatIcon.h"
+#include "Components/GameObject.h"
+#include "Components/ComponentMessage.h"
 
 using size_ga = CU::GrowingArray<CLoaderMesh*>::size_type;
 
@@ -381,7 +383,29 @@ namespace GUI
 		CHealthWidget* healthWidget = new CHealthWidget(aWidget->GetWorldPosition(), aWidget->GetSize(), "PlayerHealthWidget");
 		healthWidget->AddWidget("Model", aWidget);
 		healthWidget->Init();
-		return healthWidget;
+
+		auto getCurrentHealth = [healthWidget](std::string& aTextOut) -> bool
+		{
+			if (!PollingStation::playerObject) return false;
+
+			SComponentMessageData healthData;
+			int health = 0;
+			healthData.myVoidPointer = &health;
+			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eQueryHealth, healthData);
+
+			//float health = healthWidget->GetHealthPercent();
+			//health *= 100.f;
+			//int healthFloored = static_cast<int>(health);
+			aTextOut = "Health:\n";
+			aTextOut += std::to_string(/*healthFloored*/health);
+			//aTextOut += "%";
+			return !aTextOut.empty();
+		};
+
+		CToolTipDecorator* toolTip = new CToolTipDecorator(healthWidget, nullptr, nullptr, getCurrentHealth);
+		return toolTip;
+
+		//return healthWidget;
 	}
 
 	GUI::IWidget* WidgetFactory::CreateManaBar(IWidget* aWidget)
@@ -389,7 +413,30 @@ namespace GUI
 		CManaWidget* manaWidget = new CManaWidget(aWidget->GetWorldPosition(), aWidget->GetSize(), "PlayerManaWidget");
 		manaWidget->AddWidget("Model", aWidget);
 		manaWidget->Init();
-		return manaWidget;
+
+
+		auto getCurrentMana = [manaWidget](std::string& aTextOut) -> bool
+		{
+			if (!PollingStation::playerObject) return false;
+
+			SComponentMessageData healthData;
+			int mana = 0;
+			healthData.myVoidPointer = &mana;
+			PollingStation::playerObject->NotifyComponents(eComponentMessageType::eQueryMana, healthData);
+
+			//float mana = manaWidget->GetManaPercent();
+			//mana *= 100.f;
+			//int manaFloored = static_cast<int>(mana);
+			aTextOut = "Mana:\n";
+			aTextOut += std::to_string(/*manaFloored*/mana);
+			//aTextOut += "%";
+			return !aTextOut.empty();
+		};
+
+		CToolTipDecorator* toolTip = new CToolTipDecorator(manaWidget, nullptr, nullptr, getCurrentMana);
+		return toolTip;
+
+		//return manaWidget;
 	}
 
 	IWidget* WidgetFactory::CreateMoney(IWidget* aWidget)

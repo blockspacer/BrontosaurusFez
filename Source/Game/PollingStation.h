@@ -28,10 +28,6 @@ struct PollingStation
 	static CComponent* PlayerInput;
 	static CGameObject* playerObject;
 	static PlayerData* playerData;
-	static ValueObserver<int>* playerHealthBar;
-	static ValueObserver<int>* playerBoostBar;
-	static ValueObserver<int>* timeObjectiveBar;
-	static CollisionManager* collsionManager;
 	static CU::GrowingArray<CGameObject*> myThingsEnemiesShouldAvoid;
 	static CNavmesh* Navmesh;
 	static CU::GrowingArray<std::string> playerHatList;

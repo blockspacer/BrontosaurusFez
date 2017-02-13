@@ -235,12 +235,6 @@ eMessageReturn GUI::GUIManager::MouseMoved(const CU::Vector2f& aMousePosition)
 		}
 		if (widget != nullptr && widget != myWidgetContainer)
 		{
-			if (widget->GetName() == "guiHat03")
-			{
-				int br = 0;
-				br++;
-			}
-			//Audio::CAudioInterface::GetInstance()->PostEvent("ButtonHover");
 			DL_PRINT("mouse entered %s", widget->GetName().c_str());
 			widget->OnMouseEnter(mousePosition);
 		}

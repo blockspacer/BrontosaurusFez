@@ -114,6 +114,8 @@ enum class eComponentMessageType
 	eSpawning,
 	eDoneSpawning,
 	ePickupVisual,
+	eQueryHealth,
+	eQueryMana,
 	eLength,
 };
 

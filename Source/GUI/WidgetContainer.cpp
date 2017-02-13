@@ -168,14 +168,38 @@ namespace GUI
 		IWidget* container = IWidget::MouseIsOver(aPosition);
 		if (container != nullptr)
 		{
+			CU::GrowingArray<IWidget*> hoveredWidgets(4u);
 			for (IWidget* widget : myOrderedWidgets)
 			//for (int i = myOrderedWidgets.Size() - 1; i >= 0; --i)
 			{
-				IWidget* selectedWidget = widget/*myOrderedWidgets[i]*/->MouseIsOver(aPosition);
+				IWidget* selectedWidget = widget->MouseIsOver(aPosition);
 				if (selectedWidget != nullptr)
 				{
-					return selectedWidget;
+					hoveredWidgets.Add(widget);
+					//return selectedWidget;
 				}
+			}
+
+			if (!hoveredWidgets.Empty())
+			{
+				auto it = myWidgets.find("PlayerHealthWidget");
+				if (it != myWidgets.end())
+				{
+					if (hoveredWidgets.Find(it->second) != hoveredWidgets.FoundNone)
+					{
+						return it->second;
+					}
+				}
+				it = myWidgets.find("PlayerManaWidget");
+				if (it != myWidgets.end())
+				{
+					if (hoveredWidgets.Find(it->second) != hoveredWidgets.FoundNone)
+					{
+						return it->second;
+					}
+				}
+
+				return hoveredWidgets.GetFirst();
 			}
 		}
 
