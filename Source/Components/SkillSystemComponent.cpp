@@ -73,8 +73,11 @@ void SkillSystemComponent::Receive(const eComponentMessageType aMessageType, con
 	else if (aMessageType == eComponentMessageType::eTryToSelectSkill)
 	{
 		SComponentMessageData data;
-		data.mySkill = mySkills[aMessageData.myInt];
-		GetParent()->NotifyComponents(eComponentMessageType::eCheckIfCanSelect, data);
+		if (mySkills.HasIndex(aMessageData.myInt))
+		{
+			data.mySkill = mySkills[aMessageData.myInt];
+			GetParent()->NotifyComponents(eComponentMessageType::eCheckIfCanSelect, data);
+		}
 	}
 	else if(aMessageType == eComponentMessageType::eSetSkillTargetPosition)
 	{
