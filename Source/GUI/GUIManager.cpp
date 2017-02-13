@@ -14,6 +14,7 @@
 #include "../BrontosaurusEngine/Renderer.h"
 
 #include "../Audio/AudioInterface.h"
+#include "Game/PollingStation.h"
 
 static CU::Vector2f locMousePosition;
 
@@ -65,6 +66,7 @@ void GUI::GUIManager::Init(const char* aGUIScenePath)
 	PostMaster::GetInstance().Subscribe(myCursor, eMessageType::eSecretMouseMessageMvhCarl);
 }
 
+#include "ToolTipDecorator.h"
 void GUI::GUIManager::Update(const CU::Time& aDeltaTime)
 {
 	if (myShouldUpdate == true)
@@ -73,6 +75,34 @@ void GUI::GUIManager::Update(const CU::Time& aDeltaTime)
 		myWidgetContainer->Update(aDeltaTime);
 
 		locMousePosition = myCursor->GetPosition();
+		
+		if (PollingStation::playerHatList.Find("WhirlwindHat") != PollingStation::playerHatList.FoundNone)
+		{
+			if (!myWidgetContainer->FindWidget("WhirlwindHat"))
+			{
+				IWidget* widget = myWidgetContainer->RemoveWidget("skillKnapp03");
+				//widget->SetVisibility(true);
+				//std::string sweepAttackName = "Sweep attack - Right button\nDeals more damage over a wider area but costs some mana";
+				//widget = new CToolTipDecorator(widget, nullptr, &sweepAttackName, nullptr);
+				widget->SetName("WhirlwindHat");
+				widget->SetVisibility(true);
+				myWidgetContainer->AddWidget("WhirlwindHat", widget);
+			}
+		}
+		if (PollingStation::playerHatList.Find("SweepHatV1") != PollingStation::playerHatList.FoundNone
+			|| PollingStation::playerHatList.Find("SweepHatV2") != PollingStation::playerHatList.FoundNone)
+		{
+			if (!myWidgetContainer->FindWidget("SweepHat"))
+			{
+				IWidget* widget = myWidgetContainer->RemoveWidget("skillKnapp02");
+				widget->SetVisibility(true);
+				std::string sweepAttackName = "Sweep attack - Right button\nDeals more damage over a wider area but costs some mana";
+				widget = new CToolTipDecorator(widget, nullptr, &sweepAttackName, nullptr);
+				widget->SetName("SweepHat");
+				widget->SetVisibility(true);
+				myWidgetContainer->AddWidget("SweepHat", widget);
+			}
+		}
 	}
 }
 

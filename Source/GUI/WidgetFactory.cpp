@@ -179,9 +179,9 @@ namespace GUI
 			}
 			else if (widgetName.find("skillKnapp0") != std::string::npos)
 			{
-				widget->SetVisibility(true);
 				if (widgetName.rfind("1") != std::string::npos)
 				{
+					widget->SetVisibility(true);
 					std::string basicAttackName = "Basic attack\nLeft button";
 					widget = new CToolTipDecorator(widget, nullptr, &basicAttackName, nullptr);
 				}

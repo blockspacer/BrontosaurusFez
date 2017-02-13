@@ -45,13 +45,13 @@ namespace GUI
 				static_cast<GUI::WidgetContainer*>(baseWidget)->AddWidget(hatIcon->GetName(), hatIcon);
 			}
 		}
-		else
-		{
-			for (IWidget* hatIcon : myHatIcons)
-			{
-				aGUIManager.AddWidget(hatIcon->GetName(), hatIcon);
-			}
-		}
+		//else
+		//{
+		//	for (IWidget* hatIcon : myHatIcons)
+		//	{
+		//		aGUIManager.AddWidget(hatIcon->GetName(), hatIcon);
+		//	}
+		//}
 	}
 
 	void HatContainer::RemoveAllHats(GUIManager& aGUIManager)
