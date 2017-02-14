@@ -25,6 +25,7 @@ public:
 	void SetTargetObject(CGameObject* aTargetObject);
 	void ActivateCollider();
 	inline const bool GetIsActive() const;
+	inline const bool GetShouldPlayAnimation() const;
 	inline const bool GetIsSelected() const;
 	inline SkillData* GetSkillData();
 	inline bool IsInited();
@@ -51,6 +52,7 @@ protected:
 	bool myShouldPlayAnimation;
 	bool myHavePlayedSound;
 	bool myShouldDoDirectdamage;
+	bool myIsPerformingBasicAttack;
 };
 
 
@@ -78,3 +80,7 @@ inline bool Skill::IsInited()
 	return false;
 }
 
+inline const bool Skill::GetShouldPlayAnimation() const
+{
+	return myShouldPlayAnimation;
+}

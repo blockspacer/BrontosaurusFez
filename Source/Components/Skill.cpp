@@ -81,6 +81,7 @@ Skill::Skill(SkillData* aSkillDataPointer)
 	mySpeedBonusStats = new Stats::SBonusStats;
 	mySpeedBonusStats->BonusMovementSpeed = mySkillData->movementSpeedBuffModifier;
 	myShouldDoDirectdamage = false;
+	myIsPerformingBasicAttack = false;
 }
 
 
@@ -120,7 +121,6 @@ void Skill::Deactivate()
 void Skill::Update(float aDeltaTime)
 {
 	myElapsedCoolDownTime += aDeltaTime;
-
 
 	if(myIsActive == true)
 	{
@@ -163,8 +163,9 @@ void Skill::BasicAttackUpdate(float aDeltaTime)
 
 	if(myTargetObject != nullptr)
 	{
-		if((myUser->GetWorldPosition() - myTargetObject->GetWorldPosition()).Length2() < mySkillData->activationRadius *  mySkillData->activationRadius)
+		if((myUser->GetWorldPosition() - myTargetObject->GetWorldPosition()).Length2() < mySkillData->activationRadius *  mySkillData->activationRadius || myIsPerformingBasicAttack == true)
 		{
+			myIsPerformingBasicAttack = true;
 			eComponentMessageType type = eComponentMessageType::eStopMovement;
 			SComponentMessageData stopData;
 			stopData.myFloat = mySkillData->coolDown;
@@ -397,6 +398,7 @@ void Skill::OnDeActivation()
 	mySpeedBonusStats->BonusMovementSpeed = mySpeedBonusStats->BonusMovementSpeed * -1;
 	speedBonusData.myStatsToAdd = mySpeedBonusStats;
 	PollingStation::playerObject->NotifyComponents(eComponentMessageType::eAddStats, speedBonusData);
+	myIsPerformingBasicAttack = false;
 }
 
 void Skill::Select()
@@ -425,7 +427,11 @@ void Skill::UpdateStats(const Stats::STotalStats& someStats)
 
 void Skill::PlayAnimation()
 {
-	SComponentMessageData startedAttackingMessage;
-	startedAttackingMessage.myString = mySkillData->animationPlayedName.c_str();
-	myUser->NotifyComponents(eComponentMessageType::eBasicAttack, startedAttackingMessage);
+	if(myShouldPlayAnimation == true)
+	{
+		SComponentMessageData startedAttackingMessage;
+		startedAttackingMessage.myString = mySkillData->animationPlayedName.c_str();
+		myUser->NotifyComponents(eComponentMessageType::eBasicAttack, startedAttackingMessage);
+	
+	}
 }
