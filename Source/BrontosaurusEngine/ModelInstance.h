@@ -49,9 +49,7 @@ public:
 	void SetVisibility(const bool aFlag);
 	inline bool GetVisibility() { return myIsVisible; }
 
-	//Make GA StaticArray, no need for dynamicArray yo // or make it VectorOnStack?? :) // VectorOnAStick
 	void Render(Lights::SDirectionalLight* aLight, CU::VectorOnStack<CPointLightInstance, 8>& aPointLightList);
-
 
 	//Edvin testar med kamera
 	void Render(Lights::SDirectionalLight* aLight, CU::VectorOnStack<CPointLightInstance, 8>& aPointLightList, CRenderCamera& aRenderToCamera);

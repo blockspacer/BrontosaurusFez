@@ -408,15 +408,7 @@
     <ClCompile Include="SettingsSubscriber.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Brontosaurus.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="small.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Brontosaurus.ico">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="..\..\Bin\Sprites\launcher\icon.png">

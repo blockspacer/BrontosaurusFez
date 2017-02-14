@@ -77,7 +77,7 @@ eMessageReturn KeyPressed::DoEvent(CPlayState* aPlayState) const
 			return eMessageReturn::eStop;
 			break;
 
-#ifdef _RETAIL_BUILD
+#ifndef _RETAIL_BUILD
 		case CU::eKeys::L:
 		{
 			aPlayState->FlipCameraUnlocked();
@@ -87,7 +87,7 @@ eMessageReturn KeyPressed::DoEvent(CPlayState* aPlayState) const
 		}
 
 
-#ifdef _RETAIL_BUILD
+#ifndef _RETAIL_BUILD
 		if (aPlayState->myCameraIsFree == true)
 		{
 			aPlayState->CameraMovement(myKey, true);

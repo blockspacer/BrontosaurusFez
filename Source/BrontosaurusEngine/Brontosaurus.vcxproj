@@ -524,12 +524,8 @@
     <ClCompile Include="WindowsWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Brontosaurus.rc" />
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="..\..\Bin\Sprites\launcher\icon.ico" />
     <Image Include="..\..\Bin\Sprites\launcher\icon.png" />
-    <Image Include="Brontosaurus.ico" />
     <Image Include="icon1.ico" />
     <Image Include="small.ico" />
   </ItemGroup>
