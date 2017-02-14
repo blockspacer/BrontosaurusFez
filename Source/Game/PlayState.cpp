@@ -512,17 +512,18 @@ void CPlayState::Render()
 
 	SChangeStatesMessage msg;
 
+#ifndef _RETAIL_BUILD
+	if (myShuldRenderNavmesh == true)
+	{
+		msg.myBlendState = eBlendState::eAlphaBlend;
+		msg.myDepthStencilState = eDepthStencilState::eDisableDepth;
+		msg.myRasterizerState = eRasterizerState::eWireFrame;
+		msg.mySamplerState = eSamplerState::eClamp;
 
-	//if (myShuldRenderNavmesh == true)
-	//{
-	//	msg.myBlendState = eBlendState::eAlphaBlend;
-	//	msg.myDepthStencilState = eDepthStencilState::eDisableDepth;
-	//	msg.myRasterizerState = eRasterizerState::eWireFrame;
-	//	msg.mySamplerState = eSamplerState::eClamp;
-	//
-	//	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
-	//	myNavmesh.Render();
-	//}
+		RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
+		myNavmesh.Render();
+	}
+#endif
 
 	msg.myBlendState = eBlendState::eAlphaBlend;
 	msg.myDepthStencilState = eDepthStencilState::eDisableDepth;
@@ -530,7 +531,7 @@ void CPlayState::Render()
 	msg.mySamplerState = eSamplerState::eClamp;
 	RENDERER.AddRenderMessage(new SChangeStatesMessage(msg));
 
-	myVignetteSprite->Render();
+	//myVignetteSprite->Render();
 	myMouseComponent->Update(CEngine::GetInstance()->GetDeltaTime()); // Because of Kyle :(
 	myGUIManager->Render();
 
