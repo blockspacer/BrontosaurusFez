@@ -116,6 +116,7 @@ enum class eComponentMessageType
 	ePickupVisual,
 	eQueryHealth,
 	eQueryMana,
+	eTryToResestToIdleAnimation,
 	eLength,
 };
 

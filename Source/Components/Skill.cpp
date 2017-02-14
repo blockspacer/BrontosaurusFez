@@ -386,7 +386,7 @@ void Skill::OnDeActivation()
 {
 	SComponentMessageData statedAttackingMessage;
 	statedAttackingMessage.myString = "idle";
-	myUser->NotifyComponents(eComponentMessageType::eBasicAttack, statedAttackingMessage);
+	myUser->NotifyComponents(eComponentMessageType::eTryToResestToIdleAnimation, statedAttackingMessage);
 	myTargetObject = nullptr;
 	myAnimationTimeElapsed = 0.0f;
 	myShouldPlayAnimation = false;
