@@ -81,12 +81,15 @@ void GUI::GUIManager::Update(const CU::Time& aDeltaTime)
 			if (!myWidgetContainer->FindWidget("WhirlwindHat"))
 			{
 				IWidget* widget = myWidgetContainer->RemoveWidget("skillKnapp03");
-				//widget->SetVisibility(true);
-				//std::string sweepAttackName = "Sweep attack - Right button\nDeals more damage over a wider area but costs some mana";
-				//widget = new CToolTipDecorator(widget, nullptr, &sweepAttackName, nullptr);
-				widget->SetName("WhirlwindHat");
-				widget->SetVisibility(true);
-				myWidgetContainer->AddWidget("WhirlwindHat", widget);
+				if (widget)
+				{
+					//widget->SetVisibility(true);
+					//std::string sweepAttackName = "Sweep attack - Right button\nDeals more damage over a wider area but costs some mana";
+					//widget = new CToolTipDecorator(widget, nullptr, &sweepAttackName, nullptr);
+					widget->SetName("WhirlwindHat");
+					widget->SetVisibility(true);
+					myWidgetContainer->AddWidget("WhirlwindHat", widget);
+				}
 			}
 		}
 		if (PollingStation::playerHatList.Find("SweepHatV1") != PollingStation::playerHatList.FoundNone
@@ -95,12 +98,15 @@ void GUI::GUIManager::Update(const CU::Time& aDeltaTime)
 			if (!myWidgetContainer->FindWidget("SweepHat"))
 			{
 				IWidget* widget = myWidgetContainer->RemoveWidget("skillKnapp02");
-				widget->SetVisibility(true);
-				std::string sweepAttackName = "Sweep attack - Right button\nDeals more damage over a wider area but costs some mana";
-				widget = new CToolTipDecorator(widget, nullptr, &sweepAttackName, nullptr);
-				widget->SetName("SweepHat");
-				widget->SetVisibility(true);
-				myWidgetContainer->AddWidget("SweepHat", widget);
+				if (widget)
+				{
+					widget->SetVisibility(true);
+					std::string sweepAttackName = "Sweep attack - Right button\nDeals more damage over a wider area but costs some mana";
+					widget = new CToolTipDecorator(widget, nullptr, &sweepAttackName, nullptr);
+					widget->SetName("SweepHat");
+					widget->SetVisibility(true);
+					myWidgetContainer->AddWidget("SweepHat", widget);
+				}
 			}
 		}
 	}
