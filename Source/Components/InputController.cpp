@@ -331,7 +331,11 @@ eMessageReturn InputController::MouseReleased(const CU::eMouseButtons aMouseButt
 	if (aMouseButton == CU::eMouseButtons::LBUTTON)
 	{
 		myMouseIsDown = false;
-		RaycastOnNavmesh();
+		if(myIsActive == true)
+		{
+			RaycastOnNavmesh();
+		
+		}
 	}
 	if (aMouseButton == CU::eMouseButtons::RBUTTON)
 	{

@@ -221,6 +221,25 @@ void MovementComponent::Receive(const eComponentMessageType aMessageType, const 
 	case eComponentMessageType::eRespawned:
 		myIsActive = true;
 		break;
+	case eComponentMessageType::eTryToResestToIdleAnimation:
+	{
+		if(myIsActive == true)
+		{
+			if(myPathPointer != nullptr && myCurrentPathIndex < myPathPointer->Size())
+			{
+				SComponentMessageData directionData;
+				directionData.myString = "walk";
+				GetParent()->NotifyComponents(eComponentMessageType::eStartedMoving, directionData);
+			}
+			else
+			{
+				SComponentMessageData directionData;
+				directionData.myString = "idle";
+				GetParent()->NotifyComponents(eComponentMessageType::eStartedMoving, directionData);
+			}
+		}
+	}
+		break;
 	default:
 		break;
 	}
