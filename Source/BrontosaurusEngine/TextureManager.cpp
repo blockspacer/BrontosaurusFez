@@ -75,11 +75,13 @@ void CTextureManager::CreateTexture(const wchar_t* aTexturePath, CTexture* aNewT
 	ID3D11Texture2D *pTextureInterface = nullptr;
 	ID3D11Resource *res = nullptr;
 	//exists?
+#ifndef _RETAIL_BUILD
 	std::ifstream infile(aTexturePath);
 	if (!infile.good())
 	{
 		aTexturePath = L"error.dds";
 	}
+#endif // !_RETAIL_BUILD
 
 	result = DirectX::CreateDDSTextureFromFile(DEVICE, aTexturePath, &res, &texture);
 	if (FAILED(result))
