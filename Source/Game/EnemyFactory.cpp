@@ -43,6 +43,7 @@
 
 #include "../CommonUtilities/JsonValue.h"
 #include "ComponentMessage.h"
+#include "PollingStation.h"
 
 CEnemyFactory* CEnemyFactory::ourInstance = nullptr;
 
@@ -143,6 +144,8 @@ void CEnemyFactory::CreateEnemy(CU::Vector3f aPosition)
 	Enemy->NotifyOnlyComponents(eComponentMessageType::eBasicAttack, spawningData);
 
 	Enemy->NotifyOnlyComponents(eComponentMessageType::eSpawning, SComponentMessageData());
+	#define temp Enemy
+	PollingStation::myThingsEnemiesShouldAvoid.Add(Enemy);
 }
 
 void CEnemyFactory::Init(const std::string& aKey)

@@ -20,6 +20,8 @@ CSeekController::CSeekController()
 	myEvadeRadius = 150.0f;
 	myElapsedEvadeTime = 0.0f;
 	myShouldGoBackToStatPosition = false;
+	myShouldAvoidRight = 0;
+	myFleeingFromDizGuyIndex = -1;
 }
 
 
@@ -29,6 +31,7 @@ CSeekController::~CSeekController()
 
 const CU::Vector2f CSeekController::Update(const CU::Time& aDeltaTime)
 {
+
 	if (PollingStation::playerObject == nullptr)
 	{
 		return CU::Vector2f::Zero;
@@ -41,7 +44,13 @@ const CU::Vector2f CSeekController::Update(const CU::Time& aDeltaTime)
 	if (myShouldGoBackToStatPosition == true)
 	{
 		myTarget = myStartPosition;
-		DL_PRINT("Goinf Back");
+		CU::Vector2f targetDistance = myTarget - position;
+		if(targetDistance.Length2() < 10.0f)
+		{
+			SComponentMessageData stopData;
+			stopData.myFloat = 0.1f;
+			GetParent()->NotifyComponents(eComponentMessageType::eStopMovement, stopData);
+		}
 	}
 	targetVelocity = myTarget - position;
 
@@ -80,27 +89,86 @@ const CU::Vector2f CSeekController::Update(const CU::Time& aDeltaTime)
 	}
 	myAcceleration = acceleration * SCALAR;
 	myElapsedEvadeTime -= aDeltaTime.GetSeconds();
+	float closestDistanceTOEnemy = 2000.0f * 2000.0f;
+	int peopleThatIsTooDamnClose = 0;
 	for(unsigned short i = 0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); i++)
 	{
+		if(GetParent() == PollingStation::myThingsEnemiesShouldAvoid[i])
+		{
+			continue;
+		}
+		
+		float distanceToPlayah = CU::Vector3f(GetParent()->GetWorldPosition() - PollingStation::playerObject->GetWorldPosition()).Length2();
+		float otherEnemeyDistanceToPlayah = CU::Vector3f(PollingStation::myThingsEnemiesShouldAvoid[i]->GetWorldPosition() - PollingStation::playerObject->GetWorldPosition()).Length2();
+		float distanceToTOherENemyAndNOTPlayah = CU::Vector3f(PollingStation::myThingsEnemiesShouldAvoid[i]->GetWorldPosition() - GetParent()->GetWorldPosition()).Length2();
 		CU::Vector3f avoidDistance = GetParent()->GetWorldPosition() - PollingStation::myThingsEnemiesShouldAvoid[i]->GetWorldPosition();
 		CU::Vector2f distance(avoidDistance.x, avoidDistance.z);
-		if(distance.Length2() < myEvadeRadius * myEvadeRadius)
+
+		if (distance.Length2() < 50 * 50)
 		{
+			peopleThatIsTooDamnClose++;
+			CU::Vector3f directionFromOtherEnemy = avoidDistance.GetNormalized();
+			directionFromOtherEnemy *= 2.0f;
+			directionFromOtherEnemy.y = 0.0f;
+			GetParent()->GetLocalTransform().SetPosition(GetParent()->GetLocalTransform().GetPosition() + directionFromOtherEnemy);
+		}
+		else if(distance.Length2() < myEvadeRadius * myEvadeRadius)
+		{
+			peopleThatIsTooDamnClose++;
 			CU::Vector2f direction = distance.GetNormalized();
 			direction *= myMaxAcceleration;
 			direction *= SCALAR;
-			float avoidDifferenceLength = 35.0f;
+			float avoidDifferenceLength = 100000.0f;
+			if(closestDistanceTOEnemy > avoidDistance.Length2())
+			{
+				if(myFleeingFromDizGuyIndex != i)
+				{
+					closestDistanceTOEnemy = avoidDistance.Length2();
+					CU::Matrix44f tempLocalTrandorm = GetParent()->GetLocalTransform();
+					CU::Vector2f moveVector = myAcceleration * CU::Matrix33f::CreateRotateAroundZ(90.0f * PI / 180.0f) * 1000;
+					CU::Vector3f realMoveVector(moveVector.x, tempLocalTrandorm.GetPosition().y, moveVector.y);
+					tempLocalTrandorm.Move(realMoveVector);
+					float distanceLeft = CU::Vector3f(tempLocalTrandorm.GetPosition() - PollingStation::myThingsEnemiesShouldAvoid[i]->GetWorldPosition()).Length2();
+					tempLocalTrandorm = GetParent()->GetLocalTransform();
+					moveVector = myAcceleration * CU::Matrix33f::CreateRotateAroundZ(-90.0f * PI / 180.0f) * 1000;
+					realMoveVector = CU::Vector3f(moveVector.x, tempLocalTrandorm.GetPosition().y, moveVector.y);
+					tempLocalTrandorm.Move(realMoveVector);
+					float distanceRight = CU::Vector3f(tempLocalTrandorm.GetPosition() - PollingStation::myThingsEnemiesShouldAvoid[i]->GetWorldPosition()).Length2();
+					if (distanceRight < distanceLeft)
+					{
+						myShouldAvoidRight = 1;
+					}
+					else
+					{
+						myShouldAvoidRight = 2;
+					}
+					myElapsedEvadeTime = 1.5f;
+					myFleeingFromDizGuyIndex = i;
+				}
+			}
 			if (CU::Vector2f((direction * -1) - myAcceleration).Length2() > avoidDifferenceLength * avoidDifferenceLength)
 			{
 				continue;
 			}
-			myElapsedEvadeTime = 0.5f;
-			break;
+			myElapsedEvadeTime = 1.5f;
+			
 		}
 	}
+	
 	if(myElapsedEvadeTime > 0.0f)
 	{
-		myAcceleration = myAcceleration * CU::Matrix33f::CreateRotateAroundZ(90.0f * PI / 180.0f);
+		if(myShouldAvoidRight == 1)
+		{
+			myAcceleration = myAcceleration * CU::Matrix33f::CreateRotateAroundZ(60.0f * PI / 180.0f);
+		}
+		else if(myShouldAvoidRight == 2)
+		{
+			myAcceleration = myAcceleration * CU::Matrix33f::CreateRotateAroundZ(60.0f * PI / 180.0f);
+		}
+	}
+	else
+	{
+		myFleeingFromDizGuyIndex = -1;
 	}
 	return myAcceleration * myWeight;
 }
@@ -234,6 +302,12 @@ void CSeekController::Receive(const eComponentMessageType aMessageType, const SC
 	case(eComponentMessageType::eEnemyStartChaseAgain):
 	{
 		myShouldGoBackToStatPosition = false;
+	}
+	break;
+	case(eComponentMessageType::eSpawning):
+	{
+		myStartPosition = GetParent()->GetWorldPosition();
+		myStartPosition.y = GetParent()->GetWorldPosition().z;
 	}
 	break;
 	default:

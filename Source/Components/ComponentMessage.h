@@ -117,6 +117,7 @@ enum class eComponentMessageType
 	eQueryHealth,
 	eQueryMana,
 	eTryToResestToIdleAnimation,
+	eEvadeOtherEnemies,
 	eLength,
 };
 

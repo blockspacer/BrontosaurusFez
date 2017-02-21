@@ -41,7 +41,7 @@ enum eColliderType : unsigned int
 
 class ICollider
 {
-	static const int ourMaxNumberOfCollides = 8;
+	static const int ourMaxNumberOfCollides = 16;
 
 public:
 	using Callback = std::function<void(ICollider*)>;

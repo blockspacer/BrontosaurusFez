@@ -8,6 +8,7 @@
 #include "../PostMaster/GameObjectDiedEvent.h"
 #include "ModelInstance.h"
 #include "ModelComponent.h"
+#include "PollingStation.h"
 
 std::string GetEmitterTypeFromObjectType(const eObjectType aObjectType);
 
@@ -50,6 +51,14 @@ void CHealthComponent::SetHealth(const HealthPoint aValue)
 			GetParent()->NotifyComponents(eComponentMessageType::eDied, SComponentMessageData());
 			SComponentMessageData startedAttackingMessage;
 			startedAttackingMessage.myString = "die";
+			for (unsigned short i = 0; i < PollingStation::myThingsEnemiesShouldAvoid.Size(); i++)
+			{
+				if (PollingStation::myThingsEnemiesShouldAvoid[i]->GetId() == GetParent()->GetId())
+				{
+					PollingStation::myThingsEnemiesShouldAvoid.RemoveCyclicAtIndex(i);
+					DL_PRINT("Removed enemy from things that should be avoided");
+				}
+			}
 			GetParent()->NotifyComponents(eComponentMessageType::eBasicAttack, startedAttackingMessage);
 			/*SComponentMessageData data;
 			data.myBool = false;
