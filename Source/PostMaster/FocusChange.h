@@ -5,7 +5,10 @@ class FocusChange : public Event
 public:
 	FocusChange(const bool aHasFocus);
 	~FocusChange();
+
 	eMessageReturn DoEvent(CInputManager* aInputManager) const override;
+	eMessageReturn DoEvent(CDXFramework* aInputManager) const override;
+
 private:
 	bool myHasFocus;
 };
