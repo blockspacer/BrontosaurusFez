@@ -16,6 +16,7 @@ namespace QM
 	class CQuestDrawer;
 }
 
+class CDXFramework;
 class State;
 class PauseMenu;
 class GUICursor;
@@ -49,6 +50,7 @@ public:
 	Event() {}
 	virtual ~Event() {}
 
+	virtual eMessageReturn DoEvent(CDXFramework*) const { return eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(State*) const { return eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(PauseMenu*) const { return eMessageReturn::eContinue; }
 	virtual eMessageReturn DoEvent(GUICursor*) const { return eMessageReturn::eContinue; }

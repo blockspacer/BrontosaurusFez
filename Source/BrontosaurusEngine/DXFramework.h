@@ -3,6 +3,8 @@
 #include <directxmath.h>
 #include <d3d11.h>
 
+#include "../PostMaster/Subscriber.h"
+
 
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -11,7 +13,7 @@
 #define CHECK_RESULT(r, msg, ...) if(FAILED(r)) { DL_ASSERT(msg, __VA_ARGS__); }
 #define CHECK_BOOL_RESULT(r, msg, ...) if (r != true) { DL_ASSERT(msg, __VA_ARGS__); }
 
-class CDXFramework
+class CDXFramework : public Subscriber
 {
 public:
 	CDXFramework();
@@ -24,6 +26,8 @@ public:
 	void Render();
 	bool Initialize(const int aWidth, const int aHeight, const bool aIsFullScreen, HWND aHWND);
 
+	void SetFullscreen();
+	void SetWindowed();
 
 	void DisableDepthStencil();
 	void EnableDepthStencil();
@@ -32,6 +36,8 @@ public:
 	inline ID3D11Device* GetDevice();
 	inline ID3D11DeviceContext* GetDeviceContext();
 	inline IDXGISwapChain& GetSwapChain();
+
+	virtual eMessageReturn Recieve(const Message& aMessage) override;
 
 private:
 	bool CollectAdapters(CU::Vector2<unsigned int> aWindowSize, CU::Vector2<int>& aNumDenumerator, IDXGIAdapter*& outAdapter);

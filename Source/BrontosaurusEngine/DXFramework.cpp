@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "DXFramework.h"
+#include "..\PostMaster\Message.h"
+#include "..\PostMaster\Event.h"
+#include "..\PostMaster\PostMaster.h"
 
 CDXFramework::CDXFramework()
 {
@@ -9,10 +12,12 @@ CDXFramework::CDXFramework()
 	myRenderTargetView			= nullptr;
 	myDepthStencilView			= nullptr;
 
+	PostMaster::GetInstance().Subscribe(this, eMessageType::eFokusChanged);
 }
 
 CDXFramework::~CDXFramework()
 {
+	PostMaster::GetInstance().UnSubscribe(this, eMessageType::eFokusChanged);
 	Shutdown();
 }
 
@@ -233,6 +238,16 @@ bool CDXFramework::Initialize(const int aWidth, const int aHeight, const bool aI
 	return true;
 }
 
+void CDXFramework::SetFullscreen()
+{
+	mySwapchain->SetFullscreenState(TRUE, nullptr);
+}
+
+void CDXFramework::SetWindowed()
+{
+	mySwapchain->SetFullscreenState(FALSE, nullptr);
+}
+
 void CDXFramework::DisableDepthStencil()
 {
 	myDeviceContext->OMSetRenderTargets(1, &myRenderTargetView, NULL);
@@ -342,6 +357,11 @@ void CDXFramework::Shutdown()
 		myDepthStencilView->Release();
 		myDepthStencilView = nullptr;
 	}
+}
+
+eMessageReturn CDXFramework::Recieve(const Message& aMessage)
+{
+	return aMessage.myEvent.DoEvent(this);
 }
 
 void CDXFramework::CreateDepthStencil(const int aWidth, const int aHeight, ID3D11DepthStencilView*& aDepthStencilView, ID3D11ShaderResourceView*& aDepthStencilResource)
