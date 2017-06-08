@@ -38,10 +38,12 @@ private:
 	float myCallForHelpRadius;
 	float myEvadeRadius;
 	float myElapsedEvadeTime;
+	float myWaitUntilTurnCountDown;
 
 	unsigned short myFleeingFromDizGuyIndex;
 	short myFormationIndex;
 	char myShouldAvoidRight;
+	char myPrevoiusShouldAvoidRight;
 	bool myHaveBeenCalledForHelp;
 	bool myShouldGoBackToStatPosition;
 	// Inherited via IController
